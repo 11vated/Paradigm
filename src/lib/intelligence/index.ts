@@ -40,6 +40,27 @@ export class IntelligenceLayer {
   }
 
   /**
+   * Generates a high-dimensional vector embedding for a text string.
+   */
+  static async generateTextEmbedding(text: string): Promise<number[]> {
+    try {
+      const response = await ai.models.embedContent({
+        model: 'text-embedding-004',
+        contents: text,
+      });
+
+      if (response.embeddings && response.embeddings.length > 0 && response.embeddings[0].values) {
+        return response.embeddings[0].values;
+      }
+      
+      throw new Error("No embedding values returned from Gemini API");
+    } catch (error) {
+      console.error("Error generating text embedding:", error);
+      return this.generatePseudoEmbedding(text);
+    }
+  }
+
+  /**
    * Generates a complete GSPL seed using Gemini based on a prompt and domain.
    */
   static async generateSeed(prompt: string, domain: string): Promise<any> {

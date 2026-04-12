@@ -39,7 +39,9 @@ export const useAuthStore = create((set, get) => ({
     try {
       sessionStorage.setItem(TOKEN_KEY, token);
       if (refreshToken) sessionStorage.setItem(REFRESH_KEY, refreshToken);
-    } catch {}
+    } catch {
+      // Ignore storage errors
+    }
     set({ token, refreshToken: refreshToken || get().refreshToken });
   },
 
@@ -48,7 +50,9 @@ export const useAuthStore = create((set, get) => ({
       sessionStorage.removeItem(TOKEN_KEY);
       sessionStorage.removeItem(REFRESH_KEY);
       sessionStorage.removeItem(USER_KEY);
-    } catch {}
+    } catch {
+      // Ignore storage errors
+    }
     set({ token: null, refreshToken: null, user: null, isAuthenticated: false, error: null });
   },
 

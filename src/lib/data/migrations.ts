@@ -118,7 +118,9 @@ function getAppliedMigrations(dataDir: string): MigrationRecord[] {
     if (fs.existsSync(filePath)) {
       return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     }
-  } catch {}
+  } catch {
+    // Ignore parse errors
+  }
   return [];
 }
 

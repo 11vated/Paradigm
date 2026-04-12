@@ -1,10 +1,9 @@
 import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSeedStore } from '@/stores/seedStore';
-import { useAuthStore } from '@/stores/authStore';
 import { listSeeds, growSeed } from '@/services/api';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Dna, ArrowLeft, LogOut, User } from 'lucide-react';
+import { Dna, ArrowLeft } from 'lucide-react';
 import PromptBar from '@/components/studio/PromptBar';
 import GeneEditor from '@/components/studio/GeneEditor';
 import PreviewViewport from '@/components/studio/PreviewViewport';
@@ -16,13 +15,10 @@ import ExportPanel from '@/components/studio/ExportPanel';
 import GSPLEditor from '@/components/studio/GSPLEditor';
 import CompositionPanel from '@/components/studio/CompositionPanel';
 import SeedLibrary from '@/components/studio/SeedLibrary';
-import AgentPanel from '@/components/studio/AgentPanel';
-import MintPanel from '@/components/studio/MintPanel';
 
 export default function StudioPage() {
   const navigate = useNavigate();
   const { currentSeed, gallery, artifact, loading, setGallery, setCurrentSeed, setArtifact, setLoading, addToGallery } = useSeedStore();
-  const { user, logout } = useAuthStore();
 
   const loadGallery = useCallback(async () => {
     try {
@@ -54,19 +50,14 @@ export default function StudioPage() {
     setLoading(false);
   }, [setCurrentSeed, addToGallery, setArtifact, setLoading]);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
   return (
-    <div className="studio-grid" data-testid="creation-studio" id="main-content">
+    <div className="studio-grid" data-testid="creation-studio">
       {/* Top Bar */}
-      <header className="studio-topbar" data-testid="studio-topbar" role="banner">
-        <button data-testid="studio-back-btn" onClick={() => navigate('/')} aria-label="Back to landing page" className="text-neutral-500 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+      <div className="studio-topbar" data-testid="studio-topbar">
+        <button data-testid="studio-back-btn" onClick={() => navigate('/')} className="text-neutral-500 hover:text-white transition-colors">
+          <ArrowLeft className="w-4 h-4" />
         </button>
-        <Dna className="w-4 h-4 text-orange-500" aria-hidden="true" />
+        <Dna className="w-4 h-4 text-orange-500" />
         <span className="font-heading font-bold text-sm tracking-tight">PARADIGM</span>
         <div className="h-4 w-px bg-neutral-800" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Creation Studio</span>
@@ -80,24 +71,10 @@ export default function StudioPage() {
             </span>
           </>
         )}
-        <div className="h-4 w-px bg-neutral-800 ml-2" aria-hidden="true" />
-        {/* User menu */}
-        <div className="flex items-center gap-2 ml-1" role="group" aria-label="User menu">
-          <User className="w-3 h-3 text-neutral-600" aria-hidden="true" />
-          <span className="font-mono text-[10px] text-neutral-500">{user?.username || 'anon'}</span>
-          <button
-            data-testid="logout-btn"
-            onClick={handleLogout}
-            className="text-neutral-600 hover:text-red-400 transition-colors"
-            aria-label={`Logout ${user?.username || ''}`}
-          >
-            <LogOut className="w-3 h-3" aria-hidden="true" />
-          </button>
-        </div>
-      </header>
+      </div>
 
       {/* Left Sidebar: Gallery + Lineage + Library */}
-      <nav className="studio-sidebar-left" data-testid="studio-sidebar-left" aria-label="Seed gallery and library">
+      <div className="studio-sidebar-left" data-testid="studio-sidebar-left">
         <Tabs defaultValue="gallery" className="h-full flex flex-col">
           <TabsList className="w-full rounded-none bg-transparent border-b border-neutral-800 h-8 p-0 grid grid-cols-3">
             <TabsTrigger value="gallery" className="rounded-none text-[9px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-orange-500 data-[state=active]:border-b data-[state=active]:border-orange-500 h-full" data-testid="tab-gallery">
@@ -120,40 +97,34 @@ export default function StudioPage() {
             <SeedLibrary onImport={handleSeedCreated} activeSeed={currentSeed} />
           </TabsContent>
         </Tabs>
-      </nav>
+      </div>
 
       {/* Center: Viewport + Prompt */}
-      <main className="studio-center" data-testid="studio-center" role="main" aria-label="Preview and prompt">
+      <div className="studio-center" data-testid="studio-center">
         <PreviewViewport artifact={artifact} loading={loading} />
         <PromptBar onSeedCreated={handleSeedCreated} />
-      </main>
+      </div>
 
-      {/* Right Sidebar: Gene Editor + Operations + Compose + GSPL + Agent + Mint */}
-      <aside className="studio-sidebar-right" data-testid="studio-sidebar-right" aria-label="Seed tools and operations">
+      {/* Right Sidebar: Gene Editor + Operations + Compose + GSPL */}
+      <div className="studio-sidebar-right" data-testid="studio-sidebar-right">
         <Tabs defaultValue="genes" className="h-full flex flex-col">
-          <TabsList className="w-full rounded-none bg-transparent border-b border-neutral-800 h-8 p-0 grid grid-cols-8">
-            <TabsTrigger value="genes" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-orange-500 data-[state=active]:border-b data-[state=active]:border-orange-500 h-full" data-testid="tab-genes">
+          <TabsList className="w-full rounded-none bg-transparent border-b border-neutral-800 h-8 p-0 grid grid-cols-6">
+            <TabsTrigger value="genes" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-orange-500 data-[state=active]:border-b data-[state=active]:border-orange-500 h-full" data-testid="tab-genes">
               Genes
             </TabsTrigger>
-            <TabsTrigger value="evolve" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-emerald-500 data-[state=active]:border-b data-[state=active]:border-emerald-500 h-full" data-testid="tab-evolve">
+            <TabsTrigger value="evolve" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-emerald-500 data-[state=active]:border-b data-[state=active]:border-emerald-500 h-full" data-testid="tab-evolve">
               Evolve
             </TabsTrigger>
-            <TabsTrigger value="breed" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-cyan-500 data-[state=active]:border-b data-[state=active]:border-cyan-500 h-full" data-testid="tab-breed">
+            <TabsTrigger value="breed" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-cyan-500 data-[state=active]:border-b data-[state=active]:border-cyan-500 h-full" data-testid="tab-breed">
               Breed
             </TabsTrigger>
-            <TabsTrigger value="compose" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=active]:border-b data-[state=active]:border-cyan-400 h-full" data-testid="tab-compose">
+            <TabsTrigger value="compose" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-cyan-400 data-[state=active]:border-b data-[state=active]:border-cyan-400 h-full" data-testid="tab-compose">
               Compose
             </TabsTrigger>
-            <TabsTrigger value="gspl" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-purple-500 data-[state=active]:border-b data-[state=active]:border-purple-500 h-full" data-testid="tab-gspl">
+            <TabsTrigger value="gspl" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-purple-500 data-[state=active]:border-b data-[state=active]:border-purple-500 h-full" data-testid="tab-gspl">
               GSPL
             </TabsTrigger>
-            <TabsTrigger value="agent" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-amber-500 data-[state=active]:border-b data-[state=active]:border-amber-500 h-full" data-testid="tab-agent">
-              Agent
-            </TabsTrigger>
-            <TabsTrigger value="mint" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-amber-400 data-[state=active]:border-b data-[state=active]:border-amber-400 h-full" data-testid="tab-mint">
-              Mint
-            </TabsTrigger>
-            <TabsTrigger value="export" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-purple-400 data-[state=active]:border-b data-[state=active]:border-purple-400 h-full" data-testid="tab-export">
+            <TabsTrigger value="export" className="rounded-none text-[8px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-purple-400 data-[state=active]:border-b data-[state=active]:border-purple-400 h-full" data-testid="tab-export">
               Export
             </TabsTrigger>
           </TabsList>
@@ -172,21 +143,15 @@ export default function StudioPage() {
           <TabsContent value="gspl" className="flex-1 m-0 overflow-hidden flex flex-col">
             <GSPLEditor onSeedFromGSPL={handleSeedCreated} />
           </TabsContent>
-          <TabsContent value="agent" className="flex-1 m-0 overflow-hidden flex flex-col">
-            <AgentPanel onSeedCreated={handleSeedCreated} />
-          </TabsContent>
-          <TabsContent value="mint" className="flex-1 m-0 overflow-y-auto">
-            <MintPanel seed={currentSeed} />
-          </TabsContent>
           <TabsContent value="export" className="flex-1 m-0 overflow-y-auto">
             <ExportPanel seed={currentSeed} onSeedUpdated={handleSeedCreated} />
           </TabsContent>
         </Tabs>
-      </aside>
+      </div>
 
       {/* Status Bar */}
-      <footer className="studio-statusbar" data-testid="studio-statusbar" role="status" aria-live="polite" aria-label="Seed status">
-        <span>PARADIGM v2.0</span>
+      <div className="studio-statusbar" data-testid="studio-statusbar">
+        <span>PARADIGM v1.0</span>
         <span className="h-2 w-px bg-neutral-800" />
         {currentSeed ? (
           <>
@@ -197,9 +162,7 @@ export default function StudioPage() {
             {currentSeed.$sovereignty?.signature && <span className="text-emerald-500/60">SIGNED</span>}
           </>
         ) : <span>No seed loaded — type a prompt or select from gallery</span>}
-        <div className="flex-1" />
-        <span className="text-neutral-700">{user?.username}@{user?.role || 'user'}</span>
-      </footer>
+      </div>
     </div>
   );
 }

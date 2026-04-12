@@ -278,7 +278,7 @@ export class ParadigmAgent {
 
     // Synchronous execution — executePlan is async but kernel tools are sync
     // We wrap in a resolved promise pattern for compatibility
-    let completedPlan = plan;
+    const completedPlan = plan;
     const toolContext: ToolContext = {
       seeds,
       plan,

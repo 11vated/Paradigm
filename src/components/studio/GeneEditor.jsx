@@ -23,12 +23,12 @@ function getCategoricalChoices(geneName) {
   return map[geneName] || ['option_a', 'option_b', 'option_c'];
 }
 
-function ScalarWidget({ value, onChange, geneName }) {
+function ScalarWidget({ value, onChange }) {
   const numVal = typeof value === 'number' ? value : 0.5;
   return (
-    <div className="flex items-center gap-2 w-full" role="group" aria-label={`${geneName || 'scalar'} value`}>
-      <Slider data-testid="gene-editor-slider" value={[numVal * 100]} onValueChange={([v]) => onChange(v / 100)} max={100} step={1} className="flex-1" aria-label={`${geneName || 'scalar'} slider`} />
-      <span className="font-mono text-[10px] text-neutral-500 w-10 text-right" aria-live="polite">{numVal.toFixed(2)}</span>
+    <div className="flex items-center gap-2 w-full">
+      <Slider data-testid="gene-editor-slider" value={[numVal * 100]} onValueChange={([v]) => onChange(v / 100)} max={100} step={1} className="flex-1" />
+      <span className="font-mono text-[10px] text-neutral-500 w-10 text-right">{numVal.toFixed(2)}</span>
     </div>
   );
 }
@@ -47,10 +47,10 @@ function CategoricalWidget({ value, geneName, onChange }) {
   );
 }
 
-function VectorWidget({ value, onChange, geneName }) {
+function VectorWidget({ value, onChange }) {
   if (!Array.isArray(value)) return <span className="font-mono text-[10px] text-neutral-600">—</span>;
   return (
-    <div className="flex gap-1" role="group" aria-label={`${geneName || 'vector'} components`}>
+    <div className="flex gap-1">
       {value.map((v, i) => (
         <input
           key={i}
@@ -58,7 +58,6 @@ function VectorWidget({ value, onChange, geneName }) {
           step="0.01"
           value={typeof v === 'number' ? v.toFixed(2) : 0}
           onChange={(e) => { const nv = [...value]; nv[i] = parseFloat(e.target.value) || 0; onChange(nv); }}
-          aria-label={`${geneName || 'vector'} component ${i + 1}`}
           className="w-12 bg-transparent border border-neutral-800 text-[10px] font-mono text-center py-0.5 text-white"
           data-testid={`gene-vector-input-${i}`}
         />
@@ -79,7 +78,6 @@ function GenericWidget({ value, onChange }) {
         <textarea
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
-          aria-label="Edit gene value (JSON or text)"
           className="w-full h-20 bg-transparent border border-neutral-800 text-[10px] font-mono text-white p-1 resize-none"
           data-testid="gene-generic-textarea"
         />
@@ -171,9 +169,9 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
                 {updating === name && <span className="text-[8px] text-orange-500 animate-pulse">...</span>}
               </div>
               <div className="pl-4">
-                {gtype === 'scalar' && <ScalarWidget value={gene.value} geneName={name} onChange={(v) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'scalar' && <ScalarWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
                 {gtype === 'categorical' && <CategoricalWidget value={gene.value} geneName={name} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {gtype === 'vector' && <VectorWidget value={gene.value} geneName={name} onChange={(v) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'vector' && <VectorWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
                 {!['scalar', 'categorical', 'vector'].includes(gtype) && <GenericWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
               </div>
             </div>

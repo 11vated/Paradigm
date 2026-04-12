@@ -32,9 +32,9 @@ export default function EvolvePanel({ seed, onEvolved }) {
       ) : (
         <>
           <div className="space-y-1">
-            <label id="evolve-algo-label" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Algorithm</label>
+            <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Algorithm</label>
             <Select value={algorithm} onValueChange={setAlgorithm}>
-              <SelectTrigger className="h-7 text-[10px] font-mono bg-transparent border-neutral-800 rounded-none" data-testid="evolve-algorithm-select" aria-labelledby="evolve-algo-label">
+              <SelectTrigger className="h-7 text-[10px] font-mono bg-transparent border-neutral-800 rounded-none" data-testid="evolve-algorithm-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-[#0a0a0a] border-neutral-800">
@@ -50,7 +50,7 @@ export default function EvolvePanel({ seed, onEvolved }) {
               <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Population</label>
               <span className="font-mono text-[9px] text-neutral-500">{popSize}</span>
             </div>
-            <Slider value={[popSize]} onValueChange={([v]) => setPopSize(v)} min={4} max={50} step={2} data-testid="evolve-pop-slider" aria-label={`Population size: ${popSize}`} />
+            <Slider value={[popSize]} onValueChange={([v]) => setPopSize(v)} min={4} max={50} step={2} data-testid="evolve-pop-slider" />
           </div>
 
           <div className="space-y-1">
@@ -58,7 +58,7 @@ export default function EvolvePanel({ seed, onEvolved }) {
               <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Generations</label>
               <span className="font-mono text-[9px] text-neutral-500">{generations}</span>
             </div>
-            <Slider value={[generations]} onValueChange={([v]) => setGenerations(v)} min={1} max={20} step={1} data-testid="evolve-gen-slider" aria-label={`Generations: ${generations}`} />
+            <Slider value={[generations]} onValueChange={([v]) => setGenerations(v)} min={1} max={20} step={1} data-testid="evolve-gen-slider" />
           </div>
 
           <button

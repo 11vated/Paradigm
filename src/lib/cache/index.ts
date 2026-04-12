@@ -245,19 +245,25 @@ export class RedisCache implements CacheLayer {
   async set(key: string, value: string, ttlSeconds = 300): Promise<void> {
     try {
       await this.client.set(this.key(key), value, ttlSeconds);
-    } catch {}
+    } catch {
+      // Ignore errors
+    }
   }
 
   async del(key: string): Promise<void> {
     try {
       await this.client.del(this.key(key));
-    } catch {}
+    } catch {
+      // Ignore errors
+    }
   }
 
   async clear(): Promise<void> {
     try {
       await this.client.flushdb();
-    } catch {}
+    } catch {
+      // Ignore errors
+    }
   }
 
   stats() {

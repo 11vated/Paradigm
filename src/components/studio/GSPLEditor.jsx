@@ -65,18 +65,17 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
         data-testid="gspl-code-input"
         value={code}
         onChange={(e) => setCode(e.target.value)}
-        aria-label="GSPL source code editor"
-        className="flex-1 bg-black/30 p-3 text-[11px] font-mono text-neutral-300 resize-none leading-relaxed min-h-[200px]"
+        className="flex-1 bg-black/30 p-3 text-[11px] font-mono text-neutral-300 resize-none outline-none leading-relaxed min-h-[200px]"
         spellCheck={false}
         placeholder="Write GSPL code..."
       />
       {result && (
         <div className="border-t border-neutral-900 p-2 max-h-[200px] overflow-y-auto">
           {result.errors?.length > 0 && (
-            <div className="space-y-1 mb-2" role="alert">
+            <div className="space-y-1 mb-2">
               {result.errors.map((e, i) => (
                 <div key={i} className="flex items-start gap-1.5 text-red-400 font-mono text-[9px]">
-                  <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" aria-hidden="true" />{e}
+                  <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" />{e}
                 </div>
               ))}
             </div>

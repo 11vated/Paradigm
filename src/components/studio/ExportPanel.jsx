@@ -81,10 +81,9 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
                   data-testid="sign-seed-btn"
                   onClick={handleSign}
                   disabled={signing}
-                  aria-label={signing ? 'Signing seed...' : 'Sign seed with ECDSA P-256'}
                   className="w-full py-1.5 bg-purple-500 text-black font-bold text-[10px] uppercase tracking-wider hover:bg-purple-400 transition-colors disabled:opacity-30 flex items-center justify-center gap-1.5"
                 >
-                  {signing ? <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" /> : <Shield className="w-3 h-3" aria-hidden="true" />}
+                  {signing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Shield className="w-3 h-3" />}
                   Sign Seed
                 </button>
               </div>

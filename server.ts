@@ -101,7 +101,7 @@ function log(level: keyof typeof LOG_LEVELS, message: string, data?: Record<stri
 
 async function startServer() {
   const app = express();
-  const PORT = parseInt(process.env.PORT || '3000', 10);
+  const PORT = 3000;
   const startTime = Date.now();
 
   app.use(express.json({ limit: '2mb' }));
@@ -109,7 +109,7 @@ async function startServer() {
   // ── Security: CORS + Headers + Request ID ──────────────────────────────
   const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+    : ['*'];
   app.use(httpsRedirect());
   app.use(corsMiddleware({ origins: allowedOrigins }));
   app.use(securityHeaders());
@@ -934,6 +934,77 @@ async function startServer() {
   // GSPL PARSER & EXECUTOR
   // ═══════════════════════════════════════════════════════════════════════════
 
+  app.post('/api/v1/agent/execute_gspl', requireAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
+    const source = req.body.source || '';
+    const generatedSeeds: any[] = [];
+    const errors: string[] = [];
+
+    const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
+    let match;
+
+    while ((match = seedRegex.exec(source)) !== null) {
+      const name = match[1];
+      const domain = match[2];
+      const body = match[3];
+      const genes: Record<string, any> = {};
+
+      for (const line of body.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('//')) continue;
+
+        const colonIdx = trimmed.indexOf(':');
+        if (colonIdx > 0) {
+          const key = trimmed.substring(0, colonIdx).trim();
+          const valStr = trimmed.substring(colonIdx + 1).trim();
+
+          if (valStr.startsWith('"') && valStr.endsWith('"')) {
+            genes[key] = { type: 'categorical', value: valStr.slice(1, -1) };
+          } else if (!isNaN(Number(valStr))) {
+            genes[key] = { type: 'scalar', value: Number(valStr) };
+          } else if (valStr.startsWith('[')) {
+            try {
+              const parsed = JSON.parse(valStr);
+              if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
+            } catch {
+              const numbers = valStr.match(/-?\d+(\.\d+)?/g);
+              if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
+              else genes[key] = { type: 'vector', value: valStr };
+            }
+          } else {
+            genes[key] = { type: 'categorical', value: valStr };
+          }
+        }
+      }
+
+      const rng = rngFromHash(name + domain + Date.now());
+      const newSeed = {
+        id: crypto.randomUUID(),
+        $domain: domain,
+        $name: name,
+        $lineage: { generation: 0, operation: 'gspl' },
+        $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+        $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
+        genes,
+      };
+
+      seeds.push(newSeed);
+      generatedSeeds.push(newSeed);
+    }
+
+    if (generatedSeeds.length > 0) {
+      saveSeeds();
+    } else {
+      errors.push('No valid seed blocks found in GSPL source.');
+    }
+
+    res.json({
+      seeds: generatedSeeds,
+      errors,
+      stats: { seeds_created: generatedSeeds.length, operations: generatedSeeds.length },
+      types: {},
+    });
+  });
+
   app.post('/api/gspl/parse', validateBody(GsplParseSchema), (req: any, res: any) => {
     const source = req.body.source;
     const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
@@ -1477,9 +1548,10 @@ async function startServer() {
     // RFC 6455 handshake
     const key = req.headers['sec-websocket-key'];
     if (!key) { socket.destroy(); return; }
+    const keyStr = Array.isArray(key) ? key[0] : key;
 
     const MAGIC = '258EAFA5-E914-47DA-95CA-5AB9AC45E8B0';
-    const accept = crypto.createHash('sha1').update(key + MAGIC).digest('base64');
+    const accept = crypto.createHash('sha1').update(keyStr + MAGIC).digest('base64');
 
     socket.write(
       'HTTP/1.1 101 Switching Protocols\r\n' +
@@ -1548,7 +1620,7 @@ async function startServer() {
 
     let buffer = Buffer.alloc(0);
 
-    socket.on('data', (chunk: Buffer) => {
+    socket.on('data', async (chunk: Buffer) => {
       buffer = Buffer.concat([buffer, chunk]);
 
       while (true) {

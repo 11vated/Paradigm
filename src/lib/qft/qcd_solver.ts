@@ -68,35 +68,35 @@ export class QCDSolver {
 
   // Calculate the staple for a given link U_mu(x)
   private calculateStaple(dir: number, x: number, y: number, z: number, t: number): number[] {
-    let staple = [0, 0, 0, 0];
+    const staple = [0, 0, 0, 0];
     const pos = [x, y, z, t];
 
     for (let nu = 0; nu < 4; nu++) {
       if (nu === dir) continue;
 
       // Forward staple: U_nu(x+mu) * U_mu(x+nu)^dagger * U_nu(x)^dagger
-      let pos_mu = [...pos]; pos_mu[dir]++;
-      let pos_nu = [...pos]; pos_nu[nu]++;
+      const pos_mu = [...pos]; pos_mu[dir]++;
+      const pos_nu = [...pos]; pos_nu[nu]++;
 
       const u1 = this.idx(nu, pos_mu[0], pos_mu[1], pos_mu[2], pos_mu[3]);
       const u2 = this.idx(dir, pos_nu[0], pos_nu[1], pos_nu[2], pos_nu[3]);
       const u3 = this.idx(nu, pos[0], pos[1], pos[2], pos[3]);
 
-      let term1 = this.mulSU2(this.links, this.invSU2(this.links, u2), u1, 0);
-      let term2 = this.mulSU2(term1, this.invSU2(this.links, u3));
+      const term1 = this.mulSU2(this.links, this.invSU2(this.links, u2), u1, 0);
+      const term2 = this.mulSU2(term1, this.invSU2(this.links, u3));
       
       staple[0] += term2[0]; staple[1] += term2[1]; staple[2] += term2[2]; staple[3] += term2[3];
 
       // Backward staple: U_nu(x+mu-nu)^dagger * U_mu(x-nu)^dagger * U_nu(x-nu)
-      let pos_mu_minus_nu = [...pos]; pos_mu_minus_nu[dir]++; pos_mu_minus_nu[nu]--;
-      let pos_minus_nu = [...pos]; pos_minus_nu[nu]--;
+      const pos_mu_minus_nu = [...pos]; pos_mu_minus_nu[dir]++; pos_mu_minus_nu[nu]--;
+      const pos_minus_nu = [...pos]; pos_minus_nu[nu]--;
 
       const v1 = this.idx(nu, pos_mu_minus_nu[0], pos_mu_minus_nu[1], pos_mu_minus_nu[2], pos_mu_minus_nu[3]);
       const v2 = this.idx(dir, pos_minus_nu[0], pos_minus_nu[1], pos_minus_nu[2], pos_minus_nu[3]);
       const v3 = this.idx(nu, pos_minus_nu[0], pos_minus_nu[1], pos_minus_nu[2], pos_minus_nu[3]);
 
-      let term3 = this.mulSU2(this.invSU2(this.links, v1), this.invSU2(this.links, v2));
-      let term4 = this.mulSU2(term3, this.links, 0, v3);
+      const term3 = this.mulSU2(this.invSU2(this.links, v1), this.invSU2(this.links, v2));
+      const term4 = this.mulSU2(term3, this.links, 0, v3);
 
       staple[0] += term4[0]; staple[1] += term4[1]; staple[2] += term4[2]; staple[3] += term4[3];
     }
@@ -162,8 +162,8 @@ export class QCDSolver {
             const pos = [x, y, z, t];
             for (let mu = 0; mu < 3; mu++) {
               for (let nu = mu + 1; nu < 4; nu++) {
-                let pos_mu = [...pos]; pos_mu[mu]++;
-                let pos_nu = [...pos]; pos_nu[nu]++;
+                const pos_mu = [...pos]; pos_mu[mu]++;
+                const pos_nu = [...pos]; pos_nu[nu]++;
 
                 const u1 = this.idx(mu, pos[0], pos[1], pos[2], pos[3]);
                 const u2 = this.idx(nu, pos_mu[0], pos_mu[1], pos_mu[2], pos_mu[3]);
@@ -195,8 +195,8 @@ export class QCDSolver {
           // Sum over spatial plaquettes
           for (let mu = 0; mu < 2; mu++) {
             for (let nu = mu + 1; nu < 3; nu++) {
-              let pos_mu = [...pos]; pos_mu[mu] = (pos_mu[mu] + 1) % (mu === 0 ? this.nx : (mu === 1 ? this.ny : this.nz));
-              let pos_nu = [...pos]; pos_nu[nu] = (pos_nu[nu] + 1) % (nu === 0 ? this.nx : (nu === 1 ? this.ny : this.nz));
+              const pos_mu = [...pos]; pos_mu[mu] = (pos_mu[mu] + 1) % (mu === 0 ? this.nx : (mu === 1 ? this.ny : this.nz));
+              const pos_nu = [...pos]; pos_nu[nu] = (pos_nu[nu] + 1) % (nu === 0 ? this.nx : (nu === 1 ? this.ny : this.nz));
 
               const u1 = this.idx(mu, pos[0], pos[1], pos[2], pos[3]);
               const u2 = this.idx(nu, pos_mu[0], pos_mu[1], pos_mu[2], pos_mu[3]);

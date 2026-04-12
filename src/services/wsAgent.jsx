@@ -7,7 +7,8 @@ const API_URL = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefine
 
 function getWsUrl() {
   const base = API_URL.replace(/^http/, 'ws');
-  return `${base}/ws/agent`;
+  const token = sessionStorage.getItem('paradigm_jwt');
+  return `${base}/ws/agent${token ? `?token=${token}` : ''}`;
 }
 
 export class AgentWebSocket {
@@ -54,7 +55,9 @@ export class AgentWebSocket {
           const p = this.pending.shift();
           if (p) p.resolve(data);
         }
-      } catch {}
+      } catch {
+        // Ignore parse errors
+      }
     };
 
     this.ws.onclose = () => {

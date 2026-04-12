@@ -80,8 +80,8 @@ export function securityHeaders() {
     // Prevent MIME type sniffing
     res.setHeader('X-Content-Type-Options', 'nosniff');
 
-    // Prevent clickjacking
-    res.setHeader('X-Frame-Options', 'DENY');
+    // Prevent clickjacking - Removed to allow AI Studio iframe embedding
+    // res.setHeader('X-Frame-Options', 'DENY');
 
     // XSS protection (legacy browsers)
     res.setHeader('X-XSS-Protection', '0');
@@ -94,14 +94,13 @@ export function securityHeaders() {
 
     // Content security policy
     res.setHeader('Content-Security-Policy',
-      "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-      "style-src 'self' 'unsafe-inline'; " +
-      "img-src 'self' data: blob:; " +
-      "font-src 'self' data:; " +
-      "connect-src 'self' ws://localhost:* wss://localhost:*; " +
-      "worker-src 'self' blob:; " +
-      "frame-ancestors 'none';"
+      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: ws: wss: https: http:; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:; " +
+      "style-src 'self' 'unsafe-inline' https: http:; " +
+      "img-src 'self' data: blob: https: http:; " +
+      "font-src 'self' data: https: http:; " +
+      "connect-src 'self' ws: wss: https: http:; " +
+      "worker-src 'self' blob:;"
     );
 
     // Remove powered-by header
@@ -112,9 +111,9 @@ export function securityHeaders() {
       'camera=(), microphone=(), geolocation=(), payment=()'
     );
 
-    // Cross-origin policies
-    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-    res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    // Cross-origin policies - Removed to allow iframe embedding
+    // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    // res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
 
     next();
   };

@@ -165,36 +165,7 @@
 }
 
 /* ─── Responsive ───────────────────────────────────────────────────── */
-
-/* Tablet: stack sidebars below center */
-@media (max-width: 1280px) {
-  .studio-grid {
-    grid-template-columns: 240px 1fr 280px;
-  }
-}
-
 @media (max-width: 1024px) {
-  .studio-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: 48px auto 1fr auto 32px;
-  }
-  .studio-sidebar-left {
-    max-height: 200px;
-    overflow-y: auto;
-    border-bottom: 1px solid #262626;
-  }
-  .studio-sidebar-right {
-    max-height: 260px;
-    overflow-y: auto;
-    border-top: 1px solid #262626;
-  }
-  .studio-center {
-    min-height: 300px;
-  }
-}
-
-/* Mobile: hide sidebars entirely, use full width for center */
-@media (max-width: 640px) {
   .studio-grid {
     grid-template-columns: 1fr;
     grid-template-rows: 48px 1fr 32px;
@@ -202,14 +173,5 @@
   .studio-sidebar-left,
   .studio-sidebar-right {
     display: none;
-  }
-  .studio-topbar {
-    padding: 0 8px;
-    gap: 6px;
-  }
-  .studio-statusbar {
-    padding: 0 8px;
-    gap: 8px;
-    font-size: 9px;
   }
 }

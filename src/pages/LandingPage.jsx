@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Dna, Layers, Shield, GitBranch, Sparkles, Zap, ArrowRight, Hexagon, Atom, Binary } from 'lucide-react';
-import { useAuthStore } from '@/stores/authStore';
 import { getStats } from '@/services/api';
 
 const LAYERS = [
@@ -27,22 +26,19 @@ const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } };
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const [stats, setStats] = useState(null);
-
-  const goToStudio = () => navigate(isAuthenticated ? '/studio' : '/auth');
 
   useEffect(() => {
     getStats().then(setStats).catch(() => {});
   }, []);
 
   return (
-    <div id="main-content" className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
       {/* ─── Nav ─────────────────────────────────────────────── */}
-      <nav className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5" data-testid="landing-nav" aria-label="Main navigation">
+      <nav className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5" data-testid="landing-nav">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Dna className="w-5 h-5 text-orange-500" aria-hidden="true" />
+            <Dna className="w-5 h-5 text-orange-500" />
             <span className="font-heading font-black text-lg tracking-tight">PARADIGM</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-neutral-400">
@@ -50,7 +46,7 @@ export default function LandingPage() {
             <a href="#inventions" className="hover:text-white transition-colors">Inventions</a>
             <button
               data-testid="nav-enter-studio"
-              onClick={goToStudio}
+              onClick={() => navigate('/studio')}
               className="px-4 py-1.5 bg-orange-500 text-black font-semibold text-xs uppercase tracking-wider hover:bg-orange-400 transition-colors"
             >
               Enter Studio
@@ -60,7 +56,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ─── Hero ────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section" aria-label="Hero">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-[#030303]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(249,115,22,0.3) 1px, transparent 0)',
@@ -88,7 +84,7 @@ export default function LandingPage() {
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
               data-testid="hero-enter-studio"
-              onClick={goToStudio}
+              onClick={() => navigate('/studio')}
               className="px-8 py-3 bg-orange-500 text-black font-bold text-sm uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center gap-2 justify-center"
             >
               Enter the Studio <ArrowRight className="w-4 h-4" />
@@ -104,10 +100,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Stats Bar ───────────────────────────────────────── */}
-      <section className="border-y border-neutral-800 bg-[#0a0a0a]" aria-label="Platform statistics">
+      <section className="border-y border-neutral-800 bg-[#0a0a0a]">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-neutral-800">
           {[
-            { label: 'Domains', value: '27' },
+            { label: 'Domains', value: '26' },
             { label: 'Gene Types', value: '17' },
             { label: 'Inventions', value: '1,064' },
             { label: 'Seeds Created', value: stats?.total_seeds || '0' },
@@ -186,7 +182,7 @@ export default function LandingPage() {
               <p className="font-mono text-xs text-neutral-600 text-center mb-3">231 briefs. 1,064 inventions. One substrate.</p>
               <button
                 data-testid="inventions-enter-studio"
-                onClick={goToStudio}
+                onClick={() => navigate('/studio')}
                 className="px-6 py-2 bg-orange-500 text-black font-bold text-xs uppercase tracking-wider hover:bg-orange-400 transition-all"
               >
                 Start Creating
@@ -197,12 +193,12 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Footer ──────────────────────────────────────────── */}
-      <footer className="border-t border-neutral-800 py-12 px-6" role="contentinfo">
+      <footer className="border-t border-neutral-800 py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Dna className="w-4 h-4 text-orange-500" />
             <span className="font-heading font-bold text-sm">PARADIGM</span>
-            <span className="font-mono text-[10px] text-neutral-600 ml-2">v2.0.0</span>
+            <span className="font-mono text-[10px] text-neutral-600 ml-2">v1.0.0</span>
           </div>
           <p className="font-mono text-[10px] text-neutral-600 tracking-wider">
             GSPL OPEN SPECIFICATION LICENSE / GENETICALLY ORGANIZED EVOLUTION

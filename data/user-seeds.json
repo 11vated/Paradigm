@@ -32,7 +32,10 @@
     "$sovereignty": {
       "signature": "ZRmO7C5voXqjAdcS+nTr8UDpxy2nu1+WtAHDmW1cq8WeWm31eTxHqOKYZAWZySuJT38nHAm9coPCkI+4ptlEAQ==",
       "signed_at": "2026-04-11T17:02:47.364Z"
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.757Z",
+    "$updatedAt": "2026-04-12T18:08:47.757Z"
   },
   {
     "id": "seed-1775922706059-rxolpuovj",
@@ -63,7 +66,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 6,\n            persistence = 0.55,\n            lacunarity = 2.1,\n            frequency = 1.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-hjyy37vu1",
@@ -94,7 +100,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.WorleyParams {\n            distance_metric = \"euclidean\",\n            f_index = 1,\n            jitter = 1.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-h3gpe7023",
@@ -125,7 +134,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.WFCParams {\n            adjacency_mode = \"overlapping_nxn\",\n            n = 3,\n            backtracking = true,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-spxeh8wh7",
@@ -156,7 +168,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-166v0pfnt",
@@ -187,7 +202,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-zz01zjac1",
@@ -218,7 +236,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.DiamondSquareParams {\n            roughness = 0.62,\n            power_of_two_plus_one = 513,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-vglnl4z7z",
@@ -249,7 +270,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.MarchingCubesParams {\n            isolevel = 0.0,\n            interpolate_edges = true,\n            smooth_normals = true,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-vw2gikx7h",
@@ -280,7 +304,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.DelaunayParams {\n            method = \"bowyer_watson\",\n            incremental = true,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706059-8njtsx5i1",
@@ -311,7 +338,10 @@
         "type": "categorical",
         "value": "Std.Algorithm.Parameters.GrayScottParams {\n            feed_rate = 0.055,\n            kill_rate = 0.062,\n            diffusion_u = 0.16,\n            diffusion_v = 0.08,\n            timesteps = 4000,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706060-m39milp23",
@@ -366,7 +396,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 75.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.12, h = 80.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 40.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706060-p386352uj",
@@ -417,7 +450,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.04, h = 60.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 65.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 70.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706060-a9vo56ad6",
@@ -476,7 +512,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 90.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 85.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 25.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706060-mt4cbpaxj",
@@ -531,7 +570,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.38, c = 0.12, h = 25.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706061-hkbelduc6",
@@ -586,7 +628,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 240.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706061-vgxffnf71",
@@ -637,7 +682,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 50.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 70.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706061-h61fdj1n9",
@@ -688,7 +736,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 50.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 60.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706062-lp6uqk8a7",
@@ -739,7 +790,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 260.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 270.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 280.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706062-9vlmx71vo",
@@ -794,7 +848,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 90.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 85.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706062-3gi95djvl",
@@ -845,7 +902,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.06, h = 50.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706063-chi8ntkqn",
@@ -904,7 +964,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 220.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 35.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706063-l4whee57e",
@@ -951,7 +1014,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 220.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 140.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 50.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706064-04spz2tua",
@@ -1002,7 +1068,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 60.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 50.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706064-qlbw6voxn",
@@ -1053,7 +1122,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 50.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706064-2j8qb4rcg",
@@ -1108,7 +1180,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 135.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 85.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 100.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706064-8fl0h1bqj",
@@ -1159,7 +1234,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 220.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 140.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706065-tdz59o139",
@@ -1214,7 +1292,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.02, h = 220.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.04, h = 200.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 180.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706065-7tflr23bm",
@@ -1237,7 +1318,10 @@
         "type": "categorical",
         "value": "Std.Camera.Projection.Perspective {\n            fov_deg = 90.0,\n            aspect = 16.0 / 9.0,\n            near_m = 0.05,\n            far_m = 4000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706065-5lk267kfh",
@@ -1260,7 +1344,10 @@
         "type": "categorical",
         "value": "Std.Camera.Projection.Orthographic {\n            width_m = 32.0,\n            height_m = 18.0,\n            near_m = -100.0,\n            far_m = 100.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706065-7g3vxgw8f",
@@ -1315,7 +1402,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 85.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706066-bjngmco3c",
@@ -1366,7 +1456,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.38, c = 0.06, h = 40.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 45.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 50.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706066-v5gjm5zlb",
@@ -1417,7 +1510,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 135.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 120.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706066-ozxeaqz2b",
@@ -1468,7 +1564,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 280.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.08, h = 265.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.02, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706066-btqiyek2t",
@@ -1519,7 +1618,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 30.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.12, h = 70.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.04, h = 95.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706067-e1xf18sh4",
@@ -1570,7 +1672,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.04, h = 60.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 35.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.10, h = 50.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706067-gx3p069f9",
@@ -1621,7 +1726,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.10, h = 160.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.06, h = 170.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 180.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706067-5znbuv09q",
@@ -1672,7 +1780,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 150.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 140.0 },\n            Std.Color.OKLCh { l = 0.18, c = 0.18, h = 25.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706067-1zld4f4zm",
@@ -1731,7 +1842,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.18, c = 0.04, h = 260.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 250.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 15.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706068-f1p9he5cy",
@@ -1782,7 +1896,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.48, c = 0.14, h = 210.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 200.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.06, h = 190.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706068-vzz2ktvxx",
@@ -1833,7 +1950,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.98, c = 0.12, h = 90.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 55.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.18, h = 25.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706069-jkaqp1nv1",
@@ -1876,7 +1996,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.04, h = 80.0 },\n            Std.Color.OKLCh { l = 0.58, c = 0.05, h = 85.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.03, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706069-jcn42s4cw",
@@ -1919,7 +2042,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.58, c = 0.20, h = 35.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.16, h = 45.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706069-uc5wtayql",
@@ -1962,7 +2088,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 80.0 },\n            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 70.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.08, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706069-uosdsxrjl",
@@ -2009,7 +2138,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.58, c = 0.22, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.06, h = 80.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706069-4n1o7muuo",
@@ -2056,7 +2188,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 90.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 80.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706070-r8mm9b7ne",
@@ -2107,7 +2242,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 20.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 340.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.08, h = 300.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706070-nb2zrk591",
@@ -2154,7 +2292,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 40.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 80.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706070-lpw9pvrmp",
@@ -2197,7 +2338,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 50.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 55.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.06, h = 60.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706070-vyyz6hivb",
@@ -2240,7 +2384,10 @@
         "type": "categorical",
         "value": "Std.Creature.BreathWeapon.Flame {\n            reach_m = 9.0,\n            peak_temperature_K = 1950.0,\n            duration_ms = 1200.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706070-aogferyv8",
@@ -2287,7 +2434,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 160.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 170.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.08, h = 180.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706072-qay4so28m",
@@ -2327,7 +2477,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.18, c = 0.06, h = 40.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.14, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706072-rg1xi8hnm",
@@ -2364,7 +2517,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.06, h = 260.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 30.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.18, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706073-0idu63ntn",
@@ -2400,7 +2556,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.06, h = 140.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.04, h = 90.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706073-zk3u7r4hi",
@@ -2434,7 +2593,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 240.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 150.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 280.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706073-a5hjsbhnj",
@@ -2469,7 +2631,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 220.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.06, h = 215.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706073-rqmvmf0n1",
@@ -2505,7 +2670,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.08, h = 300.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 320.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 200.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706074-8whsm4vi0",
@@ -2542,7 +2710,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 50.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 140.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.14, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706074-27k7aeauh",
@@ -2578,7 +2749,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 60.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 85.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 100.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706074-2izgtkl1c",
@@ -2613,7 +2787,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 240.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 220.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 200.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706075-168icsktt",
@@ -2650,7 +2827,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706075-fx0ykevn1",
@@ -2693,7 +2873,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.03, h = 215.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706076-3sk8np035",
@@ -2744,7 +2927,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.38, c = 0.08, h = 200.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 210.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 220.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706076-z7504k8kl",
@@ -2787,7 +2973,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 105.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 110.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 115.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706076-sn4xh4nzz",
@@ -2834,7 +3023,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 28.0 },\n            Std.Color.OKLCh { l = 0.60, c = 0.18, h = 30.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706076-zcj3nhn7k",
@@ -2881,7 +3073,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.98, c = 0.10, h = 85.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 55.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.16, h = 30.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706076-vprqx7gdq",
@@ -2928,7 +3123,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 250.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 240.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.00, h = 230.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706077-6yjkgl4v4",
@@ -2971,7 +3169,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 75.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 80.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.16, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706077-mgo94fqty",
@@ -3018,7 +3219,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.01, h = 85.0 },\n            Std.Color.OKLCh { l = 0.99, c = 0.00, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706077-b38ok26sf",
@@ -3065,7 +3269,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 18.0 },\n            Std.Color.OKLCh { l = 0.38, c = 0.22, h = 22.0 },\n            Std.Color.OKLCh { l = 0.55, c = 0.18, h = 26.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706077-qmf7u6c26",
@@ -3116,7 +3323,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.85, c = 0.02, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 215.0 },\n            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706078-t5vt3bifd",
@@ -3155,7 +3365,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 50.0 },\n            Std.Color.OKLCh { l = 0.68, c = 0.16, h = 70.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706078-lldppcck9",
@@ -3194,7 +3407,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 22.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.20, h = 30.0 },\n            Std.Color.OKLCh { l = 0.94, c = 0.10, h = 95.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706078-sexgkflmv",
@@ -3241,7 +3457,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.20, h = 30.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 45.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706078-ui7ezk88w",
@@ -3272,7 +3491,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 135.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.16, h = 130.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 125.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706079-v1z3c48xw",
@@ -3307,7 +3529,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 60.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 65.0 },\n            Std.Color.OKLCh { l = 0.68, c = 0.08, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706079-5lil6ul2i",
@@ -3346,7 +3571,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 75.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 80.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.14, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706079-20xbe04uj",
@@ -3385,7 +3613,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 85.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.16, h = 90.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 50.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706079-jwwh1lhkd",
@@ -3424,7 +3655,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 70.0 },\n            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 60.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706079-sa0fprmwh",
@@ -3459,7 +3693,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.01, h = 85.0 },\n            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706080-vqimdn47v",
@@ -3502,7 +3739,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 18.0 },\n            Std.Color.OKLCh { l = 0.48, c = 0.22, h = 22.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706080-8f5wcwekl",
@@ -3533,7 +3773,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"y\",\n            forward_axis = \"neg_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706080-1qz47xnqj",
@@ -3564,7 +3807,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"left\",\n            up_axis = \"y\",\n            forward_axis = \"pos_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706080-moe4v1blc",
@@ -3595,7 +3841,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"left\",\n            up_axis = \"z\",\n            forward_axis = \"pos_x\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706080-sydvk5v1c",
@@ -3626,7 +3875,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"y\",\n            forward_axis = \"neg_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706081-4vcmry5wd",
@@ -3657,7 +3909,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"neg_y\",\n            forward_axis = \"pos_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706081-1fpzs6kt0",
@@ -3688,7 +3943,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"y\",\n            forward_axis = \"neg_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706081-e87q6giq6",
@@ -3719,7 +3977,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"neg_y\",\n            forward_axis = \"pos_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.758Z",
+    "$updatedAt": "2026-04-12T18:08:47.758Z"
   },
   {
     "id": "seed-1775922706081-k2zml9tav",
@@ -3750,7 +4011,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"neg_y\",\n            forward_axis = \"none\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706081-97etkf07g",
@@ -3781,7 +4045,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"z\",\n            forward_axis = \"neg_y\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706081-1lp0hkagz",
@@ -3812,7 +4079,10 @@
         "type": "categorical",
         "value": "Std.Framework.Coordinate {\n            handedness = \"right\",\n            up_axis = \"y\",\n            forward_axis = \"neg_z\","
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706081-r4xqbp9m1",
@@ -3851,7 +4121,10 @@
         "type": "categorical",
         "value": "Std.FX.Plume {\n            radius_m = 18.0,\n            rise_rate_m_s = 22.0,\n            entrainment = 0.28,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-aw6krpweo",
@@ -3878,7 +4151,10 @@
         "type": "categorical",
         "value": "Std.FX.Particle {\n            species = \"soot\",\n            mean_radius_um = 0.08,\n            density_kg_m3 = 1800.0,\n            number_density_cm3 = 1.2e6,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-itzj8me10",
@@ -3921,7 +4197,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 210.0 },\n            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 200.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-7w3knweea",
@@ -3944,7 +4223,10 @@
         "type": "categorical",
         "value": "Std.FX.Particle {\n            species = \"Fe_oxide_ember\",\n            mean_radius_um = 80.0,\n            density_kg_m3 = 5200.0,\n            initial_temperature_K = 2400.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-3gc49x9ud",
@@ -3987,7 +4269,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 260.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.16, h = 280.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.10, h = 300.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-i1k6lul4t",
@@ -4034,7 +4319,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.98, c = 0.02, h = 240.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.08, h = 260.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 280.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-jj0t1iefy",
@@ -4057,7 +4345,10 @@
         "type": "categorical",
         "value": "Std.FX.Particle {\n            species = \"soil_silicate\",\n            mean_radius_um = 6.0,\n            density_kg_m3 = 1500.0,\n            number_density_cm3 = 1.8e4,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-wiku95ar5",
@@ -4108,7 +4399,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.28, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 28.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 32.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-zth6s41uf",
@@ -4151,7 +4445,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 150.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.18, h = 170.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.12, h = 190.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706082-ywzok0nw1",
@@ -4194,7 +4491,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.55, c = 0.18, h = 220.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.16, h = 240.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.08, h = 260.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-xwfg4ny2b",
@@ -4213,7 +4513,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Directional {\n            azimuth_deg   = 265.0,\n            elevation_deg = 6.5,\n            blackbody_K   = 3200.0,                    // Rayleigh-shifted from 5778 K\n            lux           = 45_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-koebttge4",
@@ -4232,7 +4535,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Hemispheric {\n            up_color    = Std.Color.OKLCh { l = 0.92, c = 0.02, h = 240.0 },\n            down_color  = Std.Color.OKLCh { l = 0.68, c = 0.03, h = 80.0 },\n            lux         = 18_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-ddkvl4lne",
@@ -4251,7 +4557,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Directional {\n            azimuth_deg   = 90.0,\n            elevation_deg = 52.0,\n            blackbody_K   = 4100.0,                    // lunar albedo tint\n            lux           = 0.27,                      // real full moon illuminance"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-58yqebc0b",
@@ -4270,7 +4579,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Ambient {\n            color = Std.Color.OKLCh { l = 0.06, c = 0.03, h = 260.0 },\n            lux   = 0.002,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-ehevsc2zi",
@@ -4289,7 +4601,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Point {\n            position    = Vector.from([0.0, 2.4, 0.0]),\n            blackbody_K = 2700.0,\n            lumens      = 800.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-bf8fq6sai",
@@ -4308,7 +4623,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.LineEmission {\n            position  = Vector.from([0.0, 4.5, 0.0]),\n            lines_nm  = sodium.emission_lines_nm,\n            peak_cd   = 15_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-wfwo4kv1p",
@@ -4327,7 +4645,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.PointFlicker {\n            position    = Vector.from([0.0, 0.12, 0.0]),\n            blackbody_K = profile.blackbody_K * 0.72,\n            flicker_hz  = profile.flicker_hz,\n            amplitude   = profile.flicker_amplitude,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-vu2wixdqm",
@@ -4346,7 +4667,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.PointFlicker {\n            position    = Vector.from([0.0, 0.4, 0.0]),\n            blackbody_K = profile.blackbody_K * 0.78,\n            flicker_hz  = 9.0,\n            amplitude   = 0.22,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-m9b10guo4",
@@ -4365,7 +4689,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.LineEmission {\n            position  = Vector.from([0.0, 3.0, 0.0]),\n            lines_nm  = Vector.from([640.2, 614.3, 594.5]),\n            peak_cd   = 2_200.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-dvbkw9wxh",
@@ -4384,7 +4711,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.AreaEmission {\n            bounds       = Std.Light.Bounds.PlaneRect { size_m = Vector.from([20.0, 20.0]) },\n            emission_nm  = 480.0,\n            quantum_yield = 0.30,\n            luminance_cd_m2 = 0.08,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-cl53wdwer",
@@ -4403,7 +4733,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Hemispheric {\n            up_color   = Std.Color.OKLCh { l = 0.42, c = 0.10, h = 270.0 },\n            down_color = Std.Color.OKLCh { l = 0.58, c = 0.18, h = 30.0  },\n            lux        = 380.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-dnjtl0tqq",
@@ -4422,7 +4755,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Hemispheric {\n            up_color   = Std.Color.OKLCh { l = 0.18, c = 0.08, h = 260.0 },\n            down_color = Std.Color.OKLCh { l = 0.30, c = 0.10, h = 250.0 },\n            lux        = 8.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-9cdisaeir",
@@ -4441,7 +4777,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Directional {\n            azimuth_deg = 90.0, elevation_deg = 0.5,\n            blackbody_K = 2200.0, lux = 12_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-0gpt9e2iq",
@@ -4460,7 +4799,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Hemispheric {\n            up_color = Std.Color.OKLCh { l = 0.32, c = 0.02, h = 250.0 },\n            down_color = Std.Color.OKLCh { l = 0.42, c = 0.02, h = 240.0 },\n            lux = 4_500.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-t7npr119x",
@@ -4479,7 +4821,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.PointPulse {\n            position = Vector.from([0.0, 250.0, 0.0]),\n            blackbody_K = 28_000.0,\n            duration_ms = 30.0,\n            peak_lumens = 5.0e9,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-3oew4cdyr",
@@ -4498,7 +4843,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.AbsorbingVolume {\n            base_color = Std.Color.OKLCh { l = 0.62, c = 0.10, h = 200.0 },\n            depth_m    = 5.0,\n            absorption_coeffs_nm = [\n                { nm = 450.0, k = 0.015 },\n                { nm = 550.0, k = 0.064 },\n                { nm = 650.0, k = 0.340 },\n            ],"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-ai5ch3apq",
@@ -4517,7 +4865,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.AbsorbingVolume {\n            base_color = Std.Color.OKLCh { l = 0.30, c = 0.08, h = 220.0 },\n            depth_m    = 50.0,\n            absorption_coeffs_nm = [\n                { nm = 450.0, k = 0.015 },\n                { nm = 550.0, k = 0.064 },\n                { nm = 650.0, k = 0.340 },\n            ],"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706083-ffb75tme5",
@@ -4536,7 +4887,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.VolumetricScatter {\n            scatter_profile = Std.Light.Scatter.Mie { asymmetry = 0.85 },\n            extinction_per_m = 0.012,\n            ambient_color = Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },\n            lux = 6_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-u5dxbutua",
@@ -4555,7 +4909,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.Hemispheric {\n            up_color = Std.Color.OKLCh { l = 0.95, c = 0.02, h = 220.0 },\n            down_color = Std.Color.OKLCh { l = 0.97, c = 0.01, h = 220.0 },\n            lux = 25_000.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-2sgjz5b1w",
@@ -4574,7 +4931,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.LineEmission {\n            position = Vector.from([0.0, 100_000.0, 0.0]),\n            lines_nm = Vector.from([557.7, 630.0, 427.8, 391.4]),\n            peak_cd  = 12.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-a4riwb318",
@@ -4593,7 +4953,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.PointFlicker {\n            position = Vector.from([0.0, 1.0, 0.0]),\n            blackbody_K = 5400.0,\n            flicker_hz  = 8.0,\n            amplitude   = 0.05,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-us6dr6nlo",
@@ -4612,7 +4975,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.PointFlicker {\n            position = Vector.from([0.0, 0.6, 0.0]),\n            blackbody_K = 6000.0,\n            flicker_hz = 60.0,\n            amplitude  = 0.30,\n            uv_fraction = 0.18,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-npvez45vn",
@@ -4631,7 +4997,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.MaskedDirectional {\n            azimuth_deg = 180.0, elevation_deg = 65.0,\n            blackbody_K = 5500.0, lux = 22_000.0,\n            mask_kind = \"perlin_canopy\", mask_scale_m = 1.4, mask_density = 0.65,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-34y1dgfg7",
@@ -4650,7 +5019,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.FilteredDirectional {\n            azimuth_deg = 120.0, elevation_deg = 55.0,\n            blackbody_K = 5500.0, lux = 18_000.0,\n            transmission_spectrum_nm = [\n                { nm = 450.0, t = 0.92 },\n                { nm = 550.0, t = 0.10 },\n                { nm = 620.0, t = 0.78 },\n            ],"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-ornyk2gao",
@@ -4669,7 +5041,10 @@
         "type": "categorical",
         "value": "Std.Light.Source.AreaEmission {\n            bounds = Std.Light.Bounds.PlaneRect { size_m = Vector.from([0.32, 0.24]) },\n            phosphor_set = \"P22-RGB\",\n            phosphor_lines_nm = Vector.from([612.0, 543.0, 462.0]),\n            luminance_cd_m2 = 220.0,\n            scanline_hz = 60.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-geizogv6i",
@@ -4712,7 +5087,10 @@
         "type": "scalar",
         "value": 740
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-le6vvs59c",
@@ -4759,7 +5137,10 @@
         "type": "scalar",
         "value": 0.42
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706084-z2picqz8y",
@@ -4798,7 +5179,10 @@
         "type": "scalar",
         "value": 0.72
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706085-mcfcgae05",
@@ -4843,7 +5227,10 @@
         "type": "scalar",
         "value": 2750
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706085-47jleu8yj",
@@ -4886,7 +5273,10 @@
         "type": "scalar",
         "value": 2711
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706085-8m6fy249t",
@@ -4933,7 +5323,10 @@
         "type": "scalar",
         "value": 0.35
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706085-i9xcmvzsx",
@@ -4976,7 +5369,10 @@
         "type": "scalar",
         "value": 0.4
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706086-q4j2eih0q",
@@ -5023,7 +5419,10 @@
         "type": "scalar",
         "value": 0.92
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706086-860brh02c",
@@ -5062,7 +5461,10 @@
         "type": "scalar",
         "value": 0.72
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706086-kqltqy6vx",
@@ -5109,7 +5511,10 @@
         "type": "categorical",
         "value": "pigment.lightfastness"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706086-113pdc639",
@@ -5156,7 +5561,10 @@
         "type": "scalar",
         "value": 0.78
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706086-83gerjg1f",
@@ -5207,7 +5615,10 @@
         "type": "scalar",
         "value": 2.78
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706087-uekgxxfol",
@@ -5262,7 +5673,10 @@
         "type": "scalar",
         "value": 3.19
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706087-da5avd8lx",
@@ -5301,7 +5715,10 @@
         "type": "scalar",
         "value": 0.92
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706087-3co8az9jc",
@@ -5340,7 +5757,10 @@
         "type": "scalar",
         "value": 0.88
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706087-angfplg7p",
@@ -5383,7 +5803,10 @@
         "type": "scalar",
         "value": 0.04
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706087-hwxtjxmh4",
@@ -5422,7 +5845,10 @@
         "type": "scalar",
         "value": 0.7
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706088-1dwcl39vv",
@@ -5465,7 +5891,10 @@
         "type": "scalar",
         "value": 4.5
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706088-6kqsxb98w",
@@ -5508,7 +5937,10 @@
         "type": "scalar",
         "value": 0.85
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706088-4qiuv4pv2",
@@ -5559,7 +5991,10 @@
         "type": "scalar",
         "value": 0.85
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706088-77viwxilc",
@@ -5606,7 +6041,10 @@
         "type": "scalar",
         "value": 35
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706088-ylsz096wo",
@@ -5649,7 +6087,10 @@
         "type": "scalar",
         "value": 18
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706089-q4f64yrxp",
@@ -5692,7 +6133,10 @@
         "type": "scalar",
         "value": 0.84
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706089-5oqjy9hpv",
@@ -5735,7 +6179,10 @@
         "type": "categorical",
         "value": "Std.Color.OKLCh { l = 0.42, c = 0.16, h = 25.0 }"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706089-u580cubyw",
@@ -5782,7 +6229,10 @@
         "type": "scalar",
         "value": 0.45
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706089-ssone32ty",
@@ -5813,7 +6263,10 @@
         "type": "categorical",
         "value": "Std.Resonance.HarmonicStack {\n            partials = [\n                (1.0, 1.000),\n                (2.0, 0.620),\n                (3.0, 0.410),\n                (4.0, 0.250),\n                (5.0, 0.150),\n                (6.0, 0.080),\n            ],\n            inharmonicity_coef = 4.0e-4,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706090-hro5axi0m",
@@ -5844,7 +6297,10 @@
         "type": "categorical",
         "value": "Std.Resonance.HarmonicStack {\n            partials = [\n                (1.0, 1.00),\n                (2.0, 0.85),\n                (3.0, 0.72),\n                (4.0, 0.55),\n                (5.0, 0.42),\n                (6.0, 0.31),\n                (7.0, 0.22),\n                (8.0, 0.16),\n            ],\n            inharmonicity_coef = 1.0e-5,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706090-7awrsytj1",
@@ -5875,7 +6331,10 @@
         "type": "categorical",
         "value": "Std.Resonance.HarmonicStack {\n            partials = [\n                (1.000, 1.00),\n                (2.756, 0.62),\n                (5.423, 0.38),\n                (8.933, 0.22),\n                (13.345, 0.12),\n            ],\n            inharmonicity_coef = 0.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706090-kksp0oo3o",
@@ -5906,7 +6365,10 @@
         "type": "categorical",
         "value": "Std.Resonance.HarmonicStack {\n            partials = [\n                (1.000, 1.00),\n                (1.504, 0.72),\n                (1.742, 0.54),\n                (2.000, 0.38),\n                (2.494, 0.22),\n                (2.800, 0.14),\n            ],\n            inharmonicity_coef = 0.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706090-vkc72itkw",
@@ -5949,7 +6411,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 50.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.08, h = 60.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.04, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706090-nb2insfgx",
@@ -5980,7 +6445,10 @@
         "type": "categorical",
         "value": "Std.Music.Filter.LowPass {\n            initial_cutoff_hz = 4800.0,\n            final_cutoff_hz = 120.0,\n            sweep_ms = 1400.0,\n            resonance_q = 3.4,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706091-6lmgmijts",
@@ -6024,7 +6492,10 @@
         "type": "categorical",
         "value": "Std.Music.Envelope.ADSR {\n            attack_ms = 3.0,\n            decay_ms = 800.0,\n            sustain_level = 0.12,\n            release_ms = 1200.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706091-bml6ms5yi",
@@ -6067,7 +6538,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 240.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 250.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.12, h = 260.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706091-2afgrvamr",
@@ -6118,7 +6592,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 220.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.06, h = 215.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706092-3p8bf0ad6",
@@ -6149,7 +6626,10 @@
         "type": "categorical",
         "value": "Std.Resonance.HarmonicStack {\n            partials = [\n                (1.0, 0.55),\n                (2.0, 0.92),\n                (3.0, 1.00),\n                (4.0, 0.78),\n                (5.0, 0.48),\n                (6.0, 0.28),\n            ],\n            inharmonicity_coef = 0.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706092-5nauzy5mj",
@@ -6188,7 +6668,10 @@
         "type": "categorical",
         "value": "Std.Topology.LSystem {\n            axiom = \"F\",\n            rules = [(\"F\", \"F[+F]F[-F]F\")],\n            iterations = 4,\n            angle_deg = 22.5,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706092-s5gjzy7af",
@@ -6227,7 +6710,10 @@
         "type": "categorical",
         "value": "Std.Topology.LSystem {\n            axiom = \"F\",\n            rules = [(\"F\", \"F[++F][--F]F[+F][-F]F\")],\n            iterations = 5,\n            angle_deg = 18.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706092-wpmqs8o5v",
@@ -6278,7 +6764,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 15.0 },\n            Std.Color.OKLCh { l = 0.80, c = 0.18, h = 18.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.12, h = 22.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706093-sj1x987fm",
@@ -6321,7 +6810,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 135.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.16, h = 130.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 125.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706093-n294icxcw",
@@ -6360,7 +6852,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 100.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 105.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.12, h = 110.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706093-dqlgrzlz7",
@@ -6411,7 +6906,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 130.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.10, h = 125.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 120.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706093-aaatseik0",
@@ -6450,7 +6948,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 30.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 35.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706093-qdklqc9s8",
@@ -6493,7 +6994,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 85.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 80.0 },\n            Std.Color.OKLCh { l = 0.94, c = 0.10, h = 75.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706094-en9u1u1ao",
@@ -6532,7 +7036,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 140.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 135.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 130.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706094-wlwtkwxoy",
@@ -6571,7 +7078,10 @@
         "type": "categorical",
         "value": "Std.Math.PhyllotaxisSpiral {\n            divergence_rad = 2.39996323,\n            scale_mm = 3.2,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706095-yrabqhtqf",
@@ -6625,7 +7135,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },\n            Std.Color.OKLCh { l = 0.58, c = 0.20, h = 45.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.14, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706095-n9admohhg",
@@ -6676,7 +7189,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.18, c = 0.08, h = 210.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 200.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 190.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706095-j4on8nhff",
@@ -6729,7 +7245,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 140.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 90.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 70.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706096-0wvnw7flc",
@@ -6782,7 +7301,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 75.0 },\n            Std.Color.OKLCh { l = 0.86, c = 0.10, h = 80.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.06, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706096-0mhsl6ine",
@@ -6835,7 +7357,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.04, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 215.0 },\n            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 210.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706097-id9ypgwlb",
@@ -6894,7 +7419,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.18, c = 0.04, h = 30.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 45.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.18, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706097-5l22tfxg3",
@@ -6943,7 +7471,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 40.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 80.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.12, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706097-owygx9d4z",
@@ -6993,7 +7524,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.18, c = 0.06, h = 280.0 },\n            Std.Color.OKLCh { l = 0.48, c = 0.22, h = 15.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.20, h = 200.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706098-phjaez5cm",
@@ -7054,7 +7588,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 60.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.16, h = 80.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 90.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706098-xugznzhua",
@@ -7104,7 +7641,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.08, h = 260.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 150.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 180.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706099-e6xwon0vv",
@@ -7127,7 +7667,10 @@
         "type": "categorical",
         "value": "Std.Style.Quantization.Indexed {\n            palette_size = 32,\n            dither = \"bayer_4x4\",\n            dither_strength = 0.35,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706099-co4mhwb8k",
@@ -7154,7 +7697,10 @@
         "type": "categorical",
         "value": "Std.Style.Stroke.Watercolor {\n            wet_edge_strength = 0.72,\n            pigment_granulation = 0.45,\n            bleed_radius_mm = 2.8,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706099-xj05h418h",
@@ -7201,7 +7747,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.08, c = 0.00, h = 0.0 },\n            Std.Color.OKLCh { l = 0.48, c = 0.00, h = 0.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.00, h = 0.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.759Z",
+    "$updatedAt": "2026-04-12T18:08:47.759Z"
   },
   {
     "id": "seed-1775922706099-gjfyj05i7",
@@ -7240,7 +7789,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 260.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 30.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-m5ihyc0hj",
@@ -7283,7 +7835,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 60.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-r01rpbarb",
@@ -7310,7 +7865,10 @@
         "type": "categorical",
         "value": "Std.Style.Stroke.Brush {\n            brush_radius_mm = 6.0,\n            pressure_variance = 0.68,\n            dry_brush_fraction = 0.18,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-wme3dxmq1",
@@ -7333,7 +7891,10 @@
         "type": "categorical",
         "value": "Std.Style.Quantization.Indexed {\n            palette_size = 16,\n            dither = \"none\",\n            dither_strength = 0.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-ddj55vdrl",
@@ -7360,7 +7921,10 @@
         "type": "categorical",
         "value": "Std.Style.Stroke.Impasto {\n            brush_radius_mm = 3.8,\n            thickness_mm = 1.2,\n            pigment_mixing = 0.35,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-v2xvjecj3",
@@ -7403,7 +7967,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.16, h = 140.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 60.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 220.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706100-oedhpqvfl",
@@ -7430,7 +7997,10 @@
         "type": "categorical",
         "value": "Std.Style.Stroke.Etching {\n            line_density_per_mm = 12.0,\n            cross_hatch_angle_deg = 45.0,\n            line_width_mm = 0.08,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706101-prx4iu8sj",
@@ -7481,7 +8051,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 50.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.10, h = 45.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 40.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706101-8pieaqxx9",
@@ -7540,7 +8113,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 30.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706102-kefc5icoi",
@@ -7591,7 +8167,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 60.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.14, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706102-03uirbogm",
@@ -7650,7 +8229,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.14, h = 20.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 40.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 85.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706102-dj2l5lw50",
@@ -7705,7 +8287,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 75.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 70.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 30.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706103-ih2mc0eni",
@@ -7764,7 +8349,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 240.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.02, h = 230.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 220.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706103-rdfh223de",
@@ -7815,7 +8403,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 220.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 230.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706103-hpgfmv8fe",
@@ -7854,7 +8445,10 @@
         "type": "categorical",
         "value": "Std.Vehicle.Powertrain.Rocket {\n            propellant = \"RP-1/LOX\",\n            thrust_kN = 710.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706103-82dzrvbr2",
@@ -7917,7 +8511,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 70.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 30.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706103-qbscenuud",
@@ -7964,7 +8561,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 150.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 60.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706104-iln5fvpyx",
@@ -8019,7 +8619,10 @@
         "type": "categorical",
         "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 230.0 },\n            Std.Color.OKLCh { l = 0.86, c = 0.06, h = 225.0 },\n            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 220.0 },\n        ])"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706104-vr6s7dkob",
@@ -8046,7 +8649,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.Rain {\n            substance = water,\n            rate_mm_hr = 6.5,\n            drop_diameter_mm = 1.8,\n            distribution = \"Marshall-Palmer\",\n            terminal_velocity_m_s = 6.2,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706104-n7rt80ttu",
@@ -8073,7 +8679,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.Rain {\n            substance = water,\n            rate_mm_hr = 42.0,\n            drop_diameter_mm = 2.6,\n            distribution = \"Marshall-Palmer\",\n            terminal_velocity_m_s = 7.4,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706104-2gblkir5q",
@@ -8100,7 +8709,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.Snow {\n            substance = water,\n            rate_mm_hr_water_eq = 0.8,\n            crystal_habit = \"dendrite\",\n            mean_diameter_mm = 3.2,\n            terminal_velocity_m_s = 1.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706104-x9udsiig1",
@@ -8147,7 +8759,10 @@
         "type": "categorical",
         "value": "Std.Weather.Scattering.Mie {\n            asymmetry_g = 0.85,\n            droplet_radius_um = 10.0,\n            number_density_cm3 = 120.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706105-pq1eocfn3",
@@ -8174,7 +8789,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.Hail {\n            substance = water,\n            stone_diameter_mm = 20.0,\n            density_kg_m3 = 870.0,\n            terminal_velocity_m_s = 19.5,\n            rate_stones_m2_s = 8.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706105-odwdudjx2",
@@ -8201,7 +8819,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.Rain {\n            substance = water,\n            rate_mm_hr = 60.0,\n            drop_diameter_mm = 2.2,\n            distribution = \"Marshall-Palmer\",\n            terminal_velocity_m_s = 7.0,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706105-smmcnev88",
@@ -8228,7 +8849,10 @@
         "type": "categorical",
         "value": "Std.Weather.Aerosol {\n            species = \"SiO2_dust\",\n            mean_radius_um = 4.0,\n            mass_loading_g_m3 = 2.8,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706105-1l1m9pvbs",
@@ -8255,7 +8879,10 @@
         "type": "categorical",
         "value": "Std.Field.ThermalGradient {\n            surface_temperature_K = 338.15,\n            air_temperature_K = 306.15,\n            gradient_K_per_m = 12.0,\n            index_gradient = -8.5e-6,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "seed-1775922706105-a985ey1lv",
@@ -8282,7 +8909,10 @@
         "type": "categorical",
         "value": "Std.Weather.Precipitation.FreezingRain {\n            substance = water,\n            rate_mm_hr = 3.5,\n            surface_temperature_K = 270.15,\n            drop_temperature_K = 274.65,\n            glaze_accumulation_mm_hr = 2.2,"
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "45f00e24-76bf-45ef-aa35-bc7f7ac68426",
@@ -8313,7 +8943,10 @@
           193
         ]
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "d87ba581-76e5-40ae-b1ba-e9c46d15ce9c",
@@ -8327,7 +8960,10 @@
     "$fitness": {
       "overall": 0.3419073007396036
     },
-    "genes": {}
+    "genes": {},
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "6a642553-528f-47db-a05a-e7b7cf39e4f2",
@@ -8341,7 +8977,10 @@
     "$fitness": {
       "overall": 0.7647419495912178
     },
-    "genes": {}
+    "genes": {},
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   },
   {
     "id": "3567361d-5ef3-4396-b4b6-31ce5ddc8bc4",
@@ -8360,6 +8999,9 @@
         "type": "scalar",
         "value": 0.5
       }
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-04-12T18:08:47.760Z",
+    "$updatedAt": "2026-04-12T18:08:47.760Z"
   }
 ]

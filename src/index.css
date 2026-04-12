@@ -87,37 +87,3 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   background: rgba(249, 115, 22, 0.3);
   color: #fff;
 }
-
-/* ─── WCAG 2.1 AA: Focus Visible ──────────────────────────────────── */
-/* Ensure all interactive elements have a visible focus indicator */
-:focus-visible {
-  outline: 2px solid hsl(25, 95%, 53%);
-  outline-offset: 2px;
-}
-
-/* Skip-to-content link for keyboard users */
-.skip-to-content {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  z-index: 9999;
-  padding: 8px 16px;
-  background: hsl(25, 95%, 53%);
-  color: #000;
-  font-weight: 700;
-  font-size: 14px;
-  text-decoration: none;
-}
-.skip-to-content:focus {
-  left: 8px;
-  top: 8px;
-}
-
-/* Ensure reduced motion preference is respected */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}

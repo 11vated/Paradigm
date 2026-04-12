@@ -18,39 +18,6 @@ const DOMAIN_COLORS_HEX = {
   plant: '#10B981', scene: '#14B8A6', style: '#F472B6', weather: '#2DD4BF'
 };
 
-/* ── WebGL Detection ───────────────────────────────────────────────────── */
-
-function detectWebGL() {
-  try {
-    const canvas = document.createElement('canvas');
-    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
-  } catch {
-    return false;
-  }
-}
-
-const WEBGL_AVAILABLE = typeof window !== 'undefined' ? detectWebGL() : false;
-
-function WebGLFallback({ artifact }) {
-  const color = artifact?.visual?.color || DOMAIN_COLORS_HEX[artifact?.domain] || '#F97316';
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center bg-[#030303] gap-4" data-testid="preview-webgl-fallback">
-      <div className="w-24 h-24 border border-neutral-800 rounded-lg flex items-center justify-center"
-        style={{ background: `${color}15`, boxShadow: `0 0 40px ${color}10` }}>
-        <Dna className="w-10 h-10" style={{ color }} />
-      </div>
-      <div className="text-center">
-        <div className="font-heading font-bold text-sm text-white">{artifact?.name || 'Seed Preview'}</div>
-        <div className="font-mono text-[9px] text-neutral-500">{artifact?.domain} / Gen {artifact?.generation || 0}</div>
-      </div>
-      <div className="px-3 py-1.5 bg-amber-500/10 border border-amber-500/30 rounded text-center">
-        <div className="font-mono text-[10px] text-amber-500">WebGL not available</div>
-        <div className="font-mono text-[8px] text-amber-500/60 mt-0.5">3D preview requires WebGL support. Showing 2D view.</div>
-      </div>
-    </div>
-  );
-}
-
 /* ── 3D Viewport using React Three Fiber ────────────────────────────────── */
 
 function EmergentMesh({ meshData, color }) {
@@ -316,7 +283,7 @@ export default function PreviewViewport({ artifact, loading }) {
 
           {view === '3d' ? (
             <div className="absolute inset-0" data-testid="viewport-3d-container">
-              {WEBGL_AVAILABLE ? <ThreeViewport artifact={artifact} /> : <WebGLFallback artifact={artifact} />}
+              <ThreeViewport artifact={artifact} />
               
               {/* Physics Summary Overlay */}
               {artifact.physics_summary && (

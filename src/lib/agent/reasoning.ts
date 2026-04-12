@@ -274,13 +274,20 @@ export function buildPlan(parsed: ParsedQuery, seeds: any[]): ReasoningPlan {
       break;
     }
 
+    case 'parse_gspl': {
+      plan.steps.push({
+        id: 0, operation: 'execute_gspl', dependsOn: [], status: 'pending',
+        params: { source: parsed.entities.gsplSource || parsed.raw },
+      });
+      break;
+    }
+
     case 'describe_domain':
     case 'describe_gene_type':
     case 'list_domains':
     case 'list_gene_types':
     case 'suggest_composition':
-    case 'help':
-    case 'parse_gspl': {
+    case 'help': {
       plan.steps.push({
         id: 0, operation: 'query_knowledge', dependsOn: [], status: 'pending',
         params: { query: parsed.raw },

@@ -16,6 +16,10 @@
 
 import { InferenceTier } from './types.js';
 import type { InferenceRequest, InferenceResponse, InferenceClient } from './types.js';
+import { GoogleGenAI } from '@google/genai';
+
+// Initialize Gemini API client for fallback
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ─── RESPONSE CACHE ─────────────────────────────────────────────────────────
 
@@ -89,8 +93,8 @@ export class LocalInferenceClient implements InferenceClient {
 
   constructor(serverUrl?: string, timeout: number = 30_000) {
     const envUrl = typeof process !== 'undefined'
-      ? (process.env?.LLAMA_SERVER_URL || process.env?.LLM_INFERENCE_URL || '')
-      : '';
+      ? (process.env?.LLAMA_SERVER_URL || process.env?.LLM_INFERENCE_URL || 'http://localhost:8001')
+      : 'http://localhost:8001';
 
     this.config = {
       url: serverUrl || envUrl,
@@ -161,7 +165,26 @@ export class LocalInferenceClient implements InferenceClient {
     const start = Date.now();
 
     try {
-      const response = await this.callLlamaServer(request, tier);
+      let response: InferenceResponse;
+      // Try local server first if URL is configured
+      if (this.config.url && !this.config.url.includes('gemini')) {
+        try {
+          response = await this.callLlamaServer(request, tier);
+        } catch (e) {
+          // If local server fails, try Gemini fallback if available
+          if (process.env.GEMINI_API_KEY) {
+            response = await this.callGeminiFallback(request, tier, start);
+          } else {
+            throw e;
+          }
+        }
+      } else if (process.env.GEMINI_API_KEY) {
+        // Use Gemini directly
+        response = await this.callGeminiFallback(request, tier, start);
+      } else {
+        throw new Error("No inference backend available");
+      }
+
       this.cache.setForRequest(request, tier, response);
       return response;
     } catch (error) {
@@ -187,14 +210,20 @@ export class LocalInferenceClient implements InferenceClient {
   async health(): Promise<{ available: boolean; tiers: Record<InferenceTier, boolean> }> {
     this.lastHealthCheck = Date.now();
 
+    // If Gemini API key is present, we always have STANDARD and DEEP tiers available via fallback
+    const hasGemini = !!process.env.GEMINI_API_KEY;
+
     if (!this.config.url) {
+      this.tierAvailability.set(InferenceTier.FAST, hasGemini);
+      this.tierAvailability.set(InferenceTier.STANDARD, hasGemini);
+      this.tierAvailability.set(InferenceTier.DEEP, hasGemini);
       return {
-        available: false,
+        available: hasGemini,
         tiers: {
           [InferenceTier.KERNEL]: true,
-          [InferenceTier.FAST]: false,
-          [InferenceTier.STANDARD]: false,
-          [InferenceTier.DEEP]: false,
+          [InferenceTier.FAST]: hasGemini,
+          [InferenceTier.STANDARD]: hasGemini,
+          [InferenceTier.DEEP]: hasGemini,
         },
       };
     }
@@ -235,10 +264,10 @@ export class LocalInferenceClient implements InferenceClient {
         }
       }
     } catch {
-      // Server unreachable — all model tiers unavailable
-      this.tierAvailability.set(InferenceTier.FAST, false);
-      this.tierAvailability.set(InferenceTier.STANDARD, false);
-      this.tierAvailability.set(InferenceTier.DEEP, false);
+      // Server unreachable — fallback to Gemini if available
+      this.tierAvailability.set(InferenceTier.FAST, hasGemini);
+      this.tierAvailability.set(InferenceTier.STANDARD, hasGemini);
+      this.tierAvailability.set(InferenceTier.DEEP, hasGemini);
     }
 
     const tiers = {
@@ -255,6 +284,35 @@ export class LocalInferenceClient implements InferenceClient {
   }
 
   // ── Private ───────────────────────────────────────────────────────────────
+
+  private async callGeminiFallback(request: InferenceRequest, tier: InferenceTier, start: number): Promise<InferenceResponse> {
+    const prompt = request.systemPrompt
+      ? `${request.systemPrompt}\n\nUser: ${request.prompt}`
+      : request.prompt;
+
+    // Map tier to Gemini model
+    const modelName = tier === InferenceTier.DEEP ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
+
+    const response = await ai.models.generateContent({
+      model: modelName,
+      contents: prompt,
+      config: {
+        maxOutputTokens: request.maxTokens,
+        temperature: request.temperature,
+        stopSequences: request.stopSequences,
+        responseMimeType: request.jsonMode ? 'application/json' : 'text/plain',
+      }
+    });
+
+    return {
+      text: response.text || '',
+      tokensUsed: 0, // Gemini SDK doesn't always provide this easily in the simple response
+      model: `gemini-fallback-${modelName}`,
+      tier,
+      latencyMs: Date.now() - start,
+      cached: false,
+    };
+  }
 
   private async callLlamaServer(request: InferenceRequest, tier: InferenceTier): Promise<InferenceResponse> {
     const start = Date.now();

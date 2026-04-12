@@ -33,7 +33,9 @@ export class JsonStore implements SeedStore {
       try {
         const data = JSON.parse(fs.readFileSync(this.seedsFile, 'utf-8'));
         if (Array.isArray(data)) this.seeds = data;
-      } catch {}
+      } catch {
+        // Ignore parse errors
+      }
     }
 
     // Load users
@@ -41,7 +43,9 @@ export class JsonStore implements SeedStore {
       try {
         const data = JSON.parse(fs.readFileSync(this.usersFile, 'utf-8'));
         if (Array.isArray(data)) this.users = data;
-      } catch {}
+      } catch {
+        // Ignore parse errors
+      }
     }
 
     // Load audit log
@@ -49,7 +53,9 @@ export class JsonStore implements SeedStore {
       try {
         const data = JSON.parse(fs.readFileSync(this.auditFile, 'utf-8'));
         if (Array.isArray(data)) this.auditLog = data;
-      } catch {}
+      } catch {
+        // Ignore parse errors
+      }
     }
 
     // Auto-flush every 5 seconds if dirty
@@ -69,7 +75,9 @@ export class JsonStore implements SeedStore {
       fs.writeFileSync(this.usersFile, JSON.stringify(this.users, null, 2));
       fs.writeFileSync(this.auditFile, JSON.stringify(this.auditLog.slice(-10000), null, 2));
       this.dirty = false;
-    } catch {}
+    } catch {
+      // Ignore write errors
+    }
   }
 
   // ── Seeds ──────────────────────────────────────────────────────────────

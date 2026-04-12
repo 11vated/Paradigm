@@ -25,20 +25,16 @@ export default function GalleryGrid({ seeds, onSelect, selectedId }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-px bg-neutral-900 p-px" data-testid="gallery-grid" role="listbox" aria-label="Seed gallery">
+    <div className="grid grid-cols-2 gap-px bg-neutral-900 p-px" data-testid="gallery-grid">
       {seeds.map((seed) => {
         const isSelected = seed.id === selectedId;
         const color = DOMAIN_COLORS[seed.$domain] || '#525252';
         const fitness = seed.$fitness?.overall || 0;
-        const seedName = seed.$name || 'Untitled';
         return (
           <button
             key={seed.id}
             data-testid={`gallery-seed-${seed.id}`}
             onClick={() => onSelect(seed)}
-            role="option"
-            aria-selected={isSelected}
-            aria-label={`${seedName}, ${seed.$domain} domain, fitness ${(fitness * 100).toFixed(0)}%, generation ${seed.$lineage?.generation || 0}`}
             className={`bg-[#0a0a0a] p-3 text-left transition-all hover:bg-[#111] ${isSelected ? 'ring-1 ring-orange-500/50' : ''}`}
           >
             <div className="flex items-center gap-1.5 mb-1.5">

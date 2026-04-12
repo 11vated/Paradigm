@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GitBranch, ArrowRight, Loader2 } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { api } from '@/services/api';
@@ -56,9 +56,9 @@ export default function CompositionPanel({ seed, onComposed }) {
           </div>
 
           <div className="space-y-1">
-            <label id="compose-target-label" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Target Domain</label>
+            <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Target Domain</label>
             <Select value={targetDomain} onValueChange={(v) => { setTargetDomain(v); setPath(null); }}>
-              <SelectTrigger className="h-7 text-[10px] font-mono bg-transparent border-neutral-800 rounded-none" data-testid="compose-target-select" aria-labelledby="compose-target-label">
+              <SelectTrigger className="h-7 text-[10px] font-mono bg-transparent border-neutral-800 rounded-none" data-testid="compose-target-select">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-[#0a0a0a] border-neutral-800 max-h-48">

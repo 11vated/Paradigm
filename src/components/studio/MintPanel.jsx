@@ -12,14 +12,36 @@ export default function MintPanel({ seed }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!seed) { setNftInfo(null); setMintResult(null); return; }
-    setLoadingInfo(true);
-    setError(null);
-    getNftInfo(seed.id)
-      .then(setNftInfo)
-      .catch(() => setNftInfo(null))
-      .finally(() => setLoadingInfo(false));
-  }, [seed?.id]);
+    let isMounted = true;
+    
+    const fetchInfo = async () => {
+      if (!seed) {
+        if (isMounted) {
+          setNftInfo(null);
+          setMintResult(null);
+        }
+        return;
+      }
+      
+      if (isMounted) {
+        setLoadingInfo(true);
+        setError(null);
+      }
+      
+      try {
+        const info = await getNftInfo(seed.id);
+        if (isMounted) setNftInfo(info);
+      } catch {
+        if (isMounted) setNftInfo(null);
+      } finally {
+        if (isMounted) setLoadingInfo(false);
+      }
+    };
+    
+    fetchInfo();
+
+    return () => { isMounted = false; };
+  }, [seed]);
 
   const handleMint = async () => {
     if (!seed || minting) return;

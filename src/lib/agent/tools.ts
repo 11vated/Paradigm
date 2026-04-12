@@ -17,6 +17,7 @@ import {
   ENGINES, growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
+import { ParadigmPipeline } from '../pipeline/index.js';
 import { InferenceTier } from './types.js';
 import type { AgentTool, ToolContext, ToolResult, ToolParameter } from './types.js';
 
@@ -224,11 +225,11 @@ const growSeedTool: AgentTool = {
     if (!target) return { success: false, data: null, message: 'No seed found to grow.' };
 
     try {
-      const artifact = growSeed(target);
+      const artifact = await ParadigmPipeline.runEndToEnd(target);
       return {
         success: true,
         data: { artifact },
-        message: `Grew "${target.$name}" in domain "${target.$domain}" — engine produced artifact.`,
+        message: `Grew "${target.$name}" in domain "${target.$domain}" — pipeline produced emergent asset.`,
       };
     } catch (e: any) {
       return { success: false, data: null, message: `Grow failed: ${e.message}` };
@@ -356,6 +357,8 @@ const findPathTool: AgentTool = {
   },
 };
 
+import { ragRetriever } from './rag.js';
+
 const queryKnowledgeTool: AgentTool = {
   name: 'query_knowledge',
   description: 'Search the kernel knowledge base for information about domains, gene types, or GSPL',
@@ -389,6 +392,12 @@ const queryKnowledgeTool: AgentTool = {
       }
     }
 
+    // RAG Query
+    const ragResults = await ragRetriever.query(q);
+    if (ragResults.length > 0) {
+      results.push(...ragResults);
+    }
+
     // General info
     if (results.length === 0) {
       results.push(`${domains.length} domains: ${domains.join(', ')}`);
@@ -401,6 +410,87 @@ const queryKnowledgeTool: AgentTool = {
       data: { results },
       message: results.join('\n'),
     };
+  },
+};
+
+const executeGsplTool: AgentTool = {
+  name: 'execute_gspl',
+  description: 'Execute GSPL code to create or modify seeds',
+  category: 'kernel',
+  tier: InferenceTier.KERNEL,
+  parameters: {
+    source: { type: 'string', description: 'GSPL source code', required: true },
+  },
+  execute: async (params, context) => {
+    const source = params.source || '';
+    const generatedSeeds: any[] = [];
+    const errors: string[] = [];
+
+    const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
+    let match;
+
+    while ((match = seedRegex.exec(source)) !== null) {
+      const name = match[1];
+      const domain = match[2];
+      const body = match[3];
+      const genes: Record<string, any> = {};
+
+      for (const line of body.split('\n')) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('//')) continue;
+
+        const colonIdx = trimmed.indexOf(':');
+        if (colonIdx > 0) {
+          const key = trimmed.substring(0, colonIdx).trim();
+          const valStr = trimmed.substring(colonIdx + 1).trim();
+
+          if (valStr.startsWith('"') && valStr.endsWith('"')) {
+            genes[key] = { type: 'categorical', value: valStr.slice(1, -1) };
+          } else if (!isNaN(Number(valStr))) {
+            genes[key] = { type: 'scalar', value: Number(valStr) };
+          } else if (valStr.startsWith('[')) {
+            try {
+              const parsed = JSON.parse(valStr);
+              if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
+            } catch {
+              const numbers = valStr.match(/-?\d+(\.\d+)?/g);
+              if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
+              else genes[key] = { type: 'vector', value: valStr };
+            }
+          } else {
+            genes[key] = { type: 'categorical', value: valStr };
+          }
+        }
+      }
+
+      const rng = rngFromHash(name + domain + Date.now());
+      const newSeed = {
+        id: crypto.randomUUID(),
+        $domain: domain,
+        $name: name,
+        $lineage: { generation: 0, operation: 'gspl' },
+        $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+        $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
+        genes,
+      };
+
+      generatedSeeds.push(newSeed);
+    }
+
+    if (generatedSeeds.length > 0) {
+      return {
+        success: true,
+        data: { seeds: generatedSeeds },
+        seedsCreated: generatedSeeds,
+        message: `Executed GSPL and generated ${generatedSeeds.length} seeds.`,
+      };
+    } else {
+      return {
+        success: false,
+        data: null,
+        message: 'No valid seed blocks found in GSPL source.',
+      };
+    }
   },
 };
 
@@ -417,6 +507,7 @@ export const AGENT_TOOLS: Map<string, AgentTool> = new Map([
   ['compute_distance', computeDistanceTool],
   ['find_path', findPathTool],
   ['query_knowledge', queryKnowledgeTool],
+  ['execute_gspl', executeGsplTool],
 ]);
 
 /**
