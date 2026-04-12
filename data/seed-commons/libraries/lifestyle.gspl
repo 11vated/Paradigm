@@ -1,0 +1,138 @@
+// seed-commons/libraries/lifestyle.gspl
+//
+// Lifestyle library — runnable GSPL materialization of Brief 086G
+// (research/086G-lifestyle-library.md).
+//
+// Food, clothing, tools of daily living, crafts, sports, games, recreation.
+// Sources: FAO food database, Codex Alimentarius, ISO 3758 textile care,
+// Textile Institute Handbook, World Sports Encyclopedia, BGG board game db.
+//
+// PURE. rng_seed = "seed_commons.libraries.lifestyle:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.chemistry@v1, seed_commons.libraries.materials@v1]
+
+module seed_commons.libraries.lifestyle
+
+import seed_commons.libraries.materials as Mat
+
+// -----------------------------------------------------------------------------
+// 1. Food archetypes
+// -----------------------------------------------------------------------------
+
+pub enum FoodCategory { Grain, Vegetable, Fruit, Meat, Fish, Dairy, Legume, Fat, Beverage, Condiment, Prepared }
+
+pub struct FoodArchetype {
+    name: String,
+    category: FoodCategory,
+    typical_preparation: String,
+    energy_kcal_per_100g: Scalar,
+    protein_g_per_100g: Scalar,
+    fat_g_per_100g: Scalar,
+    carb_g_per_100g: Scalar,
+    water_g_per_100g: Scalar,
+    dominant_maillard: Scalar,
+}
+
+pub fn bread_sourdough() -> FoodArchetype pure =
+    FoodArchetype { name = "bread_sourdough", category = FoodCategory.Prepared, typical_preparation = "baked_230C_40min", energy_kcal_per_100g = 289.0, protein_g_per_100g = 9.9, fat_g_per_100g = 1.9, carb_g_per_100g = 56.5, water_g_per_100g = 30.0, dominant_maillard = 0.78 }
+
+pub fn ribeye_beef_seared() -> FoodArchetype pure =
+    FoodArchetype { name = "ribeye_beef_seared", category = FoodCategory.Meat, typical_preparation = "pan_seared_260C_crust", energy_kcal_per_100g = 291.0, protein_g_per_100g = 25.0, fat_g_per_100g = 21.0, carb_g_per_100g = 0.0, water_g_per_100g = 53.0, dominant_maillard = 0.92 }
+
+pub fn apple_fresh() -> FoodArchetype pure =
+    FoodArchetype { name = "apple_fresh", category = FoodCategory.Fruit, typical_preparation = "raw", energy_kcal_per_100g = 52.0, protein_g_per_100g = 0.3, fat_g_per_100g = 0.2, carb_g_per_100g = 14.0, water_g_per_100g = 85.6, dominant_maillard = 0.0 }
+
+pub fn rice_jasmine_cooked() -> FoodArchetype pure =
+    FoodArchetype { name = "rice_jasmine_cooked", category = FoodCategory.Grain, typical_preparation = "steamed", energy_kcal_per_100g = 130.0, protein_g_per_100g = 2.7, fat_g_per_100g = 0.3, carb_g_per_100g = 28.0, water_g_per_100g = 68.5, dominant_maillard = 0.0 }
+
+pub fn cheese_cheddar_aged() -> FoodArchetype pure =
+    FoodArchetype { name = "cheese_cheddar_aged", category = FoodCategory.Dairy, typical_preparation = "aged_720d", energy_kcal_per_100g = 402.0, protein_g_per_100g = 25.0, fat_g_per_100g = 33.0, carb_g_per_100g = 1.3, water_g_per_100g = 37.0, dominant_maillard = 0.15 }
+
+// -----------------------------------------------------------------------------
+// 2. Clothing archetypes
+// -----------------------------------------------------------------------------
+
+pub enum GarmentClass { Tunic, Trousers, Coat, Dress, Robe, Hat, Footwear, Undergarment, Accessory }
+
+pub struct GarmentArchetype {
+    name: String,
+    class: GarmentClass,
+    typical_fabric: String,
+    typical_color_family: String,
+    historical_origin: String,
+    weight_g: Scalar,
+}
+
+pub fn linen_tunic() -> GarmentArchetype pure =
+    GarmentArchetype { name = "linen_tunic", class = GarmentClass.Tunic, typical_fabric = "handwoven_linen", typical_color_family = "natural_undyed", historical_origin = "Ancient_Egypt_and_Mediterranean", weight_g = 320.0 }
+
+pub fn wool_greatcoat() -> GarmentArchetype pure =
+    GarmentArchetype { name = "wool_greatcoat", class = GarmentClass.Coat, typical_fabric = "worsted_wool", typical_color_family = "charcoal_or_navy", historical_origin = "19th_century_military", weight_g = 2400.0 }
+
+pub fn silk_kimono() -> GarmentArchetype pure =
+    GarmentArchetype { name = "silk_kimono", class = GarmentClass.Robe, typical_fabric = "silk_habutai", typical_color_family = "dyed_indigo_or_crimson", historical_origin = "Heian_Japan", weight_g = 900.0 }
+
+pub fn leather_boots() -> GarmentArchetype pure =
+    GarmentArchetype { name = "leather_boots", class = GarmentClass.Footwear, typical_fabric = "vegetable_tanned_cowhide", typical_color_family = "brown_or_black", historical_origin = "prehistoric", weight_g = 1400.0 }
+
+// -----------------------------------------------------------------------------
+// 3. Daily tool archetypes
+// -----------------------------------------------------------------------------
+
+pub struct ToolArchetype {
+    name: String,
+    purpose: String,
+    materials: [String],
+    typical_length_m: Scalar,
+}
+
+pub fn ceramic_bowl() -> ToolArchetype pure =
+    ToolArchetype { name = "ceramic_bowl", purpose = "eating_serving", materials = ["glazed_stoneware"], typical_length_m = 0.18 }
+
+pub fn iron_hearth_kettle() -> ToolArchetype pure =
+    ToolArchetype { name = "iron_hearth_kettle", purpose = "heating_water_and_cooking", materials = ["cast_iron"], typical_length_m = 0.35 }
+
+pub fn wooden_spoon() -> ToolArchetype pure =
+    ToolArchetype { name = "wooden_spoon", purpose = "stirring_and_eating", materials = ["beech_wood"], typical_length_m = 0.28 }
+
+// -----------------------------------------------------------------------------
+// 4. Game archetypes
+// -----------------------------------------------------------------------------
+
+pub struct GameArchetype {
+    name: String,
+    category: String,
+    player_count_min: u8,
+    player_count_max: u8,
+    defining_mechanics: [String],
+}
+
+pub fn chess() -> GameArchetype pure =
+    GameArchetype { name = "chess", category = "abstract_strategy", player_count_min = 2, player_count_max = 2, defining_mechanics = ["grid_movement", "piece_asymmetry", "check_mate"] }
+
+pub fn go_weiqi() -> GameArchetype pure =
+    GameArchetype { name = "go_weiqi", category = "abstract_strategy", player_count_min = 2, player_count_max = 2, defining_mechanics = ["stone_placement", "territory_control", "capture"] }
+
+// -----------------------------------------------------------------------------
+// 5. Functors
+// -----------------------------------------------------------------------------
+
+pub fn food_to_plated_visual_functor() -> Functor pure =
+    Functor.id("lifestyle://functor/food_to_plated_visual@v1")
+
+pub fn garment_to_body_fit_functor() -> Functor pure =
+    Functor.id("lifestyle://functor/garment_to_body_fit@v1")
+
+$metadata {
+    materializes_brief = "research/086G-lifestyle-library.md",
+    source_standards   = ["FAO", "Codex_Alimentarius", "ISO_3758", "Textile_Institute", "BGG"],
+    food_count         = 5,
+    garment_count      = 4,
+    tool_count         = 3,
+    game_count         = 2,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.lifestyle",
+    lineage_parents    = ["seed_commons.libraries.chemistry@v1", "seed_commons.libraries.materials@v1"],
+}

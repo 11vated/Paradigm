@@ -1,0 +1,135 @@
+// seed-commons/libraries/physics.gspl
+//
+// Physics constants & laws library — runnable GSPL materialization of Brief 082
+// (research/082-physics-constants-and-laws-library.md).
+//
+// PURE. All constants CODATA 2022 exact where marked. Every law expressed as
+// a pure expression composable with kernel gene types from spec/02.
+//
+// Kernel mapping:
+//   scalar      -> fundamental constants, rates, lengths, masses
+//   vector      -> force, velocity, momentum, E/B fields
+//   expression  -> Newton 2nd law, Maxwell eqs, Schrödinger, Einstein field
+//   struct      -> unit system, reference frame, conservation law
+//   field       -> gravitational, electric, magnetic, stress tensor
+//   resonance   -> oscillator modes, wave equations, dispersion
+//   quantum     -> commutators, quantum states, path integral weights
+//   dimensional -> dimensional analysis signatures [M L T I Θ N J]
+//   sovereignty -> signed provenance of every constant
+//
+// rng_seed = "seed_commons.libraries.physics:v1"
+// License: GSPL Open Specification License
+// Lineage parents: []
+
+module seed_commons.libraries.physics
+
+import Std.Math
+import Std.Units
+import Std.Dimension
+
+// -----------------------------------------------------------------------------
+// 1. SI defining constants (CODATA 2022, all exact by 2019 redefinition)
+// -----------------------------------------------------------------------------
+
+pub const SPEED_OF_LIGHT      : Scalar = 299_792_458.0              // m/s exact
+pub const PLANCK_H            : Scalar = 6.626_070_15e-34           // J s exact
+pub const HBAR                : Scalar = 1.054_571_817e-34          // J s
+pub const ELEMENTARY_Q        : Scalar = 1.602_176_634e-19          // C exact
+pub const BOLTZMANN_K         : Scalar = 1.380_649e-23              // J/K exact
+pub const AVOGADRO            : Scalar = 6.022_140_76e23            // 1/mol exact
+pub const LUMINOUS_EFF_540THZ : Scalar = 683.0                      // lm/W exact
+pub const CESIUM_HFS_HZ       : Scalar = 9_192_631_770.0            // Hz exact
+
+// -----------------------------------------------------------------------------
+// 2. Derived constants (measured, 2022 CODATA uncertainties in comments)
+// -----------------------------------------------------------------------------
+
+pub const GRAV_G              : Scalar = 6.674_30e-11               // N m²/kg² (22 ppm)
+pub const VACUUM_PERMITTIVITY : Scalar = 8.854_187_8188e-12         // F/m
+pub const VACUUM_PERMEABILITY : Scalar = 1.256_637_061_27e-6        // N/A²
+pub const IMPEDANCE_VACUUM    : Scalar = 376.730_313_412            // Ω
+pub const FINE_STRUCTURE      : Scalar = 7.297_352_5643e-3          // dimensionless
+pub const RYDBERG_E           : Scalar = 2.179_872_361_1030e-18     // J
+pub const BOHR_RADIUS         : Scalar = 5.291_772_105_44e-11       // m
+pub const ELECTRON_MASS       : Scalar = 9.109_383_7139e-31         // kg
+pub const PROTON_MASS         : Scalar = 1.672_621_925_95e-27       // kg
+pub const NEUTRON_MASS        : Scalar = 1.674_927_500_56e-27       // kg
+pub const STEFAN_BOLTZMANN    : Scalar = 5.670_374_419e-8           // W/(m² K⁴)
+pub const WIEN_DISPLACEMENT   : Scalar = 2.897_771_955e-3           // m K
+pub const STANDARD_GRAVITY    : Scalar = 9.806_65                   // m/s² exact
+
+// -----------------------------------------------------------------------------
+// 3. Dimensional signatures [M L T I Θ N J]
+// -----------------------------------------------------------------------------
+
+pub struct Dimension {
+    mass: i8, length: i8, time: i8, current: i8,
+    temperature: i8, amount: i8, luminous: i8,
+}
+
+pub const DIM_FORCE    : Dimension = Dimension { mass = 1, length = 1, time = -2, current = 0, temperature = 0, amount = 0, luminous = 0 }
+pub const DIM_ENERGY   : Dimension = Dimension { mass = 1, length = 2, time = -2, current = 0, temperature = 0, amount = 0, luminous = 0 }
+pub const DIM_POWER    : Dimension = Dimension { mass = 1, length = 2, time = -3, current = 0, temperature = 0, amount = 0, luminous = 0 }
+pub const DIM_PRESSURE : Dimension = Dimension { mass = 1, length = -1, time = -2, current = 0, temperature = 0, amount = 0, luminous = 0 }
+pub const DIM_CHARGE   : Dimension = Dimension { mass = 0, length = 0, time = 1, current = 1, temperature = 0, amount = 0, luminous = 0 }
+pub const DIM_E_FIELD  : Dimension = Dimension { mass = 1, length = 1, time = -3, current = -1, temperature = 0, amount = 0, luminous = 0 }
+
+// -----------------------------------------------------------------------------
+// 4. Canonical laws as pure expressions
+// -----------------------------------------------------------------------------
+
+pub fn newton_second_law(mass_kg: Scalar, accel_m_s2: Vec3) -> Vec3 pure =
+    Vec3.scale(accel_m_s2, mass_kg)
+
+pub fn gravitational_force(m1_kg: Scalar, m2_kg: Scalar, r_m: Scalar) -> Scalar pure =
+    GRAV_G * m1_kg * m2_kg / (r_m * r_m)
+
+pub fn coulomb_force(q1_c: Scalar, q2_c: Scalar, r_m: Scalar) -> Scalar pure =
+    (1.0 / (4.0 * Std.Math.PI * VACUUM_PERMITTIVITY)) * q1_c * q2_c / (r_m * r_m)
+
+pub fn planck_radiance(wavelength_m: Scalar, temp_k: Scalar) -> Scalar pure =
+    let a = 2.0 * PLANCK_H * SPEED_OF_LIGHT * SPEED_OF_LIGHT / (wavelength_m ^ 5.0)
+    let b = PLANCK_H * SPEED_OF_LIGHT / (wavelength_m * BOLTZMANN_K * temp_k)
+    a / (Std.Math.exp(b) - 1.0)
+
+pub fn stefan_boltzmann_power(emissivity: Scalar, area_m2: Scalar, temp_k: Scalar) -> Scalar pure =
+    emissivity * STEFAN_BOLTZMANN * area_m2 * (temp_k ^ 4.0)
+
+pub fn wien_peak_wavelength(temp_k: Scalar) -> Scalar pure =
+    WIEN_DISPLACEMENT / temp_k
+
+pub fn relativistic_energy(rest_mass_kg: Scalar, velocity_m_s: Scalar) -> Scalar pure =
+    let c2 = SPEED_OF_LIGHT * SPEED_OF_LIGHT
+    let gamma = 1.0 / Std.Math.sqrt(1.0 - (velocity_m_s * velocity_m_s) / c2)
+    gamma * rest_mass_kg * c2
+
+pub fn de_broglie_wavelength(momentum_kg_m_s: Scalar) -> Scalar pure =
+    PLANCK_H / momentum_kg_m_s
+
+pub fn schwarzschild_radius(mass_kg: Scalar) -> Scalar pure =
+    2.0 * GRAV_G * mass_kg / (SPEED_OF_LIGHT * SPEED_OF_LIGHT)
+
+// -----------------------------------------------------------------------------
+// 5. Functors into other libraries
+// -----------------------------------------------------------------------------
+
+pub fn temperature_to_planck_spectrum_functor() -> Functor pure =
+    Functor.id("physics://functor/temperature_to_planck_spectrum@v1")
+
+pub fn mass_to_gravitational_field_functor() -> Functor pure =
+    Functor.id("physics://functor/mass_to_gravitational_field@v1")
+
+pub fn charge_distribution_to_e_field_functor() -> Functor pure =
+    Functor.id("physics://functor/charge_distribution_to_e_field@v1")
+
+$metadata {
+    materializes_brief = "research/082-physics-constants-and-laws-library.md",
+    source_standards   = ["CODATA_2022", "SI_2019", "IUPAC"],
+    constant_count     = 25,
+    law_count          = 9,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.physics",
+    lineage_parents    = [],
+}

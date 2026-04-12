@@ -1,0 +1,254 @@
+// seed-commons/inventories/creature/_batch_01_foundational.gspl
+//
+// Creature inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational non-humanoid creature seeds spanning mundane fauna
+// through mythic beasts. Biological entries lineage-root in chemistry
+// primitives (water, photosynthesis substrate chain) where relevant.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.creature"
+
+module seed_commons.inventories.creature.batch01
+
+import Std.Color
+import Std.Creature
+import Std.Topology
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Grey wolf — Canis lupus adult male
+pub fn grey_wolf_adult() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.grey_wolf_adult", version = "1.0.0",
+        kind = Std.Creature.Kind.Mammal,
+        species = "Canis lupus",
+        mass_kg = 45.0,
+        length_m = 1.55,
+        locomotion = Std.Creature.Locomotion.Quadruped,
+        top_speed_m_s = 16.5,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.04, h = 80.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.05, h = 85.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.03, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/whole_blood@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Red fox — Vulpes vulpes
+pub fn red_fox() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.red_fox", version = "1.0.0",
+        kind = Std.Creature.Kind.Mammal,
+        species = "Vulpes vulpes",
+        mass_kg = 6.2,
+        length_m = 0.72,
+        locomotion = Std.Creature.Locomotion.Quadruped,
+        top_speed_m_s = 13.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.58, c = 0.20, h = 35.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.16, h = 45.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/whole_blood@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Brown trout — Salmo trutta
+pub fn brown_trout() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.brown_trout", version = "1.0.0",
+        kind = Std.Creature.Kind.Fish,
+        species = "Salmo trutta",
+        mass_kg = 1.8,
+        length_m = 0.48,
+        locomotion = Std.Creature.Locomotion.Swim,
+        top_speed_m_s = 4.2,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 80.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 70.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.08, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/fresh_water@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. European robin — Erithacus rubecula
+pub fn european_robin() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.european_robin", version = "1.0.0",
+        kind = Std.Creature.Kind.Bird,
+        species = "Erithacus rubecula",
+        mass_kg = 0.021,
+        length_m = 0.14,
+        locomotion = Std.Creature.Locomotion.Fly,
+        wingspan_m = 0.22,
+        top_speed_m_s = 9.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.58, c = 0.22, h = 25.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.06, h = 80.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Honey bee — Apis mellifera worker
+pub fn honey_bee_worker() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.honey_bee_worker", version = "1.0.0",
+        kind = Std.Creature.Kind.Insect,
+        species = "Apis mellifera",
+        mass_kg = 0.0001,
+        length_m = 0.013,
+        locomotion = Std.Creature.Locomotion.Fly,
+        wingbeat_hz = 230.0,
+        top_speed_m_s = 7.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 90.0 },
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 80.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/raw_honey@v1",
+            "inventory://plant/sunflower_bloom@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Common octopus — Octopus vulgaris
+pub fn common_octopus() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.common_octopus", version = "1.0.0",
+        kind = Std.Creature.Kind.Cephalopod,
+        species = "Octopus vulgaris",
+        mass_kg = 6.5,
+        length_m = 0.95,
+        locomotion = Std.Creature.Locomotion.JetPropulsion,
+        arm_count = 8,
+        chromatophore_density_per_mm2 = 230.0,
+        top_speed_m_s = 4.8,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 20.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 340.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.08, h = 300.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/seawater_standard@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Monarch butterfly — Danaus plexippus
+pub fn monarch_butterfly() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.monarch_butterfly", version = "1.0.0",
+        kind = Std.Creature.Kind.Insect,
+        species = "Danaus plexippus",
+        mass_kg = 0.00055,
+        length_m = 0.05,
+        locomotion = Std.Creature.Locomotion.Fly,
+        wingspan_m = 0.10,
+        wingbeat_hz = 10.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 40.0 },
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 80.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://plant/sunflower_bloom@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Dire bear — dire Ursus arctos magna (fantasy)
+pub fn dire_bear() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.dire_bear", version = "1.0.0",
+        kind = Std.Creature.Kind.Mammal,
+        species = "Ursus arctos magna",
+        mass_kg = 820.0,
+        length_m = 3.4,
+        locomotion = Std.Creature.Locomotion.Quadruped,
+        top_speed_m_s = 15.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 50.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 55.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.06, h = 60.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/whole_blood@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Red dragon hatchling — Draco ignis juvenilis
+pub fn red_dragon_hatchling() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.red_dragon_hatchling", version = "1.0.0",
+        kind = Std.Creature.Kind.Mythic,
+        species = "Draco ignis juvenilis",
+        mass_kg = 240.0,
+        length_m = 3.2,
+        locomotion = Std.Creature.Locomotion.Fly,
+        wingspan_m = 4.8,
+        breath_weapon = Std.Creature.BreathWeapon.Flame {
+            reach_m = 9.0,
+            peak_temperature_K = 1950.0,
+            duration_ms = 1200.0,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.22, h = 30.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 60.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/combustion-methane@v1",
+            "inventory://lighting/torch_flame@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Jellyfish bioluminescent — Aequorea victoria
+pub fn bioluminescent_jellyfish() -> Std.Creature.Seed pure =
+    seed Std.Creature.Seed {
+        name = "creature.bioluminescent_jellyfish", version = "1.0.0",
+        kind = Std.Creature.Kind.Cnidarian,
+        species = "Aequorea victoria",
+        mass_kg = 0.08,
+        length_m = 0.10,
+        locomotion = Std.Creature.Locomotion.Drift,
+        emission_nm = 509.0,
+        emission_protein = "GFP",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 160.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 170.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.08, h = 180.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/seawater_standard@v1",
+            "inventory://lighting/bioluminescent_lagoon@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.fluid@v1",
+        "seed_commons.inventories.lighting@v1",
+        "seed_commons.inventories.plant@v1",
+    ],
+    category   = "creature",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.creature",
+}

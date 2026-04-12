@@ -1,0 +1,333 @@
+// seed-commons/inventories/scene/_batch_01_foundational.gspl
+//
+// Scene inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational scene seeds. Scenes compose lighting + material + weather
+// + plant + fx primitives via inventory:// references, exercising the
+// cross-category lineage graph for validation/graph.ts.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.scene"
+
+module seed_commons.inventories.scene.batch01
+
+import Std.Color
+import Std.Scene
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Blacksmith workshop — interior forge scene
+pub fn blacksmith_workshop() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.blacksmith_workshop", version = "1.0.0",
+        kind = Std.Scene.Kind.Interior,
+        bounds_m = Std.Scene.BoundingBox { x = 6.0, y = 3.5, z = 8.0 },
+        lighting_refs = [
+            "inventory://lighting/forge_flame@v1",
+            "inventory://lighting/spark_shower_ferrocerium@v1",
+        ],
+        material_refs = [
+            "inventory://materials/forged_steel_blade@v1",
+            "inventory://materials/aged_copper_patina@v1",
+            "inventory://materials/rough_granite@v1",
+            "inventory://materials/polished_oak@v1",
+        ],
+        fx_refs = [
+            "inventory://fx/spark_shower_ferrocerium@v1",
+            "inventory://fx/smoke_plume_cool@v1",
+        ],
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.20, h = 45.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.14, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/forge_flame@v1",
+            "inventory://materials/forged_steel_blade@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Aquatic cave — underwater grotto with bioluminescence
+pub fn aquatic_cave() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.aquatic_cave", version = "1.0.0",
+        kind = Std.Scene.Kind.Underwater,
+        bounds_m = Std.Scene.BoundingBox { x = 12.0, y = 6.0, z = 18.0 },
+        depth_m = 8.0,
+        lighting_refs = [
+            "inventory://lighting/underwater_5m@v1",
+            "inventory://lighting/bioluminescent_lagoon@v1",
+        ],
+        material_refs = [
+            "inventory://materials/polished_obsidian@v1",
+            "inventory://materials/rough_granite@v1",
+            "inventory://materials/mother_of_pearl@v1",
+        ],
+        fluid_ref = "inventory://fluid/seawater_standard@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.08, h = 210.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 200.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 190.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/underwater_5m@v1",
+            "inventory://fluid/seawater_standard@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Sacred grove — temperate oak ring at dawn
+pub fn sacred_grove_dawn() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.sacred_grove_dawn", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 40.0, y = 25.0, z = 40.0 },
+        lighting_refs = [
+            "inventory://lighting/sunrise_horizon@v1",
+            "inventory://lighting/forest_canopy_dappled@v1",
+        ],
+        plant_refs = [
+            "inventory://plant/mature_pine_40yr@v1",
+            "inventory://plant/oak_sapling_3yr@v1",
+            "inventory://plant/moss_patch_hypnum@v1",
+            "inventory://plant/meadow_grass_tuft@v1",
+        ],
+        weather_ref = "inventory://weather/radiation_fog_bank@v1",
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 140.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 90.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 70.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/sunrise_horizon@v1",
+            "inventory://plant/mature_pine_40yr@v1",
+            "inventory://weather/radiation_fog_bank@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Desert dune noon — saguaro-dotted heat mirage
+pub fn desert_dune_noon() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.desert_dune_noon", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 120.0, y = 40.0, z = 120.0 },
+        lighting_refs = ["inventory://lighting/noon_overcast_sky@v1"],
+        material_refs = ["inventory://materials/beach_sand@v1"],
+        plant_refs = ["inventory://plant/saguaro_cactus_80yr@v1"],
+        weather_ref = "inventory://weather/heat_mirage_inferior@v1",
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 75.0 },
+            Std.Color.OKLCh { l = 0.86, c = 0.10, h = 80.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.06, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/beach_sand@v1",
+            "inventory://plant/saguaro_cactus_80yr@v1",
+            "inventory://weather/heat_mirage_inferior@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Snowy mountain peak — glacier with fresh snow
+pub fn snowy_peak_glacier() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.snowy_peak_glacier", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 200.0, y = 80.0, z = 200.0 },
+        elevation_m = 3400.0,
+        lighting_refs = ["inventory://lighting/snowy_daylight@v1"],
+        material_refs = [
+            "inventory://materials/glacier_ice@v1",
+            "inventory://materials/fresh_snow_pack@v1",
+            "inventory://materials/rough_granite@v1",
+        ],
+        weather_ref = "inventory://weather/snowfall_light@v1",
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.04, h = 220.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 215.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/glacier_ice@v1",
+            "inventory://weather/snowfall_light@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Volcanic crater — active basaltic eruption
+pub fn volcanic_crater() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.volcanic_crater", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 300.0, y = 150.0, z = 300.0 },
+        lighting_refs = ["inventory://lighting/torch_flame@v1"],
+        material_refs = [
+            "inventory://materials/polished_obsidian@v1",
+            "inventory://materials/rough_granite@v1",
+        ],
+        fluid_ref = "inventory://fluid/basaltic_lava@v1",
+        fx_refs = [
+            "inventory://fx/smoke_plume_cool@v1",
+            "inventory://fx/spark_shower_ferrocerium@v1",
+        ],
+        weather_ref = "inventory://weather/dust_storm_haboob@v1",
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.04, h = 30.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 45.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.18, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/basaltic_lava@v1",
+            "inventory://fx/smoke_plume_cool@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Medieval throne room — candlelit stone hall
+pub fn medieval_throne_room() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.medieval_throne_room", version = "1.0.0",
+        kind = Std.Scene.Kind.Interior,
+        bounds_m = Std.Scene.BoundingBox { x = 24.0, y = 9.0, z = 40.0 },
+        lighting_refs = [
+            "inventory://lighting/candle_flame@v1",
+            "inventory://lighting/stained_glass_cast@v1",
+        ],
+        material_refs = [
+            "inventory://materials/carrara_marble@v1",
+            "inventory://materials/polished_oak@v1",
+            "inventory://materials/gold_24k@v1",
+            "inventory://materials/tanned_leather@v1",
+            "inventory://materials/ultramarine_oil_paint@v1",
+        ],
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 80.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.12, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/candle_flame@v1",
+            "inventory://materials/gold_24k@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Cyberpunk alley — neon rain slick
+pub fn cyberpunk_alley() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.cyberpunk_alley", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 8.0, y = 25.0, z = 60.0 },
+        lighting_refs = [
+            "inventory://lighting/neon_sign_red@v1",
+            "inventory://lighting/crt_monitor_glow@v1",
+        ],
+        material_refs = [
+            "inventory://materials/weathered_concrete@v1",
+            "inventory://materials/brushed_aluminium@v1",
+            "inventory://materials/red_brick@v1",
+        ],
+        weather_ref = "inventory://weather/rain_shower@v1",
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.06, h = 280.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.22, h = 15.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.20, h = 200.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/neon_sign_red@v1",
+            "inventory://weather/rain_shower@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Alchemist laboratory — bottled reactions
+pub fn alchemist_laboratory() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.alchemist_laboratory", version = "1.0.0",
+        kind = Std.Scene.Kind.Interior,
+        bounds_m = Std.Scene.BoundingBox { x = 7.0, y = 4.0, z = 9.0 },
+        lighting_refs = [
+            "inventory://lighting/candle_flame@v1",
+            "inventory://lighting/magnesium_flare@v1",
+        ],
+        material_refs = [
+            "inventory://materials/crystal_glass@v1",
+            "inventory://materials/polished_oak@v1",
+            "inventory://materials/sterling_silver@v1",
+            "inventory://materials/aged_copper_patina@v1",
+        ],
+        fluid_refs = [
+            "inventory://fluid/liquid_mercury@v1",
+            "inventory://fluid/red_wine@v1",
+            "inventory://fluid/olive_oil@v1",
+        ],
+        fx_refs = ["inventory://fx/steam_burst@v1"],
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 60.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.16, h = 80.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/liquid_mercury@v1",
+            "inventory://materials/crystal_glass@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Arctic aurora plain — northern lights at midnight
+pub fn arctic_aurora_plain() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name = "scene.arctic_aurora_plain", version = "1.0.0",
+        kind = Std.Scene.Kind.Exterior,
+        bounds_m = Std.Scene.BoundingBox { x = 500.0, y = 120.0, z = 500.0 },
+        latitude_deg = 68.3,
+        lighting_refs = [
+            "inventory://lighting/aurora_borealis@v1",
+            "inventory://lighting/full_moon@v1",
+            "inventory://lighting/starlight_only@v1",
+        ],
+        material_refs = [
+            "inventory://materials/fresh_snow_pack@v1",
+            "inventory://materials/glacier_ice@v1",
+        ],
+        atmosphere = Chem.sea_level_atmosphere(),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.08, h = 260.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 150.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 180.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://lighting/aurora_borealis@v1",
+            "inventory://materials/fresh_snow_pack@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.lighting@v1",
+        "seed_commons.inventories.materials@v1",
+        "seed_commons.inventories.weather@v1",
+        "seed_commons.inventories.fluid@v1",
+        "seed_commons.inventories.fx@v1",
+        "seed_commons.inventories.plant@v1",
+    ],
+    category   = "scene",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.scene",
+}

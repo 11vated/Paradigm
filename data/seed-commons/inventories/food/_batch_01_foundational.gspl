@@ -1,0 +1,240 @@
+// seed-commons/inventories/food/_batch_01_foundational.gspl
+//
+// Food inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational food seeds spanning raw ingredients and prepared dishes.
+// Biological sources lineage-root in chemistry::photosynthesis (plant-origin)
+// and chemistry::glucose for carbohydrate substrate.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.food"
+
+module seed_commons.inventories.food.batch01
+
+import Std.Color
+import Std.Food
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Crusty sourdough loaf — wheat bread, baked
+pub fn sourdough_loaf() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.sourdough_loaf", version = "1.0.0",
+        kind = Std.Food.Kind.Baked,
+        mass_g = 820.0,
+        moisture_fraction = 0.38,
+        crust_temperature_K = 468.0,
+        maillard_intensity = 0.78,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 50.0 },
+            Std.Color.OKLCh { l = 0.68, c = 0.16, h = 70.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://plant/wheat_stalk_ripe@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Red apple — Malus domestica cv. Honeycrisp
+pub fn red_apple_honeycrisp() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.red_apple_honeycrisp", version = "1.0.0",
+        kind = Std.Food.Kind.Fruit,
+        mass_g = 220.0,
+        moisture_fraction = 0.86,
+        sugar_fraction = 0.13,
+        species = "Malus domestica",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 22.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.20, h = 30.0 },
+            Std.Color.OKLCh { l = 0.94, c = 0.10, h = 95.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Seared ribeye steak — Maillard-crusted
+pub fn seared_ribeye() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.seared_ribeye", version = "1.0.0",
+        kind = Std.Food.Kind.Meat,
+        mass_g = 340.0,
+        moisture_fraction = 0.58,
+        fat_fraction = 0.28,
+        surface_temperature_K = 478.0,
+        core_temperature_K = 328.0,
+        maillard_intensity = 0.92,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.20, h = 30.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 45.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/whole_blood@v1",
+            "inventory://creature/dire_bear@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Green salad — mixed leaves vinaigrette
+pub fn green_salad_mixed() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.green_salad_mixed", version = "1.0.0",
+        kind = Std.Food.Kind.Vegetable,
+        mass_g = 180.0,
+        moisture_fraction = 0.92,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 135.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.16, h = 130.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 125.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "inventory://fluid/olive_oil@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Mushroom stew — cremini in broth
+pub fn mushroom_stew() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.mushroom_stew", version = "1.0.0",
+        kind = Std.Food.Kind.Stew,
+        mass_g = 480.0,
+        moisture_fraction = 0.82,
+        temperature_K = 348.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 60.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 65.0 },
+            Std.Color.OKLCh { l = 0.68, c = 0.08, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/fresh_water@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Honey jar — raw amber honey
+pub fn honey_jar() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.honey_jar", version = "1.0.0",
+        kind = Std.Food.Kind.Preserve,
+        mass_g = 500.0,
+        moisture_fraction = 0.17,
+        sugar_fraction = 0.82,
+        substance_ref = "inventory://fluid/raw_honey@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 75.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 80.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.14, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/raw_honey@v1",
+            "inventory://creature/honey_bee_worker@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Hard cheese wheel — aged cheddar
+pub fn cheddar_wheel_aged() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.cheddar_wheel_aged", version = "1.0.0",
+        kind = Std.Food.Kind.Dairy,
+        mass_g = 9000.0,
+        moisture_fraction = 0.36,
+        fat_fraction = 0.33,
+        age_days = 720,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 85.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.16, h = 90.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/whole_milk@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Grilled trout — whole fish on plate
+pub fn grilled_trout_whole() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.grilled_trout_whole", version = "1.0.0",
+        kind = Std.Food.Kind.Fish,
+        mass_g = 620.0,
+        moisture_fraction = 0.68,
+        fat_fraction = 0.08,
+        surface_temperature_K = 418.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 70.0 },
+            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 60.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://creature/brown_trout@v1",
+            "inventory://fluid/olive_oil@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Bowl of rice — steamed jasmine
+pub fn steamed_jasmine_rice() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.steamed_jasmine_rice", version = "1.0.0",
+        kind = Std.Food.Kind.Grain,
+        mass_g = 180.0,
+        moisture_fraction = 0.70,
+        temperature_K = 358.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.01, h = 85.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Wine goblet — red wine pour
+pub fn wine_goblet_red() -> Std.Food.Seed pure =
+    seed Std.Food.Seed {
+        name = "food.wine_goblet_red", version = "1.0.0",
+        kind = Std.Food.Kind.Beverage,
+        volume_ml = 150.0,
+        temperature_K = 288.15,
+        alcohol_fraction = 0.135,
+        substance_ref = "inventory://fluid/red_wine@v1",
+        vessel_material_ref = "inventory://materials/crystal_glass@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 18.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.22, h = 22.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://fluid/red_wine@v1",
+            "inventory://materials/crystal_glass@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.plant@v1",
+        "seed_commons.inventories.fluid@v1",
+        "seed_commons.inventories.creature@v1",
+        "seed_commons.inventories.materials@v1",
+    ],
+    category   = "food",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.food",
+}

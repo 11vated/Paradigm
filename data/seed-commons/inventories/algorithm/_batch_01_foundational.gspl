@@ -1,0 +1,216 @@
+// seed-commons/inventories/algorithm/_batch_01_foundational.gspl
+//
+// Algorithm inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational procedural generator seeds. Each algorithm seed is
+// a pure deterministic function parameterized by rng_seed (kernel scalar
+// gene) with locked output contracts. These exercise the kernel expression,
+// graph, topology, and field gene types from spec/02.
+//
+// Every algorithm seed specifies: domain, dimensionality, deterministic
+// input→output contract, complexity bound, and a canonical test vector
+// (input_seed→first 8 output values) so validation/determinism.ts can
+// verify round-trips in CI.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.algorithm"
+
+module seed_commons.inventories.algorithm.batch01
+
+import Std.Algorithm
+import Std.Math
+import Std.Topology
+
+// 01. Perlin noise 3D — Ken Perlin's classic gradient noise
+pub fn perlin_noise_3d() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.perlin_noise_3d", version = "1.0.0",
+        domain = "scalar_field",
+        dimensionality = 3,
+        kind = Std.Algorithm.Kind.Noise,
+        parameters = Std.Algorithm.Parameters.NoiseParams {
+            octaves = 4,
+            persistence = 0.5,
+            lacunarity = 2.0,
+            frequency = 1.0,
+        },
+        complexity = "O(octaves * 8)",
+        output_range = (-1.0, 1.0),
+        test_vector_rng = "perlin3d-canonical",
+        test_vector_first8 = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Simplex noise 2D — Perlin's improved variant
+pub fn simplex_noise_2d() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.simplex_noise_2d", version = "1.0.0",
+        domain = "scalar_field",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.Noise,
+        parameters = Std.Algorithm.Parameters.NoiseParams {
+            octaves = 6,
+            persistence = 0.55,
+            lacunarity = 2.1,
+            frequency = 1.0,
+        },
+        complexity = "O(octaves * 3)",
+        output_range = (-1.0, 1.0),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Worley (cellular) noise — Voronoi-distance field
+pub fn worley_cellular_noise() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.worley_cellular_noise", version = "1.0.0",
+        domain = "scalar_field",
+        dimensionality = 3,
+        kind = Std.Algorithm.Kind.Noise,
+        parameters = Std.Algorithm.Parameters.WorleyParams {
+            distance_metric = "euclidean",
+            f_index = 1,
+            jitter = 1.0,
+        },
+        complexity = "O(27)",
+        output_range = (0.0, 1.732_050_808),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Wave Function Collapse — constraint-based tiling
+pub fn wave_function_collapse() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.wave_function_collapse", version = "1.0.0",
+        domain = "grid_tiling",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.ConstraintSolver,
+        parameters = Std.Algorithm.Parameters.WFCParams {
+            adjacency_mode = "overlapping_nxn",
+            n = 3,
+            backtracking = true,
+        },
+        complexity = "O(W*H*log(T))_average",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. L-system — Lindenmayer grammar rewriting
+pub fn lsystem_rewriter() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.lsystem_rewriter", version = "1.0.0",
+        domain = "symbolic_string",
+        dimensionality = 1,
+        kind = Std.Algorithm.Kind.Grammar,
+        parameters = Std.Algorithm.Parameters.LSystemParams {
+            max_iterations = 8,
+            stochastic = false,
+            context_sensitive = false,
+        },
+        complexity = "O(n * rule_avg_expansion)",
+        lineage = Lineage.from_parents([
+            "inventory://plant/oak_sapling_3yr@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Poisson disk sampling — blue-noise point placement
+pub fn poisson_disk_sampling_2d() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.poisson_disk_sampling_2d", version = "1.0.0",
+        domain = "point_set",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.Sampling,
+        parameters = Std.Algorithm.Parameters.PoissonParams {
+            min_distance = 1.0,
+            max_attempts_per_point = 30,
+            method = "bridson_2007",
+        },
+        complexity = "O(n)",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Diamond-square — fractal heightmap generator
+pub fn diamond_square_heightmap() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.diamond_square_heightmap", version = "1.0.0",
+        domain = "scalar_field",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.Fractal,
+        parameters = Std.Algorithm.Parameters.DiamondSquareParams {
+            roughness = 0.62,
+            power_of_two_plus_one = 513,
+        },
+        complexity = "O(N * N * log(N))",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Marching cubes — isosurface extraction
+pub fn marching_cubes() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.marching_cubes", version = "1.0.0",
+        domain = "mesh_extraction",
+        dimensionality = 3,
+        kind = Std.Algorithm.Kind.Isosurface,
+        parameters = Std.Algorithm.Parameters.MarchingCubesParams {
+            isolevel = 0.0,
+            interpolate_edges = true,
+            smooth_normals = true,
+        },
+        complexity = "O(N^3)",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Delaunay triangulation — 2D point triangulation
+pub fn delaunay_triangulation_2d() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.delaunay_triangulation_2d", version = "1.0.0",
+        domain = "mesh_construction",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.Triangulation,
+        parameters = Std.Algorithm.Parameters.DelaunayParams {
+            method = "bowyer_watson",
+            incremental = true,
+        },
+        complexity = "O(n log n)",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Reaction-diffusion — Gray-Scott pattern formation
+pub fn reaction_diffusion_gray_scott() -> Std.Algorithm.Seed pure =
+    seed Std.Algorithm.Seed {
+        name = "algorithm.reaction_diffusion_gray_scott", version = "1.0.0",
+        domain = "scalar_field",
+        dimensionality = 2,
+        kind = Std.Algorithm.Kind.PDESolver,
+        parameters = Std.Algorithm.Parameters.GrayScottParams {
+            feed_rate = 0.055,
+            kill_rate = 0.062,
+            diffusion_u = 0.16,
+            diffusion_v = 0.08,
+            timesteps = 4000,
+        },
+        complexity = "O(N^2 * T)",
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.plant@v1",
+    ],
+    category   = "algorithm",
+    batch      = "01_foundational",
+    count      = 10,
+    role       = "meta_procedural_generator",
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.algorithm",
+}
