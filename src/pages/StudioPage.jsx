@@ -60,13 +60,13 @@ export default function StudioPage() {
   };
 
   return (
-    <div className="studio-grid" data-testid="creation-studio">
+    <div className="studio-grid" data-testid="creation-studio" id="main-content">
       {/* Top Bar */}
-      <div className="studio-topbar" data-testid="studio-topbar">
-        <button data-testid="studio-back-btn" onClick={() => navigate('/')} className="text-neutral-500 hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4" />
+      <header className="studio-topbar" data-testid="studio-topbar" role="banner">
+        <button data-testid="studio-back-btn" onClick={() => navigate('/')} aria-label="Back to landing page" className="text-neutral-500 hover:text-white transition-colors">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" />
         </button>
-        <Dna className="w-4 h-4 text-orange-500" />
+        <Dna className="w-4 h-4 text-orange-500" aria-hidden="true" />
         <span className="font-heading font-bold text-sm tracking-tight">PARADIGM</span>
         <div className="h-4 w-px bg-neutral-800" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Creation Studio</span>
@@ -80,24 +80,24 @@ export default function StudioPage() {
             </span>
           </>
         )}
-        <div className="h-4 w-px bg-neutral-800 ml-2" />
+        <div className="h-4 w-px bg-neutral-800 ml-2" aria-hidden="true" />
         {/* User menu */}
-        <div className="flex items-center gap-2 ml-1">
-          <User className="w-3 h-3 text-neutral-600" />
+        <div className="flex items-center gap-2 ml-1" role="group" aria-label="User menu">
+          <User className="w-3 h-3 text-neutral-600" aria-hidden="true" />
           <span className="font-mono text-[10px] text-neutral-500">{user?.username || 'anon'}</span>
           <button
             data-testid="logout-btn"
             onClick={handleLogout}
             className="text-neutral-600 hover:text-red-400 transition-colors"
-            title="Logout"
+            aria-label={`Logout ${user?.username || ''}`}
           >
-            <LogOut className="w-3 h-3" />
+            <LogOut className="w-3 h-3" aria-hidden="true" />
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Left Sidebar: Gallery + Lineage + Library */}
-      <div className="studio-sidebar-left" data-testid="studio-sidebar-left">
+      <nav className="studio-sidebar-left" data-testid="studio-sidebar-left" aria-label="Seed gallery and library">
         <Tabs defaultValue="gallery" className="h-full flex flex-col">
           <TabsList className="w-full rounded-none bg-transparent border-b border-neutral-800 h-8 p-0 grid grid-cols-3">
             <TabsTrigger value="gallery" className="rounded-none text-[9px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-orange-500 data-[state=active]:border-b data-[state=active]:border-orange-500 h-full" data-testid="tab-gallery">
@@ -120,16 +120,16 @@ export default function StudioPage() {
             <SeedLibrary onImport={handleSeedCreated} activeSeed={currentSeed} />
           </TabsContent>
         </Tabs>
-      </div>
+      </nav>
 
       {/* Center: Viewport + Prompt */}
-      <div className="studio-center" data-testid="studio-center">
+      <main className="studio-center" data-testid="studio-center" role="main" aria-label="Preview and prompt">
         <PreviewViewport artifact={artifact} loading={loading} />
         <PromptBar onSeedCreated={handleSeedCreated} />
-      </div>
+      </main>
 
       {/* Right Sidebar: Gene Editor + Operations + Compose + GSPL + Agent + Mint */}
-      <div className="studio-sidebar-right" data-testid="studio-sidebar-right">
+      <aside className="studio-sidebar-right" data-testid="studio-sidebar-right" aria-label="Seed tools and operations">
         <Tabs defaultValue="genes" className="h-full flex flex-col">
           <TabsList className="w-full rounded-none bg-transparent border-b border-neutral-800 h-8 p-0 grid grid-cols-8">
             <TabsTrigger value="genes" className="rounded-none text-[7px] font-mono uppercase tracking-wider data-[state=active]:bg-transparent data-[state=active]:text-orange-500 data-[state=active]:border-b data-[state=active]:border-orange-500 h-full" data-testid="tab-genes">
@@ -182,10 +182,10 @@ export default function StudioPage() {
             <ExportPanel seed={currentSeed} onSeedUpdated={handleSeedCreated} />
           </TabsContent>
         </Tabs>
-      </div>
+      </aside>
 
       {/* Status Bar */}
-      <div className="studio-statusbar" data-testid="studio-statusbar">
+      <footer className="studio-statusbar" data-testid="studio-statusbar" role="status" aria-live="polite" aria-label="Seed status">
         <span>PARADIGM v2.0</span>
         <span className="h-2 w-px bg-neutral-800" />
         {currentSeed ? (
@@ -199,7 +199,7 @@ export default function StudioPage() {
         ) : <span>No seed loaded — type a prompt or select from gallery</span>}
         <div className="flex-1" />
         <span className="text-neutral-700">{user?.username}@{user?.role || 'user'}</span>
-      </div>
+      </footer>
     </div>
   );
 }

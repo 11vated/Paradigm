@@ -134,3 +134,26 @@ export function requestId() {
 }
 
 import crypto from 'crypto';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HTTPS ENFORCEMENT (production only)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Redirects HTTP → HTTPS in production when behind a reverse proxy.
+ * Checks X-Forwarded-Proto (set by Nginx/ALB/Cloudflare).
+ * In development, this is a no-op.
+ */
+export function httpsRedirect() {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (process.env.NODE_ENV !== 'production') return next();
+
+    const proto = req.headers['x-forwarded-proto'] as string;
+    if (proto && proto !== 'https') {
+      const host = req.headers.host || 'localhost';
+      return res.redirect(301, `https://${host}${req.url}`);
+    }
+
+    next();
+  };
+}

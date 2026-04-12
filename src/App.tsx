@@ -17,6 +17,7 @@ function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
+        <a href="#main-content" className="skip-to-content">Skip to main content</a>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/auth" element={<AuthPage />} />

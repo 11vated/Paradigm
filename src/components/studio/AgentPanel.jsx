@@ -133,13 +133,13 @@ export default function AgentPanel({ onSeedCreated }) {
       </div>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3" role="log" aria-label="Agent conversation" aria-live="polite">
         {messages.map((msg, i) => (
           <MessageBubble key={i} {...msg} />
         ))}
         {loading && (
-          <div className="flex items-center gap-2 text-neutral-600">
-            <Loader2 className="w-3 h-3 animate-spin" />
+          <div className="flex items-center gap-2 text-neutral-600" role="status" aria-label="Processing query">
+            <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
             <span className="font-mono text-[10px]">Processing...</span>
           </div>
         )}
@@ -154,16 +154,18 @@ export default function AgentPanel({ onSeedCreated }) {
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder='Try "create a character seed" or "list domains"'
+            aria-label="Send a query to the GSPL Agent"
             disabled={loading}
-            className="flex-1 px-2.5 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[11px] text-neutral-200 placeholder-neutral-700 focus:outline-none focus:border-orange-500/40 transition-colors disabled:opacity-40"
+            className="flex-1 px-2.5 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[11px] text-neutral-200 placeholder-neutral-700 focus:border-orange-500/40 transition-colors disabled:opacity-40"
           />
           <button
             data-testid="agent-send"
             type="submit"
             disabled={loading || !input.trim()}
+            aria-label="Send message to agent"
             className="px-2.5 py-1.5 bg-orange-500 text-black hover:bg-orange-400 transition-colors disabled:opacity-30 flex items-center"
           >
-            <Send className="w-3 h-3" />
+            <Send className="w-3 h-3" aria-hidden="true" />
           </button>
         </div>
       </form>

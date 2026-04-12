@@ -18,6 +18,8 @@
     "test:e2e:headed": "npx playwright test --headed",
     "test:all": "vitest run && node scripts/smoke-test.mjs",
     "prepare:training": "node scripts/prepare-training-data.mjs",
+    "backup": "node scripts/backup-database.mjs",
+    "backup:restore": "echo 'Copy a backup JSON into data/ and restart server'",
     "docker:up": "docker compose up -d --build",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f app"

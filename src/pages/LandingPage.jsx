@@ -37,12 +37,12 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
+    <div id="main-content" className="min-h-screen bg-[#030303] text-white overflow-x-hidden">
       {/* ─── Nav ─────────────────────────────────────────────── */}
-      <nav className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5" data-testid="landing-nav">
+      <nav className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5" data-testid="landing-nav" aria-label="Main navigation">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Dna className="w-5 h-5 text-orange-500" />
+            <Dna className="w-5 h-5 text-orange-500" aria-hidden="true" />
             <span className="font-heading font-black text-lg tracking-tight">PARADIGM</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-neutral-400">
@@ -60,7 +60,7 @@ export default function LandingPage() {
       </nav>
 
       {/* ─── Hero ────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section" aria-label="Hero">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-[#030303]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(249,115,22,0.3) 1px, transparent 0)',
@@ -104,10 +104,10 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Stats Bar ───────────────────────────────────────── */}
-      <section className="border-y border-neutral-800 bg-[#0a0a0a]">
+      <section className="border-y border-neutral-800 bg-[#0a0a0a]" aria-label="Platform statistics">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-x divide-neutral-800">
           {[
-            { label: 'Domains', value: '26' },
+            { label: 'Domains', value: '27' },
             { label: 'Gene Types', value: '17' },
             { label: 'Inventions', value: '1,064' },
             { label: 'Seeds Created', value: stats?.total_seeds || '0' },
@@ -197,7 +197,7 @@ export default function LandingPage() {
       </section>
 
       {/* ─── Footer ──────────────────────────────────────────── */}
-      <footer className="border-t border-neutral-800 py-12 px-6">
+      <footer className="border-t border-neutral-800 py-12 px-6" role="contentinfo">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Dna className="w-4 h-4 text-orange-500" />

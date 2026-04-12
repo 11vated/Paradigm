@@ -31,11 +31,13 @@ export default function BreedPanel({ gallery, onBred }) {
       ) : (
         <>
           <div className="space-y-1">
-            <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Parent A</label>
+            <label htmlFor="breed-parent-a" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Parent A</label>
             <select
+              id="breed-parent-a"
               data-testid="breed-parent-a"
               value={parentA}
               onChange={(e) => setParentA(e.target.value)}
+              aria-required="true"
               className="w-full h-7 bg-transparent border border-neutral-800 text-[10px] font-mono text-white px-2"
             >
               <option value="">Select seed...</option>
@@ -48,11 +50,13 @@ export default function BreedPanel({ gallery, onBred }) {
           <div className="text-center font-mono text-[10px] text-neutral-700">&times;</div>
 
           <div className="space-y-1">
-            <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Parent B</label>
+            <label htmlFor="breed-parent-b" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Parent B</label>
             <select
+              id="breed-parent-b"
               data-testid="breed-parent-b"
               value={parentB}
               onChange={(e) => setParentB(e.target.value)}
+              aria-required="true"
               className="w-full h-7 bg-transparent border border-neutral-800 text-[10px] font-mono text-white px-2"
             >
               <option value="">Select seed...</option>

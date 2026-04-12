@@ -60,7 +60,7 @@ import type { SeedStore, AuditEntry } from './src/lib/data/types.js';
 import { initCache, getCache, growCacheKey, compositionPathKey } from './src/lib/cache/index.js';
 
 // ─── NEW: Security Middleware (CORS + Headers) ──────────────────────────────
-import { corsMiddleware, securityHeaders, requestId } from './src/lib/security/middleware.js';
+import { corsMiddleware, securityHeaders, requestId, httpsRedirect } from './src/lib/security/middleware.js';
 
 // ─── NEW: OpenAPI Specification ──────────────────────────────────────────────
 import { OPENAPI_SPEC, swaggerUIHTML } from './src/lib/openapi/spec.js';
@@ -110,6 +110,7 @@ async function startServer() {
   const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
     : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+  app.use(httpsRedirect());
   app.use(corsMiddleware({ origins: allowedOrigins }));
   app.use(securityHeaders());
   app.use(requestId());

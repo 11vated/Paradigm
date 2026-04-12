@@ -16,7 +16,7 @@ test.describe('Paradigm Full User Journey', () => {
     await expect(page.getByTestId('inventions-section')).toBeVisible();
 
     // Stats bar
-    await expect(page.getByTestId('stat-domains')).toContainText('26');
+    await expect(page.getByTestId('stat-domains')).toContainText('27');
     await expect(page.getByTestId('stat-gene-types')).toContainText('17');
   });
 

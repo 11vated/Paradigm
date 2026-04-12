@@ -43,7 +43,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030303] text-white flex items-center justify-center relative overflow-hidden">
+    <main id="main-content" className="min-h-screen bg-[#030303] text-white flex items-center justify-center relative overflow-hidden" role="main" aria-label="Authentication">
       {/* Background grid effect */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: 'linear-gradient(rgba(249,115,22,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.3) 1px, transparent 1px)',
@@ -104,43 +104,50 @@ export default function AuthPage() {
                   exit={{ opacity: 0, height: 0 }}
                   className="flex items-start gap-2 p-2.5 border border-red-500/20 bg-red-500/5"
                 >
-                  <AlertCircle className="w-3.5 h-3.5 text-red-500 mt-0.5 shrink-0" />
-                  <span className="font-mono text-[10px] text-red-400">{error}</span>
+                  <AlertCircle className="w-3.5 h-3.5 text-red-500 mt-0.5 shrink-0" aria-hidden="true" />
+                  <span className="font-mono text-[10px] text-red-400" role="alert">{error}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             <div className="space-y-1.5">
-              <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Username</label>
+              <label htmlFor="auth-username" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Username</label>
               <input
+                id="auth-username"
                 data-testid="auth-username"
                 type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 autoComplete="username"
-                className="w-full px-3 py-2 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:outline-none focus:border-orange-500/50 transition-colors"
+                aria-required="true"
+                aria-describedby={error ? 'auth-error' : undefined}
+                className="w-full px-3 py-2 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-orange-500/50 transition-colors"
                 placeholder="your_username"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Password</label>
+              <label htmlFor="auth-password" className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Password</label>
               <div className="relative">
                 <input
+                  id="auth-password"
                   data-testid="auth-password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                  className="w-full px-3 py-2 pr-9 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:outline-none focus:border-orange-500/50 transition-colors"
+                  aria-required="true"
+                  aria-describedby={error ? 'auth-error' : undefined}
+                  className="w-full px-3 py-2 pr-9 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-orange-500/50 transition-colors"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-neutral-400 transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  {showPassword ? <EyeOff className="w-3.5 h-3.5" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
                 </button>
               </div>
             </div>
@@ -179,6 +186,6 @@ export default function AuthPage() {
           PARADIGM ENGINE v2.0 — Sovereign Creative Platform
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

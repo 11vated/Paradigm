@@ -114,14 +114,16 @@ export default function MintPanel({ seed }) {
       <div className="space-y-2">
         <div className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Mint ERC-721 (Sepolia)</div>
         <div className="space-y-1.5">
-          <label className="font-mono text-[8px] text-neutral-700 uppercase">Owner Address (optional)</label>
+          <label htmlFor="mint-address" className="font-mono text-[8px] text-neutral-700 uppercase">Owner Address (optional)</label>
           <input
+            id="mint-address"
             data-testid="mint-address"
             type="text"
             value={ownerAddress}
             onChange={e => setOwnerAddress(e.target.value)}
             placeholder="0x..."
-            className="w-full px-2 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[10px] text-neutral-300 placeholder-neutral-700 focus:outline-none focus:border-amber-500/40 transition-colors"
+            aria-describedby="mint-help"
+            className="w-full px-2 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[10px] text-neutral-300 placeholder-neutral-700 focus:border-amber-500/40 transition-colors"
           />
         </div>
         <button
@@ -137,7 +139,7 @@ export default function MintPanel({ seed }) {
 
       {/* Error */}
       {error && (
-        <div className="p-2 border border-red-500/20 bg-red-500/5">
+        <div className="p-2 border border-red-500/20 bg-red-500/5" role="alert">
           <div className="font-mono text-[9px] text-red-400">{error}</div>
         </div>
       )}
@@ -162,7 +164,7 @@ export default function MintPanel({ seed }) {
               {copied ? 'Copied!' : 'Copy Metadata JSON'}
             </button>
           )}
-          <div className="font-mono text-[8px] text-neutral-700">
+          <div id="mint-help" className="font-mono text-[8px] text-neutral-700">
             To mint on-chain, connect a wallet with Sepolia ETH and provide a signing key.
           </div>
         </div>
