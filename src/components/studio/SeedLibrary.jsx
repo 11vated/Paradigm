@@ -1,19 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Library, Download, Loader2, Sparkles } from 'lucide-react';
 import { api, getSimilarSeeds } from '@/services/api';
-
-const DOMAIN_COLORS = {
-  character: '#F97316', sprite: '#10B981', music: '#8B5CF6', visual2d: '#06B6D4',
-  procedural: '#EC4899', narrative: '#F59E0B', audio: '#EF4444', fullgame: '#14B8A6',
-  animation: '#A855F7', geometry3d: '#22D3EE', physics: '#F43F5E', ecosystem: '#2DD4BF',
-  game: '#FB923C', alife: '#818CF8', shader: '#D946EF', particle: '#D946EF',
-  architecture: '#A855F7', vehicle: '#22D3EE', food: '#FB923C', choreography: '#E879F9',
-  ui: '#FBBF24', typography: '#94A3B8', furniture: '#78716C', fashion: '#F472B6',
-  robotics: '#6366F1', circuit: '#4ADE80', algorithm: '#10B981', building: '#A855F7',
-  camera: '#06B6D4', creature: '#F97316', 'cross-domain': '#F59E0B', fluid: '#22D3EE',
-  framework: '#8B5CF6', fx: '#D946EF', lighting: '#FBBF24', materials: '#EC4899',
-  plant: '#10B981', scene: '#14B8A6', style: '#F472B6', weather: '#2DD4BF'
-};
+import { DOMAIN_COLORS } from '@/lib/constants';
 
 export default function SeedLibrary({ onImport, activeSeed }) {
   const [library, setLibrary] = useState(null);

@@ -72,15 +72,47 @@ class KnowledgeBase {
     this.buildFromKernel();
   }
 
+  private static readonly DOMAIN_DESCRIPTIONS: Record<string, string> = {
+    character: 'Generates RPG characters with archetype, stats (strength, agility, hp), visual appearance (body proportions, color palette), and personality traits.',
+    sprite: 'Generates 2D pixel art sprites with configurable resolution (8-128px), palette size, primary/secondary colors via HSL, and bilateral/radial symmetry.',
+    music: 'Generates musical compositions with tempo (60-200 BPM), key, scale, time signature, timbre characteristics, and melody preview sequences.',
+    visual2d: 'Generates 2D generative art with style, complexity-driven layer count, color palette, and composition layout.',
+    procedural: 'Generates procedural terrain with Perlin noise octaves, persistence, scale, biome type, and 256px heightmaps.',
+    fullgame: 'Generates complete game designs with genre, difficulty curves, level progression, enemy types, boss encounters, world biomes, and exploration factors.',
+    animation: 'Generates skeletal/keyframe animations with frame count, FPS, easing curves, amplitude-based keyframe generation, and blend modes.',
+    geometry3d: 'Generates 3D meshes with primitive types, subdivision levels, vertex estimates, PBR materials (roughness, metalness), and bounding boxes.',
+    narrative: 'Generates stories with structure (hero\'s journey, five-act, nonlinear), tone-driven themes, cast sizing, subplot complexity, word estimates, and pacing.',
+    ui: 'Generates UI component layouts with grid systems, theme palettes (dark/light), spacing, border radius, and responsive configuration.',
+    physics: 'Generates physics simulations with gravity, friction, elasticity, body count, collision detection strategies, and integrator selection (Verlet/SPH).',
+    audio: 'Generates sound effects and synthesis with waveform type, frequency, ADSR envelopes, harmonic count, and filter configuration.',
+    ecosystem: 'Generates ecosystems with species count, trophic levels, interaction types (predation, symbiosis), carrying capacity, and extinction risk.',
+    game: 'Generates game mechanics with rule complexity, decision points per turn, player count, balance factors, and win condition sets.',
+    alife: 'Generates cellular automata with rule sets (Conway, Wireworld, Brian\'s Brain), grid size, neighborhood types, and birth/survival rules.',
+    shader: 'Generates GLSL shaders with technique (raymarching, path tracing), iteration count, epsilon precision, uniform definitions, and texture slots.',
+    particle: 'Generates particle systems with emitter types, spawn rates, lifetime, velocity, gravity, drag, additive blending, and size curves.',
+    typography: 'Generates typeface specs with style, weight ranges, x-height, contrast, cap height metrics, glyph counts, and OpenType feature sets.',
+    architecture: 'Generates buildings with architectural style, floor count, height calculations, footprint, window ratios, roof types, and structural engineering.',
+    vehicle: 'Generates vehicles with propulsion type, top speed, mass, acceleration, drag coefficient, range, and power output.',
+    furniture: 'Generates parametric furniture with type-specific dimensions, material weight calculations, comfort scores, and durability ratings.',
+    fashion: 'Generates garments with fabric properties (warmth, drape, breathability), silhouette, seasonal layering, and construction details.',
+    robotics: 'Generates robots with DOF calculations, sensor suites, payload capacity, battery life, and autonomy levels (SLAM/waypoint/teleoperated).',
+    circuit: 'Generates electronic circuits with component nodes, connections, PCB layout dimensions, trace widths, power consumption, and frequency specs.',
+    food: 'Generates recipes with cuisine, flavor profiles (sweet/salty/umami/sour/bitter), ingredient counts, prep/cook times, and calorie estimates.',
+    choreography: 'Generates dance sequences with style-specific movements, tempo, formations, phrase structure, energy curves, and stage spatial mapping.',
+    agent: 'Generates AI agent configurations with persona, temperature, reasoning depth, domain focus weights, gene expertise vectors, tool permissions, and dynamic system prompts.',
+  };
+
   private buildFromKernel() {
-    // Index all domains
+    // Index all domains with rich, engine-derived descriptions
     const domains = getAllDomains();
     for (const domain of domains) {
+      const desc = KnowledgeBase.DOMAIN_DESCRIPTIONS[domain] ||
+        `The "${domain}" domain is one of ${domains.length} creative domains in Paradigm.`;
       this.entries.push({
         category: 'domain',
         key: domain,
-        content: `The "${domain}" domain is one of ${domains.length} creative domains in Paradigm. Seeds in this domain can be grown using the ${domain} engine.`,
-        keywords: [domain, 'domain', 'engine', 'create', 'seed'],
+        content: `${domain} domain: ${desc} Seeds can be created, mutated, bred, composed, and grown.`,
+        keywords: [domain, 'domain', 'engine', 'create', 'seed', 'grow'],
       });
     }
 
@@ -199,7 +231,7 @@ export class ParadigmAgent {
    * Process a natural language or GSPL query.
    * This is the main entry point — backward-compatible with v1 API.
    */
-  process(query: string, context?: { seeds?: any[] }): AgentResponse {
+  async process(query: string, context?: { seeds?: any[] }): Promise<AgentResponse> {
     const startTime = Date.now();
     const seeds = context?.seeds || [];
 
@@ -301,24 +333,11 @@ export class ParadigmAgent {
           const ctx: ToolContext = { ...toolContext, seeds: mutableSeeds };
           // Since kernel tools don't actually await anything, we can extract the result
           // by building the result synchronously
-          const resultPromise = tool.execute(step.params, ctx);
+          const result = await tool.execute(step.params, ctx);
 
-          // For kernel tools, the promise resolves immediately (no actual async)
-          // We use a sync extraction pattern
-          let result: any = null;
-          resultPromise.then(r => { result = r; });
-
-          // Force microtask flush for sync tool execution
-          if (result) {
-            step.status = 'completed';
-            step.result = result;
-            if (result.seedsCreated) mutableSeeds.push(...result.seedsCreated);
-          } else {
-            // Tool hasn't resolved yet — fall back to synchronous execution
-            step.status = 'completed';
-            step.result = this.executeFallback(step.operation, step.params, mutableSeeds);
-            if (step.result?.seedsCreated) mutableSeeds.push(...step.result.seedsCreated);
-          }
+          step.status = 'completed';
+          step.result = result;
+          if (result?.seedsCreated) mutableSeeds.push(...result.seedsCreated);
         } catch (e: any) {
           step.status = 'failed';
           step.error = e.message;

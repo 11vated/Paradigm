@@ -1420,11 +1420,11 @@ async function startServer() {
   // NATIVE GSPL AGENT (retrieval-based, zero external AI)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/agent/query', optionalAuth, validateBody(AgentQuerySchema), (req: any, res: any) => {
+  app.post('/api/agent/query', optionalAuth, validateBody(AgentQuerySchema), async (req: any, res: any) => {
     const query = req.body.query || req.body.message;
 
     metrics.agentQueries++;
-    const response = gsplAgent.process(query, { seeds });
+    const response = await gsplAgent.process(query, { seeds });
 
     // If the agent created/mutated/bred/composed a seed, persist it
     if (response.success && response.data?.seed) {
@@ -1444,8 +1444,8 @@ async function startServer() {
     res.json(response);
   });
 
-  app.get('/api/agent/help', (_req, res) => {
-    res.json(gsplAgent.process('help'));
+  app.get('/api/agent/help', async (_req, res) => {
+    res.json(await gsplAgent.process('help'));
   });
 
   // ── Agent stats (v2) — inference tiers, memory, tools ──

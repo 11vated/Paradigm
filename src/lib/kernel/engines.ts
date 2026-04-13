@@ -131,193 +131,432 @@ function growProcedural(seed: Seed): Artifact {
 
 function growFullgame(seed: Seed): Artifact {
   const genre = geneVal(seed, 'genre', 'action');
-  const diff = geneVal(seed, 'difficulty', 0.5);
-  const levelCount = geneVal(seed, 'levelCount', 0.5);
+  const diff = typeof geneVal(seed, 'difficulty', 0.5) === 'number' ? geneVal(seed, 'difficulty', 0.5) : 0.5;
+  const levelCount = typeof geneVal(seed, 'levelCount', 0.5) === 'number' ? geneVal(seed, 'levelCount', 0.5) : 0.5;
+  const mechanics = geneVal(seed, 'mechanics', ['action']);
+  const pacing = geneVal(seed, 'pacing', 0.5);
+  const replayability = geneVal(seed, 'replayability', 0.5);
+  const levels = Math.max(3, Math.floor(levelCount * 20));
+  const enemyTypes = Math.max(2, Math.floor(diff * 12));
+  const bossCount = Math.max(1, Math.floor(levels / 5));
+  const diffCurve = Array.from({ length: levels }, (_, i) => +((diff * 0.3 + (i / levels) * 0.7) * 100).toFixed(1));
   return {
     type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    game: { genre, difficulty: typeof diff === 'number' ? +diff.toFixed(2) : diff, levels: Math.max(3, Math.floor((typeof levelCount === 'number' ? levelCount : 0.5) * 20)), mechanics: geneVal(seed, 'mechanics', ['action']) },
+    game: {
+      genre, difficulty: +diff.toFixed(2), levels,
+      mechanics: Array.isArray(mechanics) ? mechanics : [mechanics],
+      pacing: typeof pacing === 'number' ? +pacing.toFixed(2) : 0.5,
+      replayability: typeof replayability === 'number' ? +replayability.toFixed(2) : 0.5,
+    },
+    progression: { enemy_types: enemyTypes, boss_count: bossCount, difficulty_curve: diffCurve },
+    world: { biome_count: Math.max(2, Math.floor(levelCount * 6)), has_hub: levels > 8, exploration_factor: +(1 - diff * 0.5).toFixed(2) },
     render_hints: { mode: 'game_preview', interactive: true },
   };
 }
 
 function growAnimation(seed: Seed): Artifact {
+  const frameCount = Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60));
+  const fps = Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60));
+  const motionType = geneVal(seed, 'motionType', 'skeletal');
+  const easing = geneVal(seed, 'easing', 'ease_in_out');
+  const amplitude = geneVal(seed, 'amplitude', 0.5);
+  const duration = +(frameCount / fps).toFixed(2);
+  const keyframes = Array.from({ length: Math.min(frameCount, 12) }, (_, i) => {
+    const t = i / (Math.min(frameCount, 12) - 1 || 1);
+    return { frame: Math.floor(t * frameCount), value: +(Math.sin(t * Math.PI * 2) * (typeof amplitude === 'number' ? amplitude : 0.5)).toFixed(3) };
+  });
   return {
     type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    animation: { frame_count: Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
+    animation: { frame_count: frameCount, fps, motion_type: motionType, loop: geneVal(seed, 'loop', 'loop'), easing, duration_sec: duration },
+    keyframes,
+    motion: { amplitude: typeof amplitude === 'number' ? +amplitude.toFixed(2) : 0.5, frequency: +(fps / frameCount).toFixed(2), blend_mode: motionType === 'skeletal' ? 'additive' : 'override' },
     render_hints: { mode: 'animation_timeline', animated: true },
   };
 }
 
 function growGeometry3d(seed: Seed): Artifact {
+  const primitive = geneVal(seed, 'primitive', 'sphere');
+  const detail = typeof geneVal(seed, 'detail', 0.5) === 'number' ? geneVal(seed, 'detail', 0.5) : 0.5;
+  const material = geneVal(seed, 'material', 'metal');
+  const scaleVal = geneVal(seed, 'scale', [1, 1, 1]);
+  const scale = Array.isArray(scaleVal) ? scaleVal.slice(0, 3) : [scaleVal, scaleVal, scaleVal];
+  const subdivisions = Math.max(1, Math.floor(detail * 8));
+  const vertexEstimate = primitive === 'cube' ? 8 * Math.pow(4, subdivisions - 1) :
+    primitive === 'sphere' ? Math.pow(subdivisions + 1, 2) * 2 :
+    primitive === 'torus' ? subdivisions * subdivisions * 4 : subdivisions * 12;
+  const roughness = geneVal(seed, 'roughness', 0.4);
+  const metalness = material === 'metal' ? 0.9 : material === 'wood' ? 0.1 : 0.5;
   return {
     type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    mesh: { primitive: geneVal(seed, 'primitive', 'sphere'), subdivisions: Math.max(1, Math.floor(geneVal(seed, 'detail', 0.5) * 8)), material: geneVal(seed, 'material', 'metal'), scale: [1, 1, 1] },
-    render_hints: { mode: '3d_viewport', rotatable: true },
+    mesh: { primitive, subdivisions, vertex_estimate: vertexEstimate, scale: scale.map((s: number) => +(s || 1).toFixed(2)) },
+    material: { type: material, roughness: typeof roughness === 'number' ? +roughness.toFixed(2) : 0.4, metalness: +metalness.toFixed(2), color: geneVal(seed, 'color', [0.7, 0.7, 0.7]) },
+    bounds: { min: scale.map((s: number) => -(s || 1) / 2), max: scale.map((s: number) => (s || 1) / 2) },
+    render_hints: { mode: '3d_viewport', rotatable: true, wireframe: detail < 0.3 },
   };
 }
 
 function growNarrative(seed: Seed): Artifact {
+  const structure = geneVal(seed, 'structure', 'heros_journey');
+  const tone = geneVal(seed, 'tone', 'epic');
+  const characters = geneVal(seed, 'characters', ['hero', 'villain']);
+  const plot = geneVal(seed, 'plot', 'quest');
+  const complexity = geneVal(seed, 'complexity', 0.5);
+  const castSize = Array.isArray(characters) ? characters.length : 2;
+  const actCount = structure === 'heros_journey' ? 3 : structure === 'five_act' ? 5 : structure === 'nonlinear' ? 4 : 3;
+  const subplots = Math.max(0, Math.floor((typeof complexity === 'number' ? complexity : 0.5) * castSize));
+  const wordEstimate = Math.floor(actCount * 2500 * (1 + (typeof complexity === 'number' ? complexity : 0.5)));
+  const themes = tone === 'epic' ? ['sacrifice', 'destiny'] : tone === 'dark' ? ['betrayal', 'survival'] : tone === 'comic' ? ['irony', 'absurdity'] : ['growth', 'discovery'];
   return {
     type: 'narrative', name: seed.$name ?? 'Story', domain: 'narrative',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    story: { structure: geneVal(seed, 'structure', 'heros_journey'), tone: geneVal(seed, 'tone', 'epic'), characters: geneVal(seed, 'characters', ['hero', 'villain']), plot: geneVal(seed, 'plot', 'quest'), acts: 3 },
+    story: { structure, tone, plot, acts: actCount, cast_size: castSize, characters: Array.isArray(characters) ? characters : [characters] },
+    narrative: { subplots, word_estimate: wordEstimate, themes, pov: castSize > 3 ? 'multi' : 'single', pacing: typeof complexity === 'number' ? (complexity > 0.6 ? 'slow_burn' : 'fast') : 'medium' },
     render_hints: { mode: 'narrative_flow', readable: true },
   };
 }
 
 function growUi(seed: Seed): Artifact {
+  const layout = geneVal(seed, 'layout', 'dashboard');
+  const theme = geneVal(seed, 'theme', 'dark');
+  const components = geneVal(seed, 'components', ['header', 'sidebar', 'main']);
+  const density = geneVal(seed, 'density', 0.5);
+  const responsive = geneVal(seed, 'responsive', true);
+  const compList = Array.isArray(components) ? components : [components];
+  const gridCols = layout === 'dashboard' ? 12 : layout === 'split' ? 2 : layout === 'single' ? 1 : 4;
+  const spacing = typeof density === 'number' ? Math.floor((1 - density) * 24 + 4) : 12;
+  const palette = theme === 'dark'
+    ? { bg: '#0a0a0a', surface: '#1a1a1a', text: '#e5e5e5', accent: '#F97316' }
+    : { bg: '#ffffff', surface: '#f5f5f5', text: '#171717', accent: '#2563EB' };
   return {
     type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    interface: { layout: geneVal(seed, 'layout', 'dashboard'), theme: geneVal(seed, 'theme', 'dark'), components: geneVal(seed, 'components', ['header', 'sidebar', 'main']) },
+    interface: { layout, theme, components: compList, grid_columns: gridCols, spacing_px: spacing, responsive: !!responsive },
+    design: { palette, border_radius: typeof density === 'number' ? Math.floor(density * 16) : 8, font_scale: 1.0, component_count: compList.length },
     render_hints: { mode: 'ui_preview', interactive: true },
   };
 }
 
 function growPhysics(seed: Seed): Artifact {
-  const grav = geneVal(seed, 'gravity', 0.5);
+  const grav = typeof geneVal(seed, 'gravity', 0.5) === 'number' ? geneVal(seed, 'gravity', 0.5) : 0.5;
+  const friction = typeof geneVal(seed, 'friction', 0.3) === 'number' ? geneVal(seed, 'friction', 0.3) : 0.3;
+  const elasticity = typeof geneVal(seed, 'elasticity', 0.8) === 'number' ? geneVal(seed, 'elasticity', 0.8) : 0.8;
+  const simType = geneVal(seed, 'simulationType', 'rigid_body');
+  const bodyCount = typeof geneVal(seed, 'bodyCount', 0.3) === 'number' ? Math.max(1, Math.floor(geneVal(seed, 'bodyCount', 0.3) * 50)) : 10;
+  const gravityMs2 = +(grav * 20).toFixed(2);
+  const dt = simType === 'fluid' ? 0.001 : 0.016;
+  const steps = Math.floor(simType === 'fluid' ? 5000 : 1000);
+  const energyDissipation = +(friction * (1 - elasticity)).toFixed(3);
   return {
     type: 'physics', name: seed.$name ?? 'Simulation', domain: 'physics',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    simulation: { gravity: typeof grav === 'number' ? +(grav * 20).toFixed(2) : grav, friction: geneVal(seed, 'friction', 0.3), elasticity: geneVal(seed, 'elasticity', 0.8), type: geneVal(seed, 'simulationType', 'rigid_body'), steps: 1000 },
+    simulation: { gravity_ms2: gravityMs2, friction: +friction.toFixed(2), elasticity: +elasticity.toFixed(2), type: simType, steps, dt },
+    config: { body_count: bodyCount, energy_dissipation: energyDissipation, collision_detection: bodyCount > 20 ? 'broadphase_sap' : 'naive', integrator: simType === 'fluid' ? 'sph' : 'verlet' },
+    bounds: { min: [-10, 0, -10], max: [10, 20, 10] },
     render_hints: { mode: 'physics_sim', animated: true },
   };
 }
 
 function growAudio(seed: Seed): Artifact {
+  const soundType = geneVal(seed, 'soundType', 'sfx');
+  const duration = typeof geneVal(seed, 'duration', 0.5) === 'number' ? geneVal(seed, 'duration', 0.5) : 0.5;
+  const freq = typeof geneVal(seed, 'frequency', 440) === 'number' ? geneVal(seed, 'frequency', 440) : 440;
+  const waveform = geneVal(seed, 'waveform', 'sine');
+  const envelope = geneVal(seed, 'envelope', { attack: 0.01, decay: 0.1, sustain: 0.7, release: 0.2 });
+  const durationMs = Math.max(100, Math.floor(duration * 5000));
+  const sampleRate = 44100;
+  const sampleCount = Math.floor(sampleRate * durationMs / 1000);
+  const harmonics = soundType === 'sfx' ? 1 : soundType === 'ambient' ? 6 : 3;
+  const adsr = typeof envelope === 'object' && envelope !== null ? envelope : { attack: 0.01, decay: 0.1, sustain: 0.7, release: 0.2 };
   return {
     type: 'audio', name: seed.$name ?? 'Sound', domain: 'audio',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    audio: { type: geneVal(seed, 'soundType', 'sfx'), duration_ms: Math.max(100, Math.floor(geneVal(seed, 'duration', 0.5) * 5000)), frequency: geneVal(seed, 'frequency', 440) },
+    audio: { type: soundType, duration_ms: durationMs, frequency: freq, waveform, sample_rate: sampleRate, sample_count: sampleCount },
+    synthesis: { harmonics, envelope: adsr, filter: soundType === 'ambient' ? 'lowpass' : 'none', filter_freq: Math.floor(freq * 3) },
     render_hints: { mode: 'audio_waveform', playable: true },
   };
 }
 
 function growEcosystem(seed: Seed): Artifact {
+  const speciesRaw = geneVal(seed, 'speciesCount', 0.5);
+  const speciesCount = Math.max(2, Math.floor((typeof speciesRaw === 'number' ? speciesRaw : 0.5) * 20));
+  const environment = geneVal(seed, 'environment', 'forest');
+  const stability = typeof geneVal(seed, 'stability', 0.6) === 'number' ? geneVal(seed, 'stability', 0.6) : 0.6;
+  const biodiversity = geneVal(seed, 'biodiversity', 0.5);
+  const interactionTypes = ['predation', 'symbiosis', 'competition', 'parasitism', 'commensalism'];
+  const activeInteractions = interactionTypes.slice(0, Math.max(2, Math.floor((typeof biodiversity === 'number' ? biodiversity : 0.5) * interactionTypes.length)));
+  const carryingCapacity = Math.floor(speciesCount * 50 * stability);
+  const trophicLevels = Math.max(2, Math.min(5, Math.ceil(speciesCount / 4)));
+  const extinctionRisk = +(1 - stability).toFixed(2);
   return {
     type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    ecosystem: { species_count: Math.max(2, Math.floor(geneVal(seed, 'speciesCount', 0.5) * 20)), environment: geneVal(seed, 'environment', 'forest'), stability: geneVal(seed, 'stability', 0.6), interactions: ['predation', 'symbiosis', 'competition'] },
+    ecosystem: { species_count: speciesCount, environment, stability: +stability.toFixed(2), interactions: activeInteractions },
+    dynamics: { carrying_capacity: carryingCapacity, trophic_levels: trophicLevels, extinction_risk: extinctionRisk, energy_flow: +(stability * 0.8).toFixed(2), cycles: environment === 'ocean' ? ['tidal', 'seasonal'] : ['seasonal', 'diurnal'] },
     render_hints: { mode: 'ecosystem_graph', animated: true },
   };
 }
 
 function growGame(seed: Seed): Artifact {
+  const mechType = geneVal(seed, 'mechanicType', 'turn_based');
+  const complexity = typeof geneVal(seed, 'complexity', 0.5) === 'number' ? geneVal(seed, 'complexity', 0.5) : 0.5;
+  const players = typeof geneVal(seed, 'players', 2) === 'number' ? geneVal(seed, 'players', 2) : 2;
+  const balance = geneVal(seed, 'balance', 0.5);
+  const ruleCount = Math.max(3, Math.floor(complexity * 15));
+  const decisionPoints = Math.floor(ruleCount * 1.5);
+  const avgTurnTime = mechType === 'turn_based' ? Math.floor(10 + complexity * 50) : mechType === 'realtime' ? 0 : 5;
+  const playerCount = typeof players === 'number' && players <= 1 ? Math.max(1, Math.floor(players * 8)) : Math.max(1, Math.floor(players));
   return {
     type: 'game', name: seed.$name ?? 'Game Mechanic', domain: 'game',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    mechanic: { type: geneVal(seed, 'mechanicType', 'turn_based'), complexity: geneVal(seed, 'complexity', 0.5), players: geneVal(seed, 'players', 2) },
+    mechanic: { type: mechType, complexity: +complexity.toFixed(2), players: playerCount, rule_count: ruleCount },
+    design: { decision_points_per_turn: decisionPoints, avg_turn_seconds: avgTurnTime, balance_factor: typeof balance === 'number' ? +balance.toFixed(2) : 0.5, win_conditions: ruleCount > 8 ? ['score', 'elimination', 'objective'] : ['score', 'elimination'] },
     render_hints: { mode: 'mechanic_diagram' },
   };
 }
 
 function growAlife(seed: Seed): Artifact {
+  const rules = geneVal(seed, 'rules', 'conway');
+  const gridSize = Math.max(16, Math.floor((typeof geneVal(seed, 'gridSize', 0.5) === 'number' ? geneVal(seed, 'gridSize', 0.5) : 0.5) * 128));
+  const density = typeof geneVal(seed, 'density', 0.3) === 'number' ? geneVal(seed, 'density', 0.3) : 0.3;
+  const neighborhoodType = geneVal(seed, 'neighborhood', 'moore');
+  const stateCount = rules === 'conway' ? 2 : rules === 'wireworld' ? 4 : rules === 'brians_brain' ? 3 : 2;
+  const cellCount = gridSize * gridSize;
+  const aliveCells = Math.floor(cellCount * density);
+  const birthRule = rules === 'conway' ? [3] : rules === 'highlife' ? [3, 6] : [3];
+  const surviveRule = rules === 'conway' ? [2, 3] : rules === 'highlife' ? [2, 3] : [2, 3];
   return {
     type: 'alife', name: seed.$name ?? 'Artificial Life', domain: 'alife',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    alife: { rules: geneVal(seed, 'rules', 'conway'), grid_size: Math.max(16, Math.floor(geneVal(seed, 'gridSize', 0.5) * 128)), initial_density: geneVal(seed, 'density', 0.3) },
+    alife: { rules, grid_size: gridSize, initial_density: +density.toFixed(2), states: stateCount, neighborhood: neighborhoodType },
+    simulation: { cell_count: cellCount, initial_alive: aliveCells, birth_rule: birthRule, survive_rule: surviveRule, wrapping: true },
     render_hints: { mode: 'cellular_automata', animated: true },
   };
 }
 
 function growShader(seed: Seed): Artifact {
+  const shaderType = geneVal(seed, 'shaderType', 'fragment');
+  const technique = geneVal(seed, 'technique', 'raymarching');
+  const complexity = typeof geneVal(seed, 'complexity', 0.5) === 'number' ? geneVal(seed, 'complexity', 0.5) : 0.5;
+  const palette = geneVal(seed, 'palette', [0.5, 0.3, 0.8]);
+  const iterations = Math.max(16, Math.floor(complexity * 256));
+  const epsilon = +(0.01 * (1 - complexity * 0.9)).toFixed(5);
+  const uniforms = { u_time: 'float', u_resolution: 'vec2', u_mouse: 'vec2' };
+  if (technique === 'raymarching') Object.assign(uniforms, { u_max_steps: `int(${iterations})`, u_epsilon: `float(${epsilon})` });
   return {
     type: 'shader', name: seed.$name ?? 'Shader', domain: 'shader',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    shader: { type: geneVal(seed, 'shaderType', 'fragment'), technique: geneVal(seed, 'technique', 'raymarching'), parameters: { iterations: 64, epsilon: 0.001 } },
+    shader: { type: shaderType, technique, iterations, epsilon, complexity: +complexity.toFixed(2) },
+    glsl: { uniforms, varying_count: shaderType === 'vertex' ? 3 : 0, texture_slots: Math.floor(complexity * 4), color_palette: Array.isArray(palette) ? palette : [0.5, 0.3, 0.8] },
     render_hints: { mode: 'shader_preview', realtime: true },
   };
 }
 
 function growParticle(seed: Seed): Artifact {
+  const emitter = geneVal(seed, 'emitter', 'point');
+  const count = Math.max(10, Math.floor((typeof geneVal(seed, 'count', 0.5) === 'number' ? geneVal(seed, 'count', 0.5) : 0.5) * 1000));
+  const lifetime = typeof geneVal(seed, 'lifetime', 2.0) === 'number' ? geneVal(seed, 'lifetime', 2.0) : 2.0;
+  const velocity = geneVal(seed, 'velocity', [0, 1, 0]);
+  const gravity = geneVal(seed, 'gravity', [0, -0.5, 0]);
+  const color = geneVal(seed, 'color', [1, 0.5, 0]);
+  const spread = geneVal(seed, 'spread', 0.3);
+  const emitterRadius = emitter === 'sphere' ? 1.0 : emitter === 'ring' ? 0.5 : 0;
+  const spawnRate = Math.floor(count / Math.max(0.1, lifetime));
   return {
     type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    particles: { emitter: geneVal(seed, 'emitter', 'point'), count: Math.max(10, Math.floor(geneVal(seed, 'count', 0.5) * 1000)), lifetime: geneVal(seed, 'lifetime', 2.0), velocity: geneVal(seed, 'velocity', [0, 1, 0]) },
+    particles: { emitter, count, lifetime: +lifetime.toFixed(2), velocity: Array.isArray(velocity) ? velocity : [0, velocity, 0], spawn_rate: spawnRate },
+    physics: { gravity: Array.isArray(gravity) ? gravity : [0, -gravity, 0], spread: typeof spread === 'number' ? +spread.toFixed(2) : 0.3, emitter_radius: emitterRadius, drag: 0.02 },
+    visual: { color: Array.isArray(color) ? color : [1, 0.5, 0], size_start: 0.1, size_end: 0.01, blend_mode: 'additive' },
     render_hints: { mode: 'particle_sim', animated: true },
   };
 }
 
 function growTypography(seed: Seed): Artifact {
+  const style = geneVal(seed, 'style', 'sans_serif');
+  const xHeight = typeof geneVal(seed, 'xHeight', 0.5) === 'number' ? geneVal(seed, 'xHeight', 0.5) : 0.5;
+  const contrast = typeof geneVal(seed, 'contrast', 0.3) === 'number' ? geneVal(seed, 'contrast', 0.3) : 0.3;
+  const width = geneVal(seed, 'width', 0.5);
+  const serif = style === 'serif' || style === 'slab_serif';
+  const minWeight = 100 + Math.floor((1 - contrast) * 200);
+  const maxWeight = 900 - Math.floor((1 - contrast) * 200);
+  const capHeight = +(xHeight * 1.4).toFixed(2);
+  const descenderDepth = +(xHeight * 0.3).toFixed(2);
+  const glyphCount = style === 'display' ? 62 : style === 'mono' ? 95 : 220;
   return {
     type: 'typography', name: seed.$name ?? 'Typeface', domain: 'typography',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    typography: { style: geneVal(seed, 'style', 'sans_serif'), weight_range: [100, 900], x_height: geneVal(seed, 'xHeight', 0.5), contrast: geneVal(seed, 'contrast', 0.3) },
+    typography: { style, weight_range: [minWeight, maxWeight], x_height: +xHeight.toFixed(2), contrast: +contrast.toFixed(2) },
+    metrics: { cap_height: capHeight, descender: descenderDepth, width_factor: typeof width === 'number' ? +width.toFixed(2) : 0.5, serif_style: serif ? (style === 'slab_serif' ? 'slab' : 'bracketed') : 'none', glyph_count: glyphCount, opentype_features: ['liga', 'kern', 'calt'] },
     render_hints: { mode: 'type_specimen' },
   };
 }
 
 function growArchitecture(seed: Seed): Artifact {
+  const style = geneVal(seed, 'style', 'modern');
+  const scale = typeof geneVal(seed, 'scale', 0.5) === 'number' ? geneVal(seed, 'scale', 0.5) : 0.5;
+  const symmetry = geneVal(seed, 'symmetry', 'bilateral');
+  const materials = geneVal(seed, 'materials', ['concrete', 'glass']);
+  const floors = Math.max(1, Math.floor(scale * 10));
+  const floorHeight = style === 'gothic' ? 4.5 : style === 'modern' ? 3.0 : 3.5;
+  const totalHeight = +(floors * floorHeight).toFixed(1);
+  const footprint = +(10 + scale * 40).toFixed(1);
+  const windowRatio = style === 'modern' ? 0.7 : style === 'gothic' ? 0.3 : 0.5;
+  const roofType = style === 'gothic' ? 'vaulted' : style === 'modern' ? 'flat' : 'pitched';
+  const matList = Array.isArray(materials) ? materials : [materials];
   return {
     type: 'architecture', name: seed.$name ?? 'Building', domain: 'architecture',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    building: { style: geneVal(seed, 'style', 'modern'), floors: Math.max(1, Math.floor(geneVal(seed, 'scale', 0.5) * 10)), symmetry: geneVal(seed, 'symmetry', 'bilateral'), materials: geneVal(seed, 'materials', ['concrete', 'glass']) },
+    building: { style, floors, symmetry, materials: matList, roof: roofType },
+    dimensions: { total_height_m: totalHeight, footprint_m2: footprint, floor_height_m: floorHeight, window_ratio: +windowRatio.toFixed(2) },
+    structural: { load_bearing: matList.includes('steel') ? 'steel_frame' : 'masonry', foundation: floors > 5 ? 'deep_pile' : 'strip', seismic_rating: floors > 3 ? 'zone_3' : 'zone_1' },
     render_hints: { mode: '3d_building', rotatable: true },
   };
 }
 
 function growVehicle(seed: Seed): Artifact {
+  const propulsion = geneVal(seed, 'propulsion', 'combustion');
+  const speed = typeof geneVal(seed, 'speed', 0.5) === 'number' ? geneVal(seed, 'speed', 0.5) : 0.5;
+  const mass = typeof geneVal(seed, 'mass', 0.5) === 'number' ? geneVal(seed, 'mass', 0.5) : 0.5;
+  const aero = geneVal(seed, 'aerodynamics', 0.5);
+  const topSpeed = Math.max(10, Math.floor(speed * 300));
+  const massKg = Math.max(100, Math.floor(mass * 5000));
+  const accel = +(topSpeed / (massKg / 500)).toFixed(1);
+  const dragCoeff = typeof aero === 'number' ? +(0.5 - aero * 0.3).toFixed(2) : 0.35;
+  const range = propulsion === 'electric' ? Math.floor(200 + speed * 400) : propulsion === 'hydrogen' ? Math.floor(300 + speed * 300) : Math.floor(400 + speed * 600);
+  const wheels = massKg > 3000 ? 6 : massKg > 1500 ? 4 : 2;
   return {
     type: 'vehicle', name: seed.$name ?? 'Vehicle', domain: 'vehicle',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    vehicle: { propulsion: geneVal(seed, 'propulsion', 'combustion'), top_speed: Math.max(10, Math.floor(geneVal(seed, 'speed', 0.5) * 300)), mass_kg: Math.max(100, Math.floor(geneVal(seed, 'mass', 0.5) * 5000)) },
+    vehicle: { propulsion, top_speed_kmh: topSpeed, mass_kg: massKg, wheels },
+    performance: { acceleration_0_100: accel, drag_coefficient: dragCoeff, range_km: range, power_kw: Math.floor(massKg * accel / 10) },
     render_hints: { mode: '3d_vehicle', rotatable: true },
   };
 }
 
 function growFurniture(seed: Seed): Artifact {
+  const fType = geneVal(seed, 'furnitureType', 'chair');
+  const style = geneVal(seed, 'style', 'modern');
+  const material = geneVal(seed, 'material', 'wood');
+  const ergonomics = typeof geneVal(seed, 'ergonomics', 0.5) === 'number' ? geneVal(seed, 'ergonomics', 0.5) : 0.5;
+  const dims = fType === 'chair' ? { w: 0.5, d: 0.5, h: 0.9 } : fType === 'table' ? { w: 1.2, d: 0.8, h: 0.75 } : fType === 'sofa' ? { w: 2.0, d: 0.9, h: 0.85 } : fType === 'shelf' ? { w: 0.8, d: 0.3, h: 1.8 } : { w: 0.6, d: 0.6, h: 0.8 };
+  const weightKg = +(dims.w * dims.d * dims.h * (material === 'metal' ? 80 : material === 'wood' ? 40 : 20)).toFixed(1);
+  const comfortScore = fType === 'chair' || fType === 'sofa' ? +ergonomics.toFixed(2) : 0;
   return {
     type: 'furniture', name: seed.$name ?? 'Furniture', domain: 'furniture',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    furniture: { type: geneVal(seed, 'furnitureType', 'chair'), style: geneVal(seed, 'style', 'modern'), material: geneVal(seed, 'material', 'wood') },
+    furniture: { type: fType, style, material },
+    dimensions: { width_m: dims.w, depth_m: dims.d, height_m: dims.h, weight_kg: weightKg },
+    properties: { comfort: comfortScore, durability: material === 'metal' ? 0.9 : material === 'wood' ? 0.7 : 0.5, sustainability: material === 'bamboo' ? 0.95 : material === 'wood' ? 0.6 : 0.3 },
     render_hints: { mode: '3d_furniture' },
   };
 }
 
 function growFashion(seed: Seed): Artifact {
+  const garmentType = geneVal(seed, 'garmentType', 'dress');
+  const fabric = geneVal(seed, 'fabric', 'silk');
+  const palette = geneVal(seed, 'palette', [0.8, 0.1, 0.3]);
+  const silhouette = geneVal(seed, 'silhouette', 'fitted');
+  const season = geneVal(seed, 'season', 'spring');
+  const col = Array.isArray(palette) ? palette : [0.8, 0.1, 0.3];
+  const warmth = fabric === 'wool' ? 0.9 : fabric === 'cotton' ? 0.5 : fabric === 'silk' ? 0.3 : 0.4;
+  const drape = fabric === 'silk' ? 0.95 : fabric === 'denim' ? 0.2 : fabric === 'cotton' ? 0.6 : 0.5;
+  const layers = season === 'winter' ? 3 : season === 'fall' ? 2 : 1;
   return {
     type: 'fashion', name: seed.$name ?? 'Garment', domain: 'fashion',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    garment: { type: geneVal(seed, 'garmentType', 'dress'), fabric: geneVal(seed, 'fabric', 'silk'), palette: geneVal(seed, 'palette', [0.8, 0.1, 0.3]) },
+    garment: { type: garmentType, fabric, palette: col, silhouette, season },
+    textile: { warmth: +warmth.toFixed(2), drape: +drape.toFixed(2), layers, breathability: +(1 - warmth * 0.5).toFixed(2) },
+    construction: { seam_type: fabric === 'silk' ? 'french' : 'flat_felled', closure: garmentType === 'dress' ? 'zipper' : garmentType === 'jacket' ? 'buttons' : 'none', pattern_pieces: garmentType === 'dress' ? 8 : garmentType === 'jacket' ? 12 : 4 },
     render_hints: { mode: '3d_garment' },
   };
 }
 
 function growRobotics(seed: Seed): Artifact {
+  const robotType = geneVal(seed, 'robotType', 'humanoid');
+  const dofRaw = typeof geneVal(seed, 'dof', 0.5) === 'number' ? geneVal(seed, 'dof', 0.5) : 0.5;
+  const actuators = geneVal(seed, 'actuators', ['servo', 'linear']);
+  const autonomy = typeof geneVal(seed, 'autonomy', 0.5) === 'number' ? geneVal(seed, 'autonomy', 0.5) : 0.5;
+  const dof = Math.max(3, Math.floor(dofRaw * 12));
+  const actList = Array.isArray(actuators) ? actuators : [actuators];
+  const sensors = robotType === 'humanoid' ? ['camera', 'imu', 'force', 'proximity'] :
+    robotType === 'wheeled' ? ['lidar', 'camera', 'encoder'] :
+    robotType === 'aerial' ? ['gps', 'imu', 'camera', 'barometer'] : ['camera', 'imu'];
+  const payloadKg = robotType === 'industrial' ? +(dof * 5).toFixed(1) : +(dof * 0.5).toFixed(1);
+  const batteryHours = +(4 + (1 - autonomy) * 8).toFixed(1);
   return {
     type: 'robotics', name: seed.$name ?? 'Robot', domain: 'robotics',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    robot: { type: geneVal(seed, 'robotType', 'humanoid'), dof: Math.max(3, Math.floor(geneVal(seed, 'dof', 0.5) * 12)), actuators: geneVal(seed, 'actuators', ['servo', 'linear']) },
+    robot: { type: robotType, dof, actuators: actList },
+    capabilities: { sensors, payload_kg: payloadKg, battery_hours: batteryHours, autonomy_level: +autonomy.toFixed(2), nav_type: autonomy > 0.7 ? 'slam' : autonomy > 0.4 ? 'waypoint' : 'teleoperated' },
     render_hints: { mode: '3d_robot', animated: true },
   };
 }
 
 function growCircuit(seed: Seed): Artifact {
+  const circuitType = geneVal(seed, 'circuitType', 'digital');
+  const components = geneVal(seed, 'components', ['resistor', 'capacitor', 'IC']);
+  const layersRaw = typeof geneVal(seed, 'layers', 0.5) === 'number' ? geneVal(seed, 'layers', 0.5) : 0.5;
+  const complexity = typeof geneVal(seed, 'complexity', 0.5) === 'number' ? geneVal(seed, 'complexity', 0.5) : 0.5;
+  const layers = Math.max(1, Math.floor(layersRaw * 6));
+  const compList = Array.isArray(components) ? components : [components];
+  const nodeCount = Math.floor(compList.length * (1 + complexity * 3));
+  const connectionCount = Math.floor(nodeCount * 1.5);
+  const powerMw = circuitType === 'digital' ? Math.floor(10 + complexity * 500) : Math.floor(50 + complexity * 2000);
+  const frequency = circuitType === 'digital' ? `${Math.floor(1 + complexity * 3000)} MHz` : circuitType === 'rf' ? `${+(0.1 + complexity * 5.9).toFixed(1)} GHz` : 'DC';
   return {
     type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    circuit: { type: geneVal(seed, 'circuitType', 'digital'), components: geneVal(seed, 'components', ['resistor', 'capacitor', 'IC']), layers: Math.max(1, Math.floor(geneVal(seed, 'layers', 0.5) * 6)) },
+    circuit: { type: circuitType, components: compList, layers },
+    electrical: { node_count: nodeCount, connections: connectionCount, power_mw: powerMw, frequency, voltage: circuitType === 'digital' ? '3.3V' : '12V' },
+    layout: { board_mm: [Math.floor(20 + complexity * 80), Math.floor(15 + complexity * 60)], trace_width_mm: layers > 3 ? 0.15 : 0.25, via_count: Math.floor(nodeCount * 0.3) },
     render_hints: { mode: 'schematic' },
   };
 }
 
 function growFood(seed: Seed): Artifact {
+  const cuisine = geneVal(seed, 'cuisine', 'italian');
+  const complexity = typeof geneVal(seed, 'complexity', 0.5) === 'number' ? geneVal(seed, 'complexity', 0.5) : 0.5;
+  const flavorProfile = geneVal(seed, 'flavor_profile', [0.5, 0.3, 0.7, 0.2, 0.1]);
+  const flavors = Array.isArray(flavorProfile) ? flavorProfile : [0.5, 0.3, 0.7, 0.2, 0.1];
+  const flavorLabels = ['sweet', 'salty', 'umami', 'sour', 'bitter'];
+  const dominantFlavor = flavorLabels[flavors.indexOf(Math.max(...flavors.map(Number)))] || 'umami';
+  const ingredientCount = Math.max(3, Math.floor(complexity * 15));
+  const prepMinutes = Math.floor(15 + complexity * 90);
+  const cookMinutes = Math.floor(10 + complexity * 120);
+  const servings = typeof geneVal(seed, 'servings', 4) === 'number' ? Math.max(1, Math.floor(geneVal(seed, 'servings', 4))) : 4;
+  const calories = Math.floor(200 + flavors[0] * 300 + flavors[2] * 200);
   return {
     type: 'food', name: seed.$name ?? 'Recipe', domain: 'food',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    recipe: { cuisine: geneVal(seed, 'cuisine', 'italian'), complexity: geneVal(seed, 'complexity', 0.5), servings: 4, flavor_profile: geneVal(seed, 'flavor_profile', [0.5, 0.3, 0.7, 0.2, 0.1]) },
+    recipe: { cuisine, complexity: +complexity.toFixed(2), servings, ingredient_count: ingredientCount },
+    flavor: { profile: Object.fromEntries(flavorLabels.map((l, i) => [l, +(flavors[i] ?? 0).toFixed(2)])), dominant: dominantFlavor },
+    preparation: { prep_minutes: prepMinutes, cook_minutes: cookMinutes, total_minutes: prepMinutes + cookMinutes, technique: complexity > 0.7 ? 'advanced' : complexity > 0.4 ? 'intermediate' : 'beginner', calories_per_serving: calories },
     render_hints: { mode: 'recipe_card' },
   };
 }
 
 function growChoreography(seed: Seed): Artifact {
+  const style = geneVal(seed, 'style', 'contemporary');
+  const tempo = typeof geneVal(seed, 'tempo', 0.5) === 'number' ? geneVal(seed, 'tempo', 0.5) : 0.5;
+  const dancerCount = Math.max(1, Math.floor((typeof geneVal(seed, 'dancers', 0.5) === 'number' ? geneVal(seed, 'dancers', 0.5) : 0.5) * 8));
+  const energy = typeof geneVal(seed, 'energy', 0.5) === 'number' ? geneVal(seed, 'energy', 0.5) : 0.5;
+  const bpm = Math.floor(60 + tempo * 120);
+  const durationBeats = Math.max(16, Math.floor(32 + energy * 64));
+  const durationSec = +(durationBeats / (bpm / 60)).toFixed(1);
+  const formations = dancerCount > 4 ? ['circle', 'line', 'scatter', 'pairs'] : dancerCount > 1 ? ['line', 'pairs'] : ['solo'];
+  const movements = style === 'ballet' ? ['plie', 'arabesque', 'pirouette', 'jete'] :
+    style === 'hiphop' ? ['pop', 'lock', 'wave', 'freeze'] :
+    style === 'contemporary' ? ['release', 'contraction', 'spiral', 'fall'] :
+    ['step', 'turn', 'gesture', 'jump'];
   return {
     type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    choreography: { style: geneVal(seed, 'style', 'contemporary'), tempo: geneVal(seed, 'tempo', 0.5), dancers: Math.max(1, Math.floor(geneVal(seed, 'dancers', 0.5) * 8)), duration_beats: 32 },
+    choreography: { style, tempo_bpm: bpm, dancers: dancerCount, duration_beats: durationBeats, duration_sec: durationSec },
+    structure: { formations, movements, phrase_count: Math.ceil(durationBeats / 8), energy_curve: energy > 0.6 ? 'build_drop' : 'steady' },
+    spatial: { stage_width_m: Math.max(4, dancerCount * 2), stage_depth_m: Math.max(3, dancerCount * 1.5), floor_pattern: dancerCount > 2 ? 'mapped' : 'free' },
     render_hints: { mode: 'motion_timeline', animated: true },
   };
 }

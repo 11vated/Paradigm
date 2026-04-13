@@ -137,7 +137,7 @@ describe('Plan Builder', () => {
 
 describe('Tool System', () => {
   it('has 9 kernel tools registered', () => {
-    expect(AGENT_TOOLS.size).toBe(9);
+    expect(AGENT_TOOLS.size).toBe(10);
   });
 
   it('all kernel tools have required properties', () => {
@@ -281,7 +281,7 @@ describe('Tool System', () => {
 
   it('getAvailableTools returns all kernel tools', () => {
     const available = getAvailableTools({});
-    expect(available.size).toBe(9);
+    expect(available.size).toBe(10);
     for (const [, tool] of available) {
       expect(tool.category).toBe('kernel');
     }
@@ -375,33 +375,33 @@ describe('Agent Memory', () => {
 describe('Agent Seed Operations', () => {
   const agent = new ParadigmAgent();
 
-  it('creates an agent domain seed', () => {
-    const r = agent.process('create an agent seed');
+  it('creates an agent domain seed', async () => {
+    const r = await agent.process('create an agent seed');
     expect(r.success).toBe(true);
     expect(r.data?.seed || r.data?.seeds?.[0]).toBeDefined();
     const seed = r.data?.seed || r.data?.seeds?.[0];
     expect(seed.$domain).toBe('agent');
   });
 
-  it('agent seed has rich genes (not just 3 generic)', () => {
-    const r = agent.process('create an agent seed called "Nova"');
+  it('agent seed has rich genes (not just 3 generic)', async () => {
+    const r = await agent.process('create an agent seed called "Nova"');
     expect(r.success).toBe(true);
     const seed = r.data?.seed || r.data?.seeds?.[0];
     const geneCount = Object.keys(seed.genes).length;
     expect(geneCount).toBeGreaterThan(5); // should have persona, temperature, etc.
   });
 
-  it('agent seed has unique ID', () => {
-    const r1 = agent.process('create an agent seed');
-    const r2 = agent.process('create an agent seed');
+  it('agent seed has unique ID', async () => {
+    const r1 = await agent.process('create an agent seed');
+    const r2 = await agent.process('create an agent seed');
     const seed1 = r1.data?.seed || r1.data?.seeds?.[0];
     const seed2 = r2.data?.seed || r2.data?.seeds?.[0];
     // IDs use crypto.randomUUID so they're always unique
     expect(seed1.id).not.toBe(seed2.id);
   });
 
-  it('character seed has rich genes from template', () => {
-    const r = agent.process('create a character seed called "Warrior"');
+  it('character seed has rich genes from template', async () => {
+    const r = await agent.process('create a character seed called "Warrior"');
     expect(r.success).toBe(true);
     const seed = r.data?.seed || r.data?.seeds?.[0];
     expect(seed.$domain).toBe('character');
@@ -410,8 +410,8 @@ describe('Agent Seed Operations', () => {
     expect(genes.length).toBeGreaterThanOrEqual(7);
   });
 
-  it('music seed has rich genes from template', () => {
-    const r = agent.process('create a music seed');
+  it('music seed has rich genes from template', async () => {
+    const r = await agent.process('create a music seed');
     expect(r.success).toBe(true);
     const seed = r.data?.seed || r.data?.seeds?.[0];
     expect(seed.$domain).toBe('music');
@@ -439,14 +439,14 @@ describe('Help Response (v2)', () => {
 describe('ParadigmAgent v2 integration', () => {
   const agent = new ParadigmAgent();
 
-  it('process() returns timing data', () => {
-    const r = agent.process('list domains');
+  it('process() returns timing data', async () => {
+    const r = await agent.process('list domains');
     expect(r.timing).toBeDefined();
     expect(r.timing!.totalMs).toBeGreaterThanOrEqual(0);
   });
 
-  it('process() returns suggestions for create_seed', () => {
-    const r = agent.process('create a character seed');
+  it('process() returns suggestions for create_seed', async () => {
+    const r = await agent.process('create a character seed');
     expect(r.suggestions).toBeDefined();
     expect(r.suggestions!.length).toBeGreaterThan(0);
   });
@@ -456,7 +456,7 @@ describe('ParadigmAgent v2 integration', () => {
     expect(stats.config).toBeDefined();
     expect(stats.domainsKnown).toBe(27);
     expect(stats.geneTypesKnown).toBe(17);
-    expect(stats.toolsAvailable).toBe(9);
+    expect(stats.toolsAvailable).toBe(10);
     expect(stats.memorySize).toBeGreaterThanOrEqual(0);
   });
 
@@ -478,16 +478,16 @@ describe('ParadigmAgent v2 integration', () => {
     expect(stats.config.temperature).toBe(0.8);
   });
 
-  it('gracefully handles unknown queries via knowledge base', () => {
-    const r = agent.process('tell me about the scalar gene type');
+  it('gracefully handles unknown queries via knowledge base', async () => {
+    const r = await agent.process('tell me about the scalar gene type');
     expect(r.success).toBe(true);
     expect(r.message.length).toBeGreaterThan(0);
   });
 
-  it('tracks memory across sequential calls', () => {
+  it('tracks memory across sequential calls', async () => {
     const a = new ParadigmAgent();
-    a.process('list domains');
-    a.process('create a character seed');
+    await a.process('list domains');
+    await a.process('create a character seed');
     const stats = a.getStats();
     expect(stats.memoryTurns).toBe(2);
     expect(stats.memorySize).toBeGreaterThanOrEqual(4); // 2 user + 2 agent entries

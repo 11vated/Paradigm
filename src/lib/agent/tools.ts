@@ -426,40 +426,49 @@ const executeGsplTool: AgentTool = {
     const generatedSeeds: any[] = [];
     const errors: string[] = [];
 
-    const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
+    // Robust GSPL parser: handles escaped quotes, nested brackets, multi-line values
+    const seedRegex = /seed\s+"((?:[^"\\]|\\.)*)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
     let match;
 
     while ((match = seedRegex.exec(source)) !== null) {
-      const name = match[1];
+      const name = match[1].replace(/\\"/g, '"');
       const domain = match[2];
       const body = match[3];
       const genes: Record<string, any> = {};
 
+      // Parse body with bracket-depth awareness
       for (const line of body.split('\n')) {
         const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('//')) continue;
+        if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('#')) continue;
 
-        const colonIdx = trimmed.indexOf(':');
-        if (colonIdx > 0) {
-          const key = trimmed.substring(0, colonIdx).trim();
-          const valStr = trimmed.substring(colonIdx + 1).trim();
+        // Support both "key: value" and "gene key: type = value" syntax
+        const geneMatch = trimmed.match(/^(?:gene\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*[:=]\s*(.+)$/);
+        if (!geneMatch) continue;
+        const key = geneMatch[1];
+        let valStr = geneMatch[2].replace(/[,;]$/, '').trim();
 
-          if (valStr.startsWith('"') && valStr.endsWith('"')) {
-            genes[key] = { type: 'categorical', value: valStr.slice(1, -1) };
-          } else if (!isNaN(Number(valStr))) {
-            genes[key] = { type: 'scalar', value: Number(valStr) };
-          } else if (valStr.startsWith('[')) {
-            try {
-              const parsed = JSON.parse(valStr);
-              if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
-            } catch {
-              const numbers = valStr.match(/-?\d+(\.\d+)?/g);
-              if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
-              else genes[key] = { type: 'vector', value: valStr };
-            }
-          } else {
+        // Detect type from value syntax
+        if (valStr.startsWith('"') && valStr.endsWith('"')) {
+          genes[key] = { type: 'categorical', value: valStr.slice(1, -1).replace(/\\"/g, '"') };
+        } else if (valStr === 'true' || valStr === 'false') {
+          genes[key] = { type: 'categorical', value: valStr === 'true' };
+        } else if (!isNaN(Number(valStr))) {
+          genes[key] = { type: 'scalar', value: Number(valStr) };
+        } else if (valStr.startsWith('[')) {
+          try {
+            const parsed = JSON.parse(valStr);
+            if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
+          } catch {
+            const numbers = valStr.match(/-?\d+(\.\d+)?/g);
+            if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
+            else genes[key] = { type: 'categorical', value: valStr };
+          }
+        } else if (valStr.startsWith('{')) {
+          try { genes[key] = { type: 'struct', value: JSON.parse(valStr) }; } catch {
             genes[key] = { type: 'categorical', value: valStr };
           }
+        } else {
+          genes[key] = { type: 'categorical', value: valStr };
         }
       }
 

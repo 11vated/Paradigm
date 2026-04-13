@@ -74,6 +74,16 @@ export const importFromLibrary = (seedHash) =>
 export const generateEmbedding = (id) => api.post(`/seeds/${id}/embed`).then(r => r.data);
 export const getSimilarSeeds = (id, limit = 5) => api.get(`/seeds/${id}/similar`, { params: { limit } }).then(r => r.data);
 
+// ─── Minting ──────────────────────────────────────────────────────────────────
+export const mintSeed = (id, ownerAddress) =>
+  api.post(`/seeds/${id}/mint`, { owner_address: ownerAddress }).then(r => r.data);
+export const getNftInfo = (id) => api.get(`/seeds/${id}/nft`).then(r => r.data);
+export const getSeedPortraitUrl = (id) => `${API_URL}/api/seeds/${id}/portrait`;
+
+// ─── Agent ────────────────────────────────────────────────────────────────────
+export const agentQuery = (query) =>
+  api.post('/agent/query', { query }).then(r => r.data);
+
 // ─── Info ─────────────────────────────────────────────────────────────────────
 export const getDomains = () => api.get('/domains').then(r => r.data);
 export const getGeneTypes = () => api.get('/gene-types').then(r => r.data);

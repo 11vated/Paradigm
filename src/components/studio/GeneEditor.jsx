@@ -3,13 +3,7 @@ import { updateGene } from '@/services/api';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
-const TYPE_COLORS = {
-  scalar: '#F97316', categorical: '#10B981', vector: '#06B6D4', expression: '#8B5CF6',
-  struct: '#EC4899', array: '#F59E0B', graph: '#EF4444', topology: '#14B8A6',
-  temporal: '#A855F7', regulatory: '#F43F5E', field: '#22D3EE', symbolic: '#D946EF',
-  quantum: '#6366F1', gematria: '#FB923C', resonance: '#2DD4BF', dimensional: '#818CF8',
-  sovereignty: '#FBBF24',
-};
+import { TYPE_COLORS } from '@/lib/constants';
 
 const ARCHETYPE_CHOICES = ['warrior', 'mage', 'rogue', 'paladin', 'ranger', 'bard', 'cleric', 'dark_knight', 'monk', 'necromancer'];
 const SCALE_CHOICES = ['major', 'minor', 'pentatonic', 'blues', 'dorian', 'mixolydian', 'chromatic'];

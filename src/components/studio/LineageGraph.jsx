@@ -1,12 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-
-const DOMAIN_COLORS = {
-  character: '#F97316', sprite: '#10B981', music: '#8B5CF6', visual2d: '#06B6D4',
-  procedural: '#EC4899', narrative: '#F59E0B', audio: '#EF4444', fullgame: '#14B8A6',
-  animation: '#A855F7', geometry3d: '#22D3EE', physics: '#F43F5E', ecosystem: '#2DD4BF',
-  game: '#FB923C', alife: '#818CF8', shader: '#D946EF', ui: '#FBBF24',
-};
-const OP_COLORS = { primordial: '#F97316', mutate: '#10B981', breed: '#8B5CF6', compose: '#06B6D4' };
+import { DOMAIN_COLORS, OP_COLORS } from '@/lib/constants';
 
 function simpleForceLayout(nodes, edges, width, height) {
   const positions = nodes.map((_, i) => ({

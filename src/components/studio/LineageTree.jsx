@@ -1,6 +1,5 @@
 import { GitBranch } from 'lucide-react';
-
-const OP_COLORS = { primordial: '#F97316', mutate: '#10B981', breed: '#8B5CF6', compose: '#06B6D4' };
+import { OP_COLORS } from '@/lib/constants';
 
 export default function LineageTree({ seed, gallery, onSelect }) {
   if (!seed) {
