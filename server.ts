@@ -1006,90 +1006,38 @@ async function startServer() {
   });
 
   app.post('/api/gspl/parse', validateBody(GsplParseSchema), (req: any, res: any) => {
+    const { parse: parseGSPL } = require('./src/lib/gspl/parser.js');
+    const { tokenize } = require('./src/lib/gspl/lexer.js');
     const source = req.body.source;
-    const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
-    let match;
-    let declarations = 0;
-
-    while ((match = seedRegex.exec(source)) !== null) declarations++;
-    const letRegex = /let\s+[a-zA-Z0-9_]+\s*=/g;
-    while ((match = letRegex.exec(source)) !== null) declarations++;
+    const { tokens } = tokenize(source);
+    const { ast, errors: parseErrors } = parseGSPL(source);
+    const declarations = ast.body.filter((s: any) => s.kind === 'seed_decl' || s.kind === 'let_binding' || s.kind === 'fn_decl').length;
 
     res.json({
-      ast: { type: 'Program', body: [] },
-      errors: [],
+      ast,
+      errors: parseErrors.map((e: any) => `Line ${e.line}:${e.col}: ${e.message}`),
       warnings: [],
-      stats: { tokens: source.length, declarations },
+      stats: { tokens: tokens.length, declarations },
     });
   });
 
   app.post('/api/gspl/execute', requireAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
+    const { executeGSPL } = require('./src/lib/gspl/interpreter.js');
     const source = req.body.source || '';
-    const generatedSeeds: any[] = [];
-    const errors: string[] = [];
 
-    const seedRegex = /seed\s+"([^"]+)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
-    let match;
+    const result = executeGSPL(source, seeds);
 
-    while ((match = seedRegex.exec(source)) !== null) {
-      const name = match[1];
-      const domain = match[2];
-      const body = match[3];
-      const genes: Record<string, any> = {};
-
-      for (const line of body.split('\n')) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('//')) continue;
-
-        const colonIdx = trimmed.indexOf(':');
-        if (colonIdx > 0) {
-          const key = trimmed.substring(0, colonIdx).trim();
-          const valStr = trimmed.substring(colonIdx + 1).trim();
-
-          if (valStr.startsWith('"') && valStr.endsWith('"')) {
-            genes[key] = { type: 'categorical', value: valStr.slice(1, -1) };
-          } else if (!isNaN(Number(valStr))) {
-            genes[key] = { type: 'scalar', value: Number(valStr) };
-          } else if (valStr.startsWith('[')) {
-            try {
-              const parsed = JSON.parse(valStr);
-              if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
-            } catch {
-              const numbers = valStr.match(/-?\d+(\.\d+)?/g);
-              if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
-              else genes[key] = { type: 'vector', value: valStr };
-            }
-          } else {
-            genes[key] = { type: 'categorical', value: valStr };
-          }
-        }
-      }
-
-      const rng = rngFromHash(name + domain + Date.now());
-      const newSeed = {
-        id: crypto.randomUUID(),
-        $domain: domain,
-        $name: name,
-        $lineage: { generation: 0, operation: 'gspl' },
-        $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
-        $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
-        genes,
-      };
-
-      seeds.push(newSeed);
-      generatedSeeds.push(newSeed);
-    }
-
-    if (generatedSeeds.length > 0) {
+    // Persist any newly created seeds
+    if (result.seeds.length > 0) {
+      for (const s of result.seeds) seeds.push(s);
       saveSeeds();
-    } else {
-      errors.push('No valid seed blocks found in GSPL source.');
     }
 
     res.json({
-      seeds: generatedSeeds,
-      errors,
-      stats: { seeds_created: generatedSeeds.length, operations: generatedSeeds.length },
+      seeds: result.seeds,
+      errors: result.errors,
+      output: result.output,
+      stats: { seeds_created: result.seeds.length, operations: result.seeds.length + result.output.length },
       types: {},
     });
   });
@@ -1381,6 +1329,30 @@ async function startServer() {
     } catch (e: any) {
       log('ERROR', 'On-chain mint error', { error: e.message });
       res.status(500).json({ detail: e.message || 'Minting failed' });
+    }
+  });
+
+  // ── glTF Binary Export ──
+  app.get('/api/seeds/:id/export/glb', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+    try {
+      const { ParadigmPipeline } = require('./src/lib/pipeline/index.js');
+      const { exportToGLB } = require('./src/lib/asset_pipeline/gltf_exporter.js');
+      const { generateMaterial } = require('./src/lib/asset_pipeline/material_generator.js');
+      const pipelineResult = await ParadigmPipeline.runEndToEnd(seed);
+      const meshData = pipelineResult?.emergent_assets?.mesh;
+      if (!meshData?.vertices?.length) {
+        return res.status(422).json({ detail: 'Seed did not produce mesh data' });
+      }
+      const material = generateMaterial(seed);
+      const glb = exportToGLB(meshData, seed.$name || 'Paradigm Seed', material);
+      res.setHeader('Content-Type', 'model/gltf-binary');
+      res.setHeader('Content-Disposition', `attachment; filename="${(seed.$name || 'seed').replace(/[^a-zA-Z0-9_-]/g, '_')}.glb"`);
+      res.send(Buffer.from(glb));
+    } catch (err: any) {
+      res.status(500).json({ detail: err.message || 'GLB export failed' });
     }
   });
 

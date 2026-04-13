@@ -29,7 +29,10 @@ function makeLineage(source: Seed, functorName: string) {
 
 function finalizeSeed(seed: Seed): Seed {
   seed.$hash = crypto.createHash('sha256').update(JSON.stringify(seed.genes ?? {})).digest('hex');
-  seed.$fitness = { overall: 0.5 + Math.random() * 0.3 };
+  // Deterministic fitness from hash — no Math.random()
+  const hashBytes = Buffer.from(seed.$hash, 'hex');
+  const deterministicValue = (hashBytes[0] + hashBytes[1] * 256) / 65535;
+  seed.$fitness = { overall: +(0.4 + deterministicValue * 0.4).toFixed(4) };
   return seed;
 }
 
@@ -325,6 +328,285 @@ function agentToNarrative(seed: Seed): Seed {
   });
 }
 
+// ─── 18 NEW FUNCTOR BRIDGES ───────────────────────────────────────────────────
+
+function musicToAnimation(seed: Seed): Seed {
+  const tempo = gv(seed, 'tempo', 0.5);
+  const t = typeof tempo === 'number' ? tempo : 0.5;
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'animation', $name: `${seed.$name ?? 'Music'}_animated`,
+    $lineage: makeLineage(seed, 'music_to_animation'),
+    genes: {
+      frameCount: { type: 'scalar', value: 0.3 + t * 0.5 },
+      fps: { type: 'scalar', value: 0.3 + t * 0.4 },
+      motionType: { type: 'categorical', value: 'rhythmic' },
+      amplitude: { type: 'scalar', value: t * 0.8 },
+      easing: { type: 'categorical', value: t > 0.6 ? 'bounce' : 'ease_in_out' },
+    },
+  });
+}
+
+function narrativeToCharacter(seed: Seed): Seed {
+  const tone = gv(seed, 'tone', 'epic');
+  const archetypeMap: Record<string, string> = { epic: 'warrior', dark: 'rogue', comic: 'bard', mystery: 'mage', literary: 'sage' };
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'character', $name: `${seed.$name ?? 'Story'}_protagonist`,
+    $lineage: makeLineage(seed, 'narrative_to_character'),
+    genes: {
+      archetype: { type: 'categorical', value: archetypeMap[tone] || 'warrior' },
+      strength: { type: 'scalar', value: tone === 'epic' ? 0.8 : 0.5 },
+      agility: { type: 'scalar', value: tone === 'dark' ? 0.8 : 0.5 },
+      palette: { type: 'vector', value: tone === 'dark' ? [0.2, 0.1, 0.3] : [0.7, 0.5, 0.3] },
+      personality: { type: 'categorical', value: tone === 'comic' ? 'witty' : 'determined' },
+    },
+  });
+}
+
+function ecosystemToProcedural(seed: Seed): Seed {
+  const env = gv(seed, 'environment', 'forest');
+  const biomeMap: Record<string, string> = { forest: 'temperate', ocean: 'coastal', desert: 'arid', tundra: 'arctic', jungle: 'tropical' };
+  const stability = gv(seed, 'stability', 0.6);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'procedural', $name: `${seed.$name ?? 'Eco'}_terrain`,
+    $lineage: makeLineage(seed, 'ecosystem_to_procedural'),
+    genes: {
+      biome: { type: 'categorical', value: biomeMap[env] || 'temperate' },
+      octaves: { type: 'scalar', value: 0.4 + (typeof stability === 'number' ? stability : 0.5) * 0.4 },
+      persistence: { type: 'scalar', value: 0.4 + (typeof stability === 'number' ? (1 - stability) : 0.5) * 0.3 },
+      scale: { type: 'scalar', value: 0.6 },
+    },
+  });
+}
+
+function geometry3dToPhysics(seed: Seed): Seed {
+  const detail = gv(seed, 'detail', 0.5);
+  const material = gv(seed, 'material', 'metal');
+  const densityMap: Record<string, number> = { metal: 0.8, wood: 0.3, glass: 0.5, stone: 0.7 };
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'physics', $name: `${seed.$name ?? 'Mesh'}_physics`,
+    $lineage: makeLineage(seed, 'geometry3d_to_physics'),
+    genes: {
+      gravity: { type: 'scalar', value: 0.5 },
+      friction: { type: 'scalar', value: densityMap[material] || 0.5 },
+      elasticity: { type: 'scalar', value: material === 'glass' ? 0.2 : 0.6 },
+      simulationType: { type: 'categorical', value: 'rigid_body' },
+      bodyCount: { type: 'scalar', value: typeof detail === 'number' ? detail : 0.5 },
+    },
+  });
+}
+
+function shaderToVisual2d(seed: Seed): Seed {
+  const technique = gv(seed, 'technique', 'raymarching');
+  const palette = gv(seed, 'palette', [0.5, 0.3, 0.8]);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'visual2d', $name: `${seed.$name ?? 'Shader'}_visual`,
+    $lineage: makeLineage(seed, 'shader_to_visual2d'),
+    genes: {
+      style: { type: 'categorical', value: technique === 'raymarching' ? 'abstract' : 'geometric' },
+      complexity: { type: 'scalar', value: gv(seed, 'complexity', 0.5) },
+      palette: { type: 'vector', value: Array.isArray(palette) ? palette : [0.5, 0.3, 0.8] },
+      composition: { type: 'categorical', value: 'centered' },
+    },
+  });
+}
+
+function visual2dToSprite(seed: Seed): Seed {
+  const palette = gv(seed, 'palette', [0.5, 0.3, 0.8]);
+  const complexity = gv(seed, 'complexity', 0.5);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'sprite', $name: `${seed.$name ?? 'Art'}_sprite`,
+    $lineage: makeLineage(seed, 'visual2d_to_sprite'),
+    genes: {
+      resolution: { type: 'scalar', value: typeof complexity === 'number' ? 0.3 + complexity * 0.5 : 0.5 },
+      paletteSize: { type: 'scalar', value: 0.5 },
+      colors: { type: 'vector', value: Array.isArray(palette) ? palette : [0.5, 0.3, 0.8] },
+      symmetry: { type: 'categorical', value: 'bilateral' },
+    },
+  });
+}
+
+function animationToChoreography(seed: Seed): Seed {
+  const fps = gv(seed, 'fps', 0.5);
+  const motionType = gv(seed, 'motionType', 'skeletal');
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'choreography', $name: `${seed.$name ?? 'Anim'}_dance`,
+    $lineage: makeLineage(seed, 'animation_to_choreography'),
+    genes: {
+      style: { type: 'categorical', value: motionType === 'skeletal' ? 'contemporary' : 'abstract' },
+      tempo: { type: 'scalar', value: typeof fps === 'number' ? fps : 0.5 },
+      dancers: { type: 'scalar', value: 0.3 },
+      energy: { type: 'scalar', value: gv(seed, 'amplitude', 0.5) },
+    },
+  });
+}
+
+function physicsToParticle(seed: Seed): Seed {
+  const gravity = gv(seed, 'gravity', 0.5);
+  const elasticity = gv(seed, 'elasticity', 0.8);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'particle', $name: `${seed.$name ?? 'Sim'}_particles`,
+    $lineage: makeLineage(seed, 'physics_to_particle'),
+    genes: {
+      emitter: { type: 'categorical', value: 'point' },
+      count: { type: 'scalar', value: 0.5 },
+      lifetime: { type: 'scalar', value: typeof elasticity === 'number' ? elasticity * 3 : 2.0 },
+      velocity: { type: 'vector', value: [0, typeof gravity === 'number' ? gravity : 0.5, 0] },
+      gravity: { type: 'vector', value: [0, typeof gravity === 'number' ? -gravity * 10 : -5, 0] },
+    },
+  });
+}
+
+function characterToNarrative(seed: Seed): Seed {
+  const archetype = gv(seed, 'archetype', 'warrior');
+  const plotMap: Record<string, string> = { warrior: 'quest', mage: 'mystery', rogue: 'heist', paladin: 'crusade', bard: 'romance' };
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'narrative', $name: `${seed.$name ?? 'Hero'}_story`,
+    $lineage: makeLineage(seed, 'character_to_narrative'),
+    genes: {
+      structure: { type: 'categorical', value: 'heros_journey' },
+      tone: { type: 'categorical', value: archetype === 'rogue' ? 'dark' : 'epic' },
+      characters: { type: 'array', value: [seed.$name || 'hero', 'villain', 'mentor'] },
+      plot: { type: 'categorical', value: plotMap[archetype] || 'quest' },
+      complexity: { type: 'scalar', value: 0.6 },
+    },
+  });
+}
+
+function musicToChoreography(seed: Seed): Seed {
+  const tempo = gv(seed, 'tempo', 0.5);
+  const scale = gv(seed, 'scale', 'major');
+  const styleMap: Record<string, string> = { major: 'ballet', minor: 'contemporary', blues: 'jazz', pentatonic: 'folk' };
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'choreography', $name: `${seed.$name ?? 'Music'}_dance`,
+    $lineage: makeLineage(seed, 'music_to_choreography'),
+    genes: {
+      style: { type: 'categorical', value: styleMap[scale] || 'contemporary' },
+      tempo: { type: 'scalar', value: typeof tempo === 'number' ? tempo : 0.5 },
+      dancers: { type: 'scalar', value: 0.4 },
+      energy: { type: 'scalar', value: typeof tempo === 'number' ? tempo * 0.8 : 0.4 },
+    },
+  });
+}
+
+function architectureToGeometry3d(seed: Seed): Seed {
+  const style = gv(seed, 'style', 'modern');
+  const scale = gv(seed, 'scale', 0.5);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'geometry3d', $name: `${seed.$name ?? 'Building'}_mesh`,
+    $lineage: makeLineage(seed, 'architecture_to_geometry3d'),
+    genes: {
+      primitive: { type: 'categorical', value: 'cube' },
+      detail: { type: 'scalar', value: typeof scale === 'number' ? scale : 0.5 },
+      material: { type: 'categorical', value: style === 'modern' ? 'glass' : 'stone' },
+      scale: { type: 'vector', value: [1, typeof scale === 'number' ? scale * 3 : 1.5, 1] },
+    },
+  });
+}
+
+function foodToEcosystem(seed: Seed): Seed {
+  const cuisine = gv(seed, 'cuisine', 'italian');
+  const envMap: Record<string, string> = { italian: 'mediterranean', japanese: 'coastal', mexican: 'desert', indian: 'tropical', french: 'temperate' };
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'ecosystem', $name: `${seed.$name ?? 'Recipe'}_ecosystem`,
+    $lineage: makeLineage(seed, 'food_to_ecosystem'),
+    genes: {
+      speciesCount: { type: 'scalar', value: gv(seed, 'complexity', 0.5) },
+      environment: { type: 'categorical', value: envMap[cuisine] || 'temperate' },
+      stability: { type: 'scalar', value: 0.6 },
+    },
+  });
+}
+
+function fashionToCharacter(seed: Seed): Seed {
+  const garmentType = gv(seed, 'garmentType', 'dress');
+  const palette = gv(seed, 'palette', [0.8, 0.1, 0.3]);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'character', $name: `${seed.$name ?? 'Garment'}_wearer`,
+    $lineage: makeLineage(seed, 'fashion_to_character'),
+    genes: {
+      archetype: { type: 'categorical', value: garmentType === 'armor' ? 'warrior' : 'noble' },
+      palette: { type: 'vector', value: Array.isArray(palette) ? palette : [0.8, 0.1, 0.3] },
+      strength: { type: 'scalar', value: 0.5 },
+      agility: { type: 'scalar', value: garmentType === 'dress' ? 0.4 : 0.6 },
+    },
+  });
+}
+
+function vehicleToPhysics(seed: Seed): Seed {
+  const speed = gv(seed, 'speed', 0.5);
+  const mass = gv(seed, 'mass', 0.5);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'physics', $name: `${seed.$name ?? 'Vehicle'}_sim`,
+    $lineage: makeLineage(seed, 'vehicle_to_physics'),
+    genes: {
+      gravity: { type: 'scalar', value: 0.5 },
+      friction: { type: 'scalar', value: 0.4 },
+      elasticity: { type: 'scalar', value: 0.3 },
+      simulationType: { type: 'categorical', value: 'rigid_body' },
+      bodyCount: { type: 'scalar', value: typeof mass === 'number' ? mass * 0.5 : 0.25 },
+    },
+  });
+}
+
+function circuitToRobotics(seed: Seed): Seed {
+  const complexity = gv(seed, 'complexity', 0.5);
+  const circuitType = gv(seed, 'circuitType', 'digital');
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'robotics', $name: `${seed.$name ?? 'Circuit'}_robot`,
+    $lineage: makeLineage(seed, 'circuit_to_robotics'),
+    genes: {
+      robotType: { type: 'categorical', value: circuitType === 'analog' ? 'industrial' : 'humanoid' },
+      dof: { type: 'scalar', value: typeof complexity === 'number' ? complexity : 0.5 },
+      actuators: { type: 'array', value: ['servo', 'linear'] },
+      autonomy: { type: 'scalar', value: typeof complexity === 'number' ? complexity * 0.8 : 0.4 },
+    },
+  });
+}
+
+function typographyToUi(seed: Seed): Seed {
+  const style = gv(seed, 'style', 'sans_serif');
+  const contrast = gv(seed, 'contrast', 0.3);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'ui', $name: `${seed.$name ?? 'Type'}_interface`,
+    $lineage: makeLineage(seed, 'typography_to_ui'),
+    genes: {
+      layout: { type: 'categorical', value: 'dashboard' },
+      theme: { type: 'categorical', value: typeof contrast === 'number' && contrast > 0.5 ? 'dark' : 'light' },
+      components: { type: 'array', value: ['header', 'main', 'sidebar'] },
+      density: { type: 'scalar', value: typeof contrast === 'number' ? contrast : 0.3 },
+    },
+  });
+}
+
+function alifeToEcosystem(seed: Seed): Seed {
+  const rules = gv(seed, 'rules', 'conway');
+  const density = gv(seed, 'density', 0.3);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'ecosystem', $name: `${seed.$name ?? 'ALife'}_ecosystem`,
+    $lineage: makeLineage(seed, 'alife_to_ecosystem'),
+    genes: {
+      speciesCount: { type: 'scalar', value: typeof density === 'number' ? density * 1.5 : 0.5 },
+      environment: { type: 'categorical', value: rules === 'conway' ? 'digital' : 'synthetic' },
+      stability: { type: 'scalar', value: 0.5 },
+    },
+  });
+}
+
+function particleToShader(seed: Seed): Seed {
+  const count = gv(seed, 'count', 0.5);
+  const color = gv(seed, 'color', [1, 0.5, 0]);
+  return finalizeSeed({
+    id: crypto.randomUUID(), $domain: 'shader', $name: `${seed.$name ?? 'Particles'}_shader`,
+    $lineage: makeLineage(seed, 'particle_to_shader'),
+    genes: {
+      shaderType: { type: 'categorical', value: 'fragment' },
+      technique: { type: 'categorical', value: 'particle_render' },
+      complexity: { type: 'scalar', value: typeof count === 'number' ? count : 0.5 },
+      palette: { type: 'vector', value: Array.isArray(color) ? color : [1, 0.5, 0] },
+    },
+  });
+}
+
 // ─── FUNCTOR REGISTRY ─────────────────────────────────────────────────────────
 
 interface FunctorEntry {
@@ -343,10 +625,29 @@ const FUNCTOR_REGISTRY: Map<string, FunctorEntry> = new Map([
   ['narrative->fullgame', { fn: narrativeToFullgame, name: 'narrative_to_fullgame' }],
   ['physics->fullgame', { fn: physicsToFullgame, name: 'physics_to_fullgame' }],
   ['sprite->animation', { fn: spriteToAnimation, name: 'sprite_to_animation' }],
-  // 3 new agent bridges
+  // 3 agent bridges
   ['agent->character', { fn: agentToCharacter, name: 'agent_to_character' }],
   ['character->agent', { fn: characterToAgent, name: 'character_to_agent' }],
   ['agent->narrative', { fn: agentToNarrative, name: 'agent_to_narrative' }],
+  // 18 new bridges
+  ['music->animation', { fn: musicToAnimation, name: 'music_to_animation' }],
+  ['narrative->character', { fn: narrativeToCharacter, name: 'narrative_to_character' }],
+  ['ecosystem->procedural', { fn: ecosystemToProcedural, name: 'ecosystem_to_procedural' }],
+  ['geometry3d->physics', { fn: geometry3dToPhysics, name: 'geometry3d_to_physics' }],
+  ['shader->visual2d', { fn: shaderToVisual2d, name: 'shader_to_visual2d' }],
+  ['visual2d->sprite', { fn: visual2dToSprite, name: 'visual2d_to_sprite' }],
+  ['animation->choreography', { fn: animationToChoreography, name: 'animation_to_choreography' }],
+  ['physics->particle', { fn: physicsToParticle, name: 'physics_to_particle' }],
+  ['character->narrative', { fn: characterToNarrative, name: 'character_to_narrative' }],
+  ['music->choreography', { fn: musicToChoreography, name: 'music_to_choreography' }],
+  ['architecture->geometry3d', { fn: architectureToGeometry3d, name: 'architecture_to_geometry3d' }],
+  ['food->ecosystem', { fn: foodToEcosystem, name: 'food_to_ecosystem' }],
+  ['fashion->character', { fn: fashionToCharacter, name: 'fashion_to_character' }],
+  ['vehicle->physics', { fn: vehicleToPhysics, name: 'vehicle_to_physics' }],
+  ['circuit->robotics', { fn: circuitToRobotics, name: 'circuit_to_robotics' }],
+  ['typography->ui', { fn: typographyToUi, name: 'typography_to_ui' }],
+  ['alife->ecosystem', { fn: alifeToEcosystem, name: 'alife_to_ecosystem' }],
+  ['particle->shader', { fn: particleToShader, name: 'particle_to_shader' }],
 ]);
 
 export function getFunctor(source: string, target: string): FunctorEntry | undefined {
