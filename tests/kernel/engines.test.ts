@@ -82,11 +82,11 @@ const domainTests: Record<string, { genes: Record<string, any>; checks: (r: any)
     checks: (r) => { expect(r.mesh?.primitive).toBe('sphere'); expect(r.mesh?.subdivisions).toBeGreaterThan(0); },
   },
   narrative: {
-    genes: { structure: { type: 'categorical', value: 'heros_journey' }, tone: { type: 'categorical', value: 'epic' }, characters: { type: 'array', value: ['hero', 'villain'] } },
+    genes: { structure: { type: 'categorical', value: 'heros_journey' }, tone: { type: 'categorical', value: 'epic' }, characters: { type: 'array', value: ['hero', 'villain'] }, complexity: { type: 'scalar', value: 0.6 } },
     checks: (r) => { expect(r.story?.structure).toBe('heros_journey'); expect(r.story?.acts).toBeGreaterThan(0); },
   },
   ui: {
-    genes: { layout: { type: 'categorical', value: 'dashboard' }, theme: { type: 'categorical', value: 'dark' } },
+    genes: { layout: { type: 'categorical', value: 'dashboard' }, theme: { type: 'categorical', value: 'dark' }, density: { type: 'scalar', value: 0.5 } },
     checks: (r) => { expect(r.interface?.layout).toBe('dashboard'); expect(r.interface?.theme).toBe('dark'); },
   },
   physics: {
@@ -110,7 +110,7 @@ const domainTests: Record<string, { genes: Record<string, any>; checks: (r: any)
     checks: (r) => { expect(r.alife?.rules).toBe('conway'); expect(r.alife?.grid_size).toBeGreaterThan(0); },
   },
   shader: {
-    genes: { shaderType: { type: 'categorical', value: 'fragment' }, technique: { type: 'categorical', value: 'raymarching' } },
+    genes: { shaderType: { type: 'categorical', value: 'fragment' }, technique: { type: 'categorical', value: 'raymarching' }, complexity: { type: 'scalar', value: 0.6 } },
     checks: (r) => { expect(r.shader?.type).toBe('fragment'); expect(r.shader?.technique).toBe('raymarching'); },
   },
   particle: {
@@ -130,11 +130,11 @@ const domainTests: Record<string, { genes: Record<string, any>; checks: (r: any)
     checks: (r) => { expect(r.vehicle?.propulsion).toBe('electric'); },
   },
   furniture: {
-    genes: { furnitureType: { type: 'categorical', value: 'chair' }, style: { type: 'categorical', value: 'modern' }, material: { type: 'categorical', value: 'wood' } },
+    genes: { furnitureType: { type: 'categorical', value: 'chair' }, style: { type: 'categorical', value: 'modern' }, material: { type: 'categorical', value: 'wood' }, quality: { type: 'scalar', value: 0.7 } },
     checks: (r) => { expect(r.furniture?.type).toBe('chair'); expect(r.furniture?.material).toBe('wood'); },
   },
   fashion: {
-    genes: { garmentType: { type: 'categorical', value: 'dress' }, fabric: { type: 'categorical', value: 'silk' }, palette: { type: 'vector', value: [0.8, 0.1, 0.3] } },
+    genes: { garmentType: { type: 'categorical', value: 'dress' }, fabric: { type: 'categorical', value: 'silk' }, palette: { type: 'vector', value: [0.8, 0.1, 0.3] }, complexity: { type: 'scalar', value: 0.5 } },
     checks: (r) => { expect(r.garment?.type).toBe('dress'); expect(r.garment?.fabric).toBe('silk'); },
   },
   robotics: {
