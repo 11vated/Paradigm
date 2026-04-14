@@ -35,22 +35,10 @@ export const MIGRATIONS: Migration[] = [
     up: async (_store: any) => {
       // v1: Base schema — seeds, users, audit. No changes needed (already created by stores).
     },
-    down: async (_store: any) => {
-      // v1: Nothing to undo — base schema is always required.
-    },
   },
   {
     version: 2,
     name: 'add-seed-metadata-fields',
-    down: async (store: any) => {
-      const seeds = await store.getAllSeeds();
-      for (const seed of seeds) {
-        delete seed.$version;
-        delete seed.$createdAt;
-        delete seed.$updatedAt;
-        await store.updateSeed(seed.id, seed);
-      }
-    },
     up: async (store: any) => {
       // Ensure all seeds have $version and $createdAt fields
       const seeds = await store.getAllSeeds();
@@ -77,10 +65,6 @@ export const MIGRATIONS: Migration[] = [
   {
     version: 3,
     name: 'normalize-domain-names',
-    down: async (_store: any) => {
-      // Domain names were lowercased — no reliable way to restore original case.
-      // This is a safe no-op since lowercase is valid everywhere.
-    },
     up: async (store: any) => {
       // Ensure all domain names are lowercase (historical data might have mixed case)
       const seeds = await store.getAllSeeds();
@@ -95,14 +79,6 @@ export const MIGRATIONS: Migration[] = [
   {
     version: 4,
     name: 'add-user-metadata',
-    down: async (store: any) => {
-      const users = await store.getUsers();
-      for (const user of users) {
-        delete user.lastLoginAt;
-        delete user.seedCount;
-        if (store.updateUser) await store.updateUser(user.id, user);
-      }
-    },
     up: async (store: any) => {
       // Ensure all users have lastLoginAt and seedCount fields
       const users = await store.getUsers();
@@ -190,35 +166,6 @@ export async function runMigrations(store: any, dataDir: string): Promise<number
   }
 
   return count;
-}
-
-/**
- * Rollback the last applied migration.
- * Returns the version that was rolled back, or 0 if nothing to rollback.
- */
-export async function runRollback(store: any, dataDir: string): Promise<number> {
-  const applied = getAppliedMigrations(dataDir);
-  if (applied.length === 0) return 0;
-
-  const latest = applied.reduce((a, b) => a.version > b.version ? a : b);
-  const migration = MIGRATIONS.find(m => m.version === latest.version);
-
-  if (!migration?.down) {
-    console.error(`[MIGRATION] No down() for v${latest.version} (${latest.name})`);
-    return 0;
-  }
-
-  try {
-    await migration.down(store);
-    // Remove from applied list
-    const remaining = applied.filter(m => m.version !== latest.version);
-    const filePath = path.join(dataDir, MIGRATION_FILE);
-    fs.writeFileSync(filePath, JSON.stringify(remaining, null, 2));
-    return latest.version;
-  } catch (err: any) {
-    console.error(`[MIGRATION] Rollback v${latest.version} failed: ${err.message}`);
-    return 0;
-  }
 }
 
 /**

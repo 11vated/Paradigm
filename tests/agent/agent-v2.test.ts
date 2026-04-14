@@ -11,7 +11,8 @@ import {
   AgentMemory,
   InferenceTier, INTENT_TIER,
 } from '../../src/lib/agent/index.js';
-import type { AgentConfig, ToolContext, ParsedQuery } from '../../src/lib/agent/index.js';
+import type { AgentConfig, ParsedQuery } from '../../src/lib/agent/index.js';
+import type { ToolContext } from '../../src/lib/agent/types.js';
 
 // ─── QUERY PARSER ──────────────────────────────────────────────────────────
 

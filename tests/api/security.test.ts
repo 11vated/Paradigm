@@ -247,9 +247,9 @@ describe('OpenAPI Specification', () => {
   });
 
   it('metadata endpoints do not require auth', () => {
-    expect(OPENAPI_SPEC.paths['/domains'].get.security).toBeUndefined();
-    expect(OPENAPI_SPEC.paths['/gene-types'].get.security).toBeUndefined();
-    expect(OPENAPI_SPEC.paths['/engines'].get.security).toBeUndefined();
+    expect((OPENAPI_SPEC.paths['/domains'].get as any).security).toBeUndefined();
+    expect((OPENAPI_SPEC.paths['/gene-types'].get as any).security).toBeUndefined();
+    expect((OPENAPI_SPEC.paths['/engines'].get as any).security).toBeUndefined();
   });
 });
 
