@@ -3,17 +3,26 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
 const api = axios.create({ baseURL: `${API_URL}/api`, timeout: 30000 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
 export { api };
 
 // ─── Seeds ────────────────────────────────────────────────────────────────────
 export const createSeed = (data) => api.post('/seeds', data).then(r => r.data);
-export const listSeeds = (params) => api.get('/seeds', { params }).then(r => r.data);
+export const listSeeds = (params) => api.get('/seeds', { params }).then(r => r.data.seeds);
 export const getSeed = (id) => api.get(`/seeds/${id}`).then(r => r.data);
 export const deleteSeed = (id) => api.delete(`/seeds/${id}`).then(r => r.data);
 
 // ─── Agent ────────────────────────────────────────────────────────────────────
 export const generateSeed = (prompt, domain) =>
   api.post('/seeds/generate', { prompt, domain }).then(r => r.data);
+
+export const agentQuery = (query) =>
+  api.post('/agent/query', { query }).then(r => r.data);
 
 // ─── Operations ───────────────────────────────────────────────────────────────
 export const mutateSeed = (id, rate = 0.1) =>
@@ -73,16 +82,6 @@ export const importFromLibrary = (seedHash) =>
 // ─── Intelligence ─────────────────────────────────────────────────────────────
 export const generateEmbedding = (id) => api.post(`/seeds/${id}/embed`).then(r => r.data);
 export const getSimilarSeeds = (id, limit = 5) => api.get(`/seeds/${id}/similar`, { params: { limit } }).then(r => r.data);
-
-// ─── Minting ──────────────────────────────────────────────────────────────────
-export const mintSeed = (id, ownerAddress) =>
-  api.post(`/seeds/${id}/mint`, { owner_address: ownerAddress }).then(r => r.data);
-export const getNftInfo = (id) => api.get(`/seeds/${id}/nft`).then(r => r.data);
-export const getSeedPortraitUrl = (id) => `${API_URL}/api/seeds/${id}/portrait`;
-
-// ─── Agent ────────────────────────────────────────────────────────────────────
-export const agentQuery = (query) =>
-  api.post('/agent/query', { query }).then(r => r.data);
 
 // ─── Info ─────────────────────────────────────────────────────────────────────
 export const getDomains = () => api.get('/domains').then(r => r.data);

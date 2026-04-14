@@ -46,7 +46,7 @@ export default function AuthPage() {
     <main id="main-content" className="min-h-screen bg-[#030303] text-white flex items-center justify-center relative overflow-hidden" role="main" aria-label="Authentication">
       {/* Background grid effect */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: 'linear-gradient(rgba(249,115,22,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.3) 1px, transparent 1px)',
+        backgroundImage: 'linear-gradient(rgba(0,229,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.3) 1px, transparent 1px)',
         backgroundSize: '60px 60px'
       }} />
 
@@ -54,7 +54,7 @@ export default function AuthPage() {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 rounded-full bg-orange-500/20"
+          className="absolute w-1 h-1 rounded-full bg-primary/20"
           animate={{
             x: [0, Math.sin(i * 1.2) * 100, 0],
             y: [0, Math.cos(i * 0.8) * 80, 0],
@@ -73,7 +73,7 @@ export default function AuthPage() {
       >
         {/* Logo */}
         <div className="flex items-center justify-center gap-2.5 mb-8">
-          <Dna className="w-6 h-6 text-orange-500" />
+          <Dna className="w-6 h-6 text-primary" />
           <span className="font-heading font-black text-xl tracking-tight">PARADIGM</span>
         </div>
 
@@ -82,7 +82,7 @@ export default function AuthPage() {
           {/* Header */}
           <div className="px-5 pt-5 pb-3 border-b border-neutral-800/50">
             <div className="flex items-center gap-2 mb-1">
-              <Shield className="w-3.5 h-3.5 text-orange-500/70" />
+              <Shield className="w-3.5 h-3.5 text-primary/70" />
               <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">
                 {mode === 'login' ? 'Authenticate' : 'Create Account'}
               </span>
@@ -121,7 +121,7 @@ export default function AuthPage() {
                 autoComplete="username"
                 aria-required="true"
                 aria-describedby={error ? 'auth-error' : undefined}
-                className="w-full px-3 py-2 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-orange-500/50 transition-colors"
+                className="w-full px-3 py-2 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-primary/50 transition-colors"
                 placeholder="your_username"
               />
             </div>
@@ -138,7 +138,7 @@ export default function AuthPage() {
                   autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                   aria-required="true"
                   aria-describedby={error ? 'auth-error' : undefined}
-                  className="w-full px-3 py-2 pr-9 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-orange-500/50 transition-colors"
+                  className="w-full px-3 py-2 pr-9 bg-black/40 border border-neutral-800 font-mono text-sm text-neutral-200 placeholder-neutral-700 focus:border-primary/50 transition-colors"
                   placeholder="••••••••"
                 />
                 <button
@@ -156,7 +156,7 @@ export default function AuthPage() {
               data-testid="auth-submit"
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-orange-500 text-black font-bold text-xs uppercase tracking-wider hover:bg-orange-400 transition-colors disabled:opacity-40 flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-primary text-black font-bold text-xs uppercase tracking-wider hover:bg-primary/80 transition-colors disabled:opacity-40 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -174,7 +174,7 @@ export default function AuthPage() {
             <button
               data-testid="auth-toggle"
               onClick={toggleMode}
-              className="font-mono text-[10px] text-neutral-500 hover:text-orange-500 transition-colors"
+              className="font-mono text-[10px] text-neutral-500 hover:text-primary transition-colors"
             >
               {mode === 'login' ? "Don't have an account? Register" : 'Already have an account? Sign in'}
             </button>

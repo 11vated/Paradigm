@@ -188,27 +188,37 @@ export function loginUser(username: string, password: string): { user: Omit<User
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt, role: user.role }, ...tokens };
 }
 
+const refreshingTokens = new Set<string>();
+
 /**
  * Refresh token rotation — issue new access + refresh tokens, blacklist the old refresh.
  */
 export function refreshAccessToken(refreshTokenStr: string): { token: string; refreshToken: string; expiresIn: number } | { error: string } {
   const payload = verifyJWT(refreshTokenStr);
-  if (!payload || payload.type !== 'refresh') {
+  if (!payload || payload.type !== 'refresh' || !payload.jti) {
     return { error: 'Invalid or expired refresh token' };
   }
 
-  // Blacklist the old refresh token (rotation)
-  if (payload.jti) {
+  // Concurrency lock to prevent race conditions on double-submit
+  if (refreshingTokens.has(payload.jti)) {
+    return { error: 'Concurrent refresh in progress' };
+  }
+  refreshingTokens.add(payload.jti);
+
+  try {
+    // Blacklist the old refresh token (rotation)
     tokenBlacklist.add(payload.jti);
     refreshTokens.delete(payload.jti);
+
+    // Look up user to get current role (in case it changed)
+    const users = loadUsers();
+    const user = users.find(u => u.id === payload.sub);
+    if (!user) return { error: 'User not found' };
+
+    return issueTokenPair(user);
+  } finally {
+    refreshingTokens.delete(payload.jti);
   }
-
-  // Look up user to get current role (in case it changed)
-  const users = loadUsers();
-  const user = users.find(u => u.id === payload.sub);
-  if (!user) return { error: 'User not found' };
-
-  return issueTokenPair(user);
 }
 
 /**

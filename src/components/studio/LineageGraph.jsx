@@ -114,11 +114,11 @@ export default function LineageGraph({ seeds, currentSeed, onSelect }) {
               const seed = seeds.find(s => (s.id || s.$hash) === n.id);
               if (seed) onSelect(seed);
             }} style={{ cursor: 'pointer' }}>
-              <circle cx={p.x} cy={p.y} r={r + 2} fill="none" stroke={n.isCurrent ? '#F97316' : 'transparent'} strokeWidth={2} />
+              <circle cx={p.x} cy={p.y} r={r + 2} fill="none" stroke={n.isCurrent ? 'var(--primary)' : 'transparent'} strokeWidth={2} />
               <circle cx={p.x} cy={p.y} r={r} fill={color} opacity={0.8} />
               <circle cx={p.x} cy={p.y} r={2} fill={opColor} />
-              <text x={p.x} y={p.y + r + 10} textAnchor="middle" fill="#525252" fontSize={8} fontFamily="JetBrains Mono">{n.name?.slice(0, 12)}</text>
-              <text x={p.x} y={p.y + r + 18} textAnchor="middle" fill="#333" fontSize={7} fontFamily="JetBrains Mono">G{n.generation}</text>
+              <text x={p.x} y={p.y + r + 10} textAnchor="middle" fill="#a3a3a3" fontSize={8} fontFamily="JetBrains Mono">{n.name?.slice(0, 12)}</text>
+              <text x={p.x} y={p.y + r + 18} textAnchor="middle" fill="#737373" fontSize={7} fontFamily="JetBrains Mono">G{n.generation}</text>
             </g>
           );
         })}

@@ -232,7 +232,7 @@ export function simulateEMField(initialConditions: any, gridSize: [number, numbe
       }
       console.log(`Step ${step}, maxEx: ${maxEx}`);
     }
-    if (isNaN(solver.Ex[solver.idx(16, 16, 16)])) {
+    if (isNaN(solver.Ex[16 * 64 * 64 + 16 * 64 + 16])) {
       console.log(`NaN detected at step ${step}`);
       break;
     }

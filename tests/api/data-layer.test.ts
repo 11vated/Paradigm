@@ -198,9 +198,11 @@ describe('JsonStore Data Layer', () => {
   describe('Audit Logging', () => {
     it('records and retrieves audit entries', async () => {
       const entry = {
+        id: 'audit-1',
         timestamp: new Date().toISOString(),
         userId: 'user-1',
         action: 'seed.create' as const,
+        resource: 'seed',
         resourceId: 'seed-123',
         details: { domain: 'character' },
       };
@@ -215,9 +217,11 @@ describe('JsonStore Data Layer', () => {
     it('returns most recent entries first', async () => {
       for (let i = 0; i < 5; i++) {
         await store.addAuditEntry({
+          id: `audit-mut-${i}`,
           timestamp: new Date(Date.now() + i * 1000).toISOString(),
           userId: 'user-1',
           action: 'seed.mutate',
+          resource: 'seed',
           resourceId: `seed-${i}`,
         });
       }
@@ -231,9 +235,11 @@ describe('JsonStore Data Layer', () => {
     it('respects limit parameter', async () => {
       for (let i = 0; i < 10; i++) {
         await store.addAuditEntry({
+          id: `audit-crt-${i}`,
           timestamp: new Date().toISOString(),
           userId: 'u',
           action: 'seed.create',
+          resource: 'seed',
           resourceId: `s-${i}`,
         });
       }

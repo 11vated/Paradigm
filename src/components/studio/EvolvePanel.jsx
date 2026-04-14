@@ -23,7 +23,7 @@ export default function EvolvePanel({ seed, onEvolved }) {
   return (
     <div className="p-3 space-y-4" data-testid="evolve-panel">
       <div className="flex items-center gap-2">
-        <Zap className="w-3 h-3 text-emerald-500" />
+        <Zap className="w-3 h-3 text-secondary" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Evolution</span>
       </div>
 
@@ -65,7 +65,7 @@ export default function EvolvePanel({ seed, onEvolved }) {
             data-testid="evolve-seed-button"
             onClick={handleEvolve}
             disabled={loading}
-            className="w-full py-2 bg-emerald-500 text-black font-bold text-[10px] uppercase tracking-wider hover:bg-emerald-400 transition-colors disabled:opacity-30 flex items-center justify-center gap-2"
+            className="w-full py-2 bg-secondary text-white font-bold text-[10px] uppercase tracking-wider hover:bg-secondary/80 transition-colors disabled:opacity-30 flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
             {loading ? 'Evolving...' : `Evolve ${popSize} variants`}

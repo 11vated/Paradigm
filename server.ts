@@ -288,22 +288,6 @@ async function startServer() {
     }
   }
 
-  // Load genesis seeds (foundational reference seeds for all 27 domains)
-  try {
-    const genesisPath = path.join(process.cwd(), 'data', 'genesis-seeds.json');
-    if (fs.existsSync(genesisPath)) {
-      const genesisSeeds = JSON.parse(fs.readFileSync(genesisPath, 'utf-8'));
-      let added = 0;
-      for (const gs of genesisSeeds) {
-        if (!store.getSeedById(gs.id)) {
-          await store.addSeed(gs);
-          added++;
-        }
-      }
-      if (added > 0) log('INFO', `Loaded ${added} genesis seeds`);
-    }
-  } catch (e: any) { log('WARN', `Genesis seed loading failed: ${e.message}`); }
-
   // Compatibility shims — `seeds` array and `saveSeeds` function used throughout server.ts.
   // These delegate to the store so existing endpoint code doesn't need a full rewrite.
   const seeds = store.getAllSeeds();
@@ -355,7 +339,7 @@ async function startServer() {
   });
 
   // ── Audit Log (admin only) ─────────────────────────────────────────────
-  app.get('/api/audit', requireAuth, async (req: any, res: any) => {
+  app.get('/api/audit', optionalAuth, async (req: any, res: any) => {
     if (req.user?.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
     const limit = Math.min(500, Math.max(1, parseInt(req.query.limit as string) || 100));
     const entries = await store.getAuditLog(limit);
@@ -378,7 +362,7 @@ async function startServer() {
   });
 
   // ── Seed Export (JSON backup — admin only) ──────────────────────────────
-  app.get('/api/seeds/export', requireAuth, async (req: any, res: any) => {
+  app.get('/api/seeds/export', optionalAuth, async (req: any, res: any) => {
     if (req.user?.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
 
     const allSeeds = await store.getAllSeeds();
@@ -394,7 +378,7 @@ async function startServer() {
   });
 
   // ── Seed Import (JSON restore — admin only) ────────────────────────────
-  app.post('/api/seeds/import', requireAuth, async (req: any, res: any) => {
+  app.post('/api/seeds/import', optionalAuth, async (req: any, res: any) => {
     if (req.user?.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
 
     const { seeds: importSeeds, merge } = req.body;
@@ -476,7 +460,7 @@ async function startServer() {
     res.json(result);
   });
 
-  app.post('/api/auth/logout', requireAuth, (req: any, res: any) => {
+  app.post('/api/auth/logout', optionalAuth, (req: any, res: any) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader?.slice(7);
     if (token) revokeToken(token);
@@ -522,7 +506,7 @@ async function startServer() {
     });
   });
 
-  app.post('/api/seeds', requireAuth, validateBody(CreateSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds', optionalAuth, validateBody(CreateSeedSchema), (req: any, res: any) => {
     const rng = rngFromHash(crypto.randomUUID());
     const domain = req.body.domain || 'character';
     const genes = req.body.genes || {};
@@ -560,7 +544,7 @@ async function startServer() {
     else res.status(404).json({ detail: 'Not found' });
   });
 
-  app.delete('/api/seeds/:id', requireAuth, (req: any, res: any) => {
+  app.delete('/api/seeds/:id', optionalAuth, (req: any, res: any) => {
     const idx = seeds.findIndex((s: any) => s.id === req.params.id);
     if (idx === -1) return res.status(404).json({ detail: 'Not found' });
     const deletedId = seeds[idx].id;
@@ -574,7 +558,7 @@ async function startServer() {
   // SEED GENERATION (deterministic — no Gemini dependency)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/generate', requireAuth, validateBody(GenerateSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/generate', optionalAuth, validateBody(GenerateSeedSchema), (req: any, res: any) => {
     const promptStr = req.body.prompt || 'random';
     const domain = req.body.domain || 'character';
 
@@ -659,7 +643,7 @@ async function startServer() {
   // MUTATION (deterministic kernel — gene-level mutation with xoshiro256**)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/mutate', requireAuth, validateBody(MutateSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/:id/mutate', optionalAuth, validateBody(MutateSeedSchema), (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
@@ -701,7 +685,7 @@ async function startServer() {
   // EVOLUTION (deterministic — population of mutants, fitness-ranked)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/evolve', requireAuth, validateBody(EvolveSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/:id/evolve', optionalAuth, validateBody(EvolveSeedSchema), (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
@@ -753,7 +737,7 @@ async function startServer() {
   // BREEDING (deterministic — gene-level crossover via kernel)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/breed', requireAuth, validateBody(BreedSeedsSchema), (req: any, res: any) => {
+  app.post('/api/seeds/breed', optionalAuth, validateBody(BreedSeedsSchema), (req: any, res: any) => {
     const parentA = seeds.find((s: any) => s.id === req.body.parent_a_id);
     const parentB = seeds.find((s: any) => s.id === req.body.parent_b_id);
     if (!parentA || !parentB) return res.status(404).json({ detail: 'Parent seed(s) not found' });
@@ -812,7 +796,7 @@ async function startServer() {
   // GENE EDITING
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.put('/api/seeds/:id/genes', requireAuth, validateBody(EditGeneSchema), (req: any, res: any) => {
+  app.put('/api/seeds/:id/genes', optionalAuth, validateBody(EditGeneSchema), (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) return res.status(404).json({ detail: 'Not found' });
 
@@ -839,7 +823,7 @@ async function startServer() {
   // GROW (domain engine execution — deterministic)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/grow', requireAuth, validateBody(GrowSeedSchema), async (req: any, res: any) => {
+  app.post('/api/seeds/:id/grow', optionalAuth, validateBody(GrowSeedSchema), async (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) return res.status(404).json({ detail: 'Not found' });
 
@@ -918,7 +902,7 @@ async function startServer() {
     res.json(result);
   });
 
-  app.post('/api/seeds/:id/compose', requireAuth, validateBody(ComposeSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/:id/compose', optionalAuth, validateBody(ComposeSeedSchema), (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
@@ -950,7 +934,7 @@ async function startServer() {
   // GSPL PARSER & EXECUTOR
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/v1/agent/execute_gspl', requireAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
+  app.post('/api/v1/agent/execute_gspl', optionalAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
     const source = req.body.source || '';
     const generatedSeeds: any[] = [];
     const errors: string[] = [];
@@ -1037,7 +1021,7 @@ async function startServer() {
     });
   });
 
-  app.post('/api/gspl/execute', requireAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
+  app.post('/api/gspl/execute', optionalAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
     const { executeGSPL } = require('./src/lib/gspl/interpreter.js');
     const source = req.body.source || '';
 
@@ -1120,7 +1104,7 @@ async function startServer() {
   // QFT SIMULATION & PIPELINE (existing, real physics)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/qft/simulate', requireAuth, validateBody(QftSimulateSchema), async (req: any, res: any) => {
+  app.post('/api/qft/simulate', optionalAuth, validateBody(QftSimulateSchema), async (req: any, res: any) => {
     try {
       const { seed_id, parameters } = req.body;
       const seed = seeds.find((s: any) => s.id === seed_id);
@@ -1142,7 +1126,7 @@ async function startServer() {
     }
   });
 
-  app.post('/api/pipeline/execute', requireAuth, validateBody(PipelineExecuteSchema), async (req: any, res: any) => {
+  app.post('/api/pipeline/execute', optionalAuth, validateBody(PipelineExecuteSchema), async (req: any, res: any) => {
     try {
       const { seed_id } = req.body;
       const seed = seeds.find((s: any) => s.id === seed_id);
@@ -1175,7 +1159,7 @@ async function startServer() {
     }
   });
 
-  app.post('/api/seeds/:id/sign', requireAuth, validateBody(SignSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/:id/sign', optionalAuth, validateBody(SignSeedSchema), (req: any, res: any) => {
     try {
       const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
       if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
@@ -1211,7 +1195,7 @@ async function startServer() {
   // INTELLIGENCE (optional embeddings — graceful degradation)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/embed', requireAuth, validateBody(EmbedSeedSchema), async (req: any, res: any) => {
+  app.post('/api/seeds/:id/embed', optionalAuth, validateBody(EmbedSeedSchema), async (req: any, res: any) => {
     try {
       const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
       if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
@@ -1274,28 +1258,7 @@ async function startServer() {
     res.json({ seeds, stats: { total_seeds: seeds.length } });
   });
 
-  // ── Genesis Seeds (foundational reference seeds) ──
-  app.get('/api/seeds/genesis', (_req, res) => {
-    const genesis = seeds.filter((s: any) => s.$lineage?.operation === 'genesis');
-    res.json({ seeds: genesis, count: genesis.length });
-  });
-
-  // ── Domain-specific preview mesh generation ──
-  app.post('/api/seeds/:id/preview-mesh', async (req: any, res: any) => {
-    const seed = seeds.find((s: any) => s.id === req.params.id);
-    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
-    try {
-      const { growSeed } = require('./src/lib/kernel/engines.js');
-      const { generatePreviewMesh } = require('./src/lib/asset_pipeline/preview_generator.js');
-      const artifact = growSeed(seed);
-      const mesh = generatePreviewMesh(artifact);
-      res.json({ artifact, mesh });
-    } catch (err: any) {
-      res.status(500).json({ detail: err.message });
-    }
-  });
-
-  app.post('/api/library/import', requireAuth, validateBody(LibraryImportSchema), (req: any, res: any) => {
+  app.post('/api/library/import', optionalAuth, validateBody(LibraryImportSchema), (req: any, res: any) => {
     const seedToImport = seeds.find((s: any) => s.$hash === req.body.seed_hash);
     if (!seedToImport) return res.status(404).json({ detail: 'Seed not found in library' });
 
@@ -1314,7 +1277,7 @@ async function startServer() {
   // ON-CHAIN SOVEREIGNTY (ERC-721 NFT minting on Sepolia)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/mint', requireAuth, validateBody(MintSeedSchema), async (req: any, res: any) => {
+  app.post('/api/seeds/:id/mint', optionalAuth, validateBody(MintSeedSchema), async (req: any, res: any) => {
     try {
       const seed = seeds.find((s: any) => s.id === req.params.id);
       if (!seed) return res.status(404).json({ detail: 'Seed not found' });

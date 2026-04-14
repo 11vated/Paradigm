@@ -138,7 +138,7 @@ describe('Plan Builder', () => {
 
 describe('Tool System', () => {
   it('has 9 kernel tools registered', () => {
-    expect(AGENT_TOOLS.size).toBe(10);
+    expect(AGENT_TOOLS.size).toBe(9);
   });
 
   it('all kernel tools have required properties', () => {
@@ -282,7 +282,7 @@ describe('Tool System', () => {
 
   it('getAvailableTools returns all kernel tools', () => {
     const available = getAvailableTools({});
-    expect(available.size).toBe(10);
+    expect(available.size).toBe(9);
     for (const [, tool] of available) {
       expect(tool.category).toBe('kernel');
     }
@@ -457,7 +457,7 @@ describe('ParadigmAgent v2 integration', () => {
     expect(stats.config).toBeDefined();
     expect(stats.domainsKnown).toBe(27);
     expect(stats.geneTypesKnown).toBe(17);
-    expect(stats.toolsAvailable).toBe(10);
+    expect(stats.toolsAvailable).toBe(9);
     expect(stats.memorySize).toBeGreaterThanOrEqual(0);
   });
 

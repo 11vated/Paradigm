@@ -22,7 +22,6 @@ export interface Migration {
   version: number;
   name: string;
   up: (store: any) => Promise<void>;
-  down?: (store: any) => Promise<void>;
 }
 
 // ─── Migration Registry ─────────────────────────────────────────────────────

@@ -38,7 +38,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-xl border-b border-white/5" data-testid="landing-nav">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Dna className="w-5 h-5 text-orange-500" />
+            <Dna className="w-5 h-5 text-primary" />
             <span className="font-heading font-black text-lg tracking-tight">PARADIGM</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-neutral-400">
@@ -47,7 +47,7 @@ export default function LandingPage() {
             <button
               data-testid="nav-enter-studio"
               onClick={() => navigate('/studio')}
-              className="px-4 py-1.5 bg-orange-500 text-black font-semibold text-xs uppercase tracking-wider hover:bg-orange-400 transition-colors"
+              className="px-4 py-1.5 bg-primary text-black font-semibold text-xs uppercase tracking-wider hover:bg-primary/80 transition-colors"
             >
               Enter Studio
             </button>
@@ -59,7 +59,7 @@ export default function LandingPage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden" data-testid="hero-section">
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-[#030303]" />
         <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(249,115,22,0.3) 1px, transparent 0)',
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,229,255,0.3) 1px, transparent 0)',
           backgroundSize: '40px 40px'
         }} />
         <motion.div
@@ -68,7 +68,7 @@ export default function LandingPage() {
           animate="visible"
           variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
         >
-          <motion.p variants={fadeUp} className="font-mono text-[10px] uppercase tracking-[0.3em] text-orange-500/80 mb-6">
+          <motion.p variants={fadeUp} className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary/80 mb-6">
             Genetically Organized Evolution
           </motion.p>
           <motion.h1 variants={fadeUp} className="font-heading font-black text-6xl sm:text-7xl lg:text-[120px] leading-[0.85] tracking-tighter mb-6">
@@ -85,7 +85,7 @@ export default function LandingPage() {
             <button
               data-testid="hero-enter-studio"
               onClick={() => navigate('/studio')}
-              className="px-8 py-3 bg-orange-500 text-black font-bold text-sm uppercase tracking-wider hover:bg-orange-400 transition-all flex items-center gap-2 justify-center"
+              className="px-8 py-3 bg-primary text-black font-bold text-sm uppercase tracking-wider hover:bg-primary/80 transition-all flex items-center gap-2 justify-center"
             >
               Enter the Studio <ArrowRight className="w-4 h-4" />
             </button>
@@ -120,7 +120,7 @@ export default function LandingPage() {
       <section id="architecture" className="py-24 px-6" data-testid="architecture-section">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-orange-500/80 mb-3">System Architecture</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary/80 mb-3">System Architecture</p>
             <h2 className="font-heading font-black text-4xl sm:text-5xl tracking-tighter">Seven Layers</h2>
             <p className="text-neutral-500 mt-3 max-w-xl text-base">Each layer depends only on the layer below. Each can be replaced independently.</p>
           </div>
@@ -134,7 +134,7 @@ export default function LandingPage() {
                   style={{ animationDelay: `${i * 0.1}s`, animationFillMode: 'forwards' }}
                 >
                   <div className="flex items-center gap-4 bg-[#0a0a0a] border border-neutral-800 p-5 hover:border-neutral-700 transition-colors group">
-                    <div className="w-10 h-10 flex items-center justify-center border border-neutral-800 group-hover:border-orange-500/30 transition-colors">
+                    <div className="w-10 h-10 flex items-center justify-center border border-neutral-800 group-hover:border-primary/30 transition-colors">
                       <Icon className="w-4 h-4" style={{ color: layer.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -159,7 +159,7 @@ export default function LandingPage() {
       <section id="inventions" className="py-24 px-6 bg-[#0a0a0a]" data-testid="inventions-section">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
-            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-emerald-500/80 mb-3">Core Technology</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-secondary/80 mb-3">Core Technology</p>
             <h2 className="font-heading font-black text-4xl sm:text-5xl tracking-tighter">Five Inventions</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1px] bg-neutral-800">
@@ -172,7 +172,7 @@ export default function LandingPage() {
                   style={{ animationDelay: `${i * 0.12}s`, animationFillMode: 'forwards' }}
                   data-testid={`invention-${i}`}
                 >
-                  <Icon className="w-6 h-6 text-orange-500 mb-4" />
+                  <Icon className="w-6 h-6 text-primary mb-4" />
                   <h3 className="font-heading font-bold text-base mb-2">{inv.title}</h3>
                   <p className="text-neutral-500 text-sm leading-relaxed">{inv.desc}</p>
                 </motion.div>
@@ -183,7 +183,7 @@ export default function LandingPage() {
               <button
                 data-testid="inventions-enter-studio"
                 onClick={() => navigate('/studio')}
-                className="px-6 py-2 bg-orange-500 text-black font-bold text-xs uppercase tracking-wider hover:bg-orange-400 transition-all"
+                className="px-6 py-2 bg-primary text-black font-bold text-xs uppercase tracking-wider hover:bg-primary/80 transition-all"
               >
                 Start Creating
               </button>
@@ -196,7 +196,7 @@ export default function LandingPage() {
       <footer className="border-t border-neutral-800 py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Dna className="w-4 h-4 text-orange-500" />
+            <Dna className="w-4 h-4 text-primary" />
             <span className="font-heading font-bold text-sm">PARADIGM</span>
             <span className="font-mono text-[10px] text-neutral-600 ml-2">v1.0.0</span>
           </div>

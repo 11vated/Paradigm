@@ -387,7 +387,7 @@ const queryKnowledgeTool: AgentTool = {
     // Check gene types
     for (const gt of geneTypes) {
       if (q.includes(gt)) {
-        const info = getGeneTypeInfo(gt);
+        const info = getGeneTypeInfo().find(i => i.name === gt);
         results.push(`Gene type "${gt}": supports validate, mutate, crossover, distance. ${JSON.stringify(info)}`);
       }
     }
@@ -556,11 +556,11 @@ export async function executeTool(
 
   // Check permissions
   if (tool.category === 'extended' || tool.category === 'meta') {
-    const perms = context.agentConfig.tools || {};
-    if (toolName === 'web_browse' && !perms.web_browse) {
+    const perms = context.agentConfig.tools || {} as any;
+    if (toolName === 'web_browse' && !(perms as any).web_browse) {
       return { success: false, data: null, message: 'Web browsing not permitted by agent seed.' };
     }
-    if (toolName === 'fork_agent' && !perms.fork_agent) {
+    if (toolName === 'fork_agent' && !(perms as any).fork_agent) {
       return { success: false, data: null, message: 'Agent forking not permitted by agent seed.' };
     }
   }

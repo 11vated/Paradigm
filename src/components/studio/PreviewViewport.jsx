@@ -249,21 +249,10 @@ export default function PreviewViewport({ artifact, loading }) {
       }} />
 
       {loading ? (
-        <div className="absolute inset-0 flex items-center justify-center z-20 scanline-overlay">
-          <div className="flex flex-col items-center gap-4">
-            {/* Pulsing core */}
-            <div className="relative">
-              <div className="w-16 h-16 border border-primary/30 animate-breathe flex items-center justify-center" style={{ boxShadow: '0 0 40px rgba(0,229,255,0.2)' }}>
-                <Loader2 className="w-6 h-6 text-primary animate-spin" />
-              </div>
-              {/* Orbital rings */}
-              <div className="absolute inset-[-8px] border border-primary/10 animate-spin" style={{ animationDuration: '8s' }} />
-              <div className="absolute inset-[-16px] border border-accent/10 animate-spin" style={{ animationDuration: '12s', animationDirection: 'reverse' }} />
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <span className="font-mono text-[10px] text-primary uppercase tracking-wider animate-pulse">Growing seed</span>
-              <span className="font-mono text-[8px] text-neutral-700">QFT simulation in progress</span>
-            </div>
+        <div className="absolute inset-0 flex items-center justify-center z-20">
+          <div className="flex flex-col items-center gap-3">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Growing seed...</span>
           </div>
         </div>
       ) : artifact ? (
@@ -307,9 +296,9 @@ export default function PreviewViewport({ artifact, loading }) {
           )}
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center noise-overlay scanline-overlay">
+        <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center gap-4 text-center">
-            <div className="w-16 h-16 border border-dashed border-primary/30 flex items-center justify-center animate-float glow-cyan" style={{ boxShadow: '0 0 40px rgba(0, 229, 255, 0.1)' }}>
+            <div className="w-16 h-16 border border-dashed border-primary/30 flex items-center justify-center animate-float" style={{ boxShadow: '0 0 40px rgba(0, 229, 255, 0.1)' }}>
               <Dna className="w-6 h-6 text-primary/50" />
             </div>
             <p className="font-mono text-xs text-neutral-500 max-w-xs">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { generateKeys, signSeed, verifySeed, api } from '@/services/api';
-import { Loader2, Shield, Download, Check, X, Box } from 'lucide-react';
+import { generateKeys, signSeed, verifySeed } from '@/services/api';
+import { Loader2, Shield, Download, Check, X } from 'lucide-react';
 
 export default function ExportPanel({ seed, onSeedUpdated }) {
   const [keys, setKeys] = useState(null);
@@ -124,24 +124,6 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
             >
               <Download className="w-3 h-3" />
               Download .gseed
-            </button>
-            <button
-              data-testid="export-glb-btn"
-              onClick={async () => {
-                try {
-                  const resp = await api.get(`/seeds/${seed.id}/export/glb`, { responseType: 'blob' });
-                  const url = URL.createObjectURL(resp.data);
-                  const a = document.createElement('a');
-                  a.href = url;
-                  a.download = `${(seed.$name || 'seed').replace(/\s+/g, '_')}.glb`;
-                  a.click();
-                  URL.revokeObjectURL(url);
-                } catch (e) { console.error('GLB export failed:', e); }
-              }}
-              className="w-full py-2 border border-primary/30 text-primary font-mono text-[10px] hover:border-primary/60 hover:text-white transition-colors flex items-center justify-center gap-1.5 btn-press btn-glow"
-            >
-              <Box className="w-3 h-3" />
-              Download .glb (3D Model)
             </button>
             <div className="font-mono text-[8px] text-neutral-700 space-y-0.5">
               <div>Hash: {seed.$hash?.slice(0, 32)}...</div>

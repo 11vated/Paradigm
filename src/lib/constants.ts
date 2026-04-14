@@ -8,7 +8,7 @@
 
 export const DOMAIN_COLORS: Record<string, string> = {
   // Core 27 engine domains
-  character: '#F97316', sprite: '#10B981', music: '#8B5CF6', visual2d: '#06B6D4',
+  character: '#00E5FF', sprite: '#10B981', music: '#8B5CF6', visual2d: '#06B6D4',
   procedural: '#EC4899', narrative: '#F59E0B', audio: '#EF4444', fullgame: '#14B8A6',
   animation: '#A855F7', geometry3d: '#22D3EE', physics: '#F43F5E', ecosystem: '#2DD4BF',
   game: '#FB923C', alife: '#818CF8', shader: '#D946EF', particle: '#D946EF',
@@ -16,8 +16,8 @@ export const DOMAIN_COLORS: Record<string, string> = {
   ui: '#FBBF24', typography: '#94A3B8', furniture: '#78716C', fashion: '#F472B6',
   robotics: '#6366F1', circuit: '#4ADE80', agent: '#FF6B6B',
   // Extended / library domains
-  algorithm: '#10B981', building: '#A855F7', camera: '#06B6D4', creature: '#F97316',
-  'cross-domain': '#F59E0B', fluid: '#22D3EE', framework: '#8B5CF6', fx: '#D946EF',
+  algorithm: '#10B981', building: '#A855F7', camera: '#06B6D4', creature: '#00E5FF',
+  'cross-domain': '#8A2BE2', fluid: '#22D3EE', framework: '#8B5CF6', fx: '#D946EF',
   lighting: '#FBBF24', materials: '#EC4899', plant: '#10B981', scene: '#14B8A6',
   style: '#F472B6', weather: '#2DD4BF',
 };
@@ -26,14 +26,14 @@ export const DOMAIN_COLORS: Record<string, string> = {
 // Maps lineage operations to display colors.
 
 export const OP_COLORS: Record<string, string> = {
-  primordial: '#F97316',
-  mutate: '#10B981',
-  breed: '#8B5CF6',
+  primordial: '#00E5FF',
+  mutate: '#FF0055',
+  breed: '#8A2BE2',
   compose: '#06B6D4',
   grow: '#F59E0B',
   evolve: '#EC4899',
-  agent_mutate: '#10B981',
-  agent_breed: '#8B5CF6',
+  agent_mutate: '#FF0055',
+  agent_breed: '#8A2BE2',
   agent_compose: '#06B6D4',
 };
 
@@ -41,7 +41,7 @@ export const OP_COLORS: Record<string, string> = {
 // Maps each of the 17 gene types to a display color.
 
 export const TYPE_COLORS: Record<string, string> = {
-  scalar: '#F97316', categorical: '#10B981', vector: '#06B6D4', expression: '#8B5CF6',
+  scalar: '#00E5FF', categorical: '#FF0055', vector: '#8A2BE2', expression: '#8B5CF6',
   struct: '#EC4899', array: '#F59E0B', graph: '#EF4444', topology: '#14B8A6',
   temporal: '#A855F7', regulatory: '#F43F5E', field: '#22D3EE', symbolic: '#D946EF',
   quantum: '#6366F1', gematria: '#FB923C', resonance: '#2DD4BF', dimensional: '#818CF8',

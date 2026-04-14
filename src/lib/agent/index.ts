@@ -118,7 +118,7 @@ class KnowledgeBase {
 
     // Index all gene types
     for (const geneType of Object.keys(GENE_TYPES)) {
-      const info = getGeneTypeInfo(geneType);
+      const info = getGeneTypeInfo().find(i => i.name === geneType);
       this.entries.push({
         category: 'gene_type',
         key: geneType,
@@ -297,7 +297,7 @@ export class ParadigmAgent {
         const response: AgentResponse = {
           success: true, intent: 'describe_gene_type', tier: InferenceTier.KERNEL,
           message: entries[0]?.content || `Gene type "${gt}".`,
-          data: { geneType: gt, info: getGeneTypeInfo(gt) },
+          data: { geneType: gt, info: getGeneTypeInfo().find(i => i.name === gt) },
           timing: { parseMs: 0, planMs: 0, executeMs: Date.now() - startTime, totalMs: Date.now() - startTime },
         };
         this.memory.addAgentResponse(response.message, response.intent);

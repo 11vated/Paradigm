@@ -48,7 +48,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
   return (
     <div className="h-full flex flex-col" data-testid="gspl-editor">
       <div className="flex items-center gap-2 px-3 py-2 border-b border-neutral-900">
-        <Code2 className="w-3 h-3 text-purple-500" />
+        <Code2 className="w-3 h-3 text-primary" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">GSPL Editor</span>
         <div className="flex-1" />
         <button data-testid="gspl-parse-btn" onClick={handleParse} disabled={loading}
@@ -56,7 +56,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
           Parse
         </button>
         <button data-testid="gspl-execute-btn" onClick={handleExecute} disabled={loading}
-          className="px-2 py-0.5 bg-purple-500 text-black font-bold text-[9px] hover:bg-purple-400 transition-colors flex items-center gap-1">
+          className="px-2 py-0.5 bg-primary text-black font-bold text-[9px] hover:bg-primary/80 transition-colors flex items-center gap-1">
           <Play className="w-2.5 h-2.5" /> Run
         </button>
       </div>
@@ -99,7 +99,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
               <span className="font-mono text-[8px] text-neutral-700 uppercase">Type Env</span>
               {Object.entries(result.types).slice(0, 8).map(([k, v]) => (
                 <div key={k} className="font-mono text-[9px] text-neutral-500">
-                  <span className="text-orange-500/70">{k}</span>: {v}
+                  <span className="text-primary/70">{k}</span>: {v}
                 </div>
               ))}
             </div>

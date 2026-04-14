@@ -8,13 +8,13 @@ import { z } from 'zod';
 // SHARED PRIMITIVES
 // ═══════════════════════════════════════════════════════════════════════════
 
-const seedIdParam = z.string().uuid('Invalid seed ID format');
+const seedIdParam = z.string().min(1, 'Invalid seed ID format');
 
 const geneValue = z.union([
   z.number(),
   z.string(),
   z.array(z.number()),
-  z.record(z.any()),
+  z.record(z.string(), z.any()),
   z.boolean(),
 ]);
 
@@ -102,8 +102,8 @@ export const EvolveSeedSchema = z.object({
 }).passthrough();
 
 export const BreedSeedsSchema = z.object({
-  parent_a_id: z.string().uuid('Invalid parent_a_id format'),
-  parent_b_id: z.string().uuid('Invalid parent_b_id format'),
+  parent_a_id: seedIdParam,
+  parent_b_id: seedIdParam,
 }).refine(data => data.parent_a_id !== data.parent_b_id, {
   message: 'Parents must be different seeds',
 });
@@ -193,12 +193,12 @@ export const MintSeedSchema = z.object({
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const QftSimulateSchema = z.object({
-  seed_id: z.string().uuid('Invalid seed_id format'),
-  parameters: z.record(z.any()).optional().default({}),
+  seed_id: seedIdParam,
+  parameters: z.record(z.string(), z.any()).optional().default({}),
 });
 
 export const PipelineExecuteSchema = z.object({
-  seed_id: z.string().uuid('Invalid seed_id format'),
+  seed_id: seedIdParam,
 });
 
 // ═══════════════════════════════════════════════════════════════════════════

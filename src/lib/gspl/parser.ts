@@ -87,7 +87,11 @@ export function parse(source: string): ParseResult {
         body.push(parseStatement());
       } catch (e: any) {
         errors.push({ message: e.message || 'Parse error', line: current().line, col: current().col });
-        advance(); // skip problematic token
+        // Recover by skipping to next semicolon or EOF
+        while (!check(TokenType.SEMICOLON) && !check(TokenType.EOF)) {
+          advance();
+        }
+        if (check(TokenType.SEMICOLON)) advance();
       }
     }
     return { kind: 'program', body };
@@ -278,13 +282,27 @@ export function parse(source: string): ParseResult {
     if (match(TokenType.LBRACE)) {
       const stmts: Statement[] = [];
       while (!check(TokenType.RBRACE) && !check(TokenType.EOF)) {
-        stmts.push(parseStatement());
+        try {
+          stmts.push(parseStatement());
+        } catch (e: any) {
+          errors.push({ message: e.message || 'Parse error in block', line: current().line, col: current().col });
+          // Recover by skipping to next semicolon or RBRACE
+          while (!check(TokenType.SEMICOLON) && !check(TokenType.RBRACE) && !check(TokenType.EOF)) {
+            advance();
+          }
+          if (check(TokenType.SEMICOLON)) advance();
+        }
       }
       expect(TokenType.RBRACE, 'block');
       return stmts;
     }
     // Single-statement block
-    return [parseStatement()];
+    try {
+      return [parseStatement()];
+    } catch (e: any) {
+      errors.push({ message: e.message || 'Parse error in block', line: current().line, col: current().col });
+      return [];
+    }
   }
 
   // ─── Expressions (Pratt-style precedence) ──────────────────────────────

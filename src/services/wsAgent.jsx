@@ -6,7 +6,9 @@
 const API_URL = import.meta.env.VITE_BACKEND_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
 
 function getWsUrl() {
-  const base = API_URL.replace(/^http/, 'ws');
+  const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = window.location.host;
+  const base = `${protocol}//${host}`;
   const token = sessionStorage.getItem('paradigm_jwt');
   return `${base}/ws/agent${token ? `?token=${token}` : ''}`;
 }

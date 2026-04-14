@@ -94,7 +94,7 @@ describe('Security Headers Middleware', () => {
     const req = mockReq();
     const res = mockRes();
     headers(req, res, () => {});
-    expect(res._headers['x-frame-options']).toBe('SAMEORIGIN');
+    expect(res._headers['x-frame-options']).toBe('DENY');
   });
 
   it('sets Strict-Transport-Security', () => {

@@ -68,7 +68,7 @@ export default function MintPanel({ seed }) {
     return (
       <div className="p-3" data-testid="mint-panel">
         <div className="flex items-center gap-2 mb-2">
-          <Hexagon className="w-3 h-3 text-amber-500" />
+          <Hexagon className="w-3 h-3 text-primary" />
           <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">On-Chain Sovereignty</span>
         </div>
         <p className="font-mono text-[10px] text-neutral-600">Select a seed to mint as an ERC-721 NFT.</p>
@@ -82,7 +82,7 @@ export default function MintPanel({ seed }) {
     <div className="p-3 space-y-3" data-testid="mint-panel">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <Hexagon className="w-3 h-3 text-amber-500" />
+        <Hexagon className="w-3 h-3 text-primary" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">On-Chain Sovereignty</span>
       </div>
 
@@ -106,7 +106,7 @@ export default function MintPanel({ seed }) {
         <div className="font-mono text-[8px] text-neutral-700 uppercase">Seed Metadata</div>
         <div className="font-mono text-[9px] text-neutral-500 space-y-0.5">
           <div>Name: <span className="text-neutral-300">{seed.$name}</span></div>
-          <div>Domain: <span className="text-orange-500/80">{seed.$domain}</span></div>
+          <div>Domain: <span className="text-primary/80">{seed.$domain}</span></div>
           <div>Hash: <span className="text-neutral-400">{seed.$hash?.slice(0, 24)}...</span></div>
           <div>Genes: <span className="text-neutral-400">{Object.keys(seed.genes || {}).length}</span></div>
           <div>Gen: <span className="text-neutral-400">{seed.$lineage?.generation || 0}</span></div>
@@ -121,10 +121,10 @@ export default function MintPanel({ seed }) {
         </div>
       )}
       {nftInfo && nftInfo.onchain && (
-        <div className="p-2 border border-emerald-500/20 bg-emerald-500/5 space-y-1">
-          <div className="font-mono text-[8px] text-emerald-500 uppercase">Minted On-Chain</div>
+        <div className="p-2 border border-primary/20 bg-primary/5 space-y-1">
+          <div className="font-mono text-[8px] text-primary uppercase">Minted On-Chain</div>
           <div className="font-mono text-[9px] text-neutral-500">
-            <div>Token ID: <span className="text-emerald-400">{nftInfo.tokenId}</span></div>
+            <div>Token ID: <span className="text-primary">{nftInfo.tokenId}</span></div>
             {nftInfo.metadataUri && (
               <div className="truncate">URI: <span className="text-neutral-400">{nftInfo.metadataUri.slice(0, 50)}...</span></div>
             )}
@@ -145,14 +145,14 @@ export default function MintPanel({ seed }) {
             onChange={e => setOwnerAddress(e.target.value)}
             placeholder="0x..."
             aria-describedby="mint-help"
-            className="w-full px-2 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[10px] text-neutral-300 placeholder-neutral-700 focus:border-amber-500/40 transition-colors"
+            className="w-full px-2 py-1.5 bg-black/30 border border-neutral-800 font-mono text-[10px] text-neutral-300 placeholder-neutral-700 focus:border-primary/40 transition-colors"
           />
         </div>
         <button
           data-testid="mint-btn"
           onClick={handleMint}
           disabled={minting}
-          className="w-full py-2 bg-amber-500 text-black font-bold text-[10px] uppercase tracking-wider hover:bg-amber-400 transition-colors disabled:opacity-30 flex items-center justify-center gap-1.5"
+          className="w-full py-2 bg-primary text-black font-bold text-[10px] uppercase tracking-wider hover:bg-primary/80 transition-colors disabled:opacity-30 flex items-center justify-center gap-1.5"
         >
           {minting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Hexagon className="w-3 h-3" />}
           {minting ? 'Preparing...' : 'Prepare Mint'}
@@ -168,10 +168,10 @@ export default function MintPanel({ seed }) {
 
       {/* Mint Result */}
       {mintResult && (
-        <div className="space-y-2 p-2 border border-amber-500/20 bg-amber-500/5">
-          <div className="font-mono text-[8px] text-amber-500 uppercase">Mint Prepared</div>
+        <div className="space-y-2 p-2 border border-primary/20 bg-primary/5">
+          <div className="font-mono text-[8px] text-primary uppercase">Mint Prepared</div>
           <div className="font-mono text-[9px] text-neutral-500 space-y-1">
-            {mintResult.tokenId && <div>Token ID: <span className="text-amber-400">{mintResult.tokenId}</span></div>}
+            {mintResult.tokenId && <div>Token ID: <span className="text-primary">{mintResult.tokenId}</span></div>}
             {mintResult.metadata?.name && <div>Name: {mintResult.metadata.name}</div>}
             {mintResult.metadata?.attributes && (
               <div>Attributes: {mintResult.metadata.attributes.length} traits</div>
@@ -182,7 +182,7 @@ export default function MintPanel({ seed }) {
               onClick={() => copyToClipboard(JSON.stringify(mintResult.metadata, null, 2))}
               className="w-full py-1 border border-neutral-800 text-neutral-400 font-mono text-[9px] hover:border-neutral-600 transition-colors flex items-center justify-center gap-1"
             >
-              {copied ? <Check className="w-2.5 h-2.5 text-emerald-500" /> : <Copy className="w-2.5 h-2.5" />}
+              {copied ? <Check className="w-2.5 h-2.5 text-primary" /> : <Copy className="w-2.5 h-2.5" />}
               {copied ? 'Copied!' : 'Copy Metadata JSON'}
             </button>
           )}

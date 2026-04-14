@@ -151,7 +151,7 @@ export class LocalInferenceClient implements InferenceClient {
     }
 
     // If no model available, return empty (kernel-only mode)
-    if (tier === InferenceTier.KERNEL) {
+    if ((tier as InferenceTier) === InferenceTier.KERNEL) {
       return {
         text: '',
         tokensUsed: 0,

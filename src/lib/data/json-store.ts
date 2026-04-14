@@ -69,22 +69,14 @@ export class JsonStore implements SeedStore {
     this.flushSync();
   }
 
-  /** Atomic write: write to .tmp then rename, so a crash never corrupts the real file. */
-  private atomicWriteSync(filePath: string, data: string): void {
-    const tmp = filePath + '.tmp';
-    fs.writeFileSync(tmp, data);
-    fs.renameSync(tmp, filePath);
-  }
-
   private flushSync(): void {
-    const maxAudit = parseInt(process.env.MAX_AUDIT_LOGS || '10000', 10);
     try {
-      this.atomicWriteSync(this.seedsFile, JSON.stringify(this.seeds, null, 2));
-      this.atomicWriteSync(this.usersFile, JSON.stringify(this.users, null, 2));
-      this.atomicWriteSync(this.auditFile, JSON.stringify(this.auditLog.slice(-maxAudit), null, 2));
+      fs.writeFileSync(this.seedsFile, JSON.stringify(this.seeds, null, 2));
+      fs.writeFileSync(this.usersFile, JSON.stringify(this.users, null, 2));
+      fs.writeFileSync(this.auditFile, JSON.stringify(this.auditLog.slice(-10000), null, 2));
       this.dirty = false;
-    } catch (err) {
-      console.error('[JsonStore] Flush failed:', (err as Error).message);
+    } catch {
+      // Ignore write errors
     }
   }
 

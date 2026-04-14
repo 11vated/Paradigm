@@ -205,17 +205,17 @@ const graph: GeneTypeOps = {
     return typeof value === 'object' && value !== null && 'nodes' in value && 'edges' in value;
   },
   mutate(value, rate, rng) {
-    const result = JSON.parse(JSON.stringify(value));
+    const result = JSON.parse(JSON.stringify(value)) as any;
     if (rng.nextF64() < rate) {
       const op = rng.nextInt(0, 2);
       if (op === 0 && result.nodes?.length) {
-        const node = rng.nextChoice(result.nodes);
+        const node = rng.nextChoice(result.nodes as any[]);
         if ('weight' in node) {
           node.weight = clamp(node.weight + rng.nextGaussian() * rate, 0, 1);
         }
       } else if (op === 1 && result.nodes?.length > 1) {
-        const n1 = rng.nextChoice(result.nodes);
-        const n2 = rng.nextChoice(result.nodes);
+        const n1 = rng.nextChoice(result.nodes as any[]);
+        const n2 = rng.nextChoice(result.nodes as any[]);
         if (n1.id !== n2.id) {
           result.edges.push({ from: n1.id, to: n2.id, weight: rng.nextF64() });
         }
@@ -230,8 +230,10 @@ const graph: GeneTypeOps = {
     return rng.nextBool() ? JSON.parse(JSON.stringify(a)) : JSON.parse(JSON.stringify(b));
   },
   distance(a, b) {
-    return Math.abs((a.nodes?.length ?? 0) - (b.nodes?.length ?? 0)) +
-           Math.abs((a.edges?.length ?? 0) - (b.edges?.length ?? 0));
+    const aGraph = a as any;
+    const bGraph = b as any;
+    return Math.abs((aGraph.nodes?.length ?? 0) - (bGraph.nodes?.length ?? 0)) +
+           Math.abs((aGraph.edges?.length ?? 0) - (bGraph.edges?.length ?? 0));
   }
 };
 
@@ -291,9 +293,9 @@ const regulatory: GeneTypeOps = {
     return typeof value === 'object' && value !== null && 'nodes' in value && 'edges' in value;
   },
   mutate(value, rate, rng) {
-    const result = JSON.parse(JSON.stringify(value));
+    const result = JSON.parse(JSON.stringify(value)) as any;
     if (result.edges?.length && rng.nextF64() < rate) {
-      const edge = rng.nextChoice(result.edges);
+      const edge = rng.nextChoice(result.edges as any[]);
       if ('weight' in edge) {
         edge.weight = clamp(edge.weight + rate * rng.nextGaussian(), -1, 1);
       }
@@ -423,9 +425,9 @@ const resonance: GeneTypeOps = {
     return typeof value === 'object' && value !== null && 'fundamentals' in value;
   },
   mutate(value, rate, rng) {
-    const result = JSON.parse(JSON.stringify(value));
+    const result = JSON.parse(JSON.stringify(value)) as any;
     if (result.partials?.length && rng.nextF64() < rate) {
-      const p = rng.nextChoice(result.partials);
+      const p = rng.nextChoice(result.partials as any[]);
       p.amplitude = clamp(p.amplitude + rate * rng.nextGaussian() * 0.1, 0, 1);
     }
     if (result.fundamentals?.length && rng.nextF64() < rate) {

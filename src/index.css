@@ -1,5 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@1,2,3,4,5,6,7,8,9&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @import "tailwindcss";
 @config "../tailwind.config.js";
@@ -7,28 +6,38 @@
 
 @layer base {
   :root {
-    --background: 0 0% 1.2%;
+    /* The Void (Backgrounds) */
+    --background: 0 0% 2%; /* #050505 */
     --foreground: 0 0% 96%;
-    --card: 0 0% 3.9%;
+    --card: 0 0% 6.7%; /* #111111 */
     --card-foreground: 0 0% 96%;
-    --popover: 0 0% 3.9%;
+    --popover: 0 0% 6.7%;
     --popover-foreground: 0 0% 96%;
-    --primary: 25 95% 53%;
+    
+    /* The Energy (Accents) */
+    /* Quantum Cyan #00E5FF */
+    --primary: 186 100% 50%;
     --primary-foreground: 0 0% 2%;
-    --secondary: 160 84% 39%;
+    
+    /* Mutation Magenta #FF0055 */
+    --secondary: 340 100% 50%;
     --secondary-foreground: 0 0% 98%;
+    
+    /* Resonance Purple #8A2BE2 */
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 96%;
+    
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 64%;
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 96%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 15%;
     --input: 0 0% 15%;
-    --ring: 25 95% 53%;
-    --chart-1: 25 95% 53%;
-    --chart-2: 160 84% 39%;
-    --chart-3: 197 37% 24%;
+    --ring: 186 100% 50%;
+    
+    --chart-1: 186 100% 50%; /* Cyan */
+    --chart-2: 340 100% 50%; /* Magenta */
+    --chart-3: 271 76% 53%; /* Purple */
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.125rem;
@@ -37,9 +46,9 @@
 
 body {
   margin: 0;
-  background: #030303;
+  background: #050505;
   color: #f5f5f5;
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'Geist', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -50,7 +59,8 @@ code, .font-mono {
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
-  font-family: 'Cabinet Grotesk', sans-serif;
+  font-family: 'Geist', sans-serif;
+  letter-spacing: -0.02em;
 }
 
 ::-webkit-scrollbar {
@@ -58,14 +68,14 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0a0a;
+  background: #050505;
 }
 ::-webkit-scrollbar-thumb {
-  background: #262626;
+  background: #1a1a1a;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #404040;
+  background: #333333;
 }
 
 @layer base {
@@ -84,6 +94,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 ::selection {
-  background: rgba(249, 115, 22, 0.3);
+  background: rgba(0, 229, 255, 0.3);
   color: #fff;
 }

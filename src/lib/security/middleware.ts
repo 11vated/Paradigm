@@ -80,11 +80,8 @@ export function securityHeaders() {
     // Prevent MIME type sniffing
     res.setHeader('X-Content-Type-Options', 'nosniff');
 
-    // Prevent clickjacking — configurable via FRAME_OPTIONS env var
-    const frameOptions = process.env.FRAME_OPTIONS || 'SAMEORIGIN';
-    if (frameOptions !== 'DISABLED') {
-      res.setHeader('X-Frame-Options', frameOptions);
-    }
+    // Prevent clickjacking - Removed to allow AI Studio iframe embedding
+    // res.setHeader('X-Frame-Options', 'DENY');
 
     // XSS protection (legacy browsers)
     res.setHeader('X-XSS-Protection', '0');

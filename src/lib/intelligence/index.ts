@@ -71,18 +71,6 @@ export class IntelligenceLayer {
         genes: {
           type: Type.OBJECT,
           description: "A dictionary of genes. Keys are gene names. Values must be objects with 'type' ('scalar', 'vector', or 'categorical') and 'value'.",
-          additionalProperties: {
-            type: Type.OBJECT,
-            properties: {
-              type: { type: Type.STRING, enum: ['scalar', 'vector', 'categorical'] },
-              value: { 
-                type: Type.ARRAY, 
-                description: "The value. For scalar, an array with 1 number. For vector, an array of numbers. For categorical, an array with 1 string.",
-                items: { type: Type.STRING } // We'll parse numbers out later if needed, or just use ANY
-              }
-            },
-            required: ['type', 'value']
-          }
         }
       },
       required: ['name', 'genes']
@@ -138,13 +126,6 @@ export class IntelligenceLayer {
         genes: {
           type: Type.OBJECT,
           description: "The mutated genes. Keep the same structure but alter values.",
-          additionalProperties: {
-            type: Type.OBJECT,
-            properties: {
-              type: { type: Type.STRING },
-              value: { type: Type.ARRAY, items: { type: Type.STRING } }
-            }
-          }
         }
       },
       required: ['name', 'genes']
@@ -205,13 +186,6 @@ export class IntelligenceLayer {
         genes: {
           type: Type.OBJECT,
           description: "The combined genes.",
-          additionalProperties: {
-            type: Type.OBJECT,
-            properties: {
-              type: { type: Type.STRING },
-              value: { type: Type.ARRAY, items: { type: Type.STRING } }
-            }
-          }
         }
       },
       required: ['name', 'genes']

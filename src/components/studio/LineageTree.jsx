@@ -44,9 +44,9 @@ export default function LineageTree({ seed, gallery, onSelect }) {
       )}
 
       {/* Current */}
-      <div className="p-3 border border-orange-500/30 bg-orange-500/5" data-testid="lineage-current">
+      <div className="p-3 border border-primary/30 bg-primary/5" data-testid="lineage-current">
         <div className="flex items-center gap-2 mb-1">
-          <div className="w-2 h-2 rounded-full bg-orange-500" />
+          <div className="w-2 h-2 rounded-full bg-primary" />
           <span className="font-heading text-xs font-bold text-white">{seed.$name}</span>
         </div>
         <div className="font-mono text-[9px] text-neutral-500 space-y-0.5">
