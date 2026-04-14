@@ -2,8 +2,11 @@ import { useState } from 'react';
 import { updateGene } from '@/services/api';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-
 import { TYPE_COLORS } from '@/lib/constants';
+import ScalarGauge from './genes/ScalarGauge';
+import VectorRadar from './genes/VectorRadar';
+import CategoricalCarousel from './genes/CategoricalCarousel';
+import ResonanceWave from './genes/ResonanceWave';
 
 const ARCHETYPE_CHOICES = ['warrior', 'mage', 'rogue', 'paladin', 'ranger', 'bard', 'cleric', 'dark_knight', 'monk', 'necromancer'];
 const SCALE_CHOICES = ['major', 'minor', 'pentatonic', 'blues', 'dorian', 'mixolydian', 'chromatic'];
@@ -94,7 +97,7 @@ function GenericWidget({ value, onChange }) {
                 setIsEditing(false);
               }
             }}
-            className="px-2 py-0.5 bg-orange-500 text-black text-[8px] uppercase"
+            className="px-2 py-0.5 bg-primary text-black text-[8px] uppercase"
           >
             Save
           </button>
@@ -160,13 +163,14 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
                 <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: color }} />
                 <span className="gene-label truncate">{name}</span>
                 <span className="gene-type-badge">{gtype}</span>
-                {updating === name && <span className="text-[8px] text-orange-500 animate-pulse">...</span>}
+                {updating === name && <span className="text-[8px] text-primary animate-pulse">...</span>}
               </div>
               <div className="pl-4">
-                {gtype === 'scalar' && <ScalarWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {gtype === 'categorical' && <CategoricalWidget value={gene.value} geneName={name} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {gtype === 'vector' && <VectorWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {!['scalar', 'categorical', 'vector'].includes(gtype) && <GenericWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'scalar' && <ScalarGauge value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} color={color} />}
+                {gtype === 'categorical' && <CategoricalCarousel value={gene.value} options={getCategoricalChoices(name)} onChange={(v) => handleUpdate(name, gtype, v)} color={color} />}
+                {gtype === 'vector' && <VectorRadar value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
+                {(gtype === 'resonance' || gtype === 'temporal') && <ResonanceWave value={gene.value} color={color} />}
+                {!['scalar', 'categorical', 'vector', 'resonance', 'temporal'].includes(gtype) && <GenericWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
               </div>
             </div>
           </div>
