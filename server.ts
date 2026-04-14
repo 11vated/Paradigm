@@ -288,6 +288,22 @@ async function startServer() {
     }
   }
 
+  // Load genesis seeds (foundational reference seeds for all 27 domains)
+  try {
+    const genesisPath = path.join(process.cwd(), 'data', 'genesis-seeds.json');
+    if (fs.existsSync(genesisPath)) {
+      const genesisSeeds = JSON.parse(fs.readFileSync(genesisPath, 'utf-8'));
+      let added = 0;
+      for (const gs of genesisSeeds) {
+        if (!store.getSeedById(gs.id)) {
+          await store.addSeed(gs);
+          added++;
+        }
+      }
+      if (added > 0) log('INFO', `Loaded ${added} genesis seeds`);
+    }
+  } catch (e: any) { log('WARN', `Genesis seed loading failed: ${e.message}`); }
+
   // Compatibility shims — `seeds` array and `saveSeeds` function used throughout server.ts.
   // These delegate to the store so existing endpoint code doesn't need a full rewrite.
   const seeds = store.getAllSeeds();
@@ -914,8 +930,8 @@ async function startServer() {
     }
 
     // Assign a fresh ID and persist
-    composed.id = crypto.randomUUID();
-    seeds.push(composed);
+    (composed as any).id = crypto.randomUUID();
+    seeds.push(composed as any);
     saveSeeds();
 
     // Also return the path for UI visualization
@@ -1054,7 +1070,7 @@ async function startServer() {
   app.get('/api/gene-types', (_req, res) => {
     const types: Record<string, any> = {};
     for (const key of Object.keys(GENE_TYPES)) {
-      types[key] = getGeneTypeInfo(key);
+      types[key] = getGeneTypeInfo().find(i => i.name === key);
     }
     res.json({ types, count: Object.keys(types).length });
   });
@@ -1256,6 +1272,27 @@ async function startServer() {
 
   app.get('/api/library', (_req, res) => {
     res.json({ seeds, stats: { total_seeds: seeds.length } });
+  });
+
+  // ── Genesis Seeds (foundational reference seeds) ──
+  app.get('/api/seeds/genesis', (_req, res) => {
+    const genesis = seeds.filter((s: any) => s.$lineage?.operation === 'genesis');
+    res.json({ seeds: genesis, count: genesis.length });
+  });
+
+  // ── Domain-specific preview mesh generation ──
+  app.post('/api/seeds/:id/preview-mesh', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+    try {
+      const { growSeed } = require('./src/lib/kernel/engines.js');
+      const { generatePreviewMesh } = require('./src/lib/asset_pipeline/preview_generator.js');
+      const artifact = growSeed(seed);
+      const mesh = generatePreviewMesh(artifact);
+      res.json({ artifact, mesh });
+    } catch (err: any) {
+      res.status(500).json({ detail: err.message });
+    }
   });
 
   app.post('/api/library/import', requireAuth, validateBody(LibraryImportSchema), (req: any, res: any) => {

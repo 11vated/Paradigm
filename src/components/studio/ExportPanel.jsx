@@ -51,7 +51,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
   return (
     <div className="p-3 space-y-4" data-testid="export-panel">
       <div className="flex items-center gap-2">
-        <Shield className="w-3 h-3 text-purple-500" />
+        <Shield className="w-3 h-3 text-primary" />
         <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Sovereignty & Export</span>
       </div>
 
@@ -81,7 +81,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
                   data-testid="sign-seed-btn"
                   onClick={handleSign}
                   disabled={signing}
-                  className="w-full py-1.5 bg-purple-500 text-black font-bold text-[10px] uppercase tracking-wider hover:bg-purple-400 transition-colors disabled:opacity-30 flex items-center justify-center gap-1.5"
+                  className="w-full py-1.5 bg-primary text-black font-bold text-[10px] uppercase tracking-wider hover:bg-primary/80 transition-colors disabled:opacity-30 flex items-center justify-center gap-1.5"
                 >
                   {signing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Shield className="w-3 h-3" />}
                   Sign Seed
@@ -91,8 +91,8 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
 
             {seed.$sovereignty?.signature && (
               <div className="space-y-1.5">
-                <div className="p-2 border border-emerald-500/20 bg-emerald-500/5">
-                  <div className="font-mono text-[8px] text-emerald-500 uppercase mb-0.5">Signed</div>
+                <div className="p-2 border border-primary/20 bg-primary/5">
+                  <div className="font-mono text-[8px] text-primary uppercase mb-0.5">Signed</div>
                   <div className="font-mono text-[9px] text-neutral-500 break-all">{seed.$sovereignty.signature?.slice(0, 40)}...</div>
                   <div className="font-mono text-[8px] text-neutral-700 mt-1">{seed.$sovereignty.signed_at}</div>
                 </div>
@@ -105,7 +105,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
                   {verifying ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Verify Signature'}
                 </button>
                 {verifyResult !== null && (
-                  <div className={`flex items-center gap-1.5 font-mono text-[10px] ${verifyResult ? 'text-emerald-500' : 'text-red-500'}`}>
+                  <div className={`flex items-center gap-1.5 font-mono text-[10px] ${verifyResult ? 'text-primary' : 'text-red-500'}`}>
                     {verifyResult ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                     {verifyResult ? 'Signature Valid' : 'Signature Invalid'}
                   </div>
@@ -138,10 +138,10 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
                   URL.revokeObjectURL(url);
                 } catch (e) { console.error('GLB export failed:', e); }
               }}
-              className="w-full py-2 border border-cyan-800/50 text-cyan-400 font-mono text-[10px] hover:border-cyan-600 hover:text-cyan-300 transition-colors flex items-center justify-center gap-1.5"
+              className="w-full py-2 border border-primary/30 text-primary font-mono text-[10px] hover:border-primary/60 hover:text-white transition-colors flex items-center justify-center gap-1.5 btn-press btn-glow"
             >
               <Box className="w-3 h-3" />
-              Download .glb (3D)
+              Download .glb (3D Model)
             </button>
             <div className="font-mono text-[8px] text-neutral-700 space-y-0.5">
               <div>Hash: {seed.$hash?.slice(0, 32)}...</div>
