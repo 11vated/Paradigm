@@ -85,12 +85,24 @@ function FallbackMesh({ domain, color }) {
 }
 
 function ThreeViewport({ artifact }) {
-  const domainColor = artifact?.visual?.color || DOMAIN_COLORS_HEX[artifact?.domain] || '#F97316';
+  const domainColor = artifact?.visual?.color || DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
   const hasEmergentMesh = artifact?.emergent_assets?.mesh?.vertices?.length > 0;
 
   return (
     <div className="w-full h-full block" data-testid="preview-3d-canvas">
-      <Canvas shadows camera={{ position: [0, 2, 4], fov: 50 }}>
+      <Canvas 
+        shadows 
+        camera={{ position: [0, 2, 4], fov: 50 }}
+        onCreated={({ gl }) => {
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            console.warn('WebGL context lost');
+          });
+          gl.domElement.addEventListener('webglcontextrestored', () => {
+            console.log('WebGL context restored');
+          });
+        }}
+      >
         <color attach="background" args={['#030303']} />
         <fog attach="fog" args={['#030303', 5, 15]} />
         
@@ -129,7 +141,7 @@ function CharacterPreview({ artifact }) {
         }} />
       <div className="text-center">
         <div className="font-heading font-bold text-lg text-white">{artifact.name}</div>
-        <div className="font-mono text-[10px] text-orange-500 uppercase tracking-wider">{artifact.archetype}</div>
+        <div className="font-mono text-[10px] text-primary uppercase tracking-wider">{artifact.archetype}</div>
       </div>
       <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-center">
         {Object.entries(s).map(([k, val]) => (
@@ -148,10 +160,10 @@ function MusicPreview({ artifact }) {
   const melody = artifact.melody_preview || [];
   return (
     <div className="flex flex-col items-center gap-4" data-testid="preview-music">
-      <div className="w-56 h-28 bg-gradient-to-r from-purple-500/10 via-violet-500/10 to-indigo-500/10 border border-neutral-800 flex items-center justify-center">
+      <div className="w-56 h-28 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-neutral-800 flex items-center justify-center">
         <div className="flex items-end gap-1 h-20">
           {(melody.length > 0 ? melody.slice(0, 12) : [60, 64, 67, 72, 69, 64, 67, 60]).map((note, i) => (
-            <div key={i} className="w-3 bg-purple-500/60 rounded-t-sm animate-pulse"
+            <div key={i} className="w-3 bg-primary/60 rounded-t-sm animate-pulse"
               style={{ height: `${Math.max(10, ((note - 48) / 40) * 100)}%`, animationDelay: `${i * 0.1}s` }} />
           ))}
         </div>
@@ -165,7 +177,7 @@ function MusicPreview({ artifact }) {
 }
 
 function GenericPreview({ artifact }) {
-  const c = DOMAIN_COLORS_HEX[artifact.domain] || '#F97316';
+  const c = DOMAIN_COLORS_HEX[artifact.domain] || '#00E5FF';
   
   const canvasRef = useRef(null);
   
@@ -232,15 +244,26 @@ export default function PreviewViewport({ artifact, loading }) {
   return (
     <div className="flex-1 relative overflow-hidden" data-testid="preview-viewport">
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-10" style={{
-        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(249,115,22,0.4) 1px, transparent 0)',
+        backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,229,255,0.4) 1px, transparent 0)',
         backgroundSize: '32px 32px'
       }} />
 
       {loading ? (
-        <div className="absolute inset-0 flex items-center justify-center z-20">
-          <div className="flex flex-col items-center gap-3">
-            <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
-            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Growing seed...</span>
+        <div className="absolute inset-0 flex items-center justify-center z-20 scanline-overlay">
+          <div className="flex flex-col items-center gap-4">
+            {/* Pulsing core */}
+            <div className="relative">
+              <div className="w-16 h-16 border border-primary/30 animate-breathe flex items-center justify-center" style={{ boxShadow: '0 0 40px rgba(0,229,255,0.2)' }}>
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+              </div>
+              {/* Orbital rings */}
+              <div className="absolute inset-[-8px] border border-primary/10 animate-spin" style={{ animationDuration: '8s' }} />
+              <div className="absolute inset-[-16px] border border-accent/10 animate-spin" style={{ animationDuration: '12s', animationDirection: 'reverse' }} />
+            </div>
+            <div className="flex flex-col items-center gap-1">
+              <span className="font-mono text-[10px] text-primary uppercase tracking-wider animate-pulse">Growing seed</span>
+              <span className="font-mono text-[8px] text-neutral-700">QFT simulation in progress</span>
+            </div>
           </div>
         </div>
       ) : artifact ? (
@@ -248,10 +271,10 @@ export default function PreviewViewport({ artifact, loading }) {
           {/* View toggle */}
           <div className="absolute top-2 right-2 z-20 flex gap-1">
             <button onClick={() => setView('3d')}
-              className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === '3d' ? 'border-orange-500 text-orange-500 bg-orange-500/10' : 'border-neutral-800 text-neutral-600'}`}
+              className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === '3d' ? 'border-primary text-primary bg-primary/10' : 'border-neutral-800 text-neutral-600'}`}
               data-testid="view-3d-btn">3D</button>
             <button onClick={() => setView('2d')}
-              className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === '2d' ? 'border-orange-500 text-orange-500 bg-orange-500/10' : 'border-neutral-800 text-neutral-600'}`}
+              className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === '2d' ? 'border-primary text-primary bg-primary/10' : 'border-neutral-800 text-neutral-600'}`}
               data-testid="view-2d-btn">2D</button>
           </div>
 
@@ -268,28 +291,28 @@ export default function PreviewViewport({ artifact, loading }) {
               {/* Physics Summary Overlay */}
               {artifact.physics_summary && (
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 z-20 px-3 py-1 bg-black/50 border border-neutral-800 backdrop-blur-sm rounded-full pointer-events-none">
-                  <div className="font-mono text-[9px] text-emerald-400/80">{artifact.physics_summary}</div>
+                  <div className="font-mono text-[9px] text-primary/80">{artifact.physics_summary}</div>
                 </div>
               )}
 
-              <div className="absolute bottom-0 left-0 right-0 z-20 p-3 bg-gradient-to-t from-[#030303] to-transparent pointer-events-none">
+              <div className="absolute bottom-0 left-0 right-0 z-20 p-3 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none">
                 <div className="font-heading font-bold text-sm text-white">{artifact.name}</div>
                 <div className="font-mono text-[9px] text-neutral-500">{artifact.domain} / Gen {artifact.generation}</div>
               </div>
             </div>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-[#030303]">
+            <div className="absolute inset-0 flex items-center justify-center bg-[#000000]">
               <ArtifactInfo artifact={artifact} />
             </div>
           )}
         </>
       ) : (
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center noise-overlay scanline-overlay">
           <div className="flex flex-col items-center gap-4 text-center">
-            <div className="w-16 h-16 border border-dashed border-neutral-800 flex items-center justify-center animate-float">
-              <Dna className="w-6 h-6 text-neutral-700" />
+            <div className="w-16 h-16 border border-dashed border-primary/30 flex items-center justify-center animate-float glow-cyan" style={{ boxShadow: '0 0 40px rgba(0, 229, 255, 0.1)' }}>
+              <Dna className="w-6 h-6 text-primary/50" />
             </div>
-            <p className="font-mono text-xs text-neutral-600 max-w-xs">
+            <p className="font-mono text-xs text-neutral-500 max-w-xs">
               Type a description in the prompt bar below to generate your first seed, or select one from the gallery.
             </p>
           </div>
