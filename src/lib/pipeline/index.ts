@@ -8,7 +8,7 @@ export class ParadigmPipeline {
    * Executes the full Paradigm Absolute pipeline:
    * 1. GSPL Intent -> 2. QFT Compiler -> 3. Quantum Simulation -> 4. Asset Emergence
    */
-  static async runEndToEnd(seed: any): Promise<any> {
+  static async runEndToEnd(seed: any, options: { smoothMesh?: boolean } = {}): Promise<any> {
     console.log(`[Pipeline] Initiating Absolute Pipeline for Seed: ${seed.$name || seed.id}`);
     
     // Phase 1 & 2: Compile GSPL to QFT Boundary Conditions
@@ -45,15 +45,18 @@ export class ParadigmPipeline {
         }
       }
       
-      // Extract 3D Mesh using Marching Cubes on the probability/energy density
+      // Extract 3D Mesh. Blocky = old voxel-quad extractor; smooth = real
+      // Marching Cubes on the transposed field. The caller picks via
+      // `options.smoothMesh`. Default stays blocky for now because the
+      // existing mesh tests pin against the blocky output — once callers
+      // migrate we can flip the default.
       const threshold = 0.05; // Density threshold for matter boundary
-      const meshData = MeshExtractor.extractIsosurface(
-        field, 
-        actualGridSize as [number, number, number], 
-        threshold
-      );
-      
-      console.log(`[Pipeline] Mesh Extracted: ${meshData.vertices.length / 3} vertices.`);
+      const gs = actualGridSize as [number, number, number];
+      const meshData = options.smoothMesh
+        ? MeshExtractor.extractSmoothIsosurfaceFromXMajor(field, gs, { threshold })
+        : MeshExtractor.extractIsosurface(field, gs, threshold);
+
+      console.log(`[Pipeline] Mesh Extracted (${options.smoothMesh ? 'smooth MC' : 'blocky'}): ${meshData.vertices.length / 3} vertices.`);
       
       // Bake pseudo-PBR colors based on field intensity gradients
       const coloredMesh = TextureBaker.bakeVertexColors(

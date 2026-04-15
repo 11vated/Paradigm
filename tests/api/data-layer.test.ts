@@ -276,11 +276,74 @@ describe('JsonStore Data Layer', () => {
 
       const store2 = new JsonStore(TEST_DIR);
       await store2.init();
-
-      const found = await store2.getUserByUsername('persist_user');
+      const found = store2.getUserByUsername('persist_user');
       expect(found).toBeTruthy();
-
+      expect(found!.username).toBe('persist_user');
       await store2.close();
+    });
+  });
+
+  // ── Phase 0 / G-06 acceptance ─────────────────────────────────────────────
+  // The old flushSync used `fs.writeFileSync` directly, which is not atomic.
+  // A crash mid-write would leave a truncated JSON file and init() would
+  // silently swallow the parse error, dropping user data. The new pattern
+  // writes to a temp path, fsyncs, then renames — so the target file always
+  // contains either the complete prior version or the complete new version.
+  describe('Atomic writes (G-06)', () => {
+    it('a simulated crash between tmp-write and rename leaves the target untouched', async () => {
+      const seed = makeSeed({ $name: 'Original' });
+      await store.addSeed(seed);
+      await store.persist();
+      await store.close();
+
+      const seedsFile = path.join(TEST_DIR, 'user-seeds.json');
+      const originalContent = fs.readFileSync(seedsFile, 'utf-8');
+      expect(originalContent).toContain('Original');
+
+      // Simulate a crashed write: create a tmp file with garbage, leave the
+      // real file alone. On recovery, init() should still load "Original".
+      fs.writeFileSync(seedsFile + '.tmp.99999.0000', 'GARBAGE_FROM_CRASHED_WRITE');
+
+      const store2 = new JsonStore(TEST_DIR);
+      await store2.init();
+      const all = store2.getAllSeeds();
+      expect(all.length).toBe(1);
+      expect(all[0].$name).toBe('Original');
+      await store2.close();
+    });
+
+    it('concurrent-looking writes never truncate the target file', async () => {
+      // Write enough seeds that a non-atomic writer would be observable
+      // mid-flight on a slow filesystem.
+      for (let i = 0; i < 50; i++) {
+        await store.addSeed(makeSeed({ $name: `Seed${i}` }));
+      }
+      await store.persist();
+
+      const seedsFile = path.join(TEST_DIR, 'user-seeds.json');
+      const content = fs.readFileSync(seedsFile, 'utf-8');
+      // Must be valid JSON — a non-atomic write could produce partial bytes.
+      expect(() => JSON.parse(content)).not.toThrow();
+      const parsed = JSON.parse(content);
+      expect(Array.isArray(parsed)).toBe(true);
+      expect(parsed.length).toBe(50);
+    });
+
+    it('audit log is readable after adding entries (completes addAuditEntry/getAuditLog)', async () => {
+      // Phase 0 also completed the truncated audit methods in JsonStore.
+      await store.addAuditEntry({
+        id: 'a1', timestamp: new Date().toISOString(),
+        action: 'test', resource: 'seed',
+      });
+      await store.addAuditEntry({
+        id: 'a2', timestamp: new Date().toISOString(),
+        action: 'test', resource: 'seed',
+      });
+      const log = await store.getAuditLog(10);
+      expect(log.length).toBe(2);
+      // getAuditLog returns newest-first, so insertion order [a1, a2] -> [a2, a1].
+      expect(log[0].id).toBe('a2');
+      expect(log[1].id).toBe('a1');
     });
   });
 });

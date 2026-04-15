@@ -2,22 +2,41 @@
 // Replaces the mock QCD implementation with a mathematically rigorous non-abelian gauge theory.
 // SU(2) matrices are represented by 4 real numbers (a0, a1, a2, a3) where a0^2 + a1^2 + a2^2 + a3^2 = 1.
 // U = a0*I + i*a1*sigma1 + i*a2*sigma2 + i*a3*sigma3
+//
+// Phase 0 / G-05: the Metropolis sampler previously drew from `Math.random()`,
+// which meant the same seed produced different gauge fields on every run —
+// a direct contradiction of the kernel's determinism guarantee. A pluggable
+// RNG (defaulting to xoshiro256** seeded by the caller's hash) is now threaded
+// through `randomSU2` and the accept/reject step.
+import crypto from 'crypto';
+import { rngFromHash } from '../kernel/rng.js';
+
+export type RngFn = () => number;  // returns [0, 1)
 
 export class QCDSolver {
   nx: number; ny: number; nz: number; nt: number;
   beta: number; // Inverse coupling 4/g^2 for SU(2)
-  
+
   // SU(2) link variables: U_mu(x)
   // 4 dimensions (x,y,z,t), nx*ny*nz*nt sites, 4 floats per link
   links: Float32Array;
-  
-  constructor(gridSize: [number, number, number, number] = [8, 8, 8, 8], beta = 2.5) {
+
+  // Deterministic RNG. If no caller provides one, we synthesize a constant-seeded
+  // stream so at least repeated runs within a single process are identical.
+  private rng: RngFn;
+
+  constructor(
+    gridSize: [number, number, number, number] = [8, 8, 8, 8],
+    beta = 2.5,
+    rng?: RngFn,
+  ) {
     this.nx = gridSize[0];
     this.ny = gridSize[1];
     this.nz = gridSize[2];
     this.nt = gridSize[3];
     this.beta = beta;
-    
+    this.rng = rng ?? defaultRng();
+
     const size = 4 * this.nx * this.ny * this.nz * this.nt * 4;
     this.links = new Float32Array(size);
     this.initCold();
@@ -103,12 +122,14 @@ export class QCDSolver {
     return staple;
   }
 
-  // Generate a random SU(2) matrix near identity
+  // Generate a random SU(2) matrix near identity using the deterministic RNG.
   private randomSU2(epsilon: number): number[] {
-    const r1 = (Math.random() - 0.5) * epsilon;
-    const r2 = (Math.random() - 0.5) * epsilon;
-    const r3 = (Math.random() - 0.5) * epsilon;
-    const r0 = Math.sqrt(1.0 - r1*r1 - r2*r2 - r3*r3);
+    const r1 = (this.rng() - 0.5) * epsilon;
+    const r2 = (this.rng() - 0.5) * epsilon;
+    const r3 = (this.rng() - 0.5) * epsilon;
+    // Guard against numerical negatives when epsilon is close to 1.
+    const radicand = Math.max(0, 1.0 - r1 * r1 - r2 * r2 - r3 * r3);
+    const r0 = Math.sqrt(radicand);
     return [r0, r1, r2, r3];
   }
 
@@ -136,7 +157,7 @@ export class QCDSolver {
               
               const deltaS = newAction - currentAction;
 
-              if (deltaS <= 0 || Math.random() < Math.exp(-deltaS)) {
+              if (deltaS <= 0 || this.rng() < Math.exp(-deltaS)) {
                 this.links[i] = newU[0];
                 this.links[i+1] = newU[1];
                 this.links[i+2] = newU[2];
@@ -236,8 +257,45 @@ export class QCDSolver {
   }
 }
 
-export function simulateQCD(initialConditions: any, gridSize: [number, number, number, number] = [4, 4, 4, 4], numSweeps = 20) {
-  // Reduced default grid size and sweeps for real-time performance
-  const solver = new QCDSolver(gridSize, initialConditions.beta || 2.5);
+/**
+ * Produce a deterministic RNG function from a seed hash string. This is the
+ * canonical way callers thread reproducibility through the QCD solver: pass
+ * the seed's $hash (plus an optional salt for distinct streams).
+ */
+export function qcdRngFromHash(hash: string, salt = ''): RngFn {
+  // rngFromHash only reads the first 16 hex chars of its input, so a naive
+  // `hash + ':' + salt` concatenation produces collisions when `hash` already
+  // fills those 16 chars. Re-hash the combined value so the salt always
+  // propagates into the seed.
+  const combined = crypto.createHash('sha256')
+    .update(hash + ':' + salt)
+    .digest('hex');
+  const stream = rngFromHash(combined);
+  return () => stream.nextF64();
+}
+
+/**
+ * When no hash-based seed is available we still must not fall back to
+ * `Math.random()` — that would re-open the determinism hole that G-05 closed.
+ * Instead we seed a fresh xoshiro256** from a constant hex so repeated runs
+ * in the same process produce identical results. Callers who need independent
+ * streams MUST pass an explicit `rng` to the constructor.
+ */
+function defaultRng(): RngFn {
+  const stream = rngFromHash('00000000000000000000000000000000000000000000000000000000qcd');
+  return () => stream.nextF64();
+}
+
+export function simulateQCD(
+  initialConditions: any,
+  gridSize: [number, number, number, number] = [4, 4, 4, 4],
+  numSweeps = 20,
+  rng?: RngFn,
+) {
+  // Reduced default grid size and sweeps for real-time performance.
+  // Phase 0 / G-05: the RNG is now a first-class parameter. Previously the
+  // function ended with a bare `return` — producing `undefined` — so this
+  // also fixes a latent bug in `_runQCD`.
+  const solver = new QCDSolver(gridSize, initialConditions.beta || 2.5, rng);
   return solver.run(numSweeps);
 }

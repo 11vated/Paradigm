@@ -1,7 +1,7 @@
 import { simulateEMField } from './em_solver.js';
 import { simulateDiracField } from './dirac_solver.js';
 import { simulateQED } from './qed_coupling.js';
-import { simulateQCD } from './qcd_solver.js';
+import { simulateQCD, qcdRngFromHash } from './qcd_solver.js';
 import { simulateGravity } from './gravity_solver.js';
 import crypto from 'crypto';
 
@@ -200,7 +200,11 @@ export class QFTEngine {
     const gridSize = params.grid_size || [8, 8, 8, 8];
     const numSweeps = params.num_steps || 100;
     
-    const result = simulateQCD(params.initial_conditions || {}, gridSize, numSweeps);
+    // Phase 0 / G-05: the QCD solver is now deterministic per seed. We key
+    // the RNG stream off the input seed's $hash so repeated QCD runs on the
+    // same seed are byte-identical.
+    const qcdRng = seed.$hash ? qcdRngFromHash(String(seed.$hash), 'qcd') : undefined;
+    const result = simulateQCD(params.initial_conditions || {}, gridSize, numSweeps, qcdRng);
     
     const outputSeed = {
       id: crypto.randomUUID(),

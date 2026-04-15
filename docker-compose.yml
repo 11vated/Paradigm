@@ -1,11 +1,19 @@
-# ─── Paradigm Absolute — Docker Compose ─────────────────────────────────────
-# Services: app (Node/Express), mongo (persistence), redis (cache),
-#           nginx (reverse proxy), prometheus (metrics), grafana (dashboards)
+# ─── Paradigm Absolute — Docker Compose (Phase 1, Appendix D decisions) ────
+# Services:
+#   app              — Node/Express API + static frontend
+#   caddy            — reverse proxy with auto-HTTPS (replaces nginx per D-4)
+#   postgres         — pgvector-enabled Postgres for embeddings (D-6)
+#   sbert-embedder   — self-hosted sentence-transformers sidecar (D-5)
+#   mongo            — optional: legacy data store (kept pending JSON/pgvector split)
+#   redis            — cache + rate limiting
+#   prometheus       — metrics scrape
+#   grafana          — dashboards
+#
 # Usage:
-#   docker-compose up -d          # Start all services
-#   docker-compose logs -f app    # Watch app logs
-#   docker-compose down           # Stop all services
-#   docker-compose up --scale app=3 -d  # Horizontal scaling
+#   docker compose up -d             # start core + infra
+#   docker compose up -d app caddy postgres sbert-embedder redis  # minimal Phase 1 set
+#   docker compose logs -f app       # watch app logs
+#   docker compose down              # stop everything
 # ────────────────────────────────────────────────────────────────────────────
 
 version: "3.9"
@@ -18,22 +26,26 @@ services:
       dockerfile: Dockerfile
     container_name: paradigm-app
     restart: unless-stopped
-    ports:
-      - "${APP_PORT:-3000}:3000"
+    expose:
+      - "3000"                      # internal only; Caddy fronts it
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
-      - MONGO_URI=mongodb://mongo:27017/paradigm
+      - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set in .env}
+      - MONGO_URI=${MONGO_URI:-}   # leave empty to use JsonStore
+      - DATABASE_URL=postgresql://paradigm:${POSTGRES_PASSWORD:-paradigm}@postgres:5432/paradigm
       - REDIS_URL=redis://redis:6379
+      - SBERT_URL=http://sbert-embedder:8000
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
     volumes:
       - seed-data:/app/data
     depends_on:
-      mongo:
+      postgres:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      sbert-embedder:
         condition: service_healthy
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"]
@@ -44,11 +56,78 @@ services:
     networks:
       - paradigm-net
 
-  # ── MongoDB ──────────────────────────────────────────────────────────────
+  # ── Caddy Reverse Proxy (auto-HTTPS, replaces nginx per D-4) ─────────────
+  caddy:
+    image: caddy:2-alpine
+    container_name: paradigm-caddy
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data               # Caddy stores certs here
+      - caddy-config:/config
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+      - CADDY_EMAIL=${CADDY_EMAIL:-admin@example.com}
+    depends_on:
+      - app
+    networks:
+      - paradigm-net
+
+  # ── Postgres with pgvector (embeddings, per D-6) ─────────────────────────
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: paradigm-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=paradigm
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-paradigm}
+      - POSTGRES_DB=paradigm
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations/postgres:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paradigm -d paradigm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - paradigm-net
+
+  # ── SBERT Embedder Sidecar (self-hosted embeddings, per D-5) ─────────────
+  sbert-embedder:
+    build:
+      context: ./sidecars/sbert
+      dockerfile: Dockerfile
+    container_name: paradigm-sbert
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      - SBERT_MODEL=${SBERT_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+      - HF_HOME=/models
+    volumes:
+      - sbert-models:/models
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s          # model download on first run
+      retries: 3
+    networks:
+      - paradigm-net
+
+  # ── MongoDB (legacy, optional) ───────────────────────────────────────────
+  # Retained while we plan the JSON → pgvector data migration. When MONGO_URI
+  # is empty the app uses the JSON store; when set, it uses Mongo. pgvector
+  # lives alongside either option for the embedding pipeline specifically.
   mongo:
     image: mongo:7
     container_name: paradigm-mongo
     restart: unless-stopped
+    profiles: ["legacy"]             # only starts with --profile legacy
     volumes:
       - mongo-data:/data/db
     environment:
@@ -62,7 +141,7 @@ services:
     networks:
       - paradigm-net
 
-  # ── Redis (caching engine results, rate limiting) ────────────────────────
+  # ── Redis (caching + rate limiting) ──────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: paradigm-redis
@@ -77,25 +156,12 @@ services:
     networks:
       - paradigm-net
 
-  # ── Nginx Reverse Proxy ──────────────────────────────────────────────────
-  nginx:
-    image: nginx:alpine
-    container_name: paradigm-nginx
-    restart: unless-stopped
-    ports:
-      - "${NGINX_PORT:-80}:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-    networks:
-      - paradigm-net
-
-  # ── Prometheus (Metrics Collection) ──────────────────────────────────────
+  # ── Prometheus ───────────────────────────────────────────────────────────
   prometheus:
     image: prom/prometheus:v2.51.0
     container_name: paradigm-prometheus
     restart: unless-stopped
+    profiles: ["observability"]
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
@@ -113,11 +179,12 @@ services:
     networks:
       - paradigm-net
 
-  # ── Grafana (Dashboards & Alerting) ──────────────────────────────────────
+  # ── Grafana ──────────────────────────────────────────────────────────────
   grafana:
     image: grafana/grafana:10.4.0
     container_name: paradigm-grafana
     restart: unless-stopped
+    profiles: ["observability"]
     ports:
       - "${GRAFANA_PORT:-3001}:3000"
     environment:
@@ -141,6 +208,10 @@ volumes:
   seed-data:
   mongo-data:
   redis-data:
+  postgres-data:
+  sbert-models:
+  caddy-data:
+  caddy-config:
   prometheus-data:
   grafana-data:
 

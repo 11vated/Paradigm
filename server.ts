@@ -46,11 +46,28 @@ import {
   refreshAccessToken, revokeToken, requireRole, createRateLimiter
 } from './src/lib/auth/index.js';
 
+// ─── NEW: Seed Ownership & Authorization (Phase 3) ───────────────────────────
+import {
+  addOwnerIfAuthed,
+  authorizeSeedMutation,
+  resolveCommitAuthor,
+} from './src/lib/auth/ownership.js';
+
 // ─── NEW: Native GSPL Agent ──────────────────────────────────────────────────
 import { agent as gsplAgent } from './src/lib/agent/index.js';
 
 // ─── NEW: On-Chain Sovereignty (ERC-721 minting) ─────────────────────────────
 import { OnChainSovereignty } from './src/lib/sovereignty/onchain.js';
+import {
+  canonicalizeSeed,
+  seedDigestBytes32,
+} from './src/lib/sovereignty/canonical.js';
+import {
+  LocalHmacSigner,
+  LocalDryRunAnchor,
+  LocalFilePin,
+  mintSeedSovereignty,
+} from './src/lib/sovereignty/adapters.js';
 
 // ─── NEW: Data Access Layer ──────────────────────────────────────────────────
 import { initStore, getStore } from './src/lib/data/index.js';
@@ -80,22 +97,31 @@ import {
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
 } from './src/lib/validation/schemas.js';
 
-// ─── Structured Logger ───────────────────────────────────────────────────────
-const LOG_LEVELS = { DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 } as const;
-const CURRENT_LOG_LEVEL = LOG_LEVELS[process.env.LOG_LEVEL as keyof typeof LOG_LEVELS] ?? LOG_LEVELS.INFO;
+// ─── Structured Logger (Phase 1: pino) ──────────────────────────────────────
+// The shape `log('LEVEL', 'msg', {data})` is preserved so existing call sites
+// don't need to change. Internals now go through pino, which gives us JSON
+// output, redaction, and child loggers. See src/lib/logger/index.ts.
+import { log } from './src/lib/logger/index.js';
 
-function log(level: keyof typeof LOG_LEVELS, message: string, data?: Record<string, any>) {
-  if (LOG_LEVELS[level] < CURRENT_LOG_LEVEL) return;
-  const entry = {
-    timestamp: new Date().toISOString(),
-    level,
-    message,
-    ...(data ? { data } : {}),
-  };
-  if (level === 'ERROR') console.error(JSON.stringify(entry));
-  else if (level === 'WARN') console.warn(JSON.stringify(entry));
-  else console.log(JSON.stringify(entry));
-}
+// ─── Readiness probes (Phase 1: /ready endpoint) ───────────────────────────
+import {
+  checkSbert, checkPostgres, checkStore, buildReport,
+} from './src/lib/health/readiness.js';
+
+// ─── Seed Version Control (Phase 2: git-for-seeds) ─────────────────────────
+import {
+  initFileVcs,
+  commit as vcsCommit,
+  log as vcsLog,
+  diffTrees,
+  mergeCommits,
+  branch as vcsBranch,
+  checkout as vcsCheckout,
+  ensureRef as vcsEnsureRef,
+  findMergeBase,
+  type ObjectStore as VcsObjectStoreT,
+  type RefStore as VcsRefStoreT,
+} from './src/lib/vcs/index.js';
 
 // ─── Server Boot ─────────────────────────────────────────────────────────────
 
@@ -277,6 +303,14 @@ async function startServer() {
   const cache = await initCache();
   log('INFO', `Cache initialized: ${cache.backend}`);
 
+  // ── VCS (git-for-seeds) — file-backed object + ref stores ────────────────
+  // We reuse the `data/` directory next to user-seeds.json so backups pick
+  // up both together. If this path is wrong for a given deployment, set
+  // PARADIGM_VCS_DIR and we'll use that instead.
+  const vcsDir = process.env.PARADIGM_VCS_DIR ?? path.join(process.cwd(), 'data');
+  const { objects: vcsObjects, refs: vcsRefs } = initFileVcs(vcsDir);
+  log('INFO', 'VCS initialized', { dir: vcsDir });
+
   // If store is empty, seed it from GSPL files
   if (store.getSeedCount() === 0) {
     const gsplSeeds = loadAllGsplSeeds();
@@ -336,6 +370,31 @@ async function startServer() {
       },
       timestamp: new Date().toISOString(),
     });
+  });
+
+  // Readiness probe — separate from liveness so load balancers can drain
+  // traffic from degraded instances without killing the process. Checks run
+  // in parallel so a single slow dep can't blow the client's timeout.
+  // See src/lib/health/readiness.ts for per-check semantics.
+  app.get('/ready', async (_req, res) => {
+    const sbertUrl = process.env.SBERT_URL;
+    // Only attempt a pg probe when DATABASE_URL is set — otherwise importing
+    // the pg module would construct a pool that immediately fails.
+    const pgProbe: (() => Promise<unknown>) | undefined = process.env.DATABASE_URL
+      ? async () => {
+          const { probePg } = await import('./src/lib/intelligence/pgvector.js');
+          await probePg();
+        }
+      : undefined;
+
+    const [sbert, postgres, storeCheck] = await Promise.all([
+      checkSbert(sbertUrl),
+      checkPostgres(pgProbe),
+      checkStore(async () => store.getAllSeeds()),
+    ]);
+
+    const report = buildReport([storeCheck, postgres, sbert]);
+    res.status(report.ready ? 200 : 503).json(report);
   });
 
   // ── Audit Log (admin only) ─────────────────────────────────────────────
@@ -521,7 +580,7 @@ async function startServer() {
       }
     }
 
-    const newSeed = {
+    const newSeed: any = {
       id: crypto.randomUUID(),
       $domain: domain,
       $name: req.body.name || 'Untitled Seed',
@@ -530,11 +589,13 @@ async function startServer() {
       $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
       genes,
     };
+    // Phase 3: stamp owner if authed. Unowned (legacy) otherwise.
+    addOwnerIfAuthed(newSeed, req.user);
     seeds.push(newSeed);
     saveSeeds();
     metrics.seedsCreated++;
-    log('INFO', 'Seed created', { id: newSeed.id, domain });
-    audit('seed.create', 'seed', newSeed.id, { domain }, req);
+    log('INFO', 'Seed created', { id: newSeed.id, domain, owner: newSeed.$owner?.userId ?? null });
+    audit('seed.create', 'seed', newSeed.id, { domain, owner: newSeed.$owner?.userId ?? null }, req);
     res.json(newSeed);
   });
 
@@ -547,7 +608,10 @@ async function startServer() {
   app.delete('/api/seeds/:id', optionalAuth, (req: any, res: any) => {
     const idx = seeds.findIndex((s: any) => s.id === req.params.id);
     if (idx === -1) return res.status(404).json({ detail: 'Not found' });
-    const deletedId = seeds[idx].id;
+    const seed = seeds[idx];
+    // Phase 3: owner-only delete (admin override allowed).
+    if (!authorizeSeedMutation(seed, req, res, 'seed.delete', audit)) return;
+    const deletedId = seed.id;
     seeds.splice(idx, 1);
     saveSeeds();
     audit('seed.delete', 'seed', deletedId, {}, req);
@@ -672,11 +736,14 @@ async function startServer() {
       $fitness: { overall: Math.min(1.0, Math.max(0.0, (parent.$fitness?.overall || 0.5) + (rng.nextF64() * 0.2 - 0.1))) },
       genes: newGenes,
     };
+    // Phase 3: derivations strip parent owner; actor (if authed) becomes new owner.
+    delete newSeed.$owner;
+    addOwnerIfAuthed(newSeed, req.user);
 
     seeds.push(newSeed);
     saveSeeds();
     metrics.seedsMutated++;
-    log('INFO', 'Seed mutated', { id: newSeed.id, parent: parent.id, rate });
+    log('INFO', 'Seed mutated', { id: newSeed.id, parent: parent.id, rate, owner: newSeed.$owner?.userId ?? null });
     audit('seed.mutate', 'seed', newSeed.id, { parent: parent.id, rate }, req);
     res.json(newSeed);
   });
@@ -799,6 +866,8 @@ async function startServer() {
   app.put('/api/seeds/:id/genes', optionalAuth, validateBody(EditGeneSchema), (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) return res.status(404).json({ detail: 'Not found' });
+    // Phase 3: editing genes on an owned seed requires ownership (in-place mutation).
+    if (!authorizeSeedMutation(seed, req, res, 'seed.edit_genes', audit)) return;
 
     const { gene_name, gene_type, value } = req.body;
 
@@ -928,6 +997,83 @@ async function startServer() {
     log('INFO', 'Seed composed', { id: composed.id, from: parent.$domain, to: targetDomain });
     audit('seed.compose', 'seed', composed.id, { from: parent.$domain, to: targetDomain }, req);
     res.json({ seed: composed, path: pathFormatted });
+  });
+
+  // ─── Phase 9 — Cross-domain multi-source composition ────────────────────
+  // Fuse N seeds from N different domains into one target-domain seed.
+  // Body: { seed_ids: string[], target_domain: string, strategy?, weights?, strict?, name?, persist? }
+  app.post('/api/seeds/compose/cross-domain', optionalAuth, async (req: any, res: any) => {
+    try {
+      const { seed_ids, target_domain, strategy, weights, strict, name, persist } = req.body ?? {};
+      if (!Array.isArray(seed_ids) || seed_ids.length === 0) {
+        return res.status(400).json({ detail: 'seed_ids must be a non-empty array' });
+      }
+      if (!target_domain || typeof target_domain !== 'string') {
+        return res.status(400).json({ detail: 'target_domain required' });
+      }
+
+      const inputs: any[] = [];
+      const missing: string[] = [];
+      for (const id of seed_ids) {
+        const seed = seeds.find((s: any) => s.id === id);
+        if (!seed) missing.push(id);
+        else inputs.push(seed);
+      }
+      if (missing.length > 0) {
+        return res.status(404).json({ detail: 'Unknown seed ids', missing });
+      }
+
+      const { composeMultiDomain, planMultiDomainComposition } = await import('./src/lib/composition/cross_domain.js');
+      const plan = planMultiDomainComposition(inputs, target_domain);
+      const result = composeMultiDomain(inputs, target_domain, {
+        strategy,
+        weights: Array.isArray(weights) ? weights : undefined,
+        strict: Boolean(strict),
+        name,
+      });
+
+      const out: any = result.seed;
+      if (persist) {
+        out.id = crypto.randomUUID();
+        seeds.push(out);
+        saveSeeds();
+        metrics.seedsComposed++;
+        audit('seed.compose.cross_domain', 'seed', out.id, { strategy, target_domain, sources: seed_ids }, req);
+      }
+
+      log('INFO', 'Cross-domain compose', { strategy, target_domain, used: result.contributions.filter(c => c.reachable).length });
+      res.json({
+        seed: out,
+        plan,
+        contributions: result.contributions,
+        resolutions: result.resolutions,
+      });
+    } catch (err: any) {
+      const msg = err?.message ?? String(err);
+      const status = /cannot reach|no input seed/i.test(msg) ? 422 : 400;
+      res.status(status).json({ detail: msg });
+    }
+  });
+
+  // Pre-flight: which inputs reach the target, what paths they'd take.
+  app.post('/api/seeds/compose/cross-domain/plan', optionalAuth, async (req: any, res: any) => {
+    try {
+      const { seed_ids, target_domain } = req.body ?? {};
+      if (!Array.isArray(seed_ids) || seed_ids.length === 0) {
+        return res.status(400).json({ detail: 'seed_ids must be a non-empty array' });
+      }
+      if (!target_domain || typeof target_domain !== 'string') {
+        return res.status(400).json({ detail: 'target_domain required' });
+      }
+      const inputs = seed_ids.map((id: string) => seeds.find((s: any) => s.id === id)).filter(Boolean);
+      if (inputs.length !== seed_ids.length) {
+        return res.status(404).json({ detail: 'Unknown seed ids' });
+      }
+      const { planMultiDomainComposition } = await import('./src/lib/composition/cross_domain.js');
+      res.json(planMultiDomainComposition(inputs, target_domain));
+    } catch (err: any) {
+      res.status(400).json({ detail: err?.message ?? String(err) });
+    }
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1195,58 +1341,389 @@ async function startServer() {
   // INTELLIGENCE (optional embeddings — graceful degradation)
   // ═══════════════════════════════════════════════════════════════════════════
 
+  // Embeds via the self-hosted SBERT sidecar when SBERT_URL is set, then
+  // persists the vector to pgvector. If either dep is unavailable we fall
+  // back to the legacy Gemini path so dev/test envs keep working.
   app.post('/api/seeds/:id/embed', optionalAuth, validateBody(EmbedSeedSchema), async (req: any, res: any) => {
     try {
       const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
       if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
 
       const seed = seeds[seedIndex];
-      const embedding = await IntelligenceLayer.generateEmbedding(seed);
+      const sbertUrl = process.env.SBERT_URL;
+      const databaseUrl = process.env.DATABASE_URL;
+
+      let embedding: number[];
+      let source: 'sbert' | 'gemini' = 'gemini';
+      if (sbertUrl) {
+        // Self-hosted path (D-5): deterministic render + SBERT + optional pgvector upsert.
+        const { embedSeed } = await import('./src/lib/intelligence/embedding-client.js');
+        embedding = await embedSeed(seed);
+        source = 'sbert';
+
+        if (databaseUrl) {
+          try {
+            const { upsertEmbedding } = await import('./src/lib/intelligence/pgvector.js');
+            await upsertEmbedding({
+              seed_hash: seed.$hash,
+              seed_id: seed.id,
+              domain: seed.$domain,
+              name: seed.$name ?? null,
+              embedding,
+            });
+          } catch (e: any) {
+            // Non-fatal: we still return the vector so the client can use it
+            // in-process. Similarity search will just fall back to gene distance.
+            log('WARN', 'pgvector upsert failed; vector returned without persistence', { error: e.message });
+          }
+        }
+      } else {
+        embedding = await IntelligenceLayer.generateEmbedding(seed);
+      }
+
       seeds[seedIndex] = { ...seed, $embedding: embedding };
       saveSeeds();
 
-      res.json({ success: true, dimensions: embedding.length });
+      res.json({ success: true, dimensions: embedding.length, source });
     } catch (e: any) {
-      log('WARN', 'Embedding generation failed (Gemini optional)', { error: e.message });
+      log('WARN', 'Embedding generation failed', { error: e.message });
       res.status(500).json({ detail: e.message || 'Embedding generation failed' });
     }
   });
 
-  app.get('/api/seeds/:id/similar', (req: any, res: any) => {
+  app.get('/api/seeds/:id/similar', async (req: any, res: any) => {
     try {
       const limit = parseInt(req.query.limit as string) || 5;
       const targetSeed = seeds.find((s: any) => s.id === req.params.id);
       if (!targetSeed) return res.status(404).json({ detail: 'Seed not found' });
 
-      if (!targetSeed.$embedding) {
-        // Fall back to gene-distance-based similarity
-        const distances: { seed: any; distance: number }[] = [];
-        for (const other of seeds) {
-          if (other.id === targetSeed.id) continue;
-          let totalDist = 0;
-          let count = 0;
-          const allKeys = new Set([...Object.keys(targetSeed.genes || {}), ...Object.keys(other.genes || {})]);
-          for (const key of allKeys) {
-            const gA = (targetSeed.genes || {})[key];
-            const gB = (other.genes || {})[key];
-            if (gA && gB && gA.type === gB.type && GENE_TYPES[gA.type]) {
-              totalDist += distanceGene(gA.type, gA.value, gB.value);
-              count++;
-            } else {
-              totalDist += 1.0;
-              count++;
-            }
+      // Prefer pgvector ANN when SBERT + DATABASE_URL are both configured.
+      // Requires the target seed's embedding already exist in the table;
+      // if it doesn't, we embed-on-read so a first-time /similar call still
+      // works instead of silently falling back.
+      if (process.env.SBERT_URL && process.env.DATABASE_URL) {
+        try {
+          const { embedSeed } = await import('./src/lib/intelligence/embedding-client.js');
+          const { findSimilar, upsertEmbedding } = await import('./src/lib/intelligence/pgvector.js');
+          let vector: number[];
+          if (Array.isArray(targetSeed.$embedding) && targetSeed.$embedding.length > 0) {
+            vector = targetSeed.$embedding;
+          } else {
+            vector = await embedSeed(targetSeed);
+            // Opportunistic: store it so future queries hit pgvector directly.
+            upsertEmbedding({
+              seed_hash: targetSeed.$hash,
+              seed_id: targetSeed.id,
+              domain: targetSeed.$domain,
+              name: targetSeed.$name ?? null,
+              embedding: vector,
+            }).catch((e) => log('WARN', 'pgvector opportunistic upsert failed', { error: e.message }));
           }
-          distances.push({ seed: other, distance: count > 0 ? totalDist / count : 1.0 });
+          const hits = await findSimilar({
+            vector,
+            limit,
+            excludeHash: targetSeed.$hash,
+          });
+          // Return full seed objects so the response shape matches the legacy path.
+          // Missing seeds (DB has embedding but in-memory cache doesn't) are skipped.
+          const byHash = new Map(seeds.map((s: any) => [s.$hash, s]));
+          const result = hits
+            .map((h) => {
+              const s = byHash.get(h.seed_hash);
+              return s ? { ...s, _distance: h.distance } : null;
+            })
+            .filter((x) => x !== null);
+          return res.json(result);
+        } catch (e: any) {
+          log('WARN', 'pgvector similarity failed; falling back to gene distance', { error: e.message });
+          // fall through to legacy path
         }
-        distances.sort((a, b) => a.distance - b.distance);
-        return res.json(distances.slice(0, limit).map(d => ({ ...d.seed, _distance: d.distance })));
       }
 
-      const similarSeeds = IntelligenceLayer.findSimilarSeeds(targetSeed, seeds, limit);
-      res.json(similarSeeds);
+      // Legacy fallback: gene-space distance. Preserved so tests without
+      // external deps still succeed.
+      const distances: { seed: any; distance: number }[] = [];
+      for (const other of seeds) {
+        if (other.id === targetSeed.id) continue;
+        let totalDist = 0;
+        let count = 0;
+        const allKeys = new Set([...Object.keys(targetSeed.genes || {}), ...Object.keys(other.genes || {})]);
+        for (const key of allKeys) {
+          const gA = (targetSeed.genes || {})[key];
+          const gB = (other.genes || {})[key];
+          if (gA && gB && gA.type === gB.type && GENE_TYPES[gA.type]) {
+            totalDist += distanceGene(gA.type, gA.value, gB.value);
+            count++;
+          } else {
+            totalDist += 1.0;
+            count++;
+          }
+        }
+        distances.push({ seed: other, distance: count > 0 ? totalDist / count : 1.0 });
+      }
+      distances.sort((a, b) => a.distance - b.distance);
+      res.json(distances.slice(0, limit).map(d => ({ ...d.seed, _distance: d.distance })));
     } catch (e: any) {
       res.status(500).json({ detail: e.message || 'Similarity search failed' });
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // VERSION CONTROL (git-for-seeds)
+  // Every seed has a content-addressable history. `main` is auto-created
+  // on the first commit. See src/lib/vcs/ for the object model.
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Snapshot the current state of a seed onto a branch. Body:
+   *   { branch?: string = 'main', message: string, author?: string }
+   *
+   * If the branch doesn't exist this is the first commit on it; parents[] is
+   * empty. If it does, we parent onto its tip. Same-content commits on the
+   * same message produce the same commit hash (content-addressable) — this
+   * is a feature, not a bug: retries are idempotent.
+   */
+  app.post('/api/seeds/:id/commit', optionalAuth, async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      // Phase 3: only owner/admin may commit to an owned seed's history.
+      if (!authorizeSeedMutation(seed, req, res, 'vcs.commit', audit)) return;
+
+      const branchName = typeof req.body?.branch === 'string' && req.body.branch.length
+        ? req.body.branch
+        : 'main';
+      const message = typeof req.body?.message === 'string' ? req.body.message : '';
+      // Phase 3: author is bound to the authenticated user when present,
+      // and req.body.author must match (or be omitted). Forging is rejected.
+      const author = resolveCommitAuthor(req, res, req.body?.author);
+      if (author === null) return; // response already sent
+
+      const result = await vcsCommit(vcsObjects, vcsRefs, {
+        seed,
+        branch: branchName,
+        author,
+        message,
+      });
+
+      audit('vcs.commit', 'seed', seed.id, { branch: branchName, commit: result.commit }, req);
+      res.json({
+        commit: result.commit,
+        tree: result.tree,
+        branch: branchName,
+        treeChanged: result.treeChanged,
+      });
+    } catch (e: any) {
+      log('WARN', 'VCS commit failed', { error: e.message });
+      res.status(500).json({ detail: e.message || 'Commit failed' });
+    }
+  });
+
+  /** List refs (branches/tags) for a seed. */
+  app.get('/api/seeds/:id/refs', async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      const refs = await vcsRefs.listRefs(seed.id);
+      const head = await vcsRefs.getHead(seed.id);
+      res.json({ refs, head });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message || 'Ref list failed' });
+    }
+  });
+
+  /**
+   * Walk first-parent history from a given commit (or from the tip of ?branch=).
+   * Query: branch=main (default), from=<commit>, limit=50
+   */
+  app.get('/api/seeds/:id/log', async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+      let from = typeof req.query.from === 'string' ? req.query.from : null;
+      if (!from) {
+        const branchName = typeof req.query.branch === 'string' && req.query.branch.length
+          ? req.query.branch
+          : 'main';
+        const ref = await vcsRefs.getRef(seed.id, branchName);
+        if (!ref) return res.json({ entries: [] });
+        from = ref.commit;
+      }
+      const limit = Math.max(1, Math.min(500, parseInt(req.query.limit as string) || 50));
+      const entries = await vcsLog(vcsObjects, from, limit);
+      res.json({ entries });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message || 'Log failed' });
+    }
+  });
+
+  /**
+   * Create a new branch from an existing commit or from another branch's tip.
+   * Body: { name: string, from?: string | { branch: string } }
+   * Default: branch off the current HEAD's tip.
+   */
+  app.post('/api/seeds/:id/branches', optionalAuth, async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      if (!authorizeSeedMutation(seed, req, res, 'vcs.branch', audit)) return;
+      const name = typeof req.body?.name === 'string' ? req.body.name : '';
+      if (!name.length) return res.status(400).json({ detail: 'name is required' });
+
+      // Resolve `from` → commit hash
+      let fromCommit: string | null = null;
+      const fromField = req.body?.from;
+      if (typeof fromField === 'string' && fromField.length) {
+        fromCommit = fromField;
+      } else if (fromField && typeof fromField === 'object' && typeof fromField.branch === 'string') {
+        const srcRef = await vcsRefs.getRef(seed.id, fromField.branch);
+        if (!srcRef) return res.status(404).json({ detail: `source branch ${fromField.branch} not found` });
+        fromCommit = srcRef.commit;
+      } else {
+        // Default: use current HEAD's ref
+        const head = await vcsRefs.getHead(seed.id);
+        if (!head) return res.status(400).json({ detail: 'no HEAD set; specify `from`' });
+        const headRef = await vcsRefs.getRef(seed.id, head);
+        if (!headRef) return res.status(400).json({ detail: 'HEAD points to missing ref' });
+        fromCommit = headRef.commit;
+      }
+
+      await vcsBranch(vcsRefs, seed.id, name, fromCommit);
+      audit('vcs.branch', 'seed', seed.id, { name, from: fromCommit }, req);
+      res.json({ name, commit: fromCommit });
+    } catch (e: any) {
+      res.status(400).json({ detail: e.message || 'Branch failed' });
+    }
+  });
+
+  app.post('/api/seeds/:id/checkout', optionalAuth, async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      if (!authorizeSeedMutation(seed, req, res, 'vcs.checkout', audit)) return;
+      const name = typeof req.body?.branch === 'string' ? req.body.branch : '';
+      if (!name) return res.status(400).json({ detail: 'branch is required' });
+      await vcsCheckout(vcsRefs, seed.id, name);
+      audit('vcs.checkout', 'seed', seed.id, { branch: name }, req);
+      res.json({ head: name });
+    } catch (e: any) {
+      res.status(400).json({ detail: e.message || 'Checkout failed' });
+    }
+  });
+
+  /**
+   * Diff two commits (or a commit against current seed state via ?head=seed).
+   * Query: a=<commit>, b=<commit> | a=<commit>&b=seed
+   */
+  app.get('/api/seeds/:id/diff', async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      const a = typeof req.query.a === 'string' ? req.query.a : '';
+      const b = typeof req.query.b === 'string' ? req.query.b : '';
+      if (!a || !b) return res.status(400).json({ detail: 'a and b query params required' });
+
+      const resolveTree = async (ref: string) => {
+        if (ref === 'seed') {
+          // Diff against current working state (uncommitted)
+          const { treeFromSeed } = await import('./src/lib/vcs/index.js');
+          return treeFromSeed(seed);
+        }
+        const c = await vcsObjects.getCommit(ref);
+        if (!c) throw new Error(`commit not found: ${ref}`);
+        const t = await vcsObjects.getTree(c.tree);
+        if (!t) throw new Error(`tree not found for commit ${ref}`);
+        return t;
+      };
+      const [ta, tb] = await Promise.all([resolveTree(a), resolveTree(b)]);
+      const diff = diffTrees(ta, tb);
+      res.json(diff);
+    } catch (e: any) {
+      res.status(400).json({ detail: e.message || 'Diff failed' });
+    }
+  });
+
+  /**
+   * Three-way merge two commits (`ours`, `theirs`) for this seed.
+   * Body: { ours: <commit>, theirs: <commit>, target?: <branch>, message?, author? }
+   *
+   * If the merge is clean AND `target` is provided, we write a merge commit
+   * to that branch. If clean but no target, we return the merged tree hash
+   * without committing (preview).
+   * If conflicts, we return 409 with the conflict list and no new state.
+   */
+  app.post('/api/seeds/:id/merge', optionalAuth, async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      if (!authorizeSeedMutation(seed, req, res, 'vcs.merge', audit)) return;
+      const ours = typeof req.body?.ours === 'string' ? req.body.ours : '';
+      const theirs = typeof req.body?.theirs === 'string' ? req.body.theirs : '';
+      if (!ours || !theirs) return res.status(400).json({ detail: 'ours and theirs required' });
+
+      const result = await mergeCommits(vcsObjects, { seed_id: seed.id, ours, theirs });
+
+      if (!result.clean) {
+        return res.status(409).json({
+          conflicts: result.conflicts,
+          base: result.base,
+        });
+      }
+
+      const target = typeof req.body?.target === 'string' ? req.body.target : null;
+      if (!target) {
+        // Preview only — return the merged tree hash so the client can inspect.
+        return res.json({
+          clean: true,
+          tree: result.treeHash,
+          base: result.base,
+          committed: false,
+        });
+      }
+
+      // Write a merge commit with two parents on the target branch.
+      const author = resolveCommitAuthor(req, res, req.body?.author);
+      if (author === null) return;
+      const message = typeof req.body?.message === 'string' ? req.body.message : `Merge ${theirs.slice(0, 8)} into ${ours.slice(0, 8)}`;
+      // For the commit, we need a seed-shaped input. Rehydrate from the merged tree:
+      const mergedTree = result.tree!;
+      const pseudoSeed = {
+        id: seed.id,
+        $domain: mergedTree.domain,
+        $name: mergedTree.name,
+        genes: mergedTree.genes,
+        $lineage: { generation: (seed.$lineage?.generation ?? 0) + 1, operation: 'merge' },
+      };
+      // Set primary parent to ours, secondary to theirs, via extraParents on a
+      // branch that currently points at `ours`. We do that by forcing the ref
+      // to `ours` first (if not already), then committing with extraParents=[theirs].
+      await vcsEnsureRef(vcsRefs, seed.id, target, ours);
+      // If the branch already existed and pointed elsewhere, move it to `ours`
+      // so our commit parents[0] === ours.
+      const currentRef = await vcsRefs.getRef(seed.id, target);
+      if (currentRef && currentRef.commit !== ours) {
+        await vcsRefs.setRef(seed.id, target, ours);
+      }
+      const committed = await vcsCommit(vcsObjects, vcsRefs, {
+        seed: pseudoSeed,
+        branch: target,
+        author,
+        message,
+        extraParents: [theirs],
+      });
+      audit('vcs.merge', 'seed', seed.id, { ours, theirs, target, commit: committed.commit }, req);
+      res.json({
+        clean: true,
+        tree: committed.tree,
+        commit: committed.commit,
+        base: result.base,
+        committed: true,
+        branch: target,
+      });
+    } catch (e: any) {
+      log('WARN', 'VCS merge failed', { error: e.message });
+      res.status(500).json({ detail: e.message || 'Merge failed' });
     }
   });
 
@@ -1332,16 +1809,147 @@ async function startServer() {
     }
   });
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SOVEREIGNTY PREVIEW / DRY-RUN (Phase 7)
+  //
+  // Canonical digest → sign → pin → (dry) anchor flow without any on-chain
+  // broadcast. Returns exactly what would be signed, pinned, and anchored
+  // on Base L2 so the UI can show a preview the user can inspect before
+  // spending gas. Safe to call from unauthenticated clients: the only
+  // mutation is to the local pin directory (which is itself ephemeral in
+  // dev, and ignored in CI).
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // Lazy-constructed so tests / dev environments without a writable
+  // `.paradigm/pins` dir don't crash on server boot.
+  let _sovereigntyPin: LocalFilePin | null = null;
+  let _sovereigntyAnchor: LocalDryRunAnchor | null = null;
+  const getSovereigntyPin = () => (_sovereigntyPin ??= new LocalFilePin());
+  const getSovereigntyAnchor = () => (_sovereigntyAnchor ??= new LocalDryRunAnchor());
+
+  app.get('/api/seeds/:id/sovereignty/canonical', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+    const { canonicalJson, digest, stripped } = canonicalizeSeed(seed);
+    res.json({
+      seed_id: seed.id,
+      canonical_json: canonicalJson,
+      digest_hex: digest,
+      digest_bytes32: `0x${digest}`,
+      stripped,
+    });
+  });
+
+  app.post('/api/seeds/:id/sovereignty/preview', optionalAuth, async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+      const ownerAddress =
+        req.body?.owner_address ?? req.user?.address ?? '0x0000000000000000000000000000000000000000';
+      // A preview is a dry-run through the full adapter stack, using the
+      // local deterministic signer so the response is reproducible in tests.
+      const signer = new LocalHmacSigner({
+        id: req.body?.signer_id ?? 'paradigm-preview',
+        key: req.body?.signer_key ?? 'paradigm-preview-key',
+      });
+      const anchor = getSovereigntyAnchor();
+      const pin = getSovereigntyPin();
+
+      // Build the metadata the real anchor would pin. Reuse the existing
+      // buildSeedMetadata path from onchain.ts so the preview is faithful.
+      const prepared = OnChainSovereignty.prepareMint(seed);
+      const result = await mintSeedSovereignty({
+        seed,
+        metadata: prepared.metadata,
+        owner: ownerAddress,
+        signer,
+        anchor,
+        pin,
+      });
+
+      res.json({
+        dry_run: true,
+        seed_id: seed.id,
+        digest: result.digest,
+        canonical_json_length: result.canonicalJson.length,
+        signature: {
+          signer: result.signature.signer,
+          algorithm: result.signature.algorithm,
+          signature: result.signature.signature,
+          signed_at: result.signature.signedAt,
+        },
+        pin: {
+          backend: result.pin.backend,
+          uri: result.pin.uri,
+          size_bytes: result.pin.sizeBytes,
+          content_digest: result.pin.contentDigest,
+        },
+        anchor: {
+          network: result.anchor.network,
+          chain_id: result.anchor.chainId,
+          token_id: result.anchor.tokenId,
+          transaction_hash: result.anchor.transactionHash,
+          metadata_uri: result.anchor.metadataUri,
+          owner: result.anchor.owner,
+          dry_run: result.anchor.dryRun,
+        },
+        // The metadata that would be pinned to Arweave in production.
+        metadata: prepared.metadata,
+        warning:
+          'This is a dry-run. No transaction was broadcast and no real network was contacted. Use /mint with a private key to execute the real mint on Base L2.',
+      });
+    } catch (e: any) {
+      log('ERROR', 'Sovereignty preview error', { error: e?.message });
+      res.status(500).json({ detail: e?.message ?? 'Preview failed' });
+    }
+  });
+
+  app.post('/api/seeds/:id/sovereignty/verify', async (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+      const sig = req.body?.signature;
+      if (!sig) return res.status(400).json({ detail: 'signature required' });
+      if (sig.algorithm !== 'local-hmac-sha256') {
+        return res.status(400).json({
+          detail: `verify endpoint only supports local-hmac-sha256 signatures (got ${sig.algorithm}); use an on-chain explorer for EIP-712`,
+        });
+      }
+      const signer = new LocalHmacSigner({
+        id: sig.signer,
+        key: req.body?.signer_key ?? 'paradigm-preview-key',
+      });
+      const ok = await signer.verify(seed, sig);
+      res.json({
+        valid: ok,
+        current_digest: seedDigestBytes32(seed),
+        signature_digest: sig.digest,
+        digest_matches: sig.digest === seedDigestBytes32(seed),
+      });
+    } catch (e: any) {
+      log('ERROR', 'Sovereignty verify error', { error: e?.message });
+      res.status(500).json({ detail: e?.message ?? 'Verify failed' });
+    }
+  });
+
   // ── glTF Binary Export ──
+  // Smooth/blocky opt-in via `?smooth=1`. Smooth = Marching Cubes (Phase 4),
+  // blocky = legacy voxel-quad extractor. Keeping both so callers migrating
+  // from blocky mesh assumptions don't break silently.
   app.get('/api/seeds/:id/export/glb', async (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+    // Opt-in smooth MC mesh. Accept `1`, `true`, or `yes` as truthy.
+    const smoothRaw = String(req.query?.smooth ?? '').toLowerCase();
+    const smoothMesh = smoothRaw === '1' || smoothRaw === 'true' || smoothRaw === 'yes';
 
     try {
       const { ParadigmPipeline } = require('./src/lib/pipeline/index.js');
       const { exportToGLB } = require('./src/lib/asset_pipeline/gltf_exporter.js');
       const { generateMaterial } = require('./src/lib/asset_pipeline/material_generator.js');
-      const pipelineResult = await ParadigmPipeline.runEndToEnd(seed);
+      const pipelineResult = await ParadigmPipeline.runEndToEnd(seed, { smoothMesh });
       const meshData = pipelineResult?.emergent_assets?.mesh;
       if (!meshData?.vertices?.length) {
         return res.status(422).json({ detail: 'Seed did not produce mesh data' });
@@ -1349,6 +1957,7 @@ async function startServer() {
       const material = generateMaterial(seed);
       const glb = exportToGLB(meshData, seed.$name || 'Paradigm Seed', material);
       res.setHeader('Content-Type', 'model/gltf-binary');
+      res.setHeader('X-Paradigm-Mesh-Mode', smoothMesh ? 'smooth-mc' : 'blocky');
       res.setHeader('Content-Disposition', `attachment; filename="${(seed.$name || 'seed').replace(/[^a-zA-Z0-9_-]/g, '_')}.glb"`);
       res.send(Buffer.from(glb));
     } catch (err: any) {
@@ -1377,6 +1986,41 @@ async function startServer() {
     const svg = OnChainSovereignty.generateGenePortrait(seed);
     res.setHeader('Content-Type', 'image/svg+xml');
     res.send(svg);
+  });
+
+  // ── Lightweight 3D mesh preview (Phase 4/5) ──
+  // Returns a JSON mesh the frontend can render directly in WebGL without
+  // running the heavy QFT pipeline. The default path (unknown/custom seed
+  // domain) now produces a Marching-Cubes mesh instead of a generic sphere.
+  app.get('/api/seeds/:id/preview/mesh', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+    try {
+      const { generatePreviewMesh } = require('./src/lib/asset_pipeline/preview_generator.js');
+      // Build a preview "artifact" from seed identity so the MC default path
+      // has enough identity to derive a stable per-seed shape.
+      const artifact = {
+        type: seed.$domain || 'default',
+        id: seed.id,
+        seed_id: seed.id,
+        name: seed.$name || 'Paradigm Seed',
+        visual: seed.visual,
+        mesh: seed.mesh,
+        building: seed.building,
+        particles: seed.particles,
+      };
+      const mesh = generatePreviewMesh(artifact);
+      if (!mesh) return res.status(422).json({ detail: 'Unable to generate preview mesh' });
+      res.json({
+        seedId: seed.id,
+        vertexCount: mesh.vertices.length / 3,
+        triangleCount: mesh.indices.length / 3,
+        mesh,
+      });
+    } catch (err: any) {
+      res.status(500).json({ detail: err.message || 'Preview mesh failed' });
+    }
   });
 
   app.get('/api/contract/source', (_req, res) => {
@@ -1423,6 +2067,37 @@ async function startServer() {
   // ── Agent stats (v2) — inference tiers, memory, tools ──
   app.get('/api/agent/stats', (_req, res) => {
     res.json(gsplAgent.getStats());
+  });
+
+  // ── Phi-4 inference client status (Phase 8) ──
+  // Probes the configured OpenAI-compatible endpoint and reports which
+  // tiers are actually available. No Gemini. No fallback to hosted APIs.
+  // A KERNEL-only result means your local inference server isn't up.
+  app.get('/api/agent/inference/phi4/status', async (_req: any, res: any) => {
+    try {
+      const { getPhi4Client, InferenceTier } = await import('./src/lib/agent/index.js');
+      const client = getPhi4Client();
+      const health = await client.health();
+      res.json({
+        available: health.available,
+        tiers: {
+          kernel: health.tiers[InferenceTier.KERNEL],
+          fast: health.tiers[InferenceTier.FAST],
+          standard: health.tiers[InferenceTier.STANDARD],
+          deep: health.tiers[InferenceTier.DEEP],
+        },
+        configured_models: {
+          fast: client.configuredModel(InferenceTier.FAST),
+          standard: client.configuredModel(InferenceTier.STANDARD),
+          deep: client.configuredModel(InferenceTier.DEEP),
+        },
+        loaded_models: client.loadedModels(),
+        max_available_tier: client.maxAvailableTier(),
+      });
+    } catch (e: any) {
+      log('ERROR', 'Phi-4 status error', { error: e?.message });
+      res.status(500).json({ detail: e?.message ?? 'status failed' });
+    }
   });
 
   // ── Async agent query (v2) — supports LLM enhancement when available ──
@@ -1711,6 +2386,15 @@ async function startServer() {
       log('INFO', 'Data store flushed and closed');
     } catch (e: any) {
       log('ERROR', `Data store shutdown error: ${e.message}`);
+    }
+
+    // Flush VCS stores (file-backed objects + refs)
+    try {
+      (vcsObjects as any).close?.();
+      (vcsRefs as any).close?.();
+      log('INFO', 'VCS stores flushed and closed');
+    } catch (e: any) {
+      log('ERROR', `VCS shutdown error: ${e.message}`);
     }
 
     // Allow 10 seconds for in-flight requests, then force exit

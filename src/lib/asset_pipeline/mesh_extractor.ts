@@ -1,3 +1,5 @@
+import { marchingCubes, type MarchingCubesOptions } from './marching_cubes.js';
+
 export interface MeshData {
   vertices: Float32Array;
   indices: Uint32Array;
@@ -5,7 +7,71 @@ export interface MeshData {
   colors?: Float32Array;
 }
 
+/**
+ * Transpose a field from "x-major" layout — `x*ny*nz + y*nz + z`, used by
+ * the blocky `extractIsosurface` and the QFT solvers — into MC's layout
+ * `x + y*nx + z*nx*ny`.
+ *
+ * Exported so the QFT pipeline (and tests) can adapt legacy fields in one
+ * hop without reaching into MC internals.
+ */
+export function transposeFieldToMarchingCubes(
+  field: Float32Array,
+  dims: [number, number, number],
+): Float32Array {
+  const [nx, ny, nz] = dims;
+  if (field.length !== nx * ny * nz) {
+    throw new Error(`transposeFieldToMarchingCubes: length ${field.length} ≠ ${nx}*${ny}*${nz}`);
+  }
+  const out = new Float32Array(field.length);
+  for (let x = 0; x < nx; x++) {
+    for (let y = 0; y < ny; y++) {
+      for (let z = 0; z < nz; z++) {
+        const src = x * ny * nz + y * nz + z;
+        const dst = x + y * nx + z * nx * ny;
+        out[dst] = field[src];
+      }
+    }
+  }
+  return out;
+}
+
 export class MeshExtractor {
+  /**
+   * Smooth isosurface via Marching Cubes (Phase 4).
+   *
+   * Field indexing here is `x + y*nx + z*nx*ny` (MC's own convention, see
+   * `marching_cubes.ts`). This differs from the blocky `extractIsosurface`
+   * below which uses `x*ny*nz + y*nz + z` — pass your field in the order the
+   * extractor expects, or use `extractSmoothIsosurfaceFromXMajor` for the
+   * convention the QFT pipeline uses.
+   *
+   * Use this for seed previews, glTF exports, and any render path where
+   * smooth normals matter. `extractIsosurface` (blocky) stays around for A/B.
+   */
+  static extractSmoothIsosurface(
+    field: Float32Array,
+    dims: [number, number, number],
+    options: MarchingCubesOptions = {},
+  ): MeshData {
+    return marchingCubes(field, dims, options);
+  }
+
+  /**
+   * Smooth isosurface from the QFT/blocky indexing convention
+   * (`x*ny*nz + y*nz + z`). Transposes into MC layout, then extracts.
+   * Added for the /export/glb pipeline so it can swap blocky → smooth
+   * without rewriting every upstream field producer.
+   */
+  static extractSmoothIsosurfaceFromXMajor(
+    field: Float32Array,
+    dims: [number, number, number],
+    options: MarchingCubesOptions = {},
+  ): MeshData {
+    const transposed = transposeFieldToMarchingCubes(field, dims);
+    return marchingCubes(transposed, dims, options);
+  }
+
   // Simple voxel-based isosurface extraction for field density
   static extractIsosurface(field: Float32Array, dims: [number, number, number], threshold: number): MeshData {
     const [nx, ny, nz] = dims;

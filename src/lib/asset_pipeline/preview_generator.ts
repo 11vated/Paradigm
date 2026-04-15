@@ -9,8 +9,11 @@
  * - geometry3d → actual primitive mesh (sphere, cube, torus)
  * - architecture → parametric building from floors/dimensions
  * - particle → point cloud from emitter config
- * - Default → icosahedron colored by domain
+ * - Default → Marching Cubes mesh from a seed-derived implicit field
+ *   (NOT a sphere — see generateDefaultImplicitMesh below).
  */
+
+import { marchingCubes } from './marching_cubes.js';
 
 interface MeshData {
   vertices: number[];
@@ -206,6 +209,139 @@ function generateParticleMesh(artifact: any): MeshData {
   return { vertices, indices, normals };
 }
 
+// ─── Default: seed-derived implicit mesh (kills the sphere fallback) ────────
+
+/**
+ * Deterministic 32-bit hash derived from the artifact. We avoid pulling in
+ * any crypto dependency — a small xorshift mixer over a string identifier is
+ * plenty for seeding "which shape do we get for this artifact?".
+ *
+ * Why do we need a hash at all? Because the *entire point* of Phase 4 is that
+ * every seed gets its own recognizable shape instead of the same sphere. The
+ * hash drives a handful of implicit-field parameters (twist, warp, radii)
+ * downstream so two different artifacts never collapse onto the same mesh.
+ */
+function artifactHash(artifact: any): number {
+  const key = `${artifact?.type ?? 'unknown'}::${artifact?.id ?? ''}::${artifact?.seed_id ?? ''}::${artifact?.name ?? ''}`;
+  let h = 0x811c9dc5; // FNV-1a offset basis
+  for (let i = 0; i < key.length; i++) {
+    h ^= key.charCodeAt(i);
+    // xorshift-style avalanche (matches 32-bit wraparound via Math.imul)
+    h = Math.imul(h, 0x01000193);
+  }
+  // Final mix so short keys still spread across the range.
+  h ^= h >>> 16;
+  h = Math.imul(h, 0x7feb352d);
+  h ^= h >>> 15;
+  h = Math.imul(h, 0x846ca68b);
+  h ^= h >>> 16;
+  return h >>> 0; // to unsigned
+}
+
+/**
+ * Build a scalar field from artifact-derived parameters and run Marching Cubes.
+ *
+ * The field is a signed-distance-ish blend of:
+ *   - a central twisted-sphere SDF (gives the overall volume)
+ *   - a low-frequency gyroid-like term (gives each artifact its own topology)
+ *   - a small set of orbiting metaballs whose positions come from the hash
+ *     (gives recognizable lobes/appendages at a glance)
+ *
+ * Inside is F > 0, outside is F < 0. MC extracts the level set F = 0.
+ *
+ * Why this recipe: we need something visually distinctive *without* running
+ * the heavy QFT pipeline. A pure sphere said "nothing rendered"; this recipe
+ * guarantees topology variety while staying cheap (O(N³) for N=32 ≈ 32k evals).
+ */
+function generateDefaultImplicitMesh(artifact: any): MeshData {
+  const h = artifactHash(artifact);
+
+  // Pull a handful of stable [0,1) reals out of the 32-bit hash.
+  const r0 = ((h        & 0x3FF) / 0x3FF);
+  const r1 = (((h >>> 10) & 0x3FF) / 0x3FF);
+  const r2 = (((h >>> 20) & 0x3FF) / 0x3FF);
+  const r3 = (((h >>> 5)  & 0x3FF) / 0x3FF);
+
+  // Topology params: keep ranges modest so MC always finds a closed surface
+  // inside the grid bounds.
+  const baseRadius = 0.55 + r0 * 0.15;    // 0.55..0.70 (in grid-normalized units)
+  const twist      = 0.6  + r1 * 2.2;     // 0.6..2.8
+  const gyroidAmp  = 0.12 + r2 * 0.18;    // 0.12..0.30
+  const gyroidFreq = 1.5  + r3 * 2.5;     // 1.5..4.0
+
+  // Three metaballs whose positions drift with the hash — think "lobes".
+  const metaballs: Array<[number, number, number, number]> = [];
+  for (let i = 0; i < 3; i++) {
+    const a = ((h >>> (i * 7)) & 0xFF) / 0xFF;
+    const b = ((h >>> (i * 7 + 3)) & 0xFF) / 0xFF;
+    const c = ((h >>> (i * 7 + 5)) & 0xFF) / 0xFF;
+    const radius = 0.12 + ((h >>> (i * 5)) & 0x3F) / 0x3F * 0.08;
+    metaballs.push([
+      (a - 0.5) * 0.6,
+      (b - 0.5) * 0.6,
+      (c - 0.5) * 0.6,
+      radius,
+    ]);
+  }
+
+  const N = 32; // resolution — 32³ ≈ 32k field evaluations
+  const field = new Float32Array(N * N * N);
+  const step = 2 / (N - 1); // grid spans [-1, 1] in each axis
+
+  for (let z = 0; z < N; z++) {
+    const zw = -1 + z * step;
+    for (let y = 0; y < N; y++) {
+      const yw = -1 + y * step;
+      // Twist makes the shape chiral — xz coords rotate about y as y varies.
+      const ang = yw * twist;
+      const sA = Math.sin(ang), cA = Math.cos(ang);
+      for (let x = 0; x < N; x++) {
+        const xw = -1 + x * step;
+        // Rotated xz
+        const xr = xw * cA - zw * sA;
+        const zr = xw * sA + zw * cA;
+
+        // Twisted-sphere SDF (positive inside).
+        const r = Math.hypot(xr, yw, zr);
+        let f = baseRadius - r;
+
+        // Gyroid-ish term. True gyroid is sin(x)cos(y)+sin(y)cos(z)+sin(z)cos(x).
+        const g =
+          Math.sin(xr * gyroidFreq) * Math.cos(yw * gyroidFreq) +
+          Math.sin(yw * gyroidFreq) * Math.cos(zr * gyroidFreq) +
+          Math.sin(zr * gyroidFreq) * Math.cos(xr * gyroidFreq);
+        f += g * gyroidAmp;
+
+        // Metaballs add local bulges.
+        for (const [mx, my, mz, mr] of metaballs) {
+          const dx = xw - mx, dy = yw - my, dz = zw - mz;
+          const d = Math.hypot(dx, dy, dz);
+          // Soft metaball contribution: 1/(d/R)^2 clamped near the center.
+          const t = Math.max(d / mr, 0.25);
+          f += 0.05 / (t * t);
+        }
+
+        field[x + y * N + z * N * N] = f;
+      }
+    }
+  }
+
+  // MC wants the grid index form and returns Float32Array/Uint32Array.
+  // Our legacy preview MeshData uses number[] — convert once here.
+  const mc = marchingCubes(field, [N, N, N], {
+    threshold: 0,
+    scale: step,
+    // Center the mesh at the world origin.
+    center: [1, 1, 1],
+  });
+
+  return {
+    vertices: Array.from(mc.vertices),
+    indices: Array.from(mc.indices),
+    normals: Array.from(mc.normals),
+  };
+}
+
 // ─── Mesh Combiner ───────────────────────────────────────────────────────────
 
 function combineMeshes(meshes: MeshData[]): MeshData {
@@ -256,8 +392,11 @@ export function generatePreviewMesh(artifact: any): MeshData | null {
       mesh = generateParticleMesh(artifact);
       break;
     default:
-      // Default: icosahedron
-      mesh = generateSphere(0.8, 4);
+      // Seed-derived implicit surface via Marching Cubes.
+      // Phase 4 killed the old `generateSphere(0.8, 4)` fallback: every
+      // unknown/unmapped artifact now gets its own distinctive topology
+      // driven by a deterministic hash of its identity.
+      mesh = generateDefaultImplicitMesh(artifact);
       break;
   }
 

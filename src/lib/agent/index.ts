@@ -688,6 +688,8 @@ export { parseQuery, buildPlan, executePlan, buildResponse, buildHelpResponse } 
 export { AGENT_TOOLS, executeTool, getAvailableTools } from './tools.js';
 export { AgentMemory } from './memory.js';
 export { LocalInferenceClient, getInferenceClient } from './inference.js';
+export { Phi4InferenceClient, getPhi4Client, resetPhi4Client } from './phi4_inference.js';
+export type { Phi4ClientOptions } from './phi4_inference.js';
 export { InferenceTier, INTENT_TIER } from './types.js';
 export type { AgentIntent, AgentResponse, AgentConfig, ParsedQuery, ReasoningPlan } from './types.js';
 

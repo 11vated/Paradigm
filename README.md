@@ -5,7 +5,7 @@
 
 **The Genetic Operating Environment for Digital Creation**
 
-27 domains | 17 gene types | 12 functor bridges | 7 architectural layers | 359 tests
+27 domains | 17 gene types | 12 functor bridges | 7 architectural layers | [![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2F%2F%2Fparadigm-test-count%2Fraw%2Ftest-count.json)](./.github/workflows/ci.yml)
 
 </div>
 
@@ -130,8 +130,11 @@ character, sprite, animation, music, ecosystem, fullgame, architecture, fashion,
 ## Testing
 
 ```bash
-# Run full test suite (359 tests across 13 files)
+# Run full test suite (count is dynamic — see CI badge above)
 npm test
+
+# Count tests from the live test tree (source of truth used by CI)
+node scripts/count-tests.mjs
 
 # Watch mode
 npm run test:watch

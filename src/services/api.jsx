@@ -63,6 +63,21 @@ export const signSeed = (id, privateKey) =>
 export const verifySeed = (id, publicKey) =>
   api.post(`/seeds/${id}/verify`, { public_key: publicKey }).then(r => r.data);
 
+// ─── NFT Minting (maps to server.ts:1280/1359/1373) ───────────────────────────
+// Phase 0 / G-01: these three exports were imported by MintPanel.jsx but never
+// defined, causing the Mint tab to crash on load. The server routes exist, the
+// client just lacked the bindings.
+export const mintSeed = (id, ownerAddress) =>
+  api.post(`/seeds/${id}/mint`, { owner: ownerAddress }).then(r => r.data);
+
+export const getNftInfo = (id) =>
+  api.get(`/seeds/${id}/nft`).then(r => r.data);
+
+// Portrait is a raw image served by GET /api/seeds/:id/portrait — consumers
+// use this as an <img src={...}> URL, so we return a string not a promise.
+export const getSeedPortraitUrl = (id) =>
+  `${API_URL}/api/seeds/${id}/portrait`;
+
 // ─── GSPL ─────────────────────────────────────────────────────────────────────
 export const parseGSPL = (source) => api.post('/gspl/parse', { source }).then(r => r.data);
 export const executeGSPL = (source) => api.post('/gspl/execute', { source }).then(r => r.data);

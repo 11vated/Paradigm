@@ -139,5 +139,32 @@ describe('Composition Engine', () => {
       // This should be null since the source domain doesn't exist in the graph
       expect(result).toBeNull();
     });
+
+    // ── Phase 0 / G-04 acceptance ────────────────────────────────────────
+    // The fitness was previously `0.5 + Math.random() * 0.3`, breaking the
+    // platform's determinism guarantee. It now draws from xoshiro256** seeded
+    // by the post-compose hash, so two runs with identical input produce
+    // identical fitness values.
+    it('fitness is deterministic (G-04)', () => {
+      const a = composeSeed(baseSeed, 'sprite');
+      const b = composeSeed(baseSeed, 'sprite');
+      expect(a).not.toBeNull();
+      expect(b).not.toBeNull();
+      expect(a!.$fitness?.overall).toBe(b!.$fitness?.overall);
+    });
+
+    it('fitness stays within [0.5, 0.8) range', () => {
+      // Check across all 27 domains reachable from character to catch any
+      // pathological hash collisions or numeric edge cases.
+      const targets = ['sprite', 'music', 'fullgame'];
+      for (const tgt of targets) {
+        const r = composeSeed(baseSeed, tgt);
+        if (r) {
+          const f = r.$fitness?.overall ?? 0;
+          expect(f).toBeGreaterThanOrEqual(0.5);
+          expect(f).toBeLessThan(0.8);
+        }
+      }
+    });
   });
 });

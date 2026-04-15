@@ -53,8 +53,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests (359 tests)
+      - name: Run unit tests
         run: npm test
+
+      # Phase 0 / G-08: count tests from the real test tree rather than a
+      # hard-coded number. Downstream badges/steps read $TEST_COUNT.
+      - name: Count tests (source of truth)
+        run: |
+          COUNT=$(node scripts/count-tests.mjs)
+          echo "TEST_COUNT=$COUNT" >> "$GITHUB_ENV"
+          echo "Detected $COUNT tests"
 
   # ── Stage 3: Build Frontend ──────────────────────────────────────────────
   build:

@@ -5,6 +5,7 @@
  * 3 agent bridges: agent↔character, agent→narrative.
  */
 import crypto from 'crypto';
+import { rngFromHash } from './rng.js';
 
 interface Seed {
   $gst?: string;
@@ -29,7 +30,10 @@ function makeLineage(source: Seed, functorName: string) {
 
 function finalizeSeed(seed: Seed): Seed {
   seed.$hash = crypto.createHash('sha256').update(JSON.stringify(seed.genes ?? {})).digest('hex');
-  seed.$fitness = { overall: 0.5 + Math.random() * 0.3 };
+  // G-04: deterministic fitness, seeded by post-compose hash. Math.random
+  // would give different answers on each run, violating the determinism axiom.
+  const fitnessRng = rngFromHash(seed.$hash + ':fitness');
+  seed.$fitness = { overall: 0.5 + fitnessRng.nextF64() * 0.3 };
   return seed;
 }
 
