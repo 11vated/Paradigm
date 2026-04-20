@@ -1,0 +1,1 @@
+export { ParadigmStudio } from './App';
