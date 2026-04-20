@@ -1,0 +1,271 @@
+// seed-commons/inventories/character/_batch_01_foundational.gspl
+//
+// Character inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational humanoid character seeds covering archetypal roles.
+// Each references body-material primitives through inventory:// URIs
+// and lineage-roots in seed_commons.libraries.chemistry where skin/blood
+// substrate is relevant.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.character"
+
+module seed_commons.inventories.character.batch01
+
+import Std.Character
+import Std.Color
+import Std.Topology
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Blacksmith — stocky human male, forge-worn
+pub fn blacksmith_human_male() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.blacksmith_human_male", version = "1.0.0",
+        archetype = Std.Character.Archetype.Artisan,
+        species = "Homo sapiens",
+        sex = "male",
+        age_years = 42,
+        height_m = 1.78,
+        mass_kg = 92.0,
+        build = Std.Character.Build.Stocky,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.38, c = 0.06, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 45.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Forest ranger — lean human female, alert posture
+pub fn forest_ranger_human_female() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.forest_ranger_human_female", version = "1.0.0",
+        archetype = Std.Character.Archetype.Scout,
+        species = "Homo sapiens",
+        sex = "female",
+        age_years = 29,
+        height_m = 1.68,
+        mass_kg = 61.0,
+        build = Std.Character.Build.Lean,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 135.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 120.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Elderly scholar — frail human male, robed
+pub fn elderly_scholar() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.elderly_scholar", version = "1.0.0",
+        archetype = Std.Character.Archetype.Mage,
+        species = "Homo sapiens",
+        sex = "male",
+        age_years = 78,
+        height_m = 1.72,
+        mass_kg = 64.0,
+        build = Std.Character.Build.Frail,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 280.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.08, h = 265.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.02, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Child merchant — young human, bright-eyed
+pub fn child_merchant() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.child_merchant", version = "1.0.0",
+        archetype = Std.Character.Archetype.Civilian,
+        species = "Homo sapiens",
+        sex = "neutral",
+        age_years = 10,
+        height_m = 1.38,
+        mass_kg = 32.0,
+        build = Std.Character.Build.Youthful,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 30.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.12, h = 70.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.04, h = 95.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Stone dwarf warrior — short, broad, bearded
+pub fn stone_dwarf_warrior() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.stone_dwarf_warrior", version = "1.0.0",
+        archetype = Std.Character.Archetype.Warrior,
+        species = "Dwarf",
+        sex = "male",
+        age_years = 140,
+        height_m = 1.38,
+        mass_kg = 98.0,
+        build = Std.Character.Build.Broad,
+        skin_material_ref = "inventory://materials/rough_granite@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.04, h = 60.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 35.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.10, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/rough_granite@v1",
+            "inventory://materials/forged_steel_blade@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. High elf archer — tall, slender, graceful
+pub fn high_elf_archer() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.high_elf_archer", version = "1.0.0",
+        archetype = Std.Character.Archetype.Ranger,
+        species = "Elf",
+        sex = "female",
+        age_years = 312,
+        height_m = 1.92,
+        mass_kg = 64.0,
+        build = Std.Character.Build.Slender,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.10, h = 160.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.06, h = 170.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 180.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+            "inventory://plant/oak_sapling_3yr@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Orc berserker — hulking, tusked, battle-scarred
+pub fn orc_berserker() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.orc_berserker", version = "1.0.0",
+        archetype = Std.Character.Archetype.Warrior,
+        species = "Orc",
+        sex = "male",
+        age_years = 34,
+        height_m = 2.18,
+        mass_kg = 142.0,
+        build = Std.Character.Build.Hulking,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 150.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 140.0 },
+            Std.Color.OKLCh { l = 0.18, c = 0.18, h = 25.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+            "inventory://fluid/whole_blood@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Cyber mercenary — chrome-augmented human
+pub fn cyber_mercenary() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.cyber_mercenary", version = "1.0.0",
+        archetype = Std.Character.Archetype.Soldier,
+        species = "Homo sapiens",
+        sex = "female",
+        age_years = 27,
+        height_m = 1.75,
+        mass_kg = 68.0,
+        build = Std.Character.Build.Athletic,
+        augmentation_fraction = 0.42,
+        skin_material_ref = "inventory://materials/fresh_skin_pale@v1",
+        augment_material_ref = "inventory://materials/brushed_aluminium@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.04, h = 260.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 15.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/fresh_skin_pale@v1",
+            "inventory://materials/brushed_aluminium@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Tidecaller priestess — oceanic humanoid
+pub fn tidecaller_priestess() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.tidecaller_priestess", version = "1.0.0",
+        archetype = Std.Character.Archetype.Mage,
+        species = "Merfolk",
+        sex = "female",
+        age_years = 56,
+        height_m = 1.82,
+        mass_kg = 72.0,
+        build = Std.Character.Build.Slender,
+        skin_material_ref = "inventory://materials/mother_of_pearl@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.48, c = 0.14, h = 210.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 200.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.06, h = 190.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/mother_of_pearl@v1",
+            "inventory://fluid/seawater_standard@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Ember djinni — flame-bodied elemental
+pub fn ember_djinni() -> Std.Character.Seed pure =
+    seed Std.Character.Seed {
+        name = "character.ember_djinni", version = "1.0.0",
+        archetype = Std.Character.Archetype.Elemental,
+        species = "Djinni",
+        sex = "neutral",
+        age_years = 1420,
+        height_m = 2.4,
+        mass_kg = 0.0,
+        build = Std.Character.Build.Incorporeal,
+        blackbody_temperature_K = 1800.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.98, c = 0.12, h = 90.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 55.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.18, h = 25.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/combustion-methane@v1",
+            "inventory://lighting/torch_flame@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.materials@v1",
+        "seed_commons.inventories.lighting@v1",
+        "seed_commons.inventories.fluid@v1",
+    ],
+    category   = "character",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.character",
+}

@@ -1,0 +1,9 @@
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+sentence-transformers==3.2.1
+# torch is pulled in transitively by sentence-transformers. Pinning the CPU
+# build keeps the image small; swap to the CUDA wheel only if you deploy on a
+# GPU host.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.0+cpu
+pydantic==2.9.2

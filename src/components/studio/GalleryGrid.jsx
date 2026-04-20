@@ -13,7 +13,7 @@ export default function GalleryGrid({ seeds, onSelect, selectedId }) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-px bg-neutral-900 p-px" data-testid="gallery-grid">
+    <div className="flex flex-col gap-2" data-testid="gallery-grid">
       {seeds.map((seed) => {
         const isSelected = seed.id === selectedId;
         const color = DOMAIN_COLORS[seed.$domain] || '#525252';
@@ -23,21 +23,30 @@ export default function GalleryGrid({ seeds, onSelect, selectedId }) {
             key={seed.id}
             data-testid={`gallery-seed-${seed.id}`}
             onClick={() => onSelect(seed)}
-            className={`bg-[#050505] p-3 text-left transition-all hover:bg-[#111] ${isSelected ? 'ring-1 ring-primary/50' : ''}`}
+            className={`flex flex-col text-left transition-all p-3 border rounded-sm ${
+              isSelected 
+                ? 'bg-[#0a0a0a] border-primary/50' 
+                : 'bg-[#080808] border-[#1a1a1a] hover:border-[#333]'
+            }`}
           >
-            <div className="flex items-center gap-1.5 mb-1.5">
-              <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-              <span className="font-mono text-[8px] text-neutral-600 uppercase">{seed.$domain}</span>
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+                <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">{seed.$domain}</span>
+              </div>
+              <span className="font-mono text-[9px] text-[#444]">G{seed.$lineage?.generation || 0}</span>
             </div>
-            <div className="font-heading text-[11px] text-neutral-300 truncate mb-1">
+            
+            <div className="font-mono text-[11px] text-[#d4d4d4] truncate mb-3 w-full">
               {seed.$name || 'Untitled'}
             </div>
-            <div className="fitness-bar mb-1">
-              <div className="fitness-fill" style={{ width: `${fitness * 100}%`, background: 'var(--primary)' }} />
-            </div>
-            <div className="flex justify-between">
-              <span className="font-mono text-[8px] text-neutral-700">G{seed.$lineage?.generation || 0}</span>
-              <span className="font-mono text-[8px] text-neutral-700">{(fitness * 100).toFixed(0)}%</span>
+            
+            <div className="flex items-center gap-2 w-full">
+              <span className="font-mono text-[8px] text-[#555]">FIT</span>
+              <div className="flex-1 h-[2px] bg-[#222] rounded-full overflow-hidden">
+                <div className="h-full bg-primary" style={{ width: `${fitness * 100}%` }} />
+              </div>
+              <span className="font-mono text-[8px] text-primary">{(fitness * 100).toFixed(0)}%</span>
             </div>
           </button>
         );

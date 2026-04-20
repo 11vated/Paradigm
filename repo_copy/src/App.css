@@ -1,0 +1,180 @@
+/* ─── Studio Layout ─────────────────────────────────────────────────── */
+.studio-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  grid-template-rows: 48px 1fr 32px;
+  height: 100vh;
+  gap: 1px;
+  background: #1a1a1a;
+}
+
+.studio-topbar {
+  grid-column: 1 / -1;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+}
+
+.studio-sidebar-left {
+  background: #050505;
+  overflow-y: auto;
+  border-right: 1px solid #1a1a1a;
+}
+
+.studio-center {
+  background: #000000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.studio-sidebar-right {
+  background: #050505;
+  overflow-y: auto;
+  border-left: 1px solid #1a1a1a;
+}
+
+.studio-statusbar {
+  grid-column: 1 / -1;
+  background: #050505;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #666666;
+  border-top: 1px solid #1a1a1a;
+}
+
+/* ─── Prompt Bar Glow ──────────────────────────────────────────────── */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(0, 229, 255, 0.15), 0 0 60px rgba(0, 229, 255, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(0, 229, 255, 0.25), 0 0 80px rgba(0, 229, 255, 0.1); }
+}
+
+.prompt-glow {
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* ─── Landing Page ─────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gridReveal {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-gridReveal {
+  animation: gridReveal 0.6s ease-out forwards;
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
+
+/* ─── Gene Editor Widgets ──────────────────────────────────────────── */
+.gene-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid #1a1a1a;
+  transition: background-color 0.15s;
+}
+
+.gene-row:hover {
+  background: rgba(0, 229, 255, 0.04);
+}
+
+.gene-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #a3a3a3;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gene-type-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 1px 6px;
+  border: 1px solid #262626;
+  color: #525252;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ─── Fitness Bar ──────────────────────────────────────────────────── */
+.fitness-bar {
+  height: 3px;
+  background: #1a1a1a;
+  overflow: hidden;
+}
+
+.fitness-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transition: width 0.5s ease-out;
+}
+
+/* ─── Lineage Connector ────────────────────────────────────────────── */
+.lineage-connector {
+  position: relative;
+  padding-left: 20px;
+}
+
+.lineage-connector::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #262626;
+}
+
+.lineage-node::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  width: 8px;
+  height: 1px;
+  background: #262626;
+}
+
+/* ─── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .studio-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 48px 1fr 32px;
+  }
+  .studio-sidebar-left,
+  .studio-sidebar-right {
+    display: none;
+  }
+}

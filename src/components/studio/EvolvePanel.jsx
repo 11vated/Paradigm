@@ -21,54 +21,53 @@ export default function EvolvePanel({ seed, onEvolved }) {
   };
 
   return (
-    <div className="p-3 space-y-4" data-testid="evolve-panel">
-      <div className="flex items-center gap-2">
-        <Zap className="w-3 h-3 text-secondary" />
-        <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-wider">Evolution</span>
-      </div>
-
+    <div className="flex flex-col gap-5 p-1" data-testid="evolve-panel">
       {!seed ? (
-        <p className="font-mono text-[10px] text-neutral-600">Select a seed to evolve.</p>
+        <p className="font-mono text-[10px] text-[#555] p-3 border border-[#1a1a1a] rounded-sm bg-[#050505] text-center">
+          No seed selected for evolution.
+        </p>
       ) : (
         <>
-          <div className="space-y-1">
-            <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Algorithm</label>
+          <div className="flex flex-col gap-1.5">
+            <label className="font-mono text-[9px] text-[#888] uppercase tracking-widest">Algorithm Engine</label>
             <Select value={algorithm} onValueChange={setAlgorithm}>
-              <SelectTrigger className="h-7 text-[10px] font-mono bg-transparent border-neutral-800 rounded-none" data-testid="evolve-algorithm-select">
+              <SelectTrigger className="h-8 text-[10px] font-mono bg-[#050505] border-[#1a1a1a] rounded-sm text-[#ccc] focus:ring-0 focus:border-secondary/50" data-testid="evolve-algorithm-select">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[#0a0a0a] border-neutral-800">
+              <SelectContent className="bg-[#050505] border-[#1a1a1a] rounded-sm">
                 {['map_elites', 'ga', 'cma_es', 'novelty'].map(a => (
-                  <SelectItem key={a} value={a} className="text-[10px] font-mono">{a.replace('_', ' ').toUpperCase()}</SelectItem>
+                  <SelectItem key={a} value={a} className="text-[10px] font-mono border-b border-[#111] last:border-0 hover:bg-[#1a1a1a] focus:bg-[#1a1a1a] focus:text-white cursor-pointer transition-colors text-[#ccc]">
+                    {a.replace('_', ' ').toUpperCase()}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Population</label>
-              <span className="font-mono text-[9px] text-neutral-500">{popSize}</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center">
+              <label className="font-mono text-[9px] text-[#888] uppercase tracking-widest">Population Bound</label>
+              <span className="font-mono text-[9px] text-[#ccc] tabular-nums bg-[#1a1a1a] px-1.5 py-0.5 rounded-sm">{popSize}</span>
             </div>
-            <Slider value={[popSize]} onValueChange={([v]) => setPopSize(v)} min={4} max={50} step={2} data-testid="evolve-pop-slider" />
+            <Slider value={[popSize]} onValueChange={([v]) => setPopSize(v)} min={4} max={50} step={2} data-testid="evolve-pop-slider" className="pt-1" />
           </div>
 
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <label className="font-mono text-[9px] text-neutral-600 uppercase tracking-wider">Generations</label>
-              <span className="font-mono text-[9px] text-neutral-500">{generations}</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between items-center">
+              <label className="font-mono text-[9px] text-[#888] uppercase tracking-widest">Generational Depth</label>
+              <span className="font-mono text-[9px] text-[#ccc] tabular-nums bg-[#1a1a1a] px-1.5 py-0.5 rounded-sm">{generations}</span>
             </div>
-            <Slider value={[generations]} onValueChange={([v]) => setGenerations(v)} min={1} max={20} step={1} data-testid="evolve-gen-slider" />
+            <Slider value={[generations]} onValueChange={([v]) => setGenerations(v)} min={1} max={20} step={1} data-testid="evolve-gen-slider" className="pt-1" />
           </div>
 
           <button
             data-testid="evolve-seed-button"
             onClick={handleEvolve}
             disabled={loading}
-            className="w-full py-2 bg-secondary text-white font-bold text-[10px] uppercase tracking-wider hover:bg-secondary/80 transition-colors disabled:opacity-30 flex items-center justify-center gap-2"
+            className="w-full py-2.5 mt-2 bg-secondary/10 text-secondary border border-secondary/20 rounded-sm font-mono text-[10px] uppercase tracking-widest hover:bg-secondary/20 hover:border-secondary/40 transition-all disabled:opacity-30 flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3" />}
-            {loading ? 'Evolving...' : `Evolve ${popSize} variants`}
+            {loading ? 'SYNTHESIZING...' : `EVOLVE [ ${popSize} ]`}
           </button>
         </>
       )}

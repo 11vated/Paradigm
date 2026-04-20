@@ -241,5 +241,5 @@ export function simulateEMField(initialConditions: any, gridSize: [number, numbe
     }
   }
   
-  return snapshots;
+  return snapshots.length > 0 ? snapshots : [solver.getSnapshot()];
 }

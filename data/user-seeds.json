@@ -9003,5 +9003,45 @@
     "$version": 1,
     "$createdAt": "2026-04-12T18:08:47.760Z",
     "$updatedAt": "2026-04-12T18:08:47.760Z"
+  },
+  {
+    "id": "91df7149-c19e-4dad-a6e2-5fd18c8f2f10",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-04-20T05:27:47.325Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "field",
+    "$name": "algorithm.perlin_noise_3d (Evolved EM)",
+    "$hash": "ad000b97ca022c2d09147025125c8264bf8e632afa4700c7049f1328598ead7d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
   }
 ]

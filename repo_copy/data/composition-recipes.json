@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Character Game Kit",
+    "description": "Generate a complete game kit from a single character seed",
+    "steps": [
+      { "source": "character", "target": "sprite" },
+      { "source": "character", "target": "music" },
+      { "source": "character", "target": "fullgame" }
+    ]
+  },
+  {
+    "name": "Story-Driven Game",
+    "description": "Compose a narrative into a character into a full game",
+    "steps": [
+      { "source": "narrative", "target": "character" },
+      { "source": "character", "target": "fullgame" }
+    ]
+  },
+  {
+    "name": "Musical Dance Performance",
+    "description": "Turn a music seed into animation and choreography",
+    "steps": [
+      { "source": "music", "target": "animation" },
+      { "source": "music", "target": "choreography" }
+    ]
+  },
+  {
+    "name": "Architectural Visualization",
+    "description": "Transform architecture into 3D geometry and physics simulation",
+    "steps": [
+      { "source": "architecture", "target": "geometry3d" },
+      { "source": "geometry3d", "target": "physics" }
+    ]
+  },
+  {
+    "name": "Ecosystem World Builder",
+    "description": "Grow an ecosystem into procedural terrain",
+    "steps": [
+      { "source": "ecosystem", "target": "procedural" },
+      { "source": "procedural", "target": "fullgame" }
+    ]
+  },
+  {
+    "name": "Character Epic",
+    "description": "Generate a character's story and animate their journey",
+    "steps": [
+      { "source": "character", "target": "narrative" },
+      { "source": "character", "target": "sprite" },
+      { "source": "character", "target": "music" }
+    ]
+  },
+  {
+    "name": "Physics Particle Showcase",
+    "description": "Turn a physics simulation into a particle system and shader",
+    "steps": [
+      { "source": "physics", "target": "particle" },
+      { "source": "particle", "target": "shader" }
+    ]
+  },
+  {
+    "name": "Fashion Character Design",
+    "description": "Design a garment, then create the character wearing it",
+    "steps": [
+      { "source": "fashion", "target": "character" },
+      { "source": "character", "target": "sprite" }
+    ]
+  },
+  {
+    "name": "AI Agent Story",
+    "description": "Grow an agent into a character with a narrative",
+    "steps": [
+      { "source": "agent", "target": "character" },
+      { "source": "agent", "target": "narrative" }
+    ]
+  },
+  {
+    "name": "Culinary Ecosystem",
+    "description": "Map cuisine ingredients to an ecological food web",
+    "steps": [
+      { "source": "food", "target": "ecosystem" },
+      { "source": "ecosystem", "target": "procedural" }
+    ]
+  },
+  {
+    "name": "Robot Builder",
+    "description": "Design a circuit board, then build the robot it controls",
+    "steps": [
+      { "source": "circuit", "target": "robotics" }
+    ]
+  },
+  {
+    "name": "Typography UI Kit",
+    "description": "Generate a typeface spec and compose it into a UI design",
+    "steps": [
+      { "source": "typography", "target": "ui" }
+    ]
+  }
+]

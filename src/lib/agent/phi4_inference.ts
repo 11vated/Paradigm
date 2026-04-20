@@ -250,14 +250,14 @@ export class Phi4InferenceClient implements InferenceClient {
     }
 
     // Pick the actual tier we'll serve. If strict and unavailable, fail loud.
-    let tier = preferredTier;
+    let tier: InferenceTier = preferredTier;
     if (!this.isAvailable(tier)) {
       if (this.strictTier) {
         throw new Error(`Tier ${preferredTier} unavailable and strictTier=true (no silent downgrade)`);
       }
       while (tier > InferenceTier.KERNEL && !this.isAvailable(tier)) tier--;
     }
-    if (tier === InferenceTier.KERNEL) return this.kernelResponse();
+    if ((tier as InferenceTier) === InferenceTier.KERNEL) return this.kernelResponse();
 
     const cacheKey = ContentHashCache.key(request, tier);
     const cached = this.cache.get(cacheKey);

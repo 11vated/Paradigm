@@ -9,10 +9,13 @@ export class GSPLCompiler {
     
     // 1. Determine Fundamental Field Type based on Domain Ontology
     let fieldType = "EM";
-    if (["character", "organic", "creature"].includes(domain)) fieldType = "DIRAC";
-    if (["vfx", "energy", "magic"].includes(domain)) fieldType = "QED";
-    if (["matter", "prop", "weapon"].includes(domain)) fieldType = "QCD";
-    if (["cosmos", "environment", "world"].includes(domain)) fieldType = "GRAVITY";
+    const topologyDomains = ["character", "organic", "creature", "building", "architecture", "vehicle", "furniture", "geometry3d", "fashion", "robotics"];
+    
+    if (topologyDomains.includes(domain)) fieldType = "TOPOLOGY";
+    else if (["vfx", "energy", "magic"].includes(domain)) fieldType = "QED";
+    else if (["matter", "prop", "weapon", "circuit"].includes(domain)) fieldType = "QCD";
+    else if (["cosmos", "environment", "world", "ecosystem"].includes(domain)) fieldType = "GRAVITY";
+    else if (domain === "algorithm" || domain === "procedural") fieldType = "ALGORITHM";
     
     // Explicit override via GSPL gene
     if (genes.field_type?.value) {
@@ -42,6 +45,12 @@ export class GSPLCompiler {
           width: Math.max(1, stability / 10),
           time_function: stability > 70 ? "sinusoidal" : "gaussian"
         };
+        break;
+        
+      case "TOPOLOGY":
+        qftParams.initial_conditions.topology_seed = seed.id;
+        qftParams.initial_conditions.complexity = complexity;
+        qftParams.initial_conditions.power = power;
         break;
         
       case "DIRAC":

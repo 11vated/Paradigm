@@ -1,0 +1,119 @@
+// seed-commons/libraries/particles_fields.gspl
+//
+// Particles & Fields library — runnable GSPL materialization of Brief 084
+// (research/084-particles-and-fields-library.md).
+//
+// Covers the Standard Model particle catalog, gauge fields, and quantum
+// number structures needed by downstream simulation and visualization seeds.
+// Sources: PDG 2024, NIST PML, CODATA 2022.
+//
+// PURE. rng_seed = "seed_commons.libraries.particles_fields:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.physics@v1]
+
+module seed_commons.libraries.particles_fields
+
+import Std.Math
+import Std.Units
+import seed_commons.libraries.physics as Phys
+
+// -----------------------------------------------------------------------------
+// 1. Particle taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum ParticleFamily { Quark, Lepton, GaugeBoson, ScalarBoson, Composite }
+pub enum Generation { First, Second, Third, Force }
+pub enum Statistics { Fermion, Boson }
+
+pub struct Particle {
+    name: String,
+    symbol: String,
+    family: ParticleFamily,
+    generation: Generation,
+    statistics: Statistics,
+    mass_mev_c2: Scalar,
+    charge_e: Scalar,
+    spin: Scalar,
+    color_charge: bool,
+    weak_isospin: Scalar,
+    mean_lifetime_s: Option<Scalar>,
+}
+
+// -----------------------------------------------------------------------------
+// 2. Standard Model inventory (PDG 2024)
+// -----------------------------------------------------------------------------
+
+pub fn electron() -> Particle pure =
+    Particle { name = "electron", symbol = "e-", family = ParticleFamily.Lepton, generation = Generation.First, statistics = Statistics.Fermion, mass_mev_c2 = 0.510_998_950_69, charge_e = -1.0, spin = 0.5, color_charge = false, weak_isospin = -0.5, mean_lifetime_s = None }
+
+pub fn muon() -> Particle pure =
+    Particle { name = "muon", symbol = "mu-", family = ParticleFamily.Lepton, generation = Generation.Second, statistics = Statistics.Fermion, mass_mev_c2 = 105.658_375_5, charge_e = -1.0, spin = 0.5, color_charge = false, weak_isospin = -0.5, mean_lifetime_s = Some(2.196_9811e-6) }
+
+pub fn tau() -> Particle pure =
+    Particle { name = "tau", symbol = "tau-", family = ParticleFamily.Lepton, generation = Generation.Third, statistics = Statistics.Fermion, mass_mev_c2 = 1776.86, charge_e = -1.0, spin = 0.5, color_charge = false, weak_isospin = -0.5, mean_lifetime_s = Some(2.903e-13) }
+
+pub fn up_quark() -> Particle pure =
+    Particle { name = "up", symbol = "u", family = ParticleFamily.Quark, generation = Generation.First, statistics = Statistics.Fermion, mass_mev_c2 = 2.16, charge_e = 2.0 / 3.0, spin = 0.5, color_charge = true, weak_isospin = 0.5, mean_lifetime_s = None }
+
+pub fn down_quark() -> Particle pure =
+    Particle { name = "down", symbol = "d", family = ParticleFamily.Quark, generation = Generation.First, statistics = Statistics.Fermion, mass_mev_c2 = 4.70, charge_e = -1.0 / 3.0, spin = 0.5, color_charge = true, weak_isospin = -0.5, mean_lifetime_s = None }
+
+pub fn photon() -> Particle pure =
+    Particle { name = "photon", symbol = "gamma", family = ParticleFamily.GaugeBoson, generation = Generation.Force, statistics = Statistics.Boson, mass_mev_c2 = 0.0, charge_e = 0.0, spin = 1.0, color_charge = false, weak_isospin = 0.0, mean_lifetime_s = None }
+
+pub fn gluon() -> Particle pure =
+    Particle { name = "gluon", symbol = "g", family = ParticleFamily.GaugeBoson, generation = Generation.Force, statistics = Statistics.Boson, mass_mev_c2 = 0.0, charge_e = 0.0, spin = 1.0, color_charge = true, weak_isospin = 0.0, mean_lifetime_s = None }
+
+pub fn w_boson() -> Particle pure =
+    Particle { name = "W_boson", symbol = "W+", family = ParticleFamily.GaugeBoson, generation = Generation.Force, statistics = Statistics.Boson, mass_mev_c2 = 80369.2, charge_e = 1.0, spin = 1.0, color_charge = false, weak_isospin = 1.0, mean_lifetime_s = Some(3.16e-25) }
+
+pub fn z_boson() -> Particle pure =
+    Particle { name = "Z_boson", symbol = "Z0", family = ParticleFamily.GaugeBoson, generation = Generation.Force, statistics = Statistics.Boson, mass_mev_c2 = 91188.0, charge_e = 0.0, spin = 1.0, color_charge = false, weak_isospin = 0.0, mean_lifetime_s = Some(2.64e-25) }
+
+pub fn higgs_boson() -> Particle pure =
+    Particle { name = "higgs", symbol = "H0", family = ParticleFamily.ScalarBoson, generation = Generation.Force, statistics = Statistics.Boson, mass_mev_c2 = 125_200.0, charge_e = 0.0, spin = 0.0, color_charge = false, weak_isospin = -0.5, mean_lifetime_s = Some(1.56e-22) }
+
+// -----------------------------------------------------------------------------
+// 3. Field structures
+// -----------------------------------------------------------------------------
+
+pub struct GaugeField {
+    name: String,
+    coupling_alpha: Scalar,
+    carrier: String,
+    range_m: Option<Scalar>,
+}
+
+pub fn electromagnetic_field() -> GaugeField pure =
+    GaugeField { name = "electromagnetic", coupling_alpha = Phys.FINE_STRUCTURE, carrier = "photon", range_m = None }
+
+pub fn strong_field() -> GaugeField pure =
+    GaugeField { name = "strong", coupling_alpha = 0.1179, carrier = "gluon", range_m = Some(1.0e-15) }
+
+pub fn weak_field() -> GaugeField pure =
+    GaugeField { name = "weak", coupling_alpha = 0.03368, carrier = "W/Z", range_m = Some(1.0e-18) }
+
+pub fn gravitational_field() -> GaugeField pure =
+    GaugeField { name = "gravitational", coupling_alpha = 5.9e-39, carrier = "graviton_hypothetical", range_m = None }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn particle_to_decay_chain_functor() -> Functor pure =
+    Functor.id("particles://functor/particle_to_decay_chain@v1")
+
+pub fn field_to_visualization_functor() -> Functor pure =
+    Functor.id("particles://functor/field_to_visualization@v1")
+
+$metadata {
+    materializes_brief = "research/084-particles-and-fields-library.md",
+    source_standards   = ["PDG_2024", "CODATA_2022", "NIST_PML"],
+    particle_count     = 10,
+    field_count        = 4,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.particles_fields",
+    lineage_parents    = ["seed_commons.libraries.physics@v1"],
+}
