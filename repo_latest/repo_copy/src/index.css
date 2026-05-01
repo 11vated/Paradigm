@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@import "tailwindcss";
+@config "../tailwind.config.js";
+@plugin "tailwindcss-animate";
+
+@layer base {
+  :root {
+    /* The Void (Backgrounds) */
+    --background: 0 0% 2%; /* #050505 */
+    --foreground: 0 0% 96%;
+    --card: 0 0% 6.7%; /* #111111 */
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 6.7%;
+    --popover-foreground: 0 0% 96%;
+    
+    /* The Energy (Accents) */
+    /* Quantum Cyan #00E5FF */
+    --primary: 186 100% 50%;
+    --primary-foreground: 0 0% 2%;
+    
+    /* Mutation Magenta #FF0055 */
+    --secondary: 340 100% 50%;
+    --secondary-foreground: 0 0% 98%;
+    
+    /* Resonance Purple #8A2BE2 */
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 96%;
+    
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 64%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
+    --ring: 186 100% 50%;
+    
+    --chart-1: 186 100% 50%; /* Cyan */
+    --chart-2: 340 100% 50%; /* Magenta */
+    --chart-3: 271 76% 53%; /* Purple */
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.125rem;
+  }
+}
+
+body {
+  margin: 0;
+  background: #050505;
+  color: #f5f5f5;
+  font-family: 'Geist', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+code, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Geist', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a1a1a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333333;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  [data-debug-wrapper="true"] {
+    display: contents !important;
+  }
+}
+
+::selection {
+  background: rgba(0, 229, 255, 0.3);
+  color: #fff;
+}

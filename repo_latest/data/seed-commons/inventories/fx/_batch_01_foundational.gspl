@@ -1,0 +1,237 @@
+// seed-commons/inventories/fx/_batch_01_foundational.gspl
+//
+// FX (visual effect) inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational FX seeds. Most are chemistry-grounded (combustion, phase
+// change, emission) so the lineage DAG crosses into seed_commons.libraries.chemistry.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.fx"
+
+module seed_commons.inventories.fx.batch01
+
+import Std.Color
+import Std.Field
+import Std.FX
+import Std.Math
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Explosion — TNT-class chemical detonation plume
+pub fn explosion_tnt_class() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.explosion_tnt_class", version = "1.0.0",
+        kind = Std.FX.Kind.Explosion,
+        energy_MJ = 4.184,
+        peak_temperature_K = 3800.0,
+        shockwave_m_s = 6900.0,
+        duration_ms = 180.0,
+        plume = Std.FX.Plume {
+            radius_m = 18.0,
+            rise_rate_m_s = 22.0,
+            entrainment = 0.28,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.98, c = 0.04, h = 90.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 50.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 30.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Smoke plume — cool hydrocarbon soot column
+pub fn smoke_plume_cool() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.smoke_plume_cool", version = "1.0.0",
+        kind = Std.FX.Kind.Smoke,
+        source_temperature_K = 420.0,
+        particle = Std.FX.Particle {
+            species = "soot",
+            mean_radius_um = 0.08,
+            density_kg_m3 = 1800.0,
+            number_density_cm3 = 1.2e6,
+        },
+        rise_rate_m_s = 1.4,
+        dispersion_coeff = 0.22,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.01, h = 60.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.01, h = 65.0 },
+            Std.Color.OKLCh { l = 0.68, c = 0.01, h = 70.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Steam burst — water vapor rapid expansion
+pub fn steam_burst() -> Std.FX.Seed pure =
+    let water = Chem.water()
+    seed Std.FX.Seed {
+        name = "fx.steam_burst", version = "1.0.0",
+        kind = Std.FX.Kind.Steam,
+        substance = water,
+        source_temperature_K = 373.15,
+        condensation_nuclei_cm3 = 5.0e4,
+        expansion_ratio = 1600.0,
+        duration_ms = 900.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 220.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 210.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 200.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Spark shower — ferrocerium / grinding sparks
+pub fn spark_shower_ferrocerium() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.spark_shower_ferrocerium", version = "1.0.0",
+        kind = Std.FX.Kind.Sparks,
+        particle = Std.FX.Particle {
+            species = "Fe_oxide_ember",
+            mean_radius_um = 80.0,
+            density_kg_m3 = 5200.0,
+            initial_temperature_K = 2400.0,
+        },
+        ejection_velocity_m_s = 14.0,
+        ejection_cone_rad = 0.45,
+        cooling_rate_K_s = 9500.0,
+        trail_length_mm = 120.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.98, c = 0.14, h = 95.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.22, h = 70.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 40.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://element/iron@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Magic glow aura — non-physical emissive field
+pub fn magic_glow_aura() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.magic_glow_aura", version = "1.0.0",
+        kind = Std.FX.Kind.Emissive,
+        emission_nm = 478.0,
+        intensity_nits = 1200.0,
+        pulse_hz = 0.8,
+        pulse_amplitude = 0.18,
+        falloff = Std.FX.Falloff.Exponential { lambda_m = 0.4 },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 260.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.16, h = 280.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.10, h = 300.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Lightning bolt — stepped leader + return stroke
+pub fn lightning_bolt() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.lightning_bolt", version = "1.0.0",
+        kind = Std.FX.Kind.ElectricDischarge,
+        peak_current_kA = 30.0,
+        channel_temperature_K = 28000.0,
+        stepped_leader_ms = 20.0,
+        return_stroke_ms = 0.1,
+        branch_count = 6,
+        fractal_dimension = 1.35,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.98, c = 0.02, h = 240.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.08, h = 260.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 280.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Dust cloud — footfall kick-up
+pub fn dust_cloud_footfall() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.dust_cloud_footfall", version = "1.0.0",
+        kind = Std.FX.Kind.Dust,
+        particle = Std.FX.Particle {
+            species = "soil_silicate",
+            mean_radius_um = 6.0,
+            density_kg_m3 = 1500.0,
+            number_density_cm3 = 1.8e4,
+        },
+        initial_velocity_m_s = 2.2,
+        dispersion_coeff = 0.35,
+        settle_time_s = 1.8,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 75.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.05, h = 80.0 },
+            Std.Color.OKLCh { l = 0.90, c = 0.03, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Blood splatter — arterial spray, viscous
+pub fn blood_splatter_arterial() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.blood_splatter_arterial", version = "1.0.0",
+        kind = Std.FX.Kind.Fluid,
+        substance_name = "blood",
+        density_kg_m3 = 1060.0,
+        viscosity_Pa_s = 3.5e-3,
+        surface_tension_N_m = 0.058,
+        ejection_velocity_m_s = 3.2,
+        droplet_diameter_mm = 1.4,
+        droplet_count = 180,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.28, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 28.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 32.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Portal swirl — rotational emissive disk
+pub fn portal_swirl() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.portal_swirl", version = "1.0.0",
+        kind = Std.FX.Kind.Emissive,
+        geometry = Std.FX.Geometry.Disk { radius_m = 1.6, thickness_m = 0.08 },
+        angular_velocity_rad_s = 3.14,
+        emission_nm = 520.0,
+        intensity_nits = 3200.0,
+        swirl_turbulence = 0.42,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 150.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.18, h = 170.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.12, h = 190.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Teleport dissolve — voxel-wise material dissolution
+pub fn teleport_dissolve() -> Std.FX.Seed pure =
+    seed Std.FX.Seed {
+        name = "fx.teleport_dissolve", version = "1.0.0",
+        kind = Std.FX.Kind.Dissolve,
+        duration_ms = 650.0,
+        dissolve_pattern = "voronoi_noise",
+        dissolve_scale_m = 0.04,
+        edge_emission_nm = 495.0,
+        edge_width_mm = 3.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.55, c = 0.18, h = 220.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.16, h = 240.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.08, h = 260.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "fx",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.fx",
+}

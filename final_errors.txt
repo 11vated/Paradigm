@@ -1,0 +1,8 @@
+src/intelligence/opencode-agent.ts(54,9): error TS2353: Object literal may only specify known properties, and 'model' does not exist in type '{ parentID?: string; title?: string; }'.
+src/lib/agent/opencode.ts(47,26): error TS2339: Property 'name' does not exist on type 'string | number | (() => MapIterator<[string, AgentTool]>) | ((key: string, value: AgentTool) => Map<string, AgentTool>) | ((key: string) => AgentTool) | ... 6 more ... | (() => void)'.
+  Property 'name' does not exist on type 'string'.
+src/lib/agent/opencode.ts(48,37): error TS2339: Property 'execute' does not exist on type 'string | number | (() => MapIterator<[string, AgentTool]>) | ((key: string, value: AgentTool) => Map<string, AgentTool>) | ((key: string) => AgentTool) | ... 6 more ... | (() => void)'.
+  Property 'execute' does not exist on type 'string'.
+src/lib/pipeline/index.ts(108,9): error TS2345: Argument of type '(val: number) => number[]' is not assignable to parameter of type '(val: number) => [number, number, number]'.
+  Type 'number[]' is not assignable to type '[number, number, number]'.
+    Target requires 3 element(s) but source may have fewer.

@@ -1,0 +1,147 @@
+// seed-commons/libraries/mathematics.gspl
+//
+// Mathematics & Geometry library — runnable GSPL materialization of Brief 086B
+// (research/086B-mathematics-and-geometry-library.md).
+//
+// Constants, curves, surfaces, tilings, symmetry groups, number sequences.
+// Sources: OEIS, Wolfram MathWorld, Hyperrogue, ISO 80000-2.
+//
+// PURE. rng_seed = "seed_commons.libraries.mathematics:v1"
+// License: GSPL Open Specification License
+// Lineage parents: []
+
+module seed_commons.libraries.mathematics
+
+import Std.Math
+
+// -----------------------------------------------------------------------------
+// 1. Fundamental constants
+// -----------------------------------------------------------------------------
+
+pub const PI             : Scalar = 3.141_592_653_589_793_238
+pub const TAU            : Scalar = 6.283_185_307_179_586_476
+pub const E              : Scalar = 2.718_281_828_459_045_235
+pub const PHI_GOLDEN     : Scalar = 1.618_033_988_749_894_848
+pub const SQRT_2         : Scalar = 1.414_213_562_373_095_049
+pub const SQRT_3         : Scalar = 1.732_050_807_568_877_293
+pub const SILVER_RATIO   : Scalar = 2.414_213_562_373_095_049
+pub const EULER_MASCHERONI : Scalar = 0.577_215_664_901_532_860
+pub const CATALAN        : Scalar = 0.915_965_594_177_219_015
+pub const APERY          : Scalar = 1.202_056_903_159_594_285
+pub const FEIGENBAUM_DELTA : Scalar = 4.669_201_609_102_990_671
+pub const PHYLLOTAXIS_ANGLE_RAD : Scalar = 2.399_963_229_728_653_322
+
+// -----------------------------------------------------------------------------
+// 2. Number sequences
+// -----------------------------------------------------------------------------
+
+pub fn fibonacci(n: u32) -> u64 pure =
+    match n
+        | 0 -> 0
+        | 1 -> 1
+        | _ -> fibonacci(n - 1) + fibonacci(n - 2)
+
+pub fn prime_first_20() -> [u32] pure =
+    [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71]
+
+pub fn triangular(n: u32) -> u64 pure =
+    (n as u64) * ((n as u64) + 1) / 2
+
+pub fn catalan_number(n: u32) -> u64 pure =
+    // C(2n,n)/(n+1)
+    binomial(2 * n, n) / ((n as u64) + 1)
+
+// -----------------------------------------------------------------------------
+// 3. Curves
+// -----------------------------------------------------------------------------
+
+pub struct ParametricCurve2D {
+    name: String,
+    t_min: Scalar,
+    t_max: Scalar,
+    // x(t), y(t) referenced symbolically by downstream compilers
+}
+
+pub fn unit_circle() -> ParametricCurve2D pure =
+    ParametricCurve2D { name = "unit_circle", t_min = 0.0, t_max = TAU }
+
+pub fn logarithmic_spiral(growth: Scalar) -> ParametricCurve2D pure =
+    ParametricCurve2D { name = "log_spiral_" + growth.to_string(), t_min = 0.0, t_max = 8.0 * PI }
+
+pub fn cardioid() -> ParametricCurve2D pure =
+    ParametricCurve2D { name = "cardioid", t_min = 0.0, t_max = TAU }
+
+pub fn lissajous(a_freq: Scalar, b_freq: Scalar) -> ParametricCurve2D pure =
+    ParametricCurve2D { name = "lissajous_" + a_freq.to_string() + "_" + b_freq.to_string(), t_min = 0.0, t_max = TAU }
+
+// -----------------------------------------------------------------------------
+// 4. Platonic solids
+// -----------------------------------------------------------------------------
+
+pub struct PlatonicSolid {
+    name: String,
+    vertices: u8,
+    edges: u8,
+    faces: u8,
+    face_polygon: u8,
+    dihedral_angle_rad: Scalar,
+    symmetry_group: String,
+}
+
+pub fn tetrahedron() -> PlatonicSolid pure =
+    PlatonicSolid { name = "tetrahedron", vertices = 4, edges = 6, faces = 4, face_polygon = 3, dihedral_angle_rad = 1.230_959_417, symmetry_group = "Td" }
+
+pub fn cube() -> PlatonicSolid pure =
+    PlatonicSolid { name = "cube", vertices = 8, edges = 12, faces = 6, face_polygon = 4, dihedral_angle_rad = 1.570_796_327, symmetry_group = "Oh" }
+
+pub fn octahedron() -> PlatonicSolid pure =
+    PlatonicSolid { name = "octahedron", vertices = 6, edges = 12, faces = 8, face_polygon = 3, dihedral_angle_rad = 1.910_633_236, symmetry_group = "Oh" }
+
+pub fn dodecahedron() -> PlatonicSolid pure =
+    PlatonicSolid { name = "dodecahedron", vertices = 20, edges = 30, faces = 12, face_polygon = 5, dihedral_angle_rad = 2.034_443_936, symmetry_group = "Ih" }
+
+pub fn icosahedron() -> PlatonicSolid pure =
+    PlatonicSolid { name = "icosahedron", vertices = 12, edges = 30, faces = 20, face_polygon = 3, dihedral_angle_rad = 2.411_864_997, symmetry_group = "Ih" }
+
+// -----------------------------------------------------------------------------
+// 5. Tilings
+// -----------------------------------------------------------------------------
+
+pub enum TilingKind { Regular, SemiRegular, Aperiodic, Penrose, Hyperbolic }
+
+pub struct Tiling {
+    name: String,
+    kind: TilingKind,
+    vertex_config: String,
+    symmetry_group: String,
+}
+
+pub fn hexagonal_tiling() -> Tiling pure =
+    Tiling { name = "hexagonal", kind = TilingKind.Regular, vertex_config = "6.6.6", symmetry_group = "p6m" }
+
+pub fn penrose_p3() -> Tiling pure =
+    Tiling { name = "penrose_p3_rhombic", kind = TilingKind.Penrose, vertex_config = "aperiodic_fivefold", symmetry_group = "D5" }
+
+// -----------------------------------------------------------------------------
+// 6. Functors
+// -----------------------------------------------------------------------------
+
+pub fn curve_to_polyline_functor() -> Functor pure =
+    Functor.id("math://functor/curve_to_polyline@v1")
+
+pub fn solid_to_mesh_functor() -> Functor pure =
+    Functor.id("math://functor/solid_to_mesh@v1")
+
+$metadata {
+    materializes_brief = "research/086B-mathematics-and-geometry-library.md",
+    source_standards   = ["OEIS", "WolframMathWorld", "ISO_80000_2"],
+    constant_count     = 12,
+    curve_count        = 4,
+    solid_count        = 5,
+    tiling_count       = 2,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.mathematics",
+    lineage_parents    = [],
+}

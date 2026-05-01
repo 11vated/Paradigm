@@ -1,0 +1,216 @@
+// seed-commons/inventories/lighting/_batch_01_foundational.gspl
+//
+// Foundational lighting inventory — batch 01 of the Brief 088A canonical armory.
+// Ten hand-authored lighting seeds that ground the commons' lighting category.
+// Every seed is grown via Std.Light and is chemistry-aware where relevant.
+//
+// License: GSPL Open Specification License
+// Lineage parent: seed_commons.libraries.chemistry@v1 (for chem-backed seeds)
+// rng_seed prefix: "seed_commons.inventories.lighting"
+
+module seed_commons.inventories.lighting.batch01
+
+import Std.Color
+import Std.Math
+import Std.Light
+import seed_commons.libraries.chemistry as Chem
+
+// -----------------------------------------------------------------------------
+// 01. Golden hour sun — Rayleigh-attenuated blackbody at 5778 K, low angle
+// -----------------------------------------------------------------------------
+pub fn golden_hour_sun() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.golden_hour_sun", version = "1.0.0",
+        source = Std.Light.Source.Directional {
+            azimuth_deg   = 265.0,
+            elevation_deg = 6.5,
+            blackbody_K   = 3200.0,                    // Rayleigh-shifted from 5778 K
+            lux           = 45_000.0,
+        },
+        palette = Std.Color.Palette.from_blackbody(3200.0),
+        falloff = Std.Light.Falloff.Parallel,
+        lineage = Lineage.from_parents(["chem://atmosphere/us-std-1976@sea-level"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 02. Noon overcast sky — diffuse D65 with hemispheric wrap
+// -----------------------------------------------------------------------------
+pub fn noon_overcast_sky() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.noon_overcast_sky", version = "1.0.0",
+        source = Std.Light.Source.Hemispheric {
+            up_color    = Std.Color.OKLCh { l = 0.92, c = 0.02, h = 240.0 },
+            down_color  = Std.Color.OKLCh { l = 0.68, c = 0.03, h = 80.0 },
+            lux         = 18_000.0,
+        },
+        palette = Std.Color.Palette.D65(),
+        falloff = Std.Light.Falloff.None,
+        lineage = Lineage.from_parents(["chem://atmosphere/us-std-1976@sea-level"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 03. Full moon — reflected solar spectrum, low intensity, cool cast
+// -----------------------------------------------------------------------------
+pub fn full_moon() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.full_moon", version = "1.0.0",
+        source = Std.Light.Source.Directional {
+            azimuth_deg   = 90.0,
+            elevation_deg = 52.0,
+            blackbody_K   = 4100.0,                    // lunar albedo tint
+            lux           = 0.27,                      // real full moon illuminance
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.02, h = 230.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.03, h = 220.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.02, h = 215.0 },
+            Std.Color.OKLCh { l = 0.94, c = 0.01, h = 210.0 },
+        ]),
+        falloff = Std.Light.Falloff.Parallel,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 04. Starlight only — scotopic vision regime, deep blue cast
+// -----------------------------------------------------------------------------
+pub fn starlight_only() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.starlight_only", version = "1.0.0",
+        source = Std.Light.Source.Ambient {
+            color = Std.Color.OKLCh { l = 0.06, c = 0.03, h = 260.0 },
+            lux   = 0.002,
+        },
+        palette = Std.Color.Palette.scotopic(),
+        falloff = Std.Light.Falloff.None,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 05. Tungsten incandescent bulb — 2700 K warm point light
+// -----------------------------------------------------------------------------
+pub fn tungsten_bulb_2700K() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.tungsten_bulb_2700K", version = "1.0.0",
+        source = Std.Light.Source.Point {
+            position    = Vector.from([0.0, 2.4, 0.0]),
+            blackbody_K = 2700.0,
+            lumens      = 800.0,
+        },
+        palette = Std.Color.Palette.from_blackbody(2700.0),
+        falloff = Std.Light.Falloff.InverseSquare,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 06. Sodium-vapor street lamp — chemistry-grounded line emission
+// -----------------------------------------------------------------------------
+pub fn sodium_street_lamp() -> Std.Light.Seed pure =
+    let sodium = Chem.sodium()
+    seed Std.Light.Seed {
+        name = "light.sodium_street_lamp", version = "1.0.0",
+        source = Std.Light.Source.LineEmission {
+            position  = Vector.from([0.0, 4.5, 0.0]),
+            lines_nm  = sodium.emission_lines_nm,
+            peak_cd   = 15_000.0,
+        },
+        palette = Std.Color.Palette.from_spectrum_lines(sodium.emission_lines_nm),
+        falloff = Std.Light.Falloff.InverseSquare,
+        lineage = Lineage.from_parents(["chem://element/sodium@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 07. Candle flame — combustion methane reaction -> flicker point
+// -----------------------------------------------------------------------------
+pub fn candle_flame() -> Std.Light.Seed pure =
+    let profile = Chem.functor_combustion_to_light(Chem.combust_methane())
+    seed Std.Light.Seed {
+        name = "light.candle_flame", version = "1.0.0",
+        source = Std.Light.Source.PointFlicker {
+            position    = Vector.from([0.0, 0.12, 0.0]),
+            blackbody_K = profile.blackbody_K * 0.72,
+            flicker_hz  = profile.flicker_hz,
+            amplitude   = profile.flicker_amplitude,
+        },
+        palette = profile.palette,
+        falloff = Std.Light.Falloff.InverseSquare,
+        lineage = Lineage.from_parents(["chem://reaction/combustion-methane@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 08. Torch flame — larger, turbulent version of candle flame
+// -----------------------------------------------------------------------------
+pub fn torch_flame() -> Std.Light.Seed pure =
+    let profile = Chem.functor_combustion_to_light(Chem.combust_methane())
+    seed Std.Light.Seed {
+        name = "light.torch_flame", version = "1.0.0",
+        source = Std.Light.Source.PointFlicker {
+            position    = Vector.from([0.0, 0.4, 0.0]),
+            blackbody_K = profile.blackbody_K * 0.78,
+            flicker_hz  = 9.0,
+            amplitude   = 0.22,
+        },
+        palette = profile.palette,
+        falloff = Std.Light.Falloff.InverseSquare,
+        lineage = Lineage.from_parents(["chem://reaction/combustion-methane@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 09. Neon sign (red) — noble gas line emission at 640 nm
+// -----------------------------------------------------------------------------
+pub fn neon_sign_red() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.neon_sign_red", version = "1.0.0",
+        source = Std.Light.Source.LineEmission {
+            position  = Vector.from([0.0, 3.0, 0.0]),
+            lines_nm  = Vector.from([640.2, 614.3, 594.5]),
+            peak_cd   = 2_200.0,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.60, c = 0.26, h = 25.0 },
+            Std.Color.OKLCh { l = 0.74, c = 0.22, h = 22.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 20.0 },
+        ]),
+        falloff = Std.Light.Falloff.InverseSquare,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 10. Bioluminescent lagoon — 480 nm dinoflagellate emission
+// -----------------------------------------------------------------------------
+pub fn bioluminescent_lagoon() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name = "light.bioluminescent_lagoon", version = "1.0.0",
+        source = Std.Light.Source.AreaEmission {
+            bounds       = Std.Light.Bounds.PlaneRect { size_m = Vector.from([20.0, 20.0]) },
+            emission_nm  = 480.0,
+            quantum_yield = 0.30,
+            luminance_cd_m2 = 0.08,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.10, h = 200.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 195.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.12, h = 190.0 },
+        ]),
+        falloff = Std.Light.Falloff.None,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "lighting",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.lighting",
+}

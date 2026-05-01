@@ -1,0 +1,297 @@
+// seed-commons/inventories/materials/_batch_02_extended.gspl
+//
+// Materials inventory — batch 02 of the Brief 088A canonical armory.
+// Fifteen extended material seeds. Combined with batch 01 this brings the
+// materials category to 25 of the 50 target seeds for the v1 commons drop.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.materials"
+
+module seed_commons.inventories.materials.batch02
+
+import Std.Color
+import Std.Math
+import Std.Material
+import seed_commons.libraries.chemistry as Chem
+
+// 11. Brushed aluminium (anisotropic surface)
+pub fn brushed_aluminium() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.brushed_aluminium", version = "1.0.0",
+        kind = Std.Material.Kind.Metal,
+        base_element = "Al",
+        density_kg_m3 = 2700.0, melting_K = 933.47,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 240.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 235.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.00, h = 230.0 },
+        ]),
+        gloss = 0.62, roughness = 0.32, anisotropy = 0.78,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 12. Pure 24k gold
+pub fn gold_24k() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.gold_24k", version = "1.0.0",
+        kind = Std.Material.Kind.Metal,
+        base_element = "Au",
+        density_kg_m3 = 19320.0, melting_K = 1337.33,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.16, h = 80.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.20, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.14, h = 90.0 },
+        ]),
+        gloss = 0.96, roughness = 0.06,
+        ior_real_550nm = 0.27, ior_imag_550nm = 2.78,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 13. Sterling silver
+pub fn sterling_silver() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.sterling_silver", version = "1.0.0",
+        kind = Std.Material.Kind.Metal,
+        base_element = "Ag",
+        composition = "Ag 92.5% + Cu 7.5%",
+        density_kg_m3 = 10360.0, melting_K = 1234.93,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.00, h = 240.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 230.0 },
+        ]),
+        gloss = 0.95, roughness = 0.05,
+        ior_real_550nm = 0.13, ior_imag_550nm = 3.19,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 14. Concrete (Portland cement, weathered)
+pub fn weathered_concrete() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.weathered_concrete", version = "1.0.0",
+        kind = Std.Material.Kind.Composite,
+        composition = "calcium-silicate-hydrate + aggregate",
+        density_kg_m3 = 2400.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.01, h = 80.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 75.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 70.0 },
+        ]),
+        gloss = 0.05, roughness = 0.92,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 15. Red brick (clay-fired)
+pub fn red_brick() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.red_brick", version = "1.0.0",
+        kind = Std.Material.Kind.Ceramic,
+        composition = "iron-oxide-rich clay, kiln-fired",
+        density_kg_m3 = 1900.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 30.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.16, h = 28.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 35.0 },
+        ]),
+        gloss = 0.06, roughness = 0.88,
+        lineage = Lineage.from_parents(["chem://element/iron@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 16. Polished obsidian (volcanic glass)
+pub fn polished_obsidian() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.polished_obsidian", version = "1.0.0",
+        kind = Std.Material.Kind.Glass,
+        chemical_formula = "SiO2 (amorphous, Fe-rich)",
+        refractive_index = 1.50,
+        density_kg_m3 = 2550.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.04, c = 0.01, h = 280.0 },
+            Std.Color.OKLCh { l = 0.18, c = 0.02, h = 280.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.04, h = 270.0 },
+        ]),
+        gloss = 0.97, roughness = 0.04,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 17. Tanned cowhide leather
+pub fn tanned_leather() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.tanned_leather", version = "1.0.0",
+        kind = Std.Material.Kind.Organic,
+        composition = "vegetable-tanned bovine collagen",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 50.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 55.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 60.0 },
+        ]),
+        gloss = 0.32, roughness = 0.58,
+        subsurface_depth_mm = 0.7,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 18. Polished jade (nephrite)
+pub fn polished_jade() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.polished_jade", version = "1.0.0",
+        kind = Std.Material.Kind.Stone,
+        chemical_formula = "Ca2(Mg,Fe)5Si8O22(OH)2",
+        density_kg_m3 = 2900.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.28, c = 0.08, h = 145.0 },
+            Std.Color.OKLCh { l = 0.55, c = 0.10, h = 150.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.08, h = 155.0 },
+        ]),
+        gloss = 0.88, roughness = 0.12,
+        subsurface_depth_mm = 4.5,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 19. Mother-of-pearl (nacre, iridescent)
+pub fn mother_of_pearl() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.mother_of_pearl", version = "1.0.0",
+        kind = Std.Material.Kind.Iridescent,
+        composition = "aragonite platelets in conchiolin matrix",
+        thin_film_thickness_nm = 470.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.78, c = 0.06, h = 200.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.08, h = 280.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.06, h = 60.0  },
+        ]),
+        gloss = 0.92, roughness = 0.10,
+        iridescence_strength = 0.85,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 20. Carbon fiber (woven 2x2 twill)
+pub fn carbon_fiber_2x2() -> Std.Material.Seed pure =
+    let carbon = Chem.carbon()
+    seed Std.Material.Seed {
+        name = "material.carbon_fiber_2x2", version = "1.0.0",
+        kind = Std.Material.Kind.Composite,
+        base_element = carbon.symbol,
+        weave = "2x2_twill", tow_count = 12000.0,
+        density_kg_m3 = 1600.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.06, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.18, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.01, h = 250.0 },
+        ]),
+        gloss = 0.72, roughness = 0.22, anisotropy = 0.85,
+        lineage = Lineage.from_parents(["chem://element/carbon@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 21. Ice (single crystal, blue tint)
+pub fn glacier_ice() -> Std.Material.Seed pure =
+    let water = Chem.water()
+    seed Std.Material.Seed {
+        name = "material.glacier_ice", version = "1.0.0",
+        kind = Std.Material.Kind.Crystal,
+        chemical_formula = water.formula,
+        density_kg_m3 = 917.0,
+        refractive_index = 1.31,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.60, c = 0.06, h = 220.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.05, h = 215.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.03, h = 210.0 },
+        ]),
+        gloss = 0.88, roughness = 0.16,
+        subsurface_depth_mm = 35.0,
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 22. Snow pack — multi-scattering granular medium
+pub fn fresh_snow_pack() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.fresh_snow_pack", version = "1.0.0",
+        kind = Std.Material.Kind.Granular,
+        density_kg_m3 = 100.0,
+        grain_diameter_mm = 0.4,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 220.0 },
+            Std.Color.OKLCh { l = 0.97, c = 0.01, h = 220.0 },
+            Std.Color.OKLCh { l = 0.99, c = 0.00, h = 220.0 },
+        ]),
+        gloss = 0.20, roughness = 0.85,
+        subsurface_depth_mm = 18.0,
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 23. Sand (quartz, beach)
+pub fn beach_sand() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.beach_sand", version = "1.0.0",
+        kind = Std.Material.Kind.Granular,
+        chemical_formula = "SiO2",
+        density_kg_m3 = 1600.0,
+        grain_diameter_mm = 0.35,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.06, h = 75.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.08, h = 78.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.05, h = 80.0 },
+        ]),
+        gloss = 0.18, roughness = 0.84,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 24. Fresh skin (Caucasian, dermal subsurface)
+pub fn fresh_skin_pale() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.fresh_skin_pale", version = "1.0.0",
+        kind = Std.Material.Kind.Skin,
+        composition = "epidermis + dermis + subcutaneous fat",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.08, h = 35.0 },
+            Std.Color.OKLCh { l = 0.90, c = 0.06, h = 40.0 },
+        ]),
+        gloss = 0.18, roughness = 0.55,
+        subsurface_depth_mm = 4.5,
+        subsurface_color = Std.Color.OKLCh { l = 0.42, c = 0.16, h = 25.0 },
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 25. Bioluminescent algae film (water + dinoflagellates)
+pub fn bioluminescent_algae_film() -> Std.Material.Seed pure =
+    let water = Chem.water()
+    seed Std.Material.Seed {
+        name = "material.bioluminescent_algae_film", version = "1.0.0",
+        kind = Std.Material.Kind.Biological,
+        substrate = water,
+        emitting_species = "Noctiluca scintillans",
+        emission_nm = 480.0,
+        quantum_yield = 0.30,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 200.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 195.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 190.0 },
+        ]),
+        gloss = 0.55, roughness = 0.45,
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "materials",
+    batch      = "02_extended",
+    count      = 15,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.materials",
+}

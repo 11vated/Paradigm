@@ -1,0 +1,481 @@
+// seed-commons/libraries/chemistry-invocations.gspl
+//
+// Twenty canonical example invocations of `seed_commons.libraries.chemistry`.
+// Each invocation is a complete, runnable GSPL seed that depends ONLY on
+// `Std.*` and `seed_commons.libraries.chemistry`. No other commons module is
+// required. Every seed is pure, deterministic, and signable.
+//
+// These twenty examples collectively prove out every functor exported from
+// chemistry.gspl. They are the first downstream consumers of the library and
+// serve as the regression surface for any future edit to chemistry.gspl.
+//
+// License: GSPL Open Specification License
+// rng_seed base: "seed_commons.examples.chemistry:<seed_name>:v1"
+// lineage parent: seed_commons.libraries.chemistry@v1
+
+module seed_commons.examples.chemistry
+
+import Std.Color
+import Std.Math
+import Std.Time
+import Std.Units
+import Std.Sprite
+import Std.Sculpt3D
+import Std.Particle
+import Std.Material
+import Std.Light
+import Std.Audio
+import Std.Plant
+import Std.Fluid
+import Std.Weather
+import Std.Scene
+import Std.Cross
+import seed_commons.libraries.chemistry as Chem
+
+// =============================================================================
+// 01. Candle flame (methane combustion -> light profile)
+// =============================================================================
+pub fn candle_flame() -> Std.Light.Seed pure =
+    let combustion = Chem.combust_methane()
+    let profile    = Chem.functor_combustion_to_light(combustion)
+    seed Std.Light.Seed {
+        name    = "chem.candle_flame",
+        version = "1.0.0",
+        source  = Std.Light.Source.PointFlicker {
+            position    = Vector.from([0.0, 0.0, 0.0]),
+            blackbody_K = profile.blackbody_K * 0.72,   // candles sit cooler than adiabatic
+            flicker_hz  = profile.flicker_hz,
+            amplitude   = profile.flicker_amplitude,
+        },
+        palette    = profile.palette,
+        falloff    = Std.Light.Falloff.InverseSquare,
+        lineage    = Lineage.from_parents(["chem://reaction/combustion-methane@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 02. Forge flame (methane + high O2, hotter adiabatic)
+// =============================================================================
+pub fn forge_flame() -> Std.Light.Seed pure =
+    let combustion = Chem.combust_methane()
+    let profile    = Chem.functor_combustion_to_light(combustion)
+    seed Std.Light.Seed {
+        name    = "chem.forge_flame",
+        version = "1.0.0",
+        source  = Std.Light.Source.PointFlicker {
+            position    = Vector.from([0.0, 0.3, 0.0]),
+            blackbody_K = profile.blackbody_K,             // full adiabatic
+            flicker_hz  = 22.0,                             // forced-air draft
+            amplitude   = 0.18,
+        },
+        palette    = Std.Color.Palette.from_blackbody(profile.blackbody_K),
+        falloff    = Std.Light.Falloff.InverseSquare,
+        lineage    = Lineage.from_parents(["chem://reaction/combustion-methane@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 03. Sodium street lamp (Na emission doublet)
+// =============================================================================
+pub fn sodium_street_lamp() -> Std.Light.Seed pure =
+    let sodium = Chem.sodium()
+    seed Std.Light.Seed {
+        name    = "chem.sodium_lamp",
+        version = "1.0.0",
+        source  = Std.Light.Source.LineEmission {
+            position  = Vector.from([0.0, 4.5, 0.0]),
+            lines_nm  = sodium.emission_lines_nm,
+            peak_cd   = 15_000.0,
+        },
+        palette    = Std.Color.Palette.from_spectrum_lines(sodium.emission_lines_nm),
+        falloff    = Std.Light.Falloff.InverseSquare,
+        lineage    = Lineage.from_parents(["chem://element/sodium@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 04. Ultramarine-blue painted wall (pigment -> material palette)
+// =============================================================================
+pub fn ultramarine_wall() -> Std.Material.Seed pure =
+    let pigment = Chem.ultramarine_blue()
+    let palette = Chem.functor_pigment_to_palette(pigment)
+    seed Std.Material.Seed {
+        name    = "chem.ultramarine_wall",
+        version = "1.0.0",
+        kind    = Std.Material.Kind.PaintedPlaster,
+        palette = palette,
+        gloss   = 0.08,
+        roughness = 0.78,
+        opacity = pigment.opacity,
+        lightfastness = pigment.lightfastness,
+        lineage = Lineage.from_parents(["chem://pigment/ultramarine-blue@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 05. Vermilion Chinese-lacquer plate
+// =============================================================================
+pub fn vermilion_lacquer() -> Std.Material.Seed pure =
+    let pigment = Chem.vermilion()
+    let palette = Chem.functor_pigment_to_palette(pigment)
+    seed Std.Material.Seed {
+        name    = "chem.vermilion_lacquer",
+        version = "1.0.0",
+        kind    = Std.Material.Kind.Lacquer,
+        palette = palette,
+        gloss   = 0.92,
+        roughness = 0.08,
+        opacity = pigment.opacity,
+        lightfastness = pigment.lightfastness,
+        lineage = Lineage.from_parents(["chem://pigment/vermilion@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 06. Yellow-ochre cave-painting wall (Upper Paleolithic)
+// =============================================================================
+pub fn ochre_cave_wall() -> Std.Material.Seed pure =
+    let pigment = Chem.yellow_ochre()
+    let palette = Chem.functor_pigment_to_palette(pigment)
+    seed Std.Material.Seed {
+        name    = "chem.ochre_cave_wall",
+        version = "1.0.0",
+        kind    = Std.Material.Kind.RoughRock,
+        palette = palette,
+        gloss   = 0.02,
+        roughness = 0.94,
+        opacity = pigment.opacity,
+        lightfastness = pigment.lightfastness,
+        lineage = Lineage.from_parents(["chem://pigment/yellow-ochre@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 07. Rusting iron sword (Arrhenius aging field over 120 years)
+// =============================================================================
+pub fn rusting_iron_sword() -> Std.Material.Seed pure =
+    let rust_rxn = Chem.rust_iron()
+    let aging    = Chem.functor_corrosion_to_aging_field(rust_rxn, 120.0)
+    seed Std.Material.Seed {
+        name    = "chem.rusting_iron_sword",
+        version = "1.0.0",
+        kind    = Std.Material.Kind.OxidizedMetal,
+        base_element = "Fe",
+        aging_field  = aging,
+        gloss        = 0.22,
+        roughness    = 0.66,
+        palette      = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 40.0 },
+            Std.Color.OKLCh { l = 0.45, c = 0.16, h = 35.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 55.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.05, h = 25.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/oxidation-iron-aqueous@v1",
+            "chem://element/iron@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 08. Champagne bubbles (CO2 solubility and nucleation)
+// =============================================================================
+pub fn champagne_bubbles() -> Std.Particle.Seed pure =
+    let co2   = Chem.carbon_dioxide()
+    let water = Chem.water()
+    seed Std.Particle.Seed {
+        name    = "chem.champagne_bubbles",
+        version = "1.0.0",
+        kind    = Std.Particle.Kind.GasInLiquid,
+        solute_molecule   = co2,
+        solvent_molecule  = water,
+        nucleation_rate   = 80.0,                      // sites / cm^2 / s
+        mean_radius_m     = 0.00035,                   // 0.35 mm
+        radius_variance   = 0.6,
+        rise_velocity_mps = 0.08,
+        count_per_second  = 250.0,
+        lineage = Lineage.from_parents([
+            "chem://molecule/carbon-dioxide@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 09. Campfire smoke (incomplete combustion + soot particle field)
+// =============================================================================
+pub fn campfire_smoke() -> Std.Particle.Seed pure =
+    let combustion = Chem.combust_methane()
+    seed Std.Particle.Seed {
+        name    = "chem.campfire_smoke",
+        version = "1.0.0",
+        kind    = Std.Particle.Kind.Aerosol,
+        source_reaction = combustion,
+        soot_fraction   = 0.08,                        // rich mixture
+        mean_radius_m   = 1.2e-7,                      // 120 nm
+        density_kg_m3   = 1_800.0,
+        emission_rate   = 0.45,                        // kg/s
+        color           = Std.Color.OKLCh { l = 0.28, c = 0.01, h = 60.0 },
+        buoyancy        = 1.1,
+        lineage = Lineage.from_parents(["chem://reaction/combustion-methane@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 10. Fresh-water stream (real water properties -> fluid seed)
+// =============================================================================
+pub fn freshwater_stream() -> Std.Fluid.Seed pure =
+    let water = Chem.water()
+    seed Std.Fluid.Seed {
+        name    = "chem.freshwater_stream",
+        version = "1.0.0",
+        molecule        = water,
+        density_kg_m3   = 997.0,
+        viscosity_pa_s  = 0.00089,
+        surface_tension_n_m = 0.0728,
+        refractive_index = 1.333,
+        absorption_nm    = water.uv_vis_nm,
+        appearance_color = water.appearance_color,
+        flow_profile     = Std.Fluid.Profile.LaminarShallow { depth_m = 0.12, velocity_mps = 0.35 },
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 11. Sea-level atmospheric haze (HITRAN absorption -> scene atmosphere)
+// =============================================================================
+pub fn sea_level_haze() -> Std.Scene.Atmosphere pure =
+    let atmo = Chem.sea_level_atmosphere()
+    seed Std.Scene.Atmosphere {
+        name    = "chem.sea_level_haze",
+        version = "1.0.0",
+        pressure_pa   = atmo.pressure_pa,
+        temperature_K = atmo.temperature_K,
+        composition   = atmo.composition,
+        scatter_profile = Std.Scene.Scatter.Rayleigh { beta_550nm = 1.15e-5 },
+        absorption_field = atmo.hitran_profile,
+        visibility_m     = 18_000.0,
+        lineage = Lineage.from_parents(["chem://atmosphere/us-std-1976@sea-level"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 12. Firefly bioluminescence (fluorophore-like spectrum) — light sprite
+// =============================================================================
+pub fn firefly_glow() -> Std.Light.Seed pure =
+    seed Std.Light.Seed {
+        name    = "chem.firefly_glow",
+        version = "1.0.0",
+        source  = Std.Light.Source.PointPulse {
+            position      = Vector.from([0.0, 1.0, 0.0]),
+            emission_nm   = 560.0,                      // luciferin/luciferase peak
+            quantum_yield = 0.41,
+            period_ms     = 750.0,
+            duty_cycle    = 0.15,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.88, c = 0.18, h = 125.0 },
+            Std.Color.OKLCh { l = 0.70, c = 0.14, h = 120.0 },
+            Std.Color.OKLCh { l = 0.40, c = 0.08, h = 115.0 },
+        ]),
+        falloff    = Std.Light.Falloff.InverseSquare,
+        lineage    = Lineage.from_parents(["chem://molecule/luciferin@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 13. Photosynthesising oak sapling (functor chem->plant temporal)
+// =============================================================================
+pub fn photosynthesising_oak_sapling() -> Std.Plant.Seed pure =
+    let photo  = Chem.photosynthesis()
+    let growth = Chem.functor_photosynthesis_to_growth(photo, par_mean = 900.0)
+    seed Std.Plant.Seed {
+        name    = "chem.oak_sapling",
+        version = "1.0.0",
+        species          = "Quercus robur",
+        height_m         = 0.6,
+        leaf_pigment     = Chem.yellow_ochre(),         // placeholder chlorophyll analog
+        growth_curve     = growth,
+        metabolic_source = photo,
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 14. Water IR resonance -> meditation bell (functor chem->audio)
+// =============================================================================
+pub fn water_resonance_bell() -> Std.Audio.Seed pure =
+    let water = Chem.water()
+    let res   = Chem.functor_molecule_to_resonance_audio(water)
+    seed Std.Audio.Seed {
+        name    = "chem.water_bell",
+        version = "1.0.0",
+        kind    = Std.Audio.Kind.Bell,
+        fundamental_hz = res.fundamental_hz,
+        overtones      = res.overtones,
+        decay_s        = res.decay_s,
+        timbre         = res.timbre,
+        lineage        = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance     = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 15. CO2 IR resonance -> deep drone pad
+// =============================================================================
+pub fn co2_drone_pad() -> Std.Audio.Seed pure =
+    let co2 = Chem.carbon_dioxide()
+    let res = Chem.functor_molecule_to_resonance_audio(co2)
+    seed Std.Audio.Seed {
+        name    = "chem.co2_drone",
+        version = "1.0.0",
+        kind    = Std.Audio.Kind.Drone,
+        fundamental_hz = res.fundamental_hz * 0.5,     // drop an octave for pad feel
+        overtones      = res.overtones,
+        decay_s        = 12.0,
+        timbre         = "pad",
+        lineage        = Lineage.from_parents(["chem://molecule/carbon-dioxide@v1"]),
+        provenance     = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 16. Blacksmith workshop scene (composes flame + rust + smoke + haze)
+// =============================================================================
+pub fn blacksmith_workshop_scene() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name    = "chem.blacksmith_workshop",
+        version = "1.0.0",
+        lights      = [forge_flame(), sodium_street_lamp()],
+        particles   = [campfire_smoke()],
+        fluids      = [],
+        materials   = [rusting_iron_sword(), ultramarine_wall()],
+        atmosphere  = sea_level_haze(),
+        lineage = Lineage.from_parents([
+            "examples.chemistry.forge_flame@v1",
+            "examples.chemistry.campfire_smoke@v1",
+            "examples.chemistry.rusting_iron_sword@v1",
+            "examples.chemistry.ultramarine_wall@v1",
+            "examples.chemistry.sea_level_haze@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 17. Aquatic cave scene (water + bioluminescence + quiet haze)
+// =============================================================================
+pub fn aquatic_cave_scene() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name    = "chem.aquatic_cave",
+        version = "1.0.0",
+        lights      = [firefly_glow()],
+        particles   = [champagne_bubbles()],
+        fluids      = [freshwater_stream()],
+        materials   = [ochre_cave_wall()],
+        atmosphere  = sea_level_haze(),
+        lineage = Lineage.from_parents([
+            "examples.chemistry.firefly_glow@v1",
+            "examples.chemistry.champagne_bubbles@v1",
+            "examples.chemistry.freshwater_stream@v1",
+            "examples.chemistry.ochre_cave_wall@v1",
+            "examples.chemistry.sea_level_haze@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 18. Sacred grove scene (photosynthesis + oak + water + meditation bell)
+// =============================================================================
+pub fn sacred_grove_scene() -> Std.Scene.Seed pure =
+    seed Std.Scene.Seed {
+        name    = "chem.sacred_grove",
+        version = "1.0.0",
+        lights      = [],
+        particles   = [],
+        fluids      = [freshwater_stream()],
+        plants      = [photosynthesising_oak_sapling()],
+        audio       = [water_resonance_bell()],
+        atmosphere  = sea_level_haze(),
+        lineage = Lineage.from_parents([
+            "examples.chemistry.photosynthesising_oak_sapling@v1",
+            "examples.chemistry.freshwater_stream@v1",
+            "examples.chemistry.water_resonance_bell@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// 19. Cross-domain functor seed: iron element -> pixel-art portrait palette
+// =============================================================================
+pub fn iron_element_portrait_palette() -> Std.Sprite.Palette pure =
+    let iron = Chem.iron()
+    Std.Cross.element_to_portrait_palette(
+        element = iron,
+        lineage_parent = "chem://element/iron@v1",
+        rng_seed = "chem.iron_portrait:v1",
+    )
+
+// =============================================================================
+// 20. Quantum-superposed pigment seed (quantum gene demonstration)
+// =============================================================================
+// Demonstrates that chemistry composes into the kernel's quantum gene: a single
+// seed whose color collapses to ultramarine, vermilion, or ochre at grow time,
+// seeded by the downstream consumer's rng. Useful for procedural art where
+// pigment choice is a stylistic roll.
+pub fn quantum_pigment_wash() -> Std.Material.Seed pure =
+    let quantum_state = Std.Quantum.superposition([
+        (Chem.ultramarine_blue(), 0.35),
+        (Chem.vermilion(),        0.35),
+        (Chem.yellow_ochre(),     0.30),
+    ])
+    let collapsed = Std.Quantum.collapse(quantum_state, observer = "grow_rng")
+    let palette   = Chem.functor_pigment_to_palette(collapsed)
+    seed Std.Material.Seed {
+        name    = "chem.quantum_pigment_wash",
+        version = "1.0.0",
+        kind    = Std.Material.Kind.Wash,
+        palette = palette,
+        gloss   = 0.18,
+        roughness = 0.55,
+        opacity = collapsed.opacity,
+        lineage = Lineage.from_parents([
+            "chem://pigment/ultramarine-blue@v1",
+            "chem://pigment/vermilion@v1",
+            "chem://pigment/yellow-ochre@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// =============================================================================
+// Module metadata
+// =============================================================================
+
+$metadata {
+    consumes = ["seed_commons.libraries.chemistry@v1"],
+    provides = [
+        "examples.chemistry.candle_flame",
+        "examples.chemistry.forge_flame",
+        "examples.chemistry.sodium_street_lamp",
+        "examples.chemistry.ultramarine_wall",
+        "examples.chemistry.vermilion_lacquer",
+        "examples.chemistry.ochre_cave_wall",
+        "examples.chemistry.rusting_iron_sword",
+        "examples.chemistry.champagne_bubbles",
+        "examples.chemistry.campfire_smoke",
+        "examples.chemistry.freshwater_stream",
+        "examples.chemistry.sea_level_haze",
+        "examples.chemistry.firefly_glow",
+        "examples.chemistry.photosynthesising_oak_sapling",
+        "examples.chemistry.water_resonance_bell",
+        "examples.chemistry.co2_drone_pad",
+        "examples.chemistry.blacksmith_workshop_scene",
+        "examples.chemistry.aquatic_cave_scene",
+        "examples.chemistry.sacred_grove_scene",
+        "examples.chemistry.iron_element_portrait_palette",
+        "examples.chemistry.quantum_pigment_wash",
+    ],
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.examples.chemistry",
+}

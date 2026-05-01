@@ -1,0 +1,252 @@
+// seed-commons/inventories/materials/_batch_01_foundational.gspl
+//
+// Foundational materials inventory — batch 01 of the Brief 088A canonical armory.
+// Ten hand-authored material seeds that ground the commons' materials category.
+// Every seed is grown via Std.Material and is chemistry-aware where relevant.
+//
+// License: GSPL Open Specification License
+// Lineage parent: seed_commons.libraries.chemistry@v1 (for chem-backed seeds)
+// rng_seed prefix: "seed_commons.inventories.materials"
+
+module seed_commons.inventories.materials.batch01
+
+import Std.Color
+import Std.Math
+import Std.Material
+import seed_commons.libraries.chemistry as Chem
+
+// -----------------------------------------------------------------------------
+// 01. Polished oak (Quercus robur) — quarter-sawn, wax finish
+// -----------------------------------------------------------------------------
+pub fn polished_oak() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.polished_oak", version = "1.0.0",
+        kind = Std.Material.Kind.Wood,
+        species        = "Quercus robur",
+        grain_pattern  = Std.Material.Grain.QuarterSawn { ring_density = 6.5 },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.28, c = 0.06, h = 60.0 },
+            Std.Color.OKLCh { l = 0.55, c = 0.10, h = 62.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 65.0 },
+            Std.Color.OKLCh { l = 0.86, c = 0.04, h = 70.0 },
+        ]),
+        gloss = 0.45,
+        roughness = 0.32,
+        density_kg_m3 = 740.0,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 02. Forged-steel blade (iron element grounded)
+// -----------------------------------------------------------------------------
+pub fn forged_steel_blade() -> Std.Material.Seed pure =
+    let iron = Chem.iron()
+    seed Std.Material.Seed {
+        name = "material.forged_steel_blade", version = "1.0.0",
+        kind = Std.Material.Kind.Metal,
+        base_element = iron.symbol,
+        density_kg_m3 = iron.density_kg_m3,
+        melting_K     = iron.melting_K,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.01, h = 240.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.02, h = 245.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.00, h = 255.0 },
+        ]),
+        gloss = 0.78,
+        roughness = 0.18,
+        anisotropy = 0.42,
+        lineage = Lineage.from_parents(["chem://element/iron@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 03. Aged copper patina (verdigris) — oxidized copper carbonate hydroxide
+// -----------------------------------------------------------------------------
+pub fn aged_copper_patina() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.aged_copper_patina", version = "1.0.0",
+        kind = Std.Material.Kind.OxidizedMetal,
+        base_element = "Cu",
+        patina_formula = "Cu2(CO3)(OH)2",      // malachite
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 150.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 155.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 160.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.05, h = 165.0 },
+        ]),
+        gloss = 0.18,
+        roughness = 0.72,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 04. Rough granite (igneous, feldspar + quartz + mica)
+// -----------------------------------------------------------------------------
+pub fn rough_granite() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.rough_granite", version = "1.0.0",
+        kind = Std.Material.Kind.Rock,
+        composition = [
+            { mineral = "orthoclase",  fraction = 0.40 },
+            { mineral = "quartz",      fraction = 0.35 },
+            { mineral = "plagioclase", fraction = 0.15 },
+            { mineral = "biotite",     fraction = 0.08 },
+            { mineral = "hornblende",  fraction = 0.02 },
+        ],
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.01, h = 60.0 },
+            Std.Color.OKLCh { l = 0.55, c = 0.02, h = 55.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 50.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 45.0 },
+        ]),
+        gloss = 0.08,
+        roughness = 0.92,
+        density_kg_m3 = 2750.0,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 05. Carrara marble — calcium carbonate, translucent micro-structure
+// -----------------------------------------------------------------------------
+pub fn carrara_marble() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.carrara_marble", version = "1.0.0",
+        kind = Std.Material.Kind.Stone,
+        chemical_formula = "CaCO3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 80.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 70.0 },
+            Std.Color.OKLCh { l = 0.94, c = 0.01, h = 60.0 },
+            Std.Color.OKLCh { l = 0.70, c = 0.02, h = 250.0 },  // veining
+        ]),
+        gloss = 0.62,
+        roughness = 0.28,
+        subsurface_depth_mm = 1.8,
+        density_kg_m3 = 2711.0,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 06. Handwoven linen — flax fiber, plain weave
+// -----------------------------------------------------------------------------
+pub fn handwoven_linen() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.handwoven_linen", version = "1.0.0",
+        kind = Std.Material.Kind.Fabric,
+        fiber = "flax",
+        weave = "plain",
+        thread_count_per_cm = 24.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.68, c = 0.04, h = 85.0 },
+            Std.Color.OKLCh { l = 0.80, c = 0.03, h = 82.0 },
+            Std.Color.OKLCh { l = 0.90, c = 0.02, h = 80.0 },
+        ]),
+        gloss = 0.12,
+        roughness = 0.78,
+        sheen_anisotropy = 0.35,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 07. Wet clay — earthenware, slip-glazed
+// -----------------------------------------------------------------------------
+pub fn wet_clay() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.wet_clay", version = "1.0.0",
+        kind = Std.Material.Kind.Ceramic,
+        composition = "kaolinite + quartz + feldspar",
+        water_fraction = 0.22,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 55.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.10, h = 50.0 },
+            Std.Color.OKLCh { l = 0.68, c = 0.08, h = 45.0 },
+        ]),
+        gloss = 0.55,          // wet sheen
+        roughness = 0.48,
+        subsurface_depth_mm = 0.4,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 08. Crystal glass (SiO2 + PbO lead crystal)
+// -----------------------------------------------------------------------------
+pub fn crystal_glass() -> Std.Material.Seed pure =
+    seed Std.Material.Seed {
+        name = "material.crystal_glass", version = "1.0.0",
+        kind = Std.Material.Kind.Glass,
+        chemical_formula = "SiO2 + 24% PbO",
+        refractive_index = 1.545,
+        abbe_number      = 58.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.96, c = 0.01, h = 220.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 215.0 },
+            Std.Color.OKLCh { l = 0.75, c = 0.03, h = 210.0 },
+        ]),
+        gloss = 0.98,
+        roughness = 0.02,
+        transmission = 0.92,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 09. Rusting iron (120-year aged) — chem functor driven
+// -----------------------------------------------------------------------------
+pub fn rusting_iron_120y() -> Std.Material.Seed pure =
+    let aging = Chem.functor_corrosion_to_aging_field(Chem.rust_iron(), 120.0)
+    seed Std.Material.Seed {
+        name = "material.rusting_iron_120y", version = "1.0.0",
+        kind = Std.Material.Kind.OxidizedMetal,
+        base_element = "Fe",
+        aging_field  = aging,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 40.0 },
+            Std.Color.OKLCh { l = 0.45, c = 0.16, h = 35.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.14, h = 55.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.05, h = 25.0 },
+        ]),
+        gloss = 0.18,
+        roughness = 0.72,
+        lineage = Lineage.from_parents([
+            "chem://reaction/oxidation-iron-aqueous@v1",
+            "chem://element/iron@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// -----------------------------------------------------------------------------
+// 10. Ultramarine oil paint (pigment + linseed oil vehicle)
+// -----------------------------------------------------------------------------
+pub fn ultramarine_oil_paint() -> Std.Material.Seed pure =
+    let pigment = Chem.ultramarine_blue()
+    let palette = Chem.functor_pigment_to_palette(pigment)
+    seed Std.Material.Seed {
+        name = "material.ultramarine_oil_paint", version = "1.0.0",
+        kind = Std.Material.Kind.OilPaint,
+        pigment_ref = "chem://pigment/ultramarine-blue@v1",
+        vehicle     = "linseed_oil",
+        palette     = palette,
+        gloss       = 0.52,
+        roughness   = 0.38,
+        opacity     = pigment.opacity,
+        lightfastness = pigment.lightfastness,
+        lineage = Lineage.from_parents(["chem://pigment/ultramarine-blue@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "materials",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.materials",
+}

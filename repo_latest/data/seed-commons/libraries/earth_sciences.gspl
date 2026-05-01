@@ -1,0 +1,156 @@
+// seed-commons/libraries/earth_sciences.gspl
+//
+// Earth Sciences library — runnable GSPL materialization of Brief 086
+// (research/086-earth-sciences-library.md).
+//
+// Geology, hydrology, meteorology, climate zones, biomes, atmospheric layers.
+// Sources: USGS, NOAA, WMO, IUGS, US Standard Atmosphere 1976, Köppen-Geiger,
+// WWF terrestrial ecoregions.
+//
+// PURE. rng_seed = "seed_commons.libraries.earth_sciences:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.chemistry@v1, seed_commons.libraries.physics@v1]
+
+module seed_commons.libraries.earth_sciences
+
+import Std.Math
+import Std.Units
+import seed_commons.libraries.physics as Phys
+
+// -----------------------------------------------------------------------------
+// 1. Planetary constants (Earth)
+// -----------------------------------------------------------------------------
+
+pub const EARTH_RADIUS_EQUATORIAL_M : Scalar = 6_378_137.0
+pub const EARTH_RADIUS_POLAR_M      : Scalar = 6_356_752.3142
+pub const EARTH_MASS_KG             : Scalar = 5.9722e24
+pub const EARTH_SURFACE_GRAVITY     : Scalar = 9.80665
+pub const EARTH_ROTATION_PERIOD_S   : Scalar = 86164.0905
+pub const EARTH_ORBITAL_PERIOD_S    : Scalar = 31_558_149.504
+pub const EARTH_AXIAL_TILT_RAD      : Scalar = 0.409_092_804
+pub const ATMOSPHERE_MASS_KG        : Scalar = 5.148e18
+pub const OCEAN_MASS_KG             : Scalar = 1.4e21
+pub const MEAN_SEA_LEVEL_PRESSURE_PA: Scalar = 101_325.0
+pub const MEAN_SEA_LEVEL_TEMP_K     : Scalar = 288.15
+
+// -----------------------------------------------------------------------------
+// 2. Atmospheric layer struct (US Standard Atmosphere 1976)
+// -----------------------------------------------------------------------------
+
+pub struct AtmosphereLayer {
+    name: String,
+    base_altitude_m: Scalar,
+    top_altitude_m: Scalar,
+    base_temp_k: Scalar,
+    lapse_rate_k_m: Scalar,
+    base_pressure_pa: Scalar,
+}
+
+pub fn troposphere() -> AtmosphereLayer pure =
+    AtmosphereLayer { name = "troposphere", base_altitude_m = 0.0, top_altitude_m = 11000.0, base_temp_k = 288.15, lapse_rate_k_m = -0.0065, base_pressure_pa = 101325.0 }
+
+pub fn tropopause() -> AtmosphereLayer pure =
+    AtmosphereLayer { name = "tropopause", base_altitude_m = 11000.0, top_altitude_m = 20000.0, base_temp_k = 216.65, lapse_rate_k_m = 0.0, base_pressure_pa = 22632.1 }
+
+pub fn stratosphere_lower() -> AtmosphereLayer pure =
+    AtmosphereLayer { name = "stratosphere_lower", base_altitude_m = 20000.0, top_altitude_m = 32000.0, base_temp_k = 216.65, lapse_rate_k_m = 0.001, base_pressure_pa = 5474.89 }
+
+pub fn stratosphere_upper() -> AtmosphereLayer pure =
+    AtmosphereLayer { name = "stratosphere_upper", base_altitude_m = 32000.0, top_altitude_m = 47000.0, base_temp_k = 228.65, lapse_rate_k_m = 0.0028, base_pressure_pa = 868.02 }
+
+// -----------------------------------------------------------------------------
+// 3. Rock taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum RockClass { Igneous, Sedimentary, Metamorphic }
+
+pub struct Rock {
+    name: String,
+    class: RockClass,
+    formation_mechanism: String,
+    typical_density_kg_m3: Scalar,
+    mohs_hardness: Scalar,
+    mineral_composition: [String],
+}
+
+pub fn granite_rock() -> Rock pure =
+    Rock { name = "granite", class = RockClass.Igneous, formation_mechanism = "intrusive_plutonic", typical_density_kg_m3 = 2700.0, mohs_hardness = 6.5, mineral_composition = ["quartz", "feldspar", "mica"] }
+
+pub fn basalt_rock() -> Rock pure =
+    Rock { name = "basalt", class = RockClass.Igneous, formation_mechanism = "extrusive_volcanic", typical_density_kg_m3 = 3000.0, mohs_hardness = 6.0, mineral_composition = ["plagioclase", "pyroxene", "olivine"] }
+
+pub fn limestone_rock() -> Rock pure =
+    Rock { name = "limestone", class = RockClass.Sedimentary, formation_mechanism = "biogenic_marine", typical_density_kg_m3 = 2500.0, mohs_hardness = 3.0, mineral_composition = ["calcite", "aragonite"] }
+
+pub fn marble_rock() -> Rock pure =
+    Rock { name = "marble", class = RockClass.Metamorphic, formation_mechanism = "contact_metamorphism_limestone", typical_density_kg_m3 = 2700.0, mohs_hardness = 3.5, mineral_composition = ["recrystallized_calcite"] }
+
+// -----------------------------------------------------------------------------
+// 4. Köppen-Geiger biomes
+// -----------------------------------------------------------------------------
+
+pub enum KoppenCode { Af, Am, Aw, BWh, BWk, BSh, BSk, Csa, Csb, Cfa, Cfb, Cfc, Dfa, Dfb, Dfc, Dfd, ET, EF }
+
+pub struct Biome {
+    name: String,
+    koppen: KoppenCode,
+    mean_annual_temp_c: Scalar,
+    mean_annual_precip_mm: Scalar,
+    dominant_flora: [String],
+}
+
+pub fn tropical_rainforest() -> Biome pure =
+    Biome { name = "tropical_rainforest", koppen = KoppenCode.Af, mean_annual_temp_c = 26.0, mean_annual_precip_mm = 2500.0, dominant_flora = ["broadleaf_evergreen_trees", "epiphytes", "lianas"] }
+
+pub fn temperate_deciduous_forest() -> Biome pure =
+    Biome { name = "temperate_deciduous_forest", koppen = KoppenCode.Cfb, mean_annual_temp_c = 10.0, mean_annual_precip_mm = 900.0, dominant_flora = ["oak", "maple", "beech"] }
+
+pub fn boreal_taiga() -> Biome pure =
+    Biome { name = "boreal_taiga", koppen = KoppenCode.Dfc, mean_annual_temp_c = -2.0, mean_annual_precip_mm = 500.0, dominant_flora = ["spruce", "fir", "pine", "larch"] }
+
+pub fn hot_desert() -> Biome pure =
+    Biome { name = "hot_desert", koppen = KoppenCode.BWh, mean_annual_temp_c = 28.0, mean_annual_precip_mm = 80.0, dominant_flora = ["cactus", "acacia", "creosote"] }
+
+pub fn polar_icecap() -> Biome pure =
+    Biome { name = "polar_icecap", koppen = KoppenCode.EF, mean_annual_temp_c = -30.0, mean_annual_precip_mm = 100.0, dominant_flora = [] }
+
+// -----------------------------------------------------------------------------
+// 5. Laws
+// -----------------------------------------------------------------------------
+
+pub fn barometric_pressure(altitude_m: Scalar) -> Scalar pure =
+    // Simplified exponential for troposphere
+    MEAN_SEA_LEVEL_PRESSURE_PA * Std.Math.exp(-altitude_m / 8434.5)
+
+pub fn isa_temperature(altitude_m: Scalar) -> Scalar pure =
+    if altitude_m <= 11000.0
+        then MEAN_SEA_LEVEL_TEMP_K + (-0.0065) * altitude_m
+        else 216.65
+
+// -----------------------------------------------------------------------------
+// 6. Functors
+// -----------------------------------------------------------------------------
+
+pub fn biome_to_vegetation_distribution_functor() -> Functor pure =
+    Functor.id("earth://functor/biome_to_vegetation_distribution@v1")
+
+pub fn rock_to_material_functor() -> Functor pure =
+    Functor.id("earth://functor/rock_to_material@v1")
+
+pub fn altitude_to_atmosphere_state_functor() -> Functor pure =
+    Functor.id("earth://functor/altitude_to_atmosphere_state@v1")
+
+$metadata {
+    materializes_brief = "research/086-earth-sciences-library.md",
+    source_standards   = ["USGS", "NOAA", "WMO", "IUGS", "US_Standard_Atmosphere_1976", "Koppen_Geiger", "WWF_Ecoregions"],
+    planetary_constants= 11,
+    atmosphere_layers  = 4,
+    rock_count         = 4,
+    biome_count        = 5,
+    law_count          = 2,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.earth_sciences",
+    lineage_parents    = ["seed_commons.libraries.chemistry@v1", "seed_commons.libraries.physics@v1"],
+}

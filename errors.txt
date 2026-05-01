@@ -1,0 +1,34 @@
+src/intelligence/opencode-agent.ts(198,5): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+src/intelligence/opencode-agent.ts(199,3): error TS1128: Declaration or statement expected.
+src/intelligence/opencode-agent.ts(201,3): error TS1128: Declaration or statement expected.
+src/intelligence/opencode-agent.ts(201,32): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(201,41): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(201,69): error TS1109: Expression expected.
+src/intelligence/opencode-agent.ts(201,84): error TS1109: Expression expected.
+src/intelligence/opencode-agent.ts(235,17): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(235,33): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(242,3): error TS1434: Unexpected keyword or identifier.
+src/intelligence/opencode-agent.ts(242,22): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(242,36): error TS1011: An element access expression should take an argument.
+src/intelligence/opencode-agent.ts(243,9): error TS1003: Identifier expected.
+src/intelligence/opencode-agent.ts(243,14): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(243,38): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(243,47): error TS1005: ':' expected.
+src/intelligence/opencode-agent.ts(243,49): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(245,9): error TS1005: ':' expected.
+src/intelligence/opencode-agent.ts(246,13): error TS1005: ':' expected.
+src/intelligence/opencode-agent.ts(248,9): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(249,23): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(249,37): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(249,39): error TS1136: Property assignment expected.
+src/intelligence/opencode-agent.ts(249,44): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(250,7): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(253,3): error TS1128: Declaration or statement expected.
+src/intelligence/opencode-agent.ts(258,3): error TS1434: Unexpected keyword or identifier.
+src/intelligence/opencode-agent.ts(258,23): error TS1005: ';' expected.
+src/intelligence/opencode-agent.ts(258,37): error TS1109: Expression expected.
+src/intelligence/opencode-agent.ts(259,13): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(259,36): error TS1005: ',' expected.
+src/intelligence/opencode-agent.ts(259,38): error TS1136: Property assignment expected.
+src/intelligence/opencode-agent.ts(271,3): error TS1128: Declaration or statement expected.
+src/intelligence/opencode-agent.ts(272,1): error TS1128: Declaration or statement expected.
