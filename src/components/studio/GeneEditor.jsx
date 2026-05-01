@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { updateGene } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { TYPE_COLORS } from '@/lib/constants';
@@ -119,6 +119,7 @@ function GenericWidget({ value, onChange }) {
 
 export default function GeneEditor({ seed, onSeedUpdated }) {
   const [updating, setUpdating] = useState(null);
+  const updateGeneInStore = useSeedStore((s) => s.updateGene);
 
   if (!seed) {
     return (
@@ -136,8 +137,8 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
   const handleUpdate = async (name, type, value) => {
     setUpdating(name);
     try {
-      const updated = await updateGene(seed.id, name, type, value);
-      onSeedUpdated(updated);
+      const updated = await updateGeneInStore(name, type, value);
+      if (onSeedUpdated) onSeedUpdated(updated);
     } catch (e) { console.error(e); }
     setUpdating(null);
   };

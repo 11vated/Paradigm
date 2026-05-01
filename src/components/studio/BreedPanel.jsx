@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { breedSeeds } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Heart } from 'lucide-react';
 
 export default function BreedPanel({ gallery, onBred }) {
   const [parentA, setParentA] = useState('');
   const [parentB, setParentB] = useState('');
   const [loading, setLoading] = useState(false);
+  const breedSeedsInStore = useSeedStore((s) => s.breedSeeds);
 
   const handleBreed = async () => {
     if (!parentA || !parentB || parentA === parentB || loading) return;
     setLoading(true);
     try {
-      const child = await breedSeeds(parentA, parentB);
-      onBred(child);
+      const child = await breedSeedsInStore(parentA, parentB);
+      if (onBred) onBred(child);
     } catch (e) { console.error(e); }
     setLoading(false);
   };

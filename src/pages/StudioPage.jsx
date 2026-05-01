@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSeedStore } from "@/stores/seedStore";
-import { listSeeds, growSeed } from "@/services/api";
 import {
   Dna,
   ArrowLeft,
@@ -35,57 +34,38 @@ export default function StudioPage() {
     gallery,
     artifact,
     loading,
-    setGallery,
+    error,
+    fetchSeeds,
     setCurrentSeed,
     setArtifact,
-    setLoading,
+    growCurrentSeed,
+    growSeedById,
     addToGallery,
+    generateNewSeed,
+    clearError,
   } = useSeedStore();
   const [activeView, setActiveView] = useState("forge"); // forge, lineage, map
   const [inspectorTab, setInspectorTab] = useState("agent"); // agent, genes, gspl, forge
 
-  const loadGallery = useCallback(async () => {
-    try {
-      const seeds = await listSeeds({ limit: 50 });
-      setGallery(seeds || []);
-    } catch (e) {
-      console.error(e);
-    }
-  }, [setGallery]);
-
   useEffect(() => {
-    loadGallery();
-  }, [loadGallery]);
+    fetchSeeds({ limit: 50 });
+  }, [fetchSeeds]);
 
   const handleSelectSeed = useCallback(
     async (seed) => {
       setCurrentSeed(seed);
-      setLoading(true);
-      try {
-        const art = await growSeed(seed.id);
-        setArtifact(art);
-      } catch (e) {
-        console.error(e);
-      }
-      setLoading(false);
+      await growCurrentSeed();
     },
-    [setCurrentSeed, setArtifact, setLoading],
+    [setCurrentSeed, growCurrentSeed],
   );
 
   const handleSeedCreated = useCallback(
     async (seed) => {
       setCurrentSeed(seed);
       addToGallery(seed);
-      setLoading(true);
-      try {
-        const art = await growSeed(seed.id);
-        setArtifact(art);
-      } catch (e) {
-        console.error(e);
-      }
-      setLoading(false);
+      await growCurrentSeed();
     },
-    [setCurrentSeed, addToGallery, setArtifact, setLoading],
+    [setCurrentSeed, addToGallery, growCurrentSeed],
   );
 
   return (

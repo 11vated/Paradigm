@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { evolveSeed } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Loader2, Zap } from 'lucide-react';
@@ -9,13 +9,14 @@ export default function EvolvePanel({ seed, onEvolved }) {
   const [popSize, setPopSize] = useState(12);
   const [generations, setGenerations] = useState(5);
   const [loading, setLoading] = useState(false);
+  const evolveCurrentSeed = useSeedStore((s) => s.evolveCurrentSeed);
 
   const handleEvolve = async () => {
     if (!seed || loading) return;
     setLoading(true);
     try {
-      const result = await evolveSeed(seed.id, { algorithm, population_size: popSize, generations });
-      onEvolved(result.population || []);
+      const evolved = await evolveCurrentSeed({ algorithm, population_size: popSize, generations });
+      if (onEvolved && evolved.population) onEvolved(evolved.population);
     } catch (e) { console.error(e); }
     setLoading(false);
   };
