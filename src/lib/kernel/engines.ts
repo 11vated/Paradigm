@@ -39,6 +39,7 @@ import { generateFurniture3D } from './generators/furniture-3d';
 import { generateFashion } from './generators/fashion';
 import { generateFashion3D } from './generators/fashion-3d';
 import { generateRobotics } from './generators/robotics';
+import { generateRobotics3D } from './generators/robotics-3d';
 import { generateCircuit } from './generators/circuit';
 import { generateFood } from './generators/food';
 import { generateChoreography } from './generators/choreography';
@@ -742,17 +743,24 @@ async function growFashion(seed: Seed): Promise<Artifact> {
 
 async function growRobotics(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/robotics';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
+  let armCount = geneVal(seed, 'armCount', 2);
+  if (typeof armCount === 'number' && armCount <= 1) armCount = Math.max(2, Math.floor(armCount * 10));
+
   try {
-    const result = await generateRobotics(seed, outputPath);
+    const result = await generateRobotics3D(seed, outputPath);
     return {
       type: 'robotics', name: seed.$name ?? 'Robot', domain: 'robotics',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      robot: { type: geneVal(seed, 'type', 'manipulator'), dof: geneVal(seed, 'dof', 6), payload: geneVal(seed, 'payload', 10) },
-      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
-      render_hints: { mode: 'robot_schematic', hasFile: true },
+      robot: {
+        robotType: geneVal(seed, 'robotType', 'humanoid'),
+        mobility: geneVal(seed, 'mobility', 'wheels'),
+        armCount, hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, parts: result.parts },
+      render_hints: { mode: 'robot_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
