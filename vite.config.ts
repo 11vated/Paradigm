@@ -26,10 +26,22 @@ export default defineConfig(({mode}) => {
       rollupOptions: {
         output: {
           // Chunking strategy for large app
-          manualChunks: {
-            vendor: ['react', 'react-dom', 'three'],
-            ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
-            kernel: ['./src/lib/kernel/index.ts'],
+          manualChunks(id) {
+            if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) {
+              return 'react';
+            }
+            if (id.includes('node_modules/three-stdlib')) {
+              return 'three-stdlib';
+            }
+            if (id.includes('node_modules/three')) {
+              return 'three';
+            }
+            if (id.includes('node_modules/@radix-ui')) {
+              return 'ui';
+            }
+            if (id.includes('src/lib/kernel')) {
+              return 'kernel';
+            }
           },
         },
       },
