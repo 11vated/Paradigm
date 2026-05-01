@@ -359,17 +359,17 @@ async function growNarrative(seed: Seed): Promise<Artifact> {
 
 async function growUi(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/ui';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateUI(seed, outputPath);
+    const result = await generateUIInteractive(seed, outputPath);
     return {
       type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       interface: { layout: geneVal(seed, 'layout', 'dashboard'), theme: geneVal(seed, 'theme', 'dark'), components: geneVal(seed, 'components', ['header', 'sidebar', 'main']) },
-      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
-      render_hints: { mode: 'ui_preview', interactive: true, hasFile: true },
+      artifact: { filePath: result.filePath, format: 'HTML', componentCount: result.componentCount, interactive: true },
+      render_hints: { mode: 'ui_preview', interactive: true, hasFile: true, html: true },
     };
   } catch (err) {
     return {
