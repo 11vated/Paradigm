@@ -11,6 +11,7 @@ import { generateAudio } from './generators/audio';
 import { generateGeometry3D } from './generators/geometry3d';
 import { generateCharacter } from './generators/character';
 import { generateSprite } from './generators/sprite';
+import { generateSpriteAnimated } from './generators/sprite-animated';
 import { generateMusic } from './generators/music';
 import { generateNarrative } from './generators/narrative';
 import { generatePhysics } from './generators/physics';
@@ -106,7 +107,7 @@ async function growCharacter(seed: Seed): Promise<Artifact> {
 
 async function growSprite(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/sprite';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_animated.png`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let resolution = geneVal(seed, 'resolution', 32);
@@ -117,7 +118,7 @@ async function growSprite(seed: Seed): Promise<Artifact> {
   const symmetry = geneVal(seed, 'symmetry', 'bilateral');
 
   try {
-    const result = await generateSprite(seed, outputPath);
+    const result = await generateSpriteAnimated(seed, outputPath);
     return {
       type: 'sprite', name: seed.$name ?? 'Sprite', domain: 'sprite',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
@@ -129,7 +130,7 @@ async function growSprite(seed: Seed): Promise<Artifact> {
         symmetry,
       },
       artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height, frames: result.frames },
-      render_hints: { mode: '2d_sprite', pixel_art: true, hasFile: true },
+      render_hints: { mode: '2d_sprite', pixel_art: true, animated: true, hasFile: true },
     };
   } catch (err) {
     return {
