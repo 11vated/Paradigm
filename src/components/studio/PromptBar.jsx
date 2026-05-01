@@ -1,18 +1,19 @@
 import { useState } from 'react';
-import { generateSeed } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Sparkles, Loader2 } from 'lucide-react';
 
 export default function PromptBar({ onSeedCreated }) {
   const [prompt, setPrompt] = useState('');
   const [loading, setLoading] = useState(false);
+  const generateNewSeed = useSeedStore((s) => s.generateNewSeed);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!prompt.trim() || loading) return;
     setLoading(true);
     try {
-      const seed = await generateSeed(prompt.trim());
-      onSeedCreated(seed);
+      const seed = await generateNewSeed(prompt.trim());
+      if (onSeedCreated) onSeedCreated(seed);
       setPrompt('');
     } catch (err) {
       console.error('Generation failed:', err);

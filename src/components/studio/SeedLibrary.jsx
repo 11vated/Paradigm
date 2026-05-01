@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Library, Download, Loader2, Sparkles } from 'lucide-react';
-import { api, getSimilarSeeds } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
+import { getSimilarSeeds } from '@/services/api';
 import { DOMAIN_COLORS } from '@/lib/constants';
 
 export default function SeedLibrary({ onImport, activeSeed }) {
@@ -10,16 +11,18 @@ export default function SeedLibrary({ onImport, activeSeed }) {
   const [similarSeeds, setSimilarSeeds] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
+  const importFromLibraryInStore = useSeedStore((s) => s.importFromLibrary);
 
   useEffect(() => {
-    api.get('/library').then(r => setLibrary(r.data)).catch(() => {});
+    const { getLibrary } = require('@/services/api');
+    getLibrary().then(r => setLibrary(r)).catch(() => {});
   }, []);
 
   const handleImport = async (seed) => {
     setImporting(seed.$name);
     try {
-      const res = await api.post('/library/import', { seed_hash: seed.$hash });
-      if (res.data) onImport(res.data);
+      const res = await importFromLibraryInStore(seed.$hash);
+      if (res && onImport) onImport(res);
     } catch (e) { console.error(e); }
     setImporting(null);
   };

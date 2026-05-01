@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { mintSeed, getNftInfo, getSeedPortraitUrl } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Hexagon, ExternalLink, Image, Copy, Check } from 'lucide-react';
 
 export default function MintPanel({ seed }) {
@@ -10,6 +10,9 @@ export default function MintPanel({ seed }) {
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
+  const mintSeedInStore = useSeedStore((s) => s.mintSeed);
+  const getNftInfoInStore = useSeedStore((s) => s.getNftInfo);
+  const getSeedPortraitUrl = useSeedStore((s) => s.getSeedPortraitUrl);
 
   useEffect(() => {
     let isMounted = true;
@@ -29,7 +32,7 @@ export default function MintPanel({ seed }) {
       }
       
       try {
-        const info = await getNftInfo(seed.id);
+        const info = await getNftInfoInStore();
         if (isMounted) setNftInfo(info);
       } catch {
         if (isMounted) setNftInfo(null);
@@ -41,7 +44,7 @@ export default function MintPanel({ seed }) {
     fetchInfo();
 
     return () => { isMounted = false; };
-  }, [seed]);
+  }, [seed, getNftInfoInStore]);
 
   const handleMint = async () => {
     if (!seed || minting) return;
@@ -49,7 +52,7 @@ export default function MintPanel({ seed }) {
     setMinting(true);
     try {
       // Dry-run (no private key) — returns metadata and prepared data
-      const result = await mintSeed(seed.id, ownerAddress || '0x0000000000000000000000000000000000000000');
+      const result = await mintSeedInStore(ownerAddress || '0x0000000000000000000000000000000000000000');
       setMintResult(result);
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Mint failed');
@@ -76,7 +79,7 @@ export default function MintPanel({ seed }) {
     );
   }
 
-  const portraitUrl = getSeedPortraitUrl(seed.id);
+  const portraitUrl = getSeedPortraitUrl ? getSeedPortraitUrl(seed.id) : '';
 
   return (
     <div className="p-3 space-y-3" data-testid="mint-panel">

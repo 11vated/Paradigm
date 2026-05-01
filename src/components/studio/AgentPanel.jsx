@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { agentQuery } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { getAgentWs } from '@/services/wsAgent';
 import { Loader2, Send, Bot, User, Sparkles, Wifi, WifiOff } from 'lucide-react';
 
@@ -40,6 +40,7 @@ export default function AgentPanel({ onSeedCreated }) {
   const [wsConnected, setWsConnected] = useState(false);
   const scrollRef = useRef(null);
   const wsRef = useRef(null);
+  const agentQueryInStore = useSeedStore((s) => s.agentQuery);
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -104,7 +105,7 @@ export default function AgentPanel({ onSeedCreated }) {
         }
       } else {
         // Fallback to HTTP
-        const result = await agentQuery(query);
+        const result = await agentQueryInStore(query);
         processResult(result);
       }
     } catch (err) {

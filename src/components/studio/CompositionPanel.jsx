@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { GitBranch, ArrowRight, Loader2 } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { api } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
+import { composeSeed, getCompositionGraph, getCompositionPath } from '@/services/api';
 
 export default function CompositionPanel({ seed, onComposed }) {
   const [targetDomain, setTargetDomain] = useState('sprite');
@@ -10,16 +11,16 @@ export default function CompositionPanel({ seed, onComposed }) {
   const [path, setPath] = useState(null);
 
   useEffect(() => {
-    api.get('/composition/graph').then(r => setGraph(r.data)).catch(() => {});
+    getCompositionGraph().then(r => setGraph(r)).catch(() => {});
   }, []);
 
   const handleCompose = async () => {
     if (!seed || loading) return;
     setLoading(true);
     try {
-      const res = await api.post(`/seeds/${seed.id}/compose`, { target_domain: targetDomain });
-      if (res.data.seed) onComposed(res.data.seed);
-      setPath(res.data.path);
+      const res = await composeSeed(seed.id, targetDomain);
+      if (res.seed) onComposed(res.seed);
+      setPath(res.path);
     } catch (e) { console.error(e); }
     setLoading(false);
   };
@@ -27,8 +28,8 @@ export default function CompositionPanel({ seed, onComposed }) {
   const handleFindPath = async () => {
     if (!seed) return;
     try {
-      const res = await api.get('/composition/path', { params: { source: seed.$domain, target: targetDomain } });
-      setPath(res.data);
+      const res = await getCompositionPath(seed.$domain, targetDomain);
+      setPath(res);
     } catch (e) { console.error(e); }
   };
 

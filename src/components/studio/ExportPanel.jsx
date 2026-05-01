@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { generateKeys, signSeed, verifySeed } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Shield, Download, Check, X } from 'lucide-react';
 
 export default function ExportPanel({ seed, onSeedUpdated }) {
@@ -7,10 +7,13 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
   const [signing, setSigning] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [verifyResult, setVerifyResult] = useState(null);
+  const generateKeysInStore = useSeedStore((s) => s.generateKeys);
+  const signCurrentSeed = useSeedStore((s) => s.signCurrentSeed);
+  const verifyCurrentSeed = useSeedStore((s) => s.verifyCurrentSeed);
 
   const handleGenerateKeys = async () => {
     try {
-      const k = await generateKeys();
+      const k = await generateKeysInStore();
       setKeys(k);
     } catch (e) { console.error(e); }
   };
@@ -19,10 +22,9 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
     if (!seed || !keys || signing) return;
     setSigning(true);
     try {
-      const result = await signSeed(seed.id, keys.private_key);
-      const updated = { ...seed, $sovereignty: result.sovereignty };
-      onSeedUpdated(updated);
-      setVerifyResult(result.verified);
+      const result = await signCurrentSeed(keys.private_key);
+      if (onSeedUpdated && result) onSeedUpdated(result);
+      setVerifyResult(result?.verified);
     } catch (e) { console.error(e); }
     setSigning(false);
   };
@@ -31,8 +33,8 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
     if (!seed || verifying || !keys) return;
     setVerifying(true);
     try {
-      const result = await verifySeed(seed.id, keys.public_key);
-      setVerifyResult(result.verified);
+      const result = await verifyCurrentSeed(keys.public_key);
+      setVerifyResult(result?.verified);
     } catch (e) { console.error(e); }
     setVerifying(false);
   };

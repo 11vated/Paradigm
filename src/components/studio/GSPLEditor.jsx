@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Code2, Play, AlertCircle } from 'lucide-react';
-import { api } from '@/services/api';
+import { useSeedStore } from '@/stores/seedStore';
 
 // Removed unused GSPL_KEYWORDS
 
@@ -23,12 +23,14 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
+  const parseGSPLInStore = useSeedStore((s) => s.parseGSPL);
+  const executeGSPLInStore = useSeedStore((s) => s.executeGSPL);
 
   const handleParse = async () => {
     setLoading(true);
     try {
-      const res = await api.post('/gspl/parse', { source: code });
-      setResult(res.data);
+      const res = await parseGSPLInStore(code);
+      setResult(res);
     } catch (e) { console.error(e); }
     setLoading(false);
   };
@@ -36,10 +38,10 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
   const handleExecute = async () => {
     setLoading(true);
     try {
-      const res = await api.post('/gspl/execute', { source: code });
-      setResult(res.data);
-      if (res.data.seeds?.length > 0 && onSeedFromGSPL) {
-        onSeedFromGSPL(res.data.seeds[0]);
+      const res = await executeGSPLInStore(code);
+      setResult(res);
+      if (res?.seeds?.length > 0 && onSeedFromGSPL) {
+        onSeedFromGSPL(res.seeds[0]);
       }
     } catch (e) { console.error(e); }
     setLoading(false);

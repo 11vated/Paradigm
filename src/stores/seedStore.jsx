@@ -4,6 +4,9 @@ import {
   generateSeed, growSeed as growSeedApi,
   mutateSeed, breedSeeds, evolveSeed, updateGene,
   generateKeys, signSeed, verifySeed,
+  mintSeed as mintSeedApi, getNftInfo, getSeedPortraitUrl,
+  agentQuery as agentQueryApi,
+  parseGSPL, executeGSPL,
 } from '@/services/api';
 
 export const useSeedStore = create((set, get) => ({
@@ -193,6 +196,69 @@ export const useSeedStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const result = await verifySeed(currentSeed.id, publicKey);
+      return result;
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      throw err;
+    }
+  },
+
+  // ─── Minting ────────────────────────────────────────────────────────────
+  mintSeed: async (ownerAddress) => {
+    const { currentSeed } = get();
+    if (!currentSeed) return;
+    set({ loading: true, error: null });
+    try {
+      const result = await mintSeedApi(currentSeed.id, ownerAddress);
+      set({ loading: false });
+      return result;
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      throw err;
+    }
+  },
+
+  getNftInfo: async () => {
+    const { currentSeed } = get();
+    if (!currentSeed) return null;
+    try {
+      return await getNftInfo(currentSeed.id);
+    } catch (err) {
+      console.error('Failed to get NFT info:', err);
+      return null;
+    }
+  },
+
+  getSeedPortraitUrl: (id) => {
+    return getSeedPortraitUrl(id);
+  },
+
+  // ─── Agent ────────────────────────────────────────────────────────────
+  agentQuery: async (query) => {
+    set({ loading: true, error: null });
+    try {
+      const result = await agentQueryApi(query);
+      return result;
+    } catch (err) {
+      set({ error: err.message, loading: false });
+      throw err;
+    }
+  },
+
+  // ─── GSPL ────────────────────────────────────────────────────────────
+  parseGSPL: async (source) => {
+    try {
+      return await parseGSPL(source);
+    } catch (err) {
+      set({ error: err.message });
+      throw err;
+    }
+  },
+
+  executeGSPL: async (source) => {
+    set({ loading: true, error: null });
+    try {
+      const result = await executeGSPL(source);
       return result;
     } catch (err) {
       set({ error: err.message, loading: false });
