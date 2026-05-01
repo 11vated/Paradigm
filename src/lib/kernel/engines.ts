@@ -29,6 +29,7 @@ import { generateProcedural3D } from './generators/procedural-3d';
 import { generateFullGame } from './generators/fullgame';
 import { generateFullGameElectron } from './generators/fullgame-electron';
 import { generateTypography } from './generators/typography';
+import { generateTypographyEnhanced } from './generators/typography-enhanced';
 import { generateArchitecture } from './generators/architecture';
 import { generateVehicle } from './generators/vehicle';
 import { generateFurniture } from './generators/furniture';
@@ -590,17 +591,23 @@ async function growParticle(seed: Seed): Promise<Artifact> {
 
 async function growTypography(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/typography';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateTypography(seed, outputPath);
+    const result = await generateTypographyEnhanced(seed, outputPath);
     return {
-      type: 'typography', name: seed.$name ?? 'Typeface', domain: 'typography',
+      type: 'typography', name: seed.$name ?? 'Text', domain: 'typography',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      typography: { style: geneVal(seed, 'style', 'sans_serif'), weight_range: [100, 900], x_height: geneVal(seed, 'xHeight', 0.5), contrast: geneVal(seed, 'contrast', 0.3) },
-      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
-      render_hints: { mode: 'type_specimen', hasFile: true },
+      text: {
+        fontFamily: geneVal(seed, 'fontFamily', 'Arial'),
+        weight: geneVal(seed, 'weight', 400),
+        style: geneVal(seed, 'style', 'normal'),
+        size: geneVal(seed, 'size', 24),
+        text: geneVal(seed, 'text', 'Hello World'),
+      },
+      artifact: { filePath: result.filePath, format: 'JSON+SVG+CSS+HTML', svgPath: result.svgPath, fontPath: result.fontPath },
+      render_hints: { mode: 'text_svg', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
