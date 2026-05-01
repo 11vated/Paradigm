@@ -23,6 +23,7 @@ import { generateShader } from './generators/shader';
 import { generateParticle } from './generators/particle';
 import { generateParticleGPU } from './generators/particle-gpu';
 import { generateEcosystem } from './generators/ecosystem';
+import { generateEcosystemWorker } from './generators/ecosystem-worker';
 import { generateProcedural } from './generators/procedural';
 import { generateProcedural3D } from './generators/procedural-3d';
 import { generateFullGame } from './generators/fullgame';
@@ -443,17 +444,22 @@ async function growAudio(seed: Seed): Promise<Artifact> {
 
 async function growEcosystem(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/ecosystem';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_worker.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateEcosystem(seed, outputPath);
+    const result = await generateEcosystemWorker(seed, outputPath);
     return {
       type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      ecosystem: { species_count: Math.max(2, Math.floor(geneVal(seed, 'speciesCount', 0.5) * 20)), environment: geneVal(seed, 'environment', 'forest'), stability: geneVal(seed, 'stability', 0.6), interactions: ['predation', 'symbiosis', 'competition'] },
-      artifact: { filePath: result.filePath, format: 'JSON', speciesCount: result.speciesCount },
-      render_hints: { mode: 'ecosystem_graph', animated: true, hasFile: true },
+      ecosystem: {
+        speciesCount: geneVal(seed, 'speciesCount', 10),
+        foodWebComplexity: +(geneVal(seed, 'foodWebComplexity', 0.5)).toFixed(2),
+        climateZones: geneVal(seed, 'climateZones', 3),
+        timeSteps: 1000,
+      },
+      artifact: { filePath: result.filePath, format: 'JSON', speciesCount: result.speciesCount, workerScript: true },
+      render_hints: { mode: 'ecosystem_simulation', animated: true, hasFile: true, workerReady: true },
     };
   } catch (err) {
     return {
