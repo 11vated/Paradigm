@@ -12,6 +12,14 @@ import { generateCharacter } from './generators/character';
 import { generateSprite } from './generators/sprite';
 import { generateMusic } from './generators/music';
 import { generateNarrative } from './generators/narrative';
+import { generatePhysics } from './generators/physics';
+import { generateGame } from './generators/game';
+import { generateAnimation } from './generators/animation';
+import { generateShader } from './generators/shader';
+import { generateParticle } from './generators/particle';
+import { generateEcosystem } from './generators/ecosystem';
+import { generateProcedural } from './generators/procedural';
+import { generateFullGame } from './generators/fullgame';
 
 interface Seed {
   $name?: string;
@@ -185,44 +193,90 @@ async function growVisual2d(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growProcedural(seed: Seed): Artifact {
+async function growProcedural(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/procedural';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   let octaves = geneVal(seed, 'octaves', 4);
   if (typeof octaves === 'number' && octaves <= 1) octaves = Math.max(1, Math.floor(octaves * 8));
-  return {
-    type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    terrain: {
-      octaves,
-      persistence: +(geneVal(seed, 'persistence', 0.5)).toFixed(3),
-      scale: +(geneVal(seed, 'scale', 1.0)).toFixed(2),
-      biome: geneVal(seed, 'biome', 'temperate'),
-      heightmap_size: 256,
-    },
-    render_hints: { mode: '2d_heightmap', interactive: true },
-  };
+
+  try {
+    const result = await generateProcedural(seed, outputPath);
+    return {
+      type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      terrain: {
+        octaves, persistence: +(geneVal(seed, 'persistence', 0.5)).toFixed(3),
+        scale: +(geneVal(seed, 'scale', 1.0)).toFixed(2),
+        biome: geneVal(seed, 'biome', 'temperate'),
+        heightmap_size: 256,
+      },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
+      render_hints: { mode: '2d_heightmap', interactive: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      terrain: { error: String(err) },
+      render_hints: { mode: '2d_heightmap', interactive: true, error: true },
+    };
+  }
 }
 
 // ─── EXTENDED ENGINES ─────────────────────────────────────────────────────────
 
-function growFullgame(seed: Seed): Artifact {
+async function growFullgame(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/fullgame';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.html`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   const genre = geneVal(seed, 'genre', 'action');
   const diff = geneVal(seed, 'difficulty', 0.5);
   const levelCount = geneVal(seed, 'levelCount', 0.5);
-  return {
-    type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    game: { genre, difficulty: typeof diff === 'number' ? +diff.toFixed(2) : diff, levels: Math.max(3, Math.floor((typeof levelCount === 'number' ? levelCount : 0.5) * 20)), mechanics: geneVal(seed, 'mechanics', ['action']) },
-    render_hints: { mode: 'game_preview', interactive: true },
-  };
+
+  try {
+    const result = await generateFullGame(seed, outputPath);
+    return {
+      type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      game: { genre, difficulty: typeof diff === 'number' ? +diff.toFixed(2) : diff, levels: Math.max(3, Math.floor((typeof levelCount === 'number' ? levelCount : 0.5) * 20)), mechanics: geneVal(seed, 'mechanics', ['action']) },
+      artifact: { filePath: result.filePath, format: 'HTML', levels: result.levels, fileSize: result.fileSize },
+      render_hints: { mode: 'game_preview', interactive: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      game: { error: String(err) },
+      render_hints: { mode: 'game_preview', interactive: true, error: true },
+    };
+  }
 }
 
-function growAnimation(seed: Seed): Artifact {
-  return {
-    type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    animation: { frame_count: Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
-    render_hints: { mode: 'animation_timeline', animated: true },
-  };
+async function growAnimation(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/animation';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateAnimation(seed, outputPath);
+    return {
+      type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      animation: { frame_count: Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
+      artifact: { filePath: result.filePath, format: 'PNG', frameCount: result.frameCount, fps: result.fps },
+      render_hints: { mode: 'animation_timeline', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      animation: { error: String(err) },
+      render_hints: { mode: 'animation_timeline', animated: true, error: true },
+    };
+  }
 }
 
 async function growGeometry3d(seed: Seed): Promise<Artifact> {
@@ -295,14 +349,30 @@ function growUi(seed: Seed): Artifact {
   };
 }
 
-function growPhysics(seed: Seed): Artifact {
+async function growPhysics(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/physics';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   const grav = geneVal(seed, 'gravity', 0.5);
-  return {
-    type: 'physics', name: seed.$name ?? 'Simulation', domain: 'physics',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    simulation: { gravity: typeof grav === 'number' ? +(grav * 20).toFixed(2) : grav, friction: geneVal(seed, 'friction', 0.3), elasticity: geneVal(seed, 'elasticity', 0.8), type: geneVal(seed, 'simulationType', 'rigid_body'), steps: 1000 },
-    render_hints: { mode: 'physics_sim', animated: true },
-  };
+
+  try {
+    const result = await generatePhysics(seed, outputPath);
+    return {
+      type: 'physics', name: seed.$name ?? 'Simulation', domain: 'physics',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      simulation: { gravity: typeof grav === 'number' ? +(grav * 20).toFixed(2) : grav, friction: geneVal(seed, 'friction', 0.3), elasticity: geneVal(seed, 'elasticity', 0.8), type: geneVal(seed, 'simulationType', 'rigid_body'), steps: 1000 },
+      artifact: { filePath: result.filePath, format: 'JSON', configSize: result.configSize },
+      render_hints: { mode: 'physics_sim', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'physics', name: seed.$name ?? 'Simulation', domain: 'physics',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      simulation: { error: String(err) },
+      render_hints: { mode: 'physics_sim', animated: true, error: true },
+    };
+  }
 }
 
 async function growAudio(seed: Seed): Promise<Artifact> {
@@ -334,22 +404,52 @@ async function growAudio(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growEcosystem(seed: Seed): Artifact {
-  return {
-    type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    ecosystem: { species_count: Math.max(2, Math.floor(geneVal(seed, 'speciesCount', 0.5) * 20)), environment: geneVal(seed, 'environment', 'forest'), stability: geneVal(seed, 'stability', 0.6), interactions: ['predation', 'symbiosis', 'competition'] },
-    render_hints: { mode: 'ecosystem_graph', animated: true },
-  };
+async function growEcosystem(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/ecosystem';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateEcosystem(seed, outputPath);
+    return {
+      type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      ecosystem: { species_count: Math.max(2, Math.floor(geneVal(seed, 'speciesCount', 0.5) * 20)), environment: geneVal(seed, 'environment', 'forest'), stability: geneVal(seed, 'stability', 0.6), interactions: ['predation', 'symbiosis', 'competition'] },
+      artifact: { filePath: result.filePath, format: 'JSON', speciesCount: result.speciesCount },
+      render_hints: { mode: 'ecosystem_graph', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      ecosystem: { error: String(err) },
+      render_hints: { mode: 'ecosystem_graph', animated: true, error: true },
+    };
+  }
 }
 
-function growGame(seed: Seed): Artifact {
-  return {
-    type: 'game', name: seed.$name ?? 'Game Mechanic', domain: 'game',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    mechanic: { type: geneVal(seed, 'mechanicType', 'turn_based'), complexity: geneVal(seed, 'complexity', 0.5), players: geneVal(seed, 'players', 2) },
-    render_hints: { mode: 'mechanic_diagram' },
-  };
+async function growGame(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/game';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.html`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateGame(seed, outputPath);
+    return {
+      type: 'game', name: seed.$name ?? 'Game Mechanic', domain: 'game',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      mechanic: { type: geneVal(seed, 'mechanicType', 'turn_based'), complexity: geneVal(seed, 'complexity', 0.5), players: geneVal(seed, 'players', 2) },
+      artifact: { filePath: result.filePath, format: 'HTML', levelCount: result.levelCount, fileSize: result.fileSize },
+      render_hints: { mode: 'mechanic_diagram', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'game', name: seed.$name ?? 'Game Mechanic', domain: 'game',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      mechanic: { error: String(err) },
+      render_hints: { mode: 'mechanic_diagram', error: true },
+    };
+  }
 }
 
 function growAlife(seed: Seed): Artifact {
@@ -361,22 +461,52 @@ function growAlife(seed: Seed): Artifact {
   };
 }
 
-function growShader(seed: Seed): Artifact {
-  return {
-    type: 'shader', name: seed.$name ?? 'Shader', domain: 'shader',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    shader: { type: geneVal(seed, 'shaderType', 'fragment'), technique: geneVal(seed, 'technique', 'raymarching'), parameters: { iterations: 64, epsilon: 0.001 } },
-    render_hints: { mode: 'shader_preview', realtime: true },
-  };
+async function growShader(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/shader';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.frag`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateShader(seed, outputPath);
+    return {
+      type: 'shader', name: seed.$name ?? 'Shader', domain: 'shader',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      shader: { type: geneVal(seed, 'shaderType', 'fragment'), technique: geneVal(seed, 'technique', 'raymarching'), parameters: { iterations: 64, epsilon: 0.001 } },
+      artifact: { filePath: result.filePath, format: 'GLSL', shaderCount: result.shaderCount },
+      render_hints: { mode: 'shader_preview', realtime: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'shader', name: seed.$name ?? 'Shader', domain: 'shader',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      shader: { error: String(err) },
+      render_hints: { mode: 'shader_preview', realtime: true, error: true },
+    };
+  }
 }
 
-function growParticle(seed: Seed): Artifact {
-  return {
-    type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    particles: { emitter: geneVal(seed, 'emitter', 'point'), count: Math.max(10, Math.floor(geneVal(seed, 'count', 0.5) * 1000)), lifetime: geneVal(seed, 'lifetime', 2.0), velocity: geneVal(seed, 'velocity', [0, 1, 0]) },
-    render_hints: { mode: 'particle_sim', animated: true },
-  };
+async function growParticle(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/particle';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateParticle(seed, outputPath);
+    return {
+      type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      particles: { emitter: geneVal(seed, 'emitter', 'point'), count: Math.max(10, Math.floor(geneVal(seed, 'count', 0.5) * 1000)), lifetime: geneVal(seed, 'lifetime', 2.0), velocity: geneVal(seed, 'velocity', [0, 1, 0]) },
+      artifact: { filePath: result.filePath, format: 'JSON', particleCount: result.particleCount },
+      render_hints: { mode: 'particle_sim', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      particles: { error: String(err) },
+      render_hints: { mode: 'particle_sim', animated: true, error: true },
+    };
+  }
 }
 
 function growTypography(seed: Seed): Artifact {
