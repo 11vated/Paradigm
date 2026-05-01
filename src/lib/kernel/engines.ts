@@ -41,8 +41,11 @@ import { generateFashion3D } from './generators/fashion-3d';
 import { generateRobotics } from './generators/robotics';
 import { generateRobotics3D } from './generators/robotics-3d';
 import { generateCircuit } from './generators/circuit';
+import { generateCircuitInteractive } from './generators/circuit-interactive';
 import { generateFood } from './generators/food';
+import { generateFood3D } from './generators/food-3d';
 import { generateChoreography } from './generators/choreography';
+import { generateChoreographyMotion } from './generators/choreography-motion';
 import { generateAlife } from './generators/alife';
 import { generateALifeWorker } from './generators/alife-worker';
 import { generateUI } from './generators/ui';
@@ -774,17 +777,22 @@ async function growRobotics(seed: Seed): Promise<Artifact> {
 
 async function growCircuit(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/circuit';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateCircuit(seed, outputPath);
+    const result = await generateCircuitInteractive(seed, outputPath);
     return {
       type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      circuit: { type: geneVal(seed, 'type', 'analog'), components: geneVal(seed, 'components', ['resistor', 'capacitor', 'inductor']), complexity: geneVal(seed, 'complexity', 0.5) },
-      artifact: { filePath: result.filePath, format: 'SVG', componentCount: result.componentCount },
-      render_hints: { mode: 'circuit_diagram', hasFile: true },
+      circuit: {
+        circuitType: geneVal(seed, 'circuitType', 'amplifier'),
+        componentCount: geneVal(seed, 'componentCount', 5),
+        isDigital: geneVal(seed, 'isDigital', false),
+        hasSimulation: geneVal(seed, 'hasSimulation', true),
+      },
+      artifact: { filePath: result.filePath, format: 'HTML+SVG+SPICE', componentCount: result.componentCount, interactive: true },
+      render_hints: { mode: 'circuit_simulator', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
@@ -798,17 +806,22 @@ async function growCircuit(seed: Seed): Promise<Artifact> {
 
 async function growFood(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/food';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateFood(seed, outputPath);
+    const result = await generateFood3D(seed, outputPath);
     return {
-      type: 'food', name: seed.$name ?? 'Dish', domain: 'food',
+      type: 'food', name: seed.$name ?? 'Food', domain: 'food',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      dish: { type: geneVal(seed, 'type', 'pizza'), cuisine: geneVal(seed, 'cuisine', 'italian'), ingredients: geneVal(seed, 'ingredients', ['tomato', 'cheese', 'basil']) },
-      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
-      render_hints: { mode: 'food_photography', hasFile: true },
+      food: {
+        foodType: geneVal(seed, 'foodType', 'apple'),
+        style: geneVal(seed, 'style', 'realistic'),
+        size: geneVal(seed, 'size', 1.0),
+        hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, items: result.items },
+      render_hints: { mode: 'food_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
@@ -822,17 +835,22 @@ async function growFood(seed: Seed): Promise<Artifact> {
 
 async function growChoreography(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/choreography';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_motion.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateChoreography(seed, outputPath);
+    const result = await generateChoreographyMotion(seed, outputPath);
     return {
       type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      dance: { style: geneVal(seed, 'style', 'ballet'), tempo: geneVal(seed, 'tempo', 0.5), complexity: geneVal(seed, 'complexity', 0.5), duration: geneVal(seed, 'duration', 60) },
-      artifact: { filePath: result.filePath, format: 'JSON', moveCount: result.moveCount },
-      render_hints: { mode: 'dance_timeline', hasFile: true },
+      dance: {
+        style: geneVal(seed, 'style', 'ballet'),
+        tempo: geneVal(seed, 'tempo', 0.5),
+        complexity: geneVal(seed, 'complexity', 0.5),
+        duration: geneVal(seed, 'duration', 60),
+      },
+      artifact: { filePath: result.filePath, format: 'JSON+BVH+HTML', moveCount: result.moveCount, bvhPath: result.bvhPath },
+      render_hints: { mode: 'dance_motion', hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
