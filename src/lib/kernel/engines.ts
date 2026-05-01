@@ -22,6 +22,7 @@ import { generateShader } from './generators/shader';
 import { generateParticle } from './generators/particle';
 import { generateEcosystem } from './generators/ecosystem';
 import { generateProcedural } from './generators/procedural';
+import { generateProcedural3D } from './generators/procedural-3d';
 import { generateFullGame } from './generators/fullgame';
 import { generateTypography } from './generators/typography';
 import { generateArchitecture } from './generators/architecture';
@@ -212,14 +213,14 @@ async function growVisual2d(seed: Seed): Promise<Artifact> {
 
 async function growProcedural(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/procedural';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let octaves = geneVal(seed, 'octaves', 4);
   if (typeof octaves === 'number' && octaves <= 1) octaves = Math.max(1, Math.floor(octaves * 8));
 
   try {
-    const result = await generateProcedural(seed, outputPath);
+    const result = await generateProcedural3D(seed, outputPath);
     return {
       type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
@@ -229,15 +230,15 @@ async function growProcedural(seed: Seed): Promise<Artifact> {
         biome: geneVal(seed, 'biome', 'temperate'),
         heightmap_size: 256,
       },
-      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
-      render_hints: { mode: '2d_heightmap', interactive: true, hasFile: true },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, faces: result.faces },
+      render_hints: { mode: '3d_terrain', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
       type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       terrain: { error: String(err) },
-      render_hints: { mode: '2d_heightmap', interactive: true, error: true },
+      render_hints: { mode: '3d_terrain', interactive: true, error: true },
     };
   }
 }
