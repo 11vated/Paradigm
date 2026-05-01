@@ -37,6 +37,7 @@ import { generateVehicle3D } from './generators/vehicle-3d';
 import { generateFurniture } from './generators/furniture';
 import { generateFurniture3D } from './generators/furniture-3d';
 import { generateFashion } from './generators/fashion';
+import { generateFashion3D } from './generators/fashion-3d';
 import { generateRobotics } from './generators/robotics';
 import { generateCircuit } from './generators/circuit';
 import { generateFood } from './generators/food';
@@ -712,17 +713,22 @@ async function growFurniture(seed: Seed): Promise<Artifact> {
 
 async function growFashion(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/fashion';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateFashion(seed, outputPath);
+    const result = await generateFashion3D(seed, outputPath);
     return {
       type: 'fashion', name: seed.$name ?? 'Garment', domain: 'fashion',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      garment: { type: geneVal(seed, 'type', 'dress'), style: geneVal(seed, 'style', 'casual'), colors: geneVal(seed, 'colors', [[0.8, 0.2, 0.3], [0.2, 0.5, 0.8]]) },
-      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
-      render_hints: { mode: 'fashion_sketch', hasFile: true },
+      garment: {
+        clothingType: geneVal(seed, 'clothingType', 'shirt'),
+        style: geneVal(seed, 'style', 'casual'),
+        size: geneVal(seed, 'size', 'M'),
+        hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, garments: result.garments },
+      render_hints: { mode: 'fashion_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
