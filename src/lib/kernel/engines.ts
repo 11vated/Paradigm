@@ -31,6 +31,7 @@ import { generateFullGameElectron } from './generators/fullgame-electron';
 import { generateTypography } from './generators/typography';
 import { generateTypographyEnhanced } from './generators/typography-enhanced';
 import { generateArchitecture } from './generators/architecture';
+import { generateArchitecture3D } from './generators/architecture-3d';
 import { generateVehicle } from './generators/vehicle';
 import { generateFurniture } from './generators/furniture';
 import { generateFashion } from './generators/fashion';
@@ -621,17 +622,23 @@ async function growTypography(seed: Seed): Promise<Artifact> {
 
 async function growArchitecture(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/architecture';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateArchitecture(seed, outputPath);
+    const result = await generateArchitecture3D(seed, outputPath);
     return {
       type: 'architecture', name: seed.$name ?? 'Building', domain: 'architecture',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      building: { building_type: geneVal(seed, 'building_type', 'residential'), floors: typeof geneVal(seed, 'floors', 3) === 'number' ? geneVal(seed, 'floors', 3) : 3, style: geneVal(seed, 'style', 'modern') },
-      artifact: { filePath: result.filePath, format: 'SVG', floors: result.floors },
-      render_hints: { mode: 'building_viewer', rotatable: true, hasFile: true },
+      building: {
+        buildingType: geneVal(seed, 'buildingType', 'residential'),
+        floors: geneVal(seed, 'floors', 3),
+        footprint: geneVal(seed, 'footprint', [10, 10]),
+        style: geneVal(seed, 'style', 'modern'),
+        hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, materials: result.materials },
+      render_hints: { mode: 'building_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
