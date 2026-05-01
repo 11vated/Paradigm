@@ -8,6 +8,10 @@
 import { generateVisual2D } from './generators/visual2d';
 import { generateAudio } from './generators/audio';
 import { generateGeometry3D } from './generators/geometry3d';
+import { generateCharacter } from './generators/character';
+import { generateSprite } from './generators/sprite';
+import { generateMusic } from './generators/music';
+import { generateNarrative } from './generators/narrative';
 
 interface Seed {
   $name?: string;
@@ -34,7 +38,11 @@ function geneVal(seed: Seed, name: string, fallback: any = null): any {
 
 // ─── PRIMARY ENGINES ──────────────────────────────────────────────────────────
 
-function growCharacter(seed: Seed): Artifact {
+async function growCharacter(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/character';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.obj`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   const size = geneVal(seed, 'size', 1.0);
   const archetype = geneVal(seed, 'archetype', 'warrior');
   const strength = geneVal(seed, 'strength', 0.5);
@@ -42,60 +50,108 @@ function growCharacter(seed: Seed): Artifact {
   const palette = geneVal(seed, 'palette', [0.5, 0.5, 0.5]);
   let personality = geneVal(seed, 'personality', 'neutral');
   if (typeof personality === 'object' && personality !== null) personality = personality.trait ?? 'neutral';
-  const bodyWidth = 0.3 + strength * 0.4;
-  const bodyHeight = size * 0.8;
-  const speed = agility * 10;
-  const r = Math.floor(Math.min(palette[0] ?? 0.5, 1) * 255);
-  const g = Math.floor(Math.min(palette[1] ?? 0.5, 1) * 255);
-  const b = Math.floor(Math.min(palette[2] ?? 0.5, 1) * 255);
-  return {
-    type: 'character', name: seed.$name ?? 'Unknown', domain: 'character',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    archetype,
-    visual: { body_width: +bodyWidth.toFixed(2), body_height: +bodyHeight.toFixed(2), color: `rgb(${r},${g},${b})`, size_factor: +size.toFixed(2) },
-    stats: { strength: Math.round(strength * 100), agility: Math.round(agility * 100), speed: +speed.toFixed(1), hp: Math.round(100 + strength * 200) },
-    personality,
-    render_hints: { mode: '2d_character', animated: true },
-  };
+
+  try {
+    const result = await generateCharacter(seed, outputPath);
+    return {
+      type: 'character', name: seed.$name ?? 'Unknown', domain: 'character',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      archetype,
+      visual: {
+        body_width: +(0.3 + strength * 0.4).toFixed(2),
+        body_height: +(size * 0.8).toFixed(2),
+        size_factor: +size.toFixed(2)
+      },
+      stats: {
+        strength: Math.round(strength * 100),
+        agility: Math.round(agility * 100),
+        speed: +(agility * 10).toFixed(1),
+        hp: Math.round(100 + strength * 200)
+      },
+      personality,
+      artifact: { filePath: result.filePath, format: 'OBJ', vertices: result.vertices, faces: result.faces },
+      render_hints: { mode: '3d_character', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'character', name: seed.$name ?? 'Unknown', domain: 'character',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      archetype, personality,
+      visual: { error: String(err) },
+      render_hints: { mode: '3d_character', animated: true, error: true },
+    };
+  }
 }
 
-function growSprite(seed: Seed): Artifact {
+async function growSprite(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/sprite';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   let resolution = geneVal(seed, 'resolution', 32);
   if (typeof resolution === 'number' && resolution <= 1) resolution = Math.floor(resolution * 64);
   let paletteSize = geneVal(seed, 'paletteSize', 8);
   if (typeof paletteSize === 'number' && paletteSize <= 1) paletteSize = Math.floor(paletteSize * 16);
   const colors = geneVal(seed, 'colors', [0.8, 0.2, 0.3]);
   const symmetry = geneVal(seed, 'symmetry', 'bilateral');
-  return {
-    type: 'sprite', name: seed.$name ?? 'Sprite', domain: 'sprite',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    visual: {
-      resolution: Math.max(8, Math.min(resolution, 128)),
-      palette_size: Math.max(2, Math.min(paletteSize, 32)),
-      primary_color: `hsl(${Math.floor((colors[0] ?? 0.5) * 360)}, 70%, 50%)`,
-      secondary_color: `hsl(${Math.floor((colors[1] ?? 0.25) * 360)}, 60%, 40%)`,
-      symmetry,
-    },
-    render_hints: { mode: '2d_sprite', pixel_art: true },
-  };
+
+  try {
+    const result = await generateSprite(seed, outputPath);
+    return {
+      type: 'sprite', name: seed.$name ?? 'Sprite', domain: 'sprite',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      visual: {
+        resolution: Math.max(8, Math.min(resolution, 128)),
+        palette_size: Math.max(2, Math.min(paletteSize, 32)),
+        primary_color: `hsl(${Math.floor((colors[0] ?? 0.5) * 360)}, 70%, 50%)`,
+        secondary_color: `hsl(${Math.floor((colors[1] ?? 0.25) * 360)}, 60%, 40%)`,
+        symmetry,
+      },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height, frames: result.frames },
+      render_hints: { mode: '2d_sprite', pixel_art: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'sprite', name: seed.$name ?? 'Sprite', domain: 'sprite',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      visual: { error: String(err) },
+      render_hints: { mode: '2d_sprite', pixel_art: true, error: true },
+    };
+  }
 }
 
-function growMusic(seed: Seed): Artifact {
+async function growMusic(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/music';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.wav`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   let tempo = geneVal(seed, 'tempo', 0.5);
   if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;
-  return {
-    type: 'music', name: seed.$name ?? 'Composition', domain: 'music',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    musical: {
-      tempo: Math.round(tempo),
-      key: geneVal(seed, 'key', 'C'),
-      scale: geneVal(seed, 'scale', 'major'),
-      time_signature: '4/4', measures: 8,
-    },
-    timbre: (() => { const t = geneVal(seed, 'timbre', {}); return typeof t === 'object' ? t : { warmth: 0.5 }; })(),
-    melody_preview: (() => { const m = geneVal(seed, 'melody', []); return Array.isArray(m) ? m.slice(0, 16) : []; })(),
-    render_hints: { mode: 'audio_waveform', playable: true },
-  };
+
+  try {
+    const result = await generateMusic(seed, outputPath);
+    return {
+      type: 'music', name: seed.$name ?? 'Composition', domain: 'music',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      musical: {
+        tempo: Math.round(tempo),
+        key: geneVal(seed, 'key', 'C'),
+        scale: geneVal(seed, 'scale', 'major'),
+        time_signature: '4/4', measures: 8,
+      },
+      timbre: (() => { const t = geneVal(seed, 'timbre', {}); return typeof t === 'object' ? t : { warmth: 0.5 }; })(),
+      melody_preview: (() => { const m = geneVal(seed, 'melody', []); return Array.isArray(m) ? m.slice(0, 16) : []; })(),
+      artifact: { filePath: result.filePath, format: 'WAV', duration: result.duration, sampleRate: result.sampleRate },
+      render_hints: { mode: 'audio_waveform', playable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'music', name: seed.$name ?? 'Composition', domain: 'music',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      musical: { error: String(err) },
+      render_hints: { mode: 'audio_waveform', playable: true, error: true },
+    };
+  }
 }
 
 async function growVisual2d(seed: Seed): Promise<Artifact> {
@@ -200,13 +256,34 @@ async function growGeometry3d(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growNarrative(seed: Seed): Artifact {
-  return {
-    type: 'narrative', name: seed.$name ?? 'Story', domain: 'narrative',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    story: { structure: geneVal(seed, 'structure', 'heros_journey'), tone: geneVal(seed, 'tone', 'epic'), characters: geneVal(seed, 'characters', ['hero', 'villain']), plot: geneVal(seed, 'plot', 'quest'), acts: 3 },
-    render_hints: { mode: 'narrative_flow', readable: true },
-  };
+async function growNarrative(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/narrative';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.txt`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateNarrative(seed, outputPath);
+    return {
+      type: 'narrative', name: seed.$name ?? 'Story', domain: 'narrative',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      story: {
+        structure: geneVal(seed, 'structure', 'heros_journey'),
+        tone: geneVal(seed, 'tone', 'epic'),
+        characters: geneVal(seed, 'characters', ['hero', 'villain']),
+        plot: geneVal(seed, 'plot', 'quest'),
+        acts: 3
+      },
+      artifact: { filePath: result.filePath, format: 'TXT', wordCount: result.wordCount, acts: result.acts },
+      render_hints: { mode: 'narrative_flow', readable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'narrative', name: seed.$name ?? 'Story', domain: 'narrative',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      story: { error: String(err) },
+      render_hints: { mode: 'narrative_flow', readable: true, error: true },
+    };
+  }
 }
 
 function growUi(seed: Seed): Artifact {
