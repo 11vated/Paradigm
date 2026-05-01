@@ -35,6 +35,7 @@ import { generateArchitecture3D } from './generators/architecture-3d';
 import { generateVehicle } from './generators/vehicle';
 import { generateVehicle3D } from './generators/vehicle-3d';
 import { generateFurniture } from './generators/furniture';
+import { generateFurniture3D } from './generators/furniture-3d';
 import { generateFashion } from './generators/fashion';
 import { generateRobotics } from './generators/robotics';
 import { generateCircuit } from './generators/circuit';
@@ -682,17 +683,22 @@ async function growVehicle(seed: Seed): Promise<Artifact> {
 
 async function growFurniture(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/furniture';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateFurniture(seed, outputPath);
+    const result = await generateFurniture3D(seed, outputPath);
     return {
       type: 'furniture', name: seed.$name ?? 'Furniture', domain: 'furniture',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      furniture: { type: geneVal(seed, 'type', 'chair'), dimensions: geneVal(seed, 'dimensions', [60, 60, 80]), style: geneVal(seed, 'style', 'modern') },
-      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
-      render_hints: { mode: 'furniture_viewer', rotatable: true, hasFile: true },
+      furniture: {
+        furnitureType: geneVal(seed, 'furnitureType', 'chair'),
+        style: geneVal(seed, 'style', 'modern'),
+        dimensions: geneVal(seed, 'dimensions', [1, 1, 1]),
+        hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, parts: result.parts },
+      render_hints: { mode: 'furniture_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
