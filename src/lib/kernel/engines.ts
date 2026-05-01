@@ -16,6 +16,7 @@ import { generateMusic } from './generators/music';
 import { generateNarrative } from './generators/narrative';
 import { generatePhysics } from './generators/physics';
 import { generateGame } from './generators/game';
+import { generateGameWASM } from './generators/game-wasm';
 import { generateAnimation } from './generators/animation';
 import { generateAnimationEnhanced } from './generators/animation-enhanced';
 import { generateShader } from './generators/shader';
@@ -464,17 +465,24 @@ async function growEcosystem(seed: Seed): Promise<Artifact> {
 
 async function growGame(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/game';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.html`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_wasm.js`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateGame(seed, outputPath);
+    const result = await generateGameWASM(seed, outputPath);
     return {
-      type: 'game', name: seed.$name ?? 'Game Mechanic', domain: 'game',
+      type: 'game', name: seed.$name ?? 'Game', domain: 'game',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      mechanic: { type: geneVal(seed, 'mechanicType', 'turn_based'), complexity: geneVal(seed, 'complexity', 0.5), players: geneVal(seed, 'players', 2) },
-      artifact: { filePath: result.filePath, format: 'HTML', levelCount: result.levelCount, fileSize: result.fileSize },
-      render_hints: { mode: 'mechanic_diagram', hasFile: true },
+      game: {
+        genre: geneVal(seed, 'genre', 'platformer'),
+        difficulty: geneVal(seed, 'difficulty', 0.5),
+        levelCount: geneVal(seed, 'levelCount', 5),
+        hasPowerups: geneVal(seed, 'hasPowerups', true),
+        hasObstacles: geneVal(seed, 'hasObstacles', true),
+        hasBoss: geneVal(seed, 'hasBoss', false),
+      },
+      artifact: { filePath: result.filePath, format: 'JS+WASM', size: result.size, wasmPath: result.wasmPath },
+      render_hints: { mode: 'game_logic', interactive: true, hasFile: true, wasmReady: true },
     };
   } catch (err) {
     return {
