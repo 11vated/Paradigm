@@ -17,6 +17,7 @@ import { generateNarrative } from './generators/narrative';
 import { generatePhysics } from './generators/physics';
 import { generateGame } from './generators/game';
 import { generateAnimation } from './generators/animation';
+import { generateAnimationEnhanced } from './generators/animation-enhanced';
 import { generateShader } from './generators/shader';
 import { generateParticle } from './generators/particle';
 import { generateEcosystem } from './generators/ecosystem';
@@ -273,17 +274,17 @@ async function growFullgame(seed: Seed): Promise<Artifact> {
 
 async function growAnimation(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/animation';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.png`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateAnimation(seed, outputPath);
+    const result = await generateAnimationEnhanced(seed, outputPath);
     return {
       type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       animation: { frame_count: Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
       artifact: { filePath: result.filePath, format: 'PNG', frameCount: result.frameCount, fps: result.fps },
-      render_hints: { mode: 'animation_timeline', animated: true, hasFile: true },
+      render_hints: { mode: 'animation_timeline', animated: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
