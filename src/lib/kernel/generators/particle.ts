@@ -54,11 +54,17 @@ export async function generateParticle(seed: Seed, outputPath: string): Promise<
 function extractParams(seed: Seed): ParticleParams {
   const quality = seed.genes?.quality?.value || 'medium';
   const count = seed.genes?.count?.value || 0.5;
-  const qualityMultipliers: Record<string, number> = { low: 100, medium: 500, high: 1000, photorealistic: 5000 };
+
+  // Fix: write numbers without any separators
+  const qualLow = 100;
+  const qualMed = 500;
+  const qualHigh = 1000;
+  const qualPR = 5000;
+  const qualityMultipliers: Record<string, number> = { low: qualLow, medium: qualMed, high: qualHigh, photorealistic: qualPR };
 
   return {
     emitter: seed.genes?.emitter?.value || 'point',
-    count: Math.max(10, Math.floor((typeof count === 'number' ? count : 0.5) * qualityMultipliers[quality]),
+    count: Math.max(10, Math.floor((typeof count === 'number' ? count : 0.5) * qualityMultipliers[quality])),
     lifetime: seed.genes?.lifetime?.value || 2.0,
     velocity: seed.genes?.velocity?.value || [0, 1, 0],
     quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'

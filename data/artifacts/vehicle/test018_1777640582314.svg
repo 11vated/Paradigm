@@ -1,0 +1,8 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+<rect width="600" height="400" fill="#f0f0f0"/>
+<rect x="150" y="170" width="300" height="60" fill="#e74c3c" rx="10"/>
+<rect x="220" y="140" width="160" height="40" fill="#c0392b" rx="5"/>
+<circle cx="200" cy="235" r="25" fill="#333"/>
+<circle cx="400" cy="235" r="25" fill="#333"/>
+<text x="300" y="280" text-anchor="middle" font-family="Arial" font-size="16">CAR - Speed: 100 - Capacity: 4</text>
+</svg>

@@ -1,0 +1,12 @@
+{
+  "structure": "heros_journey",
+  "tone": "epic",
+  "characters": [
+    "hero",
+    "villain"
+  ],
+  "plot": "quest",
+  "acts": 3,
+  "wordCount": 81,
+  "estimatedReadTime": "1 min"
+}

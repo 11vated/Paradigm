@@ -1,0 +1,11 @@
+{
+  "frameCount": 18,
+  "fps": 30,
+  "motionType": "skeletal",
+  "loop": "loop",
+  "frameWidth": 128,
+  "frameHeight": 128,
+  "cols": 8,
+  "rows": 3,
+  "totalFrames": 18
+}

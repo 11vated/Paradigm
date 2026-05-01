@@ -1,0 +1,227 @@
+{
+  "simulation": {
+    "type": "rigid_body",
+    "gravity": 10,
+    "friction": 0.3,
+    "elasticity": 0.8,
+    "steps": 1000,
+    "timeStep": 0.016666666666666666,
+    "solver": "sequential_impulse",
+    "quality": "low"
+  },
+  "bodies": [
+    {
+      "id": "body_0",
+      "type": "dynamic",
+      "shape": "box",
+      "position": [
+        -3.2245994724729075,
+        7.124299710456167,
+        0.5567825833384079
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 1,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_1",
+      "type": "static",
+      "shape": "sphere",
+      "position": [
+        -4.243424928291134,
+        7.03682322627036,
+        -3.5195630667170574
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_2",
+      "type": "static",
+      "shape": "cylinder",
+      "position": [
+        1.775334163979477,
+        2.5343665874533308,
+        -2.2365550176419626
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_3",
+      "type": "static",
+      "shape": "box",
+      "position": [
+        1.3619752438250066,
+        2.164981155934642,
+        4.895681631271664
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_4",
+      "type": "static",
+      "shape": "sphere",
+      "position": [
+        2.3884075466221137,
+        7.850466410310249,
+        -1.7935298020588117
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_5",
+      "type": "static",
+      "shape": "cylinder",
+      "position": [
+        4.892446286145496,
+        6.230702626836637,
+        -4.048826122179383
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_6",
+      "type": "static",
+      "shape": "box",
+      "position": [
+        -4.098941605598557,
+        8.811371246602395,
+        -2.0229736216907
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "body_7",
+      "type": "static",
+      "shape": "sphere",
+      "position": [
+        3.6613612627707344,
+        0.036286792612988394,
+        3.1030608068705092
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mass": 0,
+      "friction": 0.3,
+      "restitution": 0.8,
+      "dimensions": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "type": "gravity",
+      "value": 10,
+      "direction": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "type": "ground",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "metadata": {
+    "generated": "2026-05-01T12:58:25.102Z",
+    "seed_hash": "test008",
+    "engine_version": "2.0.0"
+  }
+}

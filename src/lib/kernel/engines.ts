@@ -29,6 +29,9 @@ import { generateRobotics } from './generators/robotics';
 import { generateCircuit } from './generators/circuit';
 import { generateFood } from './generators/food';
 import { generateChoreography } from './generators/choreography';
+import { generateAlife } from './generators/alife';
+import { generateUI } from './generators/ui';
+import { generateAgent } from './generators/agent';
 
 interface Seed {
   $name?: string;
@@ -349,13 +352,28 @@ async function growNarrative(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growUi(seed: Seed): Artifact {
-  return {
-    type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    interface: { layout: geneVal(seed, 'layout', 'dashboard'), theme: geneVal(seed, 'theme', 'dark'), components: geneVal(seed, 'components', ['header', 'sidebar', 'main']) },
-    render_hints: { mode: 'ui_preview', interactive: true },
-  };
+async function growUi(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/ui';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateUI(seed, outputPath);
+    return {
+      type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      interface: { layout: geneVal(seed, 'layout', 'dashboard'), theme: geneVal(seed, 'theme', 'dark'), components: geneVal(seed, 'components', ['header', 'sidebar', 'main']) },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
+      render_hints: { mode: 'ui_preview', interactive: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      interface: { error: String(err) },
+      render_hints: { mode: 'ui_preview', interactive: true, error: true },
+    };
+  }
 }
 
 async function growPhysics(seed: Seed): Promise<Artifact> {
@@ -461,13 +479,28 @@ async function growGame(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growAlife(seed: Seed): Artifact {
-  return {
-    type: 'alife', name: seed.$name ?? 'Artificial Life', domain: 'alife',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    alife: { rules: geneVal(seed, 'rules', 'conway'), grid_size: Math.max(16, Math.floor(geneVal(seed, 'gridSize', 0.5) * 128)), initial_density: geneVal(seed, 'density', 0.3) },
-    render_hints: { mode: 'cellular_automata', animated: true },
-  };
+async function growAlife(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/alife';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateAlife(seed, outputPath);
+    return {
+      type: 'alife', name: seed.$name ?? 'Artificial Life', domain: 'alife',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      alife: { rules: geneVal(seed, 'rules', 'conway'), grid_size: Math.max(16, Math.floor(geneVal(seed, 'gridSize', 0.5) * 128)), initial_density: geneVal(seed, 'density', 0.3) },
+      artifact: { filePath: result.filePath, format: 'JSON', gridSize: result.gridSize },
+      render_hints: { mode: 'cellular_automata', animated: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'alife', name: seed.$name ?? 'Artificial Life', domain: 'alife',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      alife: { error: String(err) },
+      render_hints: { mode: 'cellular_automata', animated: true, error: true },
+    };
+  }
 }
 
 async function growShader(seed: Seed): Promise<Artifact> {
@@ -745,82 +778,37 @@ async function growChoreography(seed: Seed): Promise<Artifact> {
  * Agent seeds are breedable, evolvable, composable, and sovereign —
  * the full kernel operates on them like any other seed.
  */
-function growAgent(seed: Seed): Artifact {
+async function growAgent(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/agent';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
   const persona = geneVal(seed, 'persona', 'architect');
-  const name = geneVal(seed, 'name', seed.$name ?? 'Unnamed Agent');
-  const temperature = Math.max(0, Math.min(1, geneVal(seed, 'temperature', 0.3)));
-  const reasoningDepth = Math.max(0, Math.min(1, geneVal(seed, 'reasoning_depth', 0.5)));
-  const explorationRate = Math.max(0, Math.min(1, geneVal(seed, 'exploration_rate', 0.2)));
-  const confidenceThreshold = Math.max(0, Math.min(1, geneVal(seed, 'confidence_threshold', 0.7)));
-  const verbosity = Math.max(0, Math.min(1, geneVal(seed, 'verbosity', 0.5)));
-  const autonomy = Math.max(0, Math.min(1, geneVal(seed, 'autonomy', 0.3)));
-  const creativityBias = Math.max(0, Math.min(1, geneVal(seed, 'creativity_bias', 0.4)));
-  const maxSteps = Math.floor(Math.max(0, Math.min(1, geneVal(seed, 'max_reasoning_steps', 0.5))) * 20);
-  const memoryWindow = Math.floor(Math.max(0, Math.min(1, geneVal(seed, 'context_window', 0.5))) * 50);
+  const name = seed.$name ?? 'Agent';
 
-  // Domain focus — attention weights over all domains (default: uniform)
-  let domainFocus = geneVal(seed, 'domain_focus', null);
-  if (!Array.isArray(domainFocus) || domainFocus.length < 26) {
-    domainFocus = new Array(27).fill(1 / 27);
+  try {
+    const result = await generateAgent(seed, outputPath);
+    return {
+      type: 'agent', name, domain: 'agent',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      config: {
+        persona, name,
+        temperature: +(geneVal(seed, 'temperature', 0.7)).toFixed(2),
+        reasoningDepth: +(geneVal(seed, 'reasoning_depth', 0.5)).toFixed(2),
+        explorationRate: +(geneVal(seed, 'exploration_rate', 0.5)).toFixed(2),
+        maxSteps: Math.floor(geneVal(seed, 'max_steps', 10)),
+      },
+      artifact: { filePath: result.filePath, format: 'JSON', configSize: result.configSize },
+      render_hints: { mode: 'chat_interface', color_scheme: 'dark', animated: false, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'agent', name, domain: 'agent',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      config: { error: String(err) },
+      render_hints: { mode: 'chat_interface', color_scheme: 'dark', animated: false, error: true },
+    };
   }
-  // Normalize to sum to 1
-  const focusSum = domainFocus.reduce((a: number, b: number) => a + Math.abs(b), 0) || 1;
-  domainFocus = domainFocus.map((v: number) => Math.abs(v) / focusSum);
-
-  // Gene expertise — proficiency with each gene type (default: uniform)
-  let geneExpertise = geneVal(seed, 'gene_expertise', null);
-  if (!Array.isArray(geneExpertise) || geneExpertise.length < 17) {
-    geneExpertise = new Array(17).fill(1 / 17);
-  }
-  const expertiseSum = geneExpertise.reduce((a: number, b: number) => a + Math.abs(b), 0) || 1;
-  geneExpertise = geneExpertise.map((v: number) => Math.abs(v) / expertiseSum);
-
-  // Tool permissions
-  const toolPerms = geneVal(seed, 'tool_permissions', {});
-  const tools = {
-    web_browse: !!toolPerms?.web_browse,
-    file_write: !!toolPerms?.file_write,
-    fork_agent: !!toolPerms?.fork_agent,
-    delegate: !!toolPerms?.delegate,
-  };
-
-  // Build the system prompt from the agent's genes
-  const personaTraits: Record<string, string> = {
-    architect: 'You approach problems systematically, designing structured solutions. You favor composition and multi-step plans.',
-    artist: 'You embrace creativity and expressiveness. You generate diverse, unexpected gene combinations and favor aesthetic quality.',
-    critic: 'You evaluate rigorously, comparing seeds by distance metrics and fitness. You suggest improvements and point out weaknesses.',
-    explorer: 'You prioritize novelty and exploration. You try unusual domain compositions and push genes toward unexplored regions.',
-    composer: 'You excel at cross-domain composition. You think in functor bridges and multi-seed synthesis.',
-    analyst: 'You are precise and data-driven. You compute distances, compare populations, and optimize fitness systematically.',
-  };
-
-  const systemPrompt = [
-    `You are ${name}, a Paradigm GSPL agent with persona "${persona}".`,
-    personaTraits[persona] || personaTraits.architect,
-    `Temperature: ${temperature.toFixed(2)} | Reasoning depth: ${reasoningDepth.toFixed(2)} | Creativity: ${creativityBias.toFixed(2)}`,
-    `You have access to 27 creative domains, 17 gene types, and 12 functor bridges.`,
-    `Maximum reasoning steps: ${maxSteps}. Memory window: ${memoryWindow} turns.`,
-    tools.web_browse ? 'Web browsing is enabled.' : '',
-    `Respond ${verbosity < 0.3 ? 'tersely' : verbosity > 0.7 ? 'in detail with explanations' : 'with moderate detail'}.`,
-    autonomy > 0.7 ? 'Act independently — execute plans without asking for confirmation.' :
-    autonomy < 0.3 ? 'Always confirm plans with the user before executing.' :
-    'Confirm complex multi-step plans, but execute simple operations directly.',
-  ].filter(Boolean).join(' ');
-
-  return {
-    type: 'agent', name, domain: 'agent',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    config: {
-      persona, name, temperature, reasoningDepth, explorationRate,
-      confidenceThreshold, verbosity, autonomy, creativityBias,
-      maxSteps, memoryWindow,
-      domainWeights: domainFocus,
-      geneWeights: geneExpertise,
-      tools,
-      systemPrompt,
-    },
-    render_hints: { mode: 'chat_interface', color_scheme: 'dark', animated: false },
-  };
 }
 
 // ─── ENGINE REGISTRY ──────────────────────────────────────────────────────────

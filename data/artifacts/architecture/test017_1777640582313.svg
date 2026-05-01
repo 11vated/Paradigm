@@ -1,0 +1,25 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+<rect width="800" height="600" fill="#e8e8e8"/>
+<rect x="200" y="470" width="400" height="80" fill="#4a90e2" stroke="#2c5aa0" stroke-width="2"/>
+<rect x="222.85714285714286" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="285.7142857142857" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="348.57142857142856" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="411.42857142857144" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="474.28571428571433" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="537.1428571428572" y="490" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="200" y="390" width="400" height="80" fill="#357abd" stroke="#2c5aa0" stroke-width="2"/>
+<rect x="222.85714285714286" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="285.7142857142857" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="348.57142857142856" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="411.42857142857144" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="474.28571428571433" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="537.1428571428572" y="410" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="200" y="310" width="400" height="80" fill="#4a90e2" stroke="#2c5aa0" stroke-width="2"/>
+<rect x="222.85714285714286" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="285.7142857142857" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="348.57142857142856" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="411.42857142857144" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="474.28571428571433" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<rect x="537.1428571428572" y="330" width="40" height="30" fill="#f5d742" opacity="0.8"/>
+<polygon points="200,310 600,310 400,250" fill="#8b4513" stroke="#654321" stroke-width="2"/>
+</svg>

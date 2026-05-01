@@ -1,0 +1,99 @@
+{
+  "style": "ballet",
+  "tempo": 130,
+  "complexity": 0.5,
+  "duration": 60,
+  "moves": [
+    {
+      "time": "0.00",
+      "move": "glide",
+      "duration": "0.23",
+      "intensity": 0.5677941606416954
+    },
+    {
+      "time": "0.46",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.4220241327690286
+    },
+    {
+      "time": "0.92",
+      "move": "kick",
+      "duration": "0.23",
+      "intensity": 0.5152692909486717
+    },
+    {
+      "time": "1.38",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.0885380208001817
+    },
+    {
+      "time": "1.85",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.6938488303654126
+    },
+    {
+      "time": "2.31",
+      "move": "pose",
+      "duration": "0.23",
+      "intensity": 0.31362693796863184
+    },
+    {
+      "time": "2.77",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.3442657234654881
+    },
+    {
+      "time": "3.23",
+      "move": "spin",
+      "duration": "0.23",
+      "intensity": 0.7999361267036573
+    },
+    {
+      "time": "3.69",
+      "move": "step",
+      "duration": "0.23",
+      "intensity": 0.03761142905738901
+    },
+    {
+      "time": "4.15",
+      "move": "spin",
+      "duration": "0.23",
+      "intensity": 0.8586182412497267
+    },
+    {
+      "time": "4.62",
+      "move": "kick",
+      "duration": "0.23",
+      "intensity": 0.8262003614663973
+    },
+    {
+      "time": "5.08",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.7353611075566115
+    },
+    {
+      "time": "5.54",
+      "move": "kick",
+      "duration": "0.23",
+      "intensity": 0.4684789387383703
+    },
+    {
+      "time": "6.00",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.7695009492082273
+    },
+    {
+      "time": "6.46",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.2733425689448806
+    }
+  ],
+  "beatCount": 130
+}

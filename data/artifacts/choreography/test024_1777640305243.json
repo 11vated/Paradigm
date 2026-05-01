@@ -1,0 +1,99 @@
+{
+  "style": "ballet",
+  "tempo": 130,
+  "complexity": 0.5,
+  "duration": 60,
+  "moves": [
+    {
+      "time": "0.00",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.043495273201458184
+    },
+    {
+      "time": "0.46",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.3187527090618836
+    },
+    {
+      "time": "0.92",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.45863676524754304
+    },
+    {
+      "time": "1.38",
+      "move": "spin",
+      "duration": "0.23",
+      "intensity": 0.9569742135086893
+    },
+    {
+      "time": "1.85",
+      "move": "leap",
+      "duration": "0.23",
+      "intensity": 0.5133102926510591
+    },
+    {
+      "time": "2.31",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.7124271476446626
+    },
+    {
+      "time": "2.77",
+      "move": "leap",
+      "duration": "0.23",
+      "intensity": 0.1316337874339969
+    },
+    {
+      "time": "3.23",
+      "move": "jump",
+      "duration": "0.23",
+      "intensity": 0.07841813965181144
+    },
+    {
+      "time": "3.69",
+      "move": "kick",
+      "duration": "0.23",
+      "intensity": 0.8347447172203892
+    },
+    {
+      "time": "4.15",
+      "move": "step",
+      "duration": "0.23",
+      "intensity": 0.37776540564951744
+    },
+    {
+      "time": "4.62",
+      "move": "leap",
+      "duration": "0.23",
+      "intensity": 0.6388060427752313
+    },
+    {
+      "time": "5.08",
+      "move": "leap",
+      "duration": "0.23",
+      "intensity": 0.6328374961141542
+    },
+    {
+      "time": "5.54",
+      "move": "turn",
+      "duration": "0.23",
+      "intensity": 0.8441357634383447
+    },
+    {
+      "time": "6.00",
+      "move": "kick",
+      "duration": "0.23",
+      "intensity": 0.5898023426231426
+    },
+    {
+      "time": "6.46",
+      "move": "leap",
+      "duration": "0.23",
+      "intensity": 0.19005597837164867
+    }
+  ],
+  "beatCount": 130
+}

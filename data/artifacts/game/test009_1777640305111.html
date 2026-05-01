@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paradigm Game - action</title>
+  <style>
+    body { margin: 0; padding: 20px; font-family: Arial; background: #1a1a2e; color: #eee; }
+    canvas { border: 2px solid #0f3460; background: #16213e; display: block; margin: 20px auto; }
+    .info { text-align: center; margin: 10px; }
+    .controls { text-align: center; margin: 20px; }
+    button { padding: 10px 20px; margin: 5px; background: #0f3460; color: white; border: none; border-radius: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="info">
+    <h1>Action Game</h1>
+    <p>Difficulty: 50% | Levels: 10 | Mechanics: action</p>
+  </div>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+  <div class="controls">
+    <button onclick="startGame()">Start Game</button>
+    <button onclick="resetGame()">Reset</button>
+  </div>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let gameState = { score: 0, level: 1, running: false };
+
+    function startGame() {
+      gameState.running = true;
+      gameState.score = 0;
+      gameLoop();
+    }
+
+    function resetGame() {
+      gameState = { score: 0, level: 1, running: false };
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function gameLoop() {
+      if (!gameState.running) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Simple game mechanics based on genre
+      
+      // Action game: move player, avoid obstacles
+      const playerX = canvas.width / 2 + Math.sin(Date.now() / 100) * 100;
+      ctx.fillStyle = '#e94560';
+      ctx.fillRect(playerX, canvas.height - 50, 50, 50);
+    
+
+      gameState.score += 1;
+      if (gameState.score % 100 === 0) gameState.level++;
+
+      requestAnimationFrame(gameLoop);
+    }
+
+    
+    function handleKeydown(e) {
+      if (e.key === ' ') gameState.running = !gameState.running;
+    }
+    document.addEventListener('keydown', handleKeydown);
+  
+  </script>
+</body>
+</html>

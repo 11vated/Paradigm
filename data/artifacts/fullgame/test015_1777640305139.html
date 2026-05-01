@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paradigm Full Game - action</title>
+  <style>
+    body { margin:0; padding:0; font-family:Arial; background:#1a1a2e; color:#eee; overflow:hidden; }
+    #gameCanvas { display:block; margin:0 auto; background:#16213e; }
+    #ui { position:absolute; top:10px; left:10px; background:rgba(0,0,0,0.7); padding:10px; border-radius:5px; }
+    .btn { padding:8px 16px; margin:5px; background:#0f3460; color:white; border:none; border-radius:3px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <h2>Action Game</h2>
+    <p>Difficulty: 50% | Levels: 10</p>
+    <button class="btn" onclick="game.start()">Start</button>
+    <button class="btn" onclick="game.pause()">Pause</button>
+    <p>Score: <span id="score">0</span> | Level: <span id="level">1</span></p>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const game = {
+      score: 0, level: 1, running: false, paused: false,
+      player: { x: canvas.width/2, y: canvas.height/2, size: 30, speed: 5 },
+      enemies: [], powerups: [],
+
+      start() { this.running = true; this.score = 0; this.level = 1; this.gameLoop(); },
+      pause() { this.paused = !this.paused; },
+      gameLoop() {
+        if (!this.running) return;
+        if (this.paused) { requestAnimationFrame(() => this.gameLoop()); return; }
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        // Draw player
+        ctx.fillStyle = '#e94560';
+        ctx.fillRect(this.player.x, this.player.y, this.player.size, this.player.size);
+
+        // action mechanics
+        this.updateGame();
+        this.drawUI();
+
+        requestAnimationFrame(() => this.gameLoop());
+      },
+      updateGame() {
+        this.score += 1;
+        if (this.score % 100 === 0) this.level = Math.min(10, this.level + 1);
+      },
+      drawUI() {
+        document.getElementById('score').textContent = this.score;
+        document.getElementById('level').textContent = this.level;
+      }
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') game.player.x -= game.player.speed;
+      if (e.key === 'ArrowRight') game.player.x += game.player.speed;
+      if (e.key === 'ArrowUp') game.player.y -= game.player.speed;
+      if (e.key === 'ArrowDown') game.player.y += game.player.speed;
+    });
+  </script>
+</body>
+</html>

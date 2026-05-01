@@ -1,0 +1,163 @@
+{
+  "environment": {
+    "type": "forest",
+    "resources": 600,
+    "climate": "temperate"
+  },
+  "species": [
+    {
+      "id": "species_0",
+      "name": "Species_A",
+      "population": 336,
+      "traits": {
+        "aggression": 0.46595211471101283,
+        "reproduction": 0.391821874922599,
+        "adaptability": 0.0036738975063240753
+      }
+    },
+    {
+      "id": "species_1",
+      "name": "Species_B",
+      "population": 724,
+      "traits": {
+        "aggression": 0.29941475291972275,
+        "reproduction": 0.4836410774975337,
+        "adaptability": 0.7433845058637707
+      }
+    },
+    {
+      "id": "species_2",
+      "name": "Species_C",
+      "population": 635,
+      "traits": {
+        "aggression": 0.06874039375016783,
+        "reproduction": 0.18954999691763993,
+        "adaptability": 0.6643208965278271
+      }
+    },
+    {
+      "id": "species_3",
+      "name": "Species_D",
+      "population": 929,
+      "traits": {
+        "aggression": 0.8362675383737035,
+        "reproduction": 0.2943728536341228,
+        "adaptability": 0.8638744841879142
+      }
+    },
+    {
+      "id": "species_4",
+      "name": "Species_E",
+      "population": 336,
+      "traits": {
+        "aggression": 0.6971512046082916,
+        "reproduction": 0.5629471963761034,
+        "adaptability": 0.18632011897972955
+      }
+    },
+    {
+      "id": "species_5",
+      "name": "Species_F",
+      "population": 791,
+      "traits": {
+        "aggression": 0.7507434092104511,
+        "reproduction": 0.24494558018770443,
+        "adaptability": 0.04411083520320491
+      }
+    }
+  ],
+  "interactions": [
+    {
+      "from": "species_0",
+      "to": "species_1",
+      "type": "predation",
+      "strength": 0.8863367965954545
+    },
+    {
+      "from": "species_0",
+      "to": "species_2",
+      "type": "competition",
+      "strength": 0.21688688868800354
+    },
+    {
+      "from": "species_0",
+      "to": "species_3",
+      "type": "competition",
+      "strength": 0.9515973483595217
+    },
+    {
+      "from": "species_0",
+      "to": "species_4",
+      "type": "symbiosis",
+      "strength": 0.20940188148197436
+    },
+    {
+      "from": "species_0",
+      "to": "species_5",
+      "type": "symbiosis",
+      "strength": 0.47463915781058985
+    },
+    {
+      "from": "species_1",
+      "to": "species_2",
+      "type": "symbiosis",
+      "strength": 0.8888503384374579
+    },
+    {
+      "from": "species_1",
+      "to": "species_3",
+      "type": "predation",
+      "strength": 0.02513919929948627
+    },
+    {
+      "from": "species_1",
+      "to": "species_4",
+      "type": "symbiosis",
+      "strength": 0.3816863414085364
+    },
+    {
+      "from": "species_1",
+      "to": "species_5",
+      "type": "symbiosis",
+      "strength": 0.11031482643967794
+    },
+    {
+      "from": "species_2",
+      "to": "species_3",
+      "type": "predation",
+      "strength": 0.10907531514802515
+    },
+    {
+      "from": "species_2",
+      "to": "species_4",
+      "type": "predation",
+      "strength": 0.8071036257623205
+    },
+    {
+      "from": "species_2",
+      "to": "species_5",
+      "type": "competition",
+      "strength": 0.5032570317163003
+    },
+    {
+      "from": "species_3",
+      "to": "species_4",
+      "type": "predation",
+      "strength": 0.6505242711768054
+    },
+    {
+      "from": "species_3",
+      "to": "species_5",
+      "type": "predation",
+      "strength": 0.9337902608098572
+    },
+    {
+      "from": "species_4",
+      "to": "species_5",
+      "type": "symbiosis",
+      "strength": 0.9100459236550398
+    }
+  ],
+  "stability": 0.6,
+  "quality": "low"
+}
