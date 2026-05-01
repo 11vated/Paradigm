@@ -5,6 +5,10 @@
  * 27th domain "agent" grows seeds into runnable agent configurations.
  */
 
+import { generateVisual2D } from './generators/visual2d';
+import { generateAudio } from './generators/audio';
+import { generateGeometry3D } from './generators/geometry3d';
+
 interface Seed {
   $name?: string;
   $domain?: string;
@@ -94,20 +98,35 @@ function growMusic(seed: Seed): Artifact {
   };
 }
 
-function growVisual2d(seed: Seed): Artifact {
+async function growVisual2d(seed: Seed): Promise<Artifact> {
   const style = geneVal(seed, 'style', 'abstract');
   const complexity = geneVal(seed, 'complexity', 0.5);
-  return {
-    type: 'visual2d', name: seed.$name ?? 'Visual', domain: 'visual2d',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    visual: {
-      style, complexity: typeof complexity === 'number' ? +complexity.toFixed(2) : complexity,
-      palette: geneVal(seed, 'palette', [0.5, 0.3, 0.8]),
-      composition: geneVal(seed, 'composition', 'centered'),
-      layers: typeof complexity === 'number' ? Math.max(3, Math.floor(complexity * 10)) : 5,
-    },
-    render_hints: { mode: '2d_canvas', generative: true },
-  };
+  const outputDir = 'data/artifacts/visual2d';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateVisual2D(seed, outputPath);
+    return {
+      type: 'visual2d', name: seed.$name ?? 'Visual', domain: 'visual2d',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      visual: {
+        style, complexity: typeof complexity === 'number' ? +complexity.toFixed(2) : complexity,
+        palette: geneVal(seed, 'palette', [0.5, 0.3, 0.8]),
+        composition: geneVal(seed, 'composition', 'centered'),
+        layers: typeof complexity === 'number' ? Math.max(3, Math.floor(complexity * 10)) : 5,
+      },
+      artifact: { filePath: outputPath, width: result.width, height: result.height, format: 'PNG' },
+      render_hints: { mode: '2d_canvas', generative: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'visual2d', name: seed.$name ?? 'Visual', domain: 'visual2d',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      visual: { style, complexity, error: String(err) },
+      render_hints: { mode: '2d_canvas', generative: true, error: true },
+    };
+  }
 }
 
 function growProcedural(seed: Seed): Artifact {
@@ -150,13 +169,35 @@ function growAnimation(seed: Seed): Artifact {
   };
 }
 
-function growGeometry3d(seed: Seed): Artifact {
-  return {
-    type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    mesh: { primitive: geneVal(seed, 'primitive', 'sphere'), subdivisions: Math.max(1, Math.floor(geneVal(seed, 'detail', 0.5) * 8)), material: geneVal(seed, 'material', 'metal'), scale: [1, 1, 1] },
-    render_hints: { mode: '3d_viewport', rotatable: true },
-  };
+async function growGeometry3d(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/geometry3d';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateGeometry3D(seed, outputPath);
+    return {
+      type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      mesh: {
+        primitive: geneVal(seed, 'primitive', 'sphere'),
+        subdivisions: Math.max(1, Math.floor(geneVal(seed, 'detail', 0.5) * 8)),
+        material: geneVal(seed, 'material', 'metal'),
+        scale: [1, 1, 1],
+        vertices: result.vertices,
+        faces: result.faces,
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, faces: result.faces },
+      render_hints: { mode: '3d_viewport', rotatable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      mesh: { error: String(err) },
+      render_hints: { mode: '3d_viewport', rotatable: true, error: true },
+    };
+  }
 }
 
 function growNarrative(seed: Seed): Artifact {
@@ -187,13 +228,33 @@ function growPhysics(seed: Seed): Artifact {
   };
 }
 
-function growAudio(seed: Seed): Artifact {
-  return {
-    type: 'audio', name: seed.$name ?? 'Sound', domain: 'audio',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    audio: { type: geneVal(seed, 'soundType', 'sfx'), duration_ms: Math.max(100, Math.floor(geneVal(seed, 'duration', 0.5) * 5000)), frequency: geneVal(seed, 'frequency', 440) },
-    render_hints: { mode: 'audio_waveform', playable: true },
-  };
+async function growAudio(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/audio';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.wav`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateAudio(seed, outputPath);
+    return {
+      type: 'audio', name: seed.$name ?? 'Sound', domain: 'audio',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      audio: {
+        type: geneVal(seed, 'soundType', 'sfx'),
+        duration_ms: result.duration * 1000,
+        frequency: geneVal(seed, 'frequency', 440),
+        sampleRate: result.sampleRate,
+      },
+      artifact: { filePath: result.filePath, format: 'WAV', duration: result.duration },
+      render_hints: { mode: 'audio_waveform', playable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'audio', name: seed.$name ?? 'Sound', domain: 'audio',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      audio: { error: String(err) },
+      render_hints: { mode: 'audio_waveform', playable: true, error: true },
+    };
+  }
 }
 
 function growEcosystem(seed: Seed): Artifact {
@@ -439,10 +500,11 @@ function growGeneric(seed: Seed): Artifact {
   };
 }
 
-export function growSeed(seed: Seed): Artifact {
+export async function growSeed(seed: Seed): Promise<Artifact> {
   const domain = seed.$domain ?? 'character';
   const engine = ENGINES[domain] ?? growGeneric;
-  return engine(seed);
+  const result = engine(seed);
+  return result instanceof Promise ? result : result;
 }
 
 export function getAllDomains(): string[] {
