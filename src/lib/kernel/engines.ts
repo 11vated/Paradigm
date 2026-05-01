@@ -13,6 +13,7 @@ import { generateCharacter } from './generators/character';
 import { generateSprite } from './generators/sprite';
 import { generateSpriteAnimated } from './generators/sprite-animated';
 import { generateMusic } from './generators/music';
+import { generateMusicEnhanced } from './generators/music-enhanced';
 import { generateNarrative } from './generators/narrative';
 import { generatePhysics } from './generators/physics';
 import { generateGame } from './generators/game';
@@ -160,27 +161,25 @@ async function growSprite(seed: Seed): Promise<Artifact> {
 
 async function growMusic(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/music';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.wav`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.wav`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  let tempo = geneVal(seed, 'tempo', 0.5);
-  if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;
-
   try {
-    const result = await generateMusic(seed, outputPath);
+    const result = await generateMusicEnhanced(seed, outputPath);
     return {
-      type: 'music', name: seed.$name ?? 'Composition', domain: 'music',
+      type: 'music', name: seed.$name ?? 'Music', domain: 'music',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      musical: {
-        tempo: Math.round(tempo),
+      music: {
+        tempo: +geneVal(seed, 'tempo', 0.5).toFixed(1),
         key: geneVal(seed, 'key', 'C'),
         scale: geneVal(seed, 'scale', 'major'),
-        time_signature: '4/4', measures: 8,
+        melody: geneVal(seed, 'melody', []),
+        duration_ms: result.duration * 1000,
+        sampleRate: result.sampleRate,
+        tuning: seed.genes?.tuning?.value || 'a432',
       },
-      timbre: (() => { const t = geneVal(seed, 'timbre', {}); return typeof t === 'object' ? t : { warmth: 0.5 }; })(),
-      melody_preview: (() => { const m = geneVal(seed, 'melody', []); return Array.isArray(m) ? m.slice(0, 16) : []; })(),
-      artifact: { filePath: result.filePath, format: 'WAV', duration: result.duration, sampleRate: result.sampleRate },
-      render_hints: { mode: 'audio_waveform', playable: true, hasFile: true },
+      artifact: { filePath: result.filePath, format: 'WAV (Stereo)', duration: result.duration, tuning: 'non-440Hz' },
+      render_hints: { mode: 'audio_waveform', playable: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
