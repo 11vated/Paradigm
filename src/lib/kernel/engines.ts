@@ -24,6 +24,7 @@ import { generateEcosystem } from './generators/ecosystem';
 import { generateProcedural } from './generators/procedural';
 import { generateProcedural3D } from './generators/procedural-3d';
 import { generateFullGame } from './generators/fullgame';
+import { generateFullGameElectron } from './generators/fullgame-electron';
 import { generateTypography } from './generators/typography';
 import { generateArchitecture } from './generators/architecture';
 import { generateVehicle } from './generators/vehicle';
@@ -247,7 +248,7 @@ async function growProcedural(seed: Seed): Promise<Artifact> {
 
 async function growFullgame(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/fullgame';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.html`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_electron.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const genre = geneVal(seed, 'genre', 'action');
@@ -303,20 +304,20 @@ async function growGeometry3d(seed: Seed): Promise<Artifact> {
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateGeometry3D(seed, outputPath);
+    const result = await generateFullGameElectron(seed, outputPath);
     return {
-      type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
+      type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      mesh: {
-        primitive: geneVal(seed, 'primitive', 'sphere'),
-        subdivisions: Math.max(1, Math.floor(geneVal(seed, 'detail', 0.5) * 8)),
-        material: geneVal(seed, 'material', 'metal'),
-        scale: [1, 1, 1],
-        vertices: result.vertices,
-        faces: result.faces,
+      game: {
+        genre, playerCount: geneVal(seed, 'playerCount', 1),
+        skillCeiling: geneVal(seed, 'skillCeiling', 5),
+        hasMultiplayer: geneVal(seed, 'hasMultiplayer', false),
+        hasPhysics: geneVal(seed, 'hasPhysics', true),
+        hasInventory: geneVal(seed, 'hasInventory', false),
+        hasQuests: geneVal(seed, 'hasQuests', false),
       },
-      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, faces: result.faces },
-      render_hints: { mode: '3d_viewport', rotatable: true, hasFile: true },
+      artifact: { filePath: result.filePath, format: 'HTML+Electron', size: result.size, platforms: result.platforms },
+      render_hints: { mode: 'game_embed', interactive: true, hasFile: true, electronReady: true },
     };
   } catch (err) {
     return {
