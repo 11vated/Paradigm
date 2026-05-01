@@ -21,6 +21,7 @@ import { generateAnimation } from './generators/animation';
 import { generateAnimationEnhanced } from './generators/animation-enhanced';
 import { generateShader } from './generators/shader';
 import { generateParticle } from './generators/particle';
+import { generateParticleGPU } from './generators/particle-gpu';
 import { generateEcosystem } from './generators/ecosystem';
 import { generateProcedural } from './generators/procedural';
 import { generateProcedural3D } from './generators/procedural-3d';
@@ -552,17 +553,24 @@ async function growShader(seed: Seed): Promise<Artifact> {
 
 async function growParticle(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/particle';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_gpu.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateParticle(seed, outputPath);
+    const result = await generateParticleGPU(seed, outputPath);
     return {
       type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      particles: { emitter: geneVal(seed, 'emitter', 'point'), count: Math.max(10, Math.floor(geneVal(seed, 'count', 0.5) * 1000)), lifetime: geneVal(seed, 'lifetime', 2.0), velocity: geneVal(seed, 'velocity', [0, 1, 0]) },
-      artifact: { filePath: result.filePath, format: 'JSON', particleCount: result.particleCount },
-      render_hints: { mode: 'particle_sim', animated: true, hasFile: true },
+      particle: {
+        count: geneVal(seed, 'count', 100),
+        emitterType: geneVal(seed, 'emitterType', 'point'),
+        particleType: geneVal(seed, 'particleType', 'spark'),
+        lifetime: +(geneVal(seed, 'lifetime', 2.0)).toFixed(1),
+        speed: +(geneVal(seed, 'speed', 5.0)).toFixed(1),
+        spread: +(geneVal(seed, 'spread', 1.0)).toFixed(1),
+      },
+      artifact: { filePath: result.filePath, format: 'JSON+GLSL+WGSL', particleCount: result.particleCount, gpuReady: true },
+      render_hints: { mode: 'particle_system', animated: true, hasFile: true, gpuReady: true },
     };
   } catch (err) {
     return {
