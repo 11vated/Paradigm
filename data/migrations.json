@@ -1,0 +1,22 @@
+[
+  {
+    "version": 1,
+    "name": "initial-schema",
+    "appliedAt": "2026-05-01T10:58:13.200Z"
+  },
+  {
+    "version": 2,
+    "name": "add-seed-metadata-fields",
+    "appliedAt": "2026-05-01T10:58:13.201Z"
+  },
+  {
+    "version": 3,
+    "name": "normalize-domain-names",
+    "appliedAt": "2026-05-01T10:58:13.202Z"
+  },
+  {
+    "version": 4,
+    "name": "add-user-metadata",
+    "appliedAt": "2026-05-01T10:58:13.202Z"
+  }
+]

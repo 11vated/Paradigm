@@ -4,27 +4,35 @@
     "username": "testuser",
     "passwordHash": "64a71f5483b52dcb7d933bfc020c3a24:b49e3804426e3c2cf7680895047fc1d71a8233cbe6e6e869e8ea97b06b9491f252adf251da8a5800e6c29cef7442f1b0c22bb798ecde8a14b0dda85024d1a5f8",
     "createdAt": "2026-04-12T20:08:10.193Z",
-    "role": "admin"
+    "role": "admin",
+    "lastLoginAt": "2026-04-12T20:08:10.193Z",
+    "seedCount": 0
   },
   {
     "id": "d2cdc6bc-e840-4964-9092-4990bfa935ab",
     "username": "testuser2",
     "passwordHash": "7cb083a8b413a99f6c16752ee6531fd7:a69e520fa8ee168d71abdab23bf059db68c0e946289ccbb163ad18930c19147c9975c4bb8e891a89ea9a212b506a7dd55be11a4339e88198717803e66f1451b1",
     "createdAt": "2026-04-12T20:16:51.895Z",
-    "role": "user"
+    "role": "user",
+    "lastLoginAt": "2026-04-12T20:16:51.895Z",
+    "seedCount": 0
   },
   {
     "id": "36b41b44-995d-429d-8749-b2a66813e6a2",
     "username": "testuser3",
     "passwordHash": "6c9f708fe9feb15a8b8b04fc5a01566f:1a5e1397a1b3844ff9ed609e11fae3d190bb7820d962925a5b5def99cb6e344d921d8788a3665f1bc9f142d2a02daa6629d5d2bfa898305e945afc9c742086b2",
     "createdAt": "2026-04-12T20:18:39.933Z",
-    "role": "user"
+    "role": "user",
+    "lastLoginAt": "2026-04-12T20:18:39.933Z",
+    "seedCount": 0
   },
   {
     "id": "99585e52-5431-4cb8-90f7-c1bd76fa2915",
     "username": "testuser4",
     "passwordHash": "d207a65d16deac6dae2883a09d9d4c07:bd0bfbdd6291d19f752ce141e2ec66ed8fcceb72a20ceb4962ea36d45c0cc05ff7714dc0ef9964e3cb8fbdbf00e87c1da4ebe92924cb8f59f19d3cc88b8775f1",
     "createdAt": "2026-04-12T20:20:39.580Z",
-    "role": "user"
+    "role": "user",
+    "lastLoginAt": "2026-04-12T20:20:39.580Z",
+    "seedCount": 0
   }
 ]

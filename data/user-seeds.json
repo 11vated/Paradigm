@@ -9042,6 +9042,9 @@
     "$lineage": {
       "generation": 1,
       "operation": "qft_evolve"
-    }
+    },
+    "$version": 1,
+    "$createdAt": "2026-05-01T10:58:13.201Z",
+    "$updatedAt": "2026-05-01T10:58:13.201Z"
   }
 ]
