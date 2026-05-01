@@ -33,6 +33,7 @@ import { generateTypographyEnhanced } from './generators/typography-enhanced';
 import { generateArchitecture } from './generators/architecture';
 import { generateArchitecture3D } from './generators/architecture-3d';
 import { generateVehicle } from './generators/vehicle';
+import { generateVehicle3D } from './generators/vehicle-3d';
 import { generateFurniture } from './generators/furniture';
 import { generateFashion } from './generators/fashion';
 import { generateRobotics } from './generators/robotics';
@@ -652,17 +653,22 @@ async function growArchitecture(seed: Seed): Promise<Artifact> {
 
 async function growVehicle(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/vehicle';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateVehicle(seed, outputPath);
+    const result = await generateVehicle3D(seed, outputPath);
     return {
       type: 'vehicle', name: seed.$name ?? 'Vehicle', domain: 'vehicle',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      vehicle: { type: geneVal(seed, 'type', 'car'), speed: geneVal(seed, 'speed', 100), capacity: geneVal(seed, 'capacity', 4) },
-      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
-      render_hints: { mode: 'vehicle_showcase', rotatable: true, hasFile: true },
+      vehicle: {
+        vehicleType: geneVal(seed, 'vehicleType', 'car'),
+        style: geneVal(seed, 'style', 'modern'),
+        wheelCount: geneVal(seed, 'wheelCount', 4),
+        hasDetails: geneVal(seed, 'hasDetails', true),
+      },
+      artifact: { filePath: result.filePath, format: 'GLTF', vertices: result.vertices, parts: result.parts },
+      render_hints: { mode: 'vehicle_3d', interactive: true, hasFile: true, enhanced: true },
     };
   } catch (err) {
     return {
