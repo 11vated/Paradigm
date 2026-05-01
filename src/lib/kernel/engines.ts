@@ -20,6 +20,15 @@ import { generateParticle } from './generators/particle';
 import { generateEcosystem } from './generators/ecosystem';
 import { generateProcedural } from './generators/procedural';
 import { generateFullGame } from './generators/fullgame';
+import { generateTypography } from './generators/typography';
+import { generateArchitecture } from './generators/architecture';
+import { generateVehicle } from './generators/vehicle';
+import { generateFurniture } from './generators/furniture';
+import { generateFashion } from './generators/fashion';
+import { generateRobotics } from './generators/robotics';
+import { generateCircuit } from './generators/circuit';
+import { generateFood } from './generators/food';
+import { generateChoreography } from './generators/choreography';
 
 interface Seed {
   $name?: string;
@@ -509,85 +518,220 @@ async function growParticle(seed: Seed): Promise<Artifact> {
   }
 }
 
-function growTypography(seed: Seed): Artifact {
-  return {
-    type: 'typography', name: seed.$name ?? 'Typeface', domain: 'typography',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    typography: { style: geneVal(seed, 'style', 'sans_serif'), weight_range: [100, 900], x_height: geneVal(seed, 'xHeight', 0.5), contrast: geneVal(seed, 'contrast', 0.3) },
-    render_hints: { mode: 'type_specimen' },
-  };
+async function growTypography(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/typography';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateTypography(seed, outputPath);
+    return {
+      type: 'typography', name: seed.$name ?? 'Typeface', domain: 'typography',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      typography: { style: geneVal(seed, 'style', 'sans_serif'), weight_range: [100, 900], x_height: geneVal(seed, 'xHeight', 0.5), contrast: geneVal(seed, 'contrast', 0.3) },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
+      render_hints: { mode: 'type_specimen', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'typography', name: seed.$name ?? 'Typeface', domain: 'typography',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      typography: { error: String(err) },
+      render_hints: { mode: 'type_specimen', error: true },
+    };
+  }
 }
 
-function growArchitecture(seed: Seed): Artifact {
-  return {
-    type: 'architecture', name: seed.$name ?? 'Building', domain: 'architecture',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    building: { style: geneVal(seed, 'style', 'modern'), floors: Math.max(1, Math.floor(geneVal(seed, 'scale', 0.5) * 10)), symmetry: geneVal(seed, 'symmetry', 'bilateral'), materials: geneVal(seed, 'materials', ['concrete', 'glass']) },
-    render_hints: { mode: '3d_building', rotatable: true },
-  };
+async function growArchitecture(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/architecture';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateArchitecture(seed, outputPath);
+    return {
+      type: 'architecture', name: seed.$name ?? 'Building', domain: 'architecture',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      building: { building_type: geneVal(seed, 'building_type', 'residential'), floors: typeof geneVal(seed, 'floors', 3) === 'number' ? geneVal(seed, 'floors', 3) : 3, style: geneVal(seed, 'style', 'modern') },
+      artifact: { filePath: result.filePath, format: 'SVG', floors: result.floors },
+      render_hints: { mode: 'building_viewer', rotatable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'architecture', name: seed.$name ?? 'Building', domain: 'architecture',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      building: { error: String(err) },
+      render_hints: { mode: 'building_viewer', rotatable: true, error: true },
+    };
+  }
 }
 
-function growVehicle(seed: Seed): Artifact {
-  return {
-    type: 'vehicle', name: seed.$name ?? 'Vehicle', domain: 'vehicle',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    vehicle: { propulsion: geneVal(seed, 'propulsion', 'combustion'), top_speed: Math.max(10, Math.floor(geneVal(seed, 'speed', 0.5) * 300)), mass_kg: Math.max(100, Math.floor(geneVal(seed, 'mass', 0.5) * 5000)) },
-    render_hints: { mode: '3d_vehicle', rotatable: true },
-  };
+async function growVehicle(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/vehicle';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateVehicle(seed, outputPath);
+    return {
+      type: 'vehicle', name: seed.$name ?? 'Vehicle', domain: 'vehicle',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      vehicle: { type: geneVal(seed, 'type', 'car'), speed: geneVal(seed, 'speed', 100), capacity: geneVal(seed, 'capacity', 4) },
+      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
+      render_hints: { mode: 'vehicle_showcase', rotatable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'vehicle', name: seed.$name ?? 'Vehicle', domain: 'vehicle',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      vehicle: { error: String(err) },
+      render_hints: { mode: 'vehicle_showcase', rotatable: true, error: true },
+    };
+  }
 }
 
-function growFurniture(seed: Seed): Artifact {
-  return {
-    type: 'furniture', name: seed.$name ?? 'Furniture', domain: 'furniture',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    furniture: { type: geneVal(seed, 'furnitureType', 'chair'), style: geneVal(seed, 'style', 'modern'), material: geneVal(seed, 'material', 'wood') },
-    render_hints: { mode: '3d_furniture' },
-  };
+async function growFurniture(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/furniture';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateFurniture(seed, outputPath);
+    return {
+      type: 'furniture', name: seed.$name ?? 'Furniture', domain: 'furniture',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      furniture: { type: geneVal(seed, 'type', 'chair'), dimensions: geneVal(seed, 'dimensions', [60, 60, 80]), style: geneVal(seed, 'style', 'modern') },
+      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
+      render_hints: { mode: 'furniture_viewer', rotatable: true, hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'furniture', name: seed.$name ?? 'Furniture', domain: 'furniture',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      furniture: { error: String(err) },
+      render_hints: { mode: 'furniture_viewer', rotatable: true, error: true },
+    };
+  }
 }
 
-function growFashion(seed: Seed): Artifact {
-  return {
-    type: 'fashion', name: seed.$name ?? 'Garment', domain: 'fashion',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    garment: { type: geneVal(seed, 'garmentType', 'dress'), fabric: geneVal(seed, 'fabric', 'silk'), palette: geneVal(seed, 'palette', [0.8, 0.1, 0.3]) },
-    render_hints: { mode: '3d_garment' },
-  };
+async function growFashion(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/fashion';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateFashion(seed, outputPath);
+    return {
+      type: 'fashion', name: seed.$name ?? 'Garment', domain: 'fashion',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      garment: { type: geneVal(seed, 'type', 'dress'), style: geneVal(seed, 'style', 'casual'), colors: geneVal(seed, 'colors', [[0.8, 0.2, 0.3], [0.2, 0.5, 0.8]]) },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
+      render_hints: { mode: 'fashion_sketch', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'fashion', name: seed.$name ?? 'Garment', domain: 'fashion',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      garment: { error: String(err) },
+      render_hints: { mode: 'fashion_sketch', error: true },
+    };
+  }
 }
 
-function growRobotics(seed: Seed): Artifact {
-  return {
-    type: 'robotics', name: seed.$name ?? 'Robot', domain: 'robotics',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    robot: { type: geneVal(seed, 'robotType', 'humanoid'), dof: Math.max(3, Math.floor(geneVal(seed, 'dof', 0.5) * 12)), actuators: geneVal(seed, 'actuators', ['servo', 'linear']) },
-    render_hints: { mode: '3d_robot', animated: true },
-  };
+async function growRobotics(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/robotics';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateRobotics(seed, outputPath);
+    return {
+      type: 'robotics', name: seed.$name ?? 'Robot', domain: 'robotics',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      robot: { type: geneVal(seed, 'type', 'manipulator'), dof: geneVal(seed, 'dof', 6), payload: geneVal(seed, 'payload', 10) },
+      artifact: { filePath: result.filePath, format: 'SVG', type: result.type },
+      render_hints: { mode: 'robot_schematic', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'robotics', name: seed.$name ?? 'Robot', domain: 'robotics',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      robot: { error: String(err) },
+      render_hints: { mode: 'robot_schematic', error: true },
+    };
+  }
 }
 
-function growCircuit(seed: Seed): Artifact {
-  return {
-    type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    circuit: { type: geneVal(seed, 'circuitType', 'digital'), components: geneVal(seed, 'components', ['resistor', 'capacitor', 'IC']), layers: Math.max(1, Math.floor(geneVal(seed, 'layers', 0.5) * 6)) },
-    render_hints: { mode: 'schematic' },
-  };
+async function growCircuit(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/circuit';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateCircuit(seed, outputPath);
+    return {
+      type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      circuit: { type: geneVal(seed, 'type', 'analog'), components: geneVal(seed, 'components', ['resistor', 'capacitor', 'inductor']), complexity: geneVal(seed, 'complexity', 0.5) },
+      artifact: { filePath: result.filePath, format: 'SVG', componentCount: result.componentCount },
+      render_hints: { mode: 'circuit_diagram', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      circuit: { error: String(err) },
+      render_hints: { mode: 'circuit_diagram', error: true },
+    };
+  }
 }
 
-function growFood(seed: Seed): Artifact {
-  return {
-    type: 'food', name: seed.$name ?? 'Recipe', domain: 'food',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    recipe: { cuisine: geneVal(seed, 'cuisine', 'italian'), complexity: geneVal(seed, 'complexity', 0.5), servings: 4, flavor_profile: geneVal(seed, 'flavor_profile', [0.5, 0.3, 0.7, 0.2, 0.1]) },
-    render_hints: { mode: 'recipe_card' },
-  };
+async function growFood(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/food';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateFood(seed, outputPath);
+    return {
+      type: 'food', name: seed.$name ?? 'Dish', domain: 'food',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      dish: { type: geneVal(seed, 'type', 'pizza'), cuisine: geneVal(seed, 'cuisine', 'italian'), ingredients: geneVal(seed, 'ingredients', ['tomato', 'cheese', 'basil']) },
+      artifact: { filePath: result.filePath, format: 'PNG', width: result.width, height: result.height },
+      render_hints: { mode: 'food_photography', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'food', name: seed.$name ?? 'Dish', domain: 'food',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      dish: { error: String(err) },
+      render_hints: { mode: 'food_photography', error: true },
+    };
+  }
 }
 
-function growChoreography(seed: Seed): Artifact {
-  return {
-    type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
-    seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-    choreography: { style: geneVal(seed, 'style', 'contemporary'), tempo: geneVal(seed, 'tempo', 0.5), dancers: Math.max(1, Math.floor(geneVal(seed, 'dancers', 0.5) * 8)), duration_beats: 32 },
-    render_hints: { mode: 'motion_timeline', animated: true },
-  };
+async function growChoreography(seed: Seed): Promise<Artifact> {
+  const outputDir = 'data/artifacts/choreography';
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const outputPath = `${outputDir}/${fileName}`;
+
+  try {
+    const result = await generateChoreography(seed, outputPath);
+    return {
+      type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      dance: { style: geneVal(seed, 'style', 'ballet'), tempo: geneVal(seed, 'tempo', 0.5), complexity: geneVal(seed, 'complexity', 0.5), duration: geneVal(seed, 'duration', 60) },
+      artifact: { filePath: result.filePath, format: 'JSON', moveCount: result.moveCount },
+      render_hints: { mode: 'dance_timeline', hasFile: true },
+    };
+  } catch (err) {
+    return {
+      type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
+      seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+      dance: { error: String(err) },
+      render_hints: { mode: 'dance_timeline', error: true },
+    };
+  }
 }
 
 // ─── 27th DOMAIN: AGENT ─────────────────────────────────────────────────────
