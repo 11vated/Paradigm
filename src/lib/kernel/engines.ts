@@ -36,6 +36,7 @@ import { generateCircuit } from './generators/circuit';
 import { generateFood } from './generators/food';
 import { generateChoreography } from './generators/choreography';
 import { generateAlife } from './generators/alife';
+import { generateALifeWorker } from './generators/alife-worker';
 import { generateUI } from './generators/ui';
 import { generateAgent } from './generators/agent';
 
@@ -496,17 +497,24 @@ async function growGame(seed: Seed): Promise<Artifact> {
 
 async function growAlife(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/alife';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_worker.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
+  let populationSize = geneVal(seed, 'populationSize', 50);
+  if (typeof populationSize === 'number' && populationSize <= 1) populationSize = Math.max(10, Math.floor(populationSize * 100));
+
   try {
-    const result = await generateAlife(seed, outputPath);
+    const result = await generateALifeWorker(seed, outputPath);
     return {
-      type: 'alife', name: seed.$name ?? 'Artificial Life', domain: 'alife',
+      type: 'alife', name: seed.$name ?? 'Ecosystem', domain: 'alife',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      alife: { rules: geneVal(seed, 'rules', 'conway'), grid_size: Math.max(16, Math.floor(geneVal(seed, 'gridSize', 0.5) * 128)), initial_density: geneVal(seed, 'density', 0.3) },
-      artifact: { filePath: result.filePath, format: 'JSON', gridSize: result.gridSize },
-      render_hints: { mode: 'cellular_automata', animated: true, hasFile: true },
+      simulation: {
+        populationSize, mutationRate: +(geneVal(seed, 'mutationRate', 0.1)).toFixed(3),
+        environment: geneVal(seed, 'environment', 'forest'),
+        timeSteps: 1000,
+      },
+      artifact: { filePath: result.filePath, format: 'JSON', entityCount: result.entityCount, workerScript: true },
+      render_hints: { mode: 'life_simulation', animated: true, hasFile: true, workerReady: true },
     };
   } catch (err) {
     return {

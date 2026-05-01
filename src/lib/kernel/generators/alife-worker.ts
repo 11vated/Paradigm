@@ -100,7 +100,7 @@ function generateResources(params: ALifeParams): any[] {
 function generateHazards(): any[] {
   return [
     { type: 'predator', position: [500, 500], strength: 10 },
-    { type: 'environmental', type: 'storm', damage: 20 }
+    { type: 'storm', position: [300, 300], damage: 20 }
   ];
 }
 
