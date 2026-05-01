@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { exportGLTF, createPBRMaterial } from './gltf-exporter';
 
 interface CharacterParams {
   size: number;
@@ -28,8 +29,8 @@ export async function generateCharacter(seed: Seed, outputPath: string): Promise
   const torsoHeight = 0.8 * params.size;
   const torsoWidth = 0.3 + params.strength * 0.4;
   const torsoGeo = new THREE.BoxGeometry(torsoWidth, torsoHeight, torsoWidth * 0.6);
-  const bodyMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(params.palette[0], params.palette[1], params.palette[2]),
+  const bodyMat = createPBRMaterial({
+    color: [params.palette[0], params.palette[1], params.palette[2]],
     metalness: 0.1,
     roughness: 0.7
   });
@@ -40,8 +41,8 @@ export async function generateCharacter(seed: Seed, outputPath: string): Promise
   // Head
   const headRadius = 0.15 * params.size;
   const headGeo = new THREE.SphereGeometry(headRadius, 16, 12);
-  const headMat = new THREE.MeshStandardMaterial({
-    color: new THREE.Color(params.palette[0] * 0.9, params.palette[1] * 0.9, params.palette[2] * 0.9),
+  const headMat = createPBRMaterial({
+    color: [params.palette[0] * 0.9, params.palette[1] * 0.9, params.palette[2] * 0.9],
     metalness: 0.0,
     roughness: 0.8
   });
@@ -73,8 +74,8 @@ export async function generateCharacter(seed: Seed, outputPath: string): Promise
     group.add(leg);
   });
   
-  // Export to OBJ
-  const objData = meshGroupToOBJ(group, 'character', params.palette);
+  // Export to GLTF
+  const gltfBuffer = await exportGLTF(group, { binary: true });
   
   // Ensure output directory exists
   const dir = path.dirname(outputPath);
@@ -111,55 +112,4 @@ function extractParams(seed: Seed): CharacterParams {
   };
 }
 
-function meshGroupToOBJ(group: THREE.Group, name: string, color: number[]): string {
-  let obj = `# Paradigm Character: ${name}\n`;
-  obj += `# Palette: RGB(${Math.floor(color[0]*255)}, ${Math.floor(color[1]*255)}, ${Math.floor(color[2]*255)})\n\n`;
-  
-  let vertexOffset = 1;
-  const r = Math.floor(color[0] * 255);
-  const g = Math.floor(color[1] * 255);
-  const b = Math.floor(color[2] * 255);
-  
-  obj += `mtllib ${name}.mtl\n`;
-  obj += `usemtl ${name}_material\n\n`;
-  
-  group.traverse(child => {
-    if (!(child instanceof THREE.Mesh)) return;
-    const geo = child.geometry;
-    const positions = geo.getAttribute('position') as THREE.BufferAttribute;
-    const normals = geo.getAttribute('normal') as THREE.BufferAttribute;
-    
-    // Write vertices
-    for (let i = 0; i < positions.count; i++) {
-      const x = positions.getX(i);
-      const y = positions.getY(i);
-      const z = positions.getZ(i);
-      obj += `v ${x.toFixed(6)} ${y.toFixed(6)} ${z.toFixed(6)}\n`;
-    }
-    
-    // Write normals
-    if (normals) {
-      for (let i = 0; i < normals.count; i++) {
-        const nx = normals.getX(i);
-        const ny = normals.getY(i);
-        const nz = normals.getZ(i);
-        obj += `vn ${nx.toFixed(6)} ${ny.toFixed(6)} ${nz.toFixed(6)}\n`;
-      }
-    }
-    
-    // Write faces
-    if (geo.index) {
-      const indices = geo.index;
-      for (let i = 0; i < indices.count; i += 3) {
-        const a = indices.getX(i) + vertexOffset;
-        const b = indices.getX(i + 1) + vertexOffset;
-        const c = indices.getX(i + 2) + vertexOffset;
-        obj += `f ${a}//${a} ${b}//${b} ${c}//${c}\n`;
-      }
-    }
-    
-    vertexOffset += positions.count;
-  });
-  
-  return obj;
-}
+// meshGroupToOBJ removed — now using GLTF exporter

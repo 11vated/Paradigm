@@ -8,7 +8,12 @@
     "start": "node server.ts",
     "build": "vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "package": "tsx scripts/package.ts",
+    "package:win": "tsx scripts/package.ts win",
+    "package:mac": "tsx scripts/package.ts mac",
+    "package:linux": "tsx scripts/package.ts linux",
+    "package:all": "tsx scripts/package.ts all"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

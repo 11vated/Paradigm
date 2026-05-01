@@ -6,6 +6,7 @@
  */
 
 import { generateVisual2D } from './generators/visual2d';
+import { generateVisual2DSVG } from './generators/visual2d-svg';
 import { generateAudio } from './generators/audio';
 import { generateGeometry3D } from './generators/geometry3d';
 import { generateCharacter } from './generators/character';
@@ -60,7 +61,7 @@ function geneVal(seed: Seed, name: string, fallback: any = null): any {
 
 async function growCharacter(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/character';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.obj`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const size = geneVal(seed, 'size', 1.0);
@@ -175,14 +176,16 @@ async function growMusic(seed: Seed): Promise<Artifact> {
 }
 
 async function growVisual2d(seed: Seed): Promise<Artifact> {
-  const style = geneVal(seed, 'style', 'abstract');
-  const complexity = geneVal(seed, 'complexity', 0.5);
   const outputDir = 'data/artifacts/visual2d';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
   const outputPath = `${outputDir}/${fileName}`;
 
+  const style = geneVal(seed, 'style', 'abstract');
+  const complexity = geneVal(seed, 'complexity', 0.5);
+  const palette = geneVal(seed, 'palette', [0.5, 0.3, 0.8]);
+
   try {
-    const result = await generateVisual2D(seed, outputPath);
+    const result = await generateVisual2DSVG(seed, outputPath);
     return {
       type: 'visual2d', name: seed.$name ?? 'Visual', domain: 'visual2d',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
@@ -192,15 +195,15 @@ async function growVisual2d(seed: Seed): Promise<Artifact> {
         composition: geneVal(seed, 'composition', 'centered'),
         layers: typeof complexity === 'number' ? Math.max(3, Math.floor(complexity * 10)) : 5,
       },
-      artifact: { filePath: outputPath, width: result.width, height: result.height, format: 'PNG' },
-      render_hints: { mode: '2d_canvas', generative: true, hasFile: true },
+      artifact: { filePath: result.filePath, format: 'SVG', width: result.width, height: result.height },
+      render_hints: { mode: '2d_svg', generative: true, hasFile: true, scalable: true },
     };
   } catch (err) {
     return {
       type: 'visual2d', name: seed.$name ?? 'Visual', domain: 'visual2d',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       visual: { style, complexity, error: String(err) },
-      render_hints: { mode: '2d_canvas', generative: true, error: true },
+      render_hints: { mode: '2d_svg', generative: true, error: true },
     };
   }
 }
@@ -843,7 +846,8 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
   const domain = seed.$domain ?? 'character';
   const engine = ENGINES[domain] ?? growGeneric;
   const result = engine(seed);
-  return result instanceof Promise ? result : result;
+  // Handle both sync and async engines
+  return result instanceof Promise ? await result : result;
 }
 
 export function getAllDomains(): string[] {

@@ -5,6 +5,8 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  const isProduction = mode === 'production';
+  
   return {
     plugins: [react(), tailwindcss()],
     define: {
@@ -17,8 +19,21 @@ export default defineConfig(({mode}) => {
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify — file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
+    build: isProduction ? {
+      rollupOptions: {
+        output: {
+          // Chunking strategy for large app
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'three'],
+            ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+            kernel: ['./src/lib/kernel/index.ts'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000,
+    } : undefined,
   };
 });
