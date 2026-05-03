@@ -1,17 +1,17 @@
 /**
  * GSPL REPL (Read-Eval-Print Loop) with Live Preview
  * Phase I.3: Interactive GSPL coding environment with real-time output
+ * NOW WIRED TO BACKEND API
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { executeGspl, type GSPLContext } from '../../lib/kernel/gspl-interpreter';
-import { growSeed, type Seed, type Artifact } from '../../lib/kernel/engines';
+import { executeGspl, parseGSPL } from '../../services/api';
+import type { Seed, Artifact } from '../../lib/kernel/engines';
 import { GsplLexer, TokenType } from '../../lib/kernel/gspl-lexer';
-import { GsplParser, ASTNodeType } from '../../lib/kernel/gspl-parser';
 import { Play, RotateCcw, Download, Eye, Code2, FileText, AlertCircle, CheckCircle } from 'lucide-react';
 
 // Default GSPL example
-const DEFAULT_CODE = `// GSPL REPL - Try it live!
+const DEFAULT_CODE = `// GSPL REPL - Try it live! (Backend API)
 // Generate a character seed and grow it
 
 seed "Demo Hero" in character {
@@ -53,31 +53,30 @@ export function GsplRepl() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'output' | 'tokens' | 'ast' | 'preview'>('output');
+  const [activeTab, setActiveTab] = useState<'output' | 'tokens' | 'tokens' | 'ast' | 'preview'>('output');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLIFrameElement>(null);
 
-  // Execute GSPL code
+  // Execute GSPL code via backend API
   const execute = useCallback(async () => {
     setIsExecuting(true);
     const startTime = performance.now();
 
     try {
-      // Lexical analysis
+      // Client-side lexical analysis for diagnostics only
       const lexer = new GsplLexer(code);
       const tokens = lexer.tokenize();
       const tokenCount = tokens.length;
 
-      // Parse
+      // Parse for AST node count (client-side for responsiveness)
+      const { GsplParser, ASTNodeType } from '../../lib/kernel/gspl-parser';
       const parser = new GsplParser(tokens.filter(t => t.type !== TokenType.ERROR));
       const ast = parser.parse();
       const astNodeCount = countNodes(ast);
 
       // Collect diagnostics
       const diagnostics: Diagnostic[] = [];
-
-      // Lexer errors
       const errorTokens = tokens.filter(t => t.type === TokenType.ERROR);
       for (const err of errorTokens) {
         diagnostics.push({
@@ -88,28 +87,11 @@ export function GsplRepl() {
         });
       }
 
-      // Execute
-      const context: GSPLContext = {
-        seeds: {},
-        functions: {},
-        variables: {},
-        types: {},
-        rng: { next: () => Math.random() } // TODO: Use Xoshiro256**
-      };
+      // Execute via backend API
+      const output = await executeGspl(code);
 
-      const output = executeGspl(code, context);
-
-      // Collect artifacts from context
-      const artifacts: Artifact[] = [];
-      for (const seed of Object.values(context.seeds)) {
-        try {
-          const artifact = await growSeed(seed as Seed);
-          if (artifact) artifacts.push(artifact);
-        } catch (e) {
-          // Ignore grow errors
-        }
-      }
-
+      // Parse response
+      const artifacts: Artifact[] = output?.emergent_assets || output?.artifacts || [];
       const executionTime = performance.now() - startTime;
 
       setResult({
@@ -141,9 +123,9 @@ export function GsplRepl() {
         astNodes: 0,
         executionTime
       });
+    } finally {
+      setIsExecuting(false);
     }
-
-    setIsExecuting(false);
   }, [code]);
 
   // Generate preview URL for artifact

@@ -2,17 +2,13 @@
  * Evolution UI — Visual interface for genetic algorithms
  * Phase II.3: Monitor and control evolution in real-time
  *
- * Features:
- * - Population visualization
- * - Fitness graph
- * - Generation controls
- * -个体 inspection
- * - Diversity metrics
+ * NOW WIRED TO BACKEND API via seedStore
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter } from 'recharts';
 import { Play, Pause, SkipForward, RotateCcw, Settings, Eye, BarChart3 } from 'lucide-react';
+import { useSeedStore } from '../../stores/seedStore';
 
 // Evolution configuration
 interface EvolutionConfig {
@@ -25,7 +21,7 @@ interface EvolutionConfig {
   selectionMethod: 'tournament' | 'roulette' | 'rank';
 }
 
-// Individual in population
+// Individual in population (mirrors backend)
 interface Individual {
   id: string;
   seed: any;
@@ -34,7 +30,7 @@ interface Individual {
   generation: number;
 }
 
-// Generation statistics
+// Generation statistics (from backend)
 interface GenerationStats {
   generation: number;
   bestFitness: number;
@@ -55,250 +51,70 @@ const DEFAULT_CONFIG: EvolutionConfig = {
   selectionMethod: 'tournament',
 };
 
-// Mock evolution engine (would connect to real GSPL evolve in production)
-class EvolutionEngine {
-  private config: EvolutionConfig;
-  private running: boolean = false;
-  private generation: number = 0;
-  private stats: GenerationStats[] = [];
-  private onUpdate?: (stats: GenerationStats) => void;
-
-  constructor(config: EvolutionConfig) {
-    this.config = config;
-  }
-
-  setUpdateCallback(callback: (stats: GenerationStats) => void) {
-    this.onUpdate = callback;
-  }
-
-  async start(): Promise<void> {
-    this.running = true;
-    this.generation = 0;
-    this.stats = [];
-
-    // Initialize population
-    let population = this.initializePopulation();
-
-    while (this.running && this.generation < this.config.generations) {
-      const stats = this.evaluateGeneration(population);
-      this.stats.push(stats);
-      this.generation++;
-
-      if (this.onUpdate) {
-        this.onUpdate(stats);
-      }
-
-      // Evolve to next generation
-      population = this.evolve(population);
-
-      // Simulate time for visualization
-      await this.sleep(100);
-    }
-  }
-
-  stop(): void {
-    this.running = false;
-  }
-
-  isRunning(): boolean {
-    return this.running;
-  }
-
-  getStats(): GenerationStats[] {
-    return this.stats;
-  }
-
-  private initializePopulation(): Individual[] {
-    const population: Individual[] = [];
-    for (let i = 0; i < this.config.populationSize; i++) {
-      population.push(this.createRandomIndividual(i));
-    }
-    return population;
-  }
-
-  private createRandomIndividual(index: number): Individual {
-    const genes = {
-      size: 0.5 + Math.random() * 1.5,
-      speed: Math.random(),
-      strength: Math.random(),
-      color: [Math.random(), Math.random(), Math.random()],
-    };
-
-    return {
-      id: `ind_${this.generation}_${index}`,
-      seed: { $name: `Individual ${index}`, phrase: `seed_${index}` },
-      fitness: 0,
-      genes,
-      generation: this.generation,
-    };
-  }
-
-  private evaluateGeneration(population: Individual[]): GenerationStats {
-    // Calculate fitness for each individual
-    for (const ind of population) {
-      ind.fitness = this.calculateFitness(ind);
-    }
-
-    // Sort by fitness
-    population.sort((a, b) => b.fitness - a.fitness);
-
-    const fitnesses = population.map(ind => ind.fitness);
-    const bestFitness = fitnesses[0];
-    const worstFitness = fitnesses[fitnesses.length - 1];
-    const avgFitness = fitnesses.reduce((a, b) => a + b, 0) / fitnesses.length;
-
-    // Calculate diversity (average gene variance)
-    const diversity = this.calculateDiversity(population);
-
-    return {
-      generation: this.generation,
-      bestFitness,
-      avgFitness,
-      worstFitness,
-      diversity,
-      population: [...population],
-    };
-  }
-
-  private calculateFitness(ind: Individual): number {
-    // Mock fitness function - in reality would use GSPL fitness expression
-    const { size, speed, strength } = ind.genes;
-    return (size * 0.3 + speed * 0.4 + strength * 0.3);
-  }
-
-  private calculateDiversity(population: Individual[]): number {
-    if (population.length === 0) return 0;
-
-    const genes = ['size', 'speed', 'strength'];
-    let totalVariance = 0;
-
-    for (const gene of genes) {
-      const values = population.map(ind => ind.genes[gene]);
-      const mean = values.reduce((a, b) => a + b, 0) / values.length;
-      const variance = values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length;
-      totalVariance += variance;
-    }
-
-    return totalVariance / genes.length;
-  }
-
-  private evolve(population: Individual[]): Individual[] {
-    const newPopulation: Individual[] = [];
-
-    // Elitism: keep best individuals
-    for (let i = 0; i < this.config.elitism && i < population.length; i++) {
-      newPopulation.push(population[i]);
-    }
-
-    // Fill rest with crossover and mutation
-    while (newPopulation.length < this.config.populationSize) {
-      const parent1 = this.selectParent(population);
-      const parent2 = this.selectParent(population);
-
-      let child = Math.random() < this.config.crossoverRate
-        ? this.crossover(parent1, parent2)
-        : { ...parent1 };
-
-      if (Math.random() < this.config.mutationRate) {
-        child = this.mutate(child);
-      }
-
-      child.id = `ind_${this.generation}_${newPopulation.length}`;
-      child.generation = this.generation;
-
-      newPopulation.push(child);
-    }
-
-    return newPopulation;
-  }
-
-  private selectParent(population: Individual[]): Individual {
-    if (this.config.selectionMethod === 'tournament') {
-      const tournamentSize = 3;
-      let best = population[Math.floor(Math.random() * population.length)];
-      for (let i = 1; i < tournamentSize; i++) {
-        const contender = population[Math.floor(Math.random() * population.length)];
-        if (contender.fitness > best.fitness) {
-          best = contender;
-        }
-      }
-      return best;
-    }
-
-    // Default: random selection
-    return population[Math.floor(Math.random() * population.length)];
-  }
-
-  private crossover(p1: Individual, p2: Individual): Individual {
-    const child: Individual = {
-      id: '',
-      seed: { ...p1.seed },
-      fitness: 0,
-      genes: {},
-      generation: 0,
-    };
-
-    // Uniform crossover
-    for (const gene of Object.keys(p1.genes)) {
-      child.genes[gene] = Math.random() < 0.5 ? p1.genes[gene] : p2.genes[gene];
-    }
-
-    return child;
-  }
-
-  private mutate(ind: Individual): Individual {
-    const mutated = { ...ind, genes: { ...ind.genes } };
-
-    for (const gene of Object.keys(mutated.genes)) {
-      if (Array.isArray(mutated.genes[gene])) {
-        // Mutate color array
-        mutated.genes[gene] = mutated.genes[gene].map((v: number) =>
-          Math.max(0, Math.min(1, v + (Math.random() - 0.5) * 0.2))
-        );
-      } else {
-        // Mutate scalar
-        mutated.genes[gene] = Math.max(0, mutated.genes[gene] + (Math.random() - 0.5) * 0.2);
-      }
-    }
-
-    return mutated;
-  }
-
-  private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-}
-
 export function EvolutionUI() {
   const [config, setConfig] = useState<EvolutionConfig>(DEFAULT_CONFIG);
-  const [engine] = useState(() => new EvolutionEngine(config));
   const [running, setRunning] = useState(false);
   const [currentStats, setCurrentStats] = useState<GenerationStats | null>(null);
   const [statsHistory, setStatsHistory] = useState<GenerationStats[]>([]);
   const [selectedIndividual, setSelectedIndividual] = useState<Individual | null>(null);
   const [view, setView] = useState<'graph' | 'population' | 'fitness'>('graph');
 
-  useEffect(() => {
-    engine.setUpdateCallback((stats) => {
-      setCurrentStats(stats);
-      setStatsHistory(prev => [...prev, stats]);
-    });
-  }, [engine]);
+  // Use seed store for backend API
+  const { currentSeed, evolveCurrentSeed, growCurrentSeed, fetchSeed, generateNewSeed } = useSeedStore();
 
   const startEvolution = async () => {
+    if (!currentSeed) {
+      // Generate a seed first if none exists
+      try {
+        const seed = await generateNewSeed('evolution test', 'character');
+        await fetchSeed(seed.id);
+      } catch (e) {
+        console.error('Failed to create seed for evolution:', e);
+        return;
+      }
+    }
+
     setRunning(true);
     setStatsHistory([]);
-    await engine.start();
-    setRunning(false);
+
+    try {
+      // Call backend evolution API
+      const result = await evolveCurrentSeed({
+        populationSize: config.populationSize,
+        generations: config.generations,
+        mutationRate: config.mutationRate,
+        crossoverRate: config.crossoverRate,
+        elitism: config.elitism,
+        selectionMethod: config.selectionMethod,
+      });
+
+      // Transform backend result to UI format
+      if (result && result.generations) {
+        const history: GenerationStats[] = result.generations.map((gen: any) => ({
+          generation: gen.generation,
+          bestFitness: gen.bestFitness,
+          avgFitness: gen.avgFitness,
+          worstFitness: gen.worstFitness,
+          diversity: gen.diversity,
+          population: gen.population || [],
+        }));
+        setStatsHistory(history);
+        if (history.length > 0) {
+          setCurrentStats(history[history.length - 1]);
+        }
+      }
+    } catch (e) {
+      console.error('Evolution failed:', e);
+    } finally {
+      setRunning(false);
+    }
   };
 
   const stopEvolution = () => {
-    engine.stop();
     setRunning(false);
   };
 
   const resetEvolution = () => {
-    engine.stop();
     setRunning(false);
     setCurrentStats(null);
     setStatsHistory([]);

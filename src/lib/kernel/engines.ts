@@ -19,24 +19,13 @@ async function getGPUSystem(): Promise<WebGPUGeneratorSystem> {
   return gpuSystem;
 }
 
-// Core domain imports (V2 versions with GPU acceleration)
-import { generateCharacter } from './generators/character'; // V2 with GPU fallback
-import { generateSpriteAnimated } from './generators/sprite-animated';
-import { generateMusicEnhanced } from './generators/music-enhanced';
-import { generateNarrative } from './generators/narrative';
-import { generatePhysics } from './generators/physics';
-import { generateGame } from './generators/game';
-import { generateVisual2DSVG } from './generators/visual2d-svg';
-import { generateAudio } from './generators/audio';
+// Core domain imports (V2/V3 versions with GPU acceleration)
+import { generateCharacter } from './generators/character-v3';
+import { generateSprite } from './generators/sprite-v2';
+import { generateMusic } from './generators/music-v2';
+import { generateVisual2D } from './generators/visual2d-v2';
+import { generateGame } from './generators/game-v2';
 import { generateGeometry3D } from './generators/geometry3d';
-import { generateCharacter } from './generators/character';
-import { generateSprite } from './generators/sprite';
-import { generateSpriteAnimated } from './generators/sprite-animated';
-import { generateMusic } from './generators/music';
-import { generateMusicEnhanced } from './generators/music-enhanced';
-import { generateNarrative } from './generators/narrative';
-import { generatePhysics } from './generators/physics';
-import { generateGame } from './generators/game';
 import { generateGameWASM } from './generators/game-wasm';
 import { generateAnimation } from './generators/animation';
 import { generateAnimationEnhanced } from './generators/animation-enhanced';
@@ -337,20 +326,18 @@ async function growGeometry3d(seed: Seed): Promise<Artifact> {
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
-    const result = await generateFullGameElectron(seed, outputPath);
+    // Use geometry3d generator to produce real GLTF files
+    const result = await generateGeometry3D(seed, outputPath);
     return {
-      type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
+      type: 'geometry3d', name: seed.$name ?? '3D Object', domain: 'geometry3d',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      game: {
-        genre: geneVal(seed, 'genre', 'arcade'), playerCount: geneVal(seed, 'playerCount', 1),
-        skillCeiling: geneVal(seed, 'skillCeiling', 5),
-        hasMultiplayer: geneVal(seed, 'hasMultiplayer', false),
-        hasPhysics: geneVal(seed, 'hasPhysics', true),
-        hasInventory: geneVal(seed, 'hasInventory', false),
-        hasQuests: geneVal(seed, 'hasQuests', false),
+      mesh: {
+        vertices: result.vertices,
+        faces: result.faces,
+        material: result.material,
       },
-      artifact: { filePath: result.filePath, format: 'HTML+Electron', size: result.size, platforms: result.platforms },
-      render_hints: { mode: 'game_embed', interactive: true, hasFile: true, electronReady: true },
+      artifact: { filePath: result.filePath, format: 'gltf-binary', size: result.fileSize },
+      render_hints: { mode: '3d_viewport', rotatable: true, hasFile: true },
     };
   } catch (err) {
     return {

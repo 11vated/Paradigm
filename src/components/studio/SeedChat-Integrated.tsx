@@ -1,14 +1,12 @@
 /**
- * SeedChat Integration — Connects to Real Generators
- * Improved with better error handling, loading states, and full flow
+ * SeedChat Integration — Connected to Backend API
+ * Uses seedStore to call real backend generators
  */
 
-import React, { useState, useRef, useEffect } from 'react';
-import { createSeedLLM, type SeedLLM } from '../../lib/kernel/seed-llm';
-import { createRealSeedLLM } from '../../lib/kernel/seed-llm-openai';
-import { executeGspl } from '../../lib/kernel/gspl-interpreter';
-import { growSeed, type Seed, type Artifact } from '../../lib/kernel/engines';
+import React, { useState } from 'react';
+import { useSeedStore } from '../../stores/seedStore';
 import { Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import type { Seed, Artifact } from '../../lib/kernel/engines';
 
 interface Message {
   id: string;
@@ -29,27 +27,16 @@ export function SeedChatIntegrated() {
     {
       id: '0',
       role: 'system',
-      content: 'Paradigm Studio AI — Connected to 103+ domain generators. Describe what to generate.',
+      content: 'Paradigm Studio AI — Connected to 103+ domain generators via backend API.',
       timestamp: new Date(),
     }
   ]);
   const [input, setInput] = useState('');
   const [loadingStep, setLoadingStep] = useState<LoadingStep>('idle');
-  const [apiKey, setApiKey] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  // Initialize LLM (mock or real)
-  const [llm] = useState<SeedLLM>(() => {
-    if (apiKey) {
-      try {
-        return createRealSeedLLM({ provider: 'openai', apiKey });
-      } catch (e) {
-        console.warn('Failed to initialize OpenAI, using mock:', e);
-        setError('Failed to initialize OpenAI API, using mock generator');
-      }
-    }
-    return createSeedLLM({ provider: 'mock' });
-  });
+  // Use the store which calls backend API
+  const { generateNewSeed, growCurrentSeed, currentSeed, artifact } = useSeedStore();
 
   const sendMessage = async () => {
     if (!input.trim() || loadingStep !== 'idle') return;
@@ -67,58 +54,30 @@ export function SeedChatIntegrated() {
     setLoadingStep('seed');
 
     try {
-      // Step 1: Generate seed
+      // Step 1: Generate seed via backend API
       let seed: Seed;
       try {
-        seed = await llm.generateSeed(input);
-        if (!seed || !seed.phrase) {
-          throw new Error('Invalid seed generated - missing phrase');
+        // Extract domain from input (simple heuristic)
+        const domain = inferDomain(input);
+        seed = await generateNewSeed(input, domain);
+        if (!seed || !seed.$hash) {
+          throw new Error('Invalid seed returned from API');
         }
       } catch (e) {
         throw new Error(`Seed generation failed: ${e instanceof Error ? e.message : String(e)}`);
       }
 
-      setLoadingStep('gspl');
-
-      // Step 2: Generate GSPL program
-      let gspl: string;
-      try {
-        gspl = await llm.generateGSPL(input, seed);
-        if (!gspl || gspl.length === 0) {
-          throw new Error('Empty GSPL program generated');
-        }
-      } catch (e) {
-        throw new Error(`GSPL generation failed: ${e instanceof Error ? e.message : String(e)}`);
-      }
-
       setLoadingStep('grow');
 
-      // Step 3: Execute GSPL or grow seed
-      let output: Artifact | undefined;
-      let gsplError: string | null = null;
-
-      // Try GSPL execution first
+      // Step 2: Grow seed via backend API
+      let output: Artifact | null = null;
       try {
-        const result = executeGspl(gspl, seed.phrase);
-        if (result && result.type && result.domain) {
-          output = result as Artifact;
+        output = await growCurrentSeed();
+        if (!output) {
+          throw new Error('No output generated');
         }
       } catch (e) {
-        gsplError = e instanceof Error ? e.message : String(e);
-        console.warn('GSPL execution failed, falling back to growSeed:', e);
-      }
-
-      // Fallback to growSeed if GSPL didn't produce valid output
-      if (!output) {
-        try {
-          output = await growSeed(seed);
-        } catch (e) {
-          throw new Error(`Generation failed: ${e instanceof Error ? e.message : String(e)}`);
-        }
-      }
-
-      if (!output) {
-        throw new Error('No output generated from seed');
+        throw new Error(`Growth failed: ${e instanceof Error ? e.message : String(e)}`);
       }
 
       setLoadingStep('complete');
@@ -126,10 +85,9 @@ export function SeedChatIntegrated() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `✓ Generated: ${seed.phrase}\nGSPL: ${gspl.length} chars${gsplError ? '\n⚠ GSPL fallback used' : ''}\nOutput: ${output.type || 'artifact'}`,
-        seed,
-        gspl,
-        output,
+        content: `✓ Generated: ${seed.$name || seed.phrase || 'Seed'}\nDomain: ${seed.$domain || 'generic'}\nHash: ${seed.$hash?.substring(0, 16)}...\nOutput: ${output.type || output.domain || 'artifact'}`,
+        seed: seed as Seed,
+        output: output as Artifact,
         step: 'complete',
         timestamp: new Date(),
       };
@@ -148,9 +106,19 @@ export function SeedChatIntegrated() {
         timestamp: new Date(),
       }]);
     } finally {
-      // Reset loading state after a brief delay for UX
       setTimeout(() => setLoadingStep('idle'), 500);
     }
+  };
+
+  // Simple domain inference from input
+  const inferDomain = (input: string): string => {
+    const lower = input.toLowerCase();
+    if (lower.includes('character') || lower.includes('person') || lower.includes('hero')) return 'character';
+    if (lower.includes('music') || lower.includes('song') || lower.includes('track')) return 'music';
+    if (lower.includes('game') || lower.includes('play')) return 'game';
+    if (lower.includes('visual') || lower.includes('art') || lower.includes('draw')) return 'visual2d';
+    if (lower.includes('3d') || lower.includes('model') || lower.includes('geometry')) return 'geometry3d';
+    return 'character'; // default
   };
 
   const getLoadingText = () => {
