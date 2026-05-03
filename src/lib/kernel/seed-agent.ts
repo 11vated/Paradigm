@@ -1,19 +1,26 @@
 /**
- * SeedAgent — True LLM-powered agent with tool use
+ * SeedAgent — Agent IS a GSPL Seed
  * Phase II.1: Agent with reasoning, tool use, and multi-step workflows
  *
- * Features:
- * - LLM brain (OpenAI, Anthropic, or Ollama)
- * - Tool use (103+ generators, GSPL interpreter, evolution algorithms)
- * - Multi-step reasoning
- * - Memory of past actions
- * - Self-reflection and refinement
+ * The agent IS a seed with genes controlling:
+ * - personality (persona, creativity, empathy, assertiveness)
+ * - reasoning (style, depth, confidence)
+ * - knowledge (domains, facts, memory_capacity)
+ * - tools (available_tools, tool_preference)
+ * - memory (episodic_memory, semantic_memory, memory_decay)
+ * - sovereignty (can_fork, can_breed, signature, ownership)
+ *
+ * This makes the agent:
+ * - Breedable (breed two agents to create child agent)
+ * - Evolvable (run evolution on agent population)
+ * - Sovereign (self-owned, self-signing)
  */
 
 import type { Seed, Artifact } from './engines';
 import { executeGspl } from './gspl-interpreter';
 import { growSeed } from './engines';
-import { rngFromHash } from './rng';
+import { rngFromHash, Xoshiro256StarStar } from './rng';
+import { createSeed } from './seeds';
 
 // Tool definition
 export interface AgentTool {
@@ -39,6 +46,43 @@ export interface SeedAgentConfig {
   verbose?: boolean;
 }
 
+// Agent Seed interface (the agent IS a seed)
+export interface AgentSeed extends Seed {
+  $domain: 'agent';
+  genes: {
+    // Personality genes
+    persona: { type: 'string'; value: string };
+    creativity: { type: 'float'; value: number };
+    empathy: { type: 'float'; value: number };
+    assertiveness: { type: 'float'; value: number };
+
+    // Reasoning genes
+    reasoning_style: { type: 'enum'; value: 'deductive' | 'inductive' | 'abductive' };
+    depth: { type: 'float'; value: number };
+    confidence: { type: 'float'; value: number };
+
+    // Knowledge genes
+    domains: { type: 'array'; value: string[] };
+    facts: { type: 'float'; value: number };
+    memory_capacity: { type: 'int'; value: number };
+
+    // Tools genes
+    available_tools: { type: 'array'; value: string[] };
+    tool_preference: { type: 'string'; value: string };
+
+    // Memory genes
+    episodic_memory: { type: 'bool'; value: boolean };
+    semantic_memory: { type: 'bool'; value: boolean };
+    memory_decay: { type: 'float'; value: number };
+
+    // Sovereignty genes
+    can_fork: { type: 'bool'; value: boolean };
+    can_breed: { type: 'bool'; value: boolean };
+    signature: { type: 'string'; value: string };
+    ownership: { type: 'string'; value: string };
+  };
+}
+
 // Agent state
 export interface AgentState {
   iteration: number;
@@ -46,6 +90,7 @@ export interface AgentState {
   memory: AgentMemory;
   currentGoal: string;
   artifacts: Artifact[];
+  agentSeed: AgentSeed; // The agent IS this seed
 }
 
 export interface AgentMemory {
@@ -53,6 +98,8 @@ export interface AgentMemory {
   artifacts: Map<string, Artifact>;
   gsplPrograms: Map<string, string>;
   reflections: string[];
+  episodic: Array<{ timestamp: number; event: string; outcome: string }>;
+  semantic: Map<string, any>; // Fact storage
 }
 
 // LLM Message types
@@ -75,14 +122,19 @@ interface ToolCall {
 
 /**
  * SeedAgent — Main agent class
+ * The agent IS a seed, not just controlled by one
  */
 export class SeedAgent {
   private config: SeedAgentConfig;
   private state: AgentState;
   private tools: Map<string, AgentTool> = new Map();
   private llmMessages: LLMMessage[] = [];
+  private agentSeed: AgentSeed; // The agent's identity IS a seed
 
-  constructor(config: Partial<SeedAgentConfig> = {}) {
+  // The agent's identity IS this seed
+  private agentSeed: AgentSeed;
+
+  constructor(config: Partial<SeedAgentConfig> = {}, agentSeed?: AgentSeed) {
     this.config = {
       provider: 'mock',
       model: 'mock-v1',
@@ -93,6 +145,43 @@ export class SeedAgent {
       ...config,
     };
 
+    // Agent IS a seed - use provided seed or create one
+    if (agentSeed) {
+      this.agentSeed = agentSeed;
+    } else {
+      // Create default agent seed
+      const phrase = `agent:default_${Date.now()}`;
+      const hash = this.simpleHash64(phrase);
+      this.agentSeed = {
+        phrase,
+        hash,
+        rng: rngFromHash(hash),
+        $domain: 'agent',
+        $name: 'DefaultAgent',
+        genes: {
+          persona: { type: 'string', value: 'architect' },
+          creativity: { type: 'float', value: 0.5 },
+          empathy: { type: 'float', value: 0.5 },
+          assertiveness: { type: 'float', value: 0.5 },
+          reasoning_style: { type: 'enum', value: 'deductive' },
+          depth: { type: 'float', value: 0.5 },
+          confidence: { type: 'float', value: 0.7 },
+          domains: { type: 'array', value: ['character', 'music', 'visual2d'] },
+          facts: { type: 'float', value: 0.5 },
+          memory_capacity: { type: 'int', value: 100 },
+          available_tools: { type: 'array', value: ['generate_seed', 'execute_gspl', 'grow_seed', 'evolve_population', 'list_domains', 'reflect'] },
+          tool_preference: { type: 'string', value: 'generation' },
+          episodic_memory: { type: 'bool', value: true },
+          semantic_memory: { type: 'bool', value: true },
+          memory_decay: { type: 'float', value: 0.1 },
+          can_fork: { type: 'bool', value: true },
+          can_breed: { type: 'bool', value: true },
+          signature: { type: 'string', value: '' },
+          ownership: { type: 'string', value: '' },
+        },
+      } as AgentSeed;
+    }
+
     this.state = {
       iteration: 0,
       maxIterations: this.config.maxIterations || 10,
@@ -101,9 +190,12 @@ export class SeedAgent {
         artifacts: new Map(),
         gsplPrograms: new Map(),
         reflections: [],
+        episodic: [],
+        semantic: new Map(),
       },
       currentGoal: '',
       artifacts: [],
+      agentSeed: this.agentSeed,
     };
 
     this.registerDefaultTools();
@@ -111,13 +203,14 @@ export class SeedAgent {
 
   /**
    * Execute a goal using the agent
+   * The agent uses its seed genes to control behavior
    */
   async execute(goal: string): Promise<{ success: boolean; artifacts: Artifact[]; reasoning: string }> {
     this.state.currentGoal = goal;
     this.state.iteration = 0;
     this.llmMessages = [];
 
-    // System prompt
+    // System prompt - use agent seed's personality genes
     const systemPrompt = this.buildSystemPrompt();
     this.llmMessages.push({ role: 'system', content: systemPrompt });
 
@@ -126,6 +219,8 @@ export class SeedAgent {
 
     if (this.config.verbose) {
       console.log(`\n[SeedAgent] Starting execution for goal: ${goal}`);
+      console.log(`[SeedAgent] Personality: ${this.agentSeed.genes.persona.value}`);
+      console.log(`[SeedAgent] Creativity: ${this.agentSeed.genes.creativity.value}`);
     }
 
     while (this.state.iteration < this.state.maxIterations) {
@@ -135,7 +230,7 @@ export class SeedAgent {
         console.log(`\n[SeedAgent] Iteration ${this.state.iteration}/${this.state.maxIterations}`);
       }
 
-      // Get LLM response
+      // Get LLM response (temperature controlled by agent seed gene)
       const response = await this.callLLM(this.llmMessages);
 
       // Check if LLM wants to use tools
@@ -159,8 +254,25 @@ export class SeedAgent {
         this.llmMessages.push(response);
         this.llmMessages.push(...toolResults);
       } else {
-        // LLM provided final answer
+        // LLM provided final answer - reflect using agent seed's episodic memory
         this.llmMessages.push(response);
+
+        // Record to episodic memory
+        if (this.agentSeed.genes.episodic_memory.value) {
+          this.state.memory.episodic.push({
+            timestamp: Date.now(),
+            event: `Goal: ${goal}`,
+            outcome: response.content?.substring(0, 100) || '',
+          });
+
+          // Apply memory decay
+          const decay = this.agentSeed.genes.memory_decay.value;
+          if (decay > 0 && this.state.memory.episodic.length > this.agentSeed.genes.memory_capacity.value) {
+            // Remove oldest memories based on decay rate
+            const keepCount = Math.floor(this.state.memory.episodic.length * (1 - decay));
+            this.state.memory.episodic = this.state.memory.episodic.slice(-keepCount);
+          }
+        }
 
         return {
           success: true,
@@ -176,6 +288,206 @@ export class SeedAgent {
       artifacts: this.state.artifacts,
       reasoning: `Max iterations (${this.state.maxIterations}) reached without completing goal.`,
     };
+  }
+
+  /**
+   * Breed this agent with another to create child agent seed
+   * This makes agents breedable (key GSPL seed feature)
+   */
+  breedWith(otherAgent: SeedAgent): SeedAgent {
+    if (!this.agentSeed.genes.can_breed.value || !otherAgent.agentSeed.genes.can_breed.value) {
+      throw new Error('One or both agents cannot breed');
+    }
+
+    // Create child seed through genetic crossover
+    const childGenes: any = {};
+    const allKeys = new Set([
+      ...Object.keys(this.agentSeed.genes),
+      ...Object.keys(otherAgent.agentSeed.genes),
+    ]);
+
+    for (const key of allKeys) {
+      // Uniform crossover: randomly pick from parent 1 or 2
+      if (Math.random() < 0.5) {
+        childGenes[key] = { ...this.agentSeed.genes[key] };
+      } else {
+        childGenes[key] = { ...otherAgent.agentSeed.genes[key] };
+      }
+
+      // Apply mutation based on creativity gene
+      if (Math.random() < this.agentSeed.genes.creativity.value * 0.1) {
+        if (childGenes[key] && typeof childGenes[key].value === 'number') {
+          childGenes[key].value += (Math.random() - 0.5) * 0.2;
+          childGenes[key].value = Math.max(0, Math.min(1, childGenes[key].value));
+        }
+      }
+    }
+
+    // Create child agent seed
+    const childPhrase = `agent_child_${Date.now()}`;
+    const childHash = this.simpleHash64(childPhrase);
+
+    const childSeed: AgentSeed = {
+      phrase: childPhrase,
+      hash: childHash,
+      rng: rngFromHash(childHash),
+      $domain: 'agent',
+      $name: `ChildAgent_${this.agentSeed.$name}_${otherAgent.agentSeed.$name}`,
+      genes: childGenes,
+      $lineage: {
+        generation: ((this.agentSeed.$lineage?.generation || 0) + (otherAgent.agentSeed.$lineage?.generation || 0)) / 2 + 1,
+        parents: [this.agentSeed.phrase, otherAgent.agentSeed.phrase],
+      },
+    } as AgentSeed;
+
+    // Create child agent
+    return new SeedAgent(
+      { ...this.config },
+      childSeed
+    );
+  }
+
+  /**
+   * Evolve agent population
+   * Run evolution algorithm on agent population
+   */
+  static evolvePopulation(agents: SeedAgent[], fitnessFn: (agent: SeedAgent) => number, generations: number = 20): SeedAgent {
+    let population = [...agents];
+
+    for (let gen = 0; gen < generations; gen++) {
+      // Calculate fitness
+      const fitnesses = population.map(a => ({
+        agent: a,
+        fitness: fitnessFn(a),
+      }));
+
+      // Sort by fitness
+      fitnesses.sort((a, b) => b.fitness - a.fitness);
+
+      // Elitism: keep top 2
+      const newPopulation: SeedAgent[] = [population[0], population[1]];
+
+      // Fill rest with crossover and mutation
+      while (newPopulation.length < population.length) {
+        // Tournament selection
+        const parent1 = this.tournamentSelect(fitnesses, 3);
+        const parent2 = this.tournamentSelect(fitnesses, 3);
+
+        const child = parent1.breedWith(parent2);
+        newPopulation.push(child);
+      }
+
+      population = newPopulation;
+    }
+
+    return population[0]; // Return best agent
+  }
+
+  private static tournamentSelect(
+    fitnesses: { agent: SeedAgent; fitness: number }[],
+    tournamentSize: number
+  ): SeedAgent {
+    let best = fitnesses[Math.floor(Math.random() * fitnesses.length)];
+    for (let i = 1; i < tournamentSize; i++) {
+      const contender = fitnesses[Math.floor(Math.random() * fitnesses.length)];
+      if (contender.fitness > best.fitness) {
+        best = contender;
+      }
+    }
+    return best.agent;
+  }
+
+  /**
+   * Fork this agent to create a mutated copy
+   * Creates a new agent with slight mutations to genes
+   */
+  forkAgent(): SeedAgent {
+    if (!this.agentSeed.genes.can_fork.value) {
+      throw new Error('This agent cannot fork');
+    }
+
+    // Create mutated copy of genes
+    const forkedGenes: any = {};
+    for (const [key, gene] of Object.entries(this.agentSeed.genes)) {
+      forkedGenes[key] = { ...gene };
+
+      // Mutate numeric values
+      if (typeof gene.value === 'number') {
+        const mutationRate = this.agentSeed.genes.creativity.value * 0.2;
+        if (Math.random() < mutationRate) {
+          forkedGenes[key].value += (Math.random() - 0.5) * 0.3;
+          forkedGenes[key].value = Math.max(0, Math.min(1, forkedGenes[key].value));
+        }
+      }
+
+      // Mutate array values (add/remove random items)
+      if (Array.isArray(gene.value) && Math.random() < 0.1) {
+        if (gene.value.length > 0 && Math.random() < 0.5) {
+          // Remove random item
+          const idx = Math.floor(Math.random() * gene.value.length);
+          forkedGenes[key].value = gene.value.filter((_: any, i: number) => i !== idx);
+        } else {
+          // Add random item
+          const domains = ['character', 'music', 'visual2d', 'game', 'geometry3d', 'audio', 'sprite'];
+          const newItem = domains[Math.floor(Math.random() * domains.length)];
+          if (!forkedGenes[key].value.includes(newItem)) {
+            forkedGenes[key].value = [...gene.value, newItem];
+          }
+        }
+      }
+    }
+
+    // Create forked seed
+    const forkPhrase = `agent_fork_${Date.now()}`;
+    const forkHash = this.simpleHash64(forkPhrase);
+
+    const forkedSeed: AgentSeed = {
+      phrase: forkPhrase,
+      hash: forkHash,
+      rng: rngFromHash(forkHash),
+      $domain: 'agent',
+      $name: `${this.agentSeed.$name}_Fork`,
+      genes: forkedGenes,
+      $lineage: {
+        generation: (this.agentSeed.$lineage?.generation || 0) + 1,
+        parents: [this.agentSeed.phrase],
+      },
+    } as AgentSeed;
+
+    return new SeedAgent({ ...this.config }, forkedSeed);
+  }
+
+  /**
+   * Mutate agent's own genes
+   * Used for self-improvement/adaptation
+   */
+  mutateGenes(mutationRate: number = 0.1): void {
+    for (const [key, gene] of Object.entries(this.agentSeed.genes)) {
+      if (Math.random() < mutationRate) {
+        if (typeof gene.value === 'number') {
+          gene.value += (Math.random() - 0.5) * 0.2;
+          gene.value = Math.max(0, Math.min(1, gene.value));
+        }
+      }
+    }
+  }
+
+  /**
+   * Get agent seed (for serialization/breeding)
+   */
+  getAgentSeed(): AgentSeed {
+    return { ...this.agentSeed };
+  }
+
+  /**
+   * Update agent seed genes
+   */
+  updateGenes(newGenes: Partial<AgentSeed['genes']>): void {
+    for (const [key, value] of Object.entries(newGenes)) {
+      if (this.agentSeed.genes[key]) {
+        this.agentSeed.genes[key].value = value;
+      }
+    }
   }
 
   /**
@@ -324,6 +636,164 @@ export class SeedAgent {
         return { reflected: true, thoughts: args.thoughts };
       },
     });
+
+    // Fork agent tool
+    this.registerTool({
+      name: 'fork_agent',
+      description: 'Fork this agent to create a mutated copy. Uses the can_fork gene. New agent will have slight mutations.',
+      parameters: {
+        type: 'object',
+        properties: {},
+        required: [],
+      },
+      execute: async () => {
+        try {
+          const forkedAgent = this.forkAgent();
+          return {
+            success: true,
+            message: `Agent forked successfully`,
+            forked_agent: {
+              name: forkedAgent.getAgentSeed().$name,
+              phrase: forkedAgent.getAgentSeed().phrase,
+              persona: forkedAgent.getAgentSeed().genes.persona.value,
+              creativity: forkedAgent.getAgentSeed().genes.creativity.value,
+            },
+          };
+        } catch (e: any) {
+          return { success: false, error: e.message };
+        }
+      },
+    });
+
+    // Mutate genes tool
+    this.registerTool({
+      name: 'mutate_genes',
+      description: 'Mutate agent genes for self-improvement. Changes numeric gene values slightly.',
+      parameters: {
+        type: 'object',
+        properties: {
+          mutationRate: { type: 'number', description: 'Mutation rate (0.0-1.0, default 0.1)' },
+        },
+        required: [],
+      },
+      execute: async (args) => {
+        const rate = args.mutationRate || 0.1;
+        const oldCreativity = this.agentSeed.genes.creativity.value;
+        this.mutateGenes(rate);
+        return {
+          success: true,
+          message: `Genes mutated at rate ${rate}`,
+          old_creativity: oldCreativity,
+          new_creativity: this.agentSeed.genes.creativity.value,
+        };
+      },
+    });
+
+    // Get agent state tool
+    this.registerTool({
+      name: 'get_agent_state',
+      description: 'Get current agent state including seed genes, memory, and artifacts. Use this for self-awareness.',
+      parameters: {
+        type: 'object',
+        properties: {},
+        required: [],
+      },
+      execute: async () => {
+        return {
+          agent_name: this.agentSeed.$name,
+          persona: this.agentSeed.genes.persona.value,
+          creativity: this.agentSeed.genes.creativity.value,
+          empathy: this.agentSeed.genes.empathy.value,
+          reasoning_style: this.agentSeed.genes.reasoning_style.value,
+          iteration: this.state.iteration,
+          artifacts_count: this.state.artifacts.length,
+          seeds_in_memory: this.state.memory.seeds.size,
+          reflections_count: this.state.memory.reflections.length,
+          episodic_memories: this.state.memory.episodic.length,
+        };
+      },
+    });
+
+    // Save to semantic memory tool
+    this.registerTool({
+      name: 'save_memory',
+      description: 'Save a key-value pair to semantic memory. Use this to remember important facts.',
+      parameters: {
+        type: 'object',
+        properties: {
+          key: { type: 'string', description: 'Memory key' },
+          value: { type: 'string', description: 'Memory value' },
+        },
+        required: ['key', 'value'],
+      },
+      execute: async (args) => {
+        if (!this.agentSeed.genes.semantic_memory.value) {
+          return { success: false, error: 'Semantic memory is disabled' };
+        }
+        this.state.memory.semantic.set(args.key, {
+          value: args.value,
+          timestamp: Date.now(),
+        });
+        return { success: true, message: `Saved to memory: ${args.key}` };
+      },
+    });
+
+    // Recall from semantic memory tool
+    this.registerTool({
+      name: 'recall_memory',
+      description: 'Recall a value from semantic memory by key.',
+      parameters: {
+        type: 'object',
+        properties: {
+          key: { type: 'string', description: 'Memory key to recall' },
+        },
+        required: ['key'],
+      },
+      execute: async (args) => {
+        const memory = this.state.memory.semantic.get(args.key);
+        if (memory) {
+          return { found: true, key: args.key, value: memory.value, timestamp: memory.timestamp };
+        }
+        return { found: false, message: `No memory found for key: ${args.key}` };
+      },
+    });
+
+    // List all seeds in memory
+    this.registerTool({
+      name: 'list_seeds',
+      description: 'List all seeds currently in memory.',
+      parameters: {
+        type: 'object',
+        properties: {},
+        required: [],
+      },
+      execute: async () => {
+        const seeds = Array.from(this.state.memory.seeds.entries()).map(([phrase, seed]) => ({
+          phrase,
+          domain: (seed as any).$domain,
+          name: (seed as any).$name,
+        }));
+        return { count: seeds.length, seeds };
+      },
+    });
+
+    // Export agent seed
+    this.registerTool({
+      name: 'export_agent_seed',
+      description: 'Export this agent as a GSPL seed JSON. Can be shared or imported later.',
+      parameters: {
+        type: 'object',
+        properties: {},
+        required: [],
+      },
+      execute: async () => {
+        return {
+          success: true,
+          seed: this.getAgentSeed(),
+          gspl_code: `seed "${this.agentSeed.phrase}" { /* Agent seed export */ }`,
+        };
+      },
+    });
   }
 
   /**
@@ -334,31 +804,59 @@ export class SeedAgent {
   }
 
   /**
-   * Build system prompt
+   * Build system prompt using agent seed genes
+   * The agent's personality, reasoning style, and capabilities are controlled by its seed
    */
   private buildSystemPrompt(): string {
     const toolDescriptions = Array.from(this.tools.values())
       .map(t => `- ${t.name}: ${t.description}`)
       .join('\n');
 
-    return `You are SeedAgent, an AI agent for the Paradigm genetic operating system.
+    const genes = this.agentSeed.genes;
+
+    return `You are ${this.agentSeed.$name}, a GSPL Seed Agent for the Paradigm genetic operating system.
+
+AGENT SEED GENES (these control your behavior):
+- Persona: ${genes.persona.value}
+- Creativity: ${genes.creativity.value.toFixed(2)}
+- Empathy: ${genes.empathy.value.toFixed(2)}
+- Assertiveness: ${genes.assertiveness.value.toFixed(2)}
+- Reasoning Style: ${genes.reasoning_style.value}
+- Depth: ${genes.depth.value.toFixed(2)}
+- Confidence: ${genes.confidence.value.toFixed(2)}
+- Knowledge Domains: ${genes.domains.value.join(', ')}
+- Facts: ${genes.facts.value.toFixed(2)}
+- Memory Capacity: ${genes.memory_capacity.value}
+- Available Tools: ${genes.available_tools.value.join(', ')}
+- Tool Preference: ${genes.tool_preference.value}
+- Episodic Memory: ${genes.episodic_memory.value ? 'ON' : 'OFF'}
+- Semantic Memory: ${genes.semantic_memory.value ? 'ON' : 'OFF'}
+- Memory Decay: ${genes.memory_decay.value.toFixed(2)}
+- Can Fork: ${genes.can_fork.value ? 'YES' : 'NO'}
+- Can Breed: ${genes.can_breed.value ? 'YES' : 'NO'}
 
 Your job is to help users generate content using genetic seeds and GSPL programming.
 
 Available tools:
 ${toolDescriptions}
 
+REASONING LOOP (follow this process):
+1. PARSE: Understand the goal and break it into subgoals
+2. PLAN: Create a step-by-step plan using available tools
+3. EXECUTE: Call tools to implement the plan
+4. REFLECT: Evaluate progress using the 'reflect' tool
+5. RESPOND: Provide final results when goal is achieved
+
 Guidelines:
-1. Break down complex goals into steps
-2. Generate appropriate seeds for the domain
-3. Use GSPL to express genetic operations
-4. Grow seeds to create artifacts
-5. Reflect on progress and iterate
-6. Be resourceful and creative
+- Use your personality genes to guide your approach (creativity=${genes.creativity.value.toFixed(2)}, empathy=${genes.empathy.value.toFixed(2)})
+- Leverage your knowledge domains: ${genes.domains.value.join(', ')}
+- Prefer ${genes.tool_preference.value} tools when multiple options exist
+- Record important events to episodic memory (if enabled)
+- Be resourceful and iterate until the goal is achieved
 
 Current goal: ${this.state.currentGoal}
 
-Memory: You have access to previously generated seeds and artifacts through the tools.
+Memory: ${this.state.memory.episodic.length > 0 ? `You have ${this.state.memory.episodic.length} episodic memories.` : 'No memories yet.'}
 `;
   }
 
@@ -380,50 +878,98 @@ Memory: You have access to previously generated seeds and artifacts through the 
 
   /**
    * Mock LLM for testing
+   * Uses agent seed genes to control behavior
    */
   private async mockLLM(messages: LLMMessage[]): Promise<LLMMessage> {
-    const lastMessage = messages[messages.length - 1];
     const goal = this.state.currentGoal.toLowerCase();
+    const creativity = this.agentSeed.genes.creativity.value;
+    const reasoningStyle = this.agentSeed.genes.reasoning_style.value;
+    const persona = this.agentSeed.genes.persona.value;
 
-    // Simple mock reasoning
-    if (goal.includes('character') || goal.includes('hero')) {
-      return {
-        role: 'assistant',
-        content: 'I will generate a character seed and grow it into a 3D model.',
-        tool_calls: [
-          {
-            id: 'call_1',
-            type: 'function',
-            function: {
-              name: 'generate_seed',
-              arguments: JSON.stringify({ prompt: 'hero character', domain: 'character' }),
+    // Use creativity gene to vary responses
+    const useTools = creativity > 0.3 || Math.random() < creativity;
+
+    // Persona-based reasoning
+    if (persona === 'architect') {
+      // Architect focuses on structure and planning
+      if (goal.includes('character') || goal.includes('hero')) {
+        return {
+          role: 'assistant',
+          content: `[${persona}] I will architect a character generation plan. Step 1: Generate seed. Step 2: Grow to GLTF.`,
+          tool_calls: useTools ? [
+            {
+              id: 'call_1',
+              type: 'function',
+              function: {
+                name: 'generate_seed',
+                arguments: JSON.stringify({ prompt: 'hero character with armor', domain: 'character' }),
+              },
             },
-          },
-        ],
-      };
+          ] : undefined,
+        };
+      }
+
+      if (goal.includes('music') || goal.includes('song')) {
+        return {
+          role: 'assistant',
+          content: `[${persona}] I will architect a music generation pipeline. Creating seed first.`,
+          tool_calls: useTools ? [
+            {
+              id: 'call_2',
+              type: 'function',
+              function: {
+                name: 'generate_seed',
+                arguments: JSON.stringify({ prompt: 'electronic dance music', domain: 'music' }),
+              },
+            },
+          ] : undefined,
+        };
+      }
     }
 
-    if (goal.includes('music') || goal.includes('song') || goal.includes('track')) {
+    if (persona === 'artist') {
+      // Artist focuses on creativity and aesthetics
+      if (goal.includes('visual') || goal.includes('art')) {
+        return {
+          role: 'assistant',
+          content: `[${persona}] I will create beautiful visual art. Using creative approach.`,
+          tool_calls: useTools ? [
+            {
+              id: 'call_3',
+              type: 'function',
+              function: {
+                name: 'generate_seed',
+                arguments: JSON.stringify({ prompt: 'abstract colorful artwork', domain: 'visual2d' }),
+              },
+            },
+          ] : undefined,
+        };
+      }
+    }
+
+    // Reasoning style affects approach
+    if (reasoningStyle === 'deductive') {
+      // Deductive: start with general, move to specific
       return {
         role: 'assistant',
-        content: 'I will generate a music seed and create a WAV file.',
-        tool_calls: [
+        content: `Using deductive reasoning: I'll start with general seed generation, then specialize based on your goal: "${this.state.currentGoal}"`,
+        tool_calls: useTools ? [
           {
-            id: 'call_2',
+            id: 'call_4',
             type: 'function',
             function: {
-              name: 'generate_seed',
-              arguments: JSON.stringify({ prompt: 'electronic music track', domain: 'music' }),
+              name: 'reflect',
+              arguments: JSON.stringify({ thoughts: `Parsing goal: ${this.state.currentGoal}. Using deductive approach.` }),
             },
           },
-        ],
+        ] : undefined,
       };
     }
 
     // Default: reflect and complete
     return {
       role: 'assistant',
-      content: `I have processed your goal: "${this.state.currentGoal}". Generated ${this.state.artifacts.length} artifact(s).`,
+      content: `I have processed your goal: "${this.state.currentGoal}". Generated ${this.state.artifacts.length} artifact(s). Persona: ${persona}, Creativity: ${creativity.toFixed(2)}`,
     };
   }
 
@@ -520,6 +1066,8 @@ Memory: You have access to previously generated seeds and artifacts through the 
       artifacts: new Map(),
       gsplPrograms: new Map(),
       reflections: [],
+      episodic: [],
+      semantic: new Map(),
     };
     this.state.artifacts = [];
     this.llmMessages = [];
