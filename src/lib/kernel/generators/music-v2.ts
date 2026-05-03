@@ -358,7 +358,7 @@ function synthesizeAudio(notes: Note[], params: MusicParams): Buffer {
         sample = 2 * Math.abs(2 * (t * freq - Math.floor(t * freq + 0.5))) - 1;
       } else if (note.instrument === 'hi-hat' || note.instrument === 'snare') {
         // Noise
-        sample = (Math.random() * 2 - 1) * 0.3;
+        sample = (rng.nextF64() * 2 - 1) * 0.3;
       } else {
         // Default: sine
         sample = Math.sin(2 * Math.PI * freq * t);

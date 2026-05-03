@@ -1,11 +1,12 @@
 /**
  * Studio Page — AI-Native Generative Design
  *
- * Main page for the Paradigm Studio with SeedChat AI assistant.
+ * Main page for the Paradigm Studio with SeedChat AI assistant, GSPL REPL, and Preview.
  */
 
 import React, { useState } from 'react';
 import SeedChat from '@/components/studio/SeedChat-Integrated';
+import { GsplRepl } from '@/components/studio/GsplRepl';
 import { PreviewViewport } from './PreviewViewport';
 
 interface Artifact {
@@ -16,7 +17,7 @@ interface Artifact {
 
 export function StudioPage() {
   const [currentArtifact, setCurrentArtifact] = useState<Artifact | null>(null);
-  const [activeTab, setActiveTab] = useState<'chat' | 'preview'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'repl' | 'preview'>('chat');
 
   const handleArtifactGenerated = (artifact: Artifact) => {
     setCurrentArtifact(artifact);
@@ -41,6 +42,15 @@ export function StudioPage() {
             💬 Chat
           </button>
           <button
+            onClick={() => setActiveTab('repl')}
+            style={{
+              ...styles.navButton,
+              ...(activeTab === 'repl' ? styles.navButtonActive : {}),
+            }}
+          >
+            💻 REPL
+          </button>
+          <button
             onClick={() => setActiveTab('preview')}
             style={{
               ...styles.navButton,
@@ -56,6 +66,10 @@ export function StudioPage() {
         {activeTab === 'chat' ? (
           <div style={styles.chatPanel}>
             <SeedChat onArtifactGenerated={handleArtifactGenerated} />
+          </div>
+        ) : activeTab === 'repl' ? (
+          <div style={styles.replPanel}>
+            <GsplRepl />
           </div>
         ) : (
           <div style={styles.previewPanel}>
@@ -150,6 +164,10 @@ const styles = {
   chatPanel: {
     height: '100%',
     padding: '16px',
+  },
+  replPanel: {
+    height: '100%',
+    overflow: 'hidden',
   },
   previewPanel: {
     height: '100%',

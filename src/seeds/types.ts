@@ -15,7 +15,9 @@ export enum GeneType {
   ANIMATION = 'animation',
   LOGIC = 'logic',
   DATA = 'data',
-  META = 'meta'
+  META = 'meta',
+  QUANTUM = 'quantum',
+  GEMATRIA = 'gematria'
 }
 
 export interface GeneTypeDefinition {
@@ -174,6 +176,22 @@ export const GENE_TYPE_DEFINITIONS: GeneTypeDefinition[] = [
     valueType: 'object',
     defaultValue: { keyframes: [], duration: 1, loop: true, easing: 'linear' },
     constraints: { min: 0 }
+  },
+  {
+    type: GeneType.QUANTUM,
+    name: 'Quantum',
+    description: 'Quantum superposition and entanglement states',
+    valueType: 'object',
+    defaultValue: { state: 'superposition', amplitudes: [], entangled: [] },
+    constraints: { enum: ['superposition', 'collapsed'] }
+  },
+  {
+    type: GeneType.GEMATRIA,
+    name: 'Gematria',
+    description: 'Numerical/alchemical correspondences',
+    valueType: 'object',
+    defaultValue: { value: 0, base: 10, correspondences: [] },
+    constraints: { min: 0, max: 999999 }
   },
   {
     type: GeneType.LOGIC,

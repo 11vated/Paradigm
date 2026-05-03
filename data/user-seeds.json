@@ -9046,5 +9046,3139 @@
     "$version": 1,
     "$createdAt": "2026-05-01T10:58:13.201Z",
     "$updatedAt": "2026-05-01T10:58:13.201Z"
+  },
+  {
+    "id": "7281ff7f-e4d5-4902-b948-73208cd8ffc5",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:37:20.406Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "3804b73d-6a62-4215-b237-6898227bf2a6",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:37:24.094Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "78417313-4660-4f3c-b780-afa44f6869b2",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:37:26.086Z",
+    "parent_seeds": [
+      "seed-1775922706059-rxolpuovj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 6,\n            persistence = 0.55,\n            lacunarity = 2.1,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.simplex_noise_2d (Voxelized)",
+    "$hash": "cc2b33dd9b0b0bd502257bdb085f72e5e3854eb04e50338d1e6db8c974ca9776",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "a6a9d0a8-1d41-4842-a92a-589a8cea0272",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:37:29.059Z",
+    "parent_seeds": [
+      "seed-1775922706059-hjyy37vu1"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.WorleyParams {\n            distance_metric = \"euclidean\",\n            f_index = 1,\n            jitter = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.worley_cellular_noise (Voxelized)",
+    "$hash": "d0e685a4489a978d2cfcf38b4b04a3a8fe75bdcfedde8e4b3e9d9d5a79184d8c",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "afc5d28c-9836-4864-8195-808fbac0b570",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:37:31.410Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "2177884c-0c13-47b6-a160-fa57caa0a62c",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:43:17.507Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "4944b77a-5f51-4549-a6b9-63be1f9e90f2",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:28.502Z",
+    "parent_seeds": [
+      "seed-1775922706059-rxolpuovj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 6,\n            persistence = 0.55,\n            lacunarity = 2.1,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.simplex_noise_2d (Voxelized)",
+    "$hash": "cc2b33dd9b0b0bd502257bdb085f72e5e3854eb04e50338d1e6db8c974ca9776",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "50dd1a6a-5337-45f9-95b1-0d73138eee58",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:31.338Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "a50a684f-3df5-4f7f-bba8-51f24d2f08b7",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:34.479Z",
+    "parent_seeds": [
+      "seed-1775922706059-vglnl4z7z"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "mesh_extraction"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Isosurface"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.MarchingCubesParams {\n            isolevel = 0.0,\n            interpolate_edges = true,\n            smooth_normals = true,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.marching_cubes (Voxelized)",
+    "$hash": "f211f8fcf877d6b23548cddb4b77b36575dd823b8b571be32b028dbe26c56285",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "4994278d-2c95-4953-860e-e30e398b4351",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:36.951Z",
+    "parent_seeds": [
+      "seed-1775922706059-zz01zjac1"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Fractal"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.DiamondSquareParams {\n            roughness = 0.62,\n            power_of_two_plus_one = 513,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.diamond_square_heightmap (Voxelized)",
+    "$hash": "c173a2fbd6df8246969d1b4d5cfa0760ec6f25d7a894c7152c72902fa5125184",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "f2dff742-b9c3-440d-8c15-ce89af0a3267",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-05-01T21:44:42.428Z",
+    "parent_seeds": [
+      "seed-1775922706064-qlbw6voxn"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Camera.Kind.Still"
+      },
+      "sensor_mm": {
+        "type": "categorical",
+        "value": "Std.Camera.Sensor { width = 36.0, height = 24.0 }"
+      },
+      "focal_length_mm": {
+        "type": "scalar",
+        "value": 50
+      },
+      "aperture_fnumber": {
+        "type": "scalar",
+        "value": 1.8
+      },
+      "shutter_speed_s": {
+        "type": "categorical",
+        "value": "1.0 / 200.0"
+      },
+      "iso": {
+        "type": "scalar",
+        "value": 400
+      },
+      "bokeh_blades": {
+        "type": "scalar",
+        "value": 9
+      },
+      "color_space": {
+        "type": "categorical",
+        "value": "Adobe-RGB"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 50.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 90.0 },\n        ])"
+      }
+    },
+    "$domain": "field",
+    "$name": "camera.portrait_50mm_f18 (Evolved EM)",
+    "$hash": "eade75056aeb0c7e59b2f31652f36bf890851beb40532b96d6abe664b3908597",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
+  },
+  {
+    "id": "d051f970-6912-457c-a44e-fb9e6f25cf4d",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-05-01T21:44:46.091Z",
+    "parent_seeds": [
+      "seed-1775922706065-7tflr23bm"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Camera.Kind.Game"
+      },
+      "projection": {
+        "type": "categorical",
+        "value": "Std.Camera.Projection.Perspective {\n            fov_deg = 90.0,\n            aspect = 16.0 / 9.0,\n            near_m = 0.05,\n            far_m = 4000.0,"
+      }
+    },
+    "$domain": "field",
+    "$name": "camera.game_fps_90fov (Evolved EM)",
+    "$hash": "5ed9d254b0e3e11a1e8ee03507c328083d38f58a21818b6c3ddf4263b983ef7a",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
+  },
+  {
+    "id": "c9bcae94-b4e5-4d57-845e-ec1b79853ab2",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:49.614Z",
+    "parent_seeds": [
+      "seed-1775922706066-ozxeaqz2b"
+    ],
+    "genes": {
+      "archetype": {
+        "type": "categorical",
+        "value": "Std.Character.Archetype.Mage"
+      },
+      "species": {
+        "type": "categorical",
+        "value": "Homo sapiens"
+      },
+      "sex": {
+        "type": "categorical",
+        "value": "male"
+      },
+      "age_years": {
+        "type": "scalar",
+        "value": 78
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 1.72
+      },
+      "mass_kg": {
+        "type": "scalar",
+        "value": 64
+      },
+      "build": {
+        "type": "categorical",
+        "value": "Std.Character.Build.Frail"
+      },
+      "skin_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/fresh_skin_pale@v1"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 280.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.08, h = 265.0 },\n            Std.Color.OKLCh { l = 0.85, c = 0.02, h = 80.0 },\n        ])"
+      }
+    },
+    "$domain": "character",
+    "$name": "character.elderly_scholar (Solid)",
+    "$hash": "120dcdda1d7998b19604111ad8097c16dabb0332b0fde0c9c8bcf3ec12a3b478",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "6a3823b2-8c5d-4f37-a074-227e008ffbf6",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:53.895Z",
+    "parent_seeds": [
+      "seed-1775922706062-lp6uqk8a7"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Sacred"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "fantasy"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 64
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 38
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 6
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.Conical { pitch_deg = 70.0 }"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/polished_obsidian@v1"
+      },
+      "trim_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/sterling_silver@v1"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 260.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 270.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 280.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.wizard_tower (Solid)",
+    "$hash": "c491189d80cb0a3a35282f40fe5a6c53c153ac02f4818a9cefbc8b76eba23295",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "66d174c6-6d83-49ef-8727-c3d2d2ae3c2f",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:44:57.285Z",
+    "parent_seeds": [
+      "seed-1775922706061-h61fdj1n9"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "precolumbian"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 320
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 11
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 3
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/wet_clay@v1"
+      },
+      "wall_thickness_m": {
+        "type": "scalar",
+        "value": 0.65
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 50.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 60.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.adobe_pueblo (Solid)",
+    "$hash": "c89d8f24b59ba357cffbfd7bc739e17e5bec726fab2cd776acc824a06fb6bd2c",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "867e00a5-2bb7-4c8b-b3f0-bc6854ed8973",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:00.507Z",
+    "parent_seeds": [
+      "seed-1775922706061-h61fdj1n9"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "precolumbian"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 320
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 11
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 3
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/wet_clay@v1"
+      },
+      "wall_thickness_m": {
+        "type": "scalar",
+        "value": 0.65
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 50.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 60.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.adobe_pueblo (Solid)",
+    "$hash": "c89d8f24b59ba357cffbfd7bc739e17e5bec726fab2cd776acc824a06fb6bd2c",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "1112af01-3533-49ab-9eeb-a16574acecab",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:03.252Z",
+    "parent_seeds": [
+      "seed-1775922706060-mt4cbpaxj"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "victorian"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 84
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 14
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 4
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.Mansard { pitch_deg = 70.0 }"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/red_brick@v1"
+      },
+      "trim_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/polished_oak@v1"
+      },
+      "window_count": {
+        "type": "scalar",
+        "value": 12
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.38, c = 0.12, h = 25.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 90.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.victorian_townhouse (Solid)",
+    "$hash": "f693c84a2f5ae6e9f3457c5f3abfb0d13a997cc6aa10044d0514bbb9cff0a050",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c944e030-a215-42da-8ead-e02a3f61b467",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:06.352Z",
+    "parent_seeds": [
+      "seed-1775922706061-hkbelduc6"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Commercial"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "late_20c"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 1800
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 168
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 42
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/crystal_glass@v1"
+      },
+      "frame_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/forged_steel_blade@v1"
+      },
+      "facade_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/brushed_aluminium@v1"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 240.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.modernist_office_tower (Solid)",
+    "$hash": "da91f5b789a45712924e112cad596cf0d95ca9a790a5f9187cdb19e339abd9b6",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "028279e8-68f3-46c9-a8bd-246650cc3bfe",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:08.919Z",
+    "parent_seeds": [
+      "seed-1775922706061-h61fdj1n9"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "precolumbian"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 320
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 11
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 3
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/wet_clay@v1"
+      },
+      "wall_thickness_m": {
+        "type": "scalar",
+        "value": 0.65
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 50.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 55.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 60.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.adobe_pueblo (Solid)",
+    "$hash": "c89d8f24b59ba357cffbfd7bc739e17e5bec726fab2cd776acc824a06fb6bd2c",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "e7ce07eb-5a49-4bb1-8fc2-5eb0190627a2",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:38.125Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "6aad3732-077a-4235-9fad-ba30f3facdcd",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:45:38.188Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "409ccdf0-9ce0-4fba-9af3-5e2f190bad1f",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:46:13.197Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "2f892e5a-7ddb-4558-b49c-67b3371f30bd",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:47:09.117Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "50ed31f9-ef61-47ca-9d4f-58c62e0070e5",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:47:38.456Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "97ed8134-a8c2-42dc-83f3-eca47a4dfec4",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:48:11.587Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "55d55773-6774-463f-a070-6d7558d52e48",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:48:48.304Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "baa82042-6dc5-4585-be60-60021b620c0c",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:49:05.683Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "6b5d2c7f-926e-4d2b-a27a-df524256f631",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:51:22.792Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "191884b2-bf3d-4aa8-8346-a485b9d597d6",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:53:04.729Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "56612764-0db7-4570-8ed3-341f09e0026c",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:58:24.968Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "d5315dd2-96e1-4c80-9941-77e8a0b5bb18",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:58:27.808Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "88f3d663-16ea-4f39-baad-c9d77bb41a71",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:58:31.128Z",
+    "parent_seeds": [
+      "seed-1775922706060-a9vo56ad6"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Sacred"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "high_medieval"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 6200
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 42
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 1
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.Vaulted { pitch_deg = 62.0 }"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/carrara_marble@v1"
+      },
+      "glass_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/crystal_glass@v1"
+      },
+      "spire_count": {
+        "type": "scalar",
+        "value": 2
+      },
+      "spire_height_m": {
+        "type": "scalar",
+        "value": 68
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 90.0 },\n            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 85.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 25.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.gothic_cathedral (Solid)",
+    "$hash": "74058a2a78a8becb06cd42099b66daac2e32add5154401e5821a32fdf40be1ed",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "9606ebfe-0daf-4e53-b194-a8ef0fca6bfa",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T21:58:34.745Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "80c8fddf-35c3-44de-9e15-543f88c7e8f1",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:00:03.088Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "65ec07c8-9b36-48b6-975f-79a1617c2666",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:01:17.497Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c1d0a390-896d-4e17-b270-d7362d0be17f",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:01:52.050Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "be5b2669-f910-4bbf-aac4-faa6b56893f9",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:07:34.244Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "36435143-4984-465e-bde9-d599ace344ab",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:07:58.740Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "6b527996-7444-408b-a92e-671724fdebf5",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:08:43.623Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "a3d737c3-d576-4815-96e5-7154be784a5f",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:13:21.008Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "26621f87-18ac-4edf-9016-dc362d130ec5",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:15:47.427Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "cdc40726-f1fc-4d2c-88d8-1909cc12b7cf",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:23:56.237Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c24ad20f-cfca-41ea-870d-687af35661d1",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:23:59.614Z",
+    "parent_seeds": [
+      "seed-1775922706059-vw2gikx7h"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "mesh_construction"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Triangulation"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.DelaunayParams {\n            method = \"bowyer_watson\",\n            incremental = true,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.delaunay_triangulation_2d (Voxelized)",
+    "$hash": "561589a7fff9fb85064b5564f0735d9e722ca4728740a5e665b69d7fb897a99d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "08b29fcc-1e81-4f52-921c-9b459c5f3466",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:24:01.625Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "9d31bb49-a2f4-46fa-b2d0-81804e0e42c0",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:24:43.222Z",
+    "parent_seeds": [
+      "seed-1775922706059-h3gpe7023"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "grid_tiling"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.ConstraintSolver"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.WFCParams {\n            adjacency_mode = \"overlapping_nxn\",\n            n = 3,\n            backtracking = true,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.wave_function_collapse (Voxelized)",
+    "$hash": "b3c0cb88123cbae6411e47c927e607c1e6a2843039d0a8b952e4cf50df466ec0",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "a4cac526-be20-412b-9552-f2c56fb22f5b",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:24:45.621Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "7fc0f930-fa72-463e-932d-318274a81ba2",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:24:48.620Z",
+    "parent_seeds": [
+      "seed-1775922706059-vglnl4z7z"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "mesh_extraction"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Isosurface"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.MarchingCubesParams {\n            isolevel = 0.0,\n            interpolate_edges = true,\n            smooth_normals = true,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.marching_cubes (Voxelized)",
+    "$hash": "f211f8fcf877d6b23548cddb4b77b36575dd823b8b571be32b028dbe26c56285",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "2836e440-2fe2-4a51-93bd-3c4d048422e4",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:28:35.545Z",
+    "parent_seeds": [
+      "seed-1775922706059-rxolpuovj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 6,\n            persistence = 0.55,\n            lacunarity = 2.1,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.simplex_noise_2d (Voxelized)",
+    "$hash": "cc2b33dd9b0b0bd502257bdb085f72e5e3854eb04e50338d1e6db8c974ca9776",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "db5ec12b-2e66-4d0e-bf50-36ecf7517fce",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:28:38.019Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c43d1575-3044-452e-8264-5c887d8feed1",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:28:40.529Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c6dd9d4b-d00e-415b-ba74-6b46e16eb605",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:28:43.368Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "7c51c4ee-d592-4d80-9aaa-e7551aca9668",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:57:59.381Z",
+    "parent_seeds": [
+      "seed-1775922706059-h3gpe7023"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "grid_tiling"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.ConstraintSolver"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.WFCParams {\n            adjacency_mode = \"overlapping_nxn\",\n            n = 3,\n            backtracking = true,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.wave_function_collapse (Voxelized)",
+    "$hash": "b3c0cb88123cbae6411e47c927e607c1e6a2843039d0a8b952e4cf50df466ec0",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "83b090f6-3f0c-4d72-b4a9-a82e1a58ba02",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:58:02.688Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "4b3e437b-c868-4590-bdb8-c6b46a67019e",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:58:06.104Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "67eea2ca-2db4-4208-be6d-7256437dd08f",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:58:09.140Z",
+    "parent_seeds": [
+      "seed-1775922706059-166v0pfnt"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "point_set"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Sampling"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.PoissonParams {\n            min_distance = 1.0,\n            max_attempts_per_point = 30,\n            method = \"bridson_2007\","
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.poisson_disk_sampling_2d (Voxelized)",
+    "$hash": "fcd9339789aed2287d5f049fa5febc231e8df3f4192cccef78f362230085747d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "420f65fa-eafc-494e-9152-865d0199ad26",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-01T22:58:53.773Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "d3ca1cb1-31ef-437f-b033-5678ee0d16f0",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:15:20.888Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "c902e2f9-368b-4146-a0c2-db4e812b38f5",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:15:28.388Z",
+    "parent_seeds": [
+      "seed-1775922706059-spxeh8wh7"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "symbolic_string"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 1
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Grammar"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.LSystemParams {\n            max_iterations = 8,\n            stochastic = false,\n            context_sensitive = false,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.lsystem_rewriter (Voxelized)",
+    "$hash": "68bdef080f3df4d74f2f505c08f90e25b8c33e0c6869973cf31ac880bbd3598b",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "bf03bd57-7c59-4d64-b27c-6f4642ef89cb",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:17:46.173Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "2e8ab4a0-94d0-45a9-91ac-daa05bc4b605",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:17:50.328Z",
+    "parent_seeds": [
+      "seed-1775922706059-zz01zjac1"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 2
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Fractal"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.DiamondSquareParams {\n            roughness = 0.62,\n            power_of_two_plus_one = 513,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.diamond_square_heightmap (Voxelized)",
+    "$hash": "c173a2fbd6df8246969d1b4d5cfa0760ec6f25d7a894c7152c72902fa5125184",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "e5a0c44d-1f88-4f1e-bc41-a7fc271ccf24",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:17:53.271Z",
+    "parent_seeds": [
+      "seed-1775922706061-hkbelduc6"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Commercial"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "late_20c"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 1800
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 168
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 42
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/crystal_glass@v1"
+      },
+      "frame_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/forged_steel_blade@v1"
+      },
+      "facade_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/brushed_aluminium@v1"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 240.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.modernist_office_tower (Solid)",
+    "$hash": "da91f5b789a45712924e112cad596cf0d95ca9a790a5f9187cdb19e339abd9b6",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "3503482f-984a-4e11-92e3-e57485b3e908",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-05-02T15:17:55.449Z",
+    "parent_seeds": [
+      "seed-1775922706065-7g3vxgw8f"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Camera.Kind.Still"
+      },
+      "sensor_mm": {
+        "type": "categorical",
+        "value": "Std.Camera.Sensor { width = 203.2, height = 254.0 }"
+      },
+      "focal_length_mm": {
+        "type": "scalar",
+        "value": 300
+      },
+      "aperture_fnumber": {
+        "type": "scalar",
+        "value": 32
+      },
+      "shutter_speed_s": {
+        "type": "scalar",
+        "value": 2
+      },
+      "iso": {
+        "type": "scalar",
+        "value": 50
+      },
+      "tilt_deg": {
+        "type": "scalar",
+        "value": 4
+      },
+      "shift_mm": {
+        "type": "scalar",
+        "value": 8
+      },
+      "color_space": {
+        "type": "categorical",
+        "value": "Adobe-RGB"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.32, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 85.0 },\n            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },\n        ])"
+      }
+    },
+    "$domain": "field",
+    "$name": "camera.large_format_8x10 (Evolved EM)",
+    "$hash": "029093353ec6cdab992059c927a743ba9c2d513bcb323d44290565475e42b439",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
+  },
+  {
+    "id": "b8415aad-fd88-4f61-88d5-34a90942f3bf",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-02T15:17:57.378Z",
+    "parent_seeds": [
+      "seed-1775922706069-jcn42s4cw"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Creature.Kind.Mammal"
+      },
+      "species": {
+        "type": "categorical",
+        "value": "Vulpes vulpes"
+      },
+      "mass_kg": {
+        "type": "scalar",
+        "value": 6.2
+      },
+      "length_m": {
+        "type": "scalar",
+        "value": 0.72
+      },
+      "locomotion": {
+        "type": "categorical",
+        "value": "Std.Creature.Locomotion.Quadruped"
+      },
+      "top_speed_m_s": {
+        "type": "scalar",
+        "value": 13
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.58, c = 0.20, h = 35.0 },\n            Std.Color.OKLCh { l = 0.78, c = 0.16, h = 45.0 },\n            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 80.0 },\n        ])"
+      }
+    },
+    "$domain": "creature",
+    "$name": "creature.red_fox (Solid)",
+    "$hash": "7eb7ce388b21c76c8478984765d208a69f9d0008c6b5162c9f0c4f025c5dd461",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "2b8cb600-5334-40f1-882e-021814189cad",
+    "type": "algorithmic_evaluation",
+    "field_type": "ALGORITHM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:55:33.687Z",
+    "parent_seeds": [
+      "seed-1775922706059-4xkp8qqwj"
+    ],
+    "genes": {
+      "domain": {
+        "type": "categorical",
+        "value": "scalar_field"
+      },
+      "dimensionality": {
+        "type": "scalar",
+        "value": 3
+      },
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Kind.Noise"
+      },
+      "parameters": {
+        "type": "categorical",
+        "value": "Std.Algorithm.Parameters.NoiseParams {\n            octaves = 4,\n            persistence = 0.5,\n            lacunarity = 2.0,\n            frequency = 1.0,"
+      }
+    },
+    "$domain": "algorithm",
+    "$name": "algorithm.perlin_noise_3d (Voxelized)",
+    "$hash": "99157884c44597eac0205ffd0647f807ccdc3d1926edd8faf23e0673c68908da",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "fee5d460-21b2-4086-ab62-534a11291aa4",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:55:38.589Z",
+    "parent_seeds": [
+      "seed-1775922706060-p386352uj"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Fortification"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "medieval"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 480
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 28
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 4
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.FlatParapet"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/rough_granite@v1"
+      },
+      "wall_thickness_m": {
+        "type": "scalar",
+        "value": 3.4
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.42, c = 0.04, h = 60.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 65.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 70.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.stone_keep_norman (Solid)",
+    "$hash": "5bc4e942b417a06daf71634a0a905a69497506bc6d0f74677a762df80a1bc9fa",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "6aa01b48-ccf3-4833-8996-3aeaa8cb2c57",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:55:40.266Z",
+    "parent_seeds": [
+      "seed-1775922706060-mt4cbpaxj"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "victorian"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 84
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 14
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 4
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.Mansard { pitch_deg = 70.0 }"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/red_brick@v1"
+      },
+      "trim_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/polished_oak@v1"
+      },
+      "window_count": {
+        "type": "scalar",
+        "value": 12
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.38, c = 0.12, h = 25.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },\n            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 90.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.victorian_townhouse (Solid)",
+    "$hash": "f693c84a2f5ae6e9f3457c5f3abfb0d13a997cc6aa10044d0514bbb9cff0a050",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "120ead76-d940-491e-9de7-645c8cd9d111",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:55:42.088Z",
+    "parent_seeds": [
+      "seed-1775922706062-3gi95djvl"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Building.Kind.Residential"
+      },
+      "era": {
+        "type": "categorical",
+        "value": "nomadic"
+      },
+      "footprint_m2": {
+        "type": "scalar",
+        "value": 28
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 2.8
+      },
+      "stories": {
+        "type": "scalar",
+        "value": 1
+      },
+      "roof": {
+        "type": "categorical",
+        "value": "Std.Building.Roof.Domed { pitch_deg = 25.0 }"
+      },
+      "wall_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/handwoven_linen@v1"
+      },
+      "frame_material_ref": {
+        "type": "categorical",
+        "value": "inventory://materials/polished_oak@v1"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },\n            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 25.0 },\n            Std.Color.OKLCh { l = 0.42, c = 0.06, h = 50.0 },\n        ])"
+      }
+    },
+    "$domain": "building",
+    "$name": "building.mongolian_ger (Solid)",
+    "$hash": "bd8fa0e95b61b76ea5fc336989268528bb216109f639b1a69d720ffeabed9f0a",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "e3da5723-3ece-4966-8cb1-8a5d3d8d1426",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-05-03T03:55:43.878Z",
+    "parent_seeds": [
+      "seed-1775922706065-tdz59o139"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Camera.Kind.Surveillance"
+      },
+      "sensor_mm": {
+        "type": "categorical",
+        "value": "Std.Camera.Sensor { width = 5.76, height = 3.24 }"
+      },
+      "focal_length_mm": {
+        "type": "scalar",
+        "value": 2.8
+      },
+      "aperture_fnumber": {
+        "type": "scalar",
+        "value": 1.4
+      },
+      "shutter_speed_s": {
+        "type": "categorical",
+        "value": "1.0 / 30.0"
+      },
+      "iso": {
+        "type": "scalar",
+        "value": 6400
+      },
+      "resolution_px": {
+        "type": "categorical",
+        "value": "Std.Camera.Resolution { w = 1920, h = 1080 }"
+      },
+      "is_infrared_capable": {
+        "type": "categorical",
+        "value": true
+      },
+      "color_space": {
+        "type": "categorical",
+        "value": "Rec.709"
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.22, c = 0.02, h = 220.0 },\n            Std.Color.OKLCh { l = 0.52, c = 0.04, h = 200.0 },\n            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 180.0 },\n        ])"
+      }
+    },
+    "$domain": "field",
+    "$name": "camera.security_cctv_wide (Evolved EM)",
+    "$hash": "336878b33dbcbbfcc481b8b1b84c357e906a3eb58ab59c96528d96174f47c20d",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
+  },
+  {
+    "id": "54f9d775-27d5-4d6e-bf20-4ea1ee4f68fa",
+    "type": "field_evolution",
+    "field_type": "EM",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "num_steps": 100,
+    "created_at": "2026-05-03T03:55:45.373Z",
+    "parent_seeds": [
+      "seed-1775922706065-5lk267kfh"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Camera.Kind.Game"
+      },
+      "projection": {
+        "type": "categorical",
+        "value": "Std.Camera.Projection.Orthographic {\n            width_m = 32.0,\n            height_m = 18.0,\n            near_m = -100.0,\n            far_m = 100.0,"
+      }
+    },
+    "$domain": "field",
+    "$name": "camera.isometric_strategy_view (Evolved EM)",
+    "$hash": "e68352016bd1a459e1f69597a3e1e6135ab9de490fdfaed560074ad1275ebdd7",
+    "$lineage": {
+      "generation": 1,
+      "operation": "qft_evolve"
+    }
+  },
+  {
+    "id": "ec44f1fe-c0a6-4d8c-a57d-12a02d421328",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:55:47.142Z",
+    "parent_seeds": [
+      "seed-1775922706068-vzz2ktvxx"
+    ],
+    "genes": {
+      "archetype": {
+        "type": "categorical",
+        "value": "Std.Character.Archetype.Elemental"
+      },
+      "species": {
+        "type": "categorical",
+        "value": "Djinni"
+      },
+      "sex": {
+        "type": "categorical",
+        "value": "neutral"
+      },
+      "age_years": {
+        "type": "scalar",
+        "value": 1420
+      },
+      "height_m": {
+        "type": "scalar",
+        "value": 2.4
+      },
+      "mass_kg": {
+        "type": "scalar",
+        "value": 0
+      },
+      "build": {
+        "type": "categorical",
+        "value": "Std.Character.Build.Incorporeal"
+      },
+      "blackbody_temperature_K": {
+        "type": "scalar",
+        "value": 1800
+      },
+      "palette": {
+        "type": "categorical",
+        "value": "Std.Color.Palette.from_oklch([\n            Std.Color.OKLCh { l = 0.98, c = 0.12, h = 90.0 },\n            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 55.0 },\n            Std.Color.OKLCh { l = 0.32, c = 0.18, h = 25.0 },\n        ])"
+      }
+    },
+    "$domain": "character",
+    "$name": "character.ember_djinni (Solid)",
+    "$hash": "3dbcd6c9ef3701cee3088dff209dca1359c05cfd35735d23b20a96711d485ad5",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
+  },
+  {
+    "id": "dd7d9c3a-5a5b-4860-9938-19d1c5879297",
+    "type": "topology_evaluation",
+    "field_type": "TOPOLOGY",
+    "grid_size": [
+      32,
+      32,
+      32
+    ],
+    "created_at": "2026-05-03T03:57:01.774Z",
+    "parent_seeds": [
+      "seed-1775922706070-vyyz6hivb"
+    ],
+    "genes": {
+      "kind": {
+        "type": "categorical",
+        "value": "Std.Creature.Kind.Mythic"
+      },
+      "species": {
+        "type": "categorical",
+        "value": "Draco ignis juvenilis"
+      },
+      "mass_kg": {
+        "type": "scalar",
+        "value": 240
+      },
+      "length_m": {
+        "type": "scalar",
+        "value": 3.2
+      },
+      "locomotion": {
+        "type": "categorical",
+        "value": "Std.Creature.Locomotion.Fly"
+      },
+      "wingspan_m": {
+        "type": "scalar",
+        "value": 4.8
+      },
+      "breath_weapon": {
+        "type": "categorical",
+        "value": "Std.Creature.BreathWeapon.Flame {\n            reach_m = 9.0,\n            peak_temperature_K = 1950.0,\n            duration_ms = 1200.0,"
+      }
+    },
+    "$domain": "creature",
+    "$name": "creature.red_dragon_hatchling (Solid)",
+    "$hash": "1c7116c6baa19d8f51374cae46ce0a2a3bd1ba233579854007963147747b320c",
+    "$lineage": {
+      "generation": 1,
+      "operation": "evaluate"
+    }
   }
 ]

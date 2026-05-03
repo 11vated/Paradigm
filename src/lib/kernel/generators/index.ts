@@ -8,9 +8,12 @@ export { generateMarket } from './market';
 export { generateMetaDomain } from './meta-domain';
 
 // V2 World-Class Generators (new)
-export { generateCharacterV2 as generateCharacter } from './character-v2';
+export { generateCharacterV3 as generateCharacter } from './character-v3';
+export { generateCharacterV2 } from './character-v2'; // OBJ fallback
 export { generateMusicV2 as generateMusic } from './music-v2';
 export { generateSpriteV2 as generateSprite } from './sprite-v2';
+export { generateVisual2DV2 as generateVisual2D } from './visual2d-v2';
+export { generateGameV2 as generateGame } from './game-v2';
 
 // WebGPU RNG for compute shaders
 export { XOSHIRO256_WGSL, hashToU64, createRNGStateBuffer } from './webgpu-rng';
