@@ -184,3 +184,33 @@ export async function getNftInfo(id: string) {
 export async function getSeedPortraitUrl(id: string) {
   return `${API_BASE}/api/seeds/${id}/portrait`;
 }
+
+// ─── Composition APIs ─────────────────────────────────
+export async function composeSeed(sourceId: string, targetDomain: string) {
+  const response = await apiRequest('/api/seeds/compose', {
+    method: 'POST',
+    body: JSON.stringify({ source: sourceId, targetDomain }),
+  });
+  return response;
+}
+
+export async function getCompositionGraph() {
+  const response = await apiRequest('/api/composition/graph', {
+    method: 'GET',
+  });
+  return response;
+}
+
+export async function getCompositionPath(from: string, to: string) {
+  const response = await apiRequest(`/api/composition/path?from=${from}&to=${to}`, {
+    method: 'GET',
+  });
+  return response;
+}
+
+export async function getSimilarSeeds(seedId: string, limit: number = 10) {
+  const response = await apiRequest(`/api/seeds/${seedId}/similar?limit=${limit}`, {
+    method: 'GET',
+  });
+  return response;
+}

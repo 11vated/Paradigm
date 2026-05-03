@@ -22,6 +22,23 @@ import { growSeed } from './engines';
 import { rngFromHash, Xoshiro256StarStar } from './rng';
 import { createSeed } from './seeds';
 
+// ─── Integrate 6 Kernel Files (Reconstructed Nexus) ───
+import { routeSeed, routeToLLM, routeByStance, type RoutingDecision } from './seed-router';
+import { 
+  STANCE_REGISTRY, applyStance, breedStances, mutateStance, 
+  stanceDistance, recommendStance, type StanceConfig 
+} from './stance-genetics';
+import { LineageTracker, type LineageNode } from './lineage-tracker';
+import { SeedDependencyGraph, type SeedGraphNode } from './seed-dependency-graph';
+import { 
+  operatorHooks, safetyHook, loggingHook, validationHook, 
+  breedWithHooks, mutateWithHooks, growWithHooks 
+} from './operator-hooks';
+import { 
+  sovereigntyChecker, checkSovereigntyHook, signAfterOperation,
+  PermissionLevel, type SovereigntyCheck 
+} from './sovereignty-checker';
+
 // Tool definition
 export interface AgentTool {
   name: string;
@@ -129,10 +146,16 @@ export class SeedAgent {
   private state: AgentState;
   private tools: Map<string, AgentTool> = new Map();
   private llmMessages: LLMMessage[] = [];
-  private agentSeed: AgentSeed; // The agent's identity IS a seed
 
-  // The agent's identity IS this seed
+  // The agent IS a seed
   private agentSeed: AgentSeed;
+
+  // ─── Integrated Kernel Systems (Reconstructed Nexus) ───
+  private seedRouter: typeof routeSeed | null = null;
+  private lineageTracker: LineageTracker = new LineageTracker();
+  private dependencyGraph: SeedDependencyGraph = new SeedDependencyGraph();
+  private currentStance: string = 'architect';
+  // ────────────────────────────────────────────────────────
 
   constructor(config: Partial<SeedAgentConfig> = {}, agentSeed?: AgentSeed) {
     this.config = {
@@ -149,36 +172,18 @@ export class SeedAgent {
     if (agentSeed) {
       this.agentSeed = agentSeed;
     } else {
-      // Create default agent seed
+      // Create default agent seed using ARCHITECT_STANCE
       const phrase = `agent:default_${Date.now()}`;
       const hash = this.simpleHash64(phrase);
+      const defaultStance = STANCE_REGISTRY['architect'];
+      
       this.agentSeed = {
         phrase,
         hash,
         rng: rngFromHash(hash),
         $domain: 'agent',
         $name: 'DefaultAgent',
-        genes: {
-          persona: { type: 'string', value: 'architect' },
-          creativity: { type: 'float', value: 0.5 },
-          empathy: { type: 'float', value: 0.5 },
-          assertiveness: { type: 'float', value: 0.5 },
-          reasoning_style: { type: 'enum', value: 'deductive' },
-          depth: { type: 'float', value: 0.5 },
-          confidence: { type: 'float', value: 0.7 },
-          domains: { type: 'array', value: ['character', 'music', 'visual2d'] },
-          facts: { type: 'float', value: 0.5 },
-          memory_capacity: { type: 'int', value: 100 },
-          available_tools: { type: 'array', value: ['generate_seed', 'execute_gspl', 'grow_seed', 'evolve_population', 'list_domains', 'reflect'] },
-          tool_preference: { type: 'string', value: 'generation' },
-          episodic_memory: { type: 'bool', value: true },
-          semantic_memory: { type: 'bool', value: true },
-          memory_decay: { type: 'float', value: 0.1 },
-          can_fork: { type: 'bool', value: true },
-          can_breed: { type: 'bool', value: true },
-          signature: { type: 'string', value: '' },
-          ownership: { type: 'string', value: '' },
-        },
+        genes: defaultStance.genes,
       } as AgentSeed;
     }
 
@@ -198,7 +203,105 @@ export class SeedAgent {
       agentSeed: this.agentSeed,
     };
 
+    // Initialize integrated kernel systems
+    this.initializeKernelSystems();
+
     this.registerDefaultTools();
+  }
+
+  /**
+   * Initialize all 6 kernel systems (reconstructed Nexus)
+   */
+  private initializeKernelSystems(): void {
+    // 1. Seed Router (replaces Model Router)
+    this.seedRouter = (seed, config) => {
+      return routeSeed(seed, this.agentSeed.genes, config || {
+        preferGPU: true,
+        fallbackToCPU: true,
+        allowComposition: true,
+      });
+    };
+
+    // 2. Lineage Tracker (replaces Conversation Branching)
+    // Already initialized as this.lineageTracker
+
+    // 3. Dependency Graph (replaces Project Intelligence)
+    // Already initialized as this.dependencyGraph
+
+    // 4. Stance Genetics (replaces Adaptive Stances)
+    this.currentStance = this.agentSeed.genes?.persona?.value || 'architect';
+
+    // 5. Operator Hooks (replaces Hooks & Safety)
+    // Already initialized as global operatorHooks
+
+    // 6. Sovereignty Checker (replaces Permission System)
+    // Already initialized as global sovereigntyChecker
+
+    // Record primordial seed
+    this.lineageTracker.recordPrimordial(this.agentSeed);
+    this.dependencyGraph.addPrimordial(this.agentSeed);
+  }
+
+  /**
+   * Change agent stance (replaces Nexus stance switching)
+   */
+  setStance(stanceName: string): void {
+    const stance = STANCE_REGISTRY[stanceName];
+    if (!stance) {
+      throw new Error(`Unknown stance: ${stanceName}`);
+    }
+
+    // Apply stance genes to agent seed
+    this.agentSeed = applyStance(this.agentSeed, stanceName) as AgentSeed;
+    this.currentStance = stanceName;
+
+    // Update state
+    this.state.agentSeed = this.agentSeed;
+  }
+
+  /**
+   * Get current stance info
+   */
+  getStance(): { name: string; config: StanceConfig } | null {
+    const stance = STANCE_REGISTRY[this.currentStance];
+    if (!stance) return null;
+    return { name: this.currentStance, config: stance };
+  }
+
+  /**
+   * Route seed using integrated seed router
+   */
+  routeSeed(seed: Seed): RoutingDecision {
+    if (!this.seedRouter) {
+      throw new Error('Seed router not initialized');
+    }
+    return this.seedRouter(seed);
+  }
+
+  /**
+   * Get lineage tracker (replaces conversation history)
+   */
+  getLineageTracker(): LineageTracker {
+    return this.lineageTracker;
+  }
+
+  /**
+   * Get dependency graph (replaces project intelligence)
+   */
+  getDependencyGraph(): SeedDependencyGraph {
+    return this.dependencyGraph;
+  }
+
+  /**
+   * Check sovereignty permissions
+   */
+  checkPermission(operation: string, signature?: string): SovereigntyCheck {
+    return sovereigntyChecker.checkPermission(
+      this.agentSeed,
+      operation as any,
+      undefined,
+      signature
+    );
   }
 
   /**
@@ -228,6 +331,14 @@ export class SeedAgent {
 
       if (this.config.verbose) {
         console.log(`\n[SeedAgent] Iteration ${this.state.iteration}/${this.state.maxIterations}`);
+      }
+
+      // Route seed using integrated seed router (replaces Model Router)
+      if (this.seedRouter) {
+        const routingDecision = this.seedRouter(this.agentSeed);
+        if (this.config.verbose) {
+          console.log(`[SeedAgent] Routing: ${routingDecision.reason} (confidence: ${routingDecision.confidence})`);
+        }
       }
 
       // Get LLM response (temperature controlled by agent seed gene)
