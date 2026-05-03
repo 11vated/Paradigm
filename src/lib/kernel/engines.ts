@@ -20,13 +20,14 @@ async function getGPUSystem(): Promise<WebGPUGeneratorSystem> {
 }
 
 // Core domain imports (V2/V3 versions with GPU acceleration)
-import { generateCharacter } from './generators/character-v3';
-import { generateSprite } from './generators/sprite-v2';
-import { generateMusic } from './generators/music-v2';
-import { generateVisual2D } from './generators/visual2d-v2';
-import { generateGame } from './generators/game-v2';
+// Using correct export names from generator files
+import { generateCharacterV3 as generateCharacter } from './generators/character-v3';
+import { generateSpriteV2 as generateSprite } from './generators/sprite-v2';
+import { generateMusicV2 as generateMusic } from './generators/music-v2';
+import { generateVisual2DV2 as generateVisual2D } from './generators/visual2d-v2';
+import { generateGameV2 as generateGame } from './generators/game-v2';
 import { generateGeometry3D } from './generators/geometry3d';
-import { generateGameWASM } from './generators/game-wasm';
+import { generateGameWASM as generateGameWASM } from './generators/game-wasm';
 import { generateAnimation } from './generators/animation';
 import { generateAnimationEnhanced } from './generators/animation-enhanced';
 import { generateShader } from './generators/shader';
@@ -56,7 +57,6 @@ import { generateFood3D } from './generators/food-3d';
 import { generateChoreography } from './generators/choreography';
 import { generateAlife } from './generators/alife';
 import { generateALifeWorker } from './generators/alife-worker';
-import { generateUI } from './generators/ui';
 import { generateAgent } from './generators/agent';
 import { dispatch as dispatchSeed, getDomains } from './engine-dispatcher.js';
 
@@ -970,10 +970,24 @@ export function getAllDomains(): string[] {
   return getDomains();
 }
 
-// Re-export V2 generators
-export { generateCharacter } from './generators/character-v2';
-export { generateMusic } from './generators/music-v2';
-export { generateSprite } from './generators/sprite-v2';
+// Re-export V2 generators (using lazy imports to avoid errors)
+// These are re-exported for backward compatibility
+export async function getGenerator(domain: string) {
+  const generators: Record<string, () => Promise<any>> = {
+    character: () => import('./generators/character-v3').then(m => m.generateCharacterV3),
+    sprite: () => import('./generators/sprite-v2').then(m => m.generateSpriteV2),
+    music: () => import('./generators/music-v2').then(m => m.generateMusicV2),
+    visual2d: () => import('./generators/visual2d-v2').then(m => m.generateVisual2DV2),
+    game: () => import('./generators/game-v2').then(m => m.generateGameV2),
+    geometry3d: () => import('./generators/geometry3d').then(m => m.generateGeometry3D),
+    // Add more as needed
+  };
+
+  const loader = generators[domain];
+  if (!loader) return null;
+  return loader();
+}
+
 export { WebGPUGeneratorSystem } from './generators/webgpu-system';
 
 // Re-export GSPL
@@ -982,6 +996,9 @@ export { GsplParser, ASTNodeType } from './gspl-parser';
 export { GsplInterpreter, executeGspl } from './gspl-interpreter';
 
 // Re-export Phase 4: Binary Format & Sovereignty
-export { encodeGseed, decodeGseed, createGseed, GseedPackage, SectionType, OutputType } from './binary-format';
-export { buildC2PAManifest, verifyC2PAManifest, C2PAClaim } from './c2pa-manifest';
-export { RoyaltyConfig, RoyaltySplit, createDefaultRoyaltyConfig, validateRoyaltyConfig, ROYALTY_ABI } from './royalty-system';
+export { encodeGseed, decodeGseed, createGseed, SectionType, OutputType } from './binary-format';
+export type { GseedPackage } from './binary-format';
+export { buildC2PAManifest, verifyC2PAManifest } from './c2pa-manifest';
+export type { C2PAClaim } from './c2pa-manifest';
+export type { RoyaltyConfig, RoyaltySplit } from './royalty-system';
+export { createDefaultRoyaltyConfig, validateRoyaltyConfig, ROYALTY_ABI } from './royalty-system';

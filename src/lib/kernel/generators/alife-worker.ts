@@ -5,13 +5,20 @@
  */
 
 import type { Seed } from '../engines';
-import { ALifeParams, ALifeResult, defaultAlifeParams } from './alife';
+import { ALifeParams, ALifeResult } from './alife';
 import { Xoshiro256StarStar } from '../rng';
 
 export interface ALifeWorkerParams extends ALifeParams {
   seed?: string; // seed hash for determinism
   useWorker?: boolean;
 }
+
+const defaultAlifeParams: ALifeParams = {
+  rules: 'conway',
+  gridSize: 32,
+  initialDensity: 0.3,
+  quality: 'medium',
+};
 
 /**
  * Generate ALife simulation, optionally using Web Worker
@@ -24,8 +31,8 @@ export async function generateALifeWorker(params: ALifeWorkerParams = {}): Promi
   }
 
   // Fallback: run in main thread
-  const { generateALife } = await import('./alife');
-  return generateALife(params as ALifeParams);
+  const { generateAlife } = await import('./alife');
+  return generateAlife(params as any);
 }
 
 /**
