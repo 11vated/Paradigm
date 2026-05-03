@@ -1,80 +1,138 @@
 /**
- * Robotics Generator — produces robot schematics
- * Generates robot blueprint as SVG
+ * Robotics Generator — produces robot designs
+ * Industrial, humanoid, drone, surgical robots
+ * $0.8T market: Robotics
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface RoboticsParams {
-  type: string;
-  dof: number;
-  payload: number;
+  robotType: 'humanoid' | 'industrial' | 'drone' | 'surgical' | 'swarm';
+  dof: number; // degrees of freedom
+  payload: number; // kg
+  autonomy: number; // 0-1
   quality: 'low' | 'medium' | 'high' | 'photorealistic';
 }
 
-export async function generateRobotics(seed: Seed, outputPath: string): Promise<{ filePath: string; type: string }> {
-  const params = extractParams(seed);
+export async function generateRobotics(seed: Seed, outputPath: string): Promise<{ filePath: string; urdfPath: string; robotType: string }> {
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
-  // Generate SVG schematic
-  const svg = generateRobotSVG(params);
+  // Generate robot design
+  const design = generateDesign(params, rng);
 
-  // Ensure output directory exists
+  // Generate control system
+  const control = generateControl(params, rng);
+
+  // Generate kinematics
+  const kinematics = generateKinematics(params, rng);
+
+  const config = {
+    robotics: {
+      robotType: params.robotType,
+      dof: params.dof,
+      payload: params.payload,
+      autonomy: params.autonomy,
+      quality: params.quality
+    },
+    design,
+    control,
+    kinematics,
+    sensors: {
+      cameras: Math.floor(rng.nextF64() * 8) + 1,
+      lidar: rng.nextF64() > 0.5,
+      imu: true,
+      forceTorque: params.robotType === 'industrial' || params.robotType === 'surgical'
+    }
+  };
+
   const dir = path.dirname(outputPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  // Write SVG
-  const svgPath = outputPath.replace(/\.gltf$/, '.svg');
-  fs.writeFileSync(svgPath, svg);
+  const jsonPath = outputPath.replace(/\.json$/, '_robotics.json');
+  fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
 
-  return { filePath: svgPath, type: params.type };
-}
+  // Write URDF placeholder
+  const urdfPath = outputPath.replace(/\.json$/, '.urdf');
+  fs.writeFileSync(urdfPath, generateURDF(params, rng));
 
-function generateRobotSVG(params: RoboticsParams): string {
-  const width = 600;
-  const height = 500;
-
-  let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">\n`;
-  svg += `<rect width="${width}" height="${height}" fill="#ecf0f1"/>\n`;
-
-  const cx = width / 2;
-  const cy = height / 2;
-
-  // Base
-  svg += `<rect x="${cx - 80}" y="${cy + 100}" width="160" height="30" fill="#7f8c8d"/>\n`;
-
-  // Body
-  svg += `<rect x="${cx - 40}" y="${cy - 50}" width="80" height="150" fill="#3498db"/>\n`;
-
-  // Head
-  svg += `<circle cx="${cx}" cy="${cy - 80}" r="30" fill="#2980b9"/>\n`;
-
-  // Arms based on DOF
-  const armCount = Math.min(params.dof, 6);
-  for (let i = 0; i < armCount; i++) {
-    const angle = (i / armCount) * Math.PI * 2;
-    const ax = cx + Math.cos(angle) * 60;
-    const ay = cy + Math.sin(angle) * 60;
-    svg += `<line x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}" stroke="#2c3e50" stroke-width="8"/>\n`;
-    svg += `<circle cx="${ax}" cy="${ay}" r="10" fill="#e74c3c"/>\n`;
-  }
-
-  // Label
-  svg += `<text x="${cx}" y="${cy + 180}" text-anchor="middle" font-family="Arial" font-size="14">`;
-  svg += `${params.type} Robot - DOF: ${params.dof} - Payload: ${params.payload}kg`;
-  svg += `</text>\n`;
-
-  svg += `</svg>`;
-  return svg;
-}
-
-function extractParams(seed: Seed): RoboticsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
   return {
-    type: seed.genes?.type?.value || 'manipulator',
-    dof: seed.genes?.dof?.value || 6,
-    payload: seed.genes?.payload?.value || 10,
+    filePath: jsonPath,
+    urdfPath,
+    robotType: params.robotType
+  };
+}
+
+function generateDesign(params: RoboticsParams, rng: Xoshiro256StarStar): any {
+  return {
+    dimensions: {
+      height: params.robotType === 'humanoid' ? 1.5 + rng.nextF64() * 0.5 : 0.5 + rng.nextF64() * 2,
+      width: 0.3 + rng.nextF64() * 1,
+      depth: 0.3 + rng.nextF64() * 1
+    },
+    weight: params.payload * (2 + rng.nextF64() * 3), // 2-5x payload
+    joints: params.dof,
+    actuators: Array.from({ length: params.dof }, (_, i) => ({
+      id: `joint_${i}`,
+      type: ['revolute', 'prismatic', 'spherical'][rng.nextInt(0, 2)],
+      torque: rng.nextF64() * 100 // Nm
+    }))
+  };
+}
+
+function generateControl(params: RoboticsParams, rng: Xoshiro256StarStar): any {
+  return {
+    architecture: params.autonomy > 0.7 ? 'autonomous' : 'teleoperated',
+    framework: ['ROS2', 'ROS', 'YARP', 'custom'][rng.nextInt(0, 3)],
+    planning: ['RRT', 'A*', 'D*', 'MPC'][rng.nextInt(0, 3)],
+    learning: rng.nextF64() > 0.5 ? 'reinforcement_learning' : 'classical'
+  };
+}
+
+function generateKinematics(params: RoboticsParams, rng: Xoshiro256StarStar): any {
+  return {
+    workspace: {
+      reach: params.robotType === 'humanoid' ? 0.8 : 1.5, // meters
+      volume: rng.nextF64() * 10 // m^3
+    },
+    dexterity: rng.nextF64(),
+    singularities: Math.floor(rng.nextF64() * 10),
+    maxVelocity: rng.nextF64() * 2 // m/s
+  };
+}
+
+function generateURDF(params: RoboticsParams, rng: Xoshiro256StarStar): string {
+  return `<?xml version="1.0"?>
+<robot name="${params.robotType}_robot">
+  <link name="base_link">
+    <visual>
+      <geometry><box size="0.5 0.5 0.2"/></geometry>
+    </visual>
+  </link>
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="link1">
+    <visual>
+      <geometry><cylinder length="0.5" radius="0.1"/></geometry>
+    </visual>
+  </link>
+</robot>`;
+}
+
+function extractParams(seed: Seed, rng: Xoshiro256StarStar): RoboticsParams {
+  const quality = seed.genes?.quality?.value || 'medium';
+
+  return {
+    robotType: seed.genes?.robotType?.value || ['humanoid', 'industrial', 'drone', 'surgical', 'swarm'][rng.nextInt(0, 4)],
+    dof: Math.floor(((seed.genes?.dof?.value as number || rng.nextF64()) * 30) + 6),
+    payload: ((seed.genes?.payload?.value as number || rng.nextF64()) * 990) + 10, // 10-1000 kg
+    autonomy: (seed.genes?.autonomy?.value as number || rng.nextF64()),
     quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
   };
 }

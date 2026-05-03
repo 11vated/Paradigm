@@ -1,11 +1,30 @@
 import { UniversalSeed, GeneType, GeneValue } from '../seeds';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface FunctorBridge {
   name: string;
   domain: string;
   encode: (seed: UniversalSeed) => number[];
   decode: (vector: number[]) => UniversalSeed;
-  mate: (parentA: UniversalSeed, parentB: UniversalSeed) => UniversalSeed[];
+  mate: (parentA: UniversalSeed, parentB: UniversalSeed, rng: ReturnType<typeof rngFromHash>) => UniversalSeed[];
+}
+
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash) / 2147483647; // Normalize to [0, 1)
+}
+
+function extractNumber(obj: unknown, key: string, defaultVal: number): number {
+  if (obj && typeof obj === 'object' && key in obj) {
+    const val = (obj as Record<string, unknown>)[key];
+    return typeof val === 'number' ? val : defaultVal;
+  }
+  return defaultVal;
 }
 
 export class GameFunctor implements FunctorBridge {
@@ -14,12 +33,12 @@ export class GameFunctor implements FunctorBridge {
 
   encode(seed: UniversalSeed): number[] {
     const vector: number[] = [];
-    const genes: GeneType[] = [
+    const geneTypes: GeneType[] = [
       GeneType.STRUCTURE, GeneType.MOTION, GeneType.PHYSICS,
       GeneType.COLOR, GeneType.TEXTURE, GeneType.BEHAVIOR, GeneType.ANIMATION
     ];
 
-    for (const geneType of genes) {
+    for (const geneType of geneTypes) {
       const gene = seed.getGene(geneType);
       vector.push(this.encodeGene(gene?.value));
     }
@@ -50,10 +69,11 @@ export class GameFunctor implements FunctorBridge {
     return seed;
   }
 
-  mate(parentA: UniversalSeed, parentB: UniversalSeed): UniversalSeed[] {
-    const childA = parentA.cross(parentB, { nextFloat: Math.random });
-    const childB = parentB.cross(parentA, { nextFloat: Math.random });
-    return [childA, childB];
+  mate(parentA: UniversalSeed, parentB: UniversalSeed, rng: ReturnType<typeof rngFromHash>): UniversalSeed[] {
+    return [
+      parentA.cross(parentB, { nextFloat: () => rng.nextF64() }),
+      parentB.cross(parentA, { nextFloat: () => rng.nextF64() })
+    ];
   }
 }
 
@@ -88,10 +108,10 @@ export class MusicFunctor implements FunctorBridge {
     return seed;
   }
 
-  mate(parentA: UniversalSeed, parentB: UniversalSeed): UniversalSeed[] {
+  mate(parentA: UniversalSeed, parentB: UniversalSeed, rng: ReturnType<typeof rngFromHash>): UniversalSeed[] {
     return [
-      parentA.cross(parentB, { nextFloat: Math.random }),
-      parentB.cross(parentA, { nextFloat: Math.random })
+      parentA.cross(parentB, { nextFloat: () => rng.nextF64() }),
+      parentB.cross(parentA, { nextFloat: () => rng.nextF64() })
     ];
   }
 }
@@ -120,10 +140,10 @@ export class ArtFunctor implements FunctorBridge {
     return seed;
   }
 
-  mate(parentA: UniversalSeed, parentB: UniversalSeed): UniversalSeed[] {
+  mate(parentA: UniversalSeed, parentB: UniversalSeed, rng: ReturnType<typeof rngFromHash>): UniversalSeed[] {
     return [
-      parentA.cross(parentB, { nextFloat: Math.random }),
-      parentB.cross(parentA, { nextFloat: Math.random })
+      parentA.cross(parentB, { nextFloat: () => rng.nextF64() }),
+      parentB.cross(parentA, { nextFloat: () => rng.nextF64() })
     ];
   }
 }
@@ -158,23 +178,16 @@ export class StorytellingFunctor implements FunctorBridge {
     return seed;
   }
 
-  mate(parentA: UniversalSeed, parentB: UniversalSeed): UniversalSeed[] {
+  mate(parentA: UniversalSeed, parentB: UniversalSeed, rng: ReturnType<typeof rngFromHash>): UniversalSeed[] {
     return [
-      parentA.cross(parentB, { nextFloat: Math.random }),
-      parentB.cross(parentA, { nextFloat: Math.random })
+      parentA.cross(parentB, { nextFloat: () => rng.nextF64() }),
+      parentB.cross(parentA, { nextFloat: () => rng.nextF64() })
     ];
   }
 }
 
 export class FunctorRegistry {
   private functors: Map<string, FunctorBridge> = new Map();
-
-  constructor() {
-    this.register(new GameFunctor());
-    this.register(new MusicFunctor());
-    this.register(new ArtFunctor());
-    this.register(new StorytellingFunctor());
-  }
 
   register(functor: FunctorBridge): void {
     this.functors.set(functor.name, functor);
@@ -188,27 +201,7 @@ export class FunctorRegistry {
     return Array.from(this.functors.values());
   }
 
-  getDomainNames(): string[] {
-    return Array.from(new Set(Array.from(this.functors.values()).map(f => f.domain)));
+  getDomains(): string[] {
+    return Array.from(this.functors.values()).map(f => f.domain);
   }
-
-  getByDomain(domain: string): FunctorBridge[] {
-    return Array.from(this.functors.values()).filter(f => f.domain === domain);
-  }
-}
-
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(i);
-    hash = hash & hash;
-  }
-  return Math.abs(hash) / 2147483647;
-}
-
-function extractNumber(value: GeneValue | undefined, key: string, defaultValue: number): number {
-  if (typeof value === 'object' && value !== null) {
-    return (value as Record<string, unknown>)[key] as number ?? defaultValue;
-  }
-  return typeof value === 'number' ? value : defaultValue;
 }

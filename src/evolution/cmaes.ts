@@ -1,5 +1,6 @@
 import { GeneType } from '../seeds/types';
 import { UniversalSeed } from '../seeds';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface CMAESConfig {
   dimension: number;
@@ -10,7 +11,7 @@ export interface CMAESConfig {
 }
 
 export interface CMAESResult {
-  bestSeed: UniversalSeed;
+  bestVector: number[];
   bestFitness: number;
   iterations: number;
   history: number[];
@@ -21,13 +22,13 @@ export class CMAES {
   private mean: number[];
   private sigma: number;
   private covMatrix: number[][];
-  private eigenDecomp: { eigenvalues: number[]; eigenvectors: number[][] } | null = null;
   private pc: number[];
   private ps: number[];
   private history: number[] = [];
-  private rng: () => number;
+  private rng: ReturnType<typeof rngFromHash>;
+  private eigenDecomp: { eigenvalues: number[]; eigenvectors: number[][] } | null = null;
 
-  constructor(config: Partial<CMAESConfig> = {}, rng?: () => number) {
+  constructor(config: Partial<CMAESConfig> = {}, rng?: ReturnType<typeof rngFromHash>) {
     this.config = {
       dimension: config.dimension ?? 10,
       populationSize: config.populationSize ?? 20,
@@ -35,9 +36,9 @@ export class CMAES {
       targetFitness: config.targetFitness,
       maxIterations: config.maxIterations ?? 1000
     };
-    this.rng = rng ?? Math.random;
+    this.rng = rng ?? rngFromHash('cmaes-default');
 
-    this.mean = new Array(this.config.dimension).fill(0).map(() => this.rng());
+    this.mean = new Array(this.config.dimension).fill(0).map(() => this.rng.nextF64());
     this.sigma = this.config.initialSigma;
     this.covMatrix = this.createIdentity(this.config.dimension);
     this.pc = new Array(this.config.dimension).fill(0);
@@ -66,6 +67,7 @@ export class CMAES {
     const muEff = 1 / (2 * mu * mu);
 
     let bestSeed: UniversalSeed | null = null;
+    let bestVector: number[] = [];
     let bestFitness = -Infinity;
 
     for (let gen = 0; gen < this.config.maxIterations; gen++) {
@@ -80,6 +82,7 @@ export class CMAES {
         if (fitness > bestFitness) {
           bestFitness = fitness;
           bestSeed = seed;
+          bestVector = vector;
         }
       }
 
@@ -99,7 +102,7 @@ export class CMAES {
     }
 
     return {
-      bestSeed: bestSeed!,
+      bestVector,
       bestFitness,
       iterations: this.history.length,
       history: this.history
@@ -134,21 +137,28 @@ export class CMAES {
     return population;
   }
 
-  private sampleNormal(): number {
-    let u = 0, v = 0;
-    while (u === 0) u = this.rng();
-    while (v === 0) v = this.rng();
-    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
+    private sampleNormal(): number {
+      let u = 0, v = 0;
+      while (u === 0) u = this.rng.nextF64();
+      while (v === 0) v = this.rng.nextF64();
+      return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    }
+
+    /**
+     * Bind a Xoshiro256Star instance to this CMA-ES for full determinism.
+     */
+    bindRng(rng: ReturnType<typeof rngFromHash>): void {
+      this.rng = rng;
+    }
 
   private updateDistribution(selected: UniversalSeed[], weights: number[], muEff: number): void {
     const oldMean = [...this.mean];
     const newMean = new Array(this.config.dimension).fill(0);
 
-    const tempSelected: UniversalSeed[] = [];
-    while (tempSelected.length < this.config.dimension * 2 && tempSelected.length < selected.length) {
-      tempSelected.push(selected[Math.floor(this.rng() * selected.length)]);
-    }
+      const tempSelected: UniversalSeed[] = [];
+      while (tempSelected.length < this.config.dimension * 2 && tempSelected.length < selected.length) {
+        tempSelected.push(selected[Math.floor(this.rng.nextF64() * selected.length)]);
+      }
 
     for (let i = 0; i < this.config.dimension; i++) {
       let sum = 0;

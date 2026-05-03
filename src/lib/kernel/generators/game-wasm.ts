@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface GameParams {
   genre: string;
@@ -18,12 +19,13 @@ interface GameParams {
 }
 
 export async function generateGameWASM(seed: Seed, outputPath: string): Promise<{ filePath: string; wasmPath: string; size: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate game logic in JavaScript (WASM-ready)
-  const gameLogic = generateGameLogicJS(params);
+  const gameLogic = generateGameLogicJS(params, rng);
   const wasmStub = generateWASMStub(params);
-  const levels = generateLevels(params);
+  const levels = generateLevels(params, rng);
 
   // Ensure output directory exists
   const dir = path.dirname(outputPath);
@@ -48,11 +50,21 @@ export async function generateGameWASM(seed: Seed, outputPath: string): Promise<
   };
 }
 
-function generateGameLogicJS(params: GameParams): string {
+function generateGameLogicJS(params: GameParams, rng: Xoshiro256StarStar): string {
+  const rngSeed = rng.nextU64().toString(16);
   return `/**
- * Game Logic — WASM-ready
- * This file can be compiled to WebAssembly for performance-critical sections
- */
+   * Game Logic — WASM-ready
+   * This file can be compiled to WebAssembly for performance-critical sections
+   */
+  
+// Deterministic RNG for game logic
+const ctx = self || window;
+function createRng(seed) {
+  let state = 0;
+  for (let i = 0; i < seed.length; i++) state = ((state << 5) - state + seed.charCodeAt(i)) | 0;
+  return function() { state = (state * 1103515245 + 12345) | 0; return ((state >>> 0) % 0x100000000) / 0x100000000; };
+}
+const rng = createRng('${rngSeed}');
 
 // Game state (WASM-compatible data structures)
 const GameState = {
@@ -131,8 +143,8 @@ function updateGame(deltaTime) {
   if (GameState.boss && GameState.boss.alive) {
     GameState.boss.x += GameState.boss.velocityX * deltaTime;
     
-    // Boss attack
-    if (Math.random() < 0.01) {
+    // Boss attack (deterministic via seeded RNG)
+    if (rng.nextF64() < 0.01) {
       GameState.entities.push({
         x: GameState.boss.x,
         y: GameState.boss.y,
@@ -171,13 +183,13 @@ function generateWASMStub(params: GameParams): Buffer {
   return Buffer.from(wasmStub);
 }
 
-function generateLevels(params: GameParams): any[] {
+function generateLevels(params: GameParams, rng: Xoshiro256StarStar): any[] {
   const levels = [];
   for (let i = 0; i < params.levelCount; i++) {
     levels.push({
       level: i + 1,
       difficulty: params.difficulty * (i + 1) / params.levelCount,
-      entityCount: Math.floor(10 + i * 5),
+      entityCount: Math.floor(10 + rng.nextF64() * i * 5),
       hasBoss: params.hasBoss && i === params.levelCount - 1,
       timeLimit: 60 + i * 30
     });
@@ -185,7 +197,7 @@ function generateLevels(params: GameParams): any[] {
   return levels;
 }
 
-function extractParams(seed: Seed): GameParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): GameParams {
   const quality = seed.genes?.quality?.value || 'medium';
   
   return {

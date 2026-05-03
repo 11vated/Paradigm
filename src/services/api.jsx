@@ -52,7 +52,7 @@ export const growSeed = (id) =>
       stats: {},
       emergent_assets: data.emergent_assets,
       physics_summary: data.physics_summary,
-      preview_slice: data.preview_slice
+      preview_slice: data.preview_slice,
     };
   });
 

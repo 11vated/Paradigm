@@ -6,3 +6,21 @@ coverage/
 *.log
 .env*
 !.env.example
+
+
+# Test outputs
+data/artifacts/
+output/
+
+# Temp files
+temp_*.txt
+phase3-status.js
+beyond-omega-exec.ts
+demo.html
+
+# Test files
+test-*.mjs
+test-*.js
+test-*.ts
+*.cjs
+

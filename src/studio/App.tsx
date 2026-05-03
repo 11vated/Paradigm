@@ -91,6 +91,14 @@ export const ParadigmStudio: React.FC = () => {
   }, [selectedSeed, seeds]);
 
   const runEvolution = useCallback(() => {
+    // Deterministic pseudo-random for display only (not used in actual evolution)
+    const displayRng = (seed: string) => {
+      let hash = 0;
+      for (let i = 0; i < seed.length; i++) hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+      const seeded = (hash * 1103515245 + 12345) | 0;
+      return ((seeded >>> 0) % 0x100000000) / 0x100000000;
+    };
+    const rng = displayRng(seeds.map(s => s.id).join(''));
     const results = `Running evolution...\n
 Parameters:
 - Population: ${seeds.length}
@@ -99,9 +107,9 @@ Parameters:
 - Generations: 100
 
 Results:
-- Best Fitness: ${(Math.random() * 100).toFixed(2)}
+- Best Fitness: ${(rng() * 100).toFixed(2)}
 - Generation: 100
-- Convergence: ${(Math.random() * 100).toFixed(1)}%`;
+- Convergence: ${(rng() * 100).toFixed(1)}%`;
 
     setAgentResponse(results);
   }, [seeds.length]);

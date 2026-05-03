@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface EcosystemParams {
   speciesCount: number;
@@ -16,16 +17,17 @@ interface EcosystemParams {
 }
 
 export async function generateEcosystem(seed: Seed, outputPath: string): Promise<{ filePath: string; speciesCount: number }> {
+  const rng = rngFromHash(seed.$hash || '');
   const params = extractParams(seed);
 
   const species = Array.from({ length: params.speciesCount }, (_, i) => ({
     id: `species_${i}`,
     name: `Species_${String.fromCharCode(65 + i)}`,
-    population: Math.floor(100 + Math.random() * 900),
+    population: Math.floor(100 + rng.nextF64() * 900),
     traits: {
-      aggression: Math.random(),
-      reproduction: 0.1 + Math.random() * 0.5,
-      adaptability: Math.random()
+      aggression: rng.nextF64(),
+      reproduction: 0.1 + rng.nextF64() * 0.5,
+      adaptability: rng.nextF64()
     }
   }));
 
@@ -36,7 +38,7 @@ export async function generateEcosystem(seed: Seed, outputPath: string): Promise
       climate: getClimate(params.environment)
     },
     species,
-    interactions: generateInteractions(species, params.interactions),
+    interactions: generateInteractions(species, params.interactions, rng),
     stability: params.stability,
     quality: params.quality
   };
@@ -64,21 +66,21 @@ function getClimate(env: string): string {
   return climates[env] || 'temperate';
 }
 
-function generateInteractions(species: any[], types: string[]): any[] {
-  const interactions = [];
-  for (let i = 0; i < species.length; i++) {
-    for (let j = i + 1; j < species.length; j++) {
-      const type = types[Math.floor(Math.random() * types.length)];
-      interactions.push({
-        from: species[i].id,
-        to: species[j].id,
-        type,
-        strength: Math.random()
-      });
+  function generateInteractions(species: any[], types: string[], rng: Xoshiro256Star): any[] {
+    const interactions = [];
+    for (let i = 0; i < species.length; i++) {
+      for (let j = i + 1; j < species.length; j++) {
+        const type = types[Math.floor(rng.nextF64() * types.length)];
+        interactions.push({
+          from: species[i].id,
+          to: species[j].id,
+          type,
+          strength: rng.nextF64()
+        });
+      }
     }
+    return interactions;
   }
-  return interactions;
-}
 
 function extractParams(seed: Seed): EcosystemParams {
   const quality = seed.genes?.quality?.value || 'medium';

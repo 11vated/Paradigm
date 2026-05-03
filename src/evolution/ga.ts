@@ -1,4 +1,5 @@
 import { UniversalSeed } from '../seeds';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface GeneticConfig {
   populationSize: number;
@@ -26,9 +27,9 @@ export interface FitnessHistory {
 
 export class GeneticAlgorithm {
   private config: GeneticConfig;
-  private rng: { nextFloat: () => number; nextInt: (min: number, max: number) => number };
+  private rng: ReturnType<typeof rngFromHash>;
 
-  constructor(config: Partial<GeneticConfig> = {}, rng?: { nextFloat: () => number; nextInt: (min: number, max: number) => number }) {
+  constructor(config: Partial<GeneticConfig> = {}, rng?: ReturnType<typeof rngFromHash>) {
     this.config = {
       populationSize: config.populationSize ?? 100,
       generationLimit: config.generationLimit ?? 100,
@@ -37,10 +38,15 @@ export class GeneticAlgorithm {
       elitismCount: config.elitismCount ?? 2,
       tournamentSize: config.tournamentSize ?? 5
     };
-    this.rng = rng ?? {
-      nextFloat: () => Math.random(),
-      nextInt: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-    };
+    this.rng = rng ?? rngFromHash('ga-default');
+  }
+
+  /**
+   * Bind a Xoshiro256StarStar instance to this GA for full determinism.
+   * Call this before evolve() to ensure reproducible runs.
+   */
+  bindRng(rng: ReturnType<typeof rngFromHash>): void {
+    this.rng = rng;
   }
 
   async evolve(
@@ -111,13 +117,13 @@ export class GeneticAlgorithm {
       let parentB = this.tournamentSelect(population);
 
       let child: UniversalSeed;
-      if (this.rng.nextFloat() < this.config.crossoverRate) {
-        child = parentA.cross(parentB, this.rng);
+      if (this.rng.nextF64() < this.config.crossoverRate) {
+        child = parentA.cross(parentB, { nextFloat: () => this.rng.nextF64() });
       } else {
         child = parentA.clone();
       }
 
-      if (this.rng.nextFloat() < this.config.mutationRate) {
+      if (this.rng.nextF64() < this.config.mutationRate) {
         child = child.mutate(this.rng);
       }
 

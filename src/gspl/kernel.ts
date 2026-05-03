@@ -1,5 +1,17 @@
 import { useSeedStore } from '@/stores/seedStore';
-import { KernelInterface } from './interpreter';
+
+/**
+ * KernelInterface defines the contract for GSPL kernel operations.
+ * This allows the GSPL interpreter to call real API endpoints via the store.
+ */
+export interface KernelInterface {
+  createSeed: (name: string, domain: string, genes?: Record<string, unknown>) => Promise<any>;
+  mutateSeed: (seed: unknown, intensity?: number) => Promise<any>;
+  breedSeeds: (parentA: unknown, parentB: unknown) => Promise<any>;
+  growArtifact: (seed: unknown) => Promise<any>;
+  evolveSeed: (seed: unknown, config?: Record<string, unknown>) => Promise<any>;
+  composeSeed: (seed: unknown, targetDomain: string) => Promise<any>;
+}
 
 /**
  * Creates a KernelInterface implementation that delegates to the Zustand store actions.

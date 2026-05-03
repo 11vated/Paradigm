@@ -2,6 +2,7 @@ import { GSPLAgent, AgentConfig } from './agent';
 import { WorldModel } from './worldmodel';
 import { UniversalSeed, GeneType } from '../seeds';
 import { GeneticAlgorithm } from '../evolution';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface Level4Config {
   selfImprovement: boolean;
@@ -51,6 +52,7 @@ export class Level4Intelligence {
   private config: Level4Config;
   private selfModel: SelfModel;
   private network: MultiAgentNetwork;
+  private rng: ReturnType<typeof rngFromHash> | null = null;
   private thoughtHistory: AgentThought[] = [];
   private metaLearner: MetaLearner;
   private codeGenerator: CodeGenerator;
@@ -196,7 +198,11 @@ export class Level4Intelligence {
       switch (action) {
         case 'create_seed':
           const seed = new UniversalSeed();
-          seed.setGene(GeneType.COLOR, [Math.random(), Math.random(), Math.random()]);
+          if (!this.rng) {
+            const seed = new UniversalSeed();
+            this.rng = rngFromHash(seed.id || 'level4-default');
+          }
+          seed.setGene(GeneType.COLOR, [this.rng.nextF64(), this.rng.nextF64(), this.rng.nextF64()]);
           result += 'seed created, ';
           break;
         case 'mutate':

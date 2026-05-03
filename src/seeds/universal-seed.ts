@@ -209,13 +209,14 @@ export class UniversalSeed {
     };
   }
 
-  mutate(rng: { nextFloat: () => number }, intensity: number = 0.1): UniversalSeed {
+  mutate(rng: { nextFloat?: () => number; nextF64?: () => number }, intensity: number = 0.1): UniversalSeed {
+    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
     const mutated = this.clone();
 
     for (const [type, gene] of mutated.genes) {
       if (!gene.metadata.mutable || gene.metadata.locked) continue;
 
-      if (rng.nextFloat() < gene.metadata.mutationRate * intensity) {
+      if (nextFloat() < gene.metadata.mutationRate * intensity) {
         gene.value = this.mutateValue(gene.value, intensity, rng);
       }
     }
@@ -232,13 +233,15 @@ export class UniversalSeed {
     return mutated;
   }
 
-  private mutateValue(value: GeneValue, intensity: number, rng: { nextFloat: () => number }): GeneValue {
+  private mutateValue(value: GeneValue, intensity: number, rng: { nextFloat?: () => number; nextF64?: () => number }): GeneValue {
+    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
+    
     if (typeof value === 'number') {
-      return value + (rng.nextFloat() - 0.5) * intensity * 2;
+      return value + (nextFloat() - 0.5) * intensity * 2;
     }
     if (typeof value === 'string') {
       const mutations = ['uppercase', 'lowercase', 'reverse', 'shuffle'];
-      const op = mutations[Math.floor(rng.nextFloat() * mutations.length)];
+      const op = mutations[Math.floor(nextFloat() * mutations.length)];
       switch (op) {
         case 'uppercase': return value.toUpperCase();
         case 'lowercase': return value.toLowerCase();
@@ -247,11 +250,11 @@ export class UniversalSeed {
       }
     }
     if (typeof value === 'boolean') {
-      return rng.nextFloat() < intensity ? !value : value;
+      return nextFloat() < intensity ? !value : value;
     }
     if (Array.isArray(value)) {
       const newArray = [...value];
-      const idx = Math.floor(rng.nextFloat() * newArray.length);
+      const idx = Math.floor(nextFloat() * newArray.length);
       newArray[idx] = this.mutateValue(newArray[idx], intensity, rng);
       return newArray;
     }
@@ -259,7 +262,7 @@ export class UniversalSeed {
       const result: Record<string, GeneValue> = { ...value as Record<string, GeneValue> };
       const keys = Object.keys(result);
       if (keys.length > 0) {
-        const key = keys[Math.floor(rng.nextFloat() * keys.length)];
+        const key = keys[Math.floor(nextFloat() * keys.length)];
         result[key] = this.mutateValue(result[key], intensity, rng);
       }
       return result;
@@ -288,13 +291,14 @@ export class UniversalSeed {
     return cloned;
   }
 
-  cross(other: UniversalSeed, rng: { nextFloat: () => number }): UniversalSeed {
+  cross(other: UniversalSeed, rng: { nextFloat?: () => number; nextF64?: () => number }): UniversalSeed {
     const child = new UniversalSeed();
+    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
     
     for (const [type, geneA] of this.genes) {
       const geneB = other.genes.get(type);
       if (geneB) {
-        const childGene = rng.nextFloat() < 0.5 ? geneA : geneB;
+        const childGene = nextFloat() < 0.5 ? geneA : geneB;
         child.genes.set(type, {
           ...childGene,
           metadata: { ...childGene.metadata }

@@ -5,53 +5,71 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, Grid } from '@react-three/drei';
 
 import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';
+import { GSeedHyperobject } from './GSeedHyperobject';
+import { loadOBJFromURL, parseOBJ, objToBufferGeometry } from '@/lib/kernel/generators/obj-loader';
 
 /* ── 3D Viewport using React Three Fiber ────────────────────────────────── */
 
 function EmergentMesh({ meshData, color }) {
   const geometry = useMemo(() => {
     if (!meshData || !meshData.vertices) return null;
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(meshData.vertices), 3));
-    if (meshData.normals) {
-      geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(meshData.normals), 3));
-    } else {
-      geo.computeVertexNormals();
+    try {
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(meshData.vertices), 3));
+      if (meshData.normals) {
+        geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(meshData.normals), 3));
+      } else {
+        geo.computeVertexNormals();
+      }
+      if (meshData.colors) {
+        geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(meshData.colors), 3));
+      }
+      if (meshData.indices && meshData.indices.length > 0) {
+        // Use Uint16Array for broader GPU compatibility (max 65535 indices)
+        const indices = meshData.indices.length < 65536
+          ? new Uint16Array(meshData.indices)
+          : new Uint32Array(meshData.indices);
+        geo.setIndex(new THREE.BufferAttribute(indices, 1));
+      }
+      // Center and scale the geometry to fit nicely in the viewport
+      geo.computeBoundingBox();
+      const center = new THREE.Vector3();
+      geo.boundingBox.getCenter(center);
+      geo.translate(-center.x, -center.y, -center.z);
+      
+      // Scale down if it's too large (e.g., 32x32x32 grid)
+      const size = new THREE.Vector3();
+      geo.boundingBox.getSize(size);
+      const maxDim = Math.max(size.x, size.y, size.z);
+      if (maxDim > 0) {
+        const scale = 2.0 / maxDim;
+        geo.scale(scale, scale, scale);
+      }
+      
+      return geo;
+    } catch (e) {
+      console.error('Error creating geometry:', e);
+      return null;
     }
-    if (meshData.colors) {
-      geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(meshData.colors), 3));
-    }
-    if (meshData.indices) {
-      geo.setIndex(new THREE.BufferAttribute(new Uint32Array(meshData.indices), 1));
-    }
-    // Center and scale the geometry to fit nicely in the viewport
-    geo.computeBoundingBox();
-    const center = new THREE.Vector3();
-    geo.boundingBox.getCenter(center);
-    geo.translate(-center.x, -center.y, -center.z);
-    
-    // Scale down if it's too large (e.g., 32x32x32 grid)
-    const size = new THREE.Vector3();
-    geo.boundingBox.getSize(size);
-    const maxDim = Math.max(size.x, size.y, size.z);
-    if (maxDim > 0) {
-      const scale = 2.0 / maxDim;
-      geo.scale(scale, scale, scale);
-    }
-    
-    return geo;
   }, [meshData]);
 
   const meshRef = useRef();
   
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.005;
-      meshRef.current.rotation.x += 0.002;
+    try {
+      if (meshRef.current) {
+        meshRef.current.rotation.y += 0.005;
+        meshRef.current.rotation.x += 0.002;
+      }
+    } catch (e) {
+      console.error('Error in useFrame:', e);
     }
   });
 
-  if (!geometry) return null;
+  if (!geometry) {
+    console.warn('No geometry created, using fallback');
+    return <FallbackMesh domain="unknown" color={color} />;
+  }
 
   return (
     <mesh ref={meshRef} geometry={geometry} castShadow receiveShadow position={[0, 1, 0]}>
@@ -85,8 +103,45 @@ function FallbackMesh({ domain, color }) {
 }
 
 function ThreeViewport({ artifact }) {
-  const domainColor = artifact?.visual?.color || DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
+  const domainColor = DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
   const hasEmergentMesh = artifact?.emergent_assets?.mesh?.vertices?.length > 0;
+  const objFilePath = artifact?.artifact?.filePath;
+
+  // Try to load OBJ file if available (browser-compatible)
+  const [objGeometry, setObjGeometry] = useState(null);
+  
+  useEffect(() => {
+    if (!objFilePath || !objFilePath.endsWith('.obj')) return;
+    
+    const loadObj = async () => {
+      try {
+        const response = await fetch(`/output/${objFilePath.split('/').pop()}`);
+        const text = await response.text();
+        const objData = parseOBJ(text);
+        const geo = objToBufferGeometry(objData);
+        
+        // Center and scale
+        geo.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geo.boundingBox.getCenter(center);
+        geo.translate(-center.x, -center.y, -center.z);
+        
+        const size = new THREE.Vector3();
+        geo.boundingBox.getSize(size);
+        const maxDim = Math.max(size.x, size.y, size.z);
+        if (maxDim > 0) {
+          const scale = 2.0 / maxDim;
+          geo.scale(scale, scale, scale);
+        }
+        
+        setObjGeometry(geo);
+      } catch (e) {
+        console.error('Error loading OBJ:', e);
+      }
+    };
+    
+    loadObj();
+  }, [objFilePath]);
 
   return (
     <div className="w-full h-full block" data-testid="preview-3d-canvas">
@@ -114,6 +169,10 @@ function ThreeViewport({ artifact }) {
         
         {hasEmergentMesh ? (
           <EmergentMesh meshData={artifact.emergent_assets.mesh} color={domainColor} />
+        ) : objGeometry ? (
+          <mesh geometry={objGeometry} position={[0, 1, 0]}>
+            <meshStandardMaterial color="#00E5FF" roughness={0.3} metalness={0.4} side={THREE.DoubleSide} />
+          </mesh>
         ) : (
           <FallbackMesh domain={artifact?.domain} color={domainColor} />
         )}
@@ -128,36 +187,25 @@ function ThreeViewport({ artifact }) {
 /* ── 2D Previews ──────────────────────────────────────────────────── */
 
 function CharacterPreview({ artifact }) {
-  const v = artifact.visual || {};
-  const s = artifact.stats || {};
+  const domainColor = DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
   return (
     <div className="flex flex-col items-center gap-6" data-testid="preview-character">
-      <div className="rounded-sm border border-neutral-800"
+      <div className="w-24 h-32 rounded-sm border border-neutral-800"
         style={{
-          width: `${60 + (v.body_width || 0.5) * 100}px`,
-          height: `${100 + (v.body_height || 0.8) * 80}px`,
-          background: v.color || 'rgb(100,100,100)',
-          boxShadow: `0 0 40px ${v.color || 'rgb(100,100,100)'}33`,
+          background: `${domainColor}20`,
+          boxShadow: `0 0 40px ${domainColor}33`,
         }} />
       <div className="text-center">
         <div className="font-heading font-bold text-lg text-white">{artifact.name}</div>
-        <div className="font-mono text-[10px] text-primary uppercase tracking-wider">{artifact.archetype}</div>
-      </div>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-center">
-        {Object.entries(s).map(([k, val]) => (
-          <div key={k}>
-            <div className="font-mono text-[10px] text-neutral-600 uppercase">{k}</div>
-            <div className="font-heading font-bold text-sm text-white">{val}</div>
-          </div>
-        ))}
+        <div className="font-mono text-[10px] text-primary uppercase tracking-wider">{artifact.domain}</div>
       </div>
     </div>
   );
 }
 
 function MusicPreview({ artifact }) {
-  const m = artifact.musical || {};
-  const melody = artifact.melody_preview || [];
+  const m = artifact.preview_slice || {};
+  const melody = Array.isArray(m) ? m : [];
   return (
     <div className="flex flex-col items-center gap-4" data-testid="preview-music">
       <div className="w-56 h-28 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-neutral-800 flex items-center justify-center">
@@ -170,7 +218,7 @@ function MusicPreview({ artifact }) {
       </div>
       <div className="text-center">
         <div className="font-heading font-bold text-lg text-white">{artifact.name}</div>
-        <div className="font-mono text-[10px] text-neutral-500">{m.key} {m.scale} / {m.tempo} BPM</div>
+        <div className="font-mono text-[10px] text-neutral-500">{artifact.domain} domain</div>
       </div>
     </div>
   );
@@ -178,36 +226,31 @@ function MusicPreview({ artifact }) {
 
 function GenericPreview({ artifact }) {
   const c = DOMAIN_COLORS_HEX[artifact.domain] || '#00E5FF';
-  
+
   const canvasRef = useRef(null);
-  
+
   useEffect(() => {
-    if (artifact.preview_slice && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      const slice = artifact.preview_slice;
-      // Assuming it's a square slice from a 32x32x32 grid, so 32x32
-      const size = Math.sqrt(slice.length);
-      if (Number.isInteger(size)) {
-        canvas.width = size;
-        canvas.height = size;
-        const imgData = ctx.createImageData(size, size);
-        for (let i = 0; i < slice.length; i++) {
-          const val = slice[i];
-          // Heatmap: dark blue -> cyan -> green -> yellow -> red
-          const r = Math.min(255, Math.max(0, val * 255 * 5));
-          const g = Math.min(255, Math.max(0, (val * 5 - 0.5) * 255));
-          const b = Math.max(0, 255 - val * 255 * 2);
-          
-          imgData.data[i * 4] = r;
-          imgData.data[i * 4 + 1] = g;
-          imgData.data[i * 4 + 2] = b;
-          imgData.data[i * 4 + 3] = 255;
-        }
-        ctx.putImageData(imgData, 0, 0);
-      }
+    if (!artifact?.preview_slice || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const slice = artifact.preview_slice;
+    const size = Math.sqrt(slice.length);
+    if (!Number.isInteger(size) || size === 0) return;
+    canvas.width = size;
+    canvas.height = size;
+    const imgData = ctx.createImageData(size, size);
+    for (let i = 0; i < slice.length; i++) {
+      const val = Math.max(0, Math.min(1, slice[i]));
+      const r = Math.min(255, Math.max(0, val * 255 * 5));
+      const g = Math.min(255, Math.max(0, (val * 5 - 0.5) * 255));
+      const b = Math.max(0, 255 - val * 255 * 2);
+      imgData.data[i * 4] = r;
+      imgData.data[i * 4 + 1] = g;
+      imgData.data[i * 4 + 2] = b;
+      imgData.data[i * 4 + 3] = 255;
     }
-  }, [artifact.preview_slice]);
+    ctx.putImageData(imgData, 0, 0);
+  }, [artifact?.preview_slice]);
 
   return (
     <div className="flex flex-col items-center gap-4" data-testid="preview-generic">
@@ -238,7 +281,7 @@ function ArtifactInfo({ artifact }) {
 
 /* ── Main Viewport ──────────────────────────────────────────────────── */
 
-export default function PreviewViewport({ artifact, loading }) {
+export default function PreviewViewport({ artifact, loading, seed }) {
   const [view, setView] = useState('3d');
 
   return (
@@ -259,6 +302,9 @@ export default function PreviewViewport({ artifact, loading }) {
         <>
           {/* View toggle */}
           <div className="absolute top-2 right-2 z-20 flex gap-1">
+            <button onClick={() => setView('hyperobject')}
+              className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === 'hyperobject' ? 'border-primary text-primary bg-primary/10' : 'border-neutral-800 text-neutral-600'}`}
+              data-testid="view-hyperobject-btn">Hyperobject</button>
             <button onClick={() => setView('3d')}
               className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${view === '3d' ? 'border-primary text-primary bg-primary/10' : 'border-neutral-800 text-neutral-600'}`}
               data-testid="view-3d-btn">3D</button>
@@ -273,7 +319,11 @@ export default function PreviewViewport({ artifact, loading }) {
             <div className="font-mono text-[8px] text-neutral-800">{artifact.seed_hash?.slice(0, 24)}</div>
           </div>
 
-          {view === '3d' ? (
+          {view === 'hyperobject' ? (
+            <div className="absolute inset-0" data-testid="viewport-hyperobject-container">
+              <GSeedHyperobject seed={seed} width={800} height={600} autoRotate={true} showAllSystems={true} />
+            </div>
+          ) : view === '3d' ? (
             <div className="absolute inset-0" data-testid="viewport-3d-container">
               <ThreeViewport artifact={artifact} />
               

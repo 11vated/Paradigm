@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface AlifeParams {
   rules: string;
@@ -15,14 +16,15 @@ interface AlifeParams {
 }
 
 export async function generateAlife(seed: Seed, outputPath: string): Promise<{ filePath: string; gridSize: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate initial grid
   const grid = [];
   for (let y = 0; y < params.gridSize; y++) {
     grid[y] = [];
     for (let x = 0; x < params.gridSize; x++) {
-      grid[y][x] = Math.random() < params.initialDensity ? 1 : 0;
+      grid[y][x] = rng.nextF64() < params.initialDensity ? 1 : 0;
     }
   }
 
@@ -74,7 +76,7 @@ function countNeighbors(grid: number[][], x: number, y: number, size: number): n
   return count;
 }
 
-function extractParams(seed: Seed): AlifeParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): AlifeParams {
   const quality = seed.genes?.quality?.value || 'medium';
   const qualitySizes: Record<string, number> = { low: 16, medium: 32, high: 64, photorealistic: 128 };
 

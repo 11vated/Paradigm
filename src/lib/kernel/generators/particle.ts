@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface ParticleParams {
   emitter: string;
@@ -16,7 +17,8 @@ interface ParticleParams {
 }
 
 export async function generateParticle(seed: Seed, outputPath: string): Promise<{ filePath: string; particleCount: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   const config = {
     emitter: {
@@ -28,8 +30,8 @@ export async function generateParticle(seed: Seed, outputPath: string): Promise<
     particles: Array.from({ length: Math.min(params.count, 1000) }, (_, i) => ({
       id: i,
       initialVelocity: params.velocity,
-      size: 0.1 + Math.random() * 0.5,
-      color: [Math.random(), Math.random(), Math.random()],
+      size: 0.1 + rng.nextF64() * 0.5,
+      color: [rng.nextF64(), rng.nextF64(), rng.nextF64()],
       drag: 0.98
     })),
     physics: {
@@ -51,7 +53,7 @@ export async function generateParticle(seed: Seed, outputPath: string): Promise<
   };
 }
 
-function extractParams(seed: Seed): ParticleParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ParticleParams {
   const quality = seed.genes?.quality?.value || 'medium';
   const count = seed.genes?.count?.value || 0.5;
 

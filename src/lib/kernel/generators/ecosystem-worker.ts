@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface EcosystemParams {
   speciesCount: number;
@@ -16,7 +17,8 @@ interface EcosystemParams {
 }
 
 export async function generateEcosystemWorker(seed: Seed, outputPath: string): Promise<{ filePath: string; workerPath: string; speciesCount: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate ecosystem config
   const config = {
@@ -27,10 +29,10 @@ export async function generateEcosystemWorker(seed: Seed, outputPath: string): P
       timeSteps: params.timeSteps,
       quality: params.quality
     },
-    species: generateSpecies(params),
-    environment: generateEnvironmentZones(params),
-    foodWeb: generateFoodWeb(params),
-    events: generateEvents(params),
+    species: generateSpecies(params, rng),
+    environment: generateEnvironmentZones(params, rng),
+    foodWeb: generateFoodWeb(params, rng),
+    events: generateEvents(params, rng),
     workerScript: 'ecosystem-worker.js'
   };
 
@@ -53,75 +55,75 @@ export async function generateEcosystemWorker(seed: Seed, outputPath: string): P
   };
 }
 
-function generateSpecies(params: EcosystemParams): any[] {
+function generateSpecies(params: EcosystemParams, rng: Xoshiro256StarStar): any[] {
   const species = [];
   const types = ['producer', 'herbivore', 'carnivore', 'omnivore', 'decomposer'];
-  
+
   for (let i = 0; i < params.speciesCount; i++) {
     const type = types[i % types.length];
     species.push({
       id: `species_${i}`,
       name: `${type}_${i}`,
       type,
-      population: Math.floor(Math.random() * 1000) + 100,
-      reproductiveRate: Math.random() * 0.5 + 0.1,
-      carryingCapacity: Math.floor(Math.random() * 5000) + 1000,
-      energyRequirement: Math.random() * 100 + 10,
+      population: Math.floor(rng.nextF64() * 1000) + 100,
+      reproductiveRate: rng.nextF64() * 0.5 + 0.1,
+      carryingCapacity: Math.floor(rng.nextF64() * 5000) + 1000,
+      energyRequirement: rng.nextF64() * 100 + 10,
       habitat: ['forest', 'grassland', 'aquatic', 'mountain'][i % 4],
       traits: {
-        speed: Math.random() * 10 + 1,
-        size: Math.random() * 100 + 1,
-        lifespan: Math.random() * 20 + 1,
-        camouflage: Math.random()
+        speed: rng.nextF64() * 10 + 1,
+        size: rng.nextF64() * 100 + 1,
+        lifespan: rng.nextF64() * 20 + 1,
+        camouflage: rng.nextF64()
       },
       threats: [],
       prey: []
     });
   }
-  
+
   return species;
 }
 
-function generateEnvironmentZones(params: EcosystemParams): any[] {
+function generateEnvironmentZones(params: EcosystemParams, rng: Xoshiro256StarStar): any[] {
   const zones = [];
   const zoneTypes = ['forest', 'grassland', 'desert', 'aquatic', 'mountain', 'tundra'];
-  
+
   for (let i = 0; i < params.climateZones; i++) {
     zones.push({
       id: `zone_${i}`,
       type: zoneTypes[i % zoneTypes.length],
-      area: Math.random() * 10000 + 1000,
-      temperature: Math.random() * 40 - 10, // -10 to 30 C
-      rainfall: Math.random() * 2000 + 100, // mm/year
+      area: rng.nextF64() * 10000 + 1000,
+      temperature: rng.nextF64() * 40 - 10, // -10 to 30 C
+      rainfall: rng.nextF64() * 2000 + 100, // mm/year
       resources: {
-        food: Math.random() * 1000 + 100,
-        water: Math.random() * 1000 + 100,
-        shelter: Math.random() * 500 + 50
+        food: rng.nextF64() * 1000 + 100,
+        water: rng.nextF64() * 1000 + 100,
+        shelter: rng.nextF64() * 500 + 50
       },
-      carryingCapacityMultiplier: Math.random() * 2 + 0.5
+      carryingCapacityMultiplier: rng.nextF64() * 2 + 0.5
     });
   }
-  
+
   return zones;
 }
 
-function generateFoodWeb(params: EcosystemParams): any {
+function generateFoodWeb(params: EcosystemParams, rng: Xoshiro256StarStar): any {
   return {
-    interactions: generateInteractions(params.speciesCount),
-    energyFlow: generateEnergyFlow(params.speciesCount),
+    interactions: generateInteractions(params.speciesCount, rng),
+    energyFlow: generateEnergyFlow(params.speciesCount, rng),
     trophicLevels: params.speciesCount > 0 ? Math.ceil(Math.log2(params.speciesCount)) : 1
   };
 }
 
-function generateInteractions(speciesCount: number): any[] {
+function generateInteractions(speciesCount: number, rng: Xoshiro256StarStar): any[] {
   const interactions = [];
   for (let i = 0; i < speciesCount; i++) {
     for (let j = 0; j < speciesCount; j++) {
-      if (i !== j && Math.random() < 0.3) {
+      if (i !== j && rng.nextF64() < 0.3) {
         interactions.push({
           predator: `species_${i}`,
           prey: `species_${j}`,
-          strength: Math.random()
+          strength: rng.nextF64()
         });
       }
     }
@@ -129,7 +131,7 @@ function generateInteractions(speciesCount: number): any[] {
   return interactions;
 }
 
-function generateEnergyFlow(speciesCount: number): any {
+function generateEnergyFlow(speciesCount: number, rng: Xoshiro256StarStar): any {
   return {
     producers: Math.floor(speciesCount * 0.3),
     consumers: Math.floor(speciesCount * 0.6),
@@ -138,12 +140,12 @@ function generateEnergyFlow(speciesCount: number): any {
   };
 }
 
-function generateEvents(params: EcosystemParams): any[] {
+function generateEvents(params: EcosystemParams, rng: Xoshiro256StarStar): any[] {
   return [
-    { type: 'drought', probability: 0.1, severity: 0.5, duration: 100 },
-    { type: 'fire', probability: 0.05, severity: 0.8, duration: 50 },
-    { type: 'migration', probability: 0.2, affectedSpecies: Math.floor(params.speciesCount * 0.5) },
-    { type: 'disease', probability: 0.15, lethality: 0.3, spreadRate: 0.1 }
+    { type: 'drought', probability: rng.nextF64() * 0.2, severity: 0.5, duration: 100 },
+    { type: 'fire', probability: rng.nextF64() * 0.1, severity: 0.8, duration: 50 },
+    { type: 'migration', probability: rng.nextF64() * 0.3, affectedSpecies: Math.floor(params.speciesCount * rng.nextF64()) },
+    { type: 'disease', probability: rng.nextF64() * 0.2, lethality: 0.3, spreadRate: 0.1 }
   ];
 }
 
@@ -168,11 +170,19 @@ self.onmessage = function(e) {
     history: []
   }));
   
-  // Simulation loop
-  for (let step = 0; step < timeSteps; step++) {
-    // Environmental effects
-    const drought = Math.random() < 0.001 ? 0.5 : 1.0; // Rare drought event
-    const temperature = environment[0].temperature + (Math.random() - 0.5) * 5;
+    // Simulation loop — deterministic RNG seeded from species hash
+    const ctx = self as any;
+    function deterministicRandom(seed: string): () => number {
+      let state = 0;
+      for (let i = 0; i < seed.length; i++) state = ((state << 5) - state + seed.charCodeAt(i)) | 0;
+      return () => { state = (state * 1103515245 + 12345) | 0; return ((state >>> 0) % 0x100000000) / 0x100000000; };
+    }
+    const rng = deterministicRandom(JSON.stringify(species.map(s => s.id)));
+
+    for (let step = 0; step < timeSteps; step++) {
+      // Environmental effects
+      const drought = rng() < 0.001 ? 0.5 : 1.0; // Rare drought event
+      const temperature = environment[0].temperature + (rng() - 0.5) * 5;
     
     // Update each species
     populations.forEach((pop, idx) => {

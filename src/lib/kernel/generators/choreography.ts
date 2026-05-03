@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface ChoreographyParams {
   style: string;
@@ -16,10 +17,11 @@ interface ChoreographyParams {
 }
 
 export async function generateChoreography(seed: Seed, outputPath: string): Promise<{ filePath: string; moveCount: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate dance sequence
-  const sequence = generateDanceSequence(params);
+  const sequence = generateDanceSequence(params, rng);
 
   // Ensure output directory exists
   const dir = path.dirname(outputPath);
@@ -32,7 +34,7 @@ export async function generateChoreography(seed: Seed, outputPath: string): Prom
   return { filePath: jsonPath, moveCount: sequence.moves.length };
 }
 
-function generateDanceSequence(params: ChoreographyParams): any {
+function generateDanceSequence(params: ChoreographyParams, rng: Xoshiro256StarStar): any {
   const moveCount = Math.floor(params.complexity * 20) + 5;
   const moves = [];
 
@@ -42,9 +44,9 @@ function generateDanceSequence(params: ChoreographyParams): any {
     const time = (i / params.tempo) * 60; // seconds
     moves.push({
       time: time.toFixed(2),
-      move: possibleMoves[Math.floor(Math.random() * possibleMoves.length)],
+      move: possibleMoves[rng.nextInt(0, possibleMoves.length - 1)],
       duration: (60 / params.tempo * 0.5).toFixed(2),
-      intensity: Math.random()
+      intensity: rng.nextF64()
     });
   }
 
@@ -58,7 +60,7 @@ function generateDanceSequence(params: ChoreographyParams): any {
   };
 }
 
-function extractParams(seed: Seed): ChoreographyParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ChoreographyParams {
   const quality = seed.genes?.quality?.value || 'medium';
   let tempo = seed.genes?.tempo?.value || 0.5;
   if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;

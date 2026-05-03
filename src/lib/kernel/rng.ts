@@ -43,96 +43,79 @@ export class Xoshiro256StarStar {
   private s1: bigint;
   private s2: bigint;
   private s3: bigint;
+  public hash: string;
+  private _hasSpare: boolean;
+  private _spare: number;
 
   /**
    * Initialize from a seed string (SHA-256 hex hash) or numeric seed.
    */
   constructor(seed: string | bigint) {
-    let seedVal: bigint;
     if (typeof seed === 'string') {
-      // Parse first 16 hex chars as a 64-bit seed
-      const cleanHex = seed.replace(/[^0-9a-fA-F]/g, '').slice(0, 16) || '0';
-      seedVal = BigInt('0x' + cleanHex);
+      const h = seed.padEnd(64, '0').slice(0, 64);
+      this.s0 = BigInt.asUintN(64, BigInt('0x' + h.slice(0, 16)));
+      this.s1 = BigInt.asUintN(64, BigInt('0x' + h.slice(16, 32)));
+      this.s2 = BigInt.asUintN(64, BigInt('0x' + h.slice(32, 48)));
+      this.s3 = BigInt.asUintN(64, BigInt('0x' + h.slice(48, 64)));
+      this.hash = seed;
     } else {
-      seedVal = seed;
+      const sm = splitmix64(BigInt.asUintN(64, seed));
+      this.s0 = sm();
+      this.s1 = sm();
+      this.s2 = sm();
+      this.s3 = sm();
+      this.hash = seed.toString(16).padStart(64, '0');
     }
-
-    const sm = splitmix64(seedVal);
-    this.s0 = sm();
-    this.s1 = sm();
-    this.s2 = sm();
-    this.s3 = sm();
+    this._hasSpare = false;
+    this._spare = 0;
   }
 
   /**
-   * Generate the next 64-bit unsigned integer.
+   * Return next 64-bit unsigned integer.
    */
   nextU64(): bigint {
     const result = BigInt.asUintN(64, rotl(BigInt.asUintN(64, this.s1 * 5n), 7n) * 9n);
 
     const t = BigInt.asUintN(64, this.s1 << 17n);
-
     this.s2 ^= this.s0;
     this.s3 ^= this.s1;
     this.s1 ^= this.s2;
     this.s0 ^= this.s3;
-
     this.s2 ^= t;
-    this.s3 = rotl(this.s3, 45n);
-
-    // Ensure all state values stay in u64 range
-    this.s0 = BigInt.asUintN(64, this.s0);
-    this.s1 = BigInt.asUintN(64, this.s1);
-    this.s2 = BigInt.asUintN(64, this.s2);
-    this.s3 = BigInt.asUintN(64, this.s3);
+    this.s3 = BigInt.asUintN(64, rotl(this.s3, 45n));
 
     return result;
   }
 
   /**
-   * Generate a uniform double in [0, 1).
+   * Uniform [0, 1) as 64-bit float.
    */
   nextF64(): number {
     const u = this.nextU64();
-    // Use the top 53 bits for a double with full mantissa precision
-    return Number(u >> 11n) / (2 ** 53);
+    const mantissa = u & ((1n << 52n) - 1n);
+    const exponent = 1023n << 52n;
+    const bits = BigInt.asUintN(64, exponent | mantissa);
+    const buffer = new ArrayBuffer(8);
+    const view = new DataView(buffer);
+    view.setBigUint64(0, bits, false);
+    return view.getFloat64(0, false) - 1.0;
   }
 
   /**
-   * Generate a uniform integer in [min, max] (inclusive).
+   * Uniform integer in [min, max] (inclusive).
    */
-  nextInt(min: number, max: number): number {
-    const range = max - min + 1;
-    return min + Math.floor(this.nextF64() * range);
+  nextInt(min: number = 0, max: number = 100): number {
+    return Math.floor(this.nextF64() * (max - min + 1)) + min;
   }
 
   /**
-   * Generate a boolean with 50% probability.
+   * Box–Muller transform: Gaussian N(0,1).
    */
-  nextBool(): boolean {
-    return this.nextF64() < 0.5;
-  }
-
-  /**
-   * Choose a random element from an array.
-   */
-  nextChoice<T>(arr: T[]): T {
-    if (arr.length === 0) throw new Error('Cannot choose from empty array');
-    return arr[this.nextInt(0, arr.length - 1)];
-  }
-
-  /**
-   * Generate a standard normal (Gaussian) variate using Box-Muller.
-   */
-  private _hasSpare = false;
-  private _spare = 0;
-
   nextGaussian(): number {
     if (this._hasSpare) {
       this._hasSpare = false;
       return this._spare;
     }
-
     let u: number, v: number, s: number;
     do {
       u = this.nextF64() * 2 - 1;
@@ -150,7 +133,6 @@ export class Xoshiro256StarStar {
    * Create a child RNG from a fork key (for parallel deterministic streams).
    */
   fork(key: string): Xoshiro256StarStar {
-    // Mix the current state with the key to produce a new independent stream
     let hash = 0n;
     for (let i = 0; i < key.length; i++) {
       hash = BigInt.asUintN(64, hash * 31n + BigInt(key.charCodeAt(i)));

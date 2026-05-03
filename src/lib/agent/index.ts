@@ -20,7 +20,7 @@
  */
 import crypto from 'crypto';
 import {
-  Xoshiro256StarStar, rngFromHash,
+  Xoshiro256Star, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
   ENGINES, growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,

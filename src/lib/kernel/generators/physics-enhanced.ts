@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface PhysicsParams {
   gravity: number;
@@ -17,7 +18,8 @@ interface PhysicsParams {
 }
 
 export async function generatePhysicsEnhanced(seed: Seed, outputPath: string): Promise<{ filePath: string; bodyCount: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate enhanced simulation config
   const config = {
@@ -66,7 +68,7 @@ function generateBodiesEnhanced(params: PhysicsParams): any[] {
       id: `body_${i}`,
       type: i === 0 ? 'dynamic' : 'static',
       shape: ['box', 'sphere', 'cylinder'][i % 3],
-      position: [Math.random() * 10 - 5, Math.random() * 10, Math.random() * 10 - 5],
+      position: [rng.nextF64() * 10 - 5, rng.nextF64() * 10, rng.nextF64() * 10 - 5],
       rotation: [0, 0, 0],
       mass: i === 0 ? 1.0 : 0,
       friction: params.friction,
@@ -168,7 +170,7 @@ self.onmessage = function(e) {
 `;
 }
 
-function extractParams(seed: Seed): PhysicsParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): PhysicsParams {
   const quality = seed.genes?.quality?.value || 'medium';
   const grav = seed.genes?.gravity?.value || 0.5;
 

@@ -34,7 +34,7 @@ import { IntelligenceLayer } from './src/lib/intelligence/index.js';
 
 // ─── NEW: Deterministic Kernel ───────────────────────────────────────────────
 import {
-  Xoshiro256StarStar, rngFromHash,
+  Xoshiro256Star, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
   ENGINES, growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph
@@ -344,8 +344,8 @@ async function startServer() {
   }
 
   // Helper: create a deterministic RNG from a seed's hash (or random fallback)
-  function rngFor(seed: any, extra: string = ''): Xoshiro256StarStar {
-    const hashSource = (seed.$hash || crypto.randomUUID()) + extra;
+  function rngFor(seed: any, extra: string = ''): ReturnType<typeof rngFromHash> {
+    const hashSource = (seed.id || crypto.randomUUID()) + extra;
     return rngFromHash(hashSource);
   }
 

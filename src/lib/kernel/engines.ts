@@ -1,11 +1,31 @@
 /**
- * Paradigm Absolute — 27 Domain Engines
- * Each engine grows a seed into an artifact descriptor.
- * Ported from Python engines.py — every grow() has real logic, no stubs.
- * 27th domain "agent" grows seeds into runnable agent configurations.
+ * Domain Engine Router — dispatches seed → generator
+ * Upgraded to use WebGPU Generator System (Phase 2)
  */
 
-import { generateVisual2D } from './generators/visual2d';
+import type { Seed } from './types';
+import { createWebGPUGeneratorSystem, WebGPUGeneratorSystem } from './generators/webgpu-system';
+
+// Lazy-loaded generator system
+let gpuSystem: WebGPUGeneratorSystem | null = null;
+
+async function getGPUSystem(): Promise<WebGPUGeneratorSystem> {
+  if (!gpuSystem) {
+    gpuSystem = await createWebGPUGeneratorSystem({
+      preferGPU: true,
+      fallbackToCPU: true
+    });
+  }
+  return gpuSystem;
+}
+
+// Core domain imports (V2 versions with GPU acceleration)
+import { generateCharacter } from './generators/character'; // V2 with GPU fallback
+import { generateSpriteAnimated } from './generators/sprite-animated';
+import { generateMusicEnhanced } from './generators/music-enhanced';
+import { generateNarrative } from './generators/narrative';
+import { generatePhysics } from './generators/physics';
+import { generateGame } from './generators/game';
 import { generateVisual2DSVG } from './generators/visual2d-svg';
 import { generateAudio } from './generators/audio';
 import { generateGeometry3D } from './generators/geometry3d';
@@ -42,15 +62,14 @@ import { generateFashion3D } from './generators/fashion-3d';
 import { generateRobotics } from './generators/robotics';
 import { generateRobotics3D } from './generators/robotics-3d';
 import { generateCircuit } from './generators/circuit';
-import { generateCircuitInteractive } from './generators/circuit-interactive';
 import { generateFood } from './generators/food';
 import { generateFood3D } from './generators/food-3d';
 import { generateChoreography } from './generators/choreography';
-import { generateChoreographyMotion } from './generators/choreography-motion';
 import { generateAlife } from './generators/alife';
 import { generateALifeWorker } from './generators/alife-worker';
 import { generateUI } from './generators/ui';
 import { generateAgent } from './generators/agent';
+import { dispatch as dispatchSeed, getDomains } from './engine-dispatcher.js';
 
 interface Seed {
   $name?: string;
@@ -70,6 +89,8 @@ interface Artifact {
   render_hints: Record<string, any>;
   [key: string]: any;
 }
+
+export type { Seed, Artifact };
 
 function geneVal(seed: Seed, name: string, fallback: any = null): any {
   return seed.genes?.[name]?.value ?? fallback;
@@ -321,7 +342,7 @@ async function growGeometry3d(seed: Seed): Promise<Artifact> {
       type: 'fullgame', name: seed.$name ?? 'Game', domain: 'fullgame',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       game: {
-        genre, playerCount: geneVal(seed, 'playerCount', 1),
+        genre: geneVal(seed, 'genre', 'arcade'), playerCount: geneVal(seed, 'playerCount', 1),
         skillCeiling: geneVal(seed, 'skillCeiling', 5),
         hasMultiplayer: geneVal(seed, 'hasMultiplayer', false),
         hasPhysics: geneVal(seed, 'hasPhysics', true),
@@ -376,13 +397,13 @@ async function growUi(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  try {
-    const result = await generateUIInteractive(seed, outputPath);
+    try {
+      const result = await generateUI(seed, outputPath);
     return {
       type: 'ui', name: seed.$name ?? 'Interface', domain: 'ui',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       interface: { layout: geneVal(seed, 'layout', 'dashboard'), theme: geneVal(seed, 'theme', 'dark'), components: geneVal(seed, 'components', ['header', 'sidebar', 'main']) },
-      artifact: { filePath: result.filePath, format: 'HTML', componentCount: result.componentCount, interactive: true },
+      artifact: { filePath: result.filePath, format: 'HTML', interactive: true },
       render_hints: { mode: 'ui_preview', interactive: true, hasFile: true, html: true },
     };
   } catch (err) {
@@ -779,8 +800,8 @@ async function growCircuit(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  try {
-    const result = await generateCircuitInteractive(seed, outputPath);
+    try {
+      const result = await generateCircuit(seed, outputPath);
     return {
       type: 'circuit', name: seed.$name ?? 'Circuit', domain: 'circuit',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
@@ -837,8 +858,8 @@ async function growChoreography(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_motion.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  try {
-    const result = await generateChoreographyMotion(seed, outputPath);
+    try {
+      const result = await generateChoreography(seed, outputPath);
     return {
       type: 'choreography', name: seed.$name ?? 'Dance', domain: 'choreography',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
@@ -848,7 +869,7 @@ async function growChoreography(seed: Seed): Promise<Artifact> {
         complexity: geneVal(seed, 'complexity', 0.5),
         duration: geneVal(seed, 'duration', 60),
       },
-      artifact: { filePath: result.filePath, format: 'JSON+BVH+HTML', moveCount: result.moveCount, bvhPath: result.bvhPath },
+      artifact: { filePath: result.filePath, format: 'JSON+BVH+HTML', moveCount: result.moveCount },
       render_hints: { mode: 'dance_motion', hasFile: true, enhanced: true },
     };
   } catch (err) {
@@ -906,7 +927,7 @@ async function growAgent(seed: Seed): Promise<Artifact> {
 }
 
 // ─── ENGINE REGISTRY ──────────────────────────────────────────────────────────
-export const ENGINES: Record<string, (seed: Seed) => Artifact> = {
+export const ENGINES: Record<string, (seed: Seed) => Promise<Artifact>> = {
   character: growCharacter, sprite: growSprite, music: growMusic,
   visual2d: growVisual2d, procedural: growProcedural,
   fullgame: growFullgame, animation: growAnimation, geometry3d: growGeometry3d,
@@ -935,12 +956,45 @@ function growGeneric(seed: Seed): Artifact {
 
 export async function growSeed(seed: Seed): Promise<Artifact> {
   const domain = seed.$domain ?? 'character';
-  const engine = ENGINES[domain] ?? growGeneric;
-  const result = engine(seed);
-  // Handle both sync and async engines
-  return result instanceof Promise ? await result : result;
+  
+  // Use engine-dispatcher for all 103+ domains
+  try {
+    const outputDir = `data/artifacts/${domain}`;
+    const result = await dispatchSeed(seed, outputDir);
+    return {
+      type: domain,
+      name: seed.$name ?? 'Artifact',
+      domain,
+      seed_hash: seed.$hash ?? '',
+      generation: seed.$lineage?.generation ?? 0,
+      ...result,
+      render_hints: { mode: domain, hasFile: !!result }
+    };
+  } catch (err) {
+    console.error(`Error growing seed for domain ${domain}:`, err);
+    // Fallback to legacy engine
+    const engine = ENGINES[domain] ?? growGeneric;
+    const result = engine(seed);
+    return result instanceof Promise ? await result : result;
+  }
 }
 
 export function getAllDomains(): string[] {
-  return Object.keys(ENGINES);
+  return getDomains();
 }
+
+// Re-export V2 generators
+export { generateCharacter } from './generators/character-v2';
+export { generateMusic } from './generators/music-v2';
+export { generateSprite } from './generators/sprite-v2';
+export { WebGPUGeneratorSystem } from './generators/webgpu-system';
+
+// Re-export GSPL
+export { GsplLexer, TokenType } from './gspl-lexer';
+export { GsplParser, ASTNodeType } from './gspl-parser';
+export { GsplInterpreter, executeGspl } from './gspl-interpreter';
+
+// Re-export Phase 4: Binary Format & Sovereignty
+export { encodeGseed, decodeGseed, createGseed, GseedPackage, SectionType, OutputType } from './binary-format';
+export { buildC2PAManifest, verifyC2PAManifest, C2PAClaim } from './c2pa-manifest';
+export { RoyaltyConfig, RoyaltySplit, createDefaultRoyaltyConfig, validateRoyaltyConfig, ROYALTY_ABI } from './royalty-system';

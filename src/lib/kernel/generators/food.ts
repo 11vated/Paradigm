@@ -7,6 +7,7 @@ import { createCanvas } from 'canvas';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface FoodParams {
   type: string;
@@ -16,7 +17,8 @@ interface FoodParams {
 }
 
 export async function generateFood(seed: Seed, outputPath: string): Promise<{ filePath: string; width: number; height: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
   const width = 500;
   const height = 500;
 
@@ -59,8 +61,8 @@ export async function generateFood(seed: Seed, outputPath: string): Promise<{ fi
   } else if (params.type === 'pasta') {
     // Pasta shape
     for (let i = 0; i < 20; i++) {
-      const x = cx + (Math.random() - 0.5) * 200;
-      const y = cy + (Math.random() - 0.5) * 200;
+      const x = cx + (rng.nextF64() -0.5) * 200;
+      const y = cy + (rng.nextF64() -0.5) * 200;
       ctx.beginPath();
       ctx.arc(x, y, 30, 0, Math.PI * 2);
       ctx.fillStyle = '#f5e6d3';
@@ -93,7 +95,7 @@ export async function generateFood(seed: Seed, outputPath: string): Promise<{ fi
   return { filePath: pngPath, width, height };
 }
 
-function extractParams(seed: Seed): FoodParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): FoodParams {
   const quality = seed.genes?.quality?.value || 'medium';
   return {
     type: seed.genes?.type?.value || 'pizza',

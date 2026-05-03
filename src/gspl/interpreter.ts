@@ -84,11 +84,15 @@ export class Interpreter {
     this.globals.set('reduce', (arr: unknown[], fn: (acc: unknown, v: unknown) => unknown, init?: unknown) => 
       arr.reduce(fn as (acc: unknown, v: unknown, i: number) => unknown, init));
 
+    // random() uses a deterministic RNG seeded from interpreter state when available.
+    // Falls back to Math.random() only if no seed context is provided.
     this.globals.set('random', (min?: number, max?: number) => {
+      const rng = (this as any)._rng;
+      const val = rng ? rng.nextF64() : Math.random();
       if (min !== undefined && max !== undefined) {
-        return Math.random() * (max - min) + min;
+        return val * (max - min) + min;
       }
-      return Math.random();
+      return val;
     });
 
     this.globals.set('floor', Math.floor);

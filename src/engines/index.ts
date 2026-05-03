@@ -1,5 +1,6 @@
 import { UniversalSeed, GeneType } from '../seeds';
 import { BaseEngine, EngineConfig, EngineResult, ShaderCode, ParticleSystem, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph, EngineRegistry } from './base';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export { BaseEngine, EngineConfig, EngineResult, ShaderCode, ParticleSystem, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph, EngineRegistry } from './base';
 
@@ -76,6 +77,7 @@ export class ParticleEngine extends BaseEngine {
   }
 
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
+    const rng = rngFromHash(seed.id || '');
     const color = seed.getGeneValue(GeneType.COLOR) as number[] | undefined;
     const motion = seed.getGeneValue(GeneType.MOTION) as Record<string, number> | undefined;
 
@@ -86,10 +88,10 @@ export class ParticleEngine extends BaseEngine {
     };
 
     const particles = Array(100).fill(null).map(() => ({
-      position: [Math.random() - 0.5, Math.random(), Math.random() - 0.5] as [number, number, number],
-      velocity: [(Math.random() - 0.5) * 2, Math.random() * 3, (Math.random() - 0.5) * 2] as [number, number, number],
+      position: [rng.nextF64() - 0.5, rng.nextF64(), rng.nextF64() - 0.5] as [number, number, number],
+      velocity: [(rng.nextF64() - 0.5) * 2, rng.nextF64() * 3, (rng.nextF64() - 0.5) * 2] as [number, number, number],
       color: color ? [color[0], color[1], color[2], 1] : [1, 1, 1, 1],
-      size: Math.random() * 0.1 + 0.01,
+      size: rng.nextF64() * 0.1 + 0.01,
       age: 0
     }));
 

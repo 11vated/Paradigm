@@ -132,8 +132,8 @@ function generateWaveformWithHarmonics(freq: number, time: number, timbre: { war
     wave = sine * timbre.warmth +
            (sine + harmonic1 + harmonic2 + harmonic3) * (1 - timbre.warmth);
 
-    // Add slight detuning for organic feel (not perfect 440Hz)
-    const detune = 1 + (Math.random() - 0.5) * 0.02;
+    // Add slight detuning for organic feel (not perfect 440Hz) — deterministic via RNG
+    const detune = 1 + (rng.nextF64() -0.5) * 0.02;
     wave = Math.sin(2 * Math.PI * freq * detune * time) * 0.7 +
            Math.sin(2 * Math.PI * freq * detune * 2 * time) * 0.3;
   }

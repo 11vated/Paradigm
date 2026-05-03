@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 interface ParticleParams {
   count: number;
@@ -18,7 +19,8 @@ interface ParticleParams {
 }
 
 export async function generateParticleGPU(seed: Seed, outputPath: string): Promise<{ filePath: string; glslPath: string; webgpuPath: string; particleCount: number }> {
-  const params = extractParams(seed);
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
 
   // Generate particle system config
   const config = {
@@ -32,7 +34,7 @@ export async function generateParticleGPU(seed: Seed, outputPath: string): Promi
       quality: params.quality
     },
     emitters: generateEmitters(params),
-    particles: generateParticles(params),
+    particles: generateParticles(params, rng),
     gpuShaders: {
       vertex: 'particle-vertex.glsl',
       fragment: 'particle-fragment.glsl',
@@ -83,16 +85,16 @@ function generateEmitters(params: ParticleParams): any[] {
   ];
 }
 
-function generateParticles(params: ParticleParams): any[] {
+function generateParticles(params: ParticleParams, rng: Xoshiro256StarStar): any[] {
   const particles = [];
   for (let i = 0; i < params.count; i++) {
     particles.push({
       id: `particle_${i}`,
       position: [0, 0, 0],
-      velocity: generateRandomVelocity(params.speed, params.spread),
-      lifetime: params.lifetime * (0.5 + Math.random() * 0.5),
+      velocity: generateRandomVelocity(params.speed, params.spread, rng),
+      lifetime: params.lifetime * (0.5 + rng.nextF64() * 0.5),
       age: 0,
-      size: 0.1 + Math.random() * 0.5,
+      size: 0.1 + rng.nextF64() * 0.5,
       color: generateRandomColor(params.particleType),
       alive: true
     });
@@ -100,9 +102,9 @@ function generateParticles(params: ParticleParams): any[] {
   return particles;
 }
 
-function generateRandomVelocity(speed: number, spread: number): number[] {
-  const theta = Math.random() * Math.PI * 2;
-  const phi = (Math.random() - 0.5) * spread;
+function generateRandomVelocity(speed: number, spread: number, rng: Xoshiro256StarStar): number[] {
+  const theta = rng.nextF64() * Math.PI * 2;
+  const phi = (rng.nextF64() - 0.5) * spread;
   return [
     Math.cos(theta) * Math.sin(phi) * speed,
     Math.cos(phi) * speed,
@@ -233,7 +235,7 @@ function getQualitySettings(quality: string): any {
   return settings[quality] || settings.medium;
 }
 
-function extractParams(seed: Seed): ParticleParams {
+function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ParticleParams {
   const quality = seed.genes?.quality?.value || 'medium';
   let count = seed.genes?.count?.value || 100;
   if (typeof count === 'number' && count <= 1) count = Math.max(10, Math.floor(count * 1000));

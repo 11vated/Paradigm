@@ -1,4 +1,5 @@
 import { UniversalSeed } from '../seeds';
+import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface FeatureVector {
   dimensions: number[];
@@ -27,19 +28,23 @@ export interface MapElitesResult {
 export class MAPElites {
   private config: MapElitesConfig;
   private grid: Map<string, EliteCell> = new Map();
-  private rng: { nextFloat: () => number; nextInt: (min: number, max: number) => number };
+  private rng: ReturnType<typeof rngFromHash>;
 
-  constructor(config: Partial<MapElitesConfig> = {}, rng?: { nextFloat: () => number; nextInt: (min: number, max: number) => number }) {
+  constructor(config: Partial<MapElitesConfig> = {}, rng?: ReturnType<typeof rngFromHash>) {
     this.config = {
       gridSize: config.gridSize ?? [10, 10],
       mutationRate: config.mutationRate ?? 0.2,
       numFeatures: config.numFeatures ?? 2,
       fillRate: config.fillRate ?? 0.1
     };
-    this.rng = rng ?? {
-      nextFloat: () => Math.random(),
-      nextInt: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-    };
+    this.rng = rng ?? rngFromHash('map-elites-default');
+  }
+
+  /**
+   * Bind a Xoshiro256StarStar instance to this MAP-Elites for full determinism.
+   */
+  bindRng(rng: ReturnType<typeof rngFromHash>): void {
+    this.rng = rng;
   }
 
   initGrid(seeds: UniversalSeed[], featureFn: (seed: UniversalSeed) => FeatureVector, fitnessFn: (seed: UniversalSeed) => number): void {

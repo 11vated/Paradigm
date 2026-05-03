@@ -53,20 +53,53 @@ export default function StudioPage() {
 
   const handleSelectSeed = useCallback(
     async (seed) => {
-      setCurrentSeed(seed);
-      await growCurrentSeed();
+      try {
+        console.log('Selecting seed:', seed?.id);
+        setCurrentSeed(seed);
+        console.log('Calling growCurrentSeed...');
+        await growCurrentSeed();
+        console.log('growCurrentSeed complete');
+      } catch (e) {
+        console.error('Error in handleSelectSeed:', e);
+      }
     },
     [setCurrentSeed, growCurrentSeed],
   );
 
   const handleSeedCreated = useCallback(
     async (seed) => {
-      setCurrentSeed(seed);
-      addToGallery(seed);
-      await growCurrentSeed();
+      try {
+        console.log('Seed created:', seed?.id);
+        setCurrentSeed(seed);
+        addToGallery(seed);
+        console.log('Calling growCurrentSeed...');
+        await growCurrentSeed();
+        console.log('growCurrentSeed complete');
+      } catch (e) {
+        console.error('Error in handleSeedCreated:', e);
+      }
     },
     [setCurrentSeed, addToGallery, growCurrentSeed],
   );
+
+  if (error) {
+    return (
+      <div className="h-screen w-full bg-[#050505] text-red-500 flex items-center justify-center p-8">
+        <div className="max-w-2xl text-center">
+          <h1 className="text-2xl font-bold mb-4">Error</h1>
+          <pre className="text-left bg-[#1a1a1a] p-4 rounded text-[10px] overflow-auto max-h-[400px]">
+            {error}
+          </pre>
+           <button
+             onClick={clearError}
+            className="mt-4 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded text-[10px] uppercase tracking-widest"
+          >
+            Clear Error
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -79,7 +112,7 @@ export default function StudioPage() {
         data-testid="studio-topbar"
       >
         <div className="flex items-center gap-3">
-          <button
+           <button
             data-testid="studio-back-btn"
             onClick={() => navigate("/")}
             className="text-[#666] hover:text-white transition-colors"
@@ -97,8 +130,8 @@ export default function StudioPage() {
         <div className="h-4 w-px bg-[#1a1a1a]" />
 
         <div className="flex items-center gap-1 bg-[#0a0a0a] p-1 rounded-sm border border-[#1a1a1a]">
-          <button
-            onClick={() => setActiveView("forge")}
+             <button
+                onClick={() => setActiveView("forge")}
             className={`px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all ${
               activeView === "forge"
                 ? "bg-[#1a1a1a] text-white"
@@ -107,8 +140,8 @@ export default function StudioPage() {
           >
             <Terminal className="w-3 h-3" /> Forge
           </button>
-          <button
-            onClick={() => setActiveView("lineage")}
+             <button
+                onClick={() => setActiveView("lineage")}
             className={`px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all ${
               activeView === "lineage"
                 ? "bg-[#1a1a1a] text-white"
@@ -117,8 +150,8 @@ export default function StudioPage() {
           >
             <GitBranch className="w-3 h-3" /> Lineage
           </button>
-          <button
-            onClick={() => setActiveView("composition")}
+             <button
+                onClick={() => setActiveView("composition")}
             className={`px-4 py-1.5 rounded-sm font-mono text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all ${
               activeView === "composition"
                 ? "bg-[#1a1a1a] text-white"
@@ -193,7 +226,7 @@ export default function StudioPage() {
 
             {/* Center Column: Preview Viewport */}
             <Panel defaultSize={50} minSize={30} className="relative flex flex-col bg-[#0a0a0a]">
-              <PreviewViewport artifact={artifact} loading={loading} />
+              <PreviewViewport artifact={artifact} loading={loading} seed={currentSeed} />
             </Panel>
 
             <PanelResizeHandle className="w-[1px] bg-[#1a1a1a] hover:bg-primary/50 transition-colors cursor-col-resize" />
@@ -201,10 +234,10 @@ export default function StudioPage() {
             {/* Right Column: Inspector Tabs */}
             <Panel defaultSize={30} minSize={20} className="flex flex-col bg-[#050505] border-l border-[#1a1a1a]">
               <div className="flex items-center gap-1 border-b border-[#1a1a1a] p-2 bg-[#0a0a0a]">
-                {["agent", "genes", "gspl", "forge"].map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setInspectorTab(tab)}
+                 {["agent", "genes", "gspl", "forge"].map((tab) => (
+                   <button
+                     key={tab}
+                     onClick={() => setInspectorTab(tab)}
                     className={`flex-1 py-1.5 rounded-sm font-mono text-[9px] uppercase tracking-widest transition-all ${
                       inspectorTab === tab
                         ? "bg-[#1a1a1a] text-white shadow-sm"

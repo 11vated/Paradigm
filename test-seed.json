@@ -1,0 +1,12 @@
+{
+  "$gst": "1.0",
+  "$domain": "character",
+  "$hash": "abc123def456",
+  "$name": "AuditSeed",
+  "genes": {
+    "size": { "type": "scalar", "value": 0.8 },
+    "archetype": { "type": "categorical", "value": "warrior" },
+    "strength": { "type": "scalar", "value": 0.75 },
+    "color": { "type": "vector", "value": [1.0, 0.0, 0.0] }
+  }
+}

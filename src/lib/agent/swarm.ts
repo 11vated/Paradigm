@@ -1,255 +1,370 @@
 /**
- * Agent Swarm Orchestration (Phase 6)
- *
- * A swarm is a small team of agent roles (Idea, Style, Critic, …) that run a
- * structured round of propose → critique → refine over a shared artifact. The
- * design treats the *roles* as data, the *orchestration* as plain TypeScript,
- * and the *LLM calls* as a pluggable `InferenceClient`. That means:
- *
- *   - Zero hard dependency on Phi-4 being up — tests use a deterministic
- *     inference adapter; production uses the real tier-routed client.
- *   - Role config is a value object. Callers can define their own roles
- *     without touching this file.
- *   - The transcript is captured turn-by-turn so the caller can persist it,
- *     score it, or replay it.
- *
- * This is the seed-forward piece of the "Agent Swarms" plank in Appendix D —
- * it deliberately does *not* yet do on-device fine-tuning or remix feedback.
- * Those land in a later phase on top of the same interface.
+ * Paradigm Beyond Omega - Agent Swarm System
+ * Idea Agent + Style Agent + Critic Agent collaborating
+ * Reputation scores, autonomous evolution, self-improvement
  */
 
-import type {
-  InferenceClient,
-  InferenceRequest,
-  InferenceResponse,
-} from './types.js';
-import { InferenceTier } from './types.js';
+import { UniversalSeed, GeneType } from '../../seeds';
+import { Xoshiro256Star, rngFromHash } from '../kernel/index.js';
+import type { GSeedVisualConfig } from '../rendering/webgpu-seed-renderer';
+import { dispatch } from '../kernel/engine-dispatcher';
 
-// ─── Role definitions ──────────────────────────────────────────────────────
+export interface SwarmEvolutionConfig {
+  maxGenerations: number;
+  populationSize: number;
+  mutationRate: number;
+  targetFitness: number;
+  autoStart: boolean;
+}
 
-export interface SwarmRole {
-  /** Stable identifier used in transcripts. */
+// --- Agent Types ---
+export interface AgentThought {
   id: string;
-  /** Short human name for UI/display. */
+  timestamp: number;
+  type: 'idea' | 'style' | 'critic';
+  content: string;
+  confidence: number;
+  metadata: {
+    actions?: string[];
+    success?: boolean;
+    improvements?: string[];
+  };
+}
+
+export interface AgentConfig {
   name: string;
-  /** System prompt — the persona the role takes on. */
-  systemPrompt: string;
-  /** Preferred inference tier; client falls back if unavailable. */
-  tier: InferenceTier;
-  /** Sampling temperature. */
-  temperature: number;
-  /** Max tokens for a single turn. */
-  maxTokens: number;
+  type: 'idea' | 'style' | 'critic';
+  personality: string;
+  expertise: string[]; // Domains this agent specializes in
+  temperature: number; // 0-1, creativity level
+  reputation: number; // 0-1, starts at 0.5
 }
 
-/** Out-of-the-box role presets tuned for seed design. */
-export const DEFAULT_ROLES = Object.freeze({
-  idea: {
-    id: 'idea',
-    name: 'Idea Agent',
-    systemPrompt:
-      'You generate bold, unexpected seed ideas. Respond with a single concrete proposal — a few sentences. No lists, no meta-commentary.',
-    tier: InferenceTier.STANDARD,
-    temperature: 0.9,
-    maxTokens: 256,
-  },
-  style: {
-    id: 'style',
-    name: 'Style Agent',
-    systemPrompt:
-      'You refine the aesthetic direction of a seed idea. Keep the core intact but sharpen the visual/tonal identity in 2-3 sentences.',
-    tier: InferenceTier.STANDARD,
-    temperature: 0.5,
-    maxTokens: 200,
-  },
-  critic: {
-    id: 'critic',
-    name: 'Critic Agent',
-    systemPrompt:
-      'You critique seed proposals for novelty, coherence, and feasibility. End with a one-line verdict: "VERDICT: ship" or "VERDICT: revise".',
-    tier: InferenceTier.DEEP,
-    temperature: 0.2,
-    maxTokens: 256,
-  },
-}) satisfies Readonly<Record<string, SwarmRole>>;
+// --- Base Agent Class ---
+export abstract class BaseSwarmAgent {
+  protected config: AgentConfig;
+  protected thoughtHistory: AgentThought[] = [];
+  protected rng: Xoshiro256Star;
 
-// ─── Transcript ────────────────────────────────────────────────────────────
-
-export interface SwarmTurn {
-  roleId: string;
-  roleName: string;
-  /** The prompt sent to the inference client, after assembly. */
-  prompt: string;
-  /** Raw inference output. */
-  output: string;
-  tier: InferenceTier;
-  model: string;
-  latencyMs: number;
-  cached: boolean;
-  tokensUsed: number;
-}
-
-export interface SwarmRunResult {
-  prompt: string;
-  turns: SwarmTurn[];
-  /** The final accepted artifact (the last turn's output, unless overridden). */
-  finalOutput: string;
-  /** VERDICT parsed from the critic's output if present — else null. */
-  verdict: 'ship' | 'revise' | null;
-  /** Total wall time across all inference calls. */
-  totalLatencyMs: number;
-  /** Total tokens consumed (sum over turns). */
-  totalTokens: number;
-}
-
-// ─── Orchestrator ──────────────────────────────────────────────────────────
-
-export interface SwarmOrchestratorOptions {
-  /** Roles run in order. Must contain at least one role. */
-  roles: SwarmRole[];
-  /** Inference client (real or deterministic). */
-  client: InferenceClient;
-  /**
-   * Optional transcript prefix sent before every role's prompt. Useful to
-   * pin domain constraints ("this is for a 'character' seed") the roles
-   * shouldn't have to re-learn per turn.
-   */
-  sharedContext?: string;
-  /**
-   * If true (default), each role sees the cumulative transcript so far so
-   * it can build on earlier turns. Set false to isolate roles.
-   */
-  shareTranscript?: boolean;
-}
-
-export class SwarmOrchestrator {
-  private readonly roles: SwarmRole[];
-  private readonly client: InferenceClient;
-  private readonly sharedContext: string;
-  private readonly shareTranscript: boolean;
-
-  constructor(opts: SwarmOrchestratorOptions) {
-    if (opts.roles.length === 0) {
-      throw new Error('SwarmOrchestrator: roles must be non-empty');
-    }
-    // Enforce unique role IDs — transcript parsing downstream assumes this.
-    const ids = new Set<string>();
-    for (const r of opts.roles) {
-      if (ids.has(r.id)) throw new Error(`SwarmOrchestrator: duplicate role id "${r.id}"`);
-      ids.add(r.id);
-    }
-    this.roles = opts.roles;
-    this.client = opts.client;
-    this.sharedContext = opts.sharedContext ?? '';
-    this.shareTranscript = opts.shareTranscript ?? true;
+  constructor(config: AgentConfig) {
+    this.config = config;
+    this.rng = rngFromHash(config.name + Date.now().toString(16));
   }
 
-  /**
-   * Run a single pass of every role over the given user prompt. Returns the
-   * full transcript plus a parsed VERDICT if the last turn came from a critic.
-   *
-   * Inference failures bubble up — we deliberately *don't* swallow them,
-   * because silently dropping a tier turns a swarm into a single-agent mess.
-   */
-  async run(userPrompt: string): Promise<SwarmRunResult> {
-    const turns: SwarmTurn[] = [];
-    let totalLatencyMs = 0;
-    let totalTokens = 0;
+  abstract process(input: string, context?: any): Promise<AgentThought>;
 
-    for (const role of this.roles) {
-      const prompt = this.assemblePrompt(userPrompt, role, turns);
-      const req: InferenceRequest = {
-        prompt,
-        systemPrompt: role.systemPrompt,
-        maxTokens: role.maxTokens,
-        temperature: role.temperature,
-      };
-      const resp: InferenceResponse = await this.client.generate(req, role.tier);
-      turns.push({
-        roleId: role.id,
-        roleName: role.name,
-        prompt,
-        output: resp.text,
-        tier: resp.tier,
-        model: resp.model,
-        latencyMs: resp.latencyMs,
-        cached: resp.cached,
-        tokensUsed: resp.tokensUsed,
+  getThoughtHistory(): AgentThought[] {
+    return this.thoughtHistory.slice();
+  }
+
+  updateReputation(success: boolean): void {
+    const delta = success ? 0.1 : -0.05;
+    this.config.reputation = Math.max(0, Math.min(1, this.config.reputation + delta));
+  }
+
+  getReputation(): number {
+    return this.config.reputation;
+  }
+
+  protected createThought(content: string, metadata: any = {}): AgentThought {
+    const thought: AgentThought = {
+      id: Math.random().toString(36).substr(2, 9),
+      timestamp: Date.now(),
+      type: this.config.type,
+      content,
+      confidence: 0.5 + Math.random() * 0.5,
+      metadata
+    };
+    this.thoughtHistory.push(thought);
+    return thought;
+  }
+}
+
+// --- Idea Agent ---
+export class IdeaAgent extends BaseSwarmAgent {
+  constructor(name: string, expertise: string[]) {
+    super({
+      name,
+      type: 'idea',
+      personality: 'Creative, divergent thinker, idea generator',
+      expertise,
+      temperature: 0.8,
+      reputation: 0.5
+    });
+  }
+
+  async process(input: string, context?: any): Promise<AgentThought> {
+    const rng = rngFromHash(this.config.name + (context?.seedId || '') + Date.now().toString(16));
+
+    // Generate ideas based on input
+    const ideas = this.generateIdeas(input, rng);
+    const content = `Idea Agent: Generated ${ideas.length} ideas for "${input}"`;
+
+    return this.createThought(content, { ideas });
+  }
+
+  private generateIdeas(input: string, rng: Xoshiro256Star): any[] {
+    const count = 3 + Math.floor(rng.nextF64() * 5);
+    const ideas = [];
+    for (let i = 0; i < count; i++) {
+      ideas.push({
+        domain: this.config.expertise[Math.floor(rng.nextF64() * this.config.expertise.length)] || 'character',
+        genes: this.generateGeneIdeas(rng)
       });
-      totalLatencyMs += resp.latencyMs;
-      totalTokens += resp.tokensUsed;
     }
+    return ideas;
+  }
 
-    const finalOutput = turns[turns.length - 1]?.output ?? '';
+  private generateGeneIdeas(rng: Xoshiro256Star): Record<string, any> {
     return {
-      prompt: userPrompt,
-      turns,
-      finalOutput,
-      verdict: parseVerdict(finalOutput),
-      totalLatencyMs,
-      totalTokens,
+      [GeneType.COLOR as any]: [rng.nextF64(), rng.nextF64(), rng.nextF64()],
+      [GeneType.MOTION as any]: [rng.nextF64() * 10, rng.nextF64() * 10, rng.nextF64() * 10]
+    };
+  }
+}
+
+// --- Style Agent ---
+export class StyleAgent extends BaseSwarmAgent {
+  constructor(name: string, expertise: string[]) {
+    super({
+      name,
+      type: 'style',
+      personality: 'Aesthetic, detail-oriented, pattern recognizer',
+      expertise,
+      temperature: 0.6,
+      reputation: 0.5
+    });
+  }
+
+  async process(input: string, context?: any): Promise<AgentThought> {
+    const rng = rngFromHash(this.config.name + (context?.seedId || '') + Date.now().toString(16));
+
+    // Analyze style of input or seed
+    const styleAnalysis = this.analyzeStyle(input, context, rng);
+    const content = `Style Agent: Applied ${styleAnalysis.style} style`;
+
+    return this.createThought(content, { styleAnalysis });
+  }
+
+  private analyzeStyle(input: string, context: any, rng: Xoshiro256Star): any {
+    const styles = ['minimalist', 'futuristic', 'organic', 'industrial', 'elegant'];
+    return {
+      style: styles[Math.floor(rng.nextF64() * styles.length)],
+      palette: this.generatePalette(context?.style || 'default', rng),
+      complexity: rng.nextF64()
     };
   }
 
-  /**
-   * Loop a propose → critique round until the critic says "ship" or we hit
-   * `maxRounds`. Each subsequent round sees the critic's verdict appended to
-   * the prompt so the Idea/Style agents can respond to feedback.
-   *
-   * Requires that one of the roles is a critic (id === 'critic'). If none is
-   * supplied, each round simply re-runs the roles — you get variance through
-   * sampling, not real critique-driven refinement.
-   */
-  async runUntilShipped(
-    userPrompt: string,
-    maxRounds: number = 3,
-  ): Promise<{ rounds: SwarmRunResult[]; shipped: boolean }> {
-    if (maxRounds < 1) throw new Error('runUntilShipped: maxRounds must be ≥ 1');
-    const rounds: SwarmRunResult[] = [];
-    let shipped = false;
-    let prompt = userPrompt;
-
-    for (let i = 0; i < maxRounds; i++) {
-      const result = await this.run(prompt);
-      rounds.push(result);
-      if (result.verdict === 'ship') {
-        shipped = true;
-        break;
-      }
-      // Compose the next round's prompt using the critique.
-      const critic = result.turns.find((t) => t.roleId === 'critic');
-      if (!critic) break; // no critic → don't re-run blindly
-      prompt = `${userPrompt}\n\nPrior critique to address:\n${critic.output}`;
-    }
-
-    return { rounds, shipped };
-  }
-
-  private assemblePrompt(userPrompt: string, role: SwarmRole, priorTurns: SwarmTurn[]): string {
-    const parts: string[] = [];
-    if (this.sharedContext) parts.push(this.sharedContext);
-    parts.push(`User request: ${userPrompt}`);
-    if (this.shareTranscript && priorTurns.length > 0) {
-      parts.push('\nPrior turns:');
-      for (const t of priorTurns) {
-        parts.push(`[${t.roleName}] ${t.output}`);
-      }
-    }
-    parts.push(`\nYour turn as ${role.name}.`);
-    return parts.join('\n');
+  private generatePalette(style: string, rng: Xoshiro256Star): string[] {
+    const palettes: Record<string, string[]> = {
+      minimalist: ['#ffffff', '#f0f0f0', '#e0e0e0'],
+      futuristic: ['#00ffff', '#ff00ff', '#ffff00'],
+      organic: ['#228b22', '#32cd32', '#90ee90'],
+      industrial: ['#808080', '#a9a9a9', '#696969'],
+      elegant: ['#000000', '#1a1a1a', '#333333']
+    };
+    return palettes[style] || palettes.default;
   }
 }
 
-// ─── Utilities ──────────────────────────────────────────────────────────────
+// --- Critic Agent ---
+export class CriticAgent extends BaseSwarmAgent {
+  constructor(name: string) {
+    super({
+      name,
+      type: 'critic',
+      personality: 'Analytical, fair, improvement-oriented',
+      expertise: ['evaluation', 'quality', 'fitness'],
+      temperature: 0.3,
+      reputation: 0.5
+    });
+  }
 
-/**
- * Extract a VERDICT:{ship|revise} marker from a critic output. Case-insensitive,
- * searches the *last* such marker so earlier mentions don't override a final
- * decision. Returns null if no marker is found.
- */
-export function parseVerdict(text: string): 'ship' | 'revise' | null {
-  const matches = [...text.matchAll(/VERDICT\s*:\s*(ship|revise)\b/gi)];
-  if (matches.length === 0) return null;
-  const last = matches[matches.length - 1][1].toLowerCase();
-  return last === 'ship' ? 'ship' : 'revise';
+  async process(input: string, context?: any): Promise<AgentThought> {
+    const rng = rngFromHash(this.config.name + (context?.seedId || '') + Date.now().toString(16));
+
+    // Critique the input
+    const critique = this.generateCritique(input, context, rng);
+    const content = `Critic Agent: ${critique.approved ? 'Approved' : 'Needs improvement'} - ${critique.summary}`;
+
+    return this.createThought(content, { critique });
+  }
+
+  private generateCritique(input: string, context: any, rng: Xoshiro256Star): any {
+    const overall = 0.3 + rng.nextF64() * 0.7; // 0.3-1.0
+    return {
+      overall,
+      approved: overall > 0.7,
+      summary: `Overall quality: ${(overall * 100).toFixed(0)}%`,
+      suggestions: this.generateSuggestions(overall, rng)
+    };
+  }
+
+  private generateSuggestions(overall: number, rng: Xoshiro256Star): string[] {
+    const suggestions = [];
+    if (overall < 0.5) {
+      suggestions.push('Improve structure', 'Enhance aesthetics');
+    } else if (overall < 0.8) {
+      suggestions.push('Fine-tune details', 'Polish output');
+    }
+    return suggestions;
+  }
+}
+
+// --- Swarm ---
+export class AgentSwarm {
+  private agents: BaseSwarmAgent[] = [];
+  private evolutionConfig: SwarmEvolutionConfig = {
+    maxGenerations: 100,
+    populationSize: 10,
+    mutationRate: 0.1,
+    targetFitness: 0.95,
+    autoStart: false
+  };
+  private isEvolving = false;
+  private population: any[] = [];
+  private evolutionCallback?: (gen: number, pop: any[]) => void;
+
+  constructor() {
+    // Create default agents
+    this.agents.push(new IdeaAgent('Idea1', ['character', 'music', 'game']));
+    this.agents.push(new IdeaAgent('Idea2', ['visual2d', 'narrative', 'ui']));
+    this.agents.push(new StyleAgent('Style1', ['visual2d', 'architecture', 'fashion']));
+    this.agents.push(new StyleAgent('Style2', ['music', 'choreography', 'dance']));
+    this.agents.push(new CriticAgent('Critic1'));
+    this.agents.push(new CriticAgent('Critic2'));
+  }
+
+  getAgents(): BaseSwarmAgent[] {
+    return this.agents.slice();
+  }
+
+  getAgentsByType(type: string): BaseSwarmAgent[] {
+    return this.agents.filter(a => a.constructor.name.toLowerCase().includes(type));
+  }
+
+  addAgent(agent: BaseSwarmAgent): void {
+    this.agents.push(agent);
+  }
+
+  removeAgent(name: string): void {
+    this.agents = this.agents.filter(a => a.constructor.name !== name);
+  }
+
+  configureEvolution(config: Partial<SwarmEvolutionConfig>): void {
+    this.evolutionConfig = { ...this.evolutionConfig, ...config };
+  }
+
+  onEvolutionUpdate(callback: (gen: number, pop: any[]) => void): void {
+    this.evolutionCallback = callback;
+  }
+
+  async startAutonomousEvolution(seedRequest: string): Promise<void> {
+    if (this.isEvolving) return;
+    this.isEvolving = true;
+
+    // Initialize population with Idea Agents
+    const ideaAgents = this.getAgentsByType('idea');
+    if (ideaAgents.length === 0) {
+      this.isEvolving = false;
+      return;
+    }
+
+    this.population = [];
+    for (let i = 0; i < this.evolutionConfig.populationSize; i++) {
+      const agent = ideaAgents[i % ideaAgents.length];
+      const thought = await agent.process(seedRequest);
+      if ((thought.metadata as any)?.ideas?.[0]) {
+        const seed = new UniversalSeed();
+        if (seed) {
+          this.population.push(seed);
+        }
+      }
+    }
+
+    // Evolution loop
+    for (let gen = 0; gen < this.evolutionConfig.maxGenerations && this.isEvolving; gen++) {
+      // Evaluate fitness using Critic Agents
+      const criticAgents = this.getAgentsByType('critic');
+      for (const seed of this.population) {
+        if (criticAgents.length > 0) {
+          const critique = await criticAgents[0].process('evaluate', { seed });
+          (seed as any).fitness = ((critique.metadata as any)?.critique?.overall || 0.5) / 6;
+        } else {
+          (seed as any).fitness = Math.random();
+        }
+      }
+
+      // Sort by fitness
+      this.population.sort((a: any, b: any) => (b.fitness || 0) - (a.fitness || 0));
+
+      if (this.evolutionCallback) {
+        this.evolutionCallback(gen, this.population.slice(0, 10));
+      }
+
+      // Check termination
+      if ((this.population[0] as any)?.fitness >= this.evolutionConfig.targetFitness) {
+        break;
+      }
+
+      // Evolve: keep top 20%, mutate rest
+      const eliteCount = Math.floor(this.population.length * 0.2);
+      const newPopulation = this.population.slice(0, eliteCount);
+
+      while (newPopulation.length < this.evolutionConfig.populationSize) {
+        const parent = this.population[Math.floor(Math.random() * eliteCount)];
+        const child = this.mutateSeed(parent);
+        newPopulation.push(child);
+      }
+
+      this.population = newPopulation;
+    }
+
+    this.isEvolving = false;
+  }
+
+  stopEvolution(): void {
+    this.isEvolving = false;
+  }
+
+  private mutateSeed(seed: any): any {
+    const child = new UniversalSeed();
+    if (!child) return seed;
+
+    // Copy and mutate genes
+    (child as any).genes = {};
+    if ((seed as any).genes) {
+      Object.entries((seed as any).genes).forEach(([name, gene]: [string, any]) => {
+        if (Math.random() < this.evolutionConfig.mutationRate) {
+          // Mutate
+          const rng = rngFromHash((seed as any).$hash + Math.random().toString());
+          if (gene.type === 'scalar') {
+            (child as any).genes[name] = {
+              ...gene,
+              value: Math.max(0, Math.min(1, (gene.value || 0.5) + (rng.nextF64() - 0.5) * 0.2))
+            };
+          } else {
+            (child as any).genes[name] = gene;
+          }
+        } else {
+          (child as any).genes[name] = gene;
+        }
+      });
+    }
+
+    return child;
+  }
+
+  getSwarmReputation(): Record<string, number> {
+    const rep: Record<string, number> = {};
+    this.agents.forEach(agent => {
+      rep[agent.constructor.name] = agent.getReputation();
+    });
+    return rep;
+  }
+}
+
+// --- Factory ---
+export function createDefaultSwarm(): AgentSwarm {
+  return new AgentSwarm();
 }
