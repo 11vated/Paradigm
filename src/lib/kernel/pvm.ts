@@ -12,7 +12,7 @@
 
 import { Opcode } from './gspl-bytecode';
 import type { BytecodeProgram, Seed } from './gspl-bytecode';
-import { growSeed, type Artifact } from './engines';
+import { growSeed, growSeedSync, type Artifact } from './engines';
 import { xoshiro256starstar, type RNG } from './rng';
 
 // VM Configuration
@@ -503,11 +503,11 @@ export class PVM {
     });
 
     this.builtins.set('generate_character', (seed: Seed) => {
-      return growSeed({ ...seed, $domain: 'character' });
+      return growSeedSync({ ...seed, $domain: 'character' });
     });
 
     this.builtins.set('generate_music', (seed: Seed) => {
-      return growSeed({ ...seed, $domain: 'music' });
+      return growSeedSync({ ...seed, $domain: 'music' });
     });
   }
 

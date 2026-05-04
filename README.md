@@ -92,19 +92,30 @@ The Platform consists of 7 layers:
 ## Quick Start
 
 ```typescript
-import { ParadigmPlatform, UniversalSeed, GeneType } from '@paradigm/gspl-platform';
+import { UniversalSeed, GeneType } from './src/lib/kernel/seeds.js'; // Assuming seeds are defined here
+import { gsplAgent } from './src/lib/agent/index.js'; // Assuming agent is defined here
+import { initStore, getStore } from './src/lib/data/index.js'; // Assuming store initialization
+import { initCache, getCache } from './src/lib/cache/index.js'; // Assuming cache initialization
 
-const platform = new ParadigmPlatform({ seed: Date.now() });
-await platform.initialize();
+async function quickStart() {
+  // Initialize store and cache first, as they are dependencies
+  const store = await initStore();
+  const cache = await initCache();
 
-const seed = new UniversalSeed();
-seed.setGene(GeneType.COLOR, [1, 0, 0]);
-seed.setGene(GeneType.SHAPE, 'circle');
+  // This example assumes a simplified platform interaction.
+  // In a real scenario, the agent might be initialized with more context or a platform instance.
+  const agent = gsplAgent; // Directly using the imported agent for this example
 
-const agent = platform.getAgent();
-const response = await agent.process('breed this seed with something similar');
+  const seed = new UniversalSeed();
+  seed.setGene(GeneType.COLOR, [1, 0, 0]);
+  seed.setGene(GeneType.SHAPE, 'circle');
 
-console.log(response);
+  const response = await agent.process('breed this seed with something similar', seed);
+
+  console.log(response);
+}
+
+quickStart();
 ```
 
 ---
@@ -154,7 +165,7 @@ console.log(response);
 
 ### Seeds
 ```typescript
-import { UniversalSeed, GeneType, GeneTypeDefinitions } from '../seeds';
+import { UniversalSeed, GeneType, GeneTypeDefinitions } from './src/lib/kernel/seeds.js';
 
 const seed = new UniversalSeed({
   metadata: {
@@ -176,7 +187,7 @@ const child = seed.cross(otherSeed, Math.random);
 
 ### GSPL
 ```typescript
-import { Lexer, Parser, Interpreter } from '../gspl';
+import { Lexer, Parser, Interpreter } from './src/lib/gspl-parser.js';
 
 const code = `
   let mySeed = seed("demo", { color: "#ff0000" });
@@ -194,7 +205,7 @@ const result = interpreter.execute(program);
 
 ### Evolution
 ```typescript
-import { GeneticAlgorithm, MAPElites, CMAES } from '../evolution';
+import { GeneticAlgorithm, MAPElites, CMAES } from './src/lib/evolution/index.js';
 
 const ga = new GeneticAlgorithm({
   populationSize: 100,
@@ -208,7 +219,7 @@ const result = await ga.evolve(population, fitnessFn);
 
 ### Engines
 ```typescript
-import { createAllEngines } from '../engines';
+import { createAllEngines } from './src/lib/kernel/engines.js';
 
 const engines = createAllEngines();
 for (const engine of engines) {

@@ -6,6 +6,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import Redis from 'ioredis';
 
 // We use Node.js built-in crypto for HMAC-SHA256 JWT instead of requiring jsonwebtoken.
 // This keeps dependencies minimal while providing secure tokens.
@@ -23,27 +24,34 @@ const JWT_SECRET = (() => {
   console.warn('[WARN] No JWT_SECRET set — using ephemeral secret. Tokens will not survive restarts.');
   return ephemeral;
 })();
+
+const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
+const redis = new Redis(REDIS_URL, { lazyConnect: true });
+
+redis.on('error', (err) => console.error('Redis Client Error', err));
+redis.on('connect', () => console.log('Redis connected'));
+
 const TOKEN_EXPIRY_SECONDS = 3600;         // Access token: 1 hour
 const REFRESH_TOKEN_EXPIRY_SECONDS = 604800; // Refresh token: 7 days
 
 // ─── JWT Blacklist (in-memory, for token revocation) ─────────────────────────
-const tokenBlacklist = new Set<string>();
-const BLACKLIST_CLEANUP_INTERVAL = 300000; // 5 minutes
+// const tokenBlacklist = new Set<string>(); // Replaced by Redis
+// const BLACKLIST_CLEANUP_INTERVAL = 300000; // 5 minutes
 
 // Track refresh tokens: jti → { userId, exp }
-const refreshTokens = new Map<string, { userId: string; exp: number }>();
+// const refreshTokens = new Map<string, { userId: string; exp: number }>(); // Replaced by Redis
 
 // Cleanup expired blacklist entries and refresh tokens periodically
-setInterval(() => {
-  const now = Math.floor(Date.now() / 1000);
-  for (const entry of tokenBlacklist) {
-    // Parse the jti timestamp if encoded, otherwise just let it age out
-    // We keep entries for max 2x the token expiry to be safe
-  }
-  for (const [jti, meta] of refreshTokens) {
-    if (meta.exp < now) refreshTokens.delete(jti);
-  }
-}, BLACKLIST_CLEANUP_INTERVAL);
+// setInterval(() => {
+//   const now = Math.floor(Date.now() / 1000);
+//   for (const entry of tokenBlacklist) {
+//     // Parse the jti timestamp if encoded, otherwise just let it age out
+//     // We keep entries for max 2x the token expiry to be safe
+//   }
+//   for (const [jti, meta] of refreshTokens) {
+//     if (meta.exp < now) refreshTokens.delete(jti);
+//   }
+// }, BLACKLIST_CLEANUP_INTERVAL);
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 
 interface User {
@@ -100,7 +108,7 @@ function signJWT(payload: JWTPayload): string {
   return `${header}.${body}.${signature}`;
 }
 
-function verifyJWT(token: string): JWTPayload | null {
+async function verifyJWT(token: string): Promise<JWTPayload | null> {
   const parts = token.split('.');
   if (parts.length !== 3) return null;
   const [header, body, signature] = parts;
@@ -111,7 +119,7 @@ function verifyJWT(token: string): JWTPayload | null {
   const payload: JWTPayload = JSON.parse(base64urlDecode(body));
   if (payload.exp < Math.floor(Date.now() / 1000)) return null;
   // Check blacklist
-  if (payload.jti && tokenBlacklist.has(payload.jti)) return null;
+  if (payload.jti && (await redis.exists(`blacklist:${payload.jti}`))) return null;
   return payload;
 }
 
@@ -132,7 +140,7 @@ function saveUsers(users: User[]): void {
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-function issueTokenPair(user: User): { token: string; refreshToken: string; expiresIn: number } {
+async function issueTokenPair(user: User): Promise<{ token: string; refreshToken: string; expiresIn: number }> {
   const now = Math.floor(Date.now() / 1000);
   const accessJti = crypto.randomUUID();
   const refreshJti = crypto.randomUUID();
@@ -149,13 +157,13 @@ function issueTokenPair(user: User): { token: string; refreshToken: string; expi
     iat: now, exp: now + REFRESH_TOKEN_EXPIRY_SECONDS,
   });
 
-  // Track the refresh token for rotation
-  refreshTokens.set(refreshJti, { userId: user.id, exp: now + REFRESH_TOKEN_EXPIRY_SECONDS });
+  // Store refresh token in Redis
+  await redis.set(`refreshToken:${refreshJti}`, JSON.stringify({ userId: user.id, exp: now + REFRESH_TOKEN_EXPIRY_SECONDS }), 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
 
   return { token, refreshToken, expiresIn: TOKEN_EXPIRY_SECONDS };
 }
 
-export function registerUser(username: string, password: string): { user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string } {
+export async function registerUser(username: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string }> {
   const users = loadUsers();
   if (users.find(u => u.username === username)) {
     return { error: 'Username already exists' };
@@ -174,17 +182,17 @@ export function registerUser(username: string, password: string): { user: Omit<U
   users.push(user);
   saveUsers(users);
 
-  const tokens = issueTokenPair(user);
+  const tokens = await issueTokenPair(user);
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt, role: user.role }, ...tokens };
 }
 
-export function loginUser(username: string, password: string): { user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string } {
+export async function loginUser(username: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string }> {
   const users = loadUsers();
   const user = users.find(u => u.username === username);
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return { error: 'Invalid username or password' };
   }
-  const tokens = issueTokenPair(user);
+  const tokens = await issueTokenPair(user);
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt, role: user.role }, ...tokens };
 }
 
@@ -193,8 +201,8 @@ const refreshingTokens = new Set<string>();
 /**
  * Refresh token rotation — issue new access + refresh tokens, blacklist the old refresh.
  */
-export function refreshAccessToken(refreshTokenStr: string): { token: string; refreshToken: string; expiresIn: number } | { error: string } {
-  const payload = verifyJWT(refreshTokenStr);
+export async function refreshAccessToken(refreshTokenStr: string): Promise<{ token: string; refreshToken: string; expiresIn: number } | { error: string }> {
+  const payload = await verifyJWT(refreshTokenStr);
   if (!payload || payload.type !== 'refresh' || !payload.jti) {
     return { error: 'Invalid or expired refresh token' };
   }
@@ -206,16 +214,23 @@ export function refreshAccessToken(refreshTokenStr: string): { token: string; re
   refreshingTokens.add(payload.jti);
 
   try {
-    // Blacklist the old refresh token (rotation)
-    tokenBlacklist.add(payload.jti);
-    refreshTokens.delete(payload.jti);
+    // Check if refresh token exists in Redis and retrieve its details
+    const storedRefreshToken = await redis.get(`refreshToken:${payload.jti}`);
+    if (!storedRefreshToken) {
+      return { error: 'Refresh token not found' };
+    }
+    const { userId } = JSON.parse(storedRefreshToken);
+
+    // Blacklist the old refresh token (rotation) and delete from refreshTokens
+    await redis.set(`blacklist:${payload.jti}`, 'true', 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
+    await redis.del(`refreshToken:${payload.jti}`);
 
     // Look up user to get current role (in case it changed)
     const users = loadUsers();
-    const user = users.find(u => u.id === payload.sub);
+    const user = users.find(u => u.id === userId);
     if (!user) return { error: 'User not found' };
 
-    return issueTokenPair(user);
+    return await issueTokenPair(user);
   } finally {
     refreshingTokens.delete(payload.jti);
   }
@@ -224,11 +239,13 @@ export function refreshAccessToken(refreshTokenStr: string): { token: string; re
 /**
  * Revoke a token (adds to blacklist). Used for logout.
  */
-export function revokeToken(tokenStr: string): boolean {
-  const payload = verifyJWT(tokenStr);
+export async function revokeToken(tokenStr: string): Promise<boolean> {
+  const payload = await verifyJWT(tokenStr);
   if (!payload?.jti) return false;
-  tokenBlacklist.add(payload.jti);
-  if (payload.type === 'refresh') refreshTokens.delete(payload.jti);
+  await redis.set(`blacklist:${payload.jti}`, 'true', 'EX', TOKEN_EXPIRY_SECONDS);
+  if (payload.type === 'refresh') {
+    await redis.del(`refreshToken:${payload.jti}`);
+  }
   return true;
 }
 
@@ -237,14 +254,14 @@ export function revokeToken(tokenStr: string): boolean {
  * Attaches the decoded payload to `req.user`.
  * Routes that don't require auth should NOT use this middleware.
  */
-export function verifyToken(req: any, res: any, next: any): void {
+export async function verifyToken(req: any, res: any, next: any): Promise<void> {
   const authHeader = req.headers['authorization'];
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Missing or invalid Authorization header' });
     return;
   }
   const token = authHeader.slice(7);
-  const payload = verifyJWT(token);
+  const payload = await verifyJWT(token);
   if (!payload) {
     res.status(401).json({ error: 'Invalid or expired token' });
     return;
@@ -257,11 +274,11 @@ export function verifyToken(req: any, res: any, next: any): void {
  * Optional auth — attaches req.user if token present, but doesn't reject.
  * Useful for endpoints that work for both authenticated and anonymous users.
  */
-export function optionalAuth(req: any, _res: any, next: any): void {
+export async function optionalAuth(req: any, _res: any, next: any): Promise<void> {
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
-    const payload = verifyJWT(token);
+    const payload = await verifyJWT(token);
     if (payload) req.user = payload;
   }
   next();
@@ -290,8 +307,8 @@ export function requireRole(...roles: string[]) {
  * Raw JWT verification — for use in WebSocket upgrade handlers where
  * Express middleware isn't available. Returns decoded payload or null.
  */
-export function verifyTokenRaw(token: string): JWTPayload | null {
-  return verifyJWT(token);
+export async function verifyTokenRaw(token: string): Promise<JWTPayload | null> {
+  return await verifyJWT(token);
 }
 
 /**
@@ -328,4 +345,22 @@ export function createRateLimiter(windowMs: number = 60000, maxRequests: number 
     requests.set(ip, recent);
     next();
   };
+}
+
+export { redis };
+
+export async function connectRedis(): Promise<void> {
+  if (redis.status === 'ready') {
+    console.log('Redis already connected.');
+    return;
+  }
+  await redis.connect();
+}
+
+export async function disconnectRedis(): Promise<void> {
+  if (redis.status === 'end') {
+    console.log('Redis already disconnected.');
+    return;
+  }
+  await redis.quit();
 }

@@ -10,7 +10,7 @@
 import crypto from 'crypto';
 import { parse, type Program, type Statement, type Expr, type GeneAssignment } from './parser.js';
 import { rngFromHash } from '../kernel/rng.js';
-import { growSeed, getAllDomains } from '../kernel/engines.js';
+import { growSeedSync, getAllDomains } from '../kernel/engines.js';
 import { composeSeed } from '../kernel/composition.js';
 import { mutateGene, crossoverGene, distanceGene, GENE_TYPES } from '../kernel/gene_system.js';
 
@@ -214,7 +214,7 @@ export class GSPLInterpreter {
 
   private builtinGrow(seed: any): any {
     if (!seed?.genes) { this.errors.push('grow: invalid seed'); return null; }
-    return growSeed(seed);
+    return growSeedSync(seed);
   }
 
   private builtinBreed(a: any, b: any): Seed | null {

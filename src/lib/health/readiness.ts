@@ -21,6 +21,9 @@
  *    (behind the docker-compose `legacy` profile).
  */
 
+import type { AbortSignal } from 'node:abort';
+import { redis } from '../auth/index.js';
+
 export type DependencyStatus = 'ok' | 'degraded' | 'down' | 'skipped';
 
 export interface DependencyCheck {
@@ -171,6 +174,21 @@ export async function checkStore(
     true,
     async (_signal) => probe(),
     opts.timeoutMs ?? 1000,
+    () => ({ status: 'ok' }),
+  );
+}
+
+/**
+ * Redis check — pings the Redis instance. Required for persistent token storage.
+ */
+export async function checkRedis(
+  opts: CheckOptions = {},
+): Promise<DependencyCheck> {
+  return withTimeout(
+    'redis',
+    true,
+    async (_signal) => redis.ping(),
+    opts.timeoutMs ?? 500,
     () => ({ status: 'ok' }),
   );
 }

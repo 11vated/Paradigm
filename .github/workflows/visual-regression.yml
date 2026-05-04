@@ -1,0 +1,50 @@
+name: Visual Regression Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  visual-regression:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.40.0-focal
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Start dev server
+        run: |
+          npm run dev &
+          SERVER_PID=$!
+          sleep 8
+          curl -f http://localhost:3000 || exit 1
+          echo "Server started with PID $SERVER_PID"
+
+      - name: Run visual regression tests
+        run: npx playwright test --project=chromium tests/visual/regressions.spec.ts
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

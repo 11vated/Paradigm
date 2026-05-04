@@ -43,16 +43,16 @@ describe('Domain Engines', () => {
       },
     });
 
-    it('returns an object for every domain', () => {
+    it('returns an object for every domain', async () => {
       for (const domain of getAllDomains()) {
         const seed = baseSeed(domain);
-        const result = growSeed(seed);
+        const result = await growSeed(seed);
         expect(result).toBeDefined();
         expect(typeof result).toBe('object');
       }
     });
 
-    it('character engine produces character artifact', () => {
+    it('character engine produces character artifact', async () => {
       const seed = {
         ...baseSeed('character'),
         genes: {
@@ -63,11 +63,11 @@ describe('Domain Engines', () => {
           intelligence: { type: 'scalar', value: 0.3 },
         },
       };
-      const result = growSeed(seed);
+      const result = await growSeed(seed);
       expect(result).toBeDefined();
     });
 
-    it('music engine produces music artifact', () => {
+    it('music engine produces music artifact', async () => {
       const seed = {
         ...baseSeed('music'),
         genes: {
@@ -77,11 +77,11 @@ describe('Domain Engines', () => {
           scale: { type: 'categorical', value: 'major' },
         },
       };
-      const result = growSeed(seed);
+      const result = await growSeed(seed);
       expect(result).toBeDefined();
     });
 
-    it('handles seeds with minimal genes', () => {
+    it('handles seeds with minimal genes', async () => {
       const seed = {
         id: 'minimal',
         $domain: 'character',
@@ -92,10 +92,10 @@ describe('Domain Engines', () => {
         genes: {},
       };
       // Should not throw even with empty genes
-      expect(() => growSeed(seed)).not.toThrow();
+      await expect(growSeed(seed)).resolves.toBeDefined();
     });
 
-    it('agent engine produces agent config artifact', () => {
+    it('agent engine produces agent config artifact', async () => {
       const seed = {
         ...baseSeed('agent'),
         genes: {
@@ -114,13 +114,13 @@ describe('Domain Engines', () => {
           tool_permissions: { type: 'struct', value: { create: true, mutate: true, breed: true, compose: true, grow: true, evolve: true, compute_distance: true, find_path: true, query_knowledge: true } },
         },
       };
-      const result = growSeed(seed);
+      const result = await growSeed(seed);
       expect(result).toBeDefined();
       expect(result.config).toBeDefined();
       expect(result.render_hints?.mode).toBe('chat_interface');
     });
 
-    it('returns different results for different gene values', () => {
+    it('returns different results for different gene values', async () => {
       const seedA = {
         ...baseSeed('character'),
         $name: 'WeakOne',
@@ -131,8 +131,8 @@ describe('Domain Engines', () => {
         $name: 'StrongOne',
         genes: { core_power: { type: 'scalar', value: 0.9 }, archetype: { type: 'categorical', value: 'warrior' } },
       };
-      const resultA = JSON.stringify(growSeed(seedA));
-      const resultB = JSON.stringify(growSeed(seedB));
+      const resultA = JSON.stringify(await growSeed(seedA));
+      const resultB = JSON.stringify(await growSeed(seedB));
       expect(resultA).not.toEqual(resultB);
     });
   });

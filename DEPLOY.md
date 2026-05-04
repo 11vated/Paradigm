@@ -17,7 +17,7 @@
 npm install
 
 # Start local services
-docker-compose -f docker-compose.local.yml up -d
+docker compose up -d
 
 # Run development server
 npm run dev
@@ -56,6 +56,7 @@ API_URL=https://api.paradigm.gspl.com
 - **Web**: http://localhost:80
 - **Prometheus**: http://localhost:9090
 - **Grafana**: http://localhost:3001
+- **Redis**: Utilized for caching and persistent storage of JWT blacklists and refresh tokens to enhance security and session management.
 
 ## Scaling
 

@@ -27,7 +27,6 @@ import { getInferenceClient } from './inference.js';
 
 // ─── CONSTANTS ──────────────────────────────────────────────────────────────
 
-const DOMAIN_SET = new Set(getAllDomains());
 const GENE_TYPE_SET = new Set(Object.keys(GENE_TYPES));
 
 // Domain-specific gene templates for rich seed creation
@@ -82,6 +81,12 @@ const DOMAIN_GENE_TEMPLATES: Record<string, Record<string, { type: string; gener
   },
 };
 
+const DOMAIN_SET = new Set([...getAllDomains(), ...Object.keys(DOMAIN_GENE_TEMPLATES)]);
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // ─── QUERY PARSER ───────────────────────────────────────────────────────────
 
 /**
@@ -94,9 +99,11 @@ export function parseQuery(raw: string): ParsedQuery {
   let intent: AgentIntent = 'unknown';
   let confidence = 0;
 
-  // Extract domain mentions
-  for (const domain of DOMAIN_SET) {
-    if (lower.includes(domain)) {
+  // Extract domain mentions. Match longer domain names first and use word boundaries.
+  const knownDomains = Array.from(DOMAIN_SET).sort((a, b) => b.length - a.length);
+  for (const domain of knownDomains) {
+    const domainRegex = new RegExp(`\\b${escapeRegExp(domain)}\\b`, 'i');
+    if (domainRegex.test(lower)) {
       if (!entities.domain) entities.domain = domain;
       else if (!entities.targetDomain) entities.targetDomain = domain;
     }

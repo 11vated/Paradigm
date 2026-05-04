@@ -105,7 +105,7 @@ import { log } from './src/lib/logger/index.js';
 
 // ─── Readiness probes (Phase 1: /ready endpoint) ───────────────────────────
 import {
-  checkSbert, checkPostgres, checkStore, buildReport,
+  checkSbert, checkPostgres, checkStore, buildReport, checkRedis
 } from './src/lib/health/readiness.js';
 
 // ─── Seed Version Control (Phase 2: git-for-seeds) ─────────────────────────
@@ -387,13 +387,14 @@ async function startServer() {
         }
       : undefined;
 
-    const [sbert, postgres, storeCheck] = await Promise.all([
+    const [sbert, postgres, storeCheck, redisCheck] = await Promise.all([
       checkSbert(sbertUrl),
       checkPostgres(pgProbe),
       checkStore(async () => store.getAllSeeds()),
+      checkRedis(),
     ]);
 
-    const report = buildReport([storeCheck, postgres, sbert]);
+    const report = buildReport([storeCheck, postgres, sbert, redisCheck]);
     res.status(report.ready ? 200 : 503).json(report);
   });
 
@@ -905,7 +906,7 @@ async function startServer() {
         return res.json(JSON.parse(cached));
       }
 
-      const grown = growSeed(seed);
+      const grown = await growSeed(seed);
 
       // Cache the result (5 min TTL)
       await cache.set(cacheKey, JSON.stringify(grown), 300);

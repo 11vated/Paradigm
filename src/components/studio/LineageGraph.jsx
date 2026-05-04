@@ -9,7 +9,10 @@ function simpleForceLayout(nodes, edges, width, height) {
   }));
   const nodeMap = {};
   nodes.forEach((n, i) => { nodeMap[n.id] = i; });
-  for (let iter = 0; iter < 80; iter++) {
+  // Phase 5.5: Reduced from 80 to 20 iterations with early-stop
+  const maxIterations = 20;
+  let prevEnergy = Infinity;
+  for (let iter = 0; iter < maxIterations; iter++) {
     for (let i = 0; i < nodes.length; i++) {
       for (let j = i + 1; j < nodes.length; j++) {
         const dx = positions[j].x - positions[i].x;
@@ -44,6 +47,14 @@ function simpleForceLayout(nodes, edges, width, height) {
       positions[i].x = Math.max(30, Math.min(width - 30, positions[i].x));
       positions[i].y = Math.max(30, Math.min(height - 30, positions[i].y));
     }
+    // Phase 5.5: Early-stop if energy change is small
+    let energy = 0;
+    for (let i = 0; i < nodes.length; i++) {
+      energy += positions[i].vx * positions[i].vx + positions[i].vy * positions[i].vy;
+    }
+    if (prevEnergy < energy) break;
+    if (prevEnergy - energy < 0.1) break;
+    prevEnergy = energy;
   }
   return positions;
 }

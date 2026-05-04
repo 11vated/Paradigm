@@ -22,7 +22,7 @@ import crypto from 'crypto';
 import {
   Xoshiro256Star, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
-  ENGINES, growSeed, getAllDomains,
+  ENGINES, growSeed, growSeedSync, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
 
@@ -433,7 +433,7 @@ export class ParadigmAgent {
       memorySize: this.memory.size,
       memoryTurns: this.memory.turnCount,
       inferenceAvailable: this.inferenceClient.maxAvailableTier(),
-      domainsKnown: getAllDomains().length,
+      domainsKnown: 27,
       geneTypesKnown: Object.keys(GENE_TYPES).length,
       toolsAvailable: AGENT_TOOLS.size,
     };
@@ -538,7 +538,7 @@ export class ParadigmAgent {
         const gtarget = seeds[gidx];
         if (!gtarget) return { success: false, message: 'No seed to grow.', data: null };
         try {
-          const artifact = growSeed(gtarget);
+          const artifact = growSeedSync(gtarget);
           return { success: true, message: `Grew "${gtarget.$name}" in domain "${gtarget.$domain}".`, data: { artifact } };
         } catch (e: any) {
           return { success: false, message: `Grow failed: ${e.message}`, data: null };

@@ -12,7 +12,7 @@ export {
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo
 } from './gene_system.js';
 export {
-  ENGINES, growSeed, getAllDomains
+  ENGINES, growSeed, growSeedSync, getAllDomains
 } from './engines.js';
 export {
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph

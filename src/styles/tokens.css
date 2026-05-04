@@ -1,0 +1,90 @@
+:root {
+  /* ─── Domain Colors ───────────────────────────────────────────────────────────── */
+  --domain-character: #f97316;
+  --domain-sprite: #84cc16;
+  --domain-music: #06b6d4;
+  --domain-visual2d: #8b5cf6;
+  --domain-game: #ec4899;
+  --domain-procedural: #14b8a6;
+  --domain-animation: #f43f5e;
+  --domain-architecture: #a8a29e;
+  --domain-vehicle: #6366f1;
+  --domain-fashion: #f59e0b;
+  --domain-robotics: #0ea5e9;
+  --domain-circuit: #22c55e;
+  --domain-food: #eab308;
+  --domain-narrative: #d946ef;
+  --domain-agent: #64748b;
+  --domain-ecosystem: #10b981;
+  --domain-typography: #0d9488;
+  --domain-furniture: #78716c;
+  --domain-choreography: #e879f9;
+  --domain-alife: #3b82f6;
+  --domain-shader: #f472b6;
+  --domain-particle: #14b8a6;
+  --domain-geometry3d: #0d9488;
+  --domain-physics: #f59e0b;
+  --domain-ui: #06b6d4;
+  --domain-audio: #a855f7;
+  --domain-terrain: #84cc16;
+  --domain-default: #94a3b8;
+
+  /* ─── Operational Colors ──────────────────────────────────────────────── */
+  --op-link: #3b82f6;
+  --op-mutate: #f59e0b;
+  --op-breed: #ec4899;
+  --op-compose: #8b5cf6;
+  --op-evolve: #10b981;
+  --op-grow: #14b8a6;
+  --op-fork: #06b6d4;
+
+  /* ─── Semantic Colors ──────────────────────────────────────────────── */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  /* ─── Spacing ───────────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ─── Typography ─────────────────────────────────────────────── */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* ─── Motion ─────────────────────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ─── Borders ───────────────────────────────────────────────── */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ───────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}

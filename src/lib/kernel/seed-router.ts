@@ -46,9 +46,9 @@ export function routeSeed(
   agentGenes?: Record<string, any>,
   config: RouterConfig = { preferGPU: true, fallbackToCPU: true, allowComposition: true }
 ): RoutingDecision {
-  const domain = seed.$domain || 'character';
-  
-  // Check if domain exists
+  const domain = (seed.$domain || 'character').toLowerCase();
+
+  // Check if domain exists in the core engine registry
   if (ENGINES[domain]) {
     const generator = selectGenerator(domain, config);
     return {
@@ -62,8 +62,8 @@ export function routeSeed(
 
   // Check agent's preferred domains
   if (agentGenes?.domains?.value) {
-    const preferredDomains = agentGenes.domains.value as string[];
-    if (preferredDomains.includes(domain)) {
+    const preferredDomains = (agentGenes.domains.value as string[]).map(d => d.toLowerCase());
+    if (preferredDomains.includes(domain) && ENGINES[domain]) {
       const generator = selectGenerator(domain, config);
       return {
         type: 'generator',
@@ -78,17 +78,18 @@ export function routeSeed(
   // Try composition bridge (cross-domain routing)
   if (config.allowComposition) {
     const compositionPath = findCompositionPath('agent', domain);
-    if (compositionPath) {
+    if (compositionPath && compositionPath.length > 0) {
+      const functor = compositionPath[compositionPath.length - 1].functor;
       return {
         type: 'composition',
-        target: compositionPath.functor,
+        target: functor,
         confidence: 0.7,
-        reason: `Composition bridge: agent → ${domain} via ${compositionPath.functor}`,
-        metadata: { 
+        reason: `Composition bridge: agent → ${domain} via ${functor}`,
+        metadata: {
           source: 'agent',
           target: domain,
-          path: compositionPath.path,
-          functor: compositionPath.functor
+          path: compositionPath,
+          functor
         }
       };
     }
@@ -124,25 +125,24 @@ export function routeSeed(
  * - Agent tool_preference gene
  */
 function selectGenerator(domain: string, config: RouterConfig): string {
-  const baseGenerator = `generate${domain.charAt(0).toUpperCase()}${domain.slice(1)}`;
-  
-  // Check for GPU version
-  if (config.preferGPU) {
-    const gpuGenerator = `${baseGenerator}GPU`;
-    // Would check if GPU generator exists
-    // For now, return base
+  const normalized = domain.toLowerCase();
+  const baseGenerator = `generate${normalized.charAt(0).toUpperCase()}${normalized.slice(1)}`;
+  const gpuDomains = new Set(['character', 'music', 'sprite']);
+  const v3Domains = new Set(['character', 'music', 'sprite', 'visual2d', 'animation', 'fullgame', 'game']);
+
+  if (config.preferGPU && gpuDomains.has(normalized)) {
+    return `${baseGenerator}GPU`;
   }
 
-  // Check for versioned generators (v2, v3)
-  const versions = ['V3', 'V2', ''];
-  for (const version of versions) {
-    const genName = `${baseGenerator}${version}`;
-    if (ENGINES[domain] || true) { // Simplified check
-      return genName;
-    }
+  if (v3Domains.has(normalized) && ENGINES[normalized]) {
+    return `${baseGenerator}V3`;
   }
 
-  return baseGenerator;
+  if (ENGINES[normalized]) {
+    return baseGenerator;
+  }
+
+  return 'generateGeneric';
 }
 
 // ─── LLM Router (replaces Model Router for reasoning) ──

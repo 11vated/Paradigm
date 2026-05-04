@@ -15,6 +15,7 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": false,
     "baseUrl": ".",
+    "types": ["webgpu"],
     "paths": {
       "@/*": ["./src/*"]
     }

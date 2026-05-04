@@ -52,11 +52,20 @@ export class Xoshiro256StarStar {
    */
   constructor(seed: string | bigint) {
     if (typeof seed === 'string') {
-      const h = seed.padEnd(64, '0').slice(0, 64);
-      this.s0 = BigInt.asUintN(64, BigInt('0x' + h.slice(0, 16)));
-      this.s1 = BigInt.asUintN(64, BigInt('0x' + h.slice(16, 32)));
-      this.s2 = BigInt.asUintN(64, BigInt('0x' + h.slice(32, 48)));
-      this.s3 = BigInt.asUintN(64, BigInt('0x' + h.slice(48, 64)));
+      const isHex = /^[0-9a-fA-F]{1,64}$/.test(seed);
+      if (isHex) {
+        const h = seed.padEnd(64, '0').slice(0, 64);
+        this.s0 = BigInt.asUintN(64, BigInt('0x' + h.slice(0, 16)));
+        this.s1 = BigInt.asUintN(64, BigInt('0x' + h.slice(16, 32)));
+        this.s2 = BigInt.asUintN(64, BigInt('0x' + h.slice(32, 48)));
+        this.s3 = BigInt.asUintN(64, BigInt('0x' + h.slice(48, 64)));
+      } else {
+        const [s0, s1, s2, s3] = this.seedFromString(seed);
+        this.s0 = s0;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.s3 = s3;
+      }
       this.hash = seed;
     } else {
       const sm = splitmix64(BigInt.asUintN(64, seed));
@@ -68,6 +77,23 @@ export class Xoshiro256StarStar {
     }
     this._hasSpare = false;
     this._spare = 0;
+  }
+
+  private seedFromString(value: string): [bigint, bigint, bigint, bigint] {
+    let s0 = 0x243f6a8885a308d3n;
+    let s1 = 0x13198a2e03707344n;
+    let s2 = 0xa4093822299f31d0n;
+    let s3 = 0x082efa98ec4e6c89n;
+
+    for (let i = 0; i < value.length; i++) {
+      const code = BigInt(value.codePointAt(i) ?? 0);
+      s0 = BigInt.asUintN(64, s0 ^ (code + 0x9e3779b97f4a7c15n + ((s0 << 6n) ^ (s0 >> 2n))));
+      s1 = BigInt.asUintN(64, s1 + (code ^ s0));
+      s2 = BigInt.asUintN(64, s2 ^ (code + 0xC13FA9A902A6328Fn + ((s2 << 5n) ^ (s2 >> 3n))));
+      s3 = BigInt.asUintN(64, s3 + (code ^ s2));
+    }
+
+    return [s0, s1, s2, s3];
   }
 
   /**
@@ -132,15 +158,36 @@ export class Xoshiro256StarStar {
   /**
    * Create a child RNG from a fork key (for parallel deterministic streams).
    */
-  fork(key: string): Xoshiro256StarStar {
-    let hash = 0n;
-    for (let i = 0; i < key.length; i++) {
-      hash = BigInt.asUintN(64, hash * 31n + BigInt(key.charCodeAt(i)));
-    }
-    const seed = BigInt.asUintN(64, this.nextU64() ^ hash);
-    return new Xoshiro256StarStar(seed);
-  }
-}
+  /**
+    * Return a random boolean.
+    */
+   nextBool(): boolean {
+     return this.nextF64() < 0.5;
+   }
+
+   /**
+    * Return a random element from an array.
+    */
+   nextChoice<T>(options: T[]): T {
+     if (options.length === 0) {
+       throw new Error("Cannot choose from an empty array.");
+     }
+     const index = this.nextInt(0, options.length - 1);
+     return options[index];
+   }
+
+   /**
+    * Create a child RNG from a fork key (for parallel deterministic streams).
+    */
+   fork(key: string): Xoshiro256StarStar {
+     let hash = 0n;
+     for (let i = 0; i < key.length; i++) {
+       hash = BigInt.asUintN(64, hash * 31n + BigInt(key.charCodeAt(i)));
+     }
+     const seed = BigInt.asUintN(64, this.nextU64() ^ hash);
+     return new Xoshiro256StarStar(seed);
+   }
+ }
 
 /**
  * Create a deterministic RNG from a seed's content hash.

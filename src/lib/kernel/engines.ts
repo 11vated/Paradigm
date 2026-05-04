@@ -914,6 +914,9 @@ async function growAgent(seed: Seed): Promise<Artifact> {
 }
 
 // ─── ENGINE REGISTRY ──────────────────────────────────────────────────────────
+// ─── 27th DOMAIN: AGENT ─────────────────────────────────────────────────────
+
+// ─── ENGINE REGISTRY ──────────────────────────────────────────────────────────
 export const ENGINES: Record<string, (seed: Seed) => Promise<Artifact>> = {
   character: growCharacter, sprite: growSprite, music: growMusic,
   visual2d: growVisual2d, procedural: growProcedural,
@@ -939,6 +942,22 @@ function growGeneric(seed: Seed): Artifact {
     gene_summary: geneSummary,
     render_hints: { mode: 'generic', description_only: true },
   };
+}
+
+export function growSeedSync(seed: Seed): Artifact {
+  const domain = seed.$domain ?? 'character';
+  const artifact = growGeneric(seed);
+  artifact.type = domain;
+  artifact.name = seed.$name ?? `${domain.charAt(0).toUpperCase() + domain.slice(1)} Artifact`;
+  artifact.domain = domain;
+  artifact.render_hints = { mode: domain, description_only: true };
+
+  if (domain === 'agent') {
+    artifact.config = { fallback: true };
+    artifact.render_hints = { mode: 'chat_interface', color_scheme: 'dark', animated: false, hasFile: false };
+  }
+
+  return artifact;
 }
 
 export async function growSeed(seed: Seed): Promise<Artifact> {
@@ -967,7 +986,7 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
 }
 
 export function getAllDomains(): string[] {
-  return getDomains();
+  return Object.keys(ENGINES).sort();
 }
 
 // Re-export V2 generators (using lazy imports to avoid errors)
