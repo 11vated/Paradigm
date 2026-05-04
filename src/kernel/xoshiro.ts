@@ -5,6 +5,10 @@ export class Xoshiro256SS {
     this.s = this.splitMix64(seed);
   }
 
+  static fromSeed(seed: number): Xoshiro256SS {
+    return new Xoshiro256SS(seed);
+  }
+
   private splitMix64(seed: number): [number, number, number, number, number, number, number, number] {
     let z = seed;
     const result: number[] = [];
@@ -97,3 +101,5 @@ export class Xoshiro256SS {
 export function createSeededRNG(seed: number): Xoshiro256SS {
   return new Xoshiro256SS(seed);
 }
+
+export const Xoshiro256StarStar = Xoshiro256SS;

@@ -687,6 +687,7 @@ export async function enhanceWithLLM(query: string, baseResponse: any): Promise<
 export { parseQuery, buildPlan, executePlan, buildResponse, buildHelpResponse } from './reasoning.js';
 export { AGENT_TOOLS, executeTool, getAvailableTools } from './tools.js';
 export { AgentMemory } from './memory.js';
+export { ReflexionMemory, ReflexionExecutor } from './reflection.js';
 export { LocalInferenceClient, getInferenceClient } from './inference.js';
 export { Phi4InferenceClient, getPhi4Client, resetPhi4Client } from './phi4_inference.js';
 export type { Phi4ClientOptions } from './phi4_inference.js';

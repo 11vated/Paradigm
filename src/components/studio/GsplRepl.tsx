@@ -5,10 +5,11 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { executeGspl, parseGSPL } from '../../services/api';
+import { executeGSPL, parseGSPL } from '../../services/api';
 import type { Seed, Artifact } from '../../lib/kernel/engines';
 import { GsplLexer, TokenType } from '../../lib/kernel/gspl-lexer';
 import { Play, RotateCcw, Download, Eye, Code2, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { GsplParser } from '../../lib/kernel/gspl-parser';
 
 // Default GSPL example
 const DEFAULT_CODE = `// GSPL REPL - Try it live! (Backend API)
@@ -70,7 +71,6 @@ export function GsplRepl() {
       const tokenCount = tokens.length;
 
       // Parse for AST node count (client-side for responsiveness)
-      const { GsplParser, ASTNodeType } from '../../lib/kernel/gspl-parser';
       const parser = new GsplParser(tokens.filter(t => t.type !== TokenType.ERROR));
       const ast = parser.parse();
       const astNodeCount = countNodes(ast);
@@ -88,7 +88,7 @@ export function GsplRepl() {
       }
 
       // Execute via backend API
-      const output = await executeGspl(code);
+      const output = await executeGSPL(code);
 
       // Parse response
       const artifacts: Artifact[] = output?.emergent_assets || output?.artifacts || [];

@@ -122,7 +122,7 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): Level[] {
     }
     
     // Generate obstacles
-    for (let j = 0; j < Math.floor(params.obstacleCount * (i + 1) / params.levelCount; j++) {
+    for (let j = 0; j < Math.floor(params.obstacleCount * (i + 1) / params.levelCount); j++) {
       obstacles.push({
         x: rng.nextF64() * (canvasWidth - 30),
         y: canvasHeight - 80,
@@ -131,7 +131,7 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): Level[] {
     }
     
     // Generate power-ups
-    for (let j = 0; j < Math.floor(params.powerUpCount * (i + 1) / params.levelCount; j++) {
+    for (let j = 0; j < Math.floor(params.powerUpCount * (i + 1) / params.levelCount); j++) {
       powerUps.push({
         x: rng.nextF64() * (canvasWidth - 20),
         y: canvasHeight - 150,

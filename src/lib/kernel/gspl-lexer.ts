@@ -103,7 +103,8 @@ export enum TokenType {
 
   // Special
   EOF = 'EOF',
-  UNKNOWN = 'UNKNOWN'
+  UNKNOWN = 'UNKNOWN',
+  ERROR = 'ERROR' // Error token for malformed input
 }
 
 export interface Token {
