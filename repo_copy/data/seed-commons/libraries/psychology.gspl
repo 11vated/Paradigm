@@ -1,0 +1,139 @@
+// seed-commons/libraries/psychology.gspl
+//
+// Psychology & Emotion library — runnable GSPL materialization of Brief 086H
+// (research/086H-psychology-and-emotion-library.md).
+//
+// Emotion taxonomies (Ekman 1999, Plutchik wheel, PAD dimensional),
+// cognitive biases (Wikipedia catalog), personality (Big Five / OCEAN),
+// developmental stages (Piaget, Erikson). Sources: APA, DSM-5-TR,
+// Ekman Group, Big Five Inventory-2, Plutchik 1980.
+//
+// All records are descriptive scientific primitives. NOT a diagnostic tool.
+//
+// PURE. rng_seed = "seed_commons.libraries.psychology:v1"
+// License: GSPL Open Specification License
+// Lineage parents: []
+
+module seed_commons.libraries.psychology
+
+// -----------------------------------------------------------------------------
+// 1. Basic emotions (Ekman 1999 extended set)
+// -----------------------------------------------------------------------------
+
+pub struct Emotion {
+    name: String,
+    valence: Scalar,       // -1 .. +1
+    arousal: Scalar,       // 0 .. 1
+    dominance: Scalar,     // 0 .. 1
+    facial_action_units: [u8],
+    body_posture: String,
+}
+
+pub fn joy() -> Emotion pure =
+    Emotion { name = "joy", valence = 0.85, arousal = 0.70, dominance = 0.62, facial_action_units = [6, 12], body_posture = "open_chest_upright" }
+
+pub fn sadness() -> Emotion pure =
+    Emotion { name = "sadness", valence = -0.75, arousal = 0.25, dominance = 0.25, facial_action_units = [1, 4, 15], body_posture = "slumped_forward" }
+
+pub fn anger() -> Emotion pure =
+    Emotion { name = "anger", valence = -0.70, arousal = 0.85, dominance = 0.80, facial_action_units = [4, 5, 7, 23], body_posture = "forward_tension" }
+
+pub fn fear() -> Emotion pure =
+    Emotion { name = "fear", valence = -0.80, arousal = 0.90, dominance = 0.15, facial_action_units = [1, 2, 4, 5, 20, 26], body_posture = "recoil_guarded" }
+
+pub fn disgust() -> Emotion pure =
+    Emotion { name = "disgust", valence = -0.70, arousal = 0.45, dominance = 0.55, facial_action_units = [9, 15, 16], body_posture = "turn_away" }
+
+pub fn surprise() -> Emotion pure =
+    Emotion { name = "surprise", valence = 0.15, arousal = 0.80, dominance = 0.40, facial_action_units = [1, 2, 5, 26], body_posture = "frozen_alert" }
+
+pub fn contempt() -> Emotion pure =
+    Emotion { name = "contempt", valence = -0.50, arousal = 0.40, dominance = 0.72, facial_action_units = [12, 14], body_posture = "chin_tilted_up" }
+
+// -----------------------------------------------------------------------------
+// 2. Plutchik wheel secondary blends
+// -----------------------------------------------------------------------------
+
+pub fn love_joy_trust_blend() -> Emotion pure =
+    Emotion { name = "love_joy_trust", valence = 0.90, arousal = 0.62, dominance = 0.58, facial_action_units = [6, 12], body_posture = "open_approach" }
+
+pub fn awe_fear_surprise_blend() -> Emotion pure =
+    Emotion { name = "awe_fear_surprise", valence = 0.10, arousal = 0.85, dominance = 0.25, facial_action_units = [1, 2, 5], body_posture = "gaze_upward" }
+
+// -----------------------------------------------------------------------------
+// 3. Big Five dimensions
+// -----------------------------------------------------------------------------
+
+pub struct BigFiveProfile {
+    openness: Scalar,
+    conscientiousness: Scalar,
+    extraversion: Scalar,
+    agreeableness: Scalar,
+    neuroticism: Scalar,
+}
+
+pub fn balanced_profile() -> BigFiveProfile pure =
+    BigFiveProfile { openness = 0.5, conscientiousness = 0.5, extraversion = 0.5, agreeableness = 0.5, neuroticism = 0.5 }
+
+// -----------------------------------------------------------------------------
+// 4. Developmental stages
+// -----------------------------------------------------------------------------
+
+pub struct DevelopmentalStage {
+    framework: String,
+    name: String,
+    age_start_years: Scalar,
+    age_end_years: Scalar,
+    core_task: String,
+}
+
+pub fn piaget_sensorimotor() -> DevelopmentalStage pure =
+    DevelopmentalStage { framework = "Piaget", name = "sensorimotor", age_start_years = 0.0, age_end_years = 2.0, core_task = "object_permanence" }
+
+pub fn piaget_preoperational() -> DevelopmentalStage pure =
+    DevelopmentalStage { framework = "Piaget", name = "preoperational", age_start_years = 2.0, age_end_years = 7.0, core_task = "symbolic_thought_and_egocentrism" }
+
+pub fn erikson_identity_vs_role_confusion() -> DevelopmentalStage pure =
+    DevelopmentalStage { framework = "Erikson", name = "identity_vs_role_confusion", age_start_years = 12.0, age_end_years = 18.0, core_task = "identity_formation" }
+
+// -----------------------------------------------------------------------------
+// 5. Cognitive biases (sample)
+// -----------------------------------------------------------------------------
+
+pub struct CognitiveBias {
+    name: String,
+    description: String,
+    domain: String,
+}
+
+pub fn confirmation_bias() -> CognitiveBias pure =
+    CognitiveBias { name = "confirmation_bias", description = "tendency_to_favor_information_confirming_prior_beliefs", domain = "belief_formation" }
+
+pub fn anchoring_bias() -> CognitiveBias pure =
+    CognitiveBias { name = "anchoring_bias", description = "over_reliance_on_first_information_encountered", domain = "numerical_estimation" }
+
+pub fn availability_heuristic() -> CognitiveBias pure =
+    CognitiveBias { name = "availability_heuristic", description = "judgment_biased_by_ease_of_recall", domain = "probability_estimation" }
+
+// -----------------------------------------------------------------------------
+// 6. Functors
+// -----------------------------------------------------------------------------
+
+pub fn emotion_to_facial_rig_functor() -> Functor pure =
+    Functor.id("psychology://functor/emotion_to_facial_rig@v1")
+
+pub fn bigfive_to_behavior_tendency_functor() -> Functor pure =
+    Functor.id("psychology://functor/bigfive_to_behavior_tendency@v1")
+
+$metadata {
+    materializes_brief = "research/086H-psychology-and-emotion-library.md",
+    source_standards   = ["Ekman_1999", "Plutchik_1980", "BFI_2", "APA", "DSM_5_TR"],
+    emotion_count      = 9,
+    stage_count        = 3,
+    bias_count         = 3,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.psychology",
+    lineage_parents    = [],
+}

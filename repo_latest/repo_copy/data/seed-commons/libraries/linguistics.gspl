@@ -1,0 +1,125 @@
+// seed-commons/libraries/linguistics.gspl
+//
+// Language & Linguistics library — runnable GSPL materialization of Brief 086D
+// (research/086D-language-and-linguistics-library.md).
+//
+// Phonemes (IPA), writing systems (ISO 15924), language families (Glottolog),
+// syntactic typology (WALS), Unicode 15.1 scripts.
+//
+// PURE. rng_seed = "seed_commons.libraries.linguistics:v1"
+// License: GSPL Open Specification License
+// Lineage parents: []
+
+module seed_commons.libraries.linguistics
+
+// -----------------------------------------------------------------------------
+// 1. Phoneme taxonomy (IPA 2020 revision)
+// -----------------------------------------------------------------------------
+
+pub enum Manner { Plosive, Nasal, Trill, Tap, Fricative, Approximant, Lateral, Affricate }
+pub enum Place  { Bilabial, Labiodental, Dental, Alveolar, Postalveolar, Retroflex, Palatal, Velar, Uvular, Pharyngeal, Glottal }
+pub enum Voicing { Voiceless, Voiced }
+
+pub struct Consonant {
+    ipa: String,
+    manner: Manner,
+    place: Place,
+    voicing: Voicing,
+}
+
+pub fn p_voiceless_bilabial_plosive() -> Consonant pure =
+    Consonant { ipa = "p", manner = Manner.Plosive, place = Place.Bilabial, voicing = Voicing.Voiceless }
+pub fn b_voiced_bilabial_plosive() -> Consonant pure =
+    Consonant { ipa = "b", manner = Manner.Plosive, place = Place.Bilabial, voicing = Voicing.Voiced }
+pub fn t_voiceless_alveolar_plosive() -> Consonant pure =
+    Consonant { ipa = "t", manner = Manner.Plosive, place = Place.Alveolar, voicing = Voicing.Voiceless }
+pub fn k_voiceless_velar_plosive() -> Consonant pure =
+    Consonant { ipa = "k", manner = Manner.Plosive, place = Place.Velar, voicing = Voicing.Voiceless }
+pub fn m_voiced_bilabial_nasal() -> Consonant pure =
+    Consonant { ipa = "m", manner = Manner.Nasal, place = Place.Bilabial, voicing = Voicing.Voiced }
+pub fn s_voiceless_alveolar_fricative() -> Consonant pure =
+    Consonant { ipa = "s", manner = Manner.Fricative, place = Place.Alveolar, voicing = Voicing.Voiceless }
+
+// -----------------------------------------------------------------------------
+// 2. Writing systems (ISO 15924)
+// -----------------------------------------------------------------------------
+
+pub enum ScriptDirection { LeftToRight, RightToLeft, TopToBottom, Boustrophedon }
+pub enum ScriptType { Alphabet, Abjad, Abugida, Syllabary, Logographic, Featural }
+
+pub struct Script {
+    name: String,
+    iso_15924: String,
+    type_: ScriptType,
+    direction: ScriptDirection,
+    unicode_block_start: u32,
+    unicode_block_end: u32,
+    character_count: u16,
+}
+
+pub fn latin_script() -> Script pure =
+    Script { name = "Latin", iso_15924 = "Latn", type_ = ScriptType.Alphabet, direction = ScriptDirection.LeftToRight, unicode_block_start = 0x0041, unicode_block_end = 0x024F, character_count = 52 }
+
+pub fn cyrillic_script() -> Script pure =
+    Script { name = "Cyrillic", iso_15924 = "Cyrl", type_ = ScriptType.Alphabet, direction = ScriptDirection.LeftToRight, unicode_block_start = 0x0400, unicode_block_end = 0x04FF, character_count = 66 }
+
+pub fn arabic_script() -> Script pure =
+    Script { name = "Arabic", iso_15924 = "Arab", type_ = ScriptType.Abjad, direction = ScriptDirection.RightToLeft, unicode_block_start = 0x0600, unicode_block_end = 0x06FF, character_count = 28 }
+
+pub fn devanagari_script() -> Script pure =
+    Script { name = "Devanagari", iso_15924 = "Deva", type_ = ScriptType.Abugida, direction = ScriptDirection.LeftToRight, unicode_block_start = 0x0900, unicode_block_end = 0x097F, character_count = 48 }
+
+pub fn han_script() -> Script pure =
+    Script { name = "Han", iso_15924 = "Hani", type_ = ScriptType.Logographic, direction = ScriptDirection.LeftToRight, unicode_block_start = 0x4E00, unicode_block_end = 0x9FFF, character_count = 20992 }
+
+pub fn hiragana_script() -> Script pure =
+    Script { name = "Hiragana", iso_15924 = "Hira", type_ = ScriptType.Syllabary, direction = ScriptDirection.LeftToRight, unicode_block_start = 0x3040, unicode_block_end = 0x309F, character_count = 48 }
+
+pub fn hangul_script() -> Script pure =
+    Script { name = "Hangul", iso_15924 = "Hang", type_ = ScriptType.Featural, direction = ScriptDirection.LeftToRight, unicode_block_start = 0xAC00, unicode_block_end = 0xD7AF, character_count = 11172 }
+
+// -----------------------------------------------------------------------------
+// 3. Language families (Glottolog)
+// -----------------------------------------------------------------------------
+
+pub struct LanguageFamily {
+    name: String,
+    glottolog_id: String,
+    approximate_speakers: u64,
+    major_languages: [String],
+}
+
+pub fn indo_european() -> LanguageFamily pure =
+    LanguageFamily { name = "Indo-European", glottolog_id = "indo1319", approximate_speakers = 3_200_000_000, major_languages = ["English", "Spanish", "Hindi", "Russian", "Portuguese", "German", "French"] }
+
+pub fn sino_tibetan() -> LanguageFamily pure =
+    LanguageFamily { name = "Sino-Tibetan", glottolog_id = "sino1245", approximate_speakers = 1_400_000_000, major_languages = ["Mandarin", "Cantonese", "Tibetan", "Burmese"] }
+
+pub fn afro_asiatic() -> LanguageFamily pure =
+    LanguageFamily { name = "Afro-Asiatic", glottolog_id = "afro1255", approximate_speakers = 580_000_000, major_languages = ["Arabic", "Hebrew", "Amharic", "Hausa"] }
+
+pub fn niger_congo() -> LanguageFamily pure =
+    LanguageFamily { name = "Niger-Congo", glottolog_id = "nige1235", approximate_speakers = 700_000_000, major_languages = ["Swahili", "Yoruba", "Zulu", "Igbo"] }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn phoneme_to_formant_profile_functor() -> Functor pure =
+    Functor.id("linguistics://functor/phoneme_to_formant_profile@v1")
+
+pub fn script_to_glyph_render_functor() -> Functor pure =
+    Functor.id("linguistics://functor/script_to_glyph_render@v1")
+
+$metadata {
+    materializes_brief = "research/086D-language-and-linguistics-library.md",
+    source_standards   = ["IPA_2020", "ISO_15924", "Unicode_15_1", "Glottolog", "WALS"],
+    consonant_count    = 6,
+    script_count       = 7,
+    family_count       = 4,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.linguistics",
+    lineage_parents    = [],
+}

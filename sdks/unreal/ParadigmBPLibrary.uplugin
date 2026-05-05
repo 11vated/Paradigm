@@ -1,0 +1,175 @@
+// Paradigm SDK for Unreal Engine 5.x
+// Header: ParadigmBPLibrary.h
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "ParadigmBPLibrary.generated.h"
+
+UENUM(BlueprintType)
+enum class EParadigmGeneType : uint8
+{
+    Color UMETA(DisplayName = "Color"),
+    Shape UMETA(DisplayName = "Shape"),
+    Motion UMETA(DisplayName = "Motion"),
+    Audio UMETA(DisplayName = "Audio"),
+    Physics UMETA(DisplayName = "Physics"),
+    Behavior UMETA(DisplayName = "Behavior"),
+    Animation UMETA(DisplayName = "Animation"),
+    Texture UMETA(DisplayName = "Texture"),
+    Lighting UMETA(DisplayName = "Lighting"),
+    Structure UMETA(DisplayName = "Structure"),
+    Material UMETA(DisplayName = "Material"),
+    Environment UMETA(DisplayName = "Environment"),
+    Pattern UMETA(DisplayName = "Pattern"),
+    Interaction UMETA(DisplayName = "Interaction"),
+    Logic UMETA(DisplayName = "Logic"),
+    Data UMETA(DisplayName = "Data"),
+    Meta UMETA(DisplayName = "Meta")
+};
+
+UCLASS()
+class UParadigmBPLibrary : public UBlueprintFunctionLibrary
+{
+    GENERATED_BODY()
+
+public:
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Seed")
+    static UPARAM(DisplayName = "Seed") FString CreateSeed(FString Name, TMap<FString, FString> Genes);
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Seed")
+    static UPARAM(DisplayName = "Success") bool SetGene(FString SeedId, FString GeneType, FString Value);
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Seed")
+    static UPARAM(DisplayName = "Value") FString GetGene(FString SeedId, FString GeneType);
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Breeding")
+    static UPARAM(DisplayName = "Child") FString Breed(UPARAM(ref) FString& ParentA, UPARAM(ref) FString& ParentB);
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Evolution")
+    static UPARAM(DisplayName = "Best") FString Evolve(TArray<FString> Population, float (*FitnessFunction)(FString));
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Utils")
+    static UPARAM(DisplayName = "Random") float RandomFloat();
+
+    UFUNCTION(BlueprintCallable, Category = "Paradigm|Utils")
+    static UPARAM(DisplayName = "Seed") int32 RandomInt(int32 Min, int32 Max);
+};
+
+// Core Implementation
+class FParadigmKernel
+{
+public:
+    static FString CreateSeed_Impl(FString Name, TMap<FString, FString> Genes);
+    static bool SetGene_Impl(FString SeedId, FString GeneType, FString Value);
+    static FString GetGene_Impl(FString SeedId, FString GeneType);
+    static FString Breed_Impl(FString ParentA, FString ParentB);
+    static FString Evolve_Impl(TArray<FString> Population);
+
+private:
+    static TMap<FString, TMap<FString, FString>> SeedDatabase;
+    static int32 SeedCounter;
+};
+
+TMap<FString, TMap<FString, FString>> FParadigmKernel::SeedDatabase;
+int32 FParadigmKernel::SeedCounter = 0;
+
+FString FParadigmKernel::CreateSeed_Impl(FString Name, TMap<FString, FString> Genes)
+{
+    FString SeedId = FString::Printf(TEXT("seed_%05d"), ++SeedCounter);
+    SeedDatabase.Add(SeedId, Genes);
+    return SeedId;
+}
+
+bool FParadigmKernel::SetGene_Impl(FString SeedId, FString GeneType, FString Value)
+{
+    if (SeedDatabase.Contains(SeedId))
+    {
+        SeedDatabase[SeedId].Add(GeneType, Value);
+        return true;
+    }
+    return false;
+}
+
+FString FParadigmKernel::GetGene_Impl(FString SeedId, FString GeneType)
+{
+    if (SeedDatabase.Contains(SeedId) && SeedDatabase[SeedId].Contains(GeneType))
+    {
+        return SeedDatabase[SeedId][GeneType];
+    }
+    return TEXT("");
+}
+
+FString FParadigmKernel::Breed_Impl(FString ParentA, FString ParentB)
+{
+    if (!SeedDatabase.Contains(ParentA) || !SeedDatabase.Contains(ParentB))
+        return TEXT("");
+
+    TMap<FString, FString> ChildGenes;
+    auto& GenesA = SeedDatabase[ParentA];
+    auto& GenesB = SeedDatabase[ParentB];
+
+    for (auto& Gene : GenesA)
+    {
+        ChildGenes.Add(Gene.Key, FMath::RandBool() ? Gene.Value : GenesB[Gene.Key]);
+    }
+
+    return CreateSeed_Impl(TEXT("Child"), ChildGenes);
+}
+
+FString FParadigmKernel::Evolve_Impl(TArray<FString> Population)
+{
+    if (Population.Num() == 0) return TEXT("");
+
+    int32 BestIdx = 0;
+    float BestFitness = 0.0f;
+
+    for (int32 i = 0; i < Population.Num(); i++)
+    {
+        float Fitness = FMath::RandFloat();
+        if (Fitness > BestFitness)
+        {
+            BestFitness = Fitness;
+            BestIdx = i;
+        }
+    }
+
+    return Population[BestIdx];
+}
+
+// Blueprint Function Implementations
+FString UParadigmBPLibrary::CreateSeed(FString Name, TMap<FString, FString> Genes)
+{
+    return FParadigmKernel::CreateSeed_Impl(Name, Genes);
+}
+
+bool UParadigmBPLibrary::SetGene(FString SeedId, FString GeneType, FString Value)
+{
+    return FParadigmKernel::SetGene_Impl(SeedId, GeneType, Value);
+}
+
+FString UParadigmBPLibrary::GetGene(FString SeedId, FString GeneType)
+{
+    return FParadigmKernel::GetGene_Impl(SeedId, GeneType);
+}
+
+FString UParadigmBPLibrary::Breed(FString& ParentA, FString& ParentB)
+{
+    return FParadigmKernel::Breed_Impl(ParentA, ParentB);
+}
+
+FString UParadigmBPLibrary::Evolve(TArray<FString> Population, float (*FitnessFunction)(FString))
+{
+    return FParadigmKernel::Evolve_Impl(Population);
+}
+
+float UParadigmBPLibrary::RandomFloat()
+{
+    return FMath::RandFloat();
+}
+
+int32 UParadigmBPLibrary::RandomInt(int32 Min, int32 Max)
+{
+    return FMath::RandRange(Min, Max);
+}

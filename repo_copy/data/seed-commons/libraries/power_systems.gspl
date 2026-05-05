@@ -1,0 +1,147 @@
+// seed-commons/libraries/power_systems.gspl
+//
+// Character Power Systems, Transformations & Movesets library — runnable GSPL
+// materialization of Brief 092
+// (research/092-character-power-systems-transformations-and-movesets.md).
+//
+// Meta-grammar for character abilities: power sources, cost/regen curves,
+// transformation trees, moveset taxonomies, combo rules. Sources: D&D 5e SRD,
+// Pathfinder 2e OGL, Shadowrun 5e, GURPS 4e, and a cross-genre meta-analysis
+// of fighting-game, shonen, ARPG, and immersive-sim power models.
+//
+// PURE. rng_seed = "seed_commons.libraries.power_systems:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.chemistry@v1, seed_commons.libraries.physics@v1, seed_commons.libraries.biology@v1]
+
+module seed_commons.libraries.power_systems
+
+// -----------------------------------------------------------------------------
+// 1. Power source taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum PowerSource {
+    Physical,        // raw body strength
+    Kinetic,         // momentum manipulation
+    Elemental,       // fire, water, earth, air, lightning, ice
+    Arcane,          // learned spellcraft
+    Divine,          // granted by higher power
+    Psionic,         // mental force
+    Biotech,         // nanotech, cybernetic augmentation
+    Spiritual,       // chi, mana, aether internal flow
+    Temporal,        // time manipulation
+    Dimensional,     // spatial folding, portal
+    Cosmic,          // stellar / galactic scale
+    Sovereignty,     // reality rewrite authority
+}
+
+pub enum ResourceType { Stamina, Mana, Rage, Focus, Heat, Cooldown, SpiritEnergy, Ammunition }
+
+pub struct PowerProfile {
+    name: String,
+    source: PowerSource,
+    primary_resource: ResourceType,
+    secondary_resource: Option<ResourceType>,
+    regen_rate_per_s: Scalar,
+    max_pool: Scalar,
+    learning_curve: String,
+}
+
+pub fn warrior_stamina_model() -> PowerProfile pure =
+    PowerProfile { name = "warrior_stamina", source = PowerSource.Physical, primary_resource = ResourceType.Stamina, secondary_resource = None, regen_rate_per_s = 12.0, max_pool = 100.0, learning_curve = "linear_with_conditioning" }
+
+pub fn mage_mana_model() -> PowerProfile pure =
+    PowerProfile { name = "mage_mana", source = PowerSource.Arcane, primary_resource = ResourceType.Mana, secondary_resource = Some(ResourceType.Focus), regen_rate_per_s = 4.0, max_pool = 200.0, learning_curve = "logarithmic_with_study" }
+
+pub fn berserker_rage_model() -> PowerProfile pure =
+    PowerProfile { name = "berserker_rage", source = PowerSource.Physical, primary_resource = ResourceType.Rage, secondary_resource = None, regen_rate_per_s = 0.0, max_pool = 100.0, learning_curve = "builds_from_damage_dealt_and_taken" }
+
+pub fn cyborg_heat_model() -> PowerProfile pure =
+    PowerProfile { name = "cyborg_heat", source = PowerSource.Biotech, primary_resource = ResourceType.Heat, secondary_resource = Some(ResourceType.Cooldown), regen_rate_per_s = -8.0, max_pool = 100.0, learning_curve = "hardware_upgrade_gated" }
+
+pub fn monk_chi_model() -> PowerProfile pure =
+    PowerProfile { name = "monk_chi", source = PowerSource.Spiritual, primary_resource = ResourceType.SpiritEnergy, secondary_resource = Some(ResourceType.Focus), regen_rate_per_s = 6.0, max_pool = 120.0, learning_curve = "meditative_discipline" }
+
+// -----------------------------------------------------------------------------
+// 2. Move taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum MoveCategory { Light, Heavy, Special, Ultimate, Utility, Defensive, Grapple, Movement }
+
+pub struct Move {
+    name: String,
+    category: MoveCategory,
+    startup_frames: u8,
+    active_frames: u8,
+    recovery_frames: u8,
+    damage: Scalar,
+    resource_cost: Scalar,
+    hitbox_radius_m: Scalar,
+    properties: [String],
+}
+
+pub fn light_punch() -> Move pure =
+    Move { name = "light_punch", category = MoveCategory.Light, startup_frames = 4, active_frames = 3, recovery_frames = 7, damage = 4.0, resource_cost = 0.0, hitbox_radius_m = 0.6, properties = ["fast", "chainable"] }
+
+pub fn heavy_swing() -> Move pure =
+    Move { name = "heavy_swing", category = MoveCategory.Heavy, startup_frames = 14, active_frames = 5, recovery_frames = 22, damage = 22.0, resource_cost = 10.0, hitbox_radius_m = 1.4, properties = ["armor_break", "launcher"] }
+
+pub fn fireball_cast() -> Move pure =
+    Move { name = "fireball_cast", category = MoveCategory.Special, startup_frames = 24, active_frames = 1, recovery_frames = 30, damage = 35.0, resource_cost = 25.0, hitbox_radius_m = 1.8, properties = ["projectile", "elemental_fire", "AoE"] }
+
+pub fn meteor_ultimate() -> Move pure =
+    Move { name = "meteor_ultimate", category = MoveCategory.Ultimate, startup_frames = 60, active_frames = 8, recovery_frames = 80, damage = 220.0, resource_cost = 100.0, hitbox_radius_m = 8.0, properties = ["invincible_startup", "screen_wide", "knockdown"] }
+
+pub fn parry_riposte() -> Move pure =
+    Move { name = "parry_riposte", category = MoveCategory.Defensive, startup_frames = 2, active_frames = 4, recovery_frames = 20, damage = 0.0, resource_cost = 15.0, hitbox_radius_m = 0.0, properties = ["counter", "frame_advantage_on_success"] }
+
+pub fn dash_forward() -> Move pure =
+    Move { name = "dash_forward", category = MoveCategory.Movement, startup_frames = 3, active_frames = 1, recovery_frames = 5, damage = 0.0, resource_cost = 8.0, hitbox_radius_m = 0.0, properties = ["iframes_3", "horizontal_only"] }
+
+// -----------------------------------------------------------------------------
+// 3. Transformation trees
+// -----------------------------------------------------------------------------
+
+pub struct Transformation {
+    name: String,
+    base_form: String,
+    trigger: String,
+    stat_multipliers: [String],
+    duration_s: Option<Scalar>,
+    cost: Scalar,
+    appearance_delta: String,
+}
+
+pub fn berserker_mode() -> Transformation pure =
+    Transformation { name = "berserker_mode", base_form = "warrior", trigger = "hp_below_25_percent", stat_multipliers = ["damage_x1.5", "defense_x0.6", "speed_x1.2"], duration_s = Some(15.0), cost = 0.0, appearance_delta = "red_aura_glow" }
+
+pub fn divine_ascension() -> Transformation pure =
+    Transformation { name = "divine_ascension", base_form = "cleric", trigger = "full_faith_meter", stat_multipliers = ["all_stats_x1.35"], duration_s = Some(30.0), cost = 100.0, appearance_delta = "golden_halo_and_wings" }
+
+pub fn beast_shift_wolf() -> Transformation pure =
+    Transformation { name = "beast_shift_wolf", base_form = "druid", trigger = "conscious_activation", stat_multipliers = ["strength_x1.4", "stamina_x1.3", "intellect_x0.6"], duration_s = None, cost = 40.0, appearance_delta = "quadruped_wolf_form" }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn profile_to_balance_curve_functor() -> Functor pure =
+    Functor.id("power://functor/profile_to_balance_curve@v1")
+
+pub fn move_to_animation_timing_functor() -> Functor pure =
+    Functor.id("power://functor/move_to_animation_timing@v1")
+
+pub fn transformation_to_vfx_bundle_functor() -> Functor pure =
+    Functor.id("power://functor/transformation_to_vfx_bundle@v1")
+
+$metadata {
+    materializes_brief = "research/092-character-power-systems-transformations-and-movesets.md",
+    source_standards   = ["DnD_5e_SRD", "Pathfinder_2e_OGL", "Shadowrun_5e", "GURPS_4e"],
+    profile_count      = 5,
+    move_count         = 6,
+    transformation_count = 3,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.power_systems",
+    lineage_parents    = ["seed_commons.libraries.chemistry@v1", "seed_commons.libraries.physics@v1", "seed_commons.libraries.biology@v1"],
+}

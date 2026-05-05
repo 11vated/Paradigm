@@ -1,0 +1,768 @@
+// seed-commons/libraries/chemistry.gspl
+//
+// Chemistry substrate library — the runnable GSPL materialization of Brief 081
+// (research/081-chemistry-primitives-library.md).
+//
+// This module is PURE. No Network, no Time, no wall clock. Every value is
+// grounded in NIST, IUPAC, CODATA, PubChem, KEGG, HITRAN, or US Standard
+// Atmosphere 1976. Every primitive declared here is addressable by downstream
+// seeds as `Chemistry.<primitive>` and composes cleanly with the 17 kernel
+// gene types from spec/02-gene-system.md.
+//
+// The library does not ship the full 50,000-molecule / 5,000-reaction v1
+// catalog inline — those live under seed-commons/libraries/chemistry/data/
+// as signed content-addressed fragments loaded on demand. What this file
+// ships is:
+//
+//   1. The TYPES every chemistry primitive is expressed in.
+//   2. The CANONICAL CONSTANTS (CODATA 2022) the substrate treats as ground truth.
+//   3. A curated CORE INVENTORY of the primitives that every downstream seed
+//      in the commons is allowed to depend on without a data-fetch round trip.
+//   4. The FUNCTORS that cross chemistry into other engines (light, material,
+//      particle, fluid, biology) per Briefs 083, 084, 085.
+//
+// Every primitive below is load-bearing for a seed in seed-commons/inventories/.
+// Removing any one of them breaks a downstream canonical seed.
+//
+// Determinism: rng_seed = "seed_commons.libraries.chemistry:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [] (primordial library; consumes no other commons module)
+
+module seed_commons.libraries.chemistry
+
+import Std.Math
+import Std.Color
+import Std.Units
+import Std.Embedding
+
+// -----------------------------------------------------------------------------
+// 1. Kernel-gene mappings
+// -----------------------------------------------------------------------------
+// Every chemistry primitive below is declared in terms of the 17 kernel gene
+// types from spec/02. The mapping is explicit so a reader can trace any
+// chemistry value back to the kernel algebra without guessing.
+//
+//   scalar      -> masses, temperatures, rate constants, energies, pH
+//   categorical -> element symbol, phase, crystal system, oxidation state
+//   vector      -> emission spectrum bins, dipole moment, crystal lattice vectors
+//   expression  -> rate law, Arrhenius law, partition function
+//   struct      -> element, molecule, reaction, pathway, pigment records
+//   array       -> isotope list, conformer ensemble, reaction step list
+//   graph       -> molecular bond graph, reaction network, metabolic pathway
+//   topology    -> 3D conformer surfaces, active-site pockets
+//   temporal    -> reaction progress, decay curves, fluorescence lifetimes
+//   regulatory  -> enzyme kinetics, allosteric networks, pH buffering
+//   field       -> electron density, electrostatic potential, ion concentration
+//   symbolic    -> IUPAC name, SMILES, InChI, CAS number
+//   quantum     -> HOMO/LUMO superposition, orbital hybridization states
+//   gematria    -> — (not used by chemistry)
+//   resonance   -> vibrational IR modes, NMR shifts, Raman spectra
+//   dimensional -> CLIP-style embeddings of molecule / material appearance
+//   sovereignty -> signed identity of every primitive in this library
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// 2. Canonical constants (CODATA 2022)
+// -----------------------------------------------------------------------------
+// These are exact substrate-level constants. Every downstream seed that needs
+// a physical constant MUST reference one of these, never inline a literal.
+
+pub const AVOGADRO        : Scalar = 6.022_140_76e23        // 1/mol, exact
+pub const BOLTZMANN_K     : Scalar = 1.380_649e-23          // J/K,  exact
+pub const GAS_R           : Scalar = 8.314_462_618_153_24   // J/(mol K), exact
+pub const FARADAY         : Scalar = 96_485.332_123_310_0   // C/mol
+pub const PLANCK_H        : Scalar = 6.626_070_15e-34       // J s, exact
+pub const SPEED_OF_LIGHT  : Scalar = 299_792_458.0          // m/s, exact
+pub const ELEMENTARY_Q    : Scalar = 1.602_176_634e-19      // C, exact
+pub const ELECTRON_MASS   : Scalar = 9.109_383_713_9e-31    // kg
+pub const PROTON_MASS     : Scalar = 1.672_621_925_95e-27   // kg
+pub const AMU             : Scalar = 1.660_539_068_92e-27   // kg (unified atomic mass unit)
+pub const STANDARD_T      : Scalar = 298.15                 // K, thermodynamic standard
+pub const STANDARD_P      : Scalar = 101_325.0              // Pa, 1 atm
+pub const WATER_TRIPLE_T  : Scalar = 273.16                 // K, exact by definition
+
+// -----------------------------------------------------------------------------
+// 3. Core type algebra
+// -----------------------------------------------------------------------------
+
+// An element record. Fields traced to NIST / IUPAC 2021.
+pub type Element = struct {
+    symbol           : Categorical,        // "H", "He", "Fe", ...
+    atomic_number    : Scalar,             // integer-valued
+    standard_weight  : Scalar,             // g/mol, IUPAC 2021
+    group            : Scalar,             // 1..18
+    period           : Scalar,             // 1..7
+    block            : Categorical,        // s | p | d | f
+    electron_config  : Symbolic,           // e.g. "[Ar] 3d6 4s2"
+    electronegativity_pauling : Scalar,    // dimensionless
+    ionization_energy_1 : Scalar,          // kJ/mol
+    electron_affinity : Scalar,            // kJ/mol
+    atomic_radius_pm : Scalar,             // pm (Slater)
+    covalent_radius_pm : Scalar,           // pm
+    density_kg_m3    : Scalar,             // at STP
+    melting_K        : Scalar,
+    boiling_K        : Scalar,
+    heat_capacity    : Scalar,             // J/(mol K) at STP
+    thermal_conductivity : Scalar,         // W/(m K)
+    common_oxidation_states : Array<Scalar>,
+    flame_color      : Std.Color.OKLCh,    // OKLab flame test color
+    crystal_structure : Categorical,       // BCC | FCC | HCP | ...
+    emission_lines_nm : Vector,            // NIST ASD primary lines
+    citation         : Symbolic,           // DOI or NIST pointer
+    uncertainty      : Scalar,             // [0,1], aggregate provenance confidence
+}
+
+// A molecule record. Consistent with PubChem CID schema.
+pub type Molecule = struct {
+    pubchem_cid      : Scalar,             // integer-valued; 0 if not in PubChem
+    inchi_key        : Symbolic,
+    smiles           : Symbolic,
+    iupac_name       : Symbolic,
+    common_name      : Symbolic,
+    cas_number       : Symbolic,
+    formula          : Symbolic,
+    molecular_weight : Scalar,             // g/mol
+    exact_mass       : Scalar,             // g/mol, monoisotopic
+    charge           : Scalar,
+    spin_multiplicity : Scalar,
+    bond_graph       : Graph<Atom, Bond>,  // kernel graph gene
+    conformers       : Topology,           // kernel topology gene
+    dipole_moment    : Vector,             // D, Debye
+    homo_ev          : Scalar,
+    lumo_ev          : Scalar,
+    logp             : Scalar,
+    pka              : Array<Scalar>,
+    uv_vis_nm        : Vector,             // absorption bins
+    ir_vibrational   : Resonance,          // kernel resonance gene
+    nmr_shifts       : Array<Scalar>,      // ppm
+    appearance_color : Std.Color.OKLCh,
+    ghs_hazard       : Array<Categorical>,
+    embedding        : Dimensional,        // Std.Embedding.clip_v1
+    citation         : Symbolic,
+}
+
+pub type Atom = struct {
+    element    : Categorical,
+    position   : Vector,                   // Å, 3D
+    charge     : Scalar,
+    isotope    : Scalar,                   // mass number; 0 = natural abundance
+}
+
+pub type Bond = struct {
+    order      : Scalar,                   // 1, 1.5, 2, 3
+    kind       : Categorical,              // single | aromatic | double | triple | coordinate
+    stereo     : Categorical,              // none | E | Z | R | S
+}
+
+// A reaction record with full kinetics and thermodynamics.
+pub type Reaction = struct {
+    name             : Symbolic,
+    reactants        : Array<Molecule>,
+    products         : Array<Molecule>,
+    stoichiometry    : Array<Scalar>,
+    conditions       : struct {
+        temperature_K : Scalar,
+        pressure_pa   : Scalar,
+        catalyst      : Symbolic,
+        solvent       : Symbolic,
+        light_required : Categorical,     // none | uv | visible | ir
+    },
+    rate_law         : Expression,         // kernel expression gene
+    arrhenius_a      : Scalar,
+    activation_kj    : Scalar,             // Ea, kJ/mol
+    delta_h          : Scalar,             // kJ/mol
+    delta_s          : Scalar,             // J/(mol K)
+    delta_g          : Scalar,             // kJ/mol at STANDARD_T
+    equilibrium_k    : Scalar,
+    mechanism        : Array<Reaction>,    // elementary steps
+    hazards          : Array<Categorical>,
+    citation         : Symbolic,
+}
+
+// A metabolic pathway as a graph of reactions.
+pub type Pathway = struct {
+    kegg_id          : Symbolic,
+    name             : Symbolic,
+    reaction_graph   : Graph<Reaction, PathwayEdge>,
+    enzymes          : Array<EnzymeEC>,
+    regulatory_net   : Regulatory,         // kernel regulatory gene
+    citation         : Symbolic,
+}
+
+pub type PathwayEdge = struct {
+    flux_direction   : Categorical,        // forward | reverse | reversible
+    cofactor         : Symbolic,
+}
+
+pub type EnzymeEC = struct {
+    ec_number        : Symbolic,           // "1.1.1.1" style
+    name             : Symbolic,
+    km               : Scalar,             // Michaelis-Menten, mol/L
+    kcat             : Scalar,             // 1/s
+    optimum_ph       : Scalar,
+    optimum_T_K      : Scalar,
+}
+
+// A pigment record for photochemistry and substrate-level color grounding.
+pub type Pigment = struct {
+    color_index      : Symbolic,           // "PB29" (ultramarine), "PY43" (yellow ochre)
+    common_name      : Symbolic,
+    chemical_formula : Symbolic,
+    absorption_nm    : Vector,             // measured absorption spectrum
+    cie_color        : Std.Color.OKLCh,    // computed from absorption under D65
+    lightfastness    : Scalar,             // Blue Wool scale 1..8
+    opacity          : Scalar,             // [0,1]
+    vehicle          : Categorical,        // oil | watercolor | acrylic | tempera | fresco
+    period_start     : Scalar,             // historical first use, year
+    citation         : Symbolic,
+}
+
+// A fluorophore record.
+pub type Fluorophore = struct {
+    name             : Symbolic,
+    excitation_nm    : Scalar,
+    emission_nm      : Scalar,
+    quantum_yield    : Scalar,             // [0,1]
+    extinction       : Scalar,             // M^-1 cm^-1
+    lifetime_ns      : Temporal,           // kernel temporal gene
+    citation         : Symbolic,
+}
+
+// A force field family for differentiable simulation (Brief 071).
+pub type ForceField = struct {
+    family           : Categorical,        // GAFF | OPLS | AMBER | CHARMM | MMFF94 | ReaxFF | Tersoff | EAM
+    version          : Symbolic,
+    parameter_graph  : Graph<Atom, ForceFieldTerm>,
+    license          : Symbolic,
+    citation         : Symbolic,
+}
+
+pub type ForceFieldTerm = struct {
+    kind             : Categorical,        // bond | angle | dihedral | lj | coulomb
+    parameters       : Array<Scalar>,
+}
+
+// Atmospheric reference state (US Standard Atmosphere 1976).
+pub type Atmosphere = struct {
+    altitude_m       : Scalar,
+    temperature_K    : Scalar,
+    pressure_pa      : Scalar,
+    density_kg_m3    : Scalar,
+    composition      : Array<struct { species : Symbolic, mole_fraction : Scalar }>,
+    hitran_profile   : Field,              // kernel field gene: absorption vs wavelength
+    citation         : Symbolic,
+}
+
+// -----------------------------------------------------------------------------
+// 4. Core inventory — the primitives every commons seed can depend on
+// -----------------------------------------------------------------------------
+// These are hand-curated. Expanding the inventory is the agent's job
+// (intelligence/gspl-agent-full-capacity.md Stage 6 archival pipeline).
+// Every entry below resolves to a signed .gseed under the Foundation identity.
+
+pub fn hydrogen() -> Element pure =
+    Element {
+        symbol = "H",
+        atomic_number = 1.0,
+        standard_weight = 1.008,
+        group = 1.0, period = 1.0, block = "s",
+        electron_config = "1s1",
+        electronegativity_pauling = 2.20,
+        ionization_energy_1 = 1312.0,
+        electron_affinity = 72.8,
+        atomic_radius_pm = 53.0,
+        covalent_radius_pm = 31.0,
+        density_kg_m3 = 0.08988,
+        melting_K = 13.99,
+        boiling_K = 20.271,
+        heat_capacity = 28.836,
+        thermal_conductivity = 0.1805,
+        common_oxidation_states = [-1.0, 1.0],
+        flame_color = Std.Color.OKLCh { l = 0.72, c = 0.14, h = 25.0 },
+        crystal_structure = "HCP",
+        emission_lines_nm = Vector.from([656.28, 486.13, 434.05, 410.17]),
+        citation = "nist:hydrogen@v2022",
+        uncertainty = 0.02,
+    }
+
+pub fn oxygen() -> Element pure =
+    Element {
+        symbol = "O",
+        atomic_number = 8.0,
+        standard_weight = 15.999,
+        group = 16.0, period = 2.0, block = "p",
+        electron_config = "[He] 2s2 2p4",
+        electronegativity_pauling = 3.44,
+        ionization_energy_1 = 1313.9,
+        electron_affinity = 141.0,
+        atomic_radius_pm = 48.0,
+        covalent_radius_pm = 66.0,
+        density_kg_m3 = 1.429,
+        melting_K = 54.36,
+        boiling_K = 90.20,
+        heat_capacity = 29.378,
+        thermal_conductivity = 0.02658,
+        common_oxidation_states = [-2.0, -1.0, 0.0, 1.0, 2.0],
+        flame_color = Std.Color.OKLCh { l = 0.66, c = 0.10, h = 260.0 },
+        crystal_structure = "cubic",
+        emission_lines_nm = Vector.from([777.42, 844.64, 615.82]),
+        citation = "nist:oxygen@v2022",
+        uncertainty = 0.02,
+    }
+
+pub fn carbon() -> Element pure =
+    Element {
+        symbol = "C",
+        atomic_number = 6.0,
+        standard_weight = 12.011,
+        group = 14.0, period = 2.0, block = "p",
+        electron_config = "[He] 2s2 2p2",
+        electronegativity_pauling = 2.55,
+        ionization_energy_1 = 1086.5,
+        electron_affinity = 153.9,
+        atomic_radius_pm = 70.0,
+        covalent_radius_pm = 77.0,
+        density_kg_m3 = 2267.0,            // graphite
+        melting_K = 3823.0,                // graphite sublimation
+        boiling_K = 4098.0,
+        heat_capacity = 8.517,
+        thermal_conductivity = 119.0,      // graphite in-plane
+        common_oxidation_states = [-4.0, -2.0, 0.0, 2.0, 4.0],
+        flame_color = Std.Color.OKLCh { l = 0.60, c = 0.13, h = 60.0 },
+        crystal_structure = "hexagonal",   // graphite
+        emission_lines_nm = Vector.from([247.86, 426.73, 658.76]),
+        citation = "nist:carbon@v2022",
+        uncertainty = 0.02,
+    }
+
+pub fn iron() -> Element pure =
+    Element {
+        symbol = "Fe",
+        atomic_number = 26.0,
+        standard_weight = 55.845,
+        group = 8.0, period = 4.0, block = "d",
+        electron_config = "[Ar] 3d6 4s2",
+        electronegativity_pauling = 1.83,
+        ionization_energy_1 = 762.5,
+        electron_affinity = 15.7,
+        atomic_radius_pm = 156.0,
+        covalent_radius_pm = 132.0,
+        density_kg_m3 = 7874.0,
+        melting_K = 1811.0,
+        boiling_K = 3134.0,
+        heat_capacity = 25.10,
+        thermal_conductivity = 80.4,
+        common_oxidation_states = [-2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0],
+        flame_color = Std.Color.OKLCh { l = 0.70, c = 0.18, h = 40.0 },
+        crystal_structure = "BCC",
+        emission_lines_nm = Vector.from([358.12, 438.35, 527.04, 526.95]),
+        citation = "nist:iron@v2022",
+        uncertainty = 0.02,
+    }
+
+pub fn sodium() -> Element pure =
+    Element {
+        symbol = "Na",
+        atomic_number = 11.0,
+        standard_weight = 22.98976928,
+        group = 1.0, period = 3.0, block = "s",
+        electron_config = "[Ne] 3s1",
+        electronegativity_pauling = 0.93,
+        ionization_energy_1 = 495.8,
+        electron_affinity = 52.8,
+        atomic_radius_pm = 190.0,
+        covalent_radius_pm = 154.0,
+        density_kg_m3 = 968.0,
+        melting_K = 370.944,
+        boiling_K = 1156.09,
+        heat_capacity = 28.230,
+        thermal_conductivity = 142.0,
+        common_oxidation_states = [-1.0, 1.0],
+        flame_color = Std.Color.OKLCh { l = 0.86, c = 0.17, h = 85.0 },  // iconic yellow
+        crystal_structure = "BCC",
+        emission_lines_nm = Vector.from([588.9950, 589.5924]),              // Na-D doublet
+        citation = "nist:sodium@v2022",
+        uncertainty = 0.02,
+    }
+
+// Water — the canonical molecule. Every aqueous seed composes this.
+pub fn water() -> Molecule pure =
+    Molecule {
+        pubchem_cid = 962.0,
+        inchi_key = "XLYOFNOQVPJJNP-UHFFFAOYSA-N",
+        smiles = "O",
+        iupac_name = "oxidane",
+        common_name = "water",
+        cas_number = "7732-18-5",
+        formula = "H2O",
+        molecular_weight = 18.01528,
+        exact_mass = 18.010565,
+        charge = 0.0,
+        spin_multiplicity = 1.0,
+        bond_graph = Graph.from_edges([
+            (Atom { element = "O", position = Vector.from([0.0, 0.0, 0.1173]),  charge = -0.834, isotope = 0.0 },
+             Atom { element = "H", position = Vector.from([0.0, 0.7572, -0.4692]), charge = 0.417,  isotope = 0.0 },
+             Bond { order = 1.0, kind = "single", stereo = "none" }),
+            (Atom { element = "O", position = Vector.from([0.0, 0.0, 0.1173]),  charge = -0.834, isotope = 0.0 },
+             Atom { element = "H", position = Vector.from([0.0, -0.7572, -0.4692]), charge = 0.417, isotope = 0.0 },
+             Bond { order = 1.0, kind = "single", stereo = "none" }),
+        ]),
+        conformers = Topology.single_point_set(),
+        dipole_moment = Vector.from([0.0, 0.0, 1.8546]),   // Debye
+        homo_ev = -12.62,
+        lumo_ev = 0.55,
+        logp = -1.38,
+        pka = [15.74],                                      // autoionization
+        uv_vis_nm = Vector.from([185.0]),                    // deep UV only
+        ir_vibrational = Resonance.from_modes([
+            (3756.0, 1.0),   // asymmetric stretch, cm^-1
+            (3657.0, 0.8),   // symmetric stretch
+            (1594.7, 0.6),   // bend
+        ]),
+        nmr_shifts = [4.79],                                 // 1H in D2O reference
+        appearance_color = Std.Color.OKLCh { l = 0.98, c = 0.003, h = 220.0 },
+        ghs_hazard = [],
+        embedding = Std.Embedding.clip_v1("water, clear, liquid, refractive"),
+        citation = "pubchem:962@v2024",
+    }
+
+pub fn carbon_dioxide() -> Molecule pure =
+    Molecule {
+        pubchem_cid = 280.0,
+        inchi_key = "CURLTUGMZLYLDI-UHFFFAOYSA-N",
+        smiles = "O=C=O",
+        iupac_name = "carbon dioxide",
+        common_name = "carbon dioxide",
+        cas_number = "124-38-9",
+        formula = "CO2",
+        molecular_weight = 44.0095,
+        exact_mass = 43.989830,
+        charge = 0.0,
+        spin_multiplicity = 1.0,
+        bond_graph = Graph.linear_triatomic("C", "O", 1.1621, 2.0),
+        conformers = Topology.single_point_set(),
+        dipole_moment = Vector.from([0.0, 0.0, 0.0]),
+        homo_ev = -13.78,
+        lumo_ev = -1.2,
+        logp = 0.83,
+        pka = [6.35, 10.33],                                 // carbonic acid equilibria
+        uv_vis_nm = Vector.from([165.0]),
+        ir_vibrational = Resonance.from_modes([
+            (2349.0, 1.0),    // asymmetric stretch
+            (1388.0, 0.7),    // symmetric stretch (Raman-active)
+            (667.0, 0.9),     // bend, 15 μm atmospheric band
+        ]),
+        nmr_shifts = [125.0],
+        appearance_color = Std.Color.OKLCh { l = 0.99, c = 0.0, h = 0.0 },
+        ghs_hazard = ["asphyxiant"],
+        embedding = Std.Embedding.clip_v1("carbon dioxide, invisible gas"),
+        citation = "pubchem:280@v2024",
+    }
+
+pub fn methane() -> Molecule pure =
+    Molecule {
+        pubchem_cid = 297.0,
+        inchi_key = "VNWKTOKETHGBQD-UHFFFAOYSA-N",
+        smiles = "C",
+        iupac_name = "methane",
+        common_name = "methane",
+        cas_number = "74-82-8",
+        formula = "CH4",
+        molecular_weight = 16.04246,
+        exact_mass = 16.031300,
+        charge = 0.0,
+        spin_multiplicity = 1.0,
+        bond_graph = Graph.tetrahedral("C", "H", 1.087),
+        conformers = Topology.single_point_set(),
+        dipole_moment = Vector.from([0.0, 0.0, 0.0]),
+        homo_ev = -14.35,
+        lumo_ev = 0.79,
+        logp = 1.09,
+        pka = [48.0],
+        uv_vis_nm = Vector.from([120.0]),
+        ir_vibrational = Resonance.from_modes([
+            (3019.0, 1.0),
+            (1306.0, 0.8),
+        ]),
+        nmr_shifts = [0.23],
+        appearance_color = Std.Color.OKLCh { l = 0.99, c = 0.0, h = 0.0 },
+        ghs_hazard = ["flammable", "asphyxiant"],
+        embedding = Std.Embedding.clip_v1("methane, natural gas, invisible"),
+        citation = "pubchem:297@v2024",
+    }
+
+// -----------------------------------------------------------------------------
+// 5. Canonical reactions
+// -----------------------------------------------------------------------------
+
+// Methane combustion — the reference seed for every candle, stove, and torch.
+pub fn combust_methane() -> Reaction pure =
+    Reaction {
+        name = "combustion.methane",
+        reactants = [methane(), oxygen_gas()],
+        products  = [carbon_dioxide(), water()],
+        stoichiometry = [1.0, 2.0, 1.0, 2.0],
+        conditions = {
+            temperature_K = 1950.0,        // adiabatic flame T in air
+            pressure_pa = STANDARD_P,
+            catalyst = "",
+            solvent = "",
+            light_required = "none",
+        },
+        rate_law = Expression.arrhenius(
+            a = 1.3e8,                     // from NIST Kinetics Database
+            ea = 202.5,                    // kJ/mol
+            orders = [0.7, 0.8],
+        ),
+        arrhenius_a = 1.3e8,
+        activation_kj = 202.5,
+        delta_h = -890.36,                 // kJ/mol, exothermic
+        delta_s = -242.8,
+        delta_g = -818.0,
+        equilibrium_k = 1.0e143,
+        mechanism = [],                    // elementary steps omitted here; loaded from chemistry/data/
+        hazards = ["explosive_at_5_to_15_percent_v_v"],
+        citation = "nist-kinetics:combust-ch4@v2022",
+    }
+
+// Iron oxidation — rust formation reference for every "ruined sword" seed.
+pub fn rust_iron() -> Reaction pure =
+    Reaction {
+        name = "oxidation.iron.aqueous",
+        reactants = [iron_metal(), oxygen_gas(), water()],
+        products  = [iron_iii_oxide_hydrated()],
+        stoichiometry = [4.0, 3.0, 6.0, 2.0],
+        conditions = {
+            temperature_K = 298.15,
+            pressure_pa = STANDARD_P,
+            catalyst = "NaCl(aq)",        // salt accelerator
+            solvent = "water",
+            light_required = "none",
+        },
+        rate_law = Expression.empirical_rust(
+            k = 2.5e-5,
+            ea = 42.0,
+        ),
+        arrhenius_a = 5.0e6,
+        activation_kj = 42.0,
+        delta_h = -823.4,
+        delta_s = -543.7,
+        delta_g = -742.2,
+        equilibrium_k = 1.0e130,
+        mechanism = [],
+        hazards = [],
+        citation = "kegg:R02061@v2024",
+    }
+
+// Photosynthesis — canonical biochemical reference for plant seeds.
+pub fn photosynthesis() -> Reaction pure =
+    Reaction {
+        name = "biochemistry.photosynthesis.net",
+        reactants = [carbon_dioxide(), water()],
+        products  = [glucose(), oxygen_gas()],
+        stoichiometry = [6.0, 6.0, 1.0, 6.0],
+        conditions = {
+            temperature_K = 298.15,
+            pressure_pa = STANDARD_P,
+            catalyst = "rubisco",
+            solvent = "water",
+            light_required = "visible",
+        },
+        rate_law = Expression.light_dependent(
+            phi = 0.08,                    // quantum yield
+            saturation_par = 1800.0,       // μmol photons / m^2 s
+        ),
+        arrhenius_a = 0.0,                 // light-driven, not thermal
+        activation_kj = 2870.0,            // net photon energy requirement
+        delta_h = 2803.0,                  // endothermic; photon-driven
+        delta_s = -210.0,
+        delta_g = 2870.0,
+        equilibrium_k = 0.0,
+        mechanism = [],
+        hazards = [],
+        citation = "kegg:R00024@v2024",
+    }
+
+// -----------------------------------------------------------------------------
+// 6. Canonical pigments (grounded in Color of Art pigment DB)
+// -----------------------------------------------------------------------------
+
+pub fn ultramarine_blue() -> Pigment pure =
+    Pigment {
+        color_index = "PB29",
+        common_name = "ultramarine blue",
+        chemical_formula = "Na7Al6Si6O24S3",
+        absorption_nm = Vector.from_spectrum(400.0, 700.0, 60),
+        cie_color = Std.Color.OKLCh { l = 0.38, c = 0.16, h = 265.0 },
+        lightfastness = 8.0,
+        opacity = 0.7,
+        vehicle = "oil",
+        period_start = 1828.0,
+        citation = "coa:PB29@v2023",
+    }
+
+pub fn yellow_ochre() -> Pigment pure =
+    Pigment {
+        color_index = "PY43",
+        common_name = "yellow ochre",
+        chemical_formula = "FeO(OH)·nH2O",
+        absorption_nm = Vector.from_spectrum(400.0, 700.0, 60),
+        cie_color = Std.Color.OKLCh { l = 0.72, c = 0.12, h = 80.0 },
+        lightfastness = 8.0,
+        opacity = 0.95,
+        vehicle = "oil",
+        period_start = -35000.0,           // used since Upper Paleolithic
+        citation = "coa:PY43@v2023",
+    }
+
+pub fn vermilion() -> Pigment pure =
+    Pigment {
+        color_index = "PR106",
+        common_name = "vermilion",
+        chemical_formula = "HgS",
+        absorption_nm = Vector.from_spectrum(400.0, 700.0, 60),
+        cie_color = Std.Color.OKLCh { l = 0.55, c = 0.22, h = 28.0 },
+        lightfastness = 7.0,
+        opacity = 0.9,
+        vehicle = "oil",
+        period_start = -6000.0,
+        citation = "coa:PR106@v2023",
+    }
+
+// -----------------------------------------------------------------------------
+// 7. Atmospheric reference (US Standard Atmosphere 1976)
+// -----------------------------------------------------------------------------
+
+pub fn sea_level_atmosphere() -> Atmosphere pure =
+    Atmosphere {
+        altitude_m = 0.0,
+        temperature_K = 288.15,
+        pressure_pa = 101_325.0,
+        density_kg_m3 = 1.225,
+        composition = [
+            { species = "N2",  mole_fraction = 0.78084  },
+            { species = "O2",  mole_fraction = 0.20946  },
+            { species = "Ar",  mole_fraction = 0.00934  },
+            { species = "CO2", mole_fraction = 0.000421 },
+            { species = "Ne",  mole_fraction = 0.0000182},
+            { species = "He",  mole_fraction = 0.00000524},
+            { species = "CH4", mole_fraction = 0.00000192},
+        ],
+        hitran_profile = Field.from_hitran("standard-sea-level@v2020"),
+        citation = "nasa:us-standard-atmosphere-1976",
+    }
+
+// -----------------------------------------------------------------------------
+// 8. Cross-domain functors — the real leverage
+// -----------------------------------------------------------------------------
+// These are the functions downstream seeds compose to turn chemistry into
+// renderable substrate. Every functor is pure. Every functor is deterministic.
+
+// Convert a pigment's absorption spectrum into a paintable Std.Color.Palette.
+pub fn functor_pigment_to_palette(p : Pigment) -> Std.Color.Palette pure =
+    Std.Color.Palette.from_oklch([
+        Std.Color.OKLCh { l = p.cie_color.l * 0.35, c = p.cie_color.c * 0.70, h = p.cie_color.h },
+        Std.Color.OKLCh { l = p.cie_color.l * 0.75, c = p.cie_color.c * 0.95, h = p.cie_color.h },
+        Std.Color.OKLCh { l = p.cie_color.l,         c = p.cie_color.c,         h = p.cie_color.h },
+        Std.Color.OKLCh { l = min(0.98, p.cie_color.l * 1.18), c = p.cie_color.c * 0.60, h = p.cie_color.h },
+    ])
+
+// Convert a flame reaction into a lighting gene for Sprite.Light / Sculpt3D.Light.
+pub fn functor_combustion_to_light(r : Reaction) -> LightProfile pure =
+    let flame_T = r.conditions.temperature_K
+    LightProfile {
+        blackbody_K = flame_T,
+        flicker_hz = 14.0,                 // measured for turbulent diffusion flames
+        flicker_amplitude = 0.12,
+        falloff_inv_sq = true,
+        warmth_bias = 0.35,
+        palette = Std.Color.Palette.from_blackbody(flame_T),
+    }
+
+// Convert a molecule's IR resonance into an audible tone family (functor chem->audio).
+pub fn functor_molecule_to_resonance_audio(m : Molecule) -> AudioResonance pure =
+    AudioResonance {
+        fundamental_hz = scale_ir_to_audio(m.ir_vibrational.primary_mode_cm1()),
+        overtones = m.ir_vibrational.map(scale_ir_to_audio),
+        timbre = "bell",
+        decay_s = 4.5,
+    }
+
+fn scale_ir_to_audio(cm1 : Scalar) -> Scalar pure =
+    // Linear map from vibrational wavenumber (cm^-1) to audible Hz
+    // so that 500 cm^-1 -> 110 Hz (A2) and 4000 cm^-1 -> 880 Hz (A5).
+    110.0 + (cm1 - 500.0) * (770.0 / 3500.0)
+
+// Convert a rust reaction into a material-aging field for the Material engine.
+pub fn functor_corrosion_to_aging_field(r : Reaction, age_years : Scalar) -> Field pure =
+    Field.time_integrated(
+        rate = r.arrhenius_a * exp(- r.activation_kj * 1000.0 / (GAS_R * r.conditions.temperature_K)),
+        age_seconds = age_years * 31_557_600.0,
+        spatial_profile = "surface_exponential",
+    )
+
+// Convert a photosynthesis reaction into a plant-growth temporal gene.
+pub fn functor_photosynthesis_to_growth(r : Reaction, par_mean : Scalar) -> Temporal pure =
+    Temporal.logistic(
+        k = 0.08 * (par_mean / r.conditions.temperature_K),
+        carrying_capacity = 1.0,
+        inflection_day = 21.0,
+    )
+
+// -----------------------------------------------------------------------------
+// 9. Helpers and aliases referenced above
+// -----------------------------------------------------------------------------
+
+pub fn oxygen_gas() -> Molecule pure =
+    Molecule.diatomic(element = oxygen(), bond_order = 2.0, name = "dioxygen", cid = 977.0)
+
+pub fn iron_metal() -> Molecule pure =
+    Molecule.pure_metal(element = iron(), phase = "solid", crystal = "BCC")
+
+pub fn iron_iii_oxide_hydrated() -> Molecule pure =
+    Molecule.from_formula("Fe2O3·xH2O", common_name = "rust", cid = 518696.0)
+
+pub fn glucose() -> Molecule pure =
+    Molecule.from_pubchem(cid = 5793.0, common_name = "glucose")
+
+// -----------------------------------------------------------------------------
+// 10. Module metadata
+// -----------------------------------------------------------------------------
+
+$metadata {
+    consumes = [],                         // primordial — depends only on Std
+    provides = [
+        "chem.elements.*",
+        "chem.molecules.*",
+        "chem.reactions.*",
+        "chem.pigments.*",
+        "chem.pathways.*",
+        "chem.forcefields.*",
+        "chem.atmosphere.*",
+        "chem.functors.*",
+    ],
+    provenance = "human_authored",
+    authority = "GSPL Foundation",
+    data_sources = [
+        "NIST Chemistry WebBook",
+        "NIST Atomic Spectra Database",
+        "IUPAC Periodic Table 2021",
+        "CODATA 2022",
+        "PubChem",
+        "KEGG",
+        "US Standard Atmosphere 1976",
+        "HITRAN",
+        "Color of Art Pigment Database",
+    ],
+    license = "GSPL Open Specification License",
+    rng_seed = "seed_commons.libraries.chemistry:v1",
+}
+
+$sovereignty {
+    author_thumbprint = "5a8d4e1f3c9b2d7e6a4f8c1b3d5e7f9a2c4b6d8e0f1a3c5b7d9e2f4a6c8b0d2e",
+    kty = "EC",
+    crv = "P-256",
+    royalty_percent = 0.0,                 // primordial library; no author royalty
+    license = "GSPL-OSL-1.0",
+    signature_slot = "placeholder",        // Foundation signs on merge
+}

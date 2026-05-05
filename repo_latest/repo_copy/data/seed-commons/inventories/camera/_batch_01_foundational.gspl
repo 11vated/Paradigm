@@ -1,0 +1,246 @@
+// seed-commons/inventories/camera/_batch_01_foundational.gspl
+//
+// Camera inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational camera seeds covering cinematic, photographic, and
+// game-engine conventions. Each pins physical sensor + lens parameters
+// so scenes compose against a concrete imaging model.
+//
+// Sensor sizes (physical mm): Full-frame 36×24, APS-C 23.6×15.6, Micro4/3 17.3×13.
+// Exposure follows EV = log2(N^2/t) + log2(ISO/100) convention.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.camera"
+
+module seed_commons.inventories.camera.batch01
+
+import Std.Camera
+import Std.Color
+import Std.Math
+
+// 01. Cinematic 35 mm anamorphic — shallow DoF hero shot
+pub fn cinematic_35mm_anamorphic() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.cinematic_35mm_anamorphic", version = "1.0.0",
+        kind = Std.Camera.Kind.Cinematic,
+        sensor_mm = Std.Camera.Sensor { width = 36.0, height = 24.0 },
+        focal_length_mm = 35.0,
+        aperture_fnumber = 2.0,
+        shutter_speed_s = 1.0 / 48.0,
+        iso = 800.0,
+        anamorphic_squeeze = 2.0,
+        bokeh_blades = 14,
+        bokeh_rotation_deg = 0.0,
+        color_space = "ACES-cg",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 220.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 35.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Wide landscape — 16 mm deep focus
+pub fn wide_landscape_16mm() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.wide_landscape_16mm", version = "1.0.0",
+        kind = Std.Camera.Kind.Still,
+        sensor_mm = Std.Camera.Sensor { width = 36.0, height = 24.0 },
+        focal_length_mm = 16.0,
+        aperture_fnumber = 11.0,
+        shutter_speed_s = 1.0 / 125.0,
+        iso = 100.0,
+        color_space = "sRGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 220.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 140.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Telephoto wildlife — 600 mm stabilized long lens
+pub fn telephoto_wildlife_600mm() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.telephoto_wildlife_600mm", version = "1.0.0",
+        kind = Std.Camera.Kind.Still,
+        sensor_mm = Std.Camera.Sensor { width = 36.0, height = 24.0 },
+        focal_length_mm = 600.0,
+        aperture_fnumber = 4.0,
+        shutter_speed_s = 1.0 / 2000.0,
+        iso = 3200.0,
+        stabilization_stops = 5.0,
+        color_space = "sRGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 60.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 50.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. 50 mm portrait — classic nifty fifty
+pub fn portrait_50mm_f18() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.portrait_50mm_f18", version = "1.0.0",
+        kind = Std.Camera.Kind.Still,
+        sensor_mm = Std.Camera.Sensor { width = 36.0, height = 24.0 },
+        focal_length_mm = 50.0,
+        aperture_fnumber = 1.8,
+        shutter_speed_s = 1.0 / 200.0,
+        iso = 400.0,
+        bokeh_blades = 9,
+        color_space = "Adobe-RGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 50.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Macro 1:1 — 100 mm extreme closeup
+pub fn macro_100mm_1to1() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.macro_100mm_1to1", version = "1.0.0",
+        kind = Std.Camera.Kind.Still,
+        sensor_mm = Std.Camera.Sensor { width = 36.0, height = 24.0 },
+        focal_length_mm = 100.0,
+        aperture_fnumber = 8.0,
+        shutter_speed_s = 1.0 / 250.0,
+        iso = 200.0,
+        magnification = 1.0,
+        minimum_focus_distance_m = 0.31,
+        color_space = "sRGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 135.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 100.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Drone aerial — wide gimbal-stabilized
+pub fn drone_aerial_wide() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.drone_aerial_wide", version = "1.0.0",
+        kind = Std.Camera.Kind.Cinematic,
+        sensor_mm = Std.Camera.Sensor { width = 17.3, height = 13.0 },
+        focal_length_mm = 10.0,
+        aperture_fnumber = 2.8,
+        shutter_speed_s = 1.0 / 500.0,
+        iso = 100.0,
+        stabilization_stops = 7.0,
+        color_space = "Rec.2020",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 220.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 140.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Security CCTV — fixed wide low-light
+pub fn security_cctv_wide() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.security_cctv_wide", version = "1.0.0",
+        kind = Std.Camera.Kind.Surveillance,
+        sensor_mm = Std.Camera.Sensor { width = 5.76, height = 3.24 },
+        focal_length_mm = 2.8,
+        aperture_fnumber = 1.4,
+        shutter_speed_s = 1.0 / 30.0,
+        iso = 6400.0,
+        resolution_px = Std.Camera.Resolution { w = 1920, h = 1080 },
+        is_infrared_capable = true,
+        color_space = "Rec.709",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.02, h = 220.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.04, h = 200.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 180.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Game engine first-person — 90° FOV
+pub fn game_fps_90fov() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.game_fps_90fov", version = "1.0.0",
+        kind = Std.Camera.Kind.Game,
+        projection = Std.Camera.Projection.Perspective {
+            fov_deg = 90.0,
+            aspect = 16.0 / 9.0,
+            near_m = 0.05,
+            far_m = 4000.0,
+        },
+        head_height_m = 1.72,
+        motion_blur_shutter = 0.5,
+        color_space = "sRGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 40.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 60.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.04, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Isometric strategy — orthographic 30° pitch
+pub fn isometric_strategy_view() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.isometric_strategy_view", version = "1.0.0",
+        kind = Std.Camera.Kind.Game,
+        projection = Std.Camera.Projection.Orthographic {
+            width_m = 32.0,
+            height_m = 18.0,
+            near_m = -100.0,
+            far_m = 100.0,
+        },
+        pitch_deg = 30.0,
+        yaw_deg = 45.0,
+        color_space = "sRGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 135.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.06, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Large-format 8×10 view — ground-glass tilt-shift
+pub fn large_format_8x10() -> Std.Camera.Seed pure =
+    seed Std.Camera.Seed {
+        name = "camera.large_format_8x10", version = "1.0.0",
+        kind = Std.Camera.Kind.Still,
+        sensor_mm = Std.Camera.Sensor { width = 203.2, height = 254.0 },
+        focal_length_mm = 300.0,
+        aperture_fnumber = 32.0,
+        shutter_speed_s = 2.0,
+        iso = 50.0,
+        tilt_deg = 4.0,
+        shift_mm = 8.0,
+        color_space = "Adobe-RGB",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.02, h = 80.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [],
+    category   = "camera",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.camera",
+}

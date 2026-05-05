@@ -1,0 +1,128 @@
+// seed-commons/libraries/vehicles_grammar.gspl
+//
+// Vehicles Full Spectrum & Open Extension Grammar library — runnable GSPL
+// materialization of Brief 094
+// (research/094-vehicles-full-spectrum-and-open-extension-grammar.md).
+//
+// Propulsion taxonomies, hull/chassis grammars, locomotion modes,
+// open-extension rules that let downstream authors declare entirely new
+// vehicle classes (e.g. "bone-limbed walking city") without touching this
+// module. Sources: SAE J3016, ISO 3833, IMO ship taxonomy, ICAO aircraft type
+// designators, NASA rocket taxonomy, AAR rail classes.
+//
+// PURE. rng_seed = "seed_commons.libraries.vehicles_grammar:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.physics@v1, seed_commons.libraries.materials@v1]
+
+module seed_commons.libraries.vehicles_grammar
+
+import seed_commons.libraries.physics as Phys
+import seed_commons.libraries.materials as Mat
+
+// -----------------------------------------------------------------------------
+// 1. Locomotion mode (open enum via OpenTag extension)
+// -----------------------------------------------------------------------------
+
+pub enum LocomotionMode {
+    Wheeled, Tracked, Legged, Skidded, Rail, Hovered,
+    Floated, Submerged, Winged, Rotor, BallisticRocket, Sail,
+    Tunneled, Teleported, Dimensional, OpenTag(String),
+}
+
+pub enum PropulsionClass {
+    Muscle, Wind, Steam, InternalCombustion, Electric, Hybrid,
+    Nuclear, Rocket, Jet, Ion, Antigravity, Magical, OpenTag(String),
+}
+
+pub enum OperatingMedium { Land, Water, Air, Space, Underwater, UnderGround, OpenTag(String) }
+
+// -----------------------------------------------------------------------------
+// 2. Chassis grammar
+// -----------------------------------------------------------------------------
+
+pub struct Chassis {
+    name: String,
+    medium: OperatingMedium,
+    locomotion: LocomotionMode,
+    propulsion: PropulsionClass,
+    mass_kg: Scalar,
+    length_m: Scalar,
+    crew: u16,
+    passenger_cap: u16,
+    cargo_kg: Scalar,
+    top_speed_m_s: Scalar,
+    range_m: Scalar,
+    primary_material: String,
+}
+
+// -----------------------------------------------------------------------------
+// 3. Core chassis inventory
+// -----------------------------------------------------------------------------
+
+pub fn horse_drawn_cart_chassis() -> Chassis pure =
+    Chassis { name = "horse_drawn_cart", medium = OperatingMedium.Land, locomotion = LocomotionMode.Wheeled, propulsion = PropulsionClass.Muscle, mass_kg = 400.0, length_m = 3.0, crew = 1, passenger_cap = 2, cargo_kg = 500.0, top_speed_m_s = 6.0, range_m = 40_000.0, primary_material = "oak_wood" }
+
+pub fn viking_longship_chassis() -> Chassis pure =
+    Chassis { name = "viking_longship", medium = OperatingMedium.Water, locomotion = LocomotionMode.Floated, propulsion = PropulsionClass.Wind, mass_kg = 20_000.0, length_m = 28.0, crew = 60, passenger_cap = 30, cargo_kg = 10_000.0, top_speed_m_s = 8.2, range_m = 1_500_000.0, primary_material = "oak_planking_iron_rivets" }
+
+pub fn steam_locomotive_chassis() -> Chassis pure =
+    Chassis { name = "steam_locomotive_pacific", medium = OperatingMedium.Land, locomotion = LocomotionMode.Rail, propulsion = PropulsionClass.Steam, mass_kg = 150_000.0, length_m = 24.0, crew = 3, passenger_cap = 0, cargo_kg = 0.0, top_speed_m_s = 44.0, range_m = 400_000.0, primary_material = "cast_steel_copper_firebox" }
+
+pub fn biplane_fighter_chassis() -> Chassis pure =
+    Chassis { name = "biplane_fighter_wwi", medium = OperatingMedium.Air, locomotion = LocomotionMode.Winged, propulsion = PropulsionClass.InternalCombustion, mass_kg = 700.0, length_m = 6.7, crew = 1, passenger_cap = 0, cargo_kg = 50.0, top_speed_m_s = 51.0, range_m = 400_000.0, primary_material = "spruce_frame_fabric_cover" }
+
+pub fn modern_ev_sedan_chassis() -> Chassis pure =
+    Chassis { name = "modern_ev_sedan", medium = OperatingMedium.Land, locomotion = LocomotionMode.Wheeled, propulsion = PropulsionClass.Electric, mass_kg = 2200.0, length_m = 4.95, crew = 1, passenger_cap = 4, cargo_kg = 500.0, top_speed_m_s = 69.0, range_m = 600_000.0, primary_material = "aluminum_steel_composite" }
+
+pub fn spacecraft_capsule_chassis() -> Chassis pure =
+    Chassis { name = "spacecraft_capsule", medium = OperatingMedium.Space, locomotion = LocomotionMode.BallisticRocket, propulsion = PropulsionClass.Rocket, mass_kg = 12_000.0, length_m = 8.1, crew = 4, passenger_cap = 3, cargo_kg = 3000.0, top_speed_m_s = 7800.0, range_m = 4.0e8, primary_material = "aluminum_lithium_phenolic_shield" }
+
+pub fn rigid_airship_chassis() -> Chassis pure =
+    Chassis { name = "rigid_airship", medium = OperatingMedium.Air, locomotion = LocomotionMode.Floated, propulsion = PropulsionClass.InternalCombustion, mass_kg = 130_000.0, length_m = 245.0, crew = 40, passenger_cap = 50, cargo_kg = 20_000.0, top_speed_m_s = 37.0, range_m = 14_000_000.0, primary_material = "duralumin_frame_helium_envelope" }
+
+// -----------------------------------------------------------------------------
+// 4. Open extension grammar
+// -----------------------------------------------------------------------------
+// Downstream authors can declare arbitrary new vehicle archetypes without
+// forking this module by using OpenTag variants and the extend_chassis helper.
+
+pub struct ChassisExtension {
+    parent_chassis: String,
+    extension_name: String,
+    override_fields: String,  // JSON-encoded patch
+    provenance_signature: String,
+}
+
+pub fn extend_chassis(parent: Chassis, patch: String, sig: String) -> ChassisExtension pure =
+    ChassisExtension { parent_chassis = parent.name, extension_name = parent.name + "_extended", override_fields = patch, provenance_signature = sig }
+
+// Example of an "impossible" vehicle declared via the open grammar:
+pub fn bone_limbed_walking_city_archetype() -> Chassis pure =
+    Chassis { name = "bone_limbed_walking_city", medium = OperatingMedium.Land, locomotion = LocomotionMode.Legged, propulsion = PropulsionClass.OpenTag("titanic_muscle_bundles"), mass_kg = 4.2e9, length_m = 1200.0, crew = 8000, passenger_cap = 500_000, cargo_kg = 1.5e8, top_speed_m_s = 4.5, range_m = 1.0e8, primary_material = "fossilized_bone_and_bronze" }
+
+// -----------------------------------------------------------------------------
+// 5. Functors
+// -----------------------------------------------------------------------------
+
+pub fn chassis_to_physics_body_functor() -> Functor pure =
+    Functor.id("vehicles://functor/chassis_to_physics_body@v1")
+
+pub fn chassis_to_silhouette_mesh_functor() -> Functor pure =
+    Functor.id("vehicles://functor/chassis_to_silhouette_mesh@v1")
+
+pub fn open_tag_to_binding_functor() -> Functor pure =
+    // Resolves a user-declared OpenTag at compile time by looking up a
+    // signed extension manifest in the project's extension registry.
+    Functor.id("vehicles://functor/open_tag_to_binding@v1")
+
+$metadata {
+    materializes_brief = "research/094-vehicles-full-spectrum-and-open-extension-grammar.md",
+    source_standards   = ["SAE_J3016", "ISO_3833", "IMO", "ICAO", "NASA", "AAR"],
+    chassis_count      = 8,
+    extension_grammar  = "open_tag_plus_patch",
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.vehicles_grammar",
+    lineage_parents    = ["seed_commons.libraries.physics@v1", "seed_commons.libraries.materials@v1"],
+}

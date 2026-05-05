@@ -1,0 +1,181 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      { "name": "name_", "type": "string", "internalType": "string" },
+      { "name": "symbol_", "type": "string", "internalType": "string" },
+      { "name": "baseURI_", "type": "string", "internalType": "string" },
+      { "name": "royaltyRecipient_", "type": "address", "internalType": "address" },
+      { "name": "royaltyBps_", "type": "uint256", "internalType": "uint256" }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "mintSeed",
+    "inputs": [
+      { "name": "to", "type": "address", "internalType": "address" },
+      { "name": "seedHash", "type": "string", "internalType": "string" },
+      { "name": "domain", "type": "string", "internalType": "string" },
+      { "name": "genetics", "type": "string", "internalType": "string" },
+      { "name": "uri", "type": "string", "internalType": "string" },
+      { "name": "parent1Hash", "type": "string", "internalType": "string" },
+      { "name": "parent2Hash", "type": "string", "internalType": "string" },
+      { "name": "generation", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "batchMintSeeds",
+    "inputs": [
+      { "name": "tos", "type": "address[]", "internalType": "address[]" },
+      { "name": "seedHashes", "type": "string[]", "internalType": "string[]" },
+      { "name": "domains", "type": "string[]", "internalType": "string[]" },
+      { "name": "geneticsList", "type": "string[]", "internalType": "string[]" },
+      { "name": "uris", "type": "string[]", "internalType": "string[]" },
+      { "name": "generations", "type": "uint256[]", "internalType": "uint256[]" }
+    ],
+    "outputs": [{ "name": "", "type": "uint256[]", "internalType": "uint256[]" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "breedSeeds",
+    "inputs": [
+      { "name": "to", "type": "address", "internalType": "address" },
+      { "name": "parent1TokenId", "type": "uint256", "internalType": "uint256" },
+      { "name": "parent2TokenId", "type": "uint256", "internalType": "uint256" },
+      { "name": "childSeedHash", "type": "string", "internalType": "string" },
+      { "name": "childGenetics", "type": "string", "internalType": "string" },
+      { "name": "childUri", "type": "string", "internalType": "string" }
+    ],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getSeedsByOwner",
+    "inputs": [{ "name": "owner", "type": "address", "internalType": "address" }],
+    "outputs": [{ "name": "", "type": "uint256[]", "internalType": "uint256[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "totalSeeds",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isSeedMinted",
+    "inputs": [{ "name": "seedHash", "type": "string", "internalType": "string" }],
+    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "seedData",
+    "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [
+      { "name": "seedHash", "type": "string", "internalType": "string" },
+      { "name": "domain", "type": "string", "internalType": "string" },
+      { "name": "genetics", "type": "string", "internalType": "string" },
+      { "name": "createdAt", "type": "uint256", "internalType": "uint256" },
+      { "name": "creator", "type": "address", "internalType": "address" },
+      { "name": "parent1", "type": "string", "internalType": "string" },
+      { "name": "parent2", "type": "string", "internalType": "string" },
+      { "name": "generation", "type": "uint256", "internalType": "uint256" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "royaltyInfo",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "internalType": "uint256" },
+      { "name": "salePrice", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [
+      { "name": "receiver", "type": "address", "internalType": "address" },
+      { "name": "royaltyAmount", "type": "uint256", "internalType": "uint256" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "setRoyalty",
+    "inputs": [
+      { "name": "recipient", "type": "address", "internalType": "address" },
+      { "name": "bps", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setBaseURI",
+    "inputs": [{ "name": "newBaseURI", "type": "string", "internalType": "string" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "hashToTokenId",
+    "inputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "SeedMinted",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "to", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "seedHash", "type": "string", "indexed": false, "internalType": "string" },
+      { "name": "domain", "type": "string", "indexed": false, "internalType": "string" },
+      { "name": "generation", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "SeedBred",
+    "inputs": [
+      { "name": "tokenId", "type": "uint256", "indexed": true, "internalType": "uint256" },
+      { "name": "breeder", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "parent1Hash", "type": "string", "indexed": false, "internalType": "string" },
+      { "name": "parent2Hash", "type": "string", "indexed": false, "internalType": "string" }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "RoyaltyUpdated",
+    "inputs": [
+      { "name": "recipient", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "bps", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "name",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "symbol",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "tokenURI",
+    "inputs": [{ "name": "tokenId", "type": "uint256", "internalType": "uint256" }],
+    "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+    "stateMutability": "view"
+  }
+]

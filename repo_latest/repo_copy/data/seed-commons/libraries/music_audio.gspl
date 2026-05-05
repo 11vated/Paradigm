@@ -1,0 +1,133 @@
+// seed-commons/libraries/music_audio.gspl
+//
+// Music & Audio library — runnable GSPL materialization of Brief 086C
+// (research/086C-music-and-audio-library.md).
+//
+// Equal temperament + just intonation + microtonal; scale/mode catalog;
+// instrument timbre profiles; psychoacoustic constants.
+// Sources: MIDI 1.0/2.0 spec, IEC 60268-5, Helmholtz, Fletcher-Munson,
+// ISO 226:2023 equal-loudness contours.
+//
+// PURE. rng_seed = "seed_commons.libraries.music_audio:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.physics@v1]
+
+module seed_commons.libraries.music_audio
+
+import Std.Math
+import seed_commons.libraries.physics as Phys
+
+// -----------------------------------------------------------------------------
+// 1. Pitch constants
+// -----------------------------------------------------------------------------
+
+pub const A4_HZ            : Scalar = 440.0
+pub const OCTAVE_RATIO     : Scalar = 2.0
+pub const SEMITONE_RATIO   : Scalar = 1.059_463_094_359_295
+pub const CENT_RATIO       : Scalar = 1.000_577_789_506_555
+pub const SPEED_SOUND_AIR  : Scalar = 343.0   // m/s at 20 °C
+pub const HEARING_LOW_HZ   : Scalar = 20.0
+pub const HEARING_HIGH_HZ  : Scalar = 20_000.0
+pub const THRESHOLD_DB_SPL : Scalar = 0.0
+pub const PAIN_DB_SPL      : Scalar = 120.0
+
+// -----------------------------------------------------------------------------
+// 2. MIDI note to frequency
+// -----------------------------------------------------------------------------
+
+pub fn midi_to_hz(midi_note: u8) -> Scalar pure =
+    A4_HZ * Std.Math.pow(2.0, ((midi_note as Scalar) - 69.0) / 12.0)
+
+pub fn hz_to_midi(hz: Scalar) -> Scalar pure =
+    69.0 + 12.0 * Std.Math.log2(hz / A4_HZ)
+
+// -----------------------------------------------------------------------------
+// 3. Scale/mode catalog
+// -----------------------------------------------------------------------------
+
+pub struct Scale {
+    name: String,
+    intervals_semitones: [u8],
+    mode_of: String,
+}
+
+pub fn major_ionian() -> Scale pure =
+    Scale { name = "major_ionian", intervals_semitones = [0, 2, 4, 5, 7, 9, 11, 12], mode_of = "diatonic" }
+
+pub fn natural_minor_aeolian() -> Scale pure =
+    Scale { name = "natural_minor_aeolian", intervals_semitones = [0, 2, 3, 5, 7, 8, 10, 12], mode_of = "diatonic" }
+
+pub fn dorian() -> Scale pure =
+    Scale { name = "dorian", intervals_semitones = [0, 2, 3, 5, 7, 9, 10, 12], mode_of = "diatonic" }
+
+pub fn phrygian() -> Scale pure =
+    Scale { name = "phrygian", intervals_semitones = [0, 1, 3, 5, 7, 8, 10, 12], mode_of = "diatonic" }
+
+pub fn lydian() -> Scale pure =
+    Scale { name = "lydian", intervals_semitones = [0, 2, 4, 6, 7, 9, 11, 12], mode_of = "diatonic" }
+
+pub fn mixolydian() -> Scale pure =
+    Scale { name = "mixolydian", intervals_semitones = [0, 2, 4, 5, 7, 9, 10, 12], mode_of = "diatonic" }
+
+pub fn locrian() -> Scale pure =
+    Scale { name = "locrian", intervals_semitones = [0, 1, 3, 5, 6, 8, 10, 12], mode_of = "diatonic" }
+
+pub fn harmonic_minor() -> Scale pure =
+    Scale { name = "harmonic_minor", intervals_semitones = [0, 2, 3, 5, 7, 8, 11, 12], mode_of = "minor_family" }
+
+pub fn pentatonic_major() -> Scale pure =
+    Scale { name = "pentatonic_major", intervals_semitones = [0, 2, 4, 7, 9, 12], mode_of = "pentatonic" }
+
+pub fn chromatic_twelve_tone() -> Scale pure =
+    Scale { name = "chromatic", intervals_semitones = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], mode_of = "chromatic" }
+
+// -----------------------------------------------------------------------------
+// 4. Instrument timbre profile
+// -----------------------------------------------------------------------------
+
+pub struct TimbreProfile {
+    name: String,
+    fundamental_hz: Scalar,
+    partials_relative: [Scalar],  // amplitude per harmonic
+    inharmonicity: Scalar,
+    attack_s: Scalar,
+    decay_s: Scalar,
+    sustain_level: Scalar,
+    release_s: Scalar,
+}
+
+pub fn piano_middle_c_profile() -> TimbreProfile pure =
+    TimbreProfile { name = "piano_C4", fundamental_hz = 261.625, partials_relative = [1.0, 0.70, 0.42, 0.28, 0.18, 0.12], inharmonicity = 4e-4, attack_s = 0.004, decay_s = 0.180, sustain_level = 0.15, release_s = 0.8 }
+
+pub fn violin_a4_profile() -> TimbreProfile pure =
+    TimbreProfile { name = "violin_A4", fundamental_hz = 440.0, partials_relative = [1.0, 0.88, 0.62, 0.48, 0.36, 0.24, 0.16, 0.10], inharmonicity = 2e-5, attack_s = 0.04, decay_s = 0.05, sustain_level = 0.92, release_s = 0.3 }
+
+pub fn sine_pure_profile() -> TimbreProfile pure =
+    TimbreProfile { name = "sine_pure", fundamental_hz = 440.0, partials_relative = [1.0], inharmonicity = 0.0, attack_s = 0.005, decay_s = 0.0, sustain_level = 1.0, release_s = 0.01 }
+
+// -----------------------------------------------------------------------------
+// 5. Functors
+// -----------------------------------------------------------------------------
+
+pub fn timbre_to_waveform_functor() -> Functor pure =
+    Functor.id("music://functor/timbre_to_waveform@v1")
+
+pub fn scale_to_chord_progression_functor() -> Functor pure =
+    Functor.id("music://functor/scale_to_chord_progression@v1")
+
+pub fn molecule_to_resonance_audio_functor() -> Functor pure =
+    // Cross-library: chemistry IR modes → audible pitch via octave-shifting
+    Functor.id("chem://functor/molecule_to_resonance_audio@v1")
+
+$metadata {
+    materializes_brief = "research/086C-music-and-audio-library.md",
+    source_standards   = ["MIDI_1_0", "MIDI_2_0", "IEC_60268_5", "ISO_226_2023", "Helmholtz"],
+    constant_count     = 9,
+    scale_count        = 10,
+    timbre_count       = 3,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.music_audio",
+    lineage_parents    = ["seed_commons.libraries.physics@v1"],
+}

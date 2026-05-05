@@ -1,0 +1,163 @@
+// seed-commons/libraries/biology.gspl
+//
+// Biology & Anatomy library — runnable GSPL materialization of Brief 085
+// (research/085-biology-and-anatomy-library.md).
+//
+// PURE. Sources: NCBI Taxonomy, UniProt, KEGG, Gray's Anatomy 42nd ed,
+// Terminologia Anatomica, FMA ontology, Enchanted Learning pedagogical
+// proportions, veterinary anatomy atlases.
+//
+// Kernel mapping:
+//   scalar      -> mass, length, heart rate, metabolic rate
+//   categorical -> kingdom, phylum, class, organ system
+//   vector      -> skeletal joint positions, muscle force vectors
+//   graph       -> phylogenetic tree, metabolic pathway, neural graph
+//   topology    -> organ surfaces, vascular trees, cortical folds
+//   temporal    -> circadian, growth curves, life cycle stages
+//   regulatory  -> homeostasis, hormonal feedback, gene networks
+//   struct      -> Organism, Organ, Tissue, Cell, Pathway records
+//
+// rng_seed = "seed_commons.libraries.biology:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.chemistry@v1]
+
+module seed_commons.libraries.biology
+
+import Std.Math
+import Std.Graph
+import seed_commons.libraries.chemistry as Chem
+
+// -----------------------------------------------------------------------------
+// 1. Taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum Kingdom { Animalia, Plantae, Fungi, Protista, Bacteria, Archaea, Virus }
+pub enum OrganSystem {
+    Musculoskeletal, Cardiovascular, Respiratory, Digestive, Nervous,
+    Endocrine, Integumentary, Reproductive, Urinary, Lymphatic, Sensory,
+}
+pub enum TissueType { Epithelial, Connective, Muscle, Nervous }
+
+pub struct TaxonomyRecord {
+    kingdom: Kingdom,
+    phylum: String, class_: String, order: String,
+    family: String, genus: String, species: String,
+    common_name: String,
+    ncbi_taxid: u32,
+}
+
+// -----------------------------------------------------------------------------
+// 2. Body plans
+// -----------------------------------------------------------------------------
+
+pub struct BodyPlan {
+    name: String,
+    average_adult_mass_kg: Scalar,
+    average_adult_length_m: Scalar,
+    limbs: u8,
+    digits_per_limb: u8,
+    skeletal_type: String,
+    respiration: String,
+    thermoregulation: String,
+    basal_metabolic_rate_w: Scalar,
+    resting_heart_rate_bpm: Option<Scalar>,
+    lifespan_years: Scalar,
+}
+
+pub fn homo_sapiens_adult() -> BodyPlan pure =
+    BodyPlan {
+        name = "homo_sapiens_adult", average_adult_mass_kg = 70.0, average_adult_length_m = 1.70,
+        limbs = 4, digits_per_limb = 5, skeletal_type = "endoskeleton",
+        respiration = "lungs", thermoregulation = "endothermic",
+        basal_metabolic_rate_w = 84.0, resting_heart_rate_bpm = Some(70.0),
+        lifespan_years = 80.0,
+    }
+
+pub fn canis_lupus_familiaris() -> BodyPlan pure =
+    BodyPlan {
+        name = "canis_lupus_familiaris", average_adult_mass_kg = 25.0, average_adult_length_m = 1.10,
+        limbs = 4, digits_per_limb = 5, skeletal_type = "endoskeleton",
+        respiration = "lungs", thermoregulation = "endothermic",
+        basal_metabolic_rate_w = 50.0, resting_heart_rate_bpm = Some(85.0),
+        lifespan_years = 13.0,
+    }
+
+pub fn apis_mellifera_worker() -> BodyPlan pure =
+    BodyPlan {
+        name = "apis_mellifera_worker", average_adult_mass_kg = 9e-5, average_adult_length_m = 0.012,
+        limbs = 6, digits_per_limb = 0, skeletal_type = "exoskeleton",
+        respiration = "tracheae", thermoregulation = "heterothermic",
+        basal_metabolic_rate_w = 1e-5, resting_heart_rate_bpm = None,
+        lifespan_years = 0.12,
+    }
+
+pub fn quercus_robur_mature() -> BodyPlan pure =
+    BodyPlan {
+        name = "quercus_robur_mature", average_adult_mass_kg = 15000.0, average_adult_length_m = 25.0,
+        limbs = 0, digits_per_limb = 0, skeletal_type = "lignified_vascular",
+        respiration = "stomatal_gas_exchange", thermoregulation = "poikilothermic",
+        basal_metabolic_rate_w = 180.0, resting_heart_rate_bpm = None,
+        lifespan_years = 500.0,
+    }
+
+// -----------------------------------------------------------------------------
+// 3. Metabolic pathway graph
+// -----------------------------------------------------------------------------
+
+pub struct MetabolicPathway {
+    name: String,
+    kegg_id: String,
+    substrates: [String],
+    products: [String],
+    delta_g_kj_mol: Scalar,
+    location: String,
+}
+
+pub fn glycolysis() -> MetabolicPathway pure =
+    MetabolicPathway {
+        name = "glycolysis", kegg_id = "map00010",
+        substrates = ["glucose", "2 NAD+", "2 ADP", "2 Pi"],
+        products = ["2 pyruvate", "2 NADH", "2 ATP", "2 H2O"],
+        delta_g_kj_mol = -85.2, location = "cytosol",
+    }
+
+pub fn citric_acid_cycle() -> MetabolicPathway pure =
+    MetabolicPathway {
+        name = "citric_acid_cycle", kegg_id = "map00020",
+        substrates = ["acetyl-CoA", "3 NAD+", "FAD", "GDP", "Pi", "2 H2O"],
+        products = ["2 CO2", "3 NADH", "FADH2", "GTP", "CoA"],
+        delta_g_kj_mol = -57.0, location = "mitochondrial_matrix",
+    }
+
+pub fn photosynthesis_calvin() -> MetabolicPathway pure =
+    MetabolicPathway {
+        name = "calvin_cycle", kegg_id = "map00710",
+        substrates = ["3 CO2", "9 ATP", "6 NADPH", "6 H+"],
+        products = ["G3P", "9 ADP", "8 Pi", "6 NADP+"],
+        delta_g_kj_mol = -42.0, location = "chloroplast_stroma",
+    }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn bodyplan_to_skeleton_rig_functor() -> Functor pure =
+    Functor.id("biology://functor/bodyplan_to_skeleton_rig@v1")
+
+pub fn pathway_to_flux_simulation_functor() -> Functor pure =
+    Functor.id("biology://functor/pathway_to_flux_simulation@v1")
+
+pub fn lifespan_to_growth_curve_functor() -> Functor pure =
+    Functor.id("biology://functor/lifespan_to_growth_curve@v1")
+
+$metadata {
+    materializes_brief = "research/085-biology-and-anatomy-library.md",
+    source_standards   = ["NCBI_Taxonomy", "UniProt", "KEGG", "GrayAnatomy42", "TerminologiaAnatomica", "FMA"],
+    bodyplan_count     = 4,
+    pathway_count      = 3,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.biology",
+    lineage_parents    = ["seed_commons.libraries.chemistry@v1"],
+}

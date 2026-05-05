@@ -1,0 +1,235 @@
+// seed-commons/inventories/fluid/_batch_01_foundational.gspl
+//
+// Fluid inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational fluid seeds covering water, oil, blood, lava, mercury,
+// honey, milk, wine, seawater, and liquid nitrogen. Substance primitives
+// draw from seed_commons.libraries.chemistry where applicable.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.fluid"
+
+module seed_commons.inventories.fluid.batch01
+
+import Std.Color
+import Std.Fluid
+import Std.Math
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Fresh water — standard incompressible liquid
+pub fn fresh_water() -> Std.Fluid.Seed pure =
+    let water = Chem.water()
+    seed Std.Fluid.Seed {
+        name = "fluid.fresh_water", version = "1.0.0",
+        substance = water,
+        density_kg_m3 = 998.2,
+        viscosity_Pa_s = 1.002e-3,
+        surface_tension_N_m = 0.0728,
+        refractive_index = 1.333,
+        temperature_K = 293.15,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.03, h = 215.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Seawater — 35 g/kg salinity
+pub fn seawater_standard() -> Std.Fluid.Seed pure =
+    let water = Chem.water()
+    seed Std.Fluid.Seed {
+        name = "fluid.seawater_standard", version = "1.0.0",
+        substance = water,
+        salinity_g_kg = 35.0,
+        density_kg_m3 = 1025.0,
+        viscosity_Pa_s = 1.08e-3,
+        surface_tension_N_m = 0.0740,
+        refractive_index = 1.339,
+        temperature_K = 288.15,
+        absorption_coeff_1_m = Std.Math.spectrum_from_pairs([
+            (450.0, 0.015),
+            (550.0, 0.064),
+            (650.0, 0.340),
+        ]),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.38, c = 0.08, h = 200.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 210.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://molecule/water@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Olive oil — non-drying vegetable oil
+pub fn olive_oil() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.olive_oil", version = "1.0.0",
+        substance_name = "olive_oil",
+        density_kg_m3 = 915.0,
+        viscosity_Pa_s = 8.4e-2,
+        surface_tension_N_m = 0.033,
+        refractive_index = 1.4680,
+        temperature_K = 293.15,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 105.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 110.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 115.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Whole blood — bovine/human class
+pub fn whole_blood() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.whole_blood", version = "1.0.0",
+        substance_name = "blood",
+        density_kg_m3 = 1060.0,
+        viscosity_Pa_s = 3.5e-3,
+        surface_tension_N_m = 0.058,
+        refractive_index = 1.36,
+        temperature_K = 310.15,
+        is_shear_thinning = true,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 28.0 },
+            Std.Color.OKLCh { l = 0.60, c = 0.18, h = 30.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Basaltic lava — molten silicate, 1450 K
+pub fn basaltic_lava() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.basaltic_lava", version = "1.0.0",
+        substance_name = "basaltic_melt",
+        density_kg_m3 = 2800.0,
+        viscosity_Pa_s = 100.0,
+        surface_tension_N_m = 0.36,
+        temperature_K = 1450.0,
+        blackbody_temperature_K = 1450.0,
+        emissivity = 0.95,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.98, c = 0.10, h = 85.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 55.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.16, h = 30.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Liquid mercury — room-temperature metal
+pub fn liquid_mercury() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.liquid_mercury", version = "1.0.0",
+        substance_name = "Hg",
+        density_kg_m3 = 13534.0,
+        viscosity_Pa_s = 1.526e-3,
+        surface_tension_N_m = 0.486,
+        temperature_K = 293.15,
+        ior_real_550nm = 0.97,
+        ior_imag_550nm = 5.28,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 250.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 240.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.00, h = 230.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Honey — highly viscous Newtonian sugar solution
+pub fn raw_honey() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.raw_honey", version = "1.0.0",
+        substance_name = "honey",
+        density_kg_m3 = 1420.0,
+        viscosity_Pa_s = 10.0,
+        surface_tension_N_m = 0.054,
+        refractive_index = 1.504,
+        temperature_K = 293.15,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.18, h = 75.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 80.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.16, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Whole milk — oil-in-water emulsion
+pub fn whole_milk() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.whole_milk", version = "1.0.0",
+        substance_name = "milk",
+        density_kg_m3 = 1030.0,
+        viscosity_Pa_s = 2.0e-3,
+        surface_tension_N_m = 0.050,
+        refractive_index = 1.35,
+        temperature_K = 277.15,
+        subsurface_depth_mm = 8.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 80.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.01, h = 85.0 },
+            Std.Color.OKLCh { l = 0.99, c = 0.00, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Red wine — tannin-rich absorbing liquid
+pub fn red_wine() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.red_wine", version = "1.0.0",
+        substance_name = "red_wine",
+        density_kg_m3 = 994.0,
+        viscosity_Pa_s = 1.6e-3,
+        surface_tension_N_m = 0.047,
+        refractive_index = 1.345,
+        temperature_K = 288.15,
+        absorption_coeff_1_m = Std.Math.spectrum_from_pairs([
+            (450.0, 12.0),
+            (550.0, 4.5),
+            (650.0, 0.9),
+        ]),
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.18, h = 18.0 },
+            Std.Color.OKLCh { l = 0.38, c = 0.22, h = 22.0 },
+            Std.Color.OKLCh { l = 0.55, c = 0.18, h = 26.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Liquid nitrogen — cryogenic boiling fluid
+pub fn liquid_nitrogen() -> Std.Fluid.Seed pure =
+    seed Std.Fluid.Seed {
+        name = "fluid.liquid_nitrogen", version = "1.0.0",
+        substance_name = "N2_liquid",
+        density_kg_m3 = 808.0,
+        viscosity_Pa_s = 1.58e-4,
+        surface_tension_N_m = 0.00885,
+        refractive_index = 1.2053,
+        temperature_K = 77.355,
+        boiling_point_K = 77.355,
+        leidenfrost_active = true,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.85, c = 0.02, h = 220.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 215.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "fluid",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.fluid",
+}

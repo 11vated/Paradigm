@@ -1,0 +1,269 @@
+// seed-commons/inventories/building/_batch_01_foundational.gspl
+//
+// Building inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational building seeds across historical periods and functions.
+// Each pulls material primitives via inventory:// URIs.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.building"
+
+module seed_commons.inventories.building.batch01
+
+import Std.Building
+import Std.Color
+import Std.Topology
+
+// 01. Thatched cottage — rural medieval
+pub fn thatched_cottage() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.thatched_cottage", version = "1.0.0",
+        kind = Std.Building.Kind.Residential,
+        era = "medieval",
+        footprint_m2 = 42.0,
+        height_m = 5.2,
+        stories = 1,
+        roof = Std.Building.Roof.Gable { pitch_deg = 48.0 },
+        wall_material_ref = "inventory://materials/wet_clay@v1",
+        roof_material_ref = "inventory://plant/wheat_stalk_ripe@v1",
+        frame_material_ref = "inventory://materials/polished_oak@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 75.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.12, h = 80.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 40.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/wet_clay@v1",
+            "inventory://plant/wheat_stalk_ripe@v1",
+            "inventory://materials/polished_oak@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Stone keep — Norman motte-and-bailey
+pub fn stone_keep_norman() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.stone_keep_norman", version = "1.0.0",
+        kind = Std.Building.Kind.Fortification,
+        era = "medieval",
+        footprint_m2 = 480.0,
+        height_m = 28.0,
+        stories = 4,
+        roof = Std.Building.Roof.FlatParapet,
+        wall_material_ref = "inventory://materials/rough_granite@v1",
+        wall_thickness_m = 3.4,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.04, h = 60.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 65.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 70.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/rough_granite@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Gothic cathedral — cruciform plan
+pub fn gothic_cathedral() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.gothic_cathedral", version = "1.0.0",
+        kind = Std.Building.Kind.Sacred,
+        era = "high_medieval",
+        footprint_m2 = 6200.0,
+        height_m = 42.0,
+        stories = 1,
+        roof = Std.Building.Roof.Vaulted { pitch_deg = 62.0 },
+        wall_material_ref = "inventory://materials/carrara_marble@v1",
+        glass_material_ref = "inventory://materials/crystal_glass@v1",
+        spire_count = 2,
+        spire_height_m = 68.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 90.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 85.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 25.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/carrara_marble@v1",
+            "inventory://materials/crystal_glass@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Victorian townhouse — brick terrace
+pub fn victorian_townhouse() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.victorian_townhouse", version = "1.0.0",
+        kind = Std.Building.Kind.Residential,
+        era = "victorian",
+        footprint_m2 = 84.0,
+        height_m = 14.0,
+        stories = 4,
+        roof = Std.Building.Roof.Mansard { pitch_deg = 70.0 },
+        wall_material_ref = "inventory://materials/red_brick@v1",
+        trim_material_ref = "inventory://materials/polished_oak@v1",
+        window_count = 12,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.38, c = 0.12, h = 25.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 30.0 },
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/red_brick@v1",
+            "inventory://materials/polished_oak@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Modernist office tower — glass curtain wall
+pub fn modernist_office_tower() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.modernist_office_tower", version = "1.0.0",
+        kind = Std.Building.Kind.Commercial,
+        era = "late_20c",
+        footprint_m2 = 1800.0,
+        height_m = 168.0,
+        stories = 42,
+        roof = Std.Building.Roof.FlatParapet,
+        wall_material_ref = "inventory://materials/crystal_glass@v1",
+        frame_material_ref = "inventory://materials/forged_steel_blade@v1",
+        facade_ref = "inventory://materials/brushed_aluminium@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 240.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 220.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/crystal_glass@v1",
+            "inventory://materials/forged_steel_blade@v1",
+            "inventory://materials/brushed_aluminium@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Japanese machiya — wooden townhouse
+pub fn japanese_machiya() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.japanese_machiya", version = "1.0.0",
+        kind = Std.Building.Kind.Residential,
+        era = "edo",
+        footprint_m2 = 56.0,
+        height_m = 6.8,
+        stories = 2,
+        roof = Std.Building.Roof.Irimoya { pitch_deg = 30.0 },
+        wall_material_ref = "inventory://materials/polished_oak@v1",
+        floor_material_ref = "inventory://materials/handwoven_linen@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 50.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 70.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/polished_oak@v1",
+            "inventory://materials/handwoven_linen@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Adobe pueblo — stacked terraced dwelling
+pub fn adobe_pueblo() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.adobe_pueblo", version = "1.0.0",
+        kind = Std.Building.Kind.Residential,
+        era = "precolumbian",
+        footprint_m2 = 320.0,
+        height_m = 11.0,
+        stories = 3,
+        roof = Std.Building.Roof.FlatParapet,
+        wall_material_ref = "inventory://materials/wet_clay@v1",
+        wall_thickness_m = 0.65,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 50.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 55.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 60.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/wet_clay@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Wizard tower — cylindrical spire
+pub fn wizard_tower() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.wizard_tower", version = "1.0.0",
+        kind = Std.Building.Kind.Sacred,
+        era = "fantasy",
+        footprint_m2 = 64.0,
+        height_m = 38.0,
+        stories = 6,
+        roof = Std.Building.Roof.Conical { pitch_deg = 70.0 },
+        wall_material_ref = "inventory://materials/polished_obsidian@v1",
+        trim_material_ref = "inventory://materials/sterling_silver@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 260.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 270.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 280.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/polished_obsidian@v1",
+            "inventory://materials/sterling_silver@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Greek temple — Doric peristyle
+pub fn greek_temple_doric() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.greek_temple_doric", version = "1.0.0",
+        kind = Std.Building.Kind.Sacred,
+        era = "classical",
+        footprint_m2 = 1100.0,
+        height_m = 14.0,
+        stories = 1,
+        roof = Std.Building.Roof.Gable { pitch_deg = 15.0 },
+        wall_material_ref = "inventory://materials/carrara_marble@v1",
+        column_count = 46,
+        column_order = "Doric",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 90.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 85.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/carrara_marble@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Mongolian ger — felt yurt
+pub fn mongolian_ger() -> Std.Building.Seed pure =
+    seed Std.Building.Seed {
+        name = "building.mongolian_ger", version = "1.0.0",
+        kind = Std.Building.Kind.Residential,
+        era = "nomadic",
+        footprint_m2 = 28.0,
+        height_m = 2.8,
+        stories = 1,
+        roof = Std.Building.Roof.Domed { pitch_deg = 25.0 },
+        wall_material_ref = "inventory://materials/handwoven_linen@v1",
+        frame_material_ref = "inventory://materials/polished_oak@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.06, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/handwoven_linen@v1",
+            "inventory://materials/polished_oak@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.inventories.materials@v1", "seed_commons.inventories.plant@v1"],
+    category   = "building",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.building",
+}

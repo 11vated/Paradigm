@@ -1,0 +1,308 @@
+// seed-commons/inventories/cross-domain/_batch_01_foundational.gspl
+//
+// Cross-domain inventory — batch 01 of the Brief 088A canonical armory.
+// Ten composite "money shot" seeds. Each seed in this batch composes
+// AT LEAST THREE distinct inventory categories via lineage edges, proving
+// that the Brief 088A graph is not a set of disjoint silos but a single
+// connected DAG where chemistry, biology, weather, materials, fluids, fx,
+// music, scenes, and cameras all cross-reference.
+//
+// These seeds are the validation targets for tools/graph_audit.ts — any
+// future change that breaks lineage resolution will surface here first.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.cross_domain"
+
+module seed_commons.inventories.cross_domain.batch01
+
+import Std.Composite
+import Std.Color
+
+// 01. Forge strike at dusk — blacksmith + sparks + hot iron + anvil ring
+pub fn forge_strike_at_dusk() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.forge_strike_at_dusk", version = "1.0.0",
+        composes = [
+            "inventory://scene/blacksmith_workshop@v1",
+            "inventory://character/blacksmith_human_male@v1",
+            "inventory://fx/spark_shower_ferrocerium@v1",
+            "inventory://fluid/basaltic_lava@v1",
+            "inventory://music/timpani_strike_f2@v1",
+            "inventory://camera/cinematic_35mm_anamorphic@v1",
+        ],
+        hero_camera = "inventory://camera/cinematic_35mm_anamorphic@v1",
+        hero_style  = "inventory://style/photorealistic_pbr@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.06, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 55.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.14, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/blacksmith_workshop@v1",
+            "inventory://character/blacksmith_human_male@v1",
+            "inventory://fx/spark_shower_ferrocerium@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Dragon over thunderstorm — creature + weather + fx + aerial camera
+pub fn dragon_over_thunderstorm() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.dragon_over_thunderstorm", version = "1.0.0",
+        composes = [
+            "inventory://creature/red_dragon_hatchling@v1",
+            "inventory://weather/thunderstorm_cell@v1",
+            "inventory://fx/lightning_bolt@v1",
+            "inventory://camera/drone_aerial_wide@v1",
+            "inventory://music/thunder_rumble_drone@v1",
+        ],
+        hero_camera = "inventory://camera/drone_aerial_wide@v1",
+        hero_style  = "inventory://style/dark_fantasy_etching@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.06, h = 260.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.22, h = 30.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.18, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://creature/red_dragon_hatchling@v1",
+            "inventory://weather/thunderstorm_cell@v1",
+            "inventory://fx/lightning_bolt@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Sacred grove at dawn with chant — plant + scene + vocal + mist
+pub fn sacred_grove_dawn_chant() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.sacred_grove_dawn_chant", version = "1.0.0",
+        composes = [
+            "inventory://scene/sacred_grove_dawn@v1",
+            "inventory://plant/mature_pine_40yr@v1",
+            "inventory://plant/moss_patch_hypnum@v1",
+            "inventory://weather/radiation_fog_bank@v1",
+            "inventory://music/gregorian_chant_dorian@v1",
+            "inventory://camera/wide_landscape_16mm@v1",
+        ],
+        hero_style  = "inventory://style/ghibli_watercolor@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.06, h = 140.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.04, h = 90.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/sacred_grove_dawn@v1",
+            "inventory://plant/mature_pine_40yr@v1",
+            "inventory://weather/radiation_fog_bank@v1",
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Arctic aurora camp — aurora weather + ger building + drone cam + harp
+pub fn arctic_aurora_camp() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.arctic_aurora_camp", version = "1.0.0",
+        composes = [
+            "inventory://scene/arctic_aurora_plain@v1",
+            "inventory://building/mongolian_ger@v1",
+            "inventory://fluid/liquid_nitrogen@v1",
+            "inventory://music/celtic_harp_c_arpeggio@v1",
+            "inventory://camera/telephoto_wildlife_600mm@v1",
+        ],
+        hero_style  = "inventory://style/photorealistic_pbr@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 240.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 150.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 280.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/arctic_aurora_plain@v1",
+            "inventory://building/mongolian_ger@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Water molecule cathedral — chem sonification + gothic interior
+pub fn water_molecule_cathedral() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.water_molecule_cathedral", version = "1.0.0",
+        composes = [
+            "inventory://building/gothic_cathedral@v1",
+            "inventory://music/water_molecule_sonification@v1",
+            "inventory://fluid/fresh_water@v1",
+            "inventory://character/elderly_scholar@v1",
+            "inventory://camera/large_format_8x10@v1",
+        ],
+        hero_style  = "inventory://style/film_noir_bw@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 220.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.06, h = 215.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://building/gothic_cathedral@v1",
+            "inventory://music/water_molecule_sonification@v1",
+            "chem://molecule/water@v1",
+            "chem://functor/molecule_to_resonance_audio@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Cyberpunk alley rainfall — weather + scene + vehicle + CRT style
+pub fn cyberpunk_alley_rainfall() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.cyberpunk_alley_rainfall", version = "1.0.0",
+        composes = [
+            "inventory://scene/cyberpunk_alley@v1",
+            "inventory://character/cyber_mercenary@v1",
+            "inventory://vehicle/modern_ev_sedan@v1",
+            "inventory://weather/rain_shower@v1",
+            "inventory://music/synth_bass_drop_a1@v1",
+            "inventory://camera/game_fps_90fov@v1",
+        ],
+        hero_style  = "inventory://style/vaporwave_crt@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.08, h = 300.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 320.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 200.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/cyberpunk_alley@v1",
+            "inventory://weather/rain_shower@v1",
+            "inventory://vehicle/modern_ev_sedan@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Alchemist laboratory reaction — alchemy scene + fluids + fx + chem
+pub fn alchemist_laboratory_reaction() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.alchemist_laboratory_reaction", version = "1.0.0",
+        composes = [
+            "inventory://scene/alchemist_laboratory@v1",
+            "inventory://character/elderly_scholar@v1",
+            "inventory://fluid/liquid_mercury@v1",
+            "inventory://fx/magic_glow_aura@v1",
+            "inventory://fx/steam_burst@v1",
+            "inventory://camera/macro_100mm_1to1@v1",
+        ],
+        hero_style  = "inventory://style/oil_painting_impasto@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 50.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 140.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.14, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/alchemist_laboratory@v1",
+            "inventory://fluid/liquid_mercury@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Honey bee on sunflower macro — creature + plant + phyllotaxis + macro lens
+pub fn honey_bee_on_sunflower() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.honey_bee_on_sunflower", version = "1.0.0",
+        composes = [
+            "inventory://creature/honey_bee_worker@v1",
+            "inventory://plant/sunflower_bloom@v1",
+            "inventory://food/honey_jar@v1",
+            "inventory://camera/macro_100mm_1to1@v1",
+            "inventory://weather/clear_sky_daylight@v1",
+        ],
+        hero_style  = "inventory://style/photorealistic_pbr@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 60.0 },
+            Std.Color.OKLCh { l = 0.78, c = 0.22, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 100.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://creature/honey_bee_worker@v1",
+            "inventory://plant/sunflower_bloom@v1",
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Viking longship at sea storm — vehicle + weather + fluid + horn
+pub fn viking_longship_storm() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.viking_longship_storm", version = "1.0.0",
+        composes = [
+            "inventory://vehicle/viking_longship@v1",
+            "inventory://weather/hurricane_rainband@v1",
+            "inventory://fluid/seawater_standard@v1",
+            "inventory://character/orc_berserker@v1",
+            "inventory://music/war_horn_blast@v1",
+            "inventory://camera/cinematic_35mm_anamorphic@v1",
+        ],
+        hero_style  = "inventory://style/dark_fantasy_etching@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.04, h = 240.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.08, h = 220.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.06, h = 200.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://vehicle/viking_longship@v1",
+            "inventory://weather/hurricane_rainband@v1",
+            "inventory://fluid/seawater_standard@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Tavern feast at nightfall — food + scene + character + wine + chant
+pub fn tavern_feast_nightfall() -> Std.Composite.Seed pure =
+    seed Std.Composite.Seed {
+        name = "cross_domain.tavern_feast_nightfall", version = "1.0.0",
+        composes = [
+            "inventory://scene/medieval_throne_room@v1",
+            "inventory://food/seared_ribeye@v1",
+            "inventory://food/sourdough_loaf@v1",
+            "inventory://food/wine_goblet_red@v1",
+            "inventory://character/stone_dwarf_warrior@v1",
+            "inventory://music/celtic_harp_c_arpeggio@v1",
+            "inventory://camera/portrait_50mm_f18@v1",
+        ],
+        hero_style  = "inventory://style/oil_painting_impasto@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 55.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://scene/medieval_throne_room@v1",
+            "inventory://food/seared_ribeye@v1",
+            "inventory://food/wine_goblet_red@v1",
+            "inventory://character/stone_dwarf_warrior@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.inventories.scene@v1",
+        "seed_commons.inventories.character@v1",
+        "seed_commons.inventories.creature@v1",
+        "seed_commons.inventories.plant@v1",
+        "seed_commons.inventories.weather@v1",
+        "seed_commons.inventories.fluid@v1",
+        "seed_commons.inventories.fx@v1",
+        "seed_commons.inventories.music@v1",
+        "seed_commons.inventories.camera@v1",
+        "seed_commons.inventories.style@v1",
+        "seed_commons.inventories.building@v1",
+        "seed_commons.inventories.vehicle@v1",
+        "seed_commons.inventories.food@v1",
+        "seed_commons.libraries.chemistry@v1",
+    ],
+    category   = "cross_domain",
+    batch      = "01_foundational",
+    count      = 10,
+    role       = "graph_validation_anchor",
+    min_categories_per_seed = 3,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.cross_domain",
+}

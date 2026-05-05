@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(node_modules/.bin/vitest run:*)",
+      "Bash(./node_modules/.bin/vitest.cmd run:*)",
+      "Bash(node -e \"require.resolve\\('vitest', {paths: ['C:/Users/11vat/Desktop/paradigm_goe \\(1\\)']}\\)\")",
+      "Bash(node node_modules/vitest/vitest.mjs run tests/agent/)",
+      "Bash(node node_modules/typescript/bin/tsc --noEmit)",
+      "Bash(node -e \"const p=require\\('C:/Users/11vat/Desktop/paradigm_goe \\(1\\)/node_modules/@google/genai/package.json'\\); console.log\\(JSON.stringify\\({main:p.main,module:p.module,exports:p.exports},null,2\\)\\)\")",
+      "Bash(awk '{print $NF}')",
+      "Bash(node -e \"const fs=require\\('fs'\\); const c=fs.readFileSync\\('src/lib/kernel/composition.ts','utf8'\\); const m=c.match\\(/\\\\['[^']+->[':\\\\s]/g\\); console.log\\('Bridges:', m.length\\)\")",
+      "Bash(wc -l tests/kernel/engines.test.ts tests/gspl/*.test.ts tests/asset_pipeline/*.test.ts)"
+    ]
+  }
+}

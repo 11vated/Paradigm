@@ -1,0 +1,128 @@
+// seed-commons/libraries/built_world.gspl
+//
+// Built World library — runnable GSPL materialization of Brief 086F
+// (research/086F-built-world-library.md).
+//
+// Architectural elements, structural systems, building typologies, urban
+// morphology, infrastructure. Sources: Neufert Architects' Data 5th ed,
+// Ching's Building Construction Illustrated, ISO 6707, IBC 2021.
+//
+// PURE. rng_seed = "seed_commons.libraries.built_world:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.materials@v1]
+
+module seed_commons.libraries.built_world
+
+import seed_commons.libraries.materials as Mat
+
+// -----------------------------------------------------------------------------
+// 1. Architectural element taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum ElementClass {
+    Foundation, Wall, Floor, Roof, Column, Beam, Arch, Vault, Dome,
+    Window, Door, Stair, Ornament, Truss, Buttress,
+}
+
+pub struct ArchitecturalElement {
+    name: String,
+    class: ElementClass,
+    typical_span_m: Scalar,
+    structural_role: String,
+    materials: [String],
+    historical_origin: String,
+}
+
+pub fn roman_arch() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "roman_arch", class = ElementClass.Arch, typical_span_m = 8.0, structural_role = "compression_loadbearing", materials = ["stone", "brick", "mortar"], historical_origin = "Etruscan_and_Roman" }
+
+pub fn gothic_pointed_arch() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "gothic_pointed_arch", class = ElementClass.Arch, typical_span_m = 12.0, structural_role = "vertical_thrust_transfer", materials = ["limestone", "mortar"], historical_origin = "12th_century_France" }
+
+pub fn ribbed_groin_vault() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "ribbed_groin_vault", class = ElementClass.Vault, typical_span_m = 15.0, structural_role = "compressive_shell", materials = ["stone", "mortar"], historical_origin = "Romanesque_to_Gothic" }
+
+pub fn flying_buttress() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "flying_buttress", class = ElementClass.Buttress, typical_span_m = 6.0, structural_role = "lateral_thrust_redirection", materials = ["limestone"], historical_origin = "Gothic_France" }
+
+pub fn king_post_truss() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "king_post_truss", class = ElementClass.Truss, typical_span_m = 10.0, structural_role = "roof_load_distribution", materials = ["oak", "iron_fastenings"], historical_origin = "Medieval_Europe" }
+
+pub fn doric_column() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "doric_column", class = ElementClass.Column, typical_span_m = 0.0, structural_role = "vertical_compression", materials = ["marble", "limestone"], historical_origin = "Archaic_Greek" }
+
+pub fn steel_i_beam() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "steel_i_beam", class = ElementClass.Beam, typical_span_m = 9.0, structural_role = "bending_moment_resistance", materials = ["structural_steel_S355"], historical_origin = "19th_century_industrial" }
+
+pub fn reinforced_concrete_slab() -> ArchitecturalElement pure =
+    ArchitecturalElement { name = "reinforced_concrete_slab", class = ElementClass.Floor, typical_span_m = 7.0, structural_role = "two_way_flexural", materials = ["concrete_C30_37", "rebar_B500B"], historical_origin = "Hennebique_1890s" }
+
+// -----------------------------------------------------------------------------
+// 2. Building typology
+// -----------------------------------------------------------------------------
+
+pub struct BuildingTypology {
+    name: String,
+    primary_function: String,
+    typical_footprint_m2: Scalar,
+    typical_stories: u8,
+    defining_features: [String],
+}
+
+pub fn single_family_dwelling() -> BuildingTypology pure =
+    BuildingTypology { name = "single_family_dwelling", primary_function = "residential", typical_footprint_m2 = 150.0, typical_stories = 2, defining_features = ["pitched_roof", "front_door", "hearth"] }
+
+pub fn basilica_plan_temple() -> BuildingTypology pure =
+    BuildingTypology { name = "basilica_plan", primary_function = "religious", typical_footprint_m2 = 1500.0, typical_stories = 1, defining_features = ["nave", "aisles", "apse", "clerestory"] }
+
+pub fn medieval_keep() -> BuildingTypology pure =
+    BuildingTypology { name = "medieval_keep", primary_function = "defensive_residence", typical_footprint_m2 = 400.0, typical_stories = 4, defining_features = ["curtain_wall", "great_hall", "arrow_slits", "crenellation"] }
+
+pub fn modernist_curtain_wall_tower() -> BuildingTypology pure =
+    BuildingTypology { name = "modernist_curtain_wall_tower", primary_function = "commercial_office", typical_footprint_m2 = 2200.0, typical_stories = 40, defining_features = ["steel_frame", "glass_curtain_wall", "core_elevators", "open_floor_plate"] }
+
+// -----------------------------------------------------------------------------
+// 3. Urban morphology
+// -----------------------------------------------------------------------------
+
+pub enum StreetPattern { Grid, Radial, Organic, Cul_de_sac, Boulevard }
+
+pub struct UrbanFabric {
+    name: String,
+    street_pattern: StreetPattern,
+    typical_block_m: Scalar,
+    far: Scalar,
+    height_limit_m: Scalar,
+}
+
+pub fn manhattan_grid() -> UrbanFabric pure =
+    UrbanFabric { name = "manhattan_grid", street_pattern = StreetPattern.Grid, typical_block_m = 80.0, far = 12.0, height_limit_m = 400.0 }
+
+pub fn paris_haussmann() -> UrbanFabric pure =
+    UrbanFabric { name = "paris_haussmann", street_pattern = StreetPattern.Radial, typical_block_m = 60.0, far = 4.0, height_limit_m = 37.0 }
+
+pub fn medieval_organic() -> UrbanFabric pure =
+    UrbanFabric { name = "medieval_organic", street_pattern = StreetPattern.Organic, typical_block_m = 25.0, far = 3.0, height_limit_m = 15.0 }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn typology_to_massing_mesh_functor() -> Functor pure =
+    Functor.id("built_world://functor/typology_to_massing_mesh@v1")
+
+pub fn element_to_structural_analysis_functor() -> Functor pure =
+    Functor.id("built_world://functor/element_to_structural_analysis@v1")
+
+$metadata {
+    materializes_brief = "research/086F-built-world-library.md",
+    source_standards   = ["Neufert_5ed", "Ching_Building_Construction", "ISO_6707", "IBC_2021"],
+    element_count      = 8,
+    typology_count     = 4,
+    fabric_count       = 3,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.built_world",
+    lineage_parents    = ["seed_commons.libraries.materials@v1"],
+}

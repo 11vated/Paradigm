@@ -1,0 +1,14 @@
+[
+  {
+    "id": "0668148f-34ff-4705-806d-31e87415f5d5",
+    "timestamp": "2026-05-05T16:09:02.845Z",
+    "action": "seed.create",
+    "resource": "seed",
+    "resourceId": "c12073ce-e46c-4e93-b096-f264ed5090a1",
+    "details": {
+      "domain": "music",
+      "owner": null
+    },
+    "ip": "127.0.0.1"
+  }
+]

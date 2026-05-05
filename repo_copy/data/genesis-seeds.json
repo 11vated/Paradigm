@@ -1,0 +1,326 @@
+[
+  {
+    "id": "genesis-character-001", "$domain": "character", "$name": "Genesis Warrior",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-character-warrior-v1", "$fitness": { "overall": 0.95 },
+    "genes": {
+      "archetype": { "type": "categorical", "value": "warrior" },
+      "strength": { "type": "scalar", "value": 0.82 },
+      "agility": { "type": "scalar", "value": 0.65 },
+      "size": { "type": "scalar", "value": 0.88 },
+      "palette": { "type": "vector", "value": [0.72, 0.28, 0.15] },
+      "personality": { "type": "categorical", "value": "determined" },
+      "intelligence": { "type": "scalar", "value": 0.55 }
+    }
+  },
+  {
+    "id": "genesis-sprite-001", "$domain": "sprite", "$name": "Genesis Pixel Knight",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-sprite-knight-v1", "$fitness": { "overall": 0.92 },
+    "genes": {
+      "resolution": { "type": "scalar", "value": 0.5 },
+      "paletteSize": { "type": "scalar", "value": 0.5 },
+      "colors": { "type": "vector", "value": [0.08, 0.55, 0.85] },
+      "symmetry": { "type": "categorical", "value": "bilateral" }
+    }
+  },
+  {
+    "id": "genesis-music-001", "$domain": "music", "$name": "Genesis Anthem",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-music-anthem-v1", "$fitness": { "overall": 0.94 },
+    "genes": {
+      "tempo": { "type": "scalar", "value": 0.55 },
+      "key": { "type": "categorical", "value": "D" },
+      "scale": { "type": "categorical", "value": "minor" },
+      "timbre": { "type": "struct", "value": { "warmth": 0.7, "brightness": 0.6, "attack": 0.3 } },
+      "melody": { "type": "array", "value": [62, 65, 69, 72, 69, 67, 65, 62, 60, 62, 65, 69, 72, 74, 72, 69] }
+    }
+  },
+  {
+    "id": "genesis-visual2d-001", "$domain": "visual2d", "$name": "Genesis Abstract Composition",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-visual2d-abstract-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "style": { "type": "categorical", "value": "abstract" },
+      "complexity": { "type": "scalar", "value": 0.72 },
+      "palette": { "type": "vector", "value": [0.95, 0.45, 0.12] },
+      "composition": { "type": "categorical", "value": "golden_ratio" }
+    }
+  },
+  {
+    "id": "genesis-procedural-001", "$domain": "procedural", "$name": "Genesis Mountain Range",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-procedural-mountain-v1", "$fitness": { "overall": 0.93 },
+    "genes": {
+      "octaves": { "type": "scalar", "value": 0.75 },
+      "persistence": { "type": "scalar", "value": 0.55 },
+      "scale": { "type": "scalar", "value": 0.8 },
+      "biome": { "type": "categorical", "value": "alpine" }
+    }
+  },
+  {
+    "id": "genesis-fullgame-001", "$domain": "fullgame", "$name": "Genesis Dungeon Crawler",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-fullgame-dungeon-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "genre": { "type": "categorical", "value": "roguelike" },
+      "difficulty": { "type": "scalar", "value": 0.65 },
+      "levelCount": { "type": "scalar", "value": 0.7 },
+      "mechanics": { "type": "array", "value": ["combat", "exploration", "loot", "permadeath"] },
+      "pacing": { "type": "scalar", "value": 0.6 },
+      "replayability": { "type": "scalar", "value": 0.85 }
+    }
+  },
+  {
+    "id": "genesis-animation-001", "$domain": "animation", "$name": "Genesis Walk Cycle",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-animation-walk-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "frameCount": { "type": "scalar", "value": 0.4 },
+      "fps": { "type": "scalar", "value": 0.5 },
+      "motionType": { "type": "categorical", "value": "skeletal" },
+      "loop": { "type": "categorical", "value": "loop" },
+      "easing": { "type": "categorical", "value": "ease_in_out" },
+      "amplitude": { "type": "scalar", "value": 0.6 }
+    }
+  },
+  {
+    "id": "genesis-geometry3d-001", "$domain": "geometry3d", "$name": "Genesis Crystal",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-geometry3d-crystal-v1", "$fitness": { "overall": 0.92 },
+    "genes": {
+      "primitive": { "type": "categorical", "value": "icosahedron" },
+      "detail": { "type": "scalar", "value": 0.7 },
+      "material": { "type": "categorical", "value": "glass" },
+      "scale": { "type": "vector", "value": [1.2, 2.0, 1.2] },
+      "roughness": { "type": "scalar", "value": 0.05 },
+      "color": { "type": "vector", "value": [0.3, 0.8, 0.95] }
+    }
+  },
+  {
+    "id": "genesis-narrative-001", "$domain": "narrative", "$name": "Genesis Epic: The Last Seed",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-narrative-epic-v1", "$fitness": { "overall": 0.93 },
+    "genes": {
+      "structure": { "type": "categorical", "value": "heros_journey" },
+      "tone": { "type": "categorical", "value": "epic" },
+      "characters": { "type": "array", "value": ["Paradigm", "The Void", "The Architect", "The Rebel", "The Oracle"] },
+      "plot": { "type": "categorical", "value": "quest" },
+      "complexity": { "type": "scalar", "value": 0.78 }
+    }
+  },
+  {
+    "id": "genesis-ui-001", "$domain": "ui", "$name": "Genesis Dashboard",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-ui-dashboard-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "layout": { "type": "categorical", "value": "dashboard" },
+      "theme": { "type": "categorical", "value": "dark" },
+      "components": { "type": "array", "value": ["header", "sidebar", "main", "chart", "table", "footer"] },
+      "density": { "type": "scalar", "value": 0.6 },
+      "responsive": { "type": "categorical", "value": true }
+    }
+  },
+  {
+    "id": "genesis-physics-001", "$domain": "physics", "$name": "Genesis Gravity Well",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-physics-gravity-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "gravity": { "type": "scalar", "value": 0.5 },
+      "friction": { "type": "scalar", "value": 0.25 },
+      "elasticity": { "type": "scalar", "value": 0.75 },
+      "simulationType": { "type": "categorical", "value": "rigid_body" },
+      "bodyCount": { "type": "scalar", "value": 0.4 }
+    }
+  },
+  {
+    "id": "genesis-audio-001", "$domain": "audio", "$name": "Genesis Synth Pad",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-audio-pad-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "soundType": { "type": "categorical", "value": "ambient" },
+      "duration": { "type": "scalar", "value": 0.8 },
+      "frequency": { "type": "scalar", "value": 220 },
+      "waveform": { "type": "categorical", "value": "sawtooth" },
+      "envelope": { "type": "struct", "value": { "attack": 0.3, "decay": 0.2, "sustain": 0.8, "release": 0.5 } }
+    }
+  },
+  {
+    "id": "genesis-ecosystem-001", "$domain": "ecosystem", "$name": "Genesis Ancient Forest",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-ecosystem-forest-v1", "$fitness": { "overall": 0.94 },
+    "genes": {
+      "speciesCount": { "type": "scalar", "value": 0.7 },
+      "environment": { "type": "categorical", "value": "forest" },
+      "stability": { "type": "scalar", "value": 0.82 },
+      "biodiversity": { "type": "scalar", "value": 0.75 }
+    }
+  },
+  {
+    "id": "genesis-game-001", "$domain": "game", "$name": "Genesis Card Battler",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-game-card-v1", "$fitness": { "overall": 0.89 },
+    "genes": {
+      "mechanicType": { "type": "categorical", "value": "turn_based" },
+      "complexity": { "type": "scalar", "value": 0.65 },
+      "players": { "type": "scalar", "value": 2 },
+      "balance": { "type": "scalar", "value": 0.72 }
+    }
+  },
+  {
+    "id": "genesis-alife-001", "$domain": "alife", "$name": "Genesis Cellular Automata",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-alife-conway-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "rules": { "type": "categorical", "value": "conway" },
+      "gridSize": { "type": "scalar", "value": 0.5 },
+      "density": { "type": "scalar", "value": 0.35 },
+      "neighborhood": { "type": "categorical", "value": "moore" }
+    }
+  },
+  {
+    "id": "genesis-shader-001", "$domain": "shader", "$name": "Genesis Fractal Shader",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-shader-fractal-v1", "$fitness": { "overall": 0.92 },
+    "genes": {
+      "shaderType": { "type": "categorical", "value": "fragment" },
+      "technique": { "type": "categorical", "value": "raymarching" },
+      "complexity": { "type": "scalar", "value": 0.8 },
+      "palette": { "type": "vector", "value": [0.0, 0.9, 1.0] }
+    }
+  },
+  {
+    "id": "genesis-particle-001", "$domain": "particle", "$name": "Genesis Fire Emitter",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-particle-fire-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "emitter": { "type": "categorical", "value": "point" },
+      "count": { "type": "scalar", "value": 0.7 },
+      "lifetime": { "type": "scalar", "value": 1.5 },
+      "velocity": { "type": "vector", "value": [0, 2.5, 0] },
+      "gravity": { "type": "vector", "value": [0, -0.3, 0] },
+      "color": { "type": "vector", "value": [1.0, 0.4, 0.05] },
+      "spread": { "type": "scalar", "value": 0.25 }
+    }
+  },
+  {
+    "id": "genesis-typography-001", "$domain": "typography", "$name": "Genesis Sans Display",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-typography-sans-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "style": { "type": "categorical", "value": "sans_serif" },
+      "xHeight": { "type": "scalar", "value": 0.52 },
+      "contrast": { "type": "scalar", "value": 0.45 },
+      "width": { "type": "scalar", "value": 0.55 }
+    }
+  },
+  {
+    "id": "genesis-architecture-001", "$domain": "architecture", "$name": "Genesis Tower",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-architecture-tower-v1", "$fitness": { "overall": 0.93 },
+    "genes": {
+      "style": { "type": "categorical", "value": "modern" },
+      "scale": { "type": "scalar", "value": 0.75 },
+      "symmetry": { "type": "categorical", "value": "bilateral" },
+      "materials": { "type": "array", "value": ["steel", "glass", "concrete"] }
+    }
+  },
+  {
+    "id": "genesis-vehicle-001", "$domain": "vehicle", "$name": "Genesis Hypercycle",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-vehicle-cycle-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "propulsion": { "type": "categorical", "value": "electric" },
+      "speed": { "type": "scalar", "value": 0.72 },
+      "mass": { "type": "scalar", "value": 0.25 },
+      "aerodynamics": { "type": "scalar", "value": 0.85 }
+    }
+  },
+  {
+    "id": "genesis-furniture-001", "$domain": "furniture", "$name": "Genesis Parametric Chair",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-furniture-chair-v1", "$fitness": { "overall": 0.89 },
+    "genes": {
+      "furnitureType": { "type": "categorical", "value": "chair" },
+      "style": { "type": "categorical", "value": "modern" },
+      "material": { "type": "categorical", "value": "wood" },
+      "ergonomics": { "type": "scalar", "value": 0.82 }
+    }
+  },
+  {
+    "id": "genesis-fashion-001", "$domain": "fashion", "$name": "Genesis Midnight Gown",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-fashion-gown-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "garmentType": { "type": "categorical", "value": "dress" },
+      "fabric": { "type": "categorical", "value": "silk" },
+      "palette": { "type": "vector", "value": [0.08, 0.02, 0.18] },
+      "silhouette": { "type": "categorical", "value": "flowing" },
+      "season": { "type": "categorical", "value": "fall" }
+    }
+  },
+  {
+    "id": "genesis-robotics-001", "$domain": "robotics", "$name": "Genesis Scout Drone",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-robotics-drone-v1", "$fitness": { "overall": 0.90 },
+    "genes": {
+      "robotType": { "type": "categorical", "value": "aerial" },
+      "dof": { "type": "scalar", "value": 0.5 },
+      "actuators": { "type": "array", "value": ["brushless_motor", "servo"] },
+      "autonomy": { "type": "scalar", "value": 0.75 }
+    }
+  },
+  {
+    "id": "genesis-circuit-001", "$domain": "circuit", "$name": "Genesis Neural Processor",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-circuit-neural-v1", "$fitness": { "overall": 0.92 },
+    "genes": {
+      "circuitType": { "type": "categorical", "value": "digital" },
+      "components": { "type": "array", "value": ["nand_gate", "flip_flop", "mux", "alu", "register_file", "cache"] },
+      "layers": { "type": "scalar", "value": 0.7 },
+      "complexity": { "type": "scalar", "value": 0.8 }
+    }
+  },
+  {
+    "id": "genesis-food-001", "$domain": "food", "$name": "Genesis Umami Ramen",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-food-ramen-v1", "$fitness": { "overall": 0.93 },
+    "genes": {
+      "cuisine": { "type": "categorical", "value": "japanese" },
+      "complexity": { "type": "scalar", "value": 0.72 },
+      "flavor_profile": { "type": "vector", "value": [0.15, 0.65, 0.90, 0.20, 0.05] }
+    }
+  },
+  {
+    "id": "genesis-choreography-001", "$domain": "choreography", "$name": "Genesis Fluid Motion",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-choreography-fluid-v1", "$fitness": { "overall": 0.91 },
+    "genes": {
+      "style": { "type": "categorical", "value": "contemporary" },
+      "tempo": { "type": "scalar", "value": 0.45 },
+      "dancers": { "type": "scalar", "value": 0.4 },
+      "energy": { "type": "scalar", "value": 0.65 }
+    }
+  },
+  {
+    "id": "genesis-agent-001", "$domain": "agent", "$name": "Genesis Architect Agent",
+    "$lineage": { "generation": 0, "operation": "genesis" },
+    "$hash": "genesis-agent-architect-v1", "$fitness": { "overall": 0.95 },
+    "genes": {
+      "persona": { "type": "categorical", "value": "architect" },
+      "name": { "type": "categorical", "value": "Genesis" },
+      "temperature": { "type": "scalar", "value": 0.3 },
+      "reasoning_depth": { "type": "scalar", "value": 0.8 },
+      "exploration_rate": { "type": "scalar", "value": 0.4 },
+      "confidence_threshold": { "type": "scalar", "value": 0.7 },
+      "verbosity": { "type": "scalar", "value": 0.5 },
+      "autonomy": { "type": "scalar", "value": 0.6 },
+      "creativity_bias": { "type": "scalar", "value": 0.5 },
+      "max_reasoning_steps": { "type": "scalar", "value": 0.6 },
+      "context_window": { "type": "scalar", "value": 0.5 },
+      "domain_focus": { "type": "vector", "value": [0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037, 0.037] },
+      "gene_expertise": { "type": "vector", "value": [0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059, 0.059] },
+      "tool_permissions": { "type": "struct", "value": { "web_browse": false, "file_write": false, "fork_agent": false, "delegate": false } }
+    }
+  }
+]

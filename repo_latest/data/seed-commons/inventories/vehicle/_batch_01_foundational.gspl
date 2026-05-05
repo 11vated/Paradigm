@@ -1,0 +1,282 @@
+// seed-commons/inventories/vehicle/_batch_01_foundational.gspl
+//
+// Vehicle inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational vehicle seeds spanning eras and locomotion modes.
+// Combustion entries lineage-root in chemistry::combust_methane when applicable.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.vehicle"
+
+module seed_commons.inventories.vehicle.batch01
+
+import Std.Color
+import Std.Vehicle
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Horse-drawn cart — two-wheel wooden
+pub fn horse_drawn_cart() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.horse_drawn_cart", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Animal,
+        era = "medieval",
+        length_m = 2.8,
+        width_m = 1.5,
+        mass_kg = 240.0,
+        top_speed_m_s = 5.0,
+        wheel_count = 2,
+        frame_material_ref = "inventory://materials/polished_oak@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 50.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.10, h = 45.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 40.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/polished_oak@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Viking longship — clinker-built oceangoing
+pub fn viking_longship() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.viking_longship", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Watercraft,
+        era = "early_medieval",
+        length_m = 28.0,
+        width_m = 5.2,
+        mass_kg = 22000.0,
+        top_speed_m_s = 8.0,
+        oar_count = 60,
+        sail_area_m2 = 90.0,
+        hull_material_ref = "inventory://materials/polished_oak@v1",
+        sail_material_ref = "inventory://materials/handwoven_linen@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.06, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 30.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/polished_oak@v1",
+            "inventory://materials/handwoven_linen@v1",
+            "inventory://fluid/seawater_standard@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Steam locomotive — 4-6-2 Pacific
+pub fn steam_locomotive_pacific() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.steam_locomotive_pacific", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Rail,
+        era = "industrial",
+        length_m = 22.5,
+        width_m = 3.1,
+        mass_kg = 180000.0,
+        top_speed_m_s = 44.7,
+        powertrain = Std.Vehicle.Powertrain.Steam { boiler_bar = 18.0, cylinders = 2 },
+        frame_material_ref = "inventory://materials/forged_steel_blade@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 60.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 25.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.14, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/forged_steel_blade@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Vintage roadster — 1930s open-top coupe
+pub fn vintage_roadster_1930() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.vintage_roadster_1930", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Automobile,
+        era = "interwar",
+        length_m = 4.2,
+        width_m = 1.68,
+        mass_kg = 1150.0,
+        top_speed_m_s = 38.0,
+        wheel_count = 4,
+        powertrain = Std.Vehicle.Powertrain.ICE { displacement_L = 3.5, cylinders = 6 },
+        frame_material_ref = "inventory://materials/forged_steel_blade@v1",
+        trim_material_ref = "inventory://materials/tanned_leather@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.14, h = 20.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.12, h = 40.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.10, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/forged_steel_blade@v1",
+            "inventory://materials/tanned_leather@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Biplane fighter — WWI-era fabric-and-wood
+pub fn biplane_fighter_wwi() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.biplane_fighter_wwi", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Aircraft,
+        era = "ww1",
+        length_m = 6.8,
+        wingspan_m = 8.5,
+        mass_kg = 660.0,
+        top_speed_m_s = 53.0,
+        powertrain = Std.Vehicle.Powertrain.ICE { displacement_L = 9.4, cylinders = 9 },
+        frame_material_ref = "inventory://materials/polished_oak@v1",
+        skin_material_ref = "inventory://materials/handwoven_linen@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 75.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.08, h = 70.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.14, h = 30.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/polished_oak@v1",
+            "inventory://materials/handwoven_linen@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Modern sedan — electric 4-door
+pub fn modern_ev_sedan() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.modern_ev_sedan", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Automobile,
+        era = "contemporary",
+        length_m = 4.98,
+        width_m = 1.96,
+        mass_kg = 2100.0,
+        top_speed_m_s = 69.0,
+        wheel_count = 4,
+        powertrain = Std.Vehicle.Powertrain.Electric { battery_kWh = 100.0, motors = 2 },
+        frame_material_ref = "inventory://materials/brushed_aluminium@v1",
+        body_material_ref = "inventory://materials/carbon_fiber_2x2@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.12, c = 0.02, h = 240.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.02, h = 230.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/brushed_aluminium@v1",
+            "inventory://materials/carbon_fiber_2x2@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Fishing dinghy — small outboard boat
+pub fn fishing_dinghy() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.fishing_dinghy", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Watercraft,
+        era = "contemporary",
+        length_m = 4.6,
+        width_m = 1.8,
+        mass_kg = 320.0,
+        top_speed_m_s = 11.0,
+        powertrain = Std.Vehicle.Powertrain.ICE { displacement_L = 0.5, cylinders = 2 },
+        hull_material_ref = "inventory://materials/carbon_fiber_2x2@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 220.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 230.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/carbon_fiber_2x2@v1",
+            "inventory://fluid/seawater_standard@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Spacecraft capsule — crewed reentry vehicle
+pub fn spacecraft_capsule() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.spacecraft_capsule", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Spacecraft,
+        era = "space_age",
+        length_m = 3.9,
+        diameter_m = 4.0,
+        mass_kg = 9500.0,
+        powertrain = Std.Vehicle.Powertrain.Rocket {
+            propellant = "RP-1/LOX",
+            thrust_kN = 710.0,
+        },
+        frame_material_ref = "inventory://materials/brushed_aluminium@v1",
+        heat_shield_material_ref = "inventory://materials/carbon_fiber_2x2@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 85.0 },
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 60.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 40.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/brushed_aluminium@v1",
+            "inventory://materials/carbon_fiber_2x2@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Skyhook airship — rigid dirigible
+pub fn rigid_airship() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.rigid_airship", version = "1.0.0",
+        kind = Std.Vehicle.Kind.Aircraft,
+        era = "interwar",
+        length_m = 240.0,
+        diameter_m = 41.0,
+        mass_kg = 215000.0,
+        top_speed_m_s = 36.0,
+        lift_gas = "helium",
+        gas_volume_m3 = 200000.0,
+        powertrain = Std.Vehicle.Powertrain.ICE { displacement_L = 88.0, cylinders = 16 },
+        frame_material_ref = "inventory://materials/brushed_aluminium@v1",
+        envelope_material_ref = "inventory://materials/handwoven_linen@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.04, h = 70.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 30.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/brushed_aluminium@v1",
+            "inventory://materials/handwoven_linen@v1",
+            "chem://reaction/combustion-methane@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Mountain bicycle — aluminium frame
+pub fn mountain_bicycle() -> Std.Vehicle.Seed pure =
+    seed Std.Vehicle.Seed {
+        name = "vehicle.mountain_bicycle", version = "1.0.0",
+        kind = Std.Vehicle.Kind.HumanPowered,
+        era = "contemporary",
+        length_m = 1.78,
+        mass_kg = 13.2,
+        top_speed_m_s = 14.0,
+        wheel_count = 2,
+        frame_material_ref = "inventory://materials/brushed_aluminium@v1",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.18, h = 150.0 },
+            Std.Color.OKLCh { l = 0.22, c = 0.04, h = 60.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 80.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/brushed_aluminium@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [
+        "seed_commons.libraries.chemistry@v1",
+        "seed_commons.inventories.materials@v1",
+        "seed_commons.inventories.fluid@v1",
+    ],
+    category   = "vehicle",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.vehicle",
+}

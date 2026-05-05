@@ -1,0 +1,167 @@
+// seed-commons/libraries/media_studio.gspl
+//
+// Full Media Spectrum & Studio Technique library — runnable GSPL materialization
+// of Brief 093 (research/093-full-media-spectrum-and-studio-technique-substrate.md).
+//
+// Captures the full analog + digital media production substrate: film stocks,
+// lens glass, lighting fixtures, color spaces, audio formats, codec profiles,
+// studio workflows. Sources: SMPTE, EBU, ACES, ARRI manuals, Kodak datasheets,
+// Dolby Labs, AES, ITU-R BT specifications.
+//
+// PURE. rng_seed = "seed_commons.libraries.media_studio:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.physics@v1, seed_commons.libraries.music_audio@v1]
+
+module seed_commons.libraries.media_studio
+
+import Std.Color
+import seed_commons.libraries.physics as Phys
+
+// -----------------------------------------------------------------------------
+// 1. Color spaces
+// -----------------------------------------------------------------------------
+
+pub enum ColorSpace {
+    sRGB, Rec709, Rec2020, P3_D65, ACEScg, ACES2065_1, ProPhoto, AdobeRGB1998,
+}
+
+pub struct ColorPipeline {
+    name: String,
+    working_space: ColorSpace,
+    display_eotf: String,
+    white_point: String,
+    gamut_primaries_xy: [Std.Color.XY],
+}
+
+pub fn rec709_tv_pipeline() -> ColorPipeline pure =
+    ColorPipeline { name = "rec709_tv", working_space = ColorSpace.Rec709, display_eotf = "BT1886", white_point = "D65",
+        gamut_primaries_xy = [Std.Color.XY { x = 0.640, y = 0.330 }, Std.Color.XY { x = 0.300, y = 0.600 }, Std.Color.XY { x = 0.150, y = 0.060 }] }
+
+pub fn aces_cg_pipeline() -> ColorPipeline pure =
+    ColorPipeline { name = "aces_cg", working_space = ColorSpace.ACEScg, display_eotf = "ACES_ODT_Rec709", white_point = "D60",
+        gamut_primaries_xy = [Std.Color.XY { x = 0.713, y = 0.293 }, Std.Color.XY { x = 0.165, y = 0.830 }, Std.Color.XY { x = 0.128, y = 0.044 }] }
+
+pub fn rec2020_hdr_pipeline() -> ColorPipeline pure =
+    ColorPipeline { name = "rec2020_hdr", working_space = ColorSpace.Rec2020, display_eotf = "PQ_ST2084", white_point = "D65",
+        gamut_primaries_xy = [Std.Color.XY { x = 0.708, y = 0.292 }, Std.Color.XY { x = 0.170, y = 0.797 }, Std.Color.XY { x = 0.131, y = 0.046 }] }
+
+// -----------------------------------------------------------------------------
+// 2. Film stocks
+// -----------------------------------------------------------------------------
+
+pub struct FilmStock {
+    name: String,
+    manufacturer: String,
+    format: String,
+    iso: u32,
+    color_type: String,
+    grain_rms: Scalar,
+    characteristic_curve: String,
+}
+
+pub fn kodak_vision3_250d() -> FilmStock pure =
+    FilmStock { name = "Vision3_250D", manufacturer = "Kodak", format = "35mm", iso = 250, color_type = "color_negative_daylight", grain_rms = 5.0, characteristic_curve = "vision3_long_latitude" }
+
+pub fn kodak_portra_400() -> FilmStock pure =
+    FilmStock { name = "Portra_400", manufacturer = "Kodak", format = "120", iso = 400, color_type = "color_negative_portrait", grain_rms = 4.0, characteristic_curve = "portra_low_saturation" }
+
+pub fn ilford_hp5_plus() -> FilmStock pure =
+    FilmStock { name = "HP5_Plus", manufacturer = "Ilford", format = "35mm", iso = 400, color_type = "bw_negative", grain_rms = 11.0, characteristic_curve = "classic_t_grain" }
+
+pub fn fujifilm_velvia_50() -> FilmStock pure =
+    FilmStock { name = "Velvia_50", manufacturer = "Fujifilm", format = "120", iso = 50, color_type = "color_reversal_landscape", grain_rms = 8.0, characteristic_curve = "high_saturation_steep" }
+
+// -----------------------------------------------------------------------------
+// 3. Lens archetype
+// -----------------------------------------------------------------------------
+
+pub struct LensArchetype {
+    name: String,
+    focal_length_mm: Scalar,
+    max_aperture: Scalar,
+    optical_construction: String,
+    bokeh_shape: String,
+    flare_character: String,
+}
+
+pub fn cooke_s4_50mm() -> LensArchetype pure =
+    LensArchetype { name = "Cooke_S4_50mm", focal_length_mm = 50.0, max_aperture = 2.0, optical_construction = "9_elements_7_groups", bokeh_shape = "round_smooth", flare_character = "warm_cooke_look" }
+
+pub fn arri_master_anamorphic_75mm() -> LensArchetype pure =
+    LensArchetype { name = "ARRI_Master_Anamorphic_75mm", focal_length_mm = 75.0, max_aperture = 1.9, optical_construction = "anamorphic_2x_squeeze", bokeh_shape = "vertical_oval", flare_character = "horizontal_blue_streak" }
+
+pub fn zeiss_otus_55mm() -> LensArchetype pure =
+    LensArchetype { name = "Zeiss_Otus_55mm", focal_length_mm = 55.0, max_aperture = 1.4, optical_construction = "12_elements_10_groups_apo", bokeh_shape = "round_edge_clean", flare_character = "minimal_t_coated" }
+
+// -----------------------------------------------------------------------------
+// 4. Lighting fixtures
+// -----------------------------------------------------------------------------
+
+pub struct LightFixture {
+    name: String,
+    type_: String,
+    power_w: Scalar,
+    cct_k: Scalar,
+    cri: Scalar,
+    beam_angle_deg: Scalar,
+    lumens: Scalar,
+}
+
+pub fn arri_skypanel_s60c() -> LightFixture pure =
+    LightFixture { name = "ARRI_SkyPanel_S60C", type_ = "rgbww_led_softlight", power_w = 450.0, cct_k = 5600.0, cri = 95.0, beam_angle_deg = 115.0, lumens = 30000.0 }
+
+pub fn aputure_600d() -> LightFixture pure =
+    LightFixture { name = "Aputure_600d_Pro", type_ = "cob_led_daylight", power_w = 720.0, cct_k = 5600.0, cri = 96.0, beam_angle_deg = 55.0, lumens = 60000.0 }
+
+pub fn tungsten_fresnel_2k() -> LightFixture pure =
+    LightFixture { name = "Mole_Richardson_2K_Junior", type_ = "tungsten_fresnel", power_w = 2000.0, cct_k = 3200.0, cri = 100.0, beam_angle_deg = 50.0, lumens = 50000.0 }
+
+// -----------------------------------------------------------------------------
+// 5. Audio formats
+// -----------------------------------------------------------------------------
+
+pub struct AudioFormat {
+    name: String,
+    channels: u8,
+    sample_rate_hz: u32,
+    bit_depth: u8,
+    codec: String,
+    use_case: String,
+}
+
+pub fn pcm_48k_24bit_stereo() -> AudioFormat pure =
+    AudioFormat { name = "PCM_48k_24_stereo", channels = 2, sample_rate_hz = 48000, bit_depth = 24, codec = "pcm_linear", use_case = "broadcast_master" }
+
+pub fn dolby_atmos_7_1_4() -> AudioFormat pure =
+    AudioFormat { name = "Dolby_Atmos_7_1_4", channels = 12, sample_rate_hz = 48000, bit_depth = 24, codec = "atmos_object_based", use_case = "cinema_premium" }
+
+pub fn opus_48k_stereo() -> AudioFormat pure =
+    AudioFormat { name = "Opus_48k_stereo", channels = 2, sample_rate_hz = 48000, bit_depth = 0, codec = "opus", use_case = "streaming_low_latency" }
+
+// -----------------------------------------------------------------------------
+// 6. Functors
+// -----------------------------------------------------------------------------
+
+pub fn stock_to_grain_profile_functor() -> Functor pure =
+    Functor.id("media://functor/film_stock_to_grain_profile@v1")
+
+pub fn lens_to_optical_defects_functor() -> Functor pure =
+    Functor.id("media://functor/lens_to_optical_defects@v1")
+
+pub fn fixture_to_light_sample_functor() -> Functor pure =
+    Functor.id("media://functor/fixture_to_light_sample@v1")
+
+$metadata {
+    materializes_brief = "research/093-full-media-spectrum-and-studio-technique-substrate.md",
+    source_standards   = ["SMPTE", "EBU", "ACES", "ARRI", "Kodak", "Dolby", "AES", "ITU_R_BT"],
+    pipeline_count     = 3,
+    film_count         = 4,
+    lens_count         = 3,
+    fixture_count      = 3,
+    audio_format_count = 3,
+    functor_count      = 3,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.media_studio",
+    lineage_parents    = ["seed_commons.libraries.physics@v1", "seed_commons.libraries.music_audio@v1"],
+}

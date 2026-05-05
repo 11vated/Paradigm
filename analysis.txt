@@ -1,0 +1,872 @@
+Paradigm GSPL Engine – Full Spectrum Analysis (Post-Update)
+Executive Summary
+The repository has been successfully updated. The platform is now a production-grade, feature-complete creative operating system with a deterministic kernel, native agent, full-stack TypeScript, and modern DevOps. However, the analysis has uncovered 4 critical bugs that block core functionality, plus several high-priority security and reliability issues.
+
+Overall Score: 82/100 – Excellent foundation, but requires a focused bug-fix sprint before production deployment.
+
+1. What's Working Well (Strengths)
+Area	Assessment
+Architecture	Clean 7-layer separation: kernel → engine → agent → API → frontend
+Deterministic Kernel	xoshiro256** RNG, 17 gene types × 4 operators, 27 domain engines, 12 functor bridges – all pure TypeScript
+Graceful Degradation	Works without LLM, Redis, or MongoDB – falls back to deterministic operations
+Testing	359 passing unit tests across kernel, agent, validation, security, auth
+API Documentation	OpenAPI 3.1 spec + Swagger UI at /api-docs/ui
+DevOps	Docker Compose (6 services), GitHub Actions CI/CD, Prometheus + Grafana
+Security (partial)	JWT + PBKDF2, refresh tokens, RBAC, rate limiting on auth
+Frontend	React 19 with Three.js, Zustand stores, WebSocket agent streaming
+Conclusion: The backend and kernel are production-ready. The frontend has critical bugs.
+
+2. Critical Issues (Must Fix – Blocks Usage)
+#	Issue	Location	Impact	Fix
+C1	Missing useEffect import	CompositionPanel.jsx:12	Composition panel crashes on mount; right-panel tab broken	Add useEffect to React import
+C2	Broken async-to-sync pattern	agent/index.ts:304-320	Synchronous process() always falls through; tool system bypassed	Replace .then() with await or restructure sync path
+C3	Missing API functions	MintPanel.jsx	mintSeed(), getNftInfo(), getSeedPortraitUrl() not exported from api.jsx	Add stubs or implement functions
+C4	CSP allows unsafe-eval	security/middleware.ts:96-104	XSS attack surface in production	Remove unsafe-eval, restrict sources
+Impact: Until these are fixed, the Composition panel, Mint panel, and Agent sync mode are completely broken. Users cannot compose seeds, mint NFTs, or use the agent without external LLM.
+
+3. High-Priority Issues (Fix Before Deployment)
+3.1 Data Integrity
+Issue	Location	Risk
+JsonStore has no atomic writes	src/lib/data/JsonStore.ts	Crash during write = data corruption
+No migration rollback	migrations/	Failed migration requires manual DB restore
+Audit log capped at 10,000	server.ts	Old entries silently deleted
+3.2 Security
+Issue	Location	Risk
+CORS origins hardcoded	security/middleware.ts	Doesn't read CORS_ORIGINS env var
+X-Frame-Options disabled	security/middleware.ts	Clickjacking risk
+No rate limiting on seed operations	server.ts	Auth has rate limiting; seed APIs don't
+3.3 Agent System
+Issue	Location	Impact
+KnowledgeBase hardcoded	agent/knowledge.ts	27 domain descriptions manually coded, not derived from kernel
+RAG chunking naive	agent/rag.ts	Splits on \n\n, breaks code blocks/tables
+GSPL parser in tools is regex-only	agent/tools.ts	Doesn't handle escaped quotes or complex syntax
+No embedding caching	agent/rag.ts	Recomputes all embeddings on every init
+3.4 Performance
+Issue	Location	Impact
+QCD solver allocates 4× needed memory	qft/qcd_solver.ts	Extra factor of 4 in Float64Array
+LineageGraph runs 80 force iterations per render	LineageGraph.jsx	No memoization, slow re-renders
+No request batching for Gemini embeddings	intelligence/index.ts	Inefficient API usage
+4. Medium-Priority Issues (Quality & Polish)
+4.1 Frontend
+Zero unit tests for React components – only E2E via Playwright
+
+All components are .jsx – no TypeScript type safety
+
+seedStore has no persistence – gallery lost on page refresh
+
+Domain color maps duplicated across 6+ files
+
+No error boundaries – unhandled component errors crash entire app
+
+No skeleton loaders – just spinner overlays
+
+4.2 Backend
+Pseudo-embedding uses weak LCG – should use better hash-based approach
+
+No rate limiting on intelligence layer – will hit Gemini quota in loops
+
+Health check pings every 30s – aggressive for external API
+
+No cache key namespacing – multi-instance collision risk
+
+RedisCache doesn't auto-reconnect on connection drop
+
+4.3 Mesh Extraction
+Not actual marching cubes – face-based extraction produces blocky output
+
+No vertex deduplication – 4-6× more vertices than needed
+
+Flat normals only – no smooth shading
+
+5. Missing Features (Nice to Have)
+Feature	Status	Notes
+Semantic search in agent	❌ Not implemented	KnowledgeBase uses keyword matching only
+Agent fork/delegation	❌ Stubs only	delegateToSubAgent tool exists but not implemented
+Migration rollback	❌ Missing	No down() migrations
+Frontend component tests	❌ 0% coverage	No React component tests
+API request deduplication	❌ Missing	Identical concurrent requests not batched
+Undo/redo in studio	❌ Missing	No operation history
+Offline support	❌ Missing	No service worker or local caching
+i18n	❌ Missing	English-only
+6. Test Coverage Gaps
+Area	Tests	Coverage	Gap
+Kernel RNG	15	HIGH	–
+Gene System	90	HIGH	–
+Engines	9	MEDIUM	Only 9 of 27 engines tested individually
+Composition	14	HIGH	–
+Agent v2	54	HIGH	–
+Validation	43	HIGH	–
+Security	45	HIGH	–
+Auth	26	HIGH	–
+Data Layer	20	MEDIUM	No concurrent access tests
+React Components	0	NONE	Critical gap
+WebSocket	0	NONE	No reconnection testing
+GSPL Parser	0	NONE	Covered indirectly via agent tests
+7. Deployment Readiness
+Criterion	Status	Notes
+Docker multi-stage build	✅ Ready	Node 20, health checks
+CI/CD pipeline	✅ Ready	6-stage GitHub Actions
+Monitoring	✅ Ready	Prometheus + Grafana
+Auth & RBAC	✅ Ready	JWT + roles
+API documentation	✅ Ready	OpenAPI 3.1 + Swagger UI
+Data persistence	⚠️ Partial	JSON store not production-safe
+Error handling	⚠️ Partial	Silent failures in many places
+Security hardening	⚠️ Partial	CSP too permissive, CORS hardcoded
+Frontend stability	❌ Broken	3 missing imports crash core features
+Component testing	❌ Missing	Zero React unit tests
+Overall Deployment Readiness: 65/100 – Backend is ready; frontend needs critical fixes.
+
+8. Recommended Fix Priority
+Immediate (Blocks Usage – Fix Today)
+✅ Fix CompositionPanel.jsx – add useEffect import
+
+✅ Fix MintPanel.jsx – add missing API functions or stub them
+
+✅ Fix agent/index.ts sync execution – replace .then() with await or remove sync path
+
+✅ Tighten CSP – remove unsafe-eval, restrict sources
+
+Short-Term (Before Any Deployment – This Week)
+Wire CORS_ORIGINS env var into security middleware
+
+Add atomic writes to JsonStore (write-tmp + rename)
+
+Add React error boundaries to entire app
+
+Add general API rate limiting (not just auth)
+
+Medium-Term (Quality & Reliability – Next 2 Weeks)
+Add React component unit tests (target 60%+ coverage)
+
+Migrate components to TypeScript
+
+Extract domain color constants to single source of truth
+
+Add Redis reconnection logic
+
+Implement proper embedding caching for RAG
+
+Replace regex GSPL parser with real parser from src/lib/gspl-parser.ts
+
+9. Overall Assessment
+Dimension	Score	Notes
+Kernel & Language	95/100	Deterministic, complete, well-tested
+Engines	85/100	27 domains, but only 9 have dedicated tests
+Agent	75/100	Powerful but broken sync path and hardcoded knowledge
+Backend Infrastructure	85/100	Solid, but missing general rate limiting
+Data Layer	65/100	JsonStore not production-safe; no migration rollback
+Frontend	60/100	Feature-rich but critical bugs and zero component tests
+Testing	70/100	Excellent backend coverage; zero frontend tests
+Security	70/100	Good auth but permissive CSP and hardcoded CORS
+Deployment	75/100	Docker + CI/CD ready; frontend instability blocks deploy
+Documentation	85/100	OpenAPI spec, README, but no GSPL language guide
+Overall	82/100	Strong foundation; fix critical bugs → 90+
+10. Final Verdict
+Paradigm GSPL Engine v2.0 is an ambitious, architecturally sound platform with an impressive deterministic kernel and feature breadth. The backend is mature, with 359 passing tests, solid auth, and production-ready DevOps.
+
+However, 3-4 critical bugs in the frontend currently block core features (Composition panel, Mint panel, Agent sync mode). The frontend also lacks any component tests and has security gaps (CSP, CORS).
+
+Recommendation: Run a focused 2-3 day bug-fix sprint on the critical issues (C1–C4 and security hardening). After that, the platform will be production-ready and score 90+.
+
+Bottom line: Strong foundation. Fix the frontend bugs, and you're ready to ship.
+
+now we need to seriously plan all the next steps
+We need to plan next steps based on the comprehensive analysis. The user wants a serious plan to move forward, addressing the critical bugs and the roadmap to 100/100. We should produce a structured plan with phases, tasks, and priorities.
+
+Paradigm GSPL Engine – Serious Next Steps Plan
+Based on the full spectrum analysis, we have a clear path from the current 82/100 to 100/100. The plan is divided into three phases over approximately 4 weeks. Each phase has concrete deliverables, estimated effort, and success criteria.
+
+Executive Summary of Findings
+Area	Current Score	Target	Gap
+Frontend Stability	60	95	Critical bugs + missing tests
+Security	70	95	CSP, CORS, rate limiting
+Data Layer	65	95	Atomic writes, migrations
+Agent	75	95	Sync path, knowledge base, RAG
+Testing	70	95	React component tests
+Overall	82	100	+18
+The 4 critical blockers (C1–C4) must be fixed immediately – they break core features.
+
+Phase 0: Emergency Bug Fix (Today – 4 hours)
+Goal: Restore broken functionality so the platform is usable.
+
+Task	File	Fix	Est.
+C1	frontend/src/components/studio/CompositionPanel.jsx	Add useEffect to React import	5 min
+C2	src/lib/agent/index.ts lines 304-320	Replace .then() pattern with await or restructure sync path	30 min
+C3	frontend/src/services/api.jsx	Add mintSeed, getNftInfo, getSeedPortraitUrl functions (or stubs)	1 hour
+C4	src/lib/security/middleware.ts lines 96-104	Remove 'unsafe-eval' and tighten CSP sources	15 min
+Verify	Run npm run dev and manually test Composition, Mint, Agent	All panels work	2 hours
+Deliverable: All critical bugs fixed. Platform fully usable.
+
+Phase 1: Security & Data Hardening (Week 1 – 5 days)
+Goal: Make the platform production-safe.
+
+1.1 Security Hardening (2 days)
+Task	File	Details
+Wire CORS origins from env var	src/lib/security/middleware.ts	Read CORS_ORIGINS env, split by comma
+Add general API rate limiting	server.ts	Apply rateLimit middleware to all /api/* routes (except auth which already has it)
+Enable X-Frame-Options	src/lib/security/middleware.ts	Set X-Frame-Options: DENY or SAMEORIGIN
+Add Helmet for extra headers	server.ts	npm install helmet and apply middleware
+Run security audit	npm audit	Fix any critical vulnerabilities
+1.2 Data Layer Production‑Ready (3 days)
+Task	File	Details
+Atomic writes for JsonStore	src/lib/data/JsonStore.ts	Write to temp file, then rename
+Add migration rollback	migrations/	Implement down() for each migration
+Increase audit log cap to 100,000 or make configurable	server.ts	Change hardcoded limit to env var
+Add backup cron (admin only)	server.ts	POST /admin/backup endpoint that exports all seeds
+Deliverable: No data corruption risk, migrations reversible, audit log configurable.
+
+Phase 2: Agent & Intelligence Upgrade (Week 2 – 5 days)
+Goal: Make the agent truly intelligent and efficient.
+
+2.1 Fix Agent Sync Path (Already in Phase 0 – ensure complete)
+Task	Details
+Replace .then() pattern	Use await or proper async flow
+Add error handling for tool execution	Catch and log, fallback to deterministic response
+2.2 Knowledge Base & RAG (3 days)
+Task	File	Details
+Derive knowledge from kernel metadata	agent/knowledge.ts	Auto-generate domain descriptions from engines.ts and gene_system.ts
+Improve RAG chunking	agent/rag.ts	Use recursive splitter respecting code fences, tables, markdown headers
+Replace regex GSPL parser	agent/tools.ts	Import real parser from src/lib/gspl-parser.ts
+Add embedding caching	agent/rag.ts	Cache embeddings in Redis or in-memory LRU
+2.3 Performance Optimizations (2 days)
+Task	File	Details
+Reduce QCD memory allocation	qft/qcd_solver.ts	Remove extra factor of 4
+Memoize LineageGraph	frontend/src/components/studio/LineageGraph.jsx	Use React.memo and useMemo
+Add request batching for Gemini	intelligence/index.ts	Batch multiple embedding requests
+Deliverable: Agent uses real GSPL parser, has semantic search via embeddings, runs faster.
+
+Phase 3: Frontend Polish & Testing (Week 3 – 5 days)
+Goal: Achieve production-quality frontend with tests.
+
+3.1 Error Boundaries & UX (2 days)
+Task	File	Details
+Add React ErrorBoundary	frontend/src/App.jsx	Wrap entire app; fallback UI
+Add skeleton loaders	All panel components	Replace spinners with skeleton screens
+Persist gallery to localStorage	frontend/src/stores/seedStore.js	Sync Zustand store with localStorage
+Extract domain color constants	New file frontend/src/constants/domainColors.js	Single source of truth
+3.2 Component Tests (3 days)
+Task	Target Coverage	Details
+Set up React Testing Library	npm install @testing-library/react	Configure Vitest for components
+Test critical components	60%+	AgentPanel, MintPanel, CompositionPanel, GeneEditor, PreviewViewport
+Test stores	Zustand stores	seedStore, authStore
+Add to CI	.github/workflows/ci.yml	Run component tests in parallel with unit tests
+Deliverable: Frontend no longer crashes, has skeleton loaders, persistent gallery, and component tests.
+
+Phase 4: Final Polish & Documentation (Week 4 – 5 days)
+Goal: Reach 100/100 with complete documentation and deployment readiness.
+
+4.1 Documentation (2 days)
+Task	File	Details
+GSPL language guide	docs/GSPL_LANGUAGE.md	Syntax, 27 engines, 17 gene types, functors, examples
+Deployment guide	docs/DEPLOYMENT.md	AWS, DigitalOcean, bare metal
+API usage examples	docs/API_EXAMPLES.md	curl commands for common workflows
+Video demo	Link in README	5-minute walkthrough
+4.2 Final Security & Performance (2 days)
+Task	Details
+Run full penetration test (manual)	Check for XSS, CSRF, injection
+Enable HTTPS in production mode	Use helmet with HSTS
+Add Redis auto-reconnect	src/lib/cache/RedisCache.ts
+Add request deduplication	For identical concurrent grow/compose requests
+4.3 Release & Monitoring (1 day)
+Task	Details
+Create GitHub release v2.0.0	Tag, changelog, binaries (if any)
+Set up Uptime monitoring	UptimeRobot or similar
+Configure alerts in Grafana	For high error rate, slow responses
+Deliverable: Platform scores 100/100, fully documented, and monitored.
+
+Summary Timeline
+Phase	Duration	Focus	Score After
+Phase 0	1 day (4 hours)	Emergency bug fix	85 → 88
+Phase 1	5 days	Security + Data	88 → 92
+Phase 2	5 days	Agent + Intelligence	92 → 95
+Phase 3	5 days	Frontend + Testing	95 → 98
+Phase 4	5 days	Docs + Final Polish	98 → 100
+Total: ~21 working days (4 weeks).
+
+Immediate Action Items (Start Today)
+Fix the 4 critical bugs – I can provide the exact code patches for each.
+
+Run the manual verification – ensure Composition, Mint, Agent panels work.
+
+Create a branch hotfix/critical-bugs and push to GitHub.
+
+Merge to main and trigger CI/CD.
+
+Do you want me to produce the exact code fixes for C1, C2, C3, C4 now?
+
+i need you to detail everything that needs to be done please
+We need to produce a comprehensive, detailed, actionable plan covering all fixes and improvements from the analysis. The user wants "everything that needs to be done" – a complete checklist with specifics. We'll organize by priority and include file paths, code snippets, and commands. We'll base on the analysis findings: critical bugs (C1-C4), security, data layer, agent, frontend, testing, documentation. Provide step-by-step instructions.
+
+Paradigm GSPL Engine – Complete Action Plan
+Below is the exhaustive, step‑by‑step list of everything that needs to be done to reach 100/100. Each item includes the file to change, the exact fix, and verification steps.
+
+Phase 0: Emergency Bug Fixes (4 hours)
+✅ C1 – CompositionPanel missing useEffect
+File: frontend/src/components/studio/CompositionPanel.jsx
+Line: ~12 (the import statement)
+
+Current:
+
+jsx
+import { useState } from 'react';
+Fix:
+
+jsx
+import { useState, useEffect } from 'react';
+Verify: Navigate to Studio → Compose tab. The panel should load without crashing.
+
+✅ C2 – Agent sync execution broken
+File: src/lib/agent/index.ts
+Lines: 304–320 (the process method, sync branch)
+
+Current (simplified):
+
+typescript
+const resultPromise = tool.execute(step.params, ctx);
+let result: any = null;
+resultPromise.then(r => { result = r; });
+if (result) { ... }  // always null
+Fix – Option A (recommended): Remove sync path entirely; always use async.
+
+typescript
+// If you have a separate syncProcess() method, delete it.
+// In process(), always await:
+const result = await tool.execute(step.params, ctx);
+if (result) { ... }
+Option B (if sync is required): Use a proper async-to-sync wrapper (not recommended in Node.js). Better to refactor caller to be async.
+
+Verify: Send a query to the agent (e.g., "create a warrior") without an LLM running. The deterministic fallback should still produce a seed.
+
+✅ C3 – MintPanel missing API functions
+File: frontend/src/services/api.jsx
+Add the following exports:
+
+javascript
+// Add these functions to the api object
+
+export const mintSeed = async (seedId, options = {}) => {
+  const response = await apiClient.post(`/seeds/${seedId}/mint`, options);
+  return response.data;
+};
+
+export const getNftInfo = async (seedId) => {
+  const response = await apiClient.get(`/seeds/${seedId}/nft`);
+  return response.data;
+};
+
+export const getSeedPortraitUrl = async (seedId) => {
+  const response = await apiClient.get(`/seeds/${seedId}/portrait`, {
+    responseType: 'blob'
+  });
+  return URL.createObjectURL(response.data);
+};
+Verify: Open Studio → Mint tab. The panel should load without console errors.
+
+✅ C4 – CSP allows unsafe-eval
+File: src/lib/security/middleware.ts
+Lines: 96–104 (the CSP directives)
+
+Current:
+
+typescript
+csp: {
+  'default-src': ["'self'"],
+  'script-src': ["'self'", "'unsafe-eval'", "http://localhost:*"],
+  ...
+}
+Fix:
+
+typescript
+csp: {
+  'default-src': ["'self'"],
+  'script-src': ["'self'", "https://cdn.jsdelivr.net"],  // remove unsafe-eval
+  'style-src': ["'self'", "'unsafe-inline'"],  // keep inline for CSS-in-JS
+  'connect-src': ["'self'", "https://api.github.com"],  // add any required APIs
+  'img-src': ["'self'", "data:", "https:"],
+  'font-src': ["'self'", "https://fonts.gstatic.com"],
+}
+Verify: Run npm run build and serve production. No console errors about CSP violations.
+
+Phase 1: Security & Data Hardening (5 days)
+1.1 Security
+1.1.1 Wire CORS from environment variable
+File: src/lib/security/middleware.ts
+
+Replace hardcoded origins:
+
+typescript
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',')
+  : ['http://localhost:3000', 'http://localhost:5173'];
+Apply to CORS middleware:
+
+typescript
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true
+}));
+1.1.2 Add general API rate limiting
+File: server.ts (after auth routes)
+
+typescript
+import rateLimit from 'express-rate-limit';
+
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100, // 100 requests per minute
+  keyGenerator: (req) => req.user?.id || req.ip,
+  skip: (req) => req.path.startsWith('/auth') // auth has its own stricter limiter
+});
+
+app.use('/api/', apiLimiter);
+1.1.3 Enable X‑Frame‑Options and Helmet
+File: server.ts
+
+bash
+npm install helmet
+typescript
+import helmet from 'helmet';
+
+app.use(helmet({
+  frameguard: { action: 'deny' },
+  hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+  contentSecurityPolicy: false // we already set CSP manually
+}));
+1.1.4 Run security audit
+bash
+npm audit fix --force   # review changes before committing
+1.2 Data Layer Production‑Ready
+1.2.1 Atomic writes for JsonStore
+File: src/lib/data/JsonStore.ts
+
+Modify write method:
+
+typescript
+async write(data: any): Promise<void> {
+  const tmpPath = `${this.filePath}.tmp`;
+  const serialized = JSON.stringify(data, null, 2);
+  await fs.promises.writeFile(tmpPath, serialized, 'utf8');
+  await fs.promises.rename(tmpPath, this.filePath);
+}
+1.2.2 Add migration rollback support
+File: migrations/migrate.js
+
+Add down() to each migration, e.g.:
+
+javascript
+exports.up = async (db) => { /* add collection */ };
+exports.down = async (db) => { /* drop collection */ };
+CLI commands:
+
+bash
+npm run migrate:up
+npm run migrate:down   # new script
+1.2.3 Make audit log limit configurable
+File: server.ts (audit log endpoint)
+
+Replace hardcoded 10000 with:
+
+typescript
+const MAX_AUDIT_LOGS = parseInt(process.env.MAX_AUDIT_LOGS || '100000', 10);
+1.2.4 Add admin backup endpoint
+File: server.ts
+
+typescript
+app.post('/api/admin/backup', requireRole('admin'), async (req, res) => {
+  const seeds = await seedStore.getAll();
+  const backup = { seeds, exportedAt: new Date() };
+  const fileName = `paradigm_backup_${Date.now()}.json`;
+  await fs.promises.writeFile(`./backups/${fileName}`, JSON.stringify(backup));
+  res.json({ message: 'Backup created', file: fileName });
+});
+Phase 2: Agent & Intelligence Upgrade (5 days)
+2.1 Fix agent sync path (already in Phase 0, but ensure thorough)
+File: src/lib/agent/index.ts – remove processSync entirely. Ensure process is always async.
+
+2.2 Derive knowledge from kernel metadata
+File: src/lib/agent/knowledge.ts
+
+Replace hardcoded domain list with:
+
+typescript
+import { engines } from '../kernel/engines';
+import { geneTypes } from '../kernel/gene_system';
+
+export const domainDescriptions = Object.entries(engines).map(([name, engine]) => ({
+  domain: name,
+  description: engine.description || `Engine for ${name} generation`,
+  parameters: engine.parameters
+}));
+2.3 Improve RAG chunking
+File: src/lib/agent/rag.ts
+
+Use a recursive splitter:
+
+typescript
+function splitDocument(text: string, maxChunkSize = 1000): string[] {
+  const chunks: string[] = [];
+  let current = '';
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    if (current.length + line.length > maxChunkSize) {
+      chunks.push(current);
+      current = '';
+    }
+    current += line + '\n';
+  }
+  if (current) chunks.push(current);
+  return chunks;
+}
+2.4 Replace regex GSPL parser with real parser
+File: src/lib/agent/tools.ts
+
+typescript
+import { parseGSPL } from '../gspl-parser'; // existing real parser
+
+async function executeGSPL(code: string) {
+  const ast = parseGSPL(code); // use the real parser
+  // then interpret AST...
+}
+2.5 Add embedding caching
+File: src/lib/agent/rag.ts
+
+Use an LRU cache:
+
+typescript
+import LRU from 'lru-cache';
+const embeddingCache = new LRU<string, number[]>({ max: 1000 });
+
+async function getEmbedding(text: string): Promise<number[]> {
+  const cached = embeddingCache.get(text);
+  if (cached) return cached;
+  const embedding = await generateEmbedding(text);
+  embeddingCache.set(text, embedding);
+  return embedding;
+}
+2.6 Performance optimizations
+2.6.1 QCD memory allocation
+File: src/lib/qft/qcd_solver.ts
+
+Look for Float64Array allocation with factor 4. Change to Float64Array(size) where size is correct.
+
+2.6.2 Memoize LineageGraph
+File: frontend/src/components/studio/LineageGraph.jsx
+
+jsx
+import React, { memo, useMemo } from 'react';
+
+const LineageGraph = memo(({ seeds }) => {
+  const graphData = useMemo(() => computeGraph(seeds), [seeds]);
+  // ...
+});
+2.6.3 Batch Gemini embeddings
+File: src/lib/intelligence/index.ts
+
+typescript
+async function batchEmbed(texts: string[]): Promise<number[][]> {
+  const batches = [];
+  for (let i = 0; i < texts.length; i += 20) {
+    batches.push(texts.slice(i, i + 20));
+  }
+  const results = await Promise.all(batches.map(batch => callGeminiEmbed(batch)));
+  return results.flat();
+}
+Phase 3: Frontend Polish & Testing (5 days)
+3.1 Error Boundaries & UX
+3.1.1 Add global ErrorBoundary
+File: frontend/src/App.jsx
+
+jsx
+import React from 'react';
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+  static getDerivedStateFromError() { return { hasError: true }; }
+  render() {
+    if (this.state.hasError) return <h1>Something went wrong. Please refresh.</h1>;
+    return this.props.children;
+  }
+}
+Wrap <ErrorBoundary> around the entire app.
+
+3.1.2 Add skeleton loaders
+File: frontend/src/components/studio/AgentPanel.jsx (example)
+
+Replace spinner with:
+
+jsx
+{isLoading && <div className="skeleton">Loading...</div>}
+Add CSS: .skeleton { background: #e2e8f0; animation: pulse 1.5s infinite; }
+
+3.1.3 Persist gallery to localStorage
+File: frontend/src/stores/seedStore.js
+
+javascript
+const useSeedStore = create((set, get) => ({
+  seeds: JSON.parse(localStorage.getItem('paradigm_seeds') || '[]'),
+  addSeed: (seed) => {
+    const newSeeds = [...get().seeds, seed];
+    localStorage.setItem('paradigm_seeds', JSON.stringify(newSeeds));
+    set({ seeds: newSeeds });
+  },
+  // similarly for update, delete
+}));
+3.1.4 Extract domain colors to single source
+File: frontend/src/constants/domainColors.js
+
+javascript
+export const DOMAIN_COLORS = {
+  character: '#3b82f6',
+  music: '#ec489a',
+  sprite: '#10b981',
+  // ... all 27 domains
+};
+Remove hardcoded color maps from individual components.
+
+3.2 Component Tests
+3.2.1 Install dependencies
+bash
+npm install --save-dev @testing-library/react @testing-library/jest-dom vitest jsdom
+3.2.2 Configure Vitest for components
+File: vitest.config.ts
+
+typescript
+export default defineConfig({
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.ts'],
+    include: ['**/*.test.{ts,tsx}'],
+  },
+});
+File: tests/setup.ts
+
+typescript
+import '@testing-library/jest-dom';
+3.2.3 Write tests for critical components
+Example: frontend/src/components/studio/AgentPanel.test.jsx
+
+jsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { AgentPanel } from './AgentPanel';
+
+test('sends message on button click', () => {
+  render(<AgentPanel />);
+  const input = screen.getByPlaceholderText(/ask/i);
+  const button = screen.getByText(/send/i);
+  fireEvent.change(input, { target: { value: 'hello' } });
+  fireEvent.click(button);
+  expect(screen.getByText(/hello/i)).toBeInTheDocument();
+});
+Repeat for MintPanel, CompositionPanel, GeneEditor, PreviewViewport.
+
+3.2.4 Add to CI
+File: .github/workflows/ci.yml
+
+Add step:
+
+yaml
+- name: Run component tests
+  run: npm run test:components
+Add script to package.json:
+
+json
+"test:components": "vitest run --environment jsdom"
+Phase 4: Final Polish & Documentation (5 days)
+4.1 Documentation
+4.1.1 GSPL language guide
+File: docs/GSPL_LANGUAGE.md
+
+Include:
+
+Syntax reference (seeds, genes, operators)
+
+List of 27 domains and their parameters
+
+List of 17 gene types and operators (validate, mutate, crossover, distance)
+
+Functor bridges and composition examples
+
+Full example seeds
+
+4.1.2 Deployment guide
+File: docs/DEPLOYMENT.md
+
+Include:
+
+Docker Compose production setup
+
+Environment variables explanation
+
+HTTPS configuration with Let's Encrypt (Nginx)
+
+Backup and restore procedures
+
+Monitoring setup (Prometheus + Grafana)
+
+4.1.3 API usage examples
+File: docs/API_EXAMPLES.md
+
+Include curl commands for:
+
+Authentication (register, login, refresh)
+
+Seed CRUD
+
+Mutation, breeding, evolution
+
+Composition
+
+Agent query
+
+Minting
+
+4.1.4 Video demo
+Record a 5‑minute walkthrough and link in README.md.
+
+4.2 Final Security & Performance
+4.2.1 Manual penetration test
+Check for:
+
+XSS: try injecting <script>alert(1)</script> in seed name, agent query.
+
+CSRF: try making requests from another domain without token.
+
+SQL injection (if using MongoDB, test NoSQL injection via { $ne: null } in parameters).
+
+4.2.2 Enable HTTPS in production
+In server.ts, add:
+
+typescript
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(`https://${req.headers.host}${req.url}`);
+    }
+    next();
+  });
+}
+4.2.3 Redis auto‑reconnect
+File: src/lib/cache/RedisCache.ts
+
+typescript
+const client = createClient({ url: process.env.REDIS_URL });
+client.on('error', (err) => console.error('Redis error', err));
+client.on('end', () => setTimeout(() => client.connect(), 1000));
+await client.connect();
+4.2.4 Request deduplication
+Use a simple in‑memory map for in‑flight requests:
+
+typescript
+const inflight = new Map();
+async function dedupe(key: string, fn: () => Promise<any>) {
+  if (inflight.has(key)) return inflight.get(key);
+  const promise = fn().finally(() => inflight.delete(key));
+  inflight.set(key, promise);
+  return promise;
+}
+Apply to grow and compose endpoints.
+
+4.3 Release & Monitoring
+4.3.1 Create GitHub release
+bash
+git tag -a v2.0.0 -m "Paradigm GSPL Engine v2.0 – Full production release"
+git push origin v2.0.0
+Then go to GitHub → Releases → Draft a new release → choose tag → publish.
+
+4.3.2 Set up uptime monitoring
+Use UptimeRobot or Better Stack to monitor https://your-domain.com/health.
+
+4.3.3 Configure Grafana alerts
+Example: alert when error rate >5% for 5 minutes.
+
+File: monitoring/grafana/provisioning/alerts.yml
+
+yaml
+- name: paradigm_alerts
+  rules:
+    - alert: HighErrorRate
+      expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+      for: 5m
+      annotations:
+        summary: "High error rate detected"
+Summary Checklist
+Phase 0 (Today)
+Fix CompositionPanel useEffect import
+
+Fix agent sync execution path
+
+Add missing API functions for MintPanel
+
+Tighten CSP (remove unsafe-eval)
+
+Phase 1 (Week 1)
+CORS from env var
+
+General rate limiting
+
+Helmet + X‑Frame‑Options
+
+Atomic writes for JsonStore
+
+Migration rollback support
+
+Configurable audit log limit
+
+Admin backup endpoint
+
+Phase 2 (Week 2)
+Derive knowledge from kernel metadata
+
+Improve RAG chunking
+
+Replace regex GSPL parser
+
+Add embedding caching
+
+QCD memory fix
+
+Memoize LineageGraph
+
+Batch Gemini embeddings
+
+Phase 3 (Week 3)
+React ErrorBoundary
+
+Skeleton loaders
+
+Persist gallery to localStorage
+
+Extract domain colors to single file
+
+Set up React Testing Library
+
+Write component tests (60%+ coverage)
+
+Add component tests to CI
+
+Phase 4 (Week 4)
+GSPL language guide
+
+Deployment guide
+
+API examples
+
+Video demo
+
+Manual penetration test
+
+HTTPS enforcement in production
+
+Redis auto‑reconnect
+
+Request deduplication
+
+GitHub release v2.0.0
+
+Uptime monitoring
+
+Grafana alerts
+
+After completing all items, the platform will score 100/100.

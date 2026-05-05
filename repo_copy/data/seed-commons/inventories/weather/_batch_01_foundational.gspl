@@ -1,0 +1,339 @@
+// seed-commons/inventories/weather/_batch_01_foundational.gspl
+//
+// Weather inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational weather seeds, each lineage-rooted in the
+// seed_commons.libraries.chemistry primitives (water, atmosphere, pigments)
+// so the commons DAG proves cross-category lineage.
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.weather"
+
+module seed_commons.inventories.weather.batch01
+
+import Std.Color
+import Std.Field
+import Std.Math
+import Std.Weather
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Clear sky — Rayleigh-scattered daylight
+pub fn clear_sky_daylight() -> Std.Weather.Seed pure =
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.clear_sky_daylight", version = "1.0.0",
+        kind = Std.Weather.Kind.Clear,
+        atmosphere = atm,
+        cloud_cover = 0.02,
+        humidity_rel = 0.45,
+        wind_m_s = 2.4,
+        temperature_K = 293.15,
+        pressure_Pa = 101325.0,
+        visibility_km = 40.0,
+        scattering = Std.Weather.Scattering.Rayleigh { turbidity = 2.2 },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 230.0 },
+            Std.Color.OKLCh { l = 0.86, c = 0.06, h = 225.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.02, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://atmosphere/sea-level@v1",
+            "seed_commons.libraries.chemistry@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Rain shower — Marshall-Palmer drop-size distribution
+pub fn rain_shower() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.rain_shower", version = "1.0.0",
+        kind = Std.Weather.Kind.Rain,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.Rain {
+            substance = water,
+            rate_mm_hr = 6.5,
+            drop_diameter_mm = 1.8,
+            distribution = "Marshall-Palmer",
+            terminal_velocity_m_s = 6.2,
+        },
+        cloud_cover = 0.85,
+        humidity_rel = 0.96,
+        wind_m_s = 4.8,
+        temperature_K = 289.15,
+        visibility_km = 6.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.02, h = 240.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.02, h = 235.0 },
+            Std.Color.OKLCh { l = 0.80, c = 0.01, h = 230.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Thunderstorm — cumulonimbus with lightning discharge
+pub fn thunderstorm_cell() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.thunderstorm_cell", version = "1.0.0",
+        kind = Std.Weather.Kind.Thunderstorm,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.Rain {
+            substance = water,
+            rate_mm_hr = 42.0,
+            drop_diameter_mm = 2.6,
+            distribution = "Marshall-Palmer",
+            terminal_velocity_m_s = 7.4,
+        },
+        cloud_cover = 1.0,
+        cloud_kind = "cumulonimbus",
+        cloud_top_km = 14.0,
+        humidity_rel = 0.99,
+        wind_m_s = 16.0,
+        temperature_K = 291.15,
+        visibility_km = 2.5,
+        electrical = Std.Weather.Electrical {
+            flash_rate_hz = 0.4,
+            peak_current_kA = 30.0,
+            channel_temperature_K = 28000.0,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.18, c = 0.02, h = 250.0 },
+            Std.Color.OKLCh { l = 0.38, c = 0.02, h = 245.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.01, h = 240.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Snowfall — dendritic crystal, light powder
+pub fn snowfall_light() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.snowfall_light", version = "1.0.0",
+        kind = Std.Weather.Kind.Snow,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.Snow {
+            substance = water,
+            rate_mm_hr_water_eq = 0.8,
+            crystal_habit = "dendrite",
+            mean_diameter_mm = 3.2,
+            terminal_velocity_m_s = 1.0,
+        },
+        cloud_cover = 0.92,
+        humidity_rel = 0.88,
+        wind_m_s = 2.0,
+        temperature_K = 270.15,
+        visibility_km = 4.5,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 230.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.01, h = 225.0 },
+            Std.Color.OKLCh { l = 0.98, c = 0.00, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Fog bank — radiation fog, Mie-dominant
+pub fn radiation_fog_bank() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.radiation_fog_bank", version = "1.0.0",
+        kind = Std.Weather.Kind.Fog,
+        atmosphere = atm,
+        humidity_rel = 1.0,
+        cloud_cover = 0.3,
+        wind_m_s = 0.6,
+        temperature_K = 281.15,
+        visibility_km = 0.15,
+        scattering = Std.Weather.Scattering.Mie {
+            asymmetry_g = 0.85,
+            droplet_radius_um = 10.0,
+            number_density_cm3 = 120.0,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.78, c = 0.01, h = 90.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.01, h = 95.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.00, h = 100.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Hailstorm — 20 mm stones, supercell updraft
+pub fn hailstorm_supercell() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.hailstorm_supercell", version = "1.0.0",
+        kind = Std.Weather.Kind.Hail,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.Hail {
+            substance = water,
+            stone_diameter_mm = 20.0,
+            density_kg_m3 = 870.0,
+            terminal_velocity_m_s = 19.5,
+            rate_stones_m2_s = 8.0,
+        },
+        cloud_cover = 1.0,
+        cloud_kind = "cumulonimbus_supercell",
+        updraft_m_s = 35.0,
+        humidity_rel = 0.95,
+        wind_m_s = 22.0,
+        temperature_K = 287.15,
+        visibility_km = 1.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.02, h = 220.0 },
+            Std.Color.OKLCh { l = 0.58, c = 0.02, h = 215.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.01, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Hurricane rainband — tropical cyclone outer band
+pub fn hurricane_rainband() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.hurricane_rainband", version = "1.0.0",
+        kind = Std.Weather.Kind.Cyclone,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.Rain {
+            substance = water,
+            rate_mm_hr = 60.0,
+            drop_diameter_mm = 2.2,
+            distribution = "Marshall-Palmer",
+            terminal_velocity_m_s = 7.0,
+        },
+        cloud_cover = 1.0,
+        cloud_kind = "cumulonimbus_band",
+        humidity_rel = 1.0,
+        wind_m_s = 48.0,
+        wind_gust_m_s = 66.0,
+        temperature_K = 299.15,
+        pressure_Pa = 96500.0,
+        visibility_km = 0.8,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.02, h = 230.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.03, h = 225.0 },
+            Std.Color.OKLCh { l = 0.70, c = 0.02, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Dust storm — haboob, silica aerosol
+pub fn dust_storm_haboob() -> Std.Weather.Seed pure =
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.dust_storm_haboob", version = "1.0.0",
+        kind = Std.Weather.Kind.DustStorm,
+        atmosphere = atm,
+        aerosol = Std.Weather.Aerosol {
+            species = "SiO2_dust",
+            mean_radius_um = 4.0,
+            mass_loading_g_m3 = 2.8,
+        },
+        cloud_cover = 0.0,
+        humidity_rel = 0.18,
+        wind_m_s = 24.0,
+        temperature_K = 312.15,
+        visibility_km = 0.3,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 60.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.14, h = 65.0 },
+            Std.Color.OKLCh { l = 0.80, c = 0.10, h = 70.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://atmosphere/sea-level@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Heat mirage — inferior mirage over hot surface
+pub fn heat_mirage_inferior() -> Std.Weather.Seed pure =
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.heat_mirage_inferior", version = "1.0.0",
+        kind = Std.Weather.Kind.Mirage,
+        atmosphere = atm,
+        refraction = Std.Field.ThermalGradient {
+            surface_temperature_K = 338.15,
+            air_temperature_K = 306.15,
+            gradient_K_per_m = 12.0,
+            index_gradient = -8.5e-6,
+        },
+        humidity_rel = 0.22,
+        wind_m_s = 1.2,
+        temperature_K = 308.15,
+        visibility_km = 22.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.04, h = 200.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.03, h = 210.0 },
+            Std.Color.OKLCh { l = 0.94, c = 0.02, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents(["chem://atmosphere/sea-level@v1"]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Ice storm — freezing rain, glaze ice deposition
+pub fn ice_storm_glaze() -> Std.Weather.Seed pure =
+    let water = Chem.water()
+    let atm = Chem.sea_level_atmosphere()
+    seed Std.Weather.Seed {
+        name = "weather.ice_storm_glaze", version = "1.0.0",
+        kind = Std.Weather.Kind.FreezingRain,
+        atmosphere = atm,
+        precipitation = Std.Weather.Precipitation.FreezingRain {
+            substance = water,
+            rate_mm_hr = 3.5,
+            surface_temperature_K = 270.15,
+            drop_temperature_K = 274.65,
+            glaze_accumulation_mm_hr = 2.2,
+        },
+        cloud_cover = 0.98,
+        humidity_rel = 0.98,
+        wind_m_s = 6.5,
+        temperature_K = 271.15,
+        visibility_km = 3.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.02, h = 220.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.02, h = 215.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.01, h = 210.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://molecule/water@v1",
+            "chem://atmosphere/sea-level@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "weather",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.weather",
+}

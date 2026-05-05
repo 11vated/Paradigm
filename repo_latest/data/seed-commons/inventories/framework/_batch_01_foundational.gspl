@@ -1,0 +1,233 @@
+// seed-commons/inventories/framework/_batch_01_foundational.gspl
+//
+// Framework inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational target-runtime binding seeds. Framework seeds describe
+// how a grown .gseed payload is projected onto a specific engine or runtime
+// (Godot, Unity, Unreal, Three.js, Phaser, Bevy, etc.). These are pure
+// projection contracts, not implementations.
+//
+// Every framework seed pins: engine name, version, coordinate handedness,
+// up axis, unit scale, color pipeline, and the lossless round-trip contract
+// (does growing and re-exporting the projection return the same payload?).
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.framework"
+
+module seed_commons.inventories.framework.batch01
+
+import Std.Framework
+
+// 01. Godot 4 — GDScript-native runtime
+pub fn godot_4_gdscript() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.godot_4_gdscript", version = "1.0.0",
+        engine = "Godot",
+        engine_version = "4.3",
+        language = "GDScript",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "y",
+            forward_axis = "neg_z",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "linear_sRGB",
+        export_format = "scn+tres",
+        round_trip_lossless = true,
+        license = "MIT_engine_seed_payload_GSPL_OSL",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Unity 2022 LTS — C# mono backend
+pub fn unity_2022_lts_csharp() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.unity_2022_lts_csharp", version = "1.0.0",
+        engine = "Unity",
+        engine_version = "2022.3 LTS",
+        language = "C#",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "left",
+            up_axis = "y",
+            forward_axis = "pos_z",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "linear_sRGB",
+        export_format = "prefab+asset",
+        round_trip_lossless = true,
+        note = "seed payload still GSPL-OSL; only runtime binding is engine-licensed",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Unreal 5 — Blueprint + C++ hybrid
+pub fn unreal_5_blueprint() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.unreal_5_blueprint", version = "1.0.0",
+        engine = "Unreal Engine",
+        engine_version = "5.4",
+        language = "Blueprint+C++",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "left",
+            up_axis = "z",
+            forward_axis = "pos_x",
+        },
+        unit_scale_m = 0.01,
+        color_pipeline = "ACES_cg",
+        export_format = "uasset",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Three.js — WebGL browser runtime
+pub fn threejs_webgl() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.threejs_webgl", version = "1.0.0",
+        engine = "Three.js",
+        engine_version = "r160",
+        language = "TypeScript",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "y",
+            forward_axis = "neg_z",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "linear_sRGB",
+        export_format = "gltf2",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Phaser 3 — 2D HTML5 canvas game framework
+pub fn phaser_3_2d() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.phaser_3_2d", version = "1.0.0",
+        engine = "Phaser",
+        engine_version = "3.80",
+        language = "TypeScript",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "neg_y",
+            forward_axis = "pos_z",
+        },
+        unit_scale_m = 0.01,
+        color_pipeline = "sRGB_display",
+        export_format = "png_atlas+json",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Bevy — Rust ECS engine
+pub fn bevy_rust_ecs() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.bevy_rust_ecs", version = "1.0.0",
+        engine = "Bevy",
+        engine_version = "0.14",
+        language = "Rust",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "y",
+            forward_axis = "neg_z",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "linear_sRGB",
+        export_format = "ron+gltf2",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. GameMaker 2 — cross-platform 2D
+pub fn gamemaker_2() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.gamemaker_2", version = "1.0.0",
+        engine = "GameMaker",
+        engine_version = "2024",
+        language = "GML",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "neg_y",
+            forward_axis = "pos_z",
+        },
+        unit_scale_m = 0.01,
+        color_pipeline = "sRGB_display",
+        export_format = "yyp+png",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Aseprite — pixel art editor as headless runtime
+pub fn aseprite_headless() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.aseprite_headless", version = "1.0.0",
+        engine = "Aseprite",
+        engine_version = "1.3",
+        language = "Lua",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "neg_y",
+            forward_axis = "none",
+        },
+        unit_scale_m = 0.0,
+        color_pipeline = "sRGB_display",
+        export_format = "aseprite+png",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Blender — DCC pipeline export target
+pub fn blender_dcc() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.blender_dcc", version = "1.0.0",
+        engine = "Blender",
+        engine_version = "4.2 LTS",
+        language = "Python",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "z",
+            forward_axis = "neg_y",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "ACES_cg",
+        export_format = "blend+gltf2",
+        round_trip_lossless = true,
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Headless reference compiler — canonical self-host target
+pub fn gspl_headless_reference() -> Std.Framework.Seed pure =
+    seed Std.Framework.Seed {
+        name = "framework.gspl_headless_reference", version = "1.0.0",
+        engine = "GSPL Reference Compiler",
+        engine_version = "0.1.0-wasm",
+        language = "Rust->WASM",
+        coordinate = Std.Framework.Coordinate {
+            handedness = "right",
+            up_axis = "y",
+            forward_axis = "neg_z",
+        },
+        unit_scale_m = 1.0,
+        color_pipeline = "linear_sRGB",
+        export_format = "gseed_json+gseed_bin",
+        round_trip_lossless = true,
+        note = "canonical GSPL grow+validate target; byte-for-byte reproducible",
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = [],
+    category   = "framework",
+    batch      = "01_foundational",
+    count      = 10,
+    role       = "meta_runtime_binding",
+    applies_to = ["any_inventory_seed"],
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.framework",
+}

@@ -1,0 +1,112 @@
+{
+  "project_name": "Paradigm",
+  "theme": "dark",
+  "archetype": "Archetype 4: Swiss & High-Contrast (Dark Mode Technical Brutalism)",
+  "emotional_tone": "Monolithic, Authoritative, Mysterious, Quantum-Architectural",
+  "vision": "A groundbreaking $5T genetic computing platform where every digital artifact is a living blueprint (seed). Interface must feel like a quantum supercomputer command center.",
+  "colors": {
+    "background": "#030303",
+    "surface": "#0A0A0A",
+    "surface_glass": "rgba(10, 10, 10, 0.7)",
+    "border": "#262626",
+    "border_hover": "#404040",
+    "primary": "#F97316",
+    "primary_hover": "#EA580C",
+    "secondary": "#10B981",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A3A3A3",
+    "text_tertiary": "#525252",
+    "error": "#EF4444",
+    "warning": "#F59E0B"
+  },
+  "typography": {
+    "headings": {
+      "family": "Cabinet Grotesk, sans-serif",
+      "weights": ["400", "800", "900"],
+      "tracking": "tracking-tighter",
+      "casing": "normal"
+    },
+    "body": {
+      "family": "IBM Plex Sans, sans-serif",
+      "weights": ["400", "500"]
+    },
+    "mono": {
+      "family": "JetBrains Mono, monospace",
+      "weights": ["400"],
+      "usage": "Gene data, seed hashes, lineage IDs, and structural metrics."
+    },
+    "rules": [
+      "No generic sans-serif for headings (Inter is banned for headings).",
+      "Use extreme weight contrast: Black (900) for H1, Light (300) for subtitles.",
+      "Overlines and small labels MUST be uppercase, JetBrains Mono, tracking-[0.2em], text-xs."
+    ]
+  },
+  "layout_and_spacing": {
+    "landing_page": {
+      "grid_mode": "Mode A: The Tetris Grid",
+      "gap": "gap-8 md:gap-12",
+      "padding": "p-12 md:p-24",
+      "alignment": "Aggressive asymmetry, overlapping elements. Use The Swiss Grid approach."
+    },
+    "creation_studio": {
+      "grid_mode": "Mode B: The Control Room Grid",
+      "gap": "gap-px",
+      "padding": "p-4 md:p-6",
+      "alignment": "Dense, functional, every pixel utilized. Strict border-collapse style grids."
+    }
+  },
+  "surfaces_and_borders": {
+    "panels": "Cardless design. Raw 1px solid borders (border-neutral-800). No soft drop shadows.",
+    "prompt_bar": "The Tracing Beam: Floating element at bottom with dynamic glowing gradient border.",
+    "glassmorphism": "Optical Clarity: bg-black/60, backdrop-blur-2xl, border-white/10. Used ONLY for floating contextual menus.",
+    "buttons": "Sharp edges (rounded-none or max rounded-sm). Primary CTA is solid Electric Orange. Secondary is pure border with hover:bg-white/10."
+  },
+  "motion_and_interactions": {
+    "scroll": "Lenis smooth scroll (momentum, weight) required for landing page.",
+    "hover": "High-contrast text shifts (e.g., hover:bg-white hover:text-black).",
+    "microinteractions": "Framer Motion staggered list reveals for MAP-Elites gallery and Gene list.",
+    "transitions": "transition-all duration-200 ease-out"
+  },
+  "image_urls": {
+    "hero_background": {
+      "url": "https://images.unsplash.com/photo-1763058674270-7ac07f015a2a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGRhcmslMjBnZW9tZXRyaWMlMjBzdHJ1Y3R1cmV8ZW58MHx8fHwxNzc1NzYwOTgyfDA&ixlib=rb-4.1.0&q=85",
+      "description": "Abstract geometric pattern with blue lighting. Use for the main landing page hero behind a dark gradient overlay."
+    },
+    "lineage_tree_bg": {
+      "url": "https://images.unsplash.com/photo-1771015138422-819587ae7011?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMHBhcnRpY2xlJTIwbmV0d29yayUyMGdsb3dpbmd8ZW58MHx8fHwxNzc1NzYwOTk0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Abstract molecular structure with glowing nodes. Use as a subtle, low-opacity background for the Lineage Tree or MAP-Elites view."
+    },
+    "evolve_panel_bg": {
+      "url": "https://images.unsplash.com/photo-1773053525984-3857c1e0be44?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMHBhcnRpY2xlJTIwbmV0d29yayUyMGdsb3dpbmd8ZW58MHx8fHwxNzc1NzYwOTk0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Abstract flowing golden lines. Use within the Evolve/Breed panel to signify mutation and energy."
+    },
+    "vision_section": {
+      "url": "https://images.unsplash.com/photo-1759771963617-e451d02011d4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHBhcnRpY2xlJTIwbmV0d29yayUyMGdsb3dpbmd8ZW58MHx8fHwxNzc1NzYwOTk0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Glowing ring of light particles. Use for the 'Platform Vision' / Kernel architecture explanation."
+    }
+  },
+  "instructions_to_main_agent": {
+    "architecture_and_libraries": [
+      "Use pure HTML/Tailwind for the landing page to achieve overlapping bento layouts. Avoid generic UI cards.",
+      "Use Shadcn UI components for the Creation Studio (Dialogs, Select, Tabs, Sliders) but heavily strip their default styling. Make them flat, sharp, and 1px bordered.",
+      "For icons, use @phosphor-icons/react (Weight: 'regular' or 'duotone' for technical feel).",
+      "Install framer-motion, @phosphor-icons/react, lucide-react."
+    ],
+    "landing_page_requirements": [
+      "Must have a fixed/sticky Glassmorphism header (bg-black/60 backdrop-blur-xl).",
+      "Hero section MUST overlay the hero image with at least bg-black/60. Text must use text-shadow for readability.",
+      "Include a visual breakdown of the 7-layer architecture (Kernel -> Studio & Marketplace) using a Tetris Grid layout."
+    ],
+    "creation_studio_requirements": [
+      "Layout: A massive Control Room. Left sidebar (Lineage/Gallery), Center (Preview Viewport & Prompt Bar), Right sidebar (Gene Editor, Evolve, Breed panels).",
+      "Gene Editor: Must handle 17 gene types. Group them intuitively (e.g., Physical [scalar, vector], Metaphysical [quantum, gematria, resonance, sovereignty]). Use monospaced labels and tight padding.",
+      "Prompt Bar: Placed at the bottom of the center viewport. Floating. Must have a glowing border effect.",
+      "Preview Viewport: Simulate a 3D/holographic canvas area. Center the artifact representation here.",
+      "Lineage Tree: Implement a network-style visual or a deeply nested collapsible list with JetBrains Mono font and connecting border lines.",
+      "Seed Sovereignty: Add an ECDSA signing / verification UI state in the Export Panel."
+    ],
+    "data_attributes": [
+      "All interactive elements MUST have data-testid attributes (e.g., data-testid='evolve-seed-button', data-testid='gene-editor-slider')."
+    ]
+  }
+}

@@ -1,0 +1,204 @@
+// seed-commons/libraries/materials.gspl
+//
+// Materials library — runnable GSPL materialization of Brief 083
+// (research/083-materials-library.md).
+//
+// PURE. Sources: MatWeb, NIST, ASM Handbook, ASTM, ISO, Granta, ICSD.
+// Every material primitive composes through the Material struct and carries
+// optical, thermal, mechanical, acoustic, and PBR render properties.
+//
+// Kernel mapping:
+//   scalar      -> density, Young's modulus, thermal conductivity
+//   categorical -> crystal system, material class, phase
+//   vector      -> anisotropic stiffness tensor rows, reflectance spectrum
+//   struct      -> Material record (full PBR + physical + acoustic)
+//   field       -> stress, strain, temperature field
+//   resonance   -> sound speed, acoustic absorption, modal frequencies
+//   symbolic    -> MatWeb ID, ASTM designation, chemical formula
+//   dimensional -> CLIP appearance embedding
+//   sovereignty -> signed provenance
+//
+// rng_seed = "seed_commons.libraries.materials:v1"
+// License: GSPL Open Specification License
+// Lineage parents: [seed_commons.libraries.chemistry@v1, seed_commons.libraries.physics@v1]
+
+module seed_commons.libraries.materials
+
+import Std.Math
+import Std.Color
+import Std.Units
+import seed_commons.libraries.chemistry as Chem
+import seed_commons.libraries.physics as Phys
+
+// -----------------------------------------------------------------------------
+// 1. Material class taxonomy
+// -----------------------------------------------------------------------------
+
+pub enum MaterialClass {
+    Metal, Alloy, Ceramic, Glass, Polymer, Elastomer, Composite,
+    Wood, Stone, Mineral, Concrete, Textile, Paper, Leather,
+    BiologicalTissue, IceOrSnow, Foam, Liquid, GasMedium, Exotic,
+}
+
+pub enum CrystalSystem {
+    Cubic, Tetragonal, Orthorhombic, Hexagonal, Trigonal, Monoclinic, Triclinic, Amorphous,
+}
+
+// -----------------------------------------------------------------------------
+// 2. Material struct
+// -----------------------------------------------------------------------------
+
+pub struct Material {
+    name: String,
+    class: MaterialClass,
+    crystal: CrystalSystem,
+    // Physical
+    density_kg_m3: Scalar,
+    molar_mass_g_mol: Option<Scalar>,
+    melt_point_k: Option<Scalar>,
+    // Mechanical
+    youngs_modulus_gpa: Scalar,
+    shear_modulus_gpa: Scalar,
+    poisson_ratio: Scalar,
+    yield_strength_mpa: Option<Scalar>,
+    hardness_mohs: Option<Scalar>,
+    // Thermal
+    thermal_conductivity_w_mk: Scalar,
+    specific_heat_j_kgk: Scalar,
+    thermal_expansion_1_k: Scalar,
+    // Electrical
+    resistivity_ohm_m: Option<Scalar>,
+    relative_permittivity: Option<Scalar>,
+    // Optical (PBR)
+    base_color_srgb: Std.Color.sRGB,
+    ior_real: Scalar,
+    ior_imag: Scalar,
+    roughness: Scalar,
+    metallic: Scalar,
+    subsurface_mm: Scalar,
+    anisotropy: Scalar,
+    // Acoustic
+    sound_speed_m_s: Scalar,
+    acoustic_impedance_mrayl: Scalar,
+}
+
+// -----------------------------------------------------------------------------
+// 3. Core inventory — load-bearing for downstream inventory seeds
+// -----------------------------------------------------------------------------
+
+pub fn iron_pure() -> Material pure =
+    Material {
+        name = "iron_pure", class = MaterialClass.Metal, crystal = CrystalSystem.Cubic,
+        density_kg_m3 = 7874.0, molar_mass_g_mol = Some(55.845), melt_point_k = Some(1811.0),
+        youngs_modulus_gpa = 211.0, shear_modulus_gpa = 82.0, poisson_ratio = 0.29,
+        yield_strength_mpa = Some(250.0), hardness_mohs = Some(4.0),
+        thermal_conductivity_w_mk = 80.2, specific_heat_j_kgk = 449.0, thermal_expansion_1_k = 11.8e-6,
+        resistivity_ohm_m = Some(9.71e-8), relative_permittivity = None,
+        base_color_srgb = Std.Color.sRGB { r = 0.560, g = 0.570, b = 0.580 },
+        ior_real = 2.91, ior_imag = 3.02, roughness = 0.35, metallic = 1.0,
+        subsurface_mm = 0.0, anisotropy = 0.0,
+        sound_speed_m_s = 5960.0, acoustic_impedance_mrayl = 46.9,
+    }
+
+pub fn copper_pure() -> Material pure =
+    Material {
+        name = "copper_pure", class = MaterialClass.Metal, crystal = CrystalSystem.Cubic,
+        density_kg_m3 = 8960.0, molar_mass_g_mol = Some(63.546), melt_point_k = Some(1357.77),
+        youngs_modulus_gpa = 130.0, shear_modulus_gpa = 48.0, poisson_ratio = 0.34,
+        yield_strength_mpa = Some(70.0), hardness_mohs = Some(3.0),
+        thermal_conductivity_w_mk = 401.0, specific_heat_j_kgk = 385.0, thermal_expansion_1_k = 16.5e-6,
+        resistivity_ohm_m = Some(1.68e-8), relative_permittivity = None,
+        base_color_srgb = Std.Color.sRGB { r = 0.955, g = 0.637, b = 0.538 },
+        ior_real = 0.27, ior_imag = 3.41, roughness = 0.30, metallic = 1.0,
+        subsurface_mm = 0.0, anisotropy = 0.0,
+        sound_speed_m_s = 4760.0, acoustic_impedance_mrayl = 42.6,
+    }
+
+pub fn gold_pure() -> Material pure =
+    Material {
+        name = "gold_pure", class = MaterialClass.Metal, crystal = CrystalSystem.Cubic,
+        density_kg_m3 = 19320.0, molar_mass_g_mol = Some(196.9666), melt_point_k = Some(1337.33),
+        youngs_modulus_gpa = 79.0, shear_modulus_gpa = 27.0, poisson_ratio = 0.44,
+        yield_strength_mpa = Some(55.0), hardness_mohs = Some(2.5),
+        thermal_conductivity_w_mk = 318.0, specific_heat_j_kgk = 129.0, thermal_expansion_1_k = 14.2e-6,
+        resistivity_ohm_m = Some(2.44e-8), relative_permittivity = None,
+        base_color_srgb = Std.Color.sRGB { r = 1.000, g = 0.766, b = 0.336 },
+        ior_real = 0.18, ior_imag = 3.07, roughness = 0.20, metallic = 1.0,
+        subsurface_mm = 0.0, anisotropy = 0.0,
+        sound_speed_m_s = 3240.0, acoustic_impedance_mrayl = 62.6,
+    }
+
+pub fn oak_wood_quercus_robur() -> Material pure =
+    Material {
+        name = "oak_wood", class = MaterialClass.Wood, crystal = CrystalSystem.Amorphous,
+        density_kg_m3 = 750.0, molar_mass_g_mol = None, melt_point_k = None,
+        youngs_modulus_gpa = 11.0, shear_modulus_gpa = 0.9, poisson_ratio = 0.35,
+        yield_strength_mpa = Some(40.0), hardness_mohs = Some(2.0),
+        thermal_conductivity_w_mk = 0.17, specific_heat_j_kgk = 2380.0, thermal_expansion_1_k = 5.4e-6,
+        resistivity_ohm_m = None, relative_permittivity = Some(2.5),
+        base_color_srgb = Std.Color.sRGB { r = 0.42, g = 0.28, b = 0.18 },
+        ior_real = 1.53, ior_imag = 0.0, roughness = 0.72, metallic = 0.0,
+        subsurface_mm = 1.2, anisotropy = 0.85,
+        sound_speed_m_s = 4110.0, acoustic_impedance_mrayl = 3.08,
+    }
+
+pub fn granite_stone() -> Material pure =
+    Material {
+        name = "granite", class = MaterialClass.Stone, crystal = CrystalSystem.Amorphous,
+        density_kg_m3 = 2700.0, molar_mass_g_mol = None, melt_point_k = Some(1533.0),
+        youngs_modulus_gpa = 55.0, shear_modulus_gpa = 24.0, poisson_ratio = 0.25,
+        yield_strength_mpa = Some(200.0), hardness_mohs = Some(6.5),
+        thermal_conductivity_w_mk = 2.8, specific_heat_j_kgk = 790.0, thermal_expansion_1_k = 8.0e-6,
+        resistivity_ohm_m = Some(3e3), relative_permittivity = Some(8.0),
+        base_color_srgb = Std.Color.sRGB { r = 0.55, g = 0.52, b = 0.50 },
+        ior_real = 1.56, ior_imag = 0.0, roughness = 0.58, metallic = 0.0,
+        subsurface_mm = 0.3, anisotropy = 0.1,
+        sound_speed_m_s = 5950.0, acoustic_impedance_mrayl = 16.1,
+    }
+
+pub fn soda_lime_glass() -> Material pure =
+    Material {
+        name = "soda_lime_glass", class = MaterialClass.Glass, crystal = CrystalSystem.Amorphous,
+        density_kg_m3 = 2520.0, molar_mass_g_mol = None, melt_point_k = Some(1873.0),
+        youngs_modulus_gpa = 72.0, shear_modulus_gpa = 29.0, poisson_ratio = 0.22,
+        yield_strength_mpa = Some(70.0), hardness_mohs = Some(5.5),
+        thermal_conductivity_w_mk = 1.0, specific_heat_j_kgk = 840.0, thermal_expansion_1_k = 9.0e-6,
+        resistivity_ohm_m = Some(1e13), relative_permittivity = Some(7.0),
+        base_color_srgb = Std.Color.sRGB { r = 0.95, g = 0.97, b = 0.98 },
+        ior_real = 1.52, ior_imag = 0.0, roughness = 0.02, metallic = 0.0,
+        subsurface_mm = 12.0, anisotropy = 0.0,
+        sound_speed_m_s = 5640.0, acoustic_impedance_mrayl = 14.2,
+    }
+
+// -----------------------------------------------------------------------------
+// 4. Laws
+// -----------------------------------------------------------------------------
+
+pub fn hookes_stress(strain: Scalar, youngs_modulus_gpa: Scalar) -> Scalar pure =
+    strain * youngs_modulus_gpa * 1e9
+
+pub fn fresnel_reflectance_normal(n1: Scalar, n2: Scalar) -> Scalar pure =
+    let r = (n1 - n2) / (n1 + n2)
+    r * r
+
+// -----------------------------------------------------------------------------
+// 5. Functors
+// -----------------------------------------------------------------------------
+
+pub fn material_to_pbr_shader_functor() -> Functor pure =
+    Functor.id("materials://functor/material_to_pbr_shader@v1")
+
+pub fn material_to_acoustic_impulse_functor() -> Functor pure =
+    Functor.id("materials://functor/material_to_acoustic_impulse@v1")
+
+$metadata {
+    materializes_brief = "research/083-materials-library.md",
+    source_standards   = ["MatWeb", "NIST", "ASM", "ASTM", "ICSD"],
+    core_inventory     = 6,
+    law_count          = 2,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.materials",
+    lineage_parents    = ["seed_commons.libraries.chemistry@v1", "seed_commons.libraries.physics@v1"],
+}

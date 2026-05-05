@@ -1,0 +1,120 @@
+// seed-commons/libraries/culture_history.gspl
+//
+// Culture, History & Mythology library — runnable GSPL materialization of Brief 086E
+// (research/086E-culture-history-mythology-library.md).
+//
+// Historical periods, mythological pantheons, cultural artifact archetypes,
+// ritual categories. Sources: Encyclopedia Britannica, Perseus Digital Library,
+// ORBIS Stanford, Theoi.com, Smithsonian world cultures archive.
+//
+// PURE. No ideological position — the library catalogs what exists, not what
+// should be believed. All records are descriptive, not prescriptive.
+//
+// rng_seed = "seed_commons.libraries.culture_history:v1"
+// License: GSPL Open Specification License
+// Lineage parents: []
+
+module seed_commons.libraries.culture_history
+
+// -----------------------------------------------------------------------------
+// 1. Historical period taxonomy
+// -----------------------------------------------------------------------------
+
+pub struct HistoricalPeriod {
+    name: String,
+    region: String,
+    start_year_ce: i32,
+    end_year_ce: i32,
+    defining_technologies: [String],
+    material_culture_markers: [String],
+}
+
+pub fn paleolithic() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Paleolithic", region = "Global", start_year_ce = -3_300_000, end_year_ce = -10_000, defining_technologies = ["knapped_stone", "fire_control"], material_culture_markers = ["cave_paintings", "hand_axes", "venus_figurines"] }
+
+pub fn neolithic() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Neolithic", region = "Global", start_year_ce = -10_000, end_year_ce = -4_500, defining_technologies = ["agriculture", "pottery", "polished_stone"], material_culture_markers = ["mud_brick_dwellings", "polished_axes", "ceramic_vessels"] }
+
+pub fn bronze_age() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Bronze Age", region = "Eurasia", start_year_ce = -3_300, end_year_ce = -1_200, defining_technologies = ["bronze_metallurgy", "wheeled_vehicles", "writing"], material_culture_markers = ["bronze_swords", "chariots", "cuneiform_tablets"] }
+
+pub fn iron_age() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Iron Age", region = "Eurasia", start_year_ce = -1_200, end_year_ce = 550, defining_technologies = ["iron_smelting", "coinage", "alphabets"], material_culture_markers = ["iron_weapons", "classical_temples", "codices"] }
+
+pub fn medieval_european() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Medieval (European)", region = "Europe", start_year_ce = 500, end_year_ce = 1500, defining_technologies = ["heavy_plow", "watermill", "plate_armor"], material_culture_markers = ["stone_castles", "illuminated_manuscripts", "gothic_cathedrals"] }
+
+pub fn industrial_age() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Industrial Age", region = "Global", start_year_ce = 1760, end_year_ce = 1945, defining_technologies = ["steam_engine", "electricity", "telegraph", "assembly_line"], material_culture_markers = ["locomotives", "factory_architecture", "mass_produced_goods"] }
+
+pub fn information_age() -> HistoricalPeriod pure =
+    HistoricalPeriod { name = "Information Age", region = "Global", start_year_ce = 1945, end_year_ce = 2100, defining_technologies = ["digital_computing", "networking", "machine_learning"], material_culture_markers = ["silicon_chips", "smartphones", "data_centers"] }
+
+// -----------------------------------------------------------------------------
+// 2. Mythological pantheons
+// -----------------------------------------------------------------------------
+
+pub struct Pantheon {
+    name: String,
+    region: String,
+    cosmology: String,
+    principal_figures: [String],
+    sacred_texts: [String],
+}
+
+pub fn hellenic_pantheon() -> Pantheon pure =
+    Pantheon { name = "Hellenic", region = "Ancient Greece", cosmology = "Olympian_hierarchy", principal_figures = ["Zeus", "Hera", "Poseidon", "Athena", "Apollo", "Artemis", "Ares", "Aphrodite", "Hermes", "Hephaestus", "Demeter", "Dionysus"], sacred_texts = ["Theogony", "Homeric_Hymns"] }
+
+pub fn norse_pantheon() -> Pantheon pure =
+    Pantheon { name = "Norse", region = "Scandinavia", cosmology = "Nine_worlds_Yggdrasil", principal_figures = ["Odin", "Thor", "Freya", "Loki", "Tyr", "Heimdall", "Baldr"], sacred_texts = ["Poetic_Edda", "Prose_Edda"] }
+
+pub fn egyptian_pantheon() -> Pantheon pure =
+    Pantheon { name = "Egyptian", region = "Nile Valley", cosmology = "Ennead_of_Heliopolis", principal_figures = ["Ra", "Osiris", "Isis", "Horus", "Anubis", "Thoth", "Set", "Ma'at"], sacred_texts = ["Pyramid_Texts", "Book_of_the_Dead"] }
+
+pub fn vedic_pantheon() -> Pantheon pure =
+    Pantheon { name = "Vedic", region = "Indian Subcontinent", cosmology = "Rigvedic_cosmology", principal_figures = ["Indra", "Agni", "Varuna", "Vayu", "Surya", "Soma"], sacred_texts = ["Rig_Veda", "Yajur_Veda", "Sama_Veda", "Atharva_Veda"] }
+
+// -----------------------------------------------------------------------------
+// 3. Cultural artifact archetypes
+// -----------------------------------------------------------------------------
+
+pub enum ArtifactCategory { Weapon, Tool, Vessel, Textile, Adornment, Instrument, Ritual, Manuscript, Monument }
+
+pub struct ArtifactArchetype {
+    name: String,
+    category: ArtifactCategory,
+    typical_materials: [String],
+    cultural_function: String,
+}
+
+pub fn ceremonial_sword() -> ArtifactArchetype pure =
+    ArtifactArchetype { name = "ceremonial_sword", category = ArtifactCategory.Weapon, typical_materials = ["iron", "bronze", "gold_inlay", "leather"], cultural_function = "authority_display_and_combat" }
+
+pub fn prayer_wheel() -> ArtifactArchetype pure =
+    ArtifactArchetype { name = "prayer_wheel", category = ArtifactCategory.Ritual, typical_materials = ["copper", "wood", "paper"], cultural_function = "meditation_and_merit_generation" }
+
+pub fn hand_loom_textile() -> ArtifactArchetype pure =
+    ArtifactArchetype { name = "hand_loom_textile", category = ArtifactCategory.Textile, typical_materials = ["wool", "flax", "cotton", "natural_dyes"], cultural_function = "clothing_and_tradition_transmission" }
+
+// -----------------------------------------------------------------------------
+// 4. Functors
+// -----------------------------------------------------------------------------
+
+pub fn period_to_material_palette_functor() -> Functor pure =
+    Functor.id("culture://functor/period_to_material_palette@v1")
+
+pub fn pantheon_to_character_roster_functor() -> Functor pure =
+    Functor.id("culture://functor/pantheon_to_character_roster@v1")
+
+$metadata {
+    materializes_brief = "research/086E-culture-history-mythology-library.md",
+    source_standards   = ["Encyclopedia_Britannica", "Perseus_Digital_Library", "ORBIS_Stanford", "Theoi", "Smithsonian"],
+    period_count       = 7,
+    pantheon_count     = 4,
+    artifact_count     = 3,
+    functor_count      = 2,
+    determinism        = "pure_no_io",
+    license            = "GSPL-OSL-1.0",
+    rng_seed_prefix    = "seed_commons.libraries.culture_history",
+    lineage_parents    = [],
+}

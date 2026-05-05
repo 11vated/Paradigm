@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paradigm GSPL Engine - Full Spectrum Analysis</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: #2a2a3a;
+    --text: #e0e0e8;
+    --text-dim: #8888a0;
+    --accent: #6c5ce7;
+    --accent2: #a855f7;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --cyan: #06b6d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 40px 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .hero {
+    text-align: center;
+    padding: 60px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 50px;
+  }
+  .hero h1 {
+    font-size: 2.4rem;
+    font-weight: 300;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .hero .subtitle {
+    font-size: 1rem;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .hero .date {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+  }
+
+  .score-banner {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+  }
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    text-align: center;
+    min-width: 180px;
+  }
+  .score-card .label {
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .score-card .value {
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+  .score-card .sub {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .score-green .value { color: var(--green); }
+  .score-yellow .value { color: var(--yellow); }
+  .score-red .value { color: var(--red); }
+  .score-blue .value { color: var(--blue); }
+
+  section {
+    margin-bottom: 50px;
+  }
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--cyan);
+    margin: 24px 0 12px;
+  }
+  p { margin-bottom: 14px; color: var(--text); }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .card p, .card li {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-weight: 600;
+    color: var(--accent2);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  td { color: var(--text-dim); }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .tag-green { background: rgba(34,197,94,0.15); color: var(--green); }
+  .tag-yellow { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .tag-red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .tag-blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+  .arch-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    color: var(--text-dim);
+    white-space: pre;
+  }
+
+  .finding {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .finding.critical { border-left-color: var(--red); }
+  .finding.success { border-left-color: var(--green); }
+  .finding.warning { border-left-color: var(--yellow); }
+  .finding .finding-label {
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .finding.critical .finding-label { color: var(--red); }
+  .finding.success .finding-label { color: var(--green); }
+  .finding.warning .finding-label { color: var(--yellow); }
+
+  ul { padding-left: 20px; margin: 10px 0; }
+  li { margin-bottom: 6px; color: var(--text-dim); font-size: 0.9rem; }
+
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0 4px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 30px;
+    margin-bottom: 40px;
+  }
+  .toc h3 { margin-top: 0; color: var(--text-dim); font-size: 0.85rem; letter-spacing: 2px; }
+  .toc a {
+    color: var(--text-dim);
+    text-decoration: none;
+    display: block;
+    padding: 4px 0;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .toc a:hover { color: var(--accent2); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+  <h1>Paradigm</h1>
+  <div class="subtitle">Full Spectrum Platform Analysis</div>
+  <div class="date">April 11, 2026 &mdash; Genetic Operating Environment</div>
+</div>
+
+<!-- SCORE BANNER -->
+<div class="score-banner">
+  <div class="score-card score-green">
+    <div class="label">Core Innovation</div>
+    <div class="value">85</div>
+    <div class="sub">Genuine &amp; Deep</div>
+  </div>
+  <div class="score-card score-yellow">
+    <div class="label">Feature Complete</div>
+    <div class="value">62</div>
+    <div class="sub">Functional Prototype</div>
+  </div>
+  <div class="score-card score-red">
+    <div class="label">Production Ready</div>
+    <div class="value">18</div>
+    <div class="sub">Missing Infra</div>
+  </div>
+  <div class="score-card score-blue">
+    <div class="label">Total LOC</div>
+    <div class="value">12K+</div>
+    <div class="sub">Across Both Backends</div>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h3>Contents</h3>
+  <a href="#architecture">1. Architecture Overview</a>
+  <a href="#dual-backend">2. The Dual Backend Problem</a>
+  <a href="#typescript-core">3. TypeScript Core: QFT Physics Engine</a>
+  <a href="#python-core">4. Python Core: 26 Domain Engines</a>
+  <a href="#gspl">5. GSPL Language &amp; Parser</a>
+  <a href="#sovereignty">6. Sovereignty &amp; Cryptography</a>
+  <a href="#intelligence">7. Intelligence Layer</a>
+  <a href="#asset-pipeline">8. Asset Pipeline &amp; The Sphere Problem</a>
+  <a href="#frontend">9. Frontend Architecture</a>
+  <a href="#seed-commons">10. Seed Commons &amp; Specification</a>
+  <a href="#completeness">11. Feature Completeness Matrix</a>
+  <a href="#gaps">12. Critical Gaps &amp; Risks</a>
+  <a href="#path-forward">13. Path Forward</a>
+</div>
+
+<!-- 1. ARCHITECTURE -->
+<section id="architecture">
+<h2>1. Architecture Overview</h2>
+
+<p>Paradigm is a two-tier generative platform built on the concept of <strong>seeds</strong> &mdash; genetic blueprints containing typed genes that can be bred, mutated, composed across domains, cryptographically signed, and grown into deterministic artifacts. The core innovation is the GSPL (Generative Seed Programming Language) and a physics-first approach to content generation that routes creative parameters through quantum field theory solvers before extracting 3D meshes, textures, and animations.</p>
+
+<div class="arch-diagram">
+                        PARADIGM ARCHITECTURE (Current State)
+
+  FRONTEND (React 19 + Vite + Tailwind + Three.js)
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  LandingPage ─── StudioPage                                     │
+  │                   ├── PromptBar (NL input)                       │
+  │                   ├── GalleryGrid / LineageGraph / SeedLibrary   │
+  │                   ├── PreviewViewport (React Three Fiber)        │
+  │                   ├── GeneEditor (17 types)                      │
+  │                   ├── EvolvePanel / BreedPanel / CompositionPanel│
+  │                   ├── GSPLEditor / ExportPanel                   │
+  │                   └── Zustand Store (seedStore)                  │
+  └────────────────────────────┬────────────────────────────────────┘
+                               │ REST API
+  TYPESCRIPT BACKEND (Express, server.ts &mdash; 983 lines)
+  ┌────────────────────────────┴────────────────────────────────────┐
+  │  25+ Endpoints: CRUD, Generate, Mutate, Evolve, Breed, Grow,   │
+  │  Compose, Parse, Execute, Sign, Verify, Embed, Similar          │
+  │  ┌──────────┐  ┌──────────┐  ┌────────────┐  ┌──────────────┐ │
+  │  │ GSPL     │  │ QFT      │  │ Sovereignty│  │ Intelligence │ │
+  │  │ Parser   │  │ Engine   │  │ Layer      │  │ Layer        │ │
+  │  │ (regex)  │  │ (5 solv) │  │ (ECDSA)    │  │ (Gemini)     │ │
+  │  └──────────┘  └──────────┘  └────────────┘  └──────────────┘ │
+  │  ┌──────────────────────────────────────────────────────────┐  │
+  │  │ Pipeline: GSPL Compile &rarr; QFT Simulate &rarr; Mesh Extract &rarr; Bake │
+  │  └──────────────────────────────────────────────────────────┘  │
+  │  Data: JSON flat file (data/user-seeds.json)                   │
+  └────────────────────────────────────────────────────────────────┘
+
+  PYTHON BACKEND (FastAPI, paradigm/backend/ &mdash; 7000+ LOC)
+  ┌────────────────────────────────────────────────────────────────┐
+  │  33 Endpoints: Full CRUD, Evolution, Composition, Sovereignty  │
+  │  ┌──────────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐ │
+  │  │ GSPL Parser  │  │ 26       │  │ Gene     │  │ Composit.│ │
+  │  │ (849 LOC,    │  │ Domain   │  │ System   │  │ Engine   │ │
+  │  │  full AST)   │  │ Engines  │  │ (17x4)   │  │ (9 fnctrs│ │
+  │  └──────────────┘  └──────────┘  └──────────┘  └──────────┘ │
+  │  Data: MongoDB (Motor async)                                   │
+  └────────────────────────────────────────────────────────────────┘
+
+  DATA LAYER
+  ┌────────────────────────────────────────────────────────────────┐
+  │  data/spec/ (7 formal specs, 1714 lines)                       │
+  │  data/seed-commons/ (38 .gspl files, 20 domains, 210+ seeds)  │
+  │  data/seed-commons/libraries/ (18 knowledge libraries)         │
+  │  data/seed-commons/validators/ (5 TypeScript validators)       │
+  └────────────────────────────────────────────────────────────────┘
+</div>
+</section>
+
+<!-- 2. DUAL BACKEND -->
+<section id="dual-backend">
+<h2>2. The Dual Backend Problem</h2>
+
+<div class="finding critical">
+  <div class="finding-label">Critical Architecture Issue</div>
+  <p>The project has <strong>two separate backends</strong> that overlap in functionality but diverge in capability. The TypeScript backend (Express, server.ts) has the QFT physics solvers and Gemini integration. The Python backend (FastAPI, paradigm/backend/) has the full GSPL parser, all 26 domain engines, the gene system, and MongoDB persistence. Neither is a superset of the other.</p>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>TypeScript Backend (Active)</h4>
+    <ul>
+      <li>Express server, 983 lines</li>
+      <li>5 QFT solvers (EM, Dirac, QED, QCD, Gravity)</li>
+      <li>4-stage pipeline (GSPL &rarr; QFT &rarr; Mesh &rarr; Texture)</li>
+      <li>Gemini AI integration (generate, mutate, embed)</li>
+      <li>ECDSA P-256 sovereignty</li>
+      <li>JSON flat-file persistence</li>
+      <li>Regex-based GSPL parser</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>Python Backend (Dormant)</h4>
+    <ul>
+      <li>FastAPI server, 618 lines + 6400 LOC modules</li>
+      <li>Full GSPL parser with AST + type checker (849 lines)</li>
+      <li>All 26 domain engines with real grow() methods</li>
+      <li>17 gene types x 4 operators = 68 functions</li>
+      <li>9 cross-domain functor bridges</li>
+      <li>MongoDB async persistence (Motor)</li>
+      <li>ECDSA P-256 sovereignty (ecdsa library)</li>
+    </ul>
+  </div>
+</div>
+
+<p>The frontend currently connects to the <strong>TypeScript backend only</strong>. The Python backend represents a more complete implementation of the GSPL specification but lacks the QFT physics engine. These two backends need to be unified &mdash; the Python backend's language infrastructure with the TypeScript backend's physics engine.</p>
+</section>
+
+<!-- 3. TYPESCRIPT QFT -->
+<section id="typescript-core">
+<h2>3. TypeScript Core: QFT Physics Engine</h2>
+
+<p>The QFT module contains five genuine numerical solvers implementing real physics. These are not toy models &mdash; they use standard computational physics techniques found in academic codes.</p>
+
+<table>
+  <tr>
+    <th>Solver</th>
+    <th>Method</th>
+    <th>Lines</th>
+    <th>Physics</th>
+    <th>Depth</th>
+  </tr>
+  <tr>
+    <td>EM (Maxwell)</td>
+    <td>FDTD with PML</td>
+    <td>246</td>
+    <td>Full 3D Maxwell equations, Yee leapfrog, Courant stability</td>
+    <td><span class="tag tag-green">Real</span></td>
+  </tr>
+  <tr>
+    <td>Dirac</td>
+    <td>Spinor evolution</td>
+    <td>254</td>
+    <td>4-component spinor, Pauli matrices, Coulomb potential with softening</td>
+    <td><span class="tag tag-green">Real</span></td>
+  </tr>
+  <tr>
+    <td>QED Coupling</td>
+    <td>Bidirectional</td>
+    <td>~100</td>
+    <td>Fermionic current J = psi-bar gamma psi drives EM, EM feeds back to Dirac</td>
+    <td><span class="tag tag-yellow">Simplified</span></td>
+  </tr>
+  <tr>
+    <td>QCD (Lattice)</td>
+    <td>Metropolis MC</td>
+    <td>244</td>
+    <td>SU(2) lattice gauge, Wilson action, plaquette observables, 4D periodic BC</td>
+    <td><span class="tag tag-green">Rigorous</span></td>
+  </tr>
+  <tr>
+    <td>Gravity</td>
+    <td>Wave equation</td>
+    <td>160</td>
+    <td>Linearized metric perturbation, binary inspiral quadrupole source</td>
+    <td><span class="tag tag-yellow">Linearized</span></td>
+  </tr>
+</table>
+
+<div class="finding success">
+  <div class="finding-label">Key Finding</div>
+  <p>The QCD solver is the most sophisticated module in the entire codebase. It implements actual Monte Carlo lattice gauge theory with SU(2) matrix multiplication, staple calculation, and Metropolis accept/reject &mdash; the same algorithmic framework used in real lattice QCD research. The EM solver uses proper FDTD with Perfectly Matched Layer boundaries, which is standard in electromagnetic simulation.</p>
+</div>
+
+<h3>GSPL Compiler (Domain &rarr; Physics Mapping)</h3>
+<p>The compiler maps creative domains to field types deterministically: character/organic &rarr; Dirac (fermionic), vfx/energy &rarr; QED (coupled), matter/prop &rarr; QCD (strong force), cosmos/environment &rarr; Gravity. Seed genes (core_power, stability, complexity) map to physics parameters (field amplitude, localization width, momentum). This mapping is the conceptual bridge between creative intent and physical simulation.</p>
+</section>
+
+<!-- 4. PYTHON CORE -->
+<section id="python-core">
+<h2>4. Python Core: 26 Domain Engines</h2>
+
+<div class="finding success">
+  <div class="finding-label">Contrary to Initial Assessment</div>
+  <p>The project instructions estimated "likely 2-3 real engines, others are skeletons." After deep analysis: <strong>all 26 engines are implemented with real logic</strong>. Every grow() function extracts genes, applies mathematical transformations, and returns rich artifact descriptors with domain-specific render hints. No stubs, no TODOs, no placeholder returns.</p>
+</div>
+
+<p>The 26 engines span these domains, each with substantive grow() methods in engines.py (356 lines total):</p>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>Primary Engines (5)</h4>
+    <p>character, sprite, music, visual2d, procedural &mdash; most detailed implementations with 30-40 lines each. Character engine computes body dimensions from strength/agility genes, derives HP/MP stats, extracts RGB from palette vectors.</p>
+  </div>
+  <div class="card">
+    <h4>Extended Engines (21)</h4>
+    <p>fullgame, animation, geometry3d, narrative, ui, physics, audio, ecosystem, game, alife, shader, particle, typography, architecture, vehicle, furniture, fashion, robotics, circuit, food, choreography &mdash; each 10-20 lines with real gene extraction and domain-specific output.</p>
+  </div>
+</div>
+
+<h3>Gene System (509 Lines, 68 Functions)</h3>
+<p>All 17 gene types implement all 4 operators (validate, mutate, crossover, distance). Notable implementations include quantum genes with amplitude normalization, graph genes with three mutation modes (weight, add edge, delete), temporal genes with ADSR envelope support, and sovereignty genes that are deliberately immutable (mutation and crossover are no-ops by design).</p>
+
+<h3>Composition Engine (277 Lines, 9 Functors)</h3>
+<p>Nine pre-registered functor bridges enable cross-domain transformation with semantic mappings. For example, character_to_music maps warrior archetype to minor mode, mage to dorian, rogue to blues; tempo derives from strength gene; timbre from agility. These are real creative transformations, not passthrough copies. BFS pathfinding enables multi-hop composition between any two domains.</p>
+</section>
+
+<!-- 5. GSPL -->
+<section id="gspl">
+<h2>5. GSPL Language &amp; Parser</h2>
+
+<div class="grid-2">
+  <div class="card">
+    <h4>TypeScript Parser (gspl-parser.ts)</h4>
+    <p>Regex-based, extracts seed blocks, parses key-value pairs with depth-aware nesting. Handles scalar/vector/categorical types. Functional but fragile. ~80% complete. Used by the active frontend.</p>
+  </div>
+  <div class="card">
+    <h4>Python Parser (gspl_parser.py, 849 lines)</h4>
+    <p>Full recursive-descent parser with lexer, AST generation, and Hindley-Milner type system integration. Supports all 26 keywords, 17 gene types, seed operations (breed, mutate, compose, evolve, grow). Production-grade. Currently dormant.</p>
+  </div>
+</div>
+
+<h3>Language Specification (from data/spec/04-gspl-language.md)</h3>
+<p>GSPL is formally specified with 26 keywords, ~30 operators, 6 literal types (int, float, string, bool, vector, nil), and a complete grammar supporting seed declarations, function definitions, type declarations, domain schemas, trait implementations, and GPU annotations. The spec defines 25+ AST node types and includes formal operational semantics for seed operations.</p>
+</section>
+
+<!-- 6. SOVEREIGNTY -->
+<section id="sovereignty">
+<h2>6. Sovereignty &amp; Cryptography</h2>
+
+<div class="finding success">
+  <div class="finding-label">Production-Grade Crypto</div>
+  <p>Both backends implement real ECDSA P-256 (secp256r1) signing. The TypeScript layer uses Node.js crypto with PEM-encoded keys. The Python layer uses the ecdsa library with JWK-formatted public keys. Seeds are content-addressed (SHA-256 of canonical JSON) before signing. Verification is stateless.</p>
+</div>
+
+<p>The sovereignty specification (data/spec/05-sovereignty.md, 241 lines) defines RFC 8785 JSON Canonicalization, SHA-256 hashing, and RFC 6979 deterministic ECDSA. Lineage signatures compose, meaning a child seed's signature chain includes its parents. This is the foundation for provenance tracking and eventual on-chain minting.</p>
+</section>
+
+<!-- 7. INTELLIGENCE -->
+<section id="intelligence">
+<h2>7. Intelligence Layer</h2>
+
+<p>The intelligence module (318 lines) integrates Google's Gemini API for three operations: embedding generation (text-embedding-004, 768 dimensions), seed generation from natural language prompts (gemini-2.5-flash), and AI-assisted mutation/breeding. All operations have deterministic fallbacks: pseudo-embeddings via SHA-based LCG, hash-based seed generation, and Gaussian/random mutation.</p>
+
+<div class="finding warning">
+  <div class="finding-label">Dependency Risk</div>
+  <p>The platform currently relies on Gemini for its most user-facing features (prompt-to-seed, intelligent mutation). The fallback mechanisms work but produce semantically meaningless results. The vision document describes a native GSPL agent (fine-tuned Llama 3 70B with QLoRA + ChromaDB RAG) that would eliminate this dependency, but it has not been implemented.</p>
+</div>
+</section>
+
+<!-- 8. ASSET PIPELINE -->
+<section id="asset-pipeline">
+<h2>8. Asset Pipeline &amp; The Sphere Problem</h2>
+
+<div class="finding critical">
+  <div class="finding-label">Root Cause: The Sphere Problem</div>
+  <p>The mesh extractor claims to implement Marching Cubes but actually performs <strong>naive voxel cube generation</strong>. For each voxel above threshold, it generates 6 faces as axis-aligned boxes. There is no edge interpolation, no vertex interpolation between grid points, and no smooth isosurface extraction. If the QFT field is a Gaussian (spherically symmetric), the output is a <strong>cubic shell</strong>, not a smooth sphere. This is why everything looks the same &mdash; the extraction algorithm cannot distinguish between different field topologies at the visual level.</p>
+</div>
+
+<table>
+  <tr>
+    <th>Stage</th>
+    <th>Module</th>
+    <th>Quality</th>
+    <th>Issue</th>
+  </tr>
+  <tr>
+    <td>1. Compile</td>
+    <td>gspl/compiler.ts</td>
+    <td><span class="tag tag-green">Good</span></td>
+    <td>Deterministic domain &rarr; QFT mapping. Clean.</td>
+  </tr>
+  <tr>
+    <td>2. Simulate</td>
+    <td>qft/*.ts</td>
+    <td><span class="tag tag-green">Good</span></td>
+    <td>Real PDE solvers. Output is genuine 3D field data.</td>
+  </tr>
+  <tr>
+    <td>3. Extract</td>
+    <td>mesh_extractor.ts</td>
+    <td><span class="tag tag-red">Broken</span></td>
+    <td>Voxel cubes, not Marching Cubes. No interpolation. Root cause of sphere problem.</td>
+  </tr>
+  <tr>
+    <td>4. Bake</td>
+    <td>texture_baker.ts</td>
+    <td><span class="tag tag-yellow">Basic</span></td>
+    <td>Nearest-neighbor. No PBR, no normal maps. Functional but crude.</td>
+  </tr>
+  <tr>
+    <td>4b. Animate</td>
+    <td>animation_extractor.ts</td>
+    <td><span class="tag tag-yellow">Basic</span></td>
+    <td>Center-of-mass trajectory only. Single bone. Limited but correct.</td>
+  </tr>
+</table>
+
+<p>The pipeline's stages 1-2 (compilation and simulation) produce genuinely rich data. The field output from a QCD simulation on a 4D lattice, for example, contains real gauge field configurations. But stages 3-4 collapse this richness into blocky voxels with flat colors. Replacing the mesh extractor with true Marching Cubes (with edge interpolation and normal estimation) would immediately unlock visual diversity from the existing physics.</p>
+</section>
+
+<!-- 9. FRONTEND -->
+<section id="frontend">
+<h2>9. Frontend Architecture</h2>
+
+<p>The frontend is a React 19 SPA with Vite, Tailwind CSS, and Zustand state management. It has two pages: a hero landing page and a three-column studio workspace. The studio layout includes a gallery/lineage/library sidebar, a central 3D viewport with prompt bar, and a right panel with six operation tabs (Genes, Evolve, Breed, Compose, GSPL, Export).</p>
+
+<table>
+  <tr>
+    <th>Component</th>
+    <th>Lines</th>
+    <th>Real Data?</th>
+    <th>Notes</th>
+  </tr>
+  <tr><td>PreviewViewport</td><td>320</td><td><span class="tag tag-green">Yes</span></td><td>React Three Fiber, renders actual mesh from grow() artifacts</td></tr>
+  <tr><td>GeneEditor</td><td>183</td><td><span class="tag tag-green">Yes</span></td><td>Type-specific widgets for scalar/categorical/vector; textarea for rest</td></tr>
+  <tr><td>ExportPanel</td><td>139</td><td><span class="tag tag-green">Yes</span></td><td>glTF, USD, WAV, HTML5 zip export</td></tr>
+  <tr><td>LineageGraph</td><td>135</td><td><span class="tag tag-green">Yes</span></td><td>D3 force-directed graph of seed ancestry</td></tr>
+  <tr><td>SeedLibrary</td><td>134</td><td><span class="tag tag-green">Yes</span></td><td>Loads from seed-commons .gspl files</td></tr>
+  <tr><td>CompositionPanel</td><td>125</td><td><span class="tag tag-green">Yes</span></td><td>Cross-domain composition. Has a bug: missing useEffect import</td></tr>
+  <tr><td>GSPLEditor</td><td>111</td><td><span class="tag tag-green">Yes</span></td><td>Syntax-highlighted code editor</td></tr>
+  <tr><td>LineageTree</td><td>82</td><td><span class="tag tag-green">Yes</span></td><td>Tree-based genealogy renderer</td></tr>
+  <tr><td>BreedPanel</td><td>78</td><td><span class="tag tag-yellow">Partial</span></td><td>Parent selection from gallery array</td></tr>
+  <tr><td>EvolvePanel</td><td>77</td><td><span class="tag tag-green">Yes</span></td><td>Population size/generation controls</td></tr>
+  <tr><td>GalleryGrid</td><td>59</td><td><span class="tag tag-green">Yes</span></td><td>Thumbnail grid with selection</td></tr>
+  <tr><td>PromptBar</td><td>47</td><td><span class="tag tag-green">Yes</span></td><td>Calls /api/seeds/generate</td></tr>
+</table>
+
+<div class="finding warning">
+  <div class="finding-label">Known Bug</div>
+  <p>CompositionPanel.jsx uses <code>useEffect</code> without importing it from React. This prevents the composition graph from loading on mount.</p>
+</div>
+</section>
+
+<!-- 10. SEED COMMONS -->
+<section id="seed-commons">
+<h2>10. Seed Commons &amp; Specification</h2>
+
+<p>The data layer contains 38 GSPL files across 20 domain inventories (210+ foundational seeds), 18 knowledge libraries (biology, chemistry, physics, linguistics, mathematics, culture_history, earth_sciences, materials, and more), and 5 TypeScript validators. The seeds encode real-world knowledge with citations &mdash; the biology library, for example, defines body plans for Homo sapiens, Canis lupus familiaris, and Apis mellifera with references to NCBI Taxonomy, UniProt, and Gray's Anatomy 42nd edition.</p>
+
+<p>The formal specification spans 7 documents (1,714 lines) covering the Universal Seed schema, 17-type gene system with pseudocode operators, the xoshiro256** RNG and 8-phase tick cycle, full GSPL grammar, sovereignty protocol, binary .gseed format, and cross-platform determinism guarantees.</p>
+</section>
+
+<!-- 11. COMPLETENESS MATRIX -->
+<section id="completeness">
+<h2>11. Feature Completeness Matrix</h2>
+
+<table>
+  <tr>
+    <th>Feature Area</th>
+    <th>Implementation</th>
+    <th>Completeness</th>
+    <th>Evidence</th>
+  </tr>
+  <tr>
+    <td>Seed CRUD</td>
+    <td>Both backends</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:85%; background:var(--green)"></div></div>
+      85%
+    </td>
+    <td>Full create/read/update/delete, gene editing, lineage tracking</td>
+  </tr>
+  <tr>
+    <td>GSPL Parser</td>
+    <td>Python: full AST; TS: regex</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:80%; background:var(--green)"></div></div>
+      80%
+    </td>
+    <td>Python parser is production-grade; TS parser is functional but fragile</td>
+  </tr>
+  <tr>
+    <td>Gene System</td>
+    <td>Python (509 LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:95%; background:var(--green)"></div></div>
+      95%
+    </td>
+    <td>17 types x 4 operators = 68 functions, all implemented with real logic</td>
+  </tr>
+  <tr>
+    <td>26 Domain Engines</td>
+    <td>Python (356 LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:75%; background:var(--green)"></div></div>
+      75%
+    </td>
+    <td>All 26 implemented with real math; extended engines are thinner</td>
+  </tr>
+  <tr>
+    <td>QFT Physics</td>
+    <td>TypeScript (1000+ LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:85%; background:var(--green)"></div></div>
+      85%
+    </td>
+    <td>5 real PDE solvers, actual lattice gauge theory, proper numerical methods</td>
+  </tr>
+  <tr>
+    <td>Composition</td>
+    <td>Python (277 LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:70%; background:var(--yellow)"></div></div>
+      70%
+    </td>
+    <td>9 semantic functor bridges with BFS pathfinding. Not yet connected to TS backend</td>
+  </tr>
+  <tr>
+    <td>Asset Pipeline</td>
+    <td>TypeScript</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:35%; background:var(--red)"></div></div>
+      35%
+    </td>
+    <td>Voxel cubes instead of Marching Cubes; no PBR; single-bone animation</td>
+  </tr>
+  <tr>
+    <td>Sovereignty</td>
+    <td>Both backends</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:60%; background:var(--yellow)"></div></div>
+      60%
+    </td>
+    <td>Real ECDSA P-256 signing/verification. No blockchain, IPFS, or ZK proofs yet</td>
+  </tr>
+  <tr>
+    <td>Intelligence</td>
+    <td>TypeScript (318 LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:50%; background:var(--yellow)"></div></div>
+      50%
+    </td>
+    <td>Gemini integration works; fallbacks exist; no native agent; no vector DB</td>
+  </tr>
+  <tr>
+    <td>Frontend UI</td>
+    <td>React (1490 LOC)</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:65%; background:var(--yellow)"></div></div>
+      65%
+    </td>
+    <td>12 components, 3D viewport, studio layout. No responsive, no accessibility</td>
+  </tr>
+  <tr>
+    <td>Auth &amp; Security</td>
+    <td>None</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%; background:var(--red)"></div></div>
+      0%
+    </td>
+    <td>No users, sessions, API keys, or rate limiting</td>
+  </tr>
+  <tr>
+    <td>DevOps</td>
+    <td>None</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:0%; background:var(--red)"></div></div>
+      0%
+    </td>
+    <td>No Docker, CI/CD, monitoring, logging, or health checks</td>
+  </tr>
+  <tr>
+    <td>Determinism</td>
+    <td>Spec only</td>
+    <td>
+      <div class="progress-bar"><div class="progress-fill" style="width:30%; background:var(--red)"></div></div>
+      30%
+    </td>
+    <td>Spec mandates xoshiro256**; TS backend uses Math.random() in fallbacks</td>
+  </tr>
+</table>
+</section>
+
+<!-- 12. CRITICAL GAPS -->
+<section id="gaps">
+<h2>12. Critical Gaps &amp; Risks</h2>
+
+<div class="finding critical">
+  <div class="finding-label">P0 &mdash; The Sphere Problem (Asset Pipeline)</div>
+  <p>The mesh extractor does not implement actual Marching Cubes. It generates identical-looking cubic voxel shells regardless of the input field topology. This is the single biggest blocker to demonstrating the platform's value &mdash; users see the same shape for every domain. <strong>Fix: Implement true Marching Cubes with edge interpolation and smooth normal estimation.</strong></p>
+</div>
+
+<div class="finding critical">
+  <div class="finding-label">P0 &mdash; Dual Backend Unification</div>
+  <p>Two backends that each have capabilities the other lacks. The frontend only talks to the TypeScript backend, which means the 26 Python engines, full GSPL parser, gene system, and composition engine are all unreachable from the UI. <strong>Fix: Either port the Python modules to TypeScript, or set up the Python backend as a service called by the TS server.</strong></p>
+</div>
+
+<div class="finding critical">
+  <div class="finding-label">P0 &mdash; No Authentication</div>
+  <p>The API is completely public. Anyone can create, mutate, delete, and sign seeds. No users, no sessions, no permissions. <strong>Fix: Implement JWT auth with user accounts.</strong></p>
+</div>
+
+<div class="finding warning">
+  <div class="finding-label">P1 &mdash; Determinism Violation</div>
+  <p>The spec mandates xoshiro256** RNG for reproducibility, but the TS backend uses Math.random() in mutation fallbacks. This breaks the core promise: same seed &rarr; bit-identical artifact. <strong>Fix: Implement seeded xoshiro256** in TypeScript and use it everywhere.</strong></p>
+</div>
+
+<div class="finding warning">
+  <div class="finding-label">P1 &mdash; External AI Dependency</div>
+  <p>Prompt-to-seed generation, intelligent mutation, and embedding all depend on Gemini API calls. If the API is down, rate-limited, or deprecated, core user-facing features degrade to hash-based fallbacks. <strong>Fix: Build the native GSPL agent (Llama 3 + RAG) as specified in the vision.</strong></p>
+</div>
+
+<div class="finding warning">
+  <div class="finding-label">P1 &mdash; Frontend Bug</div>
+  <p>CompositionPanel.jsx references useEffect without importing it. The composition graph won't render on mount. <strong>Fix: Add useEffect to the React import.</strong></p>
+</div>
+
+<div class="finding warning">
+  <div class="finding-label">P2 &mdash; No Deployment Infrastructure</div>
+  <p>No Docker, no CI/CD, no health checks, no structured logging, no monitoring. The README shows manual <code>npm run dev</code> only. <strong>Fix: Docker Compose (app + db + redis), GitHub Actions pipeline.</strong></p>
+</div>
+</section>
+
+<!-- 13. PATH FORWARD -->
+<section id="path-forward">
+<h2>13. Path Forward</h2>
+
+<p>The platform's core innovation is <strong>genuine and deep</strong>. The QFT solvers are real computational physics. The gene system is mathematically complete. The GSPL specification is publication-ready. The 26 engines all contain real logic. The sovereignty layer uses production-grade cryptography. This is not vaporware &mdash; it is a functional prototype with a single critical bottleneck (the asset pipeline) and an architectural split (dual backends) that prevents the full vision from being realized in the UI.</p>
+
+<h3>Immediate Impact (Week 1-2)</h3>
+<div class="card" style="margin: 12px 0">
+  <h4>Fix the Sphere Problem</h4>
+  <p>Replace the voxel cube extractor with true Marching Cubes. This single change would make every domain produce visually distinct geometry from the QFT fields. Add smooth normals, basic PBR material properties, and edge interpolation. The physics is already generating rich field data &mdash; the visualization just needs to faithfully represent it.</p>
+</div>
+
+<h3>Foundation (Week 2-4)</h3>
+<div class="card" style="margin: 12px 0">
+  <h4>Unify the Backends</h4>
+  <p>Port the Python GSPL parser, gene system, and composition engine to TypeScript (or expose the Python backend as a microservice). This unlocks all 26 domain engines, the full type system, and cross-domain functor composition in the live UI. Implement the seeded xoshiro256** RNG to restore determinism.</p>
+</div>
+
+<h3>Production (Week 4-8)</h3>
+<div class="card" style="margin: 12px 0">
+  <h4>Auth + Infrastructure + Native Agent</h4>
+  <p>Add JWT authentication, Docker Compose deployment, CI/CD pipeline, and begin work on the native GSPL agent to eliminate the Gemini dependency. Harden the API with rate limiting, input validation, and structured logging.</p>
+</div>
+
+<h3>Vision (Week 8+)</h3>
+<div class="card" style="margin: 12px 0">
+  <h4>The Living Creative Operating System</h4>
+  <p>On-chain sovereignty (L2 minting), IPFS/Arweave storage, infinite canvas UI, agent swarms, creative version control (Git for Seeds), WebAssembly engine execution, and the full game generation pipeline. These are achievable extensions of the existing architecture, not rewrites.</p>
+</div>
+
+</section>
+
+<div style="text-align: center; padding: 40px 0; border-top: 1px solid var(--border); margin-top: 40px; color: var(--text-dim); font-size: 0.8rem; letter-spacing: 2px;">
+  PARADIGM GSPL ENGINE &mdash; FULL SPECTRUM ANALYSIS &mdash; APRIL 2026
+</div>
+
+</div>
+</body>
+</html>

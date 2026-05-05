@@ -1,0 +1,247 @@
+// seed-commons/inventories/style/_batch_01_foundational.gspl
+//
+// Style inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational rendering-intent seeds. Style seeds are meta-seeds:
+// they do NOT describe a subject, they describe how ANY subject should be
+// rendered. Every style pins a quantization model, palette constraint,
+// stroke/dither behavior, and tonemap so a downstream compose step can
+// apply them deterministically to any existing inventory seed.
+//
+// Style seeds are pure; they never introduce randomness except through
+// their rng_seed (kernel scalar gene).
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.style"
+
+module seed_commons.inventories.style.batch01
+
+import Std.Color
+import Std.Math
+import Std.Style
+
+// 01. Pixel art 16-bit — SNES-era quantized palette
+pub fn pixel_art_16bit() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.pixel_art_16bit", version = "1.0.0",
+        kind = Std.Style.Kind.Raster,
+        quantization = Std.Style.Quantization.Indexed {
+            palette_size = 32,
+            dither = "bayer_4x4",
+            dither_strength = 0.35,
+        },
+        pixel_grid_px = 1,
+        outline = Std.Style.Outline.None,
+        tonemap = Std.Style.Tonemap.NoneLinear,
+        gamut = "sRGB-narrow",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.10, h = 260.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 30.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.14, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Ghibli watercolor — soft edges, desaturated midtones
+pub fn ghibli_watercolor() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.ghibli_watercolor", version = "1.0.0",
+        kind = Std.Style.Kind.Painterly,
+        quantization = Std.Style.Quantization.Continuous,
+        stroke = Std.Style.Stroke.Watercolor {
+            wet_edge_strength = 0.72,
+            pigment_granulation = 0.45,
+            bleed_radius_mm = 2.8,
+        },
+        outline = Std.Style.Outline.Soft { width_mm = 0.2, alpha = 0.28 },
+        tonemap = Std.Style.Tonemap.Filmic { exposure = 0.0, contrast = 0.82 },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.10, h = 140.0 },
+            Std.Color.OKLCh { l = 0.85, c = 0.08, h = 85.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.04, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Film noir — high-contrast B&W with hard shadows
+pub fn film_noir_bw() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.film_noir_bw", version = "1.0.0",
+        kind = Std.Style.Kind.Photographic,
+        quantization = Std.Style.Quantization.Continuous,
+        desaturate = 1.0,
+        outline = Std.Style.Outline.None,
+        tonemap = Std.Style.Tonemap.Filmic { exposure = -0.4, contrast = 1.85 },
+        shadow_hardness = 0.92,
+        grain_amount = 0.22,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.08, c = 0.00, h = 0.0 },
+            Std.Color.OKLCh { l = 0.48, c = 0.00, h = 0.0 },
+            Std.Color.OKLCh { l = 0.96, c = 0.00, h = 0.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Cel-shaded anime — three-tone stepped lighting
+pub fn cel_shaded_anime() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.cel_shaded_anime", version = "1.0.0",
+        kind = Std.Style.Kind.Painterly,
+        quantization = Std.Style.Quantization.Stepped { levels = 3 },
+        outline = Std.Style.Outline.Hard { width_mm = 0.6, alpha = 1.0, color_darken = 0.6 },
+        tonemap = Std.Style.Tonemap.Linear,
+        specular_mode = "banded",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 260.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.18, h = 30.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Photorealistic PBR — full ACES cinematic pipeline
+pub fn photorealistic_pbr() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.photorealistic_pbr", version = "1.0.0",
+        kind = Std.Style.Kind.Photographic,
+        quantization = Std.Style.Quantization.Continuous,
+        gamut = "Rec.2020",
+        tonemap = Std.Style.Tonemap.ACES { exposure = 0.0 },
+        bounce_depth = 8,
+        caustics = true,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.06, h = 80.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 60.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.08, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Ink wash — sumi-e brush strokes, rice paper
+pub fn sumi_e_ink_wash() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.sumi_e_ink_wash", version = "1.0.0",
+        kind = Std.Style.Kind.Painterly,
+        quantization = Std.Style.Quantization.Continuous,
+        stroke = Std.Style.Stroke.Brush {
+            brush_radius_mm = 6.0,
+            pressure_variance = 0.68,
+            dry_brush_fraction = 0.18,
+        },
+        substrate = "rice_paper",
+        outline = Std.Style.Outline.None,
+        desaturate = 1.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.08, c = 0.02, h = 50.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.04, h = 60.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Vaporwave — pastel cyan/magenta, CRT scanlines
+pub fn vaporwave_crt() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.vaporwave_crt", version = "1.0.0",
+        kind = Std.Style.Kind.Raster,
+        quantization = Std.Style.Quantization.Indexed {
+            palette_size = 16,
+            dither = "none",
+            dither_strength = 0.0,
+        },
+        post_fx = Std.Style.PostFX.CRT {
+            scanline_density_px = 3,
+            chromatic_aberration_px = 2.5,
+            bloom_strength = 0.42,
+        },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 320.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.18, h = 200.0 },
+            Std.Color.OKLCh { l = 0.95, c = 0.08, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Oil painting — impasto, visible brushwork
+pub fn oil_painting_impasto() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.oil_painting_impasto", version = "1.0.0",
+        kind = Std.Style.Kind.Painterly,
+        quantization = Std.Style.Quantization.Continuous,
+        stroke = Std.Style.Stroke.Impasto {
+            brush_radius_mm = 3.8,
+            thickness_mm = 1.2,
+            pigment_mixing = 0.35,
+        },
+        substrate = "linen_canvas",
+        tonemap = Std.Style.Tonemap.Filmic { exposure = -0.2, contrast = 1.15 },
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.14, h = 40.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.18, h = 60.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.08, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "inventory://materials/ultramarine_oil_paint@v1",
+            "inventory://materials/handwoven_linen@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Low-poly flat — 90s CG, no textures
+pub fn low_poly_flat() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.low_poly_flat", version = "1.0.0",
+        kind = Std.Style.Kind.Vector,
+        triangle_budget = 500,
+        shading_mode = "flat",
+        quantization = Std.Style.Quantization.Stepped { levels = 4 },
+        outline = Std.Style.Outline.None,
+        tonemap = Std.Style.Tonemap.Linear,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.42, c = 0.16, h = 140.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 60.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.10, h = 220.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Dark fantasy etching — Doré-style line engraving
+pub fn dark_fantasy_etching() -> Std.Style.Seed pure =
+    seed Std.Style.Seed {
+        name = "style.dark_fantasy_etching", version = "1.0.0",
+        kind = Std.Style.Kind.LineArt,
+        quantization = Std.Style.Quantization.Threshold { level = 0.48 },
+        stroke = Std.Style.Stroke.Etching {
+            line_density_per_mm = 12.0,
+            cross_hatch_angle_deg = 45.0,
+            line_width_mm = 0.08,
+        },
+        substrate = "aged_paper",
+        desaturate = 1.0,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.08, c = 0.02, h = 60.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.04, h = 70.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.04, h = 85.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.inventories.materials@v1"],
+    category   = "style",
+    batch      = "01_foundational",
+    count      = 10,
+    role       = "meta_render_intent",
+    applies_to = ["any_inventory_seed"],
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.style",
+}

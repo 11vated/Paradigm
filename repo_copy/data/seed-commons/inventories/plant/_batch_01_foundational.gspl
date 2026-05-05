@@ -1,0 +1,259 @@
+// seed-commons/inventories/plant/_batch_01_foundational.gspl
+//
+// Plant inventory — batch 01 of the Brief 088A canonical armory.
+// Ten foundational plant seeds. Photosynthesis-driven entries draw lineage
+// from seed_commons.libraries.chemistry::photosynthesis() and glucose().
+//
+// License: GSPL Open Specification License
+// rng_seed prefix: "seed_commons.inventories.plant"
+
+module seed_commons.inventories.plant.batch01
+
+import Std.Color
+import Std.Math
+import Std.Plant
+import Std.Topology
+import seed_commons.libraries.chemistry as Chem
+
+// 01. Oak sapling — Quercus robur, 3 years
+pub fn oak_sapling_3yr() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.oak_sapling_3yr", version = "1.0.0",
+        kind = Std.Plant.Kind.Tree,
+        species = "Quercus robur",
+        age_years = 3.0,
+        height_m = 1.2,
+        trunk_diameter_mm = 22.0,
+        branching = Std.Topology.LSystem {
+            axiom = "F",
+            rules = [("F", "F[+F]F[-F]F")],
+            iterations = 4,
+            angle_deg = 22.5,
+        },
+        leaf_count = 240,
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.12, h = 140.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.16, h = 135.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.14, h = 130.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 02. Mature pine — Pinus sylvestris, 40 years
+pub fn mature_pine_40yr() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.mature_pine_40yr", version = "1.0.0",
+        kind = Std.Plant.Kind.Tree,
+        species = "Pinus sylvestris",
+        age_years = 40.0,
+        height_m = 18.0,
+        trunk_diameter_mm = 420.0,
+        branching = Std.Topology.LSystem {
+            axiom = "F",
+            rules = [("F", "F[++F][--F]F[+F][-F]F")],
+            iterations = 5,
+            angle_deg = 18.0,
+        },
+        needle_length_mm = 55.0,
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 150.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.12, h = 145.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.10, h = 140.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 03. Wild rose bush — Rosa canina in bloom
+pub fn wild_rose_blooming() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.wild_rose_blooming", version = "1.0.0",
+        kind = Std.Plant.Kind.Shrub,
+        species = "Rosa canina",
+        age_years = 4.0,
+        height_m = 1.8,
+        flower_count = 28,
+        flower_diameter_mm = 42.0,
+        flower_pigment = "PR108_cadmium_red",
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.62, c = 0.22, h = 15.0 },
+            Std.Color.OKLCh { l = 0.80, c = 0.18, h = 18.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.12, h = 22.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 04. Meadow grass — Festuca rubra tuft
+pub fn meadow_grass_tuft() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.meadow_grass_tuft", version = "1.0.0",
+        kind = Std.Plant.Kind.Grass,
+        species = "Festuca rubra",
+        blade_count = 180,
+        blade_length_mm = 220.0,
+        blade_width_mm = 2.2,
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 135.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.16, h = 130.0 },
+            Std.Color.OKLCh { l = 0.88, c = 0.10, h = 125.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 05. Giant kelp frond — Macrocystis pyrifera
+pub fn giant_kelp_frond() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.giant_kelp_frond", version = "1.0.0",
+        kind = Std.Plant.Kind.Algae,
+        species = "Macrocystis pyrifera",
+        length_m = 22.0,
+        pneumatocyst_count = 48,
+        metabolism = "photosynthetic_algal",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.22, c = 0.08, h = 100.0 },
+            Std.Color.OKLCh { l = 0.42, c = 0.10, h = 105.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.12, h = 110.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 06. Saguaro cactus — Carnegiea gigantea, 80 years, CAM
+pub fn saguaro_cactus_80yr() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.saguaro_cactus_80yr", version = "1.0.0",
+        kind = Std.Plant.Kind.Succulent,
+        species = "Carnegiea gigantea",
+        age_years = 80.0,
+        height_m = 8.5,
+        trunk_diameter_mm = 520.0,
+        arm_count = 5,
+        rib_count = 24,
+        metabolism = "CAM",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.08, h = 130.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.10, h = 125.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.08, h = 120.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 07. Amanita muscaria — fly agaric mushroom (non-photosynthetic)
+pub fn amanita_muscaria() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.amanita_muscaria", version = "1.0.0",
+        kind = Std.Plant.Kind.Fungus,
+        species = "Amanita muscaria",
+        cap_diameter_mm = 140.0,
+        stem_height_mm = 180.0,
+        metabolism = "saprotrophic",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.52, c = 0.22, h = 30.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.22, h = 35.0 },
+            Std.Color.OKLCh { l = 0.92, c = 0.02, h = 90.0 },
+        ]),
+        lineage = Lineage.from_parents([]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 08. Wheat stalk — Triticum aestivum in golden ripeness
+pub fn wheat_stalk_ripe() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.wheat_stalk_ripe", version = "1.0.0",
+        kind = Std.Plant.Kind.Grass,
+        species = "Triticum aestivum",
+        height_m = 0.92,
+        grain_count = 48,
+        awn_length_mm = 72.0,
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.68, c = 0.14, h = 85.0 },
+            Std.Color.OKLCh { l = 0.82, c = 0.16, h = 80.0 },
+            Std.Color.OKLCh { l = 0.94, c = 0.10, h = 75.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 09. Moss patch — Hypnum cupressiforme on stone
+pub fn moss_patch_hypnum() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.moss_patch_hypnum", version = "1.0.0",
+        kind = Std.Plant.Kind.Bryophyte,
+        species = "Hypnum cupressiforme",
+        coverage_m2 = 0.45,
+        thickness_mm = 12.0,
+        metabolism = "C3",
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.32, c = 0.10, h = 140.0 },
+            Std.Color.OKLCh { l = 0.52, c = 0.14, h = 135.0 },
+            Std.Color.OKLCh { l = 0.72, c = 0.12, h = 130.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/water@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+// 10. Sunflower in bloom — Helianthus annuus, heliotropic
+pub fn sunflower_bloom() -> Std.Plant.Seed pure =
+    seed Std.Plant.Seed {
+        name = "plant.sunflower_bloom", version = "1.0.0",
+        kind = Std.Plant.Kind.Herbaceous,
+        species = "Helianthus annuus",
+        height_m = 2.4,
+        head_diameter_mm = 300.0,
+        ray_floret_count = 34,
+        seed_spiral = Std.Math.PhyllotaxisSpiral {
+            divergence_rad = 2.39996323,
+            scale_mm = 3.2,
+        },
+        metabolism = "C3",
+        heliotropic = true,
+        palette = Std.Color.Palette.from_oklch([
+            Std.Color.OKLCh { l = 0.82, c = 0.22, h = 95.0 },
+            Std.Color.OKLCh { l = 0.62, c = 0.20, h = 80.0 },
+            Std.Color.OKLCh { l = 0.32, c = 0.14, h = 50.0 },
+        ]),
+        lineage = Lineage.from_parents([
+            "chem://reaction/photosynthesis@v1",
+            "chem://molecule/glucose@v1",
+        ]),
+        provenance = Provenance.HumanAuthored,
+    }
+
+$metadata {
+    consumes   = ["seed_commons.libraries.chemistry@v1"],
+    category   = "plant",
+    batch      = "01_foundational",
+    count      = 10,
+    provenance = "human_authored",
+    license    = "GSPL-OSL-1.0",
+    rng_seed_prefix = "seed_commons.inventories.plant",
+}

@@ -1,0 +1,131 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@db:5432/paradigm
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - paradigm-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=paradigm
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - paradigm-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 8G
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 4gb --maxmemory-policy allkeys-lru
+    networks:
+      - paradigm-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: node dist/worker.js
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@db:5432/paradigm
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - db
+      - redis
+    networks:
+      - paradigm-network
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  gpu-worker:
+    build:
+      context: .
+      gpuDockerfile: Dockerfile.gpu
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        limits:
+          devices:
+            - capabilities: [gpu]
+      resources:
+        limits:
+          cpus: '8'
+          memory: 16G
+    networks:
+      - paradigm-network
+
+  cdn:
+    image: caddy:2-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy-data:/data
+    networks:
+      - paradigm-network
+
+  monitoring:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - paradigm-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    networks:
+      - paradigm-network
+
+volumes:
+  postgres-data:
+  caddy-data:
+
+networks:
+  paradigm-network:
+    driver: bridge
