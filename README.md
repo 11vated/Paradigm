@@ -1,263 +1,236 @@
-# Paradigm Absolute Platform
-  
-**Version**: 2.0.0  
-**Vision**: A Deterministic Synthetic Evolution Operating System where every digital artifact is a "seed" that can be bred, mutated, evolved, and composed.
+# Paradigm Absolute
 
----
+**Paradigm Absolute** is a deterministic synthetic evolution operating system for generating, mutating, breeding, evolving, composing, and exporting digital artifacts as reproducible genetic seeds.
 
-## Phase 9 Complete ✅
+The core guarantee is simple:
 
-**All infrastructure phases completed:**
-
-| Phase | Status | Key Components |
-|-------|--------|----------------|
-| Phase 1: Build | ✅ | TypeScript fixes, relaxed strict mode |
-| Phase 2: Foundational | ✅ | Kernel types, RNG exports, Seed types |
-| Phase 3: GSPL | ✅ | Working lexer/parser, executeGSPL |
-| Phase 4: Cognitive | ✅ | Reflexion memory, trial-with-retries |
-| Phase 5: Engines | ✅ | Real synthesis (WAV, HTML, PNG, GLTF) |
-| Phase 6: Multimodal | ✅ | Cross-domain composition, 9 functors |
-| Phase 7: GPU | ✅ | WebGPU system with WGSL compute |
-| Phase 8: Visualization | ✅ | LineageTree, LineageGraph |
-| Phase 9: Self-Improvement | ✅ | AutonomousResearchLoop |
-
----
-
-## Build Status
-- **✅ Build passes**: 7.26s
-- **2353 modules** transformed
-- **~1.6MB** production bundle
-
----
-
-## Quick Start
-
-```bash
-npm install
-npm run dev    # Start development server
-npm run build  # Build for production
+```text
+same seed + same deterministic RNG + same code = reproducible output
 ```
+
+This repository is now updated to reflect the completed stabilization pass from the implementation planning work: typechecking is clean, the full Vitest suite passes, GSPL compatibility modules are wired for tests, and the GitHub `main` branch is synchronized.
+
+---
+
+## Current Status
+
+| Area | Status |
+| --- | --- |
+| TypeScript typecheck | Passing |
+| Full test suite | Passing |
+| GSPL tests | Passing |
+| Swarm orchestration tests | Passing |
+| Parity tests | Passing |
+| GitHub `main` | Updated |
+
+Verified locally before the latest GitHub update:
+
+```text
+Test Files  40 passed (40)
+Tests       771 passed (771)
+```
+
+---
+
+## What Paradigm Provides
+
+- **Deterministic seed kernel** using seeded RNG instead of ambient randomness for reproducible evolution paths.
+- **Universal seed model** with typed genes, lineage metadata, mutation, crossover, cloning, serialization, and distance operations.
+- **GSPL language support** for seed-oriented scripting through lexer, parser, interpreter, compiler, and compatibility modules.
+- **Evolution systems** including genetic algorithm support and deterministic parity coverage.
+- **Domain engine infrastructure** for synthesizing artifacts across many creative, scientific, and simulation domains.
+- **Agent and swarm systems** for multi-role reasoning, critique, synthesis, and verdict parsing.
+- **Studio UI components** for seed chat, GSPL REPL workflows, canvas interaction, and generated artifact inspection.
+- **Persistence and auth infrastructure** with test-compatible local fallbacks.
+- **Parity fixtures** for seed commons validation and reproducibility-oriented regression tests.
+
+---
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────┐
-│ Layer 9: Self-Improvement (Research Loop)    │
-├─────────────────────────────────────────────┤
-│ Layer 8: Visualization (React + WebGL)       │
-├─────────────────────────────────────────────┤
-│ Layer 7: GPU/Distributed Compute            │
-├─────────────────────────────────────────────┤
-│ Layer 6: Multimodal Infrastructure         │
-├─────────────────────────────────────────────┤
-│ Layer 5: Domain Engines (27 pipelines)      │
-├─────────────────────────────────────────────┤
-│ Layer 4: Cognitive Architecture (Reflexion) │
-├─────────────────────────────────────────────┤
-│ Layer 3: GSPL (Lexer → Parser → Interpreter)│
-├─────────────────────────────────────────────┤
-│ Layer 2: Seeds (Universal Genome)          │
-├─────────────────────────────────────────────┤
-│ Layer 1: Kernel (xoshiro256** + Evolution) │
-└─────────────────────────────────────────────┘
+```text
+Layer 1   Deterministic RNG and kernel primitives
+Layer 2   Universal seeds and typed genes
+Layer 3   GSPL lexer, parser, interpreter, compiler
+Layer 4   Evolution algorithms and parity checks
+Layer 5   Domain engines and generators
+Layer 6   Cross-domain composition and functors
+Layer 7   Agent, swarm, memory, and reasoning systems
+Layer 8   GPU, physics, rendering, and metaverse export paths
+Layer 9   React studio and interactive authoring UI
+Layer 10  Tests, CI-oriented checks, and compatibility shims
 ```
 
-## Key Features
+---
 
-- **Deterministic**: Same seed = identical output (Xoshiro256** PRNG)
-- **27 Domain Engines**: Real artifact synthesis
-- **Cross-Domain**: 9 functor bridges for breeding across domains
-- **Cognitive**: Reflexion-based self-improvement
-- **GPU-Ready**: WebGPU compute pipelines in WGSL
-- **Genetic**: GA, CMA-ES, MAP-Elites algorithms
-| 3 | `visual2d` | SVG (scalable) | Vector graphics |
-| 4 | `audio` | WAV + ADSR | Multi-track with envelopes |
-| 5 | `sprite` | Animated PNG | Sprite sheets |
-| 6 | `animation` | Enhanced PNG | Motion paths |
-| 7 | `narrative` | Enhanced TXT | Metadata + structure |
-| 8 | `shader` | GLSL + Raymarching | PBR/Toon/Compute |
-| 9 | `ui` | Interactive HTML | Dark/light theme, JS |
-| 10 | `physics` | JSON + Worker | Web Worker simulation |
-| 11 | `procedural` | GLTF terrain | Heightmaps, biomes |
-| 12 | `fullgame` | HTML + Electron | Desktop app ready |
-| 13 | `game` | JS + WASM | WebAssembly ready |
-| 14 | `alife` | JSON + Worker | Life simulation |
-| 15 | `particle` | GLTF + GLSL/WGSL | GPU compute shaders |
-| 16 | `ecosystem` | JSON + Worker | Food webs, environment |
-| 17 | `typography` | SVG + Variable Fonts | OpenType features |
-| 18 | `architecture` | GLTF buildings | PBR materials |
-| 19 | `vehicle` | GLTF vehicles | PBR materials |
-| 20 | `furniture` | GLTF furniture | PBR materials |
-| 21 | `fashion` | GLTF garments | PBR materials |
-| 22 | `robotics` | GLTF robots | PBR materials |
-| 23 | `circuit` | HTML + SPICE | Interactive simulator |
-| 24 | `food` | GLTF 3D food | PBR materials |
-| 25 | `choreography` | BVH motion capture | Motion data |
-| 26 | `agent` | JSON agent config | Enhanced agent |
-| 27 | `music` | WAV stereo | Non-440Hz tuning |
+## Repository Layout
 
-### Quality Tiers:
-- **Low**: Basic output (small, simple)
-- **Medium**: Enhanced with metadata
-- **High**: Near-photorealistic
-- **Photorealistic**: Full interactive/3D/GLTF/WASM/WebGPU
+```text
+src/
+  kernel/                 Core runtime kernel and RNG
+  seeds/                  UniversalSeed, GeneType, seed serialization
+  evolution/              Evolution algorithms and functors
+  gspl/                   Public GSPL entrypoints
+  lib/gspl/               GSPL compatibility and kernel bridge modules
+  lib/kernel/             Engines, generators, provenance, composition
+  lib/agent/              Agent and swarm systems
+  lib/auth/               Auth helpers and test-safe Redis fallback
+  components/studio/      React studio components
+  pages/                  Application pages
+  services/               API service layer
 
-### Key Features:
-- ✅ **100% local-first** — zero external APIs, zero costs
-- ✅ **Build passing** with clean chunk splitting
-- ✅ **Music enhanced** with natural harmonics (432Hz, etc.)
-- ✅ **End-to-end tested** — all 27 engines generating artifacts
-- ✅ **Zero tracking** — complete privacy
+commons/data/             CommonJS seed commons fixture for parity tests
+tests/                    Vitest suites
+scripts/                  Determinism and project utility scripts
+```
 
 ---
 
 ## Quick Start
 
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Run typecheck:
+
+```bash
+npm run typecheck
+```
+
+Run tests:
+
+```bash
+npm run test
+```
+
+Run determinism checks:
+
+```bash
+npm run determinism:check
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+---
+
+## GSPL Example
+
 ```typescript
-import { UniversalSeed, GeneType } from './src/lib/kernel/seeds.js'; // Assuming seeds are defined here
-import { gsplAgent } from './src/lib/agent/index.js'; // Assuming agent is defined here
-import { initStore, getStore } from './src/lib/data/index.js'; // Assuming store initialization
-import { initCache, getCache } from './src/lib/cache/index.js'; // Assuming cache initialization
+import { executeGSPL } from './src/lib/gspl/index.js';
 
-async function quickStart() {
-  // Initialize store and cache first, as they are dependencies
-  const store = await initStore();
-  const cache = await initCache();
-
-  // This example assumes a simplified platform interaction.
-  // In a real scenario, the agent might be initialized with more context or a platform instance.
-  const agent = gsplAgent; // Directly using the imported agent for this example
-
-  const seed = new UniversalSeed();
-  seed.setGene(GeneType.COLOR, [1, 0, 0]);
-  seed.setGene(GeneType.SHAPE, 'circle');
-
-  const response = await agent.process('breed this seed with something similar', seed);
-
-  console.log(response);
+const source = `
+seed Character {
+  palette: [0.8, 0.2, 0.1]
+  mood: "focused"
 }
 
-quickStart();
-```
-
----
-
-## Layer Details
-
-### Layer 1: Kernel
-- **xoshiro256**: Fast deterministic RNG with 256-bit state
-- **FIM**: Fold-Invariant Model for state consistency
-- **Tick System**: Game loop with metrics
-- **Effects**: 8 genetic operators (mutation, crossover, selection, etc.)
-- **Gene Operators**: 4 operators (blend, interpolate, compose, transform)
-
-### Layer 2: Seeds
-17 gene types:
-- structure, color, shape, motion, audio, texture, pattern, behavior, interaction, physics, material, lighting, environment, animation, logic, data, meta
-
-### Layer 3: GSPL
-- **Lexer**: Full tokenizer with 50+ token types
-- **Parser**: Recursive descent AST parser
-- **Type Checker**: Static type analysis
-- **Interpreter**: Runtime with 30+ built-in functions
-
-### Layer 4: Engines
-27 implemented domain engines:
-- geometry3d, character, visual2d, audio, sprite, animation, narrative, shader, ui, physics, procedural, fullgame, game, alife, particle, ecosystem, typography, architecture, vehicle, furniture, fashion, robotics, circuit, food, choreography, agent, music
-
-### Layer 5: Evolution
-- **Genetic Algorithm**: Classic GA with tournament selection
-- **MAP-Elites**: Quality diversity algorithm
-- **CMA-ES**: Covariance Matrix Adaptation
-- **Functors**: Domain-specific encoders/decoders
-
-### Layer 6: Intelligence
-- **GSPL Agent**: Conversational agent with tool use
-- **World Model**: Semantic graph of concepts
-
-### Layer 7: Studio
-- **React Frontend**: Full UI with gene editor, breeding, agent chat, canvas
-- **Gene Editor**: Visual editor for all 17 gene types
-- **Breeding Station**: Visual breeding and evolution controls
-- **GSPL Agent Chat**: Natural language interface
-
----
-
-## API Reference
-
-### Seeds
-```typescript
-import { UniversalSeed, GeneType, GeneTypeDefinitions } from './src/lib/kernel/seeds.js';
-
-const seed = new UniversalSeed({
-  metadata: {
-    id: 'seed-001',
-    name: 'My Seed',
-    created: Date.now()
-  }
-});
-
-// Access gene types
-seed.setGene(GeneType.COLOR, [1, 0, 0]);
-seed.setGene(GeneType.SHAPE, 'circle');
-seed.setGene(GeneType.MOTION, { velocity: 1 });
-
-// Mutate and breed
-const mutated = seed.mutate(Math.random, 0.1);
-const child = seed.cross(otherSeed, Math.random);
-```
-
-### GSPL
-```typescript
-import { Lexer, Parser, Interpreter } from './src/lib/gspl-parser.js';
-
-const code = `
-  let mySeed = seed("demo", { color: "#ff0000" });
-  let mutated = mutate(mySeed, 0.1);
-  print(mutated);
+let intensity = 0.15
+print(intensity)
 `;
 
-const lexer = new Lexer(code);
-const parser = new Parser(lexer);
-const program = parser.parse();
+const result = executeGSPL(source, { seedPhrase: 'demo-seed' });
 
-const interpreter = new Interpreter();
-const result = interpreter.execute(program);
+console.log(result.seeds);
+console.log(result.output);
+console.log(result.errors);
 ```
 
-### Evolution
+---
+
+## Seed Example
+
 ```typescript
-import { GeneticAlgorithm, MAPElites, CMAES } from './src/lib/evolution/index.js';
+import { UniversalSeed, GeneType } from './src/seeds/index.js';
+import { Xoshiro256SS } from './src/kernel/index.js';
 
-const ga = new GeneticAlgorithm({
-  populationSize: 100,
-  generationLimit: 100,
-  mutationRate: 0.1,
-  crossoverRate: 0.7
-});
+const rng = new Xoshiro256SS(42);
 
-const result = await ga.evolve(population, fitnessFn);
+const seed = new UniversalSeed();
+seed.setGene(GeneType.COLOR, [1, 0, 0]);
+seed.setGene(GeneType.SHAPE, 'circle');
+
+const mutated = seed.mutate(rng, 0.1);
+
+console.log(mutated.getAllGenes());
 ```
 
-### Engines
-```typescript
-import { createAllEngines } from './src/lib/kernel/engines.js';
+Use seeded RNG objects for reproducibility. Do not use `Math.random()` in deterministic production paths.
 
-const engines = createAllEngines();
-for (const engine of engines) {
-  await engine.initialize();
-  const result = await engine.process(seed);
-}
+---
+
+## Verification Commands
+
+The current repository state was validated with:
+
+```bash
+npx tsc --noEmit --pretty false
+npm run test
+npx vitest run tests/gspl --reporter=dot
+npx vitest run tests/parity.test.ts --reporter=dot
 ```
+
+Expected current result:
+
+```text
+Typecheck: passing
+Full test suite: 40 files, 771 tests passing
+```
+
+---
+
+## Latest Stabilization Work Reflected Here
+
+The GitHub update includes the completed hardening work from the planning session:
+
+- GSPL lexer/parser/interpreter/compiler compatibility modules added or corrected.
+- GSPL tests brought to green for editor-format syntax expectations.
+- Swarm test contract implemented with `SwarmOrchestrator`, `DEFAULT_ROLES`, and `parseVerdict`.
+- Auth Redis behavior made test-safe with local fallback behavior.
+- Parity test resolution fixed through seed commons compatibility fixtures.
+- Forked RNG stream behavior corrected for kernel parity expectations.
+- Typecheck blockers across core kernel, GSPL, UI, agent, and ambient module declarations addressed.
+- Full test suite verified before pushing to GitHub.
+
+---
+
+## GitHub Sync
+
+Current pushed branch:
+
+```text
+main -> origin/main
+```
+
+Latest code stabilization commit:
+
+```text
+42522ed fix: harden GSPL and test compatibility
+```
+
+This README documents the completed state after that stabilization work.
 
 ---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Write tests and code
-4. Submit a PR
+1. Create a focused branch.
+2. Keep deterministic paths seeded.
+3. Add or update tests for behavior changes.
+4. Run typecheck and tests before opening a PR.
+5. Avoid committing local backup files, generated scratch files, secrets, or private user data.
 
 ---
 
@@ -267,4 +240,4 @@ MIT
 
 ---
 
-**🎉 Paradigm Absolute v2.0.0 — Where every digital artifact is a living, evolving seed.**
+**Paradigm Absolute** — deterministic evolution for digital artifacts.
