@@ -377,7 +377,7 @@ export function createGseed(
       encryptedSeed: false,
       royaltyEnabled: false,
     },
-    seedHash: seed.hash,
+    seedHash: String(seed.hash),
     metadata: {
       schema: 'https://paradigm.ai/schema/gseed-metadata/v1',
       author: metadata.author || 'Anonymous',

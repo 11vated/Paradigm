@@ -1,23 +1,20 @@
 import { UniversalSeed, GeneType } from '../seeds';
-import { BaseEngine, EngineConfig, EngineResult, ShaderCode, ParticleSystem, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph, EngineRegistry } from './base';
-import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
-
-export { BaseEngine, EngineConfig, EngineResult, ShaderCode, ParticleSystem, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph, EngineRegistry } from './base';
-
+import { BaseEngine } from './base';
+import type { EngineResult, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph } from './base';
+import { rngFromHash } from '../lib/kernel/rng';
+export { BaseEngine } from './base';
+export type { EngineConfig, EngineResult, ShaderCode, ParticleSystem, VehicleConfig, FashionDesign, Narrative, UIComponent, PhysicsWorld, AccessibilityReport, VoiceConfig, FontDesign, AnimationGraph, EngineRegistry } from './base';
 export class ShaderEngine extends BaseEngine {
   constructor() {
     super({ name: 'ShaderEngine', domain: 'shader', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const color = seed.getGeneValue(GeneType.COLOR) as number[] | undefined;
     const texture = seed.getGeneValue(GeneType.TEXTURE) as string | undefined;
     const lighting = seed.getGeneValue(GeneType.LIGHTING) as Record<string, number> | undefined;
-
     const vertex = `#version 330 core
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
@@ -31,7 +28,6 @@ void main() {
   Normal = mat3(transpose(inverse(model))) * aNormal;
   gl_Position = projection * view * vec4(FragPos, 1.0);
 }`;
-
     const fragment = `#version 330 core
 in vec3 FragPos;
 in vec3 Normal;
@@ -54,39 +50,32 @@ void main() {
   vec3 result = (ambient + diffuse + specular) * objectColor;
   FragColor = vec4(result, 1.0);
 }`;
-
     return {
       success: true,
       output: { vertex, fragment, uniforms: { lightPos: { type: 'vec3', value: [1, 1, 1] } } },
       errors: []
     };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class ParticleEngine extends BaseEngine {
   constructor() {
     super({ name: 'ParticleEngine', domain: 'particle', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const rng = rngFromHash(seed.id || '');
     const color = seed.getGeneValue(GeneType.COLOR) as number[] | undefined;
     const motion = seed.getGeneValue(GeneType.MOTION) as Record<string, number> | undefined;
-
     const emitter = {
       position: [0, 0, 0] as [number, number, number],
       rate: params?.rate as number ?? 100,
       lifetime: [1, 3] as [number, number]
     };
-
     const particles = Array(100).fill(null).map(() => ({
       position: [rng.nextF64() - 0.5, rng.nextF64(), rng.nextF64() - 0.5] as [number, number, number],
       velocity: [(rng.nextF64() - 0.5) * 2, rng.nextF64() * 3, (rng.nextF64() - 0.5) * 2] as [number, number, number],
@@ -94,27 +83,21 @@ export class ParticleEngine extends BaseEngine {
       size: rng.nextF64() * 0.1 + 0.01,
       age: 0
     }));
-
     return { success: true, output: { emitter, particles }, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class VehicleEngine extends BaseEngine {
   constructor() {
     super({ name: 'VehicleEngine', domain: 'vehicle', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const physics = seed.getGeneValue(GeneType.PHYSICS) as Record<string, number> | undefined;
-
     const config: VehicleConfig = {
       wheels: params?.wheels as number ?? 4,
       maxSpeed: physics?.velocity ?? 50,
@@ -122,29 +105,23 @@ export class VehicleEngine extends BaseEngine {
       handling: params?.handling as number ?? 0.8,
       mass: physics?.mass ?? 1000
     };
-
     return { success: true, output: config, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class FashionEngine extends BaseEngine {
   constructor() {
     super({ name: 'FashionEngine', domain: 'fashion', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const color = seed.getGeneValue(GeneType.COLOR) as number[] | undefined;
     const texture = seed.getGeneValue(GeneType.TEXTURE) as string | undefined;
     const structure = seed.getGeneValue(GeneType.STRUCTURE) as Record<string, unknown> | undefined;
-
     const design: FashionDesign = {
       silhouette: params?.silhouette as string ?? 'a-line',
       fabric: texture ?? 'cotton',
@@ -152,28 +129,22 @@ export class FashionEngine extends BaseEngine {
       patterns: ['solid'],
       details: ['seam', 'hem', 'button']
     };
-
     return { success: true, output: design, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class NarrativeEngine extends BaseEngine {
   constructor() {
     super({ name: 'NarrativeEngine', domain: 'narrative', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const behavior = seed.getGeneValue(GeneType.BEHAVIOR) as Record<string, unknown> | undefined;
     const logic = seed.getGeneValue(GeneType.LOGIC) as Record<string, unknown> | undefined;
-
     const narrative: Narrative = {
       title: params?.title as string ?? 'Untitled Story',
       genre: params?.genre as string ?? 'adventure',
@@ -185,24 +156,19 @@ export class NarrativeEngine extends BaseEngine {
       setting: params?.setting as string ?? 'Unknown World',
       tone: params?.tone as string ?? 'dramatic'
     };
-
     return { success: true, output: narrative, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class UIEngine extends BaseEngine {
   constructor() {
     super({ name: 'UIEngine', domain: 'ui', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const component: UIComponent = {
       type: params?.type as string ?? 'div',
@@ -211,27 +177,21 @@ export class UIEngine extends BaseEngine {
       events: { onClick: '', onHover: '' },
       a11y: { role: 'region', label: 'Main content' }
     };
-
     return { success: true, output: component, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class PhysicsEngine extends BaseEngine {
   constructor() {
     super({ name: 'PhysicsEngine', domain: 'physics', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const physics = seed.getGeneValue(GeneType.PHYSICS) as Record<string, number> | undefined;
-
     const world: PhysicsWorld = {
       gravity: [0, -(physics?.gravity ?? 9.8), 0] as [number, number, number],
       bodies: [
@@ -239,24 +199,19 @@ export class PhysicsEngine extends BaseEngine {
       ],
       constraints: []
     };
-
     return { success: true, output: world, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class AccessibilityEngine extends BaseEngine {
   constructor() {
     super({ name: 'AccessibilityEngine', domain: 'accessibility', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const report: AccessibilityReport = {
       score: 85,
@@ -265,27 +220,21 @@ export class AccessibilityEngine extends BaseEngine {
       ],
       recommendations: ['Add aria-labels', 'Ensure keyboard navigation', 'Provide alt text']
     };
-
     return { success: true, output: report, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class VoiceEngine extends BaseEngine {
   constructor() {
     super({ name: 'VoiceEngine', domain: 'voice', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const audio = seed.getGeneValue(GeneType.AUDIO) as Record<string, number> | undefined;
-
     const config: VoiceConfig = {
       voice: params?.voice as string ?? 'default',
       pitch: audio?.frequency ?? 1.0,
@@ -294,24 +243,19 @@ export class VoiceEngine extends BaseEngine {
       language: params?.language as string ?? 'en-US',
       effects: { reverb: false, echo: false }
     };
-
     return { success: true, output: config, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class FontEngine extends BaseEngine {
   constructor() {
     super({ name: 'FontEngine', domain: 'fonts', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const font: FontDesign = {
       family: params?.family as string ?? 'Inter',
@@ -321,27 +265,21 @@ export class FontEngine extends BaseEngine {
       characterSet: ['latin', 'latin-ext'],
       metrics: { ascent: 0.92, descent: -0.24, lineGap: 0, capHeight: 0.71 }
     };
-
     return { success: true, output: font, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export class MotionEngine extends BaseEngine {
   constructor() {
     super({ name: 'MotionEngine', domain: 'motion', version: '1.0.0' });
   }
-
   async initialize(): Promise<void> {
     this.initialized = true;
   }
-
   async process(seed: UniversalSeed, params?: Record<string, unknown>): Promise<EngineResult> {
     const animation = seed.getGeneValue(GeneType.ANIMATION) as Record<string, unknown> | undefined;
-
     const graph: AnimationGraph = {
       nodes: [
         { id: 'idle', type: 'state', properties: { duration: 1 } },
@@ -356,15 +294,12 @@ export class MotionEngine extends BaseEngine {
       duration: params?.duration as number ?? 1,
       loop: params?.loop as boolean ?? true
     };
-
     return { success: true, output: graph, errors: [] };
   }
-
   async cleanup(): Promise<void> {
     this.initialized = false;
   }
 }
-
 export function createAllEngines(): BaseEngine[] {
   return [
     new ShaderEngine(),

@@ -62,6 +62,7 @@ export class Xoshiro256SS {
   fork(): Xoshiro256SS {
     const forked = new Xoshiro256SS(0);
     forked.s = [...this.s];
+    forked.next();
     return forked;
   }
 

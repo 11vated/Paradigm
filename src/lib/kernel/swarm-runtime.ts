@@ -10,6 +10,7 @@
  * - Fault tolerance and agent recovery
  */
 
+import { createHash } from 'crypto';
 import { SeedAgent, type SeedAgentConfig as AgentConfig, type AgentState } from './seed-agent';
 import type { Seed, Artifact } from './engines';
 
@@ -112,8 +113,12 @@ export class SwarmRuntime {
    * Submit a task to the swarm
    */
   submitTask(goal: string, priority: number = 1, dependencies?: string[]): string {
+    const taskHash = createHash('sha256')
+      .update(`${this.config.swarmId}:${goal}:${priority}:${dependencies?.join(',') ?? ''}:${this.taskQueue.length}`)
+      .digest('hex')
+      .slice(0, 12);
     const task: SwarmTask = {
-      id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `task_${taskHash}`,
       goal,
       priority,
       status: 'pending',

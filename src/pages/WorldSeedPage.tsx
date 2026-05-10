@@ -20,6 +20,7 @@ import { SeedAgent } from '../lib/kernel/seed-agent';
 import { SwarmRuntime } from '../lib/kernel/swarm-runtime';
 import { GsplBytecodeCompiler } from '../lib/kernel/gspl-bytecode';
 import { GsplRepl } from '../components/studio/GsplRepl';
+import { rngFromHash } from '../lib/kernel/rng';
 
 // World definition
 interface WorldConfig {
@@ -425,6 +426,7 @@ async function generatePopulation(seed: Seed, count: number): Promise<WorldEntit
       $domain: 'character',
       $name: `Character_${i}`,
     } as Seed;
+    const rng = rngFromHash(`${charSeed.phrase}:world-character:${i}`);
 
     try {
       const artifact = await growSeed(charSeed);
@@ -433,8 +435,8 @@ async function generatePopulation(seed: Seed, count: number): Promise<WorldEntit
         type: 'character',
         seed: charSeed,
         artifact,
-        position: [(Math.random() - 0.5) * 40, 0.5, (Math.random() - 0.5) * 40],
-        rotation: [0, Math.random() * 360, 0],
+        position: [(rng.nextF64() - 0.5) * 40, 0.5, (rng.nextF64() - 0.5) * 40],
+        rotation: [0, rng.nextF64() * 360, 0],
         scale: 1,
       });
     } catch (e) {
@@ -451,13 +453,14 @@ async function generateStructures(seed: Seed, biome: string): Promise<WorldEntit
   const count = biome === 'city' || biome === 'cyberpunk' ? 15 : 5;
 
   for (let i = 0; i < count; i++) {
+    const rng = rngFromHash(`${seed.phrase}:world-structure:${biome}:${i}`);
     entities.push({
       id: `building_${i}`,
       type: 'building',
       seed: { ...seed, $domain: 'architecture' } as Seed,
-      position: [(Math.random() - 0.5) * 60, 0, (Math.random() - 0.5) * 60],
-      rotation: [0, Math.random() * 360, 0],
-      scale: 0.5 + Math.random() * 1.5,
+      position: [(rng.nextF64() - 0.5) * 60, 0, (rng.nextF64() - 0.5) * 60],
+      rotation: [0, rng.nextF64() * 360, 0],
+      scale: 0.5 + rng.nextF64() * 1.5,
     });
   }
 
@@ -469,13 +472,14 @@ async function generateVegetation(seed: Seed): Promise<WorldEntity[]> {
   const entities: WorldEntity[] = [];
 
   for (let i = 0; i < 20; i++) {
+    const rng = rngFromHash(`${seed.phrase}:world-vegetation:${i}`);
     entities.push({
       id: `tree_${i}`,
       type: 'vegetation',
       seed: { ...seed, $domain: 'furniture' } as Seed, // Using furniture as proxy
-      position: [(Math.random() - 0.5) * 80, 0, (Math.random() - 0.5) * 80],
-      rotation: [0, Math.random() * 360, 0],
-      scale: 0.3 + Math.random() * 0.7,
+      position: [(rng.nextF64() - 0.5) * 80, 0, (rng.nextF64() - 0.5) * 80],
+      rotation: [0, rng.nextF64() * 360, 0],
+      scale: 0.3 + rng.nextF64() * 0.7,
     });
   }
 
@@ -484,20 +488,22 @@ async function generateVegetation(seed: Seed): Promise<WorldEntity[]> {
 
 // Helper: Spawn single character
 async function spawnCharacter(seedPhrase: string): Promise<WorldEntity> {
+  const rng = rngFromHash(`${seedPhrase}:spawn-character`);
+  const spawnHash = await hashString(seedPhrase);
   const charSeed: Seed = {
     phrase: seedPhrase,
-    hash: await hashString(seedPhrase),
+    hash: spawnHash,
     rng: createRNG(seedPhrase),
     $domain: 'character',
-    $name: `Spawned_${Date.now()}`,
+    $name: `Spawned_${spawnHash.slice(0, 8)}`,
   } as Seed;
 
   return {
-    id: `spawned_${Date.now()}`,
+    id: `spawned_${spawnHash.slice(0, 12)}`,
     type: 'character',
     seed: charSeed,
-    position: [(Math.random() - 0.5) * 20, 0.5, (Math.random() - 0.5) * 20],
-    rotation: [0, Math.random() * 360, 0],
+    position: [(rng.nextF64() - 0.5) * 20, 0.5, (rng.nextF64() - 0.5) * 20],
+    rotation: [0, rng.nextF64() * 360, 0],
     scale: 1,
   };
 }

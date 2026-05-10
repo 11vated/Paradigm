@@ -53,7 +53,7 @@ export function buildC2PAManifest(
         {
           title: 'Seed Input',
           format: 'application/x-gseed-seed',
-          documentID: seed.hash,
+          documentID: String(seed.hash),
           relationship: 'input',
         },
         {

@@ -13,9 +13,9 @@ export class JsonStore implements SeedStore {
   private seeds: Seed[] = [];
   private users: User[] = [];
   private auditLog: AuditEntry[] = [];
-  private seedsFile: string;
-  private usersFile: string;
-  private auditFile: string;
+  private seedsFile = '';
+  private usersFile = '';
+  private auditFile = '';
   private dirty = false;
   private flushTimer: ReturnType<typeof setInterval> | null = null;
 

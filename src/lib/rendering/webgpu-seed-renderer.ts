@@ -22,6 +22,8 @@
  * 17. Structural Skeleton — Seed's "bone structure" (WebXR)
  */
 
+import { rngFromHash } from '../kernel/rng';
+
 export interface GSeedVisualConfig {
   hash: string;
   domain: string;
@@ -229,7 +231,7 @@ export class GSeedRenderer {
     this.renderQuantumCore(config);
 
     // Update and render particles
-    this.updateParticles(deltaTime);
+    this.updateParticles(deltaTime, config.hash);
     this.renderParticles(config);
 
     // Render Domain Halo
@@ -241,7 +243,7 @@ export class GSeedRenderer {
     }
   }
 
-  private updateParticles(deltaTime: number): void {
+  private updateParticles(deltaTime: number, seedHash: string): void {
     if (!this.device) return;
     const pipeline = this.computePipelines.get('particles');
     if (!pipeline) return;
@@ -256,13 +258,14 @@ export class GSeedRenderer {
 
     // Initialize particles (first time)
     const initData = new Float32Array(particleCount * 12);
+    const rng = rngFromHash(`${seedHash}:webgpu-particles`);
     for (let i = 0; i < particleCount; i++) {
       initData[i * 12 + 0] = (i % 10) - 5;     // position.x
       initData[i * 12 + 1] = (i / 10) - 5;     // position.y
       initData[i * 12 + 2] = 0;                   // position.z
-      initData[i * 12 + 3] = (Math.random() - 0.5) * 0.1; // velocity.x
-      initData[i * 12 + 4] = (Math.random() - 0.5) * 0.1; // velocity.y
-      initData[i * 12 + 5] = (Math.random() - 0.5) * 0.1; // velocity.z
+      initData[i * 12 + 3] = (rng.nextF64() - 0.5) * 0.1; // velocity.x
+      initData[i * 12 + 4] = (rng.nextF64() - 0.5) * 0.1; // velocity.y
+      initData[i * 12 + 5] = (rng.nextF64() - 0.5) * 0.1; // velocity.z
       initData[i * 12 + 6] = 1; // color.r
       initData[i * 12 + 7] = 1; // color.g
       initData[i * 12 + 8] = 1; // color.b

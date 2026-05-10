@@ -137,16 +137,16 @@ export function GsplRepl() {
 
     switch (artifact.format) {
       case 'gltf-binary':
-        blob = new Blob([artifact.data], { type: 'model/gltf-binary' });
+        blob = new Blob([artifact.data as BlobPart], { type: 'model/gltf-binary' });
         break;
       case 'wav':
-        blob = new Blob([artifact.data], { type: 'audio/wav' });
+        blob = new Blob([artifact.data as BlobPart], { type: 'audio/wav' });
         break;
       case 'svg':
-        blob = new Blob([artifact.data], { type: 'image/svg+xml' });
+        blob = new Blob([artifact.data as BlobPart], { type: 'image/svg+xml' });
         break;
       case 'html5':
-        blob = new Blob([artifact.data], { type: 'text/html' });
+        blob = new Blob([artifact.data as BlobPart], { type: 'text/html' });
         break;
       default:
         blob = new Blob([JSON.stringify(artifact.data, null, 2)], { type: 'application/json' });
@@ -331,19 +331,19 @@ function OutputPanel({ result }: { result: ExecutionResult | null }) {
             <div key={i} className="text-sm bg-gray-800 p-3 rounded mb-2">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-purple-400">{artifact.domain}</span>
-                <span className="text-gray-500">{artifact.format}</span>
+                <span className="text-gray-500">{String(artifact.format)}</span>
               </div>
               <div className="text-xs text-gray-400">
-                {artifact.metadata?.generator && `Generator: ${artifact.metadata.generator}`}
+                {(artifact.metadata as any)?.generator && `Generator: ${(artifact.metadata as any).generator}`}
               </div>
               {artifact.data && (
                 <button
                   onClick={() => {
-                    const blob = new Blob([artifact.data]);
+                    const blob = new Blob([artifact.data as BlobPart]);
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `artifact-${i}.${getExtension(artifact.format)}`;
+                    a.download = `artifact-${i}.${getExtension(String(artifact.format))}`;
                     a.click();
                     URL.revokeObjectURL(url);
                   }}

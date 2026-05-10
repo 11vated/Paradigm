@@ -1,10 +1,12 @@
 export { Kernel, Xoshiro256SS, FIM, TickSystem, Effects, GeneOperators } from './kernel';
 export { UniversalSeed, GeneType } from './seeds';
-export { Lexer, Parser, Interpreter, GSPLRuntimeError, TypeChecker, ASTNode, Program, Token, TokenType } from './gspl';
+export { Lexer, Parser, Interpreter, GSPLRuntimeError, TypeChecker, TokenType } from './gspl';
+export type { ASTNode, Program, Token } from './gspl';
 export { GeneticAlgorithm, MAPElites, CMAES, FunctorRegistry, GameFunctor, MusicFunctor, ArtFunctor, StorytellingFunctor } from './evolution';
 export { GSPLAgent, WorldModel } from './intelligence';
 export { Level4Intelligence } from './intelligence/level4';
-export { BaseEngine, EngineRegistry, createAllEngines } from './engines';
+export { BaseEngine, createAllEngines } from './engines';
+export type { EngineRegistry } from './engines';
 // removed some extra types since they are not explicitly exported by the folder index
 export { ParadigmStudio } from './studio/App';
 

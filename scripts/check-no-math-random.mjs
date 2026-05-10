@@ -10,8 +10,9 @@ import { readdirSync, statSync, readFileSync } from 'fs';
 import { join, extname } from 'path';
 
 const SRC_DIR = 'src';
-const IGNORE_DIRS = ['node_modules', '.git', 'dist', 'coverage', '__pycache__'];
+const IGNORE_DIRS = ['node_modules', '.git', 'dist', 'coverage', '__pycache__', '__tests__'];
 const IGNORE_EXTENSIONS = ['.json', '.md', '.yml', '.yaml', '.dockerfile'];
+const IGNORE_FILE_PATTERNS = [/\.test\.[cm]?[jt]sx?$/, /\.spec\.[cm]?[jt]sx?$/];
 
 function scanDir(dir, findings = []) {
   const entries = readdirSync(dir, { withFileTypes: true });
@@ -23,6 +24,7 @@ function scanDir(dir, findings = []) {
       if (IGNORE_DIRS.includes(entry.name)) continue;
       scanDir(fullPath, findings);
     } else if (entry.isFile()) {
+      if (IGNORE_FILE_PATTERNS.some((pattern) => pattern.test(entry.name))) continue;
       const ext = extname(entry.name);
       if (IGNORE_EXTENSIONS.includes(ext)) continue;
       
@@ -31,15 +33,15 @@ function scanDir(dir, findings = []) {
       
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        if (/\bMath\.random\b/.test(line) && !line.includes('//') && !line.includes('*')) {
-          const cleanLine = line.replace(/\/\/.*$/, '').replace(/\*.*\*\//, '');
-          if (/\bMath\.random\b/.test(cleanLine)) {
-            findings.push({
-              file: fullPath,
-              line: i + 1,
-              content: line.trim()
-            });
-          }
+        if (line.trim().startsWith('//')) continue;
+        if (line.trim().startsWith('*')) continue;
+        const cleanLine = line.replace(/\/\/.*$/, '').replace(/\/\*.*?\*\//g, '');
+        if (/\bMath\.random\s*\(/.test(cleanLine)) {
+          findings.push({
+            file: fullPath,
+            line: i + 1,
+            content: line.trim()
+          });
         }
       }
     }

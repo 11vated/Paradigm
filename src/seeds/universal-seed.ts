@@ -117,6 +117,7 @@ export class UniversalSeed {
         dominant: false,
         hidden: false,
         locked: false,
+        mutationRate: 0.01,
         ...existing?.metadata,
         ...metadata
       }
@@ -210,7 +211,7 @@ export class UniversalSeed {
   }
 
   mutate(rng: { nextFloat?: () => number; nextF64?: () => number }, intensity: number = 0.1): UniversalSeed {
-    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
+    const nextFloat = this.requireDeterministicFloat(rng);
     const mutated = this.clone();
 
     for (const [type, gene] of mutated.genes) {
@@ -234,7 +235,7 @@ export class UniversalSeed {
   }
 
   private mutateValue(value: GeneValue, intensity: number, rng: { nextFloat?: () => number; nextF64?: () => number }): GeneValue {
-    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
+    const nextFloat = this.requireDeterministicFloat(rng);
     
     if (typeof value === 'number') {
       return value + (nextFloat() - 0.5) * intensity * 2;
@@ -293,7 +294,7 @@ export class UniversalSeed {
 
   cross(other: UniversalSeed, rng: { nextFloat?: () => number; nextF64?: () => number }): UniversalSeed {
     const child = new UniversalSeed();
-    const nextFloat = rng.nextFloat ?? (rng as any).nextF64?.bind(rng) ?? (() => Math.random());
+    const nextFloat = this.requireDeterministicFloat(rng);
     
     for (const [type, geneA] of this.genes) {
       const geneB = other.genes.get(type);
@@ -322,6 +323,14 @@ export class UniversalSeed {
   evaluate(fitnessFn: (seed: UniversalSeed) => number): number {
     this.metadata.fitness = fitnessFn(this);
     return this.metadata.fitness;
+  }
+
+  private requireDeterministicFloat(rng: { nextFloat?: () => number; nextF64?: () => number }): () => number {
+    const nextFloat = rng.nextFloat ?? rng.nextF64?.bind(rng);
+    if (!nextFloat) {
+      throw new Error('UniversalSeed requires a deterministic RNG with nextFloat() or nextF64().');
+    }
+    return nextFloat;
   }
 
   serialize(): SerializedSeed {
@@ -384,4 +393,5 @@ export class UniversalSeed {
   }
 }
 
-export { GeneType, GeneSchema, GeneMetadata, GeneValue };
+export { GeneType };
+export type { GeneSchema, GeneMetadata, GeneValue };

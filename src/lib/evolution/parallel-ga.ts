@@ -7,6 +7,8 @@
  * - Multi-threaded crossover & mutation
  */
 
+import { rngFromHash } from '../kernel/rng';
+
 export interface WorkerMessage {
   type: 'init' | 'evaluate' | 'crossover' | 'mutate' | 'select' | 'result';
   data?: any;
@@ -217,13 +219,14 @@ export class ParallelGeneticAlgorithm {
    */
   private tournamentSelect(population: any[], scores: number[], tournamentSize: number, count: number): any[] {
     const selected: any[] = [];
+    const rng = rngFromHash(`parallel-ga:tournament:${population.length}:${scores.join(',')}:${tournamentSize}:${count}`);
     
     for (let i = 0; i < count; i++) {
       let best: any = null;
       let bestScore = -Infinity;
       
       for (let j = 0; j < tournamentSize; j++) {
-        const idx = Math.floor(Math.random() * population.length);
+        const idx = rng.nextInt(0, population.length - 1);
         if (scores[idx] > bestScore) {
           bestScore = scores[idx];
           best = population[idx];
@@ -295,7 +298,7 @@ self.onmessage = async function(event) {
       case 'crossover':
         // Perform crossover on batch
         const offspring = [];
-        const rng = new SeededRandom(Date.now() + workerId);
+        const rng = new SeededRandom(workerId + data.population.length + Math.floor(data.crossoverRate * 1000000));
         
         for (let i = 0; i < data.population.length; i += 2) {
           if (i + 1 >= data.population.length) break;
@@ -331,9 +334,10 @@ self.onmessage = async function(event) {
           const newSeed = { ...seed };
           newSeed.genes = { ...seed.genes };
           
+          const rng = new SeededRandom(workerId + data.population.length + Math.floor(data.mutationRate * 1000000));
           for (const key in newSeed.genes) {
-            if (typeof newSeed.genes[key] === 'number' && Math.random() < data.mutationRate) {
-              newSeed.genes[key] += (Math.random() - 0.5) * data.mutationRate;
+            if (typeof newSeed.genes[key] === 'number' && rng.next() < data.mutationRate) {
+              newSeed.genes[key] += (rng.next() - 0.5) * data.mutationRate;
               newSeed.genes[key] = Math.max(0, Math.min(1, newSeed.genes[key]));
             }
           }
@@ -346,7 +350,7 @@ self.onmessage = async function(event) {
       case 'select':
         // Tournament selection
         const selected = [];
-        const rng = new SeededRandom(Date.now() + workerId);
+        const rng = new SeededRandom(workerId + data.population.length + data.count + data.tournamentSize);
         
         for (let i = 0; i < data.count; i++) {
           let best = null;

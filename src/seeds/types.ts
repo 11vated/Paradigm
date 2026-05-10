@@ -38,7 +38,7 @@ export interface GeneConstraints {
   enum?: string[];
 }
 
-export type GeneValue = number | string | boolean | bigint | GeneValue[] | { [key: string]: GeneValue };
+export type GeneValue = number | string | boolean | bigint | null | GeneValue[] | { [key: string]: GeneValue | undefined };
 
 export interface GeneSchema {
   type: GeneType;

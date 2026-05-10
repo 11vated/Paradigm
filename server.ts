@@ -1066,7 +1066,7 @@ async function startServer() {
       if (!target_domain || typeof target_domain !== 'string') {
         return res.status(400).json({ detail: 'target_domain required' });
       }
-      const inputs = seed_ids.map((id: string) => seeds.find((s: any) => s.id === id)).filter(Boolean);
+      const inputs = seed_ids.map((id: string) => seeds.find((s: any) => s.id === id)).filter((seed: any): seed is any => Boolean(seed));
       if (inputs.length !== seed_ids.length) {
         return res.status(404).json({ detail: 'Unknown seed ids' });
       }

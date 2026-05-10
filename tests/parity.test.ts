@@ -63,11 +63,10 @@ describe('Cross-Engine Parity Tests', () => {
     });
   });
 
-  describe('Gene Type Coverage', () => {
-    const geneTypes = Object.values(GeneType);
-    
-    test('should have 17 gene types', () => {
-      expect(geneTypes.length).toBe(17);
+describe('Gene Type Coverage', () => {
+    test('should have 19 gene types', () => {
+      const types = Object.values(GeneType);
+      expect(types.length).toBe(19);
     });
 
     test('should create seeds with all gene types', () => {

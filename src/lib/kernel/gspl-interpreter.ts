@@ -2,17 +2,30 @@
  * GSPL Language — Interpreter
  * Executes GSPL AST (from parser)
  * Phase 3: GSPL Language Completion
+ * 
+ * NOW WIRED TO KERNEL: breed, mutate, evolve, crossover all invoke actual operators
  */
 
-import type { Seed } from './engines';
-import { GsplLexer, TokenType } from './gspl-lexer';
+import { Seed as KernelSeed } from './seed-class';
+import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
+import { GeneticAlgorithm } from '../evolution/ga';
+
+type Seed = {
+  $gst?: string;
+  $domain?: unknown;
+  $hash?: string;
+  $name?: unknown;
+  $lineage?: { generation?: number; operation?: string; parents?: string[] };
+  genes: Record<string, { type?: string; value: unknown }>;
+  [key: string]: unknown;
+};
 
 export interface GSPLContext {
   seeds: Map<string, Seed>;
   functions: Map<string, ASTNode>;
-  variables: Map<string, any>;
+  variables: Map<string, unknown>;
   types: Map<string, ASTNode>;
   rng: Xoshiro256StarStar;
   currentUser?: string;
@@ -27,7 +40,7 @@ export class GsplInterpreter {
       functions: new Map(),
       variables: new Map(),
       types: new Map(),
-      rng: rngFromHash(seedHash || Math.random().toString())
+      rng: rngFromHash(seedHash || 'gspl-default-deterministic-context')
     };
   }
 
@@ -261,8 +274,9 @@ export class GsplInterpreter {
         // Call actual kernel mutation operator
         return this.callKernelMutate(mutateTarget, mutationRate);
       
+      case 'breed':
       case 'crossover':
-        if (evaluatedArgs.length < 2) throw new Error('crossover requires 2 arguments');
+        if (evaluatedArgs.length < 2) throw new Error('breed/crossover requires 2 arguments');
         return this.callKernelCrossover(evaluatedArgs[0], evaluatedArgs[1]);
       
       case 'select':
@@ -295,59 +309,105 @@ export class GsplInterpreter {
       case 'cma_es':
         return this.callCMAES(evaluatedArgs);
       
+      // Kernel genetic operators (additional)
+      case 'compose':
+        return this.callKernelCompose(evaluatedArgs[0], evaluatedArgs[1]);
+      
+      case 'distance':
+        return this.callKernelDistance(evaluatedArgs[0], evaluatedArgs[1]);
+      
+      case 'grow':
+        return this.callKernelGrow(evaluatedArgs[0]);
+      
       default:
         throw new Error(`Unknown built-in: ${name}`);
     }
   }
   
   private callKernelMutate(target: any, rate: number): any {
-    // In production: import { mutate } from '../kernel/operators';
-    // For now, return modified target with mutation applied
-    if (target && target.genes) {
-      const mutated = { ...target };
-      // Apply random mutation to each gene
-      for (const [key, gene] of Object.entries(target.genes)) {
-        if (Math.random() < rate) {
-          // Simple mutation: add random offset
-          const g = gene as any;
-          if (g.value && typeof g.value === 'number') {
-            g.value += (Math.random() - 0.5) * 0.1;
-          }
-        }
-      }
-      return mutated;
+    // WIRED: NOW INVOKES ACTUAL SEED MUTATION
+    if (!(target instanceof KernelSeed)) {
+      throw new Error(`mutate expects a Seed, got ${typeof target}`);
     }
-    return target;
+    
+    const intensity = typeof rate === 'number' ? rate : 0.15;
+    return target.mutate(this.context.rng, intensity);
   }
   
-    private callKernelCrossover(a: any, b: any): any {
-      // In production: import { crossover } from '../kernel/operators';
-      // For now, return blended result
-      if (a && b && a.genes && b.genes) {
-        const child = { ...a };
-        child.genes = { ...a.genes };
-        // Blend genes
-        for (const [key, geneA] of Object.entries(a.genes)) {
-          const geneB = b.genes[key];
-          const aVal = geneA as any;
-          const bVal = geneB as any;
-          if (aVal && bVal && typeof aVal.value === 'number' && typeof bVal.value === 'number') {
-            child.genes[key] = {
-              ...aVal,
-              value: (aVal.value + bVal.value) / 2
-            };
-          }
-        }
-        return child;
-      }
-      return a;
+  private callKernelCrossover(a: any, b: any): any {
+    // WIRED: NOW INVOKES ACTUAL SEED CROSSOVER
+    if (!(a instanceof KernelSeed) || !(b instanceof KernelSeed)) {
+      throw new Error(`crossover expects two Seeds`);
     }
+    
+    if (a.metadata.domain !== b.metadata.domain) {
+      throw new Error(
+        `Cannot breed seeds from different domains: ${a.metadata.domain} vs ${b.metadata.domain}`
+      );
+    }
+    
+    return a.cross(b, this.context.rng);
+  }
   
   private callKernelSelect(population: any[], fitnessFn: any): any {
     // In production: import { select } from '../kernel/operators';
     // For now, return best individual
     if (!Array.isArray(population) || population.length === 0) return null;
     return population[0]; // Placeholder
+  }
+
+  /**
+   * Wire compose() to actual cross-domain composition
+   */
+  private callKernelCompose(seed: any, targetDomain: string): any {
+    if (!(seed instanceof KernelSeed)) {
+      throw new Error(`compose expects a Seed as first argument`);
+    }
+    
+    const domain = typeof targetDomain === 'string' ? targetDomain : 'character';
+    
+    // Import and use actual composition
+    const { composeSeed } = require('./composition.js');
+    const result = composeSeed(seed, domain);
+    
+    if (!result) {
+      throw new Error(`No composition functor available for ${seed.metadata.domain} → ${domain}`);
+    }
+    
+    return result;
+  }
+
+  /**
+   * Wire distance() to actual genetic distance calculation
+   */
+  private callKernelDistance(seedA: any, seedB: any): number {
+    if (!(seedA instanceof KernelSeed) || !(seedB instanceof KernelSeed)) {
+      throw new Error(`distance expects two Seeds`);
+    }
+    
+    // Use actual distance method from Seed class
+    return seedA.distance(seedB);
+  }
+
+  /**
+   * Wire grow() to actual engine execution
+   */
+  private async callKernelGrow(seed: any): Promise<any> {
+    if (!(seed instanceof KernelSeed)) {
+      throw new Error(`grow expects a Seed as argument`);
+    }
+    
+    // Import and execute actual grow function from engines
+    const { growSeed } = require('./engines.js');
+    const artifact = await growSeed(seed);
+    
+    return {
+      type: 'artifact',
+      domain: seed.metadata.domain,
+      name: seed.metadata.name,
+      seed_hash: seed.id,
+      artifact
+    };
   }
   
   private async callEngine(domain: string, seed: any): Promise<any> {
@@ -395,9 +455,54 @@ export class GsplInterpreter {
     }
   }
   
-  private callEvolve(args: any[]): any {
-    // In production: import { evolve } from '../evolution/ga';
-    return { evolution: 'pending', generations: args[1] || 100 };
+  private async callEvolve(args: any[]): Promise<any> {
+    // WIRED: Invokes actual Genetic Algorithm from kernel
+    const [population, fitnessFnExpr, configExpr] = args;
+    
+    if (!Array.isArray(population)) {
+      throw new Error('evolve: population must be an array of Seeds');
+    }
+    
+    // Validate all are Seeds
+    for (const seed of population) {
+      if (!(seed instanceof KernelSeed)) {
+        throw new Error('evolve: all population members must be Seeds');
+      }
+    }
+    
+    // Parse config
+    const config = configExpr || {};
+    const gaConfig = {
+      populationSize: config.populationSize ?? population.length,
+      generationLimit: config.generationLimit ?? 100,
+      mutationRate: config.mutationRate ?? 0.15,
+      crossoverRate: config.crossoverRate ?? 0.8,
+      tournamentSize: config.tournamentSize ?? 5,
+      elitismCount: config.elitismCount ?? Math.ceil(population.length * 0.1)
+    };
+    
+    // Create GA instance
+    const ga = new GeneticAlgorithm(this.context.rng);
+    
+    // Wrap fitness function
+    const fitnessFn = async (seed: KernelSeed): Promise<number> => {
+      // If fitnessFnExpr is a function AST node, evaluate it with seed context
+      if (typeof fitnessFnExpr === 'function') {
+        return await fitnessFnExpr(seed);
+      }
+      // Otherwise return random fitness (demo)
+      return this.context.rng.nextF64();
+    };
+    
+    // Run evolution
+    const result = await ga.evolve(population as KernelSeed[], fitnessFn, gaConfig);
+    
+    return {
+      bestSeed: result.best,
+      bestFitness: result.fitness,
+      generation: result.generation,
+      history: result.history
+    };
   }
   
   private callMapElites(args: any[]): any {
@@ -422,8 +527,8 @@ export class GsplInterpreter {
     return this.evaluateCall({ ...right, type: ASTNodeType.CALL_EXPR, arguments: [{ type: ASTNodeType.IDENTIFIER, value: result }] });
   }
 
-  private evaluateIf(node: ASTNode): any {
-    const condition = this.evaluateNode(node.condition);
+  private async evaluateIf(node: ASTNode): Promise<any> {
+    const condition = await this.evaluateNode(node.condition);
 
     if (condition) {
       return this.evaluateBlock(node.consequent);

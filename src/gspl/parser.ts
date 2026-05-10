@@ -32,7 +32,7 @@ export interface ASTNode {
   type: ASTNodeType;
   line: number;
   column: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface Program extends ASTNode {

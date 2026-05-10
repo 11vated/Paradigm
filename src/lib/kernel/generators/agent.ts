@@ -52,8 +52,8 @@ export async function generateAgent(seed: Seed, outputPath: string): Promise<{ f
       // Sovereignty genes (4)
       can_fork: { type: 'bool', value: true },
       can_breed: { type: 'bool', value: true },
-      signature: { type: 'string', value: seed.$provenance?.signature || '' },
-      ownership: { type: 'string', value: seed.$provenance?.signer || '' },
+      signature: { type: 'string', value: (seed.$provenance as any)?.signature || '' },
+      ownership: { type: 'string', value: (seed.$provenance as any)?.signer || '' },
     },
   };
 

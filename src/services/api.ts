@@ -96,7 +96,7 @@ export async function breedSeeds(id1: string, id2: string) {
   return response.child || response;
 }
 
-export async function updateGene(id: string, geneName: string, value: any) {
+export async function updateGene(id: string, geneName: string, value: unknown) {
   const response = await apiRequest(`/api/seeds/${id}/genes/${geneName}`, {
     method: 'PUT',
     body: JSON.stringify({ value }),

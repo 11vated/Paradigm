@@ -416,26 +416,29 @@ export class SeedAgent {
       ...Object.keys(this.agentSeed.genes),
       ...Object.keys(otherAgent.agentSeed.genes),
     ]);
+    const rng = rngFromHash(`agent-breed:${this.agentSeed.hash}:${otherAgent.agentSeed.hash}`);
+    const parentGenes = this.agentSeed.genes as Record<string, { type: string; value: any }>;
+    const otherGenes = otherAgent.agentSeed.genes as Record<string, { type: string; value: any }>;
 
     for (const key of allKeys) {
       // Uniform crossover: randomly pick from parent 1 or 2
-      if (Math.random() < 0.5) {
-        childGenes[key] = { ...this.agentSeed.genes[key] };
+      if (rng.nextF64() < 0.5) {
+        childGenes[key] = { ...parentGenes[key] };
       } else {
-        childGenes[key] = { ...otherAgent.agentSeed.genes[key] };
+        childGenes[key] = { ...otherGenes[key] };
       }
 
       // Apply mutation based on creativity gene
-      if (Math.random() < this.agentSeed.genes.creativity.value * 0.1) {
+      if (rng.nextF64() < this.agentSeed.genes.creativity.value * 0.1) {
         if (childGenes[key] && typeof childGenes[key].value === 'number') {
-          childGenes[key].value += (Math.random() - 0.5) * 0.2;
+          childGenes[key].value += (rng.nextF64() - 0.5) * 0.2;
           childGenes[key].value = Math.max(0, Math.min(1, childGenes[key].value));
         }
       }
     }
 
     // Create child agent seed
-    const childPhrase = `agent_child_${Date.now()}`;
+    const childPhrase = `agent_child_${this.agentSeed.hash}_${otherAgent.agentSeed.hash}`;
     const childHash = this.simpleHash64(childPhrase);
 
     const childSeed: AgentSeed = {
@@ -498,9 +501,10 @@ export class SeedAgent {
     fitnesses: { agent: SeedAgent; fitness: number }[],
     tournamentSize: number
   ): SeedAgent {
-    let best = fitnesses[Math.floor(Math.random() * fitnesses.length)];
+    const rng = rngFromHash(`agent-tournament:${fitnesses.map(f => `${f.agent.agentSeed.hash}:${f.fitness}`).join('|')}:${tournamentSize}`);
+    let best = fitnesses[rng.nextInt(0, fitnesses.length - 1)];
     for (let i = 1; i < tournamentSize; i++) {
-      const contender = fitnesses[Math.floor(Math.random() * fitnesses.length)];
+      const contender = fitnesses[rng.nextInt(0, fitnesses.length - 1)];
       if (contender.fitness > best.fitness) {
         best = contender;
       }
@@ -519,28 +523,29 @@ export class SeedAgent {
 
     // Create mutated copy of genes
     const forkedGenes: any = {};
+    const rng = rngFromHash(`agent-fork:${this.agentSeed.hash}:${this.agentSeed.$lineage?.generation ?? 0}`);
     for (const [key, gene] of Object.entries(this.agentSeed.genes)) {
       forkedGenes[key] = { ...gene };
 
       // Mutate numeric values
       if (typeof gene.value === 'number') {
         const mutationRate = this.agentSeed.genes.creativity.value * 0.2;
-        if (Math.random() < mutationRate) {
-          forkedGenes[key].value += (Math.random() - 0.5) * 0.3;
+        if (rng.nextF64() < mutationRate) {
+          forkedGenes[key].value += (rng.nextF64() - 0.5) * 0.3;
           forkedGenes[key].value = Math.max(0, Math.min(1, forkedGenes[key].value));
         }
       }
 
       // Mutate array values (add/remove random items)
-      if (Array.isArray(gene.value) && Math.random() < 0.1) {
-        if (gene.value.length > 0 && Math.random() < 0.5) {
+      if (Array.isArray(gene.value) && rng.nextF64() < 0.1) {
+        if (gene.value.length > 0 && rng.nextF64() < 0.5) {
           // Remove random item
-          const idx = Math.floor(Math.random() * gene.value.length);
+          const idx = rng.nextInt(0, gene.value.length - 1);
           forkedGenes[key].value = gene.value.filter((_: any, i: number) => i !== idx);
         } else {
           // Add random item
           const domains = ['character', 'music', 'visual2d', 'game', 'geometry3d', 'audio', 'sprite'];
-          const newItem = domains[Math.floor(Math.random() * domains.length)];
+          const newItem = domains[rng.nextInt(0, domains.length - 1)];
           if (!forkedGenes[key].value.includes(newItem)) {
             forkedGenes[key].value = [...gene.value, newItem];
           }
@@ -549,7 +554,7 @@ export class SeedAgent {
     }
 
     // Create forked seed
-    const forkPhrase = `agent_fork_${Date.now()}`;
+    const forkPhrase = `agent_fork_${this.agentSeed.hash}_${this.agentSeed.$lineage?.generation ?? 0}`;
     const forkHash = this.simpleHash64(forkPhrase);
 
     const forkedSeed: AgentSeed = {
@@ -573,10 +578,11 @@ export class SeedAgent {
    * Used for self-improvement/adaptation
    */
   mutateGenes(mutationRate: number = 0.1): void {
+    const rng = rngFromHash(`agent-mutate:${this.agentSeed.hash}:${mutationRate}:${this.agentSeed.$lineage?.generation ?? 0}`);
     for (const [key, gene] of Object.entries(this.agentSeed.genes)) {
-      if (Math.random() < mutationRate) {
+      if (rng.nextF64() < mutationRate) {
         if (typeof gene.value === 'number') {
-          gene.value += (Math.random() - 0.5) * 0.2;
+          gene.value += (rng.nextF64() - 0.5) * 0.2;
           gene.value = Math.max(0, Math.min(1, gene.value));
         }
       }
@@ -594,9 +600,10 @@ export class SeedAgent {
    * Update agent seed genes
    */
   updateGenes(newGenes: Partial<AgentSeed['genes']>): void {
+    const genes = this.agentSeed.genes as Record<string, { type: string; value: any }>;
     for (const [key, value] of Object.entries(newGenes)) {
-      if (this.agentSeed.genes[key]) {
-        this.agentSeed.genes[key].value = value;
+      if (genes[key]) {
+        genes[key].value = value;
       }
     }
   }
@@ -628,7 +635,7 @@ export class SeedAgent {
           $name: args.prompt.slice(0, 50),
         } as Seed;
 
-        this.state.memory.seeds.set(seed.phrase, seed);
+        this.state.memory.seeds.set(String(seed.phrase), seed);
         return { seed, success: true };
       },
     });
@@ -996,9 +1003,10 @@ Memory: ${this.state.memory.episodic.length > 0 ? `You have ${this.state.memory.
     const creativity = this.agentSeed.genes.creativity.value;
     const reasoningStyle = this.agentSeed.genes.reasoning_style.value;
     const persona = this.agentSeed.genes.persona.value;
+    const rng = rngFromHash(`agent-mock:${this.agentSeed.hash}:${goal}:${messages.length}`);
 
     // Use creativity gene to vary responses
-    const useTools = creativity > 0.3 || Math.random() < creativity;
+    const useTools = creativity > 0.3 || rng.nextF64() < creativity;
 
     // Persona-based reasoning
     if (persona === 'architect') {

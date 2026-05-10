@@ -19,8 +19,8 @@ describe('Auth Module', () => {
   describe('registerUser', () => {
     beforeEach(clearUsers);
 
-    it('registers a new user and returns token', () => {
-      const result = registerUser('testuser', 'password123');
+    it('registers a new user and returns token', async () => {
+      const result = await registerUser('testuser', 'password123');
       expect(result).not.toHaveProperty('error');
       expect(result).toHaveProperty('token');
       expect(result).toHaveProperty('user');
@@ -30,15 +30,15 @@ describe('Auth Module', () => {
       }
     });
 
-    it('rejects duplicate username', () => {
-      registerUser('dupe', 'pass1');
-      const result = registerUser('dupe', 'pass2');
+    it('rejects duplicate username', async () => {
+      await registerUser('dupe', 'pass1');
+      const result = await registerUser('dupe', 'pass2');
       expect(result).toHaveProperty('error');
     });
 
-    it('second user gets user role', () => {
-      registerUser('admin1', 'pass');
-      const result = registerUser('user2', 'pass');
+    it('second user gets user role', async () => {
+      await registerUser('admin1', 'pass');
+      const result = await registerUser('user2', 'pass');
       if ('user' in result) {
         expect(result.user.role).toBe('user');
       }
@@ -48,21 +48,21 @@ describe('Auth Module', () => {
   describe('loginUser', () => {
     beforeEach(clearUsers);
 
-    it('logs in with correct credentials', () => {
-      registerUser('logintest', 'mypassword');
-      const result = loginUser('logintest', 'mypassword');
+    it('logs in with correct credentials', async () => {
+      await registerUser('logintest', 'mypassword');
+      const result = await loginUser('logintest', 'mypassword');
       expect(result).toHaveProperty('token');
       expect(result).not.toHaveProperty('error');
     });
 
-    it('rejects wrong password', () => {
-      registerUser('logintest2', 'correct');
-      const result = loginUser('logintest2', 'wrong');
+    it('rejects wrong password', async () => {
+      await registerUser('logintest2', 'correct');
+      const result = await loginUser('logintest2', 'wrong');
       expect(result).toHaveProperty('error');
     });
 
-    it('rejects non-existent user', () => {
-      const result = loginUser('nobody', 'pass');
+    it('rejects non-existent user', async () => {
+      const result = await loginUser('nobody', 'pass');
       expect(result).toHaveProperty('error');
     });
   });

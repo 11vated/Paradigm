@@ -6,13 +6,20 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
-import Redis from 'ioredis';
 
 // We use Node.js built-in crypto for HMAC-SHA256 JWT instead of requiring jsonwebtoken.
 // This keeps dependencies minimal while providing secure tokens.
 
+let Redis: any = null;
+try {
+  Redis = require('ioredis').default || require('ioredis');
+} catch (e) {
+  // ioredis not available at module load - will be loaded lazily
+}
+
 // In production, JWT_SECRET MUST be set — random secrets break across restarts
-const JWT_SECRET = (() => {
+// Read lazily so test setup can set it before use
+function getJwtSecret(): string {
   if (process.env.JWT_SECRET) return process.env.JWT_SECRET;
   if (process.env.NODE_ENV === 'production') {
     console.error('[FATAL] JWT_SECRET environment variable is required in production.');
@@ -23,13 +30,66 @@ const JWT_SECRET = (() => {
   const ephemeral = crypto.randomBytes(32).toString('hex');
   console.warn('[WARN] No JWT_SECRET set — using ephemeral secret. Tokens will not survive restarts.');
   return ephemeral;
-})();
+}
 
-const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
-const redis = new Redis(REDIS_URL, { lazyConnect: true });
+let JWT_SECRET: string | null = null;
+function getJwtSecretCached(): string {
+  if (!JWT_SECRET) JWT_SECRET = getJwtSecret();
+  return JWT_SECRET;
+}
 
-redis.on('error', (err) => console.error('Redis Client Error', err));
-redis.on('connect', () => console.log('Redis connected'));
+let redisClient: any = null;
+const inMemoryRedis = new Map<string, string>();
+
+function getRedisClient(): any {
+  if (redisClient) return redisClient;
+  
+  const REDIS_URL = process.env.REDIS_URL;
+  const createFallbackRedis = () => ({
+    get: (key: string) => inMemoryRedis.get(key) ?? null,
+    set: (key: string, value: string) => { inMemoryRedis.set(key, value); return 'OK'; },
+    del: (key: string) => inMemoryRedis.delete(key) ? 1 : 0,
+    exists: (key: string) => inMemoryRedis.has(key) ? 1 : 0,
+    on: () => {},
+    status: 'end'
+  });
+  
+  // If REDIS_URL is empty or explicitly disabled, use in-memory fallback
+  if (!REDIS_URL || REDIS_URL === '' || REDIS_URL === 'disabled') {
+    console.warn('[AUTH] Redis not configured, using in-memory fallback');
+    redisClient = createFallbackRedis();
+    return redisClient;
+  }
+  
+  try {
+    redisClient = new Redis(REDIS_URL, { lazyConnect: true });
+    // Suppress connection errors during tests
+    redisClient.on('error', (err: any) => {
+      if (process.env.NODE_ENV === 'test') return;
+      console.error('Redis Client Error', err);
+    });
+    redisClient.on('connect', () => {
+      if (process.env.NODE_ENV !== 'test') console.log('Redis connected');
+    });
+  } catch (e) {
+    console.warn('[AUTH] Redis not available, using in-memory fallback');
+    redisClient = createFallbackRedis();
+  }
+  
+  return redisClient;
+}
+
+  // Use lazy client directly
+  const redis = new Proxy({} as any, {
+    get(_target, prop: string | symbol) {
+      const client = getRedisClient();
+      return client[prop];
+    }
+  });
+
+// Export the proxy as redis for backward compatibility
+// (Redis import is unused when REDIS_URL is empty; that's intentional)
+export { redis };
 
 const TOKEN_EXPIRY_SECONDS = 3600;         // Access token: 1 hour
 const REFRESH_TOKEN_EXPIRY_SECONDS = 604800; // Refresh token: 7 days
@@ -103,23 +163,23 @@ function signJWT(payload: JWTPayload): string {
   const header = base64url(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const body = base64url(JSON.stringify(payload));
   const signature = base64url(
-    crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest()
+    crypto.createHmac('sha256', getJwtSecretCached()).update(`${header}.${body}`).digest()
   );
   return `${header}.${body}.${signature}`;
 }
 
-async function verifyJWT(token: string): Promise<JWTPayload | null> {
+function verifyJWT(token: string): JWTPayload | null {
   const parts = token.split('.');
   if (parts.length !== 3) return null;
   const [header, body, signature] = parts;
   const expectedSig = base64url(
-    crypto.createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest()
+    crypto.createHmac('sha256', getJwtSecretCached()).update(`${header}.${body}`).digest()
   );
   if (signature !== expectedSig) return null;
   const payload: JWTPayload = JSON.parse(base64urlDecode(body));
   if (payload.exp < Math.floor(Date.now() / 1000)) return null;
   // Check blacklist
-  if (payload.jti && (await redis.exists(`blacklist:${payload.jti}`))) return null;
+  if (payload.jti && redis.exists(`blacklist:${payload.jti}`)) return null;
   return payload;
 }
 
@@ -140,7 +200,7 @@ function saveUsers(users: User[]): void {
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-async function issueTokenPair(user: User): Promise<{ token: string; refreshToken: string; expiresIn: number }> {
+function issueTokenPair(user: User): { token: string; refreshToken: string; expiresIn: number } {
   const now = Math.floor(Date.now() / 1000);
   const accessJti = crypto.randomUUID();
   const refreshJti = crypto.randomUUID();
@@ -158,12 +218,12 @@ async function issueTokenPair(user: User): Promise<{ token: string; refreshToken
   });
 
   // Store refresh token in Redis
-  await redis.set(`refreshToken:${refreshJti}`, JSON.stringify({ userId: user.id, exp: now + REFRESH_TOKEN_EXPIRY_SECONDS }), 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
+  redis.set(`refreshToken:${refreshJti}`, JSON.stringify({ userId: user.id, exp: now + REFRESH_TOKEN_EXPIRY_SECONDS }), 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
 
   return { token, refreshToken, expiresIn: TOKEN_EXPIRY_SECONDS };
 }
 
-export async function registerUser(username: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string }> {
+export function registerUser(username: string, password: string): { user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string } {
   const users = loadUsers();
   if (users.find(u => u.username === username)) {
     return { error: 'Username already exists' };
@@ -182,17 +242,17 @@ export async function registerUser(username: string, password: string): Promise<
   users.push(user);
   saveUsers(users);
 
-  const tokens = await issueTokenPair(user);
+  const tokens = issueTokenPair(user);
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt, role: user.role }, ...tokens };
 }
 
-export async function loginUser(username: string, password: string): Promise<{ user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string }> {
+export function loginUser(username: string, password: string): { user: Omit<User, 'passwordHash'>; token: string; refreshToken: string; expiresIn: number } | { error: string } {
   const users = loadUsers();
   const user = users.find(u => u.username === username);
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return { error: 'Invalid username or password' };
   }
-  const tokens = await issueTokenPair(user);
+  const tokens = issueTokenPair(user);
   return { user: { id: user.id, username: user.username, createdAt: user.createdAt, role: user.role }, ...tokens };
 }
 
@@ -201,8 +261,8 @@ const refreshingTokens = new Set<string>();
 /**
  * Refresh token rotation — issue new access + refresh tokens, blacklist the old refresh.
  */
-export async function refreshAccessToken(refreshTokenStr: string): Promise<{ token: string; refreshToken: string; expiresIn: number } | { error: string }> {
-  const payload = await verifyJWT(refreshTokenStr);
+export function refreshAccessToken(refreshTokenStr: string): { token: string; refreshToken: string; expiresIn: number } | { error: string } {
+  const payload = verifyJWT(refreshTokenStr);
   if (!payload || payload.type !== 'refresh' || !payload.jti) {
     return { error: 'Invalid or expired refresh token' };
   }
@@ -215,22 +275,22 @@ export async function refreshAccessToken(refreshTokenStr: string): Promise<{ tok
 
   try {
     // Check if refresh token exists in Redis and retrieve its details
-    const storedRefreshToken = await redis.get(`refreshToken:${payload.jti}`);
+    const storedRefreshToken = redis.get(`refreshToken:${payload.jti}`);
     if (!storedRefreshToken) {
       return { error: 'Refresh token not found' };
     }
     const { userId } = JSON.parse(storedRefreshToken);
 
     // Blacklist the old refresh token (rotation) and delete from refreshTokens
-    await redis.set(`blacklist:${payload.jti}`, 'true', 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
-    await redis.del(`refreshToken:${payload.jti}`);
+    redis.set(`blacklist:${payload.jti}`, 'true', 'EX', REFRESH_TOKEN_EXPIRY_SECONDS);
+    redis.del(`refreshToken:${payload.jti}`);
 
     // Look up user to get current role (in case it changed)
     const users = loadUsers();
     const user = users.find(u => u.id === userId);
     if (!user) return { error: 'User not found' };
 
-    return await issueTokenPair(user);
+    return issueTokenPair(user);
   } finally {
     refreshingTokens.delete(payload.jti);
   }
@@ -239,12 +299,12 @@ export async function refreshAccessToken(refreshTokenStr: string): Promise<{ tok
 /**
  * Revoke a token (adds to blacklist). Used for logout.
  */
-export async function revokeToken(tokenStr: string): Promise<boolean> {
-  const payload = await verifyJWT(tokenStr);
+export function revokeToken(tokenStr: string): boolean {
+  const payload = verifyJWT(tokenStr);
   if (!payload?.jti) return false;
-  await redis.set(`blacklist:${payload.jti}`, 'true', 'EX', TOKEN_EXPIRY_SECONDS);
+  redis.set(`blacklist:${payload.jti}`, 'true', 'EX', TOKEN_EXPIRY_SECONDS);
   if (payload.type === 'refresh') {
-    await redis.del(`refreshToken:${payload.jti}`);
+    redis.del(`refreshToken:${payload.jti}`);
   }
   return true;
 }
@@ -254,14 +314,14 @@ export async function revokeToken(tokenStr: string): Promise<boolean> {
  * Attaches the decoded payload to `req.user`.
  * Routes that don't require auth should NOT use this middleware.
  */
-export async function verifyToken(req: any, res: any, next: any): Promise<void> {
+export function verifyToken(req: any, res: any, next: any): void {
   const authHeader = req.headers['authorization'];
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Missing or invalid Authorization header' });
     return;
   }
   const token = authHeader.slice(7);
-  const payload = await verifyJWT(token);
+  const payload = verifyJWT(token);
   if (!payload) {
     res.status(401).json({ error: 'Invalid or expired token' });
     return;
@@ -274,11 +334,11 @@ export async function verifyToken(req: any, res: any, next: any): Promise<void> 
  * Optional auth — attaches req.user if token present, but doesn't reject.
  * Useful for endpoints that work for both authenticated and anonymous users.
  */
-export async function optionalAuth(req: any, _res: any, next: any): Promise<void> {
+export function optionalAuth(req: any, _res: any, next: any): void {
   const authHeader = req.headers['authorization'];
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
-    const payload = await verifyJWT(token);
+    const payload = verifyJWT(token);
     if (payload) req.user = payload;
   }
   next();
@@ -307,8 +367,8 @@ export function requireRole(...roles: string[]) {
  * Raw JWT verification — for use in WebSocket upgrade handlers where
  * Express middleware isn't available. Returns decoded payload or null.
  */
-export async function verifyTokenRaw(token: string): Promise<JWTPayload | null> {
-  return await verifyJWT(token);
+export function verifyTokenRaw(token: string): JWTPayload | null {
+  return verifyJWT(token);
 }
 
 /**
@@ -347,14 +407,13 @@ export function createRateLimiter(windowMs: number = 60000, maxRequests: number 
   };
 }
 
-export { redis };
-
 export async function connectRedis(): Promise<void> {
   if (redis.status === 'ready') {
     console.log('Redis already connected.');
     return;
   }
   await redis.connect();
+  console.log('Redis connected.');
 }
 
 export async function disconnectRedis(): Promise<void> {

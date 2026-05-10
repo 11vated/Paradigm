@@ -123,7 +123,8 @@ export class MockSeedLLM implements SeedLLM {
   }
 
   async evaluateOutput(output: GeneratorOutput, criteria: string): Promise<number> {
-    return 0.7 + Math.random() * 0.25;
+    const rng = rngFromHash(`${output.seed_hash ?? output.name ?? output.domain}:${criteria}`);
+    return 0.7 + rng.nextF64() * 0.25;
   }
 
   async generateVariations(seed: Seed, count: number): Promise<Seed[]> {
@@ -170,6 +171,6 @@ export async function generateFromPrompt(
 ): Promise<{ seed: Seed; output: GeneratorOutput; gspl: string }> {
   const seed = await llm.generateSeed(prompt);
   const gspl = await llm.generateGSPL(prompt, seed);
-  const output = await executeGspl(gspl, seed.phrase);
+  const output = await executeGspl(gspl, String(seed.phrase));
   return { seed, output, gspl };
 }

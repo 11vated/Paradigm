@@ -129,7 +129,7 @@ export default function InfiniteCanvas({
       .force('y', forceY(300).strength(0.05))
       .alphaDecay(0.02)
       .on('tick', () => {
-        setNodes([...sim.nodes()]);
+        setNodes([...sim.nodes()] as CanvasNode[]);
       });
 
     simulationRef.current = sim;

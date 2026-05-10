@@ -464,7 +464,7 @@ export class DigitalNation {
     nationId: string;
     config: NationConfig;
     constitution: any;
-    stats: ReturnType<this['getStats']>;
+    stats: ReturnType<DigitalNation['getStats']>;
     exportedAt: number;
   } {
     return {

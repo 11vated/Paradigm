@@ -10,6 +10,7 @@
  */
 
 import { Complex } from './complex';
+import { rngFromHash } from '../kernel/rng';
 
 export interface QuantumState {
   position: [number, number, number];
@@ -90,6 +91,7 @@ export class QFTSolver {
     
     const hbar = 1.0545718e-34; // Planck constant
     const mass = currentState.mass || 1; // Normalized mass
+    const rng = rngFromHash(`qft-schrodinger:${JSON.stringify(initialState)}:${timeStep}:${steps}`);
     
     for (let i = 0; i < steps; i++) {
       // Update position based on momentum (p = mv)
@@ -106,9 +108,9 @@ export class QFTSolver {
       // Quantum diffusion (simplified)
       const diffusion = Math.sqrt(hbar * timeStep / mass);
       currentState.momentum = [
-        currentState.momentum[0] + (Math.random() - 0.5) * diffusion,
-        currentState.momentum[1] + (Math.random() - 0.5) * diffusion,
-        currentState.momentum[2] + (Math.random() - 0.5) * diffusion,
+        currentState.momentum[0] + (rng.nextF64() - 0.5) * diffusion,
+        currentState.momentum[1] + (rng.nextF64() - 0.5) * diffusion,
+        currentState.momentum[2] + (rng.nextF64() - 0.5) * diffusion,
       ];
       
       states.push({ ...currentState });
@@ -125,6 +127,8 @@ export class QFTSolver {
     measurementBasis: 'position' | 'momentum' | 'spin'
   ): { collapsedState: QuantumState; probability: number } {
     const hbar = 1.0545718e-34;
+    const mass = state.mass || 1;
+    const rng = rngFromHash(`qft-collapse:${JSON.stringify(state)}:${measurementBasis}`);
     
     if (measurementBasis === 'position') {
       // Collapse to position eigenstate
@@ -148,7 +152,7 @@ export class QFTSolver {
     if (measurementBasis === 'spin') {
       // Spin measurement
       const spinProb = 0.5 + state.spin / 2;
-      const collapsedSpin = Math.random() < spinProb ? 0.5 : -0.5;
+      const collapsedSpin = rng.nextF64() < spinProb ? 0.5 : -0.5;
       
       return {
         collapsedState: {
@@ -408,23 +412,24 @@ export class QFTSolver {
     count: number
   ): QuantumState[] {
     const particles: QuantumState[] = [];
+    const rng = rngFromHash(`qft-particles:${JSON.stringify(seedGenome)}:${count}`);
     
     for (let i = 0; i < count; i++) {
       const baseEnergy = seedGenome.energy || 1;
-      const spin = seedGenome.spin || (Math.random() > 0.5 ? 0.5 : -0.5);
-      const charge = seedGenome.charge || (Math.random() > 0.5 ? 1 : -1);
+      const spin = seedGenome.spin || (rng.nextF64() > 0.5 ? 0.5 : -0.5);
+      const charge = seedGenome.charge || (rng.nextF64() > 0.5 ? 1 : -1);
       const mass = seedGenome.mass || 1;
       
       particles.push({
         position: [
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 10,
-          (Math.random() - 0.5) * 10,
+          (rng.nextF64() - 0.5) * 10,
+          (rng.nextF64() - 0.5) * 10,
+          (rng.nextF64() - 0.5) * 10,
         ],
         momentum: [
-          (Math.random() - 0.5) * baseEnergy,
-          (Math.random() - 0.5) * baseEnergy,
-          (Math.random() - 0.5) * baseEnergy,
+          (rng.nextF64() - 0.5) * baseEnergy,
+          (rng.nextF64() - 0.5) * baseEnergy,
+          (rng.nextF64() - 0.5) * baseEnergy,
         ],
         spin,
         charge,

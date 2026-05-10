@@ -9,7 +9,7 @@ function clamp(v: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, v));
 }
 
-interface GeneSchema {
+export interface GeneSchema {
   min?: number;
   max?: number;
   choices?: string[];
@@ -22,7 +22,7 @@ type MutateFn = (value: any, rate: number, rng: Xoshiro256StarStar, schema?: Gen
 type CrossoverFn = (a: any, b: any, rng: Xoshiro256StarStar) => any;
 type DistanceFn = (a: any, b: any, schema?: GeneSchema) => number;
 
-interface GeneTypeOps {
+export interface GeneTypeOps {
   validate: ValidateFn;
   mutate: MutateFn;
   crossover: CrossoverFn;
@@ -493,6 +493,12 @@ export const GENE_TYPES: Record<string, GeneTypeOps> = {
   topology, temporal, regulatory, field, symbolic, quantum,
   gematria, resonance, dimensional, sovereignty
 };
+
+export class GeneSystem {
+  static getOps(type: string): GeneTypeOps {
+    return GENE_TYPES[type] ?? GENE_TYPES.scalar;
+  }
+}
 
 export function validateGene(geneType: string, value: any, schema?: GeneSchema): boolean {
   const ops = GENE_TYPES[geneType];

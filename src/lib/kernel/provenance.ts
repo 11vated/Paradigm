@@ -39,7 +39,7 @@ export interface MutationRecord {
  * In production, use: const ec = new EC('secp256k1');
  */
 export function generateKeyPair(seed?: string): { privateKey: string; publicKey: string } {
-  const rng = seed ? new Xoshiro256StarStar(seed) : new Xoshiro256StarStar(Math.random().toString());
+  const rng = new Xoshiro256StarStar(seed ?? 'provenance-default-deterministic-keypair');
   
   // Simplified: generate 32-byte private key from seed
   let privateKey = '';

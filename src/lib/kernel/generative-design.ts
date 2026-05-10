@@ -63,7 +63,7 @@ export async function workflowNaturalLanguageToArtifact(
 
     // Reconstruct RNG from phrase
     const { rngFromHash } = await import('./rng');
-    context.seed.rng = rngFromHash(context.seed.phrase);
+    context.seed.rng = rngFromHash(String(context.seed.phrase));
 
     context.history[context.history.length - 1].output = seedData;
   } catch (err) {
@@ -147,7 +147,7 @@ export async function workflowIterativeRefinement(
 
     // Reconstruct RNG
     const { rngFromHash } = await import('./rng');
-    context.seed.rng = rngFromHash(context.seed.phrase);
+    context.seed.rng = rngFromHash(String(context.seed.phrase));
 
     context.history[context.history.length - 1].output = refinedData;
 

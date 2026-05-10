@@ -71,7 +71,7 @@ export function SeedChat({ onArtifactGenerated }: SeedChatProps) {
       // Step 3: Execute GSPL to generate output
       let output;
       try {
-        output = executeGspl(gspl, seed.phrase);
+        output = executeGspl(gspl, String(seed.phrase));
       } catch (e) {
         output = { error: e instanceof Error ? e.message : String(e) };
       }
@@ -91,7 +91,7 @@ export function SeedChat({ onArtifactGenerated }: SeedChatProps) {
         gseed.c2paManifest = new TextEncoder().encode(JSON.stringify(manifest));
         gseed.flags.hasC2PA = true;
         const encoded = encodeGseed(gseed);
-        gseedInfo = { size: encoded.length, hash: seed.hash?.substring(0, 16) };
+        gseedInfo = { size: encoded.length, hash: String(seed.hash).substring(0, 16) };
       } catch (e) {
         gseedInfo = { error: 'Failed to create .gseed' };
       }
@@ -99,7 +99,7 @@ export function SeedChat({ onArtifactGenerated }: SeedChatProps) {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `Generated "${input}"\n\nSeed: ${seed.phrase}\nHash: ${seed.hash?.substring(0, 16)}...\nGSPL: ${gspl.length} chars\n.gseed: ${gseedInfo?.size || 'N/A'} bytes`,
+        content: `Generated "${input}"\n\nSeed: ${seed.phrase}\nHash: ${String(seed.hash).substring(0, 16)}...\nGSPL: ${gspl.length} chars\n.gseed: ${gseedInfo?.size || 'N/A'} bytes`,
         seed,
         gspl,
         output,

@@ -127,17 +127,18 @@ class DreamMode {
     try {
       const artifact = await growSeed(seed);
 
-      if (artifact?.$fitness?.overall >= this.config.targetFitness) {
+      const fitness = (artifact as any)?.$fitness?.overall ?? 0;
+      if (fitness >= this.config.targetFitness) {
         return {
           seed,
-          reason: `Generated ${domain} with fitness ${artifact.$fitness.overall}`,
+          reason: `Generated ${domain} with fitness ${fitness}`,
           generationMs: Date.now() - startTime,
         };
       }
 
       return {
         seed,
-        reason: `Generated ${domain} with fitness ${artifact?.$fitness?.overall || 0}`,
+        reason: `Generated ${domain} with fitness ${fitness}`,
         generationMs: Date.now() - startTime,
       };
     } catch (e) {

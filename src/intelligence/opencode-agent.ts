@@ -48,7 +48,7 @@ export class ParadigmOpenCodeAgent {
     });
 
     // Create a new session
-    const response = await this.client.session.create({
+    const response = await (this.client as any).session.create({
       body: {
         title: 'Paradigm Agent Session',
       },
@@ -70,7 +70,7 @@ export class ParadigmOpenCodeAgent {
 
     try {
       // Send the prompt to OpenCode via the session.prompt() API
-      const response = await this.client!.session.prompt({
+      const response = await (this.client as any).session.prompt({
         path: { id: sessionId },
         body: {
           parts: [
@@ -175,17 +175,18 @@ Current seed: ${currentSeed.$name} (${currentSeed.$domain}, Gen ${currentSeed.$l
     return context.replace('{{SEED_COUNT}}', String(seedCount));
   }
 
-    private extractTextContent(responseData: any): string {
-    // The session.prompt() response has structure: { info: Message, parts: Part[] }
-    if (!responseData) return '';
+    private extractTextContent(responseData: unknown): string {
+      // The session.prompt() response has structure: { info: Message, parts: Part[] }
+      if (!responseData) return '';
 
-    // If it's the full response with parts
-    if (responseData.parts && Array.isArray(responseData.parts)) {
-      return responseData.parts
-        .filter((part: any) => part.type === 'text')
-        .map((part: any) => part.text || '')
-        .join('');
-    }
+      // If it's the full response with parts
+      const data = responseData as { parts?: Array<{ type: string; text?: string }> };
+      if (data.parts && Array.isArray(data.parts)) {
+        return data.parts
+          .filter((part) => part.type === 'text')
+          .map((part) => part.text || '')
+          .join('');
+      }
 
     // If it's just a string
     if (typeof responseData === 'string') return responseData;
@@ -238,7 +239,7 @@ Current seed: ${currentSeed.$name} (${currentSeed.$domain}, Gen ${currentSeed.$l
     if (!this.client || !this.session) return [];
 
     try {
-      const response = await this.client.session.messages({
+      const response = await (this.client as any).session.messages({
         path: { id: this.session.id },
       });
       // Returns { info: Message, parts: Part[] }[]
@@ -255,7 +256,7 @@ Current seed: ${currentSeed.$name} (${currentSeed.$domain}, Gen ${currentSeed.$l
   async clearContext(): Promise<void> {
     if (this.client && this.session) {
       try {
-        await this.client.session.delete({
+        await (this.client as any).session.delete({
           path: { id: this.session.id },
         });
       } catch {

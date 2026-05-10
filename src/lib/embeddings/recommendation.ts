@@ -111,7 +111,7 @@ export class RecommendationEngine {
         if (seed.seedId === seedId) continue;
         
         const otherSeed = allEmbeddings.find(s => s.seedId === seed.seedId);
-        if (otherSeed?.metadata?.domain === sourceDomain && otherSeed.seedId !== seedId) {
+        if (otherSeed && otherSeed.metadata?.domain === sourceDomain && otherSeed.seedId !== seedId) {
           breedingPool.push({
             seedId: seed.seedId,
             score: seed.similarity,

@@ -189,4 +189,5 @@ export class Kernel {
 }
 
 export { Xoshiro256SS, FIM, TickSystem, Effects, GeneOperators };
-export { EffectType, GeneOperator, Genome, Gene, GeneValue, EffectConfig };
+export { EffectType, GeneOperator };
+export type { Genome, Gene, GeneValue, EffectConfig };

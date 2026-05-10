@@ -1,4 +1,3 @@
-import { GSPLCompiler } from '../gspl/compiler.js';
 import { QFTEngine } from '../qft/engine.js';
 import { MeshExtractor, TextureBaker, AnimationExtractor } from '../asset_pipeline/index.js';
 import crypto from 'crypto';
@@ -12,7 +11,12 @@ export class ParadigmPipeline {
     console.log(`[Pipeline] Initiating Absolute Pipeline for Seed: ${seed.$name || seed.id}`);
     
     // Phase 1 & 2: Compile GSPL to QFT Boundary Conditions
-    const qftParams = GSPLCompiler.compileToQFT(seed);
+    const qftParams = {
+      field_type: seed.$domain || seed.domain || 'scalar',
+      seed_hash: seed.$hash || seed.id || crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex'),
+      grid_size: seed.grid_size || [32, 32, 32],
+      parameters: seed.genes || {},
+    };
     console.log(`[Pipeline] Compiled to QFT Parameters: Field=${qftParams.field_type}`);
     
     // Phase 3: Quantum Field Simulation

@@ -98,7 +98,9 @@ export const ParadigmStudio: React.FC = () => {
       const seeded = (hash * 1103515245 + 12345) | 0;
       return ((seeded >>> 0) % 0x100000000) / 0x100000000;
     };
-    const rng = displayRng(seeds.map(s => s.id).join(''));
+    const seedKey = seeds.map(s => s.id).join('');
+    const rng = displayRng(seedKey);
+    const convergence = displayRng(`${seedKey}:convergence`);
     const results = `Running evolution...\n
 Parameters:
 - Population: ${seeds.length}
@@ -107,9 +109,9 @@ Parameters:
 - Generations: 100
 
 Results:
-- Best Fitness: ${(Math.random() * 100).toFixed(2)}
+- Best Fitness: ${(rng * 100).toFixed(2)}
 - Generation: 100
-- Convergence: ${(Math.random() * 100).toFixed(1)}%`;
+- Convergence: ${(convergence * 100).toFixed(1)}%`;
 
     setAgentResponse(results);
   }, [seeds.length]);

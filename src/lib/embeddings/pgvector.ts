@@ -1,4 +1,4 @@
-import { createClient, type ClientConfig } from 'pg';
+import pg, { type ClientConfig } from 'pg';
 
 export interface EmbeddingResult {
   seedId: string;
@@ -52,7 +52,7 @@ export class PgVectorStore {
       Object.assign(pgConfig, { connectionString });
     }
 
-    this.client = createClient(pgConfig);
+    this.client = new pg.Client(pgConfig);
     await this.client.connect();
 
     await this.ensureTable();

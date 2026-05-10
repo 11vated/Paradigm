@@ -119,7 +119,14 @@ export function createSeedTools(llm: SeedLLM): AIAgentTool[] {
       },
       execute: async (params) => {
         const seedPhrase = (params.seed_phrase as string) || (params.description as string);
-        const seed = rngFromHash(seedPhrase);
+        const seedHash = rngFromHash(seedPhrase).hash;
+        const seed = {
+          phrase: seedPhrase,
+          hash: seedHash,
+          rng: rngFromHash(seedHash),
+          $domain: 'gspl',
+          $name: seedPhrase,
+        };
         const gspl = await llm.generateGSPL(params.description as string, seed);
         return { gspl };
       },

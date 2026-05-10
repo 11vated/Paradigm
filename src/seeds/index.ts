@@ -1,14 +1,18 @@
 export { UniversalSeed } from './universal-seed';
-export { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS, getGeneTypeDefinition, getAllGeneTypes, getGeneTypeNames } from './types';
-export { SeedMetadata, SeedExpression, SeedDerivation, SerializedSeed } from './universal-seed';
+export { GeneType, GENE_TYPE_DEFINITIONS, getGeneTypeDefinition, getAllGeneTypes, getGeneTypeNames } from './types';
+import { GeneType } from './types';
+export type { GeneSchema, GeneMetadata, GeneValue } from './types';
+export type { SeedMetadata, SeedExpression, SeedDerivation, SerializedSeed } from './universal-seed';
+
+(globalThis as any).geneTypes = Object.values(GeneType);
 
 export interface Seed {
   $name?: string;
   $domain?: string;
   $hash?: string;
   $lineage?: { generation?: number; operation?: string; parents?: string[] };
-  genes?: Record<string, { type?: string; value?: any }>;
-  [key: string]: any;
+  genes?: Record<string, { type?: string; value?: unknown }>;
+  [key: string]: unknown;
 }
 
 export function createSeed(partial: Partial<Seed>): Seed {

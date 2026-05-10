@@ -243,7 +243,7 @@ export class RobloxExporter extends MetaverseExporter {
     
     return {
       geometry: seed.geometry || {},
-      materials: seed.materials || { default: { Brick = { Color3 = { 0.9, 0.9, 0.9 } } } },
+      materials: seed.materials || { default: { Brick: { Color3: [0.9, 0.9, 0.9] } } },
       polyLimit,
     };
   }

@@ -75,7 +75,7 @@ interface Seed {
   $hash?: string;
   $lineage?: { generation?: number };
   genes?: Record<string, { type?: string; value?: any }>;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface Artifact {
@@ -84,14 +84,24 @@ interface Artifact {
   domain: string;
   seed_hash: string;
   generation: number;
-  render_hints: Record<string, any>;
-  [key: string]: any;
+  render_hints: Record<string, unknown>;
+  [key: string]: unknown;
 }
 
 export type { Seed, Artifact, GeneratorOutput };
 
-function geneVal(seed: Seed, name: string, fallback: any = null): any {
+function geneVal(seed: Seed, name: string, fallback: unknown = null): unknown {
   return seed.genes?.[name]?.value ?? fallback;
+}
+
+function geneNumber(seed: Seed, name: string, fallback: number): number {
+  const value = geneVal(seed, name, fallback);
+  return typeof value === 'number' ? value : fallback;
+}
+
+function geneArray(seed: Seed, name: string, fallback: number[]): number[] {
+  const value = geneVal(seed, name, fallback);
+  return Array.isArray(value) ? value : fallback;
 }
 
 // ─── PRIMARY ENGINES ──────────────────────────────────────────────────────────
@@ -101,13 +111,13 @@ async function growCharacter(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  const size = geneVal(seed, 'size', 1.0);
+  const size = geneNumber(seed, 'size', 1.0);
   const archetype = geneVal(seed, 'archetype', 'warrior');
-  const strength = geneVal(seed, 'strength', 0.5);
-  const agility = geneVal(seed, 'agility', 0.5);
-  const palette = geneVal(seed, 'palette', [0.5, 0.5, 0.5]);
+  const strength = geneNumber(seed, 'strength', 0.5);
+  const agility = geneNumber(seed, 'agility', 0.5);
+  const palette = geneArray(seed, 'palette', [0.5, 0.5, 0.5]);
   let personality = geneVal(seed, 'personality', 'neutral');
-  if (typeof personality === 'object' && personality !== null) personality = personality.trait ?? 'neutral';
+  if (typeof personality === 'object' && personality !== null) personality = (personality as { trait?: unknown }).trait ?? 'neutral';
 
   try {
     const result = await generateCharacter(seed, outputPath);
@@ -146,11 +156,11 @@ async function growSprite(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_animated.png`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  let resolution = geneVal(seed, 'resolution', 32);
+  let resolution = geneNumber(seed, 'resolution', 32);
   if (typeof resolution === 'number' && resolution <= 1) resolution = Math.floor(resolution * 64);
-  let paletteSize = geneVal(seed, 'paletteSize', 8);
+  let paletteSize = geneNumber(seed, 'paletteSize', 8);
   if (typeof paletteSize === 'number' && paletteSize <= 1) paletteSize = Math.floor(paletteSize * 16);
-  const colors = geneVal(seed, 'colors', [0.8, 0.2, 0.3]);
+  const colors = geneArray(seed, 'colors', [0.8, 0.2, 0.3]);
   const symmetry = geneVal(seed, 'symmetry', 'bilateral');
 
   try {
@@ -189,7 +199,7 @@ async function growMusic(seed: Seed): Promise<Artifact> {
       type: 'music', name: seed.$name ?? 'Music', domain: 'music',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       music: {
-        tempo: +geneVal(seed, 'tempo', 0.5).toFixed(1),
+        tempo: +geneNumber(seed, 'tempo', 0.5).toFixed(1),
         key: geneVal(seed, 'key', 'C'),
         scale: geneVal(seed, 'scale', 'major'),
         melody: geneVal(seed, 'melody', []),
@@ -248,7 +258,7 @@ async function growProcedural(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  let octaves = geneVal(seed, 'octaves', 4);
+  let octaves = geneNumber(seed, 'octaves', 4);
   if (typeof octaves === 'number' && octaves <= 1) octaves = Math.max(1, Math.floor(octaves * 8));
 
   try {
@@ -257,8 +267,8 @@ async function growProcedural(seed: Seed): Promise<Artifact> {
       type: 'procedural', name: seed.$name ?? 'Terrain', domain: 'procedural',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       terrain: {
-        octaves, persistence: +(geneVal(seed, 'persistence', 0.5)).toFixed(3),
-        scale: +(geneVal(seed, 'scale', 1.0)).toFixed(2),
+        octaves, persistence: +geneNumber(seed, 'persistence', 0.5).toFixed(3),
+        scale: +geneNumber(seed, 'scale', 1.0).toFixed(2),
         biome: geneVal(seed, 'biome', 'temperate'),
         heightmap_size: 256,
       },
@@ -315,7 +325,7 @@ async function growAnimation(seed: Seed): Promise<Artifact> {
     return {
       type: 'animation', name: seed.$name ?? 'Animation', domain: 'animation',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
-      animation: { frame_count: Math.max(4, Math.floor(geneVal(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneVal(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
+      animation: { frame_count: Math.max(4, Math.floor(geneNumber(seed, 'frameCount', 0.5) * 60)), fps: Math.max(8, Math.floor(geneNumber(seed, 'fps', 0.5) * 60)), motion_type: geneVal(seed, 'motionType', 'skeletal'), loop: geneVal(seed, 'loop', 'loop') },
       artifact: { filePath: result.filePath, format: 'PNG', frameCount: result.frameCount, fps: result.fps },
       render_hints: { mode: 'animation_timeline', animated: true, hasFile: true, enhanced: true },
     };
@@ -478,9 +488,9 @@ async function growEcosystem(seed: Seed): Promise<Artifact> {
       type: 'ecosystem', name: seed.$name ?? 'Ecosystem', domain: 'ecosystem',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       ecosystem: {
-        speciesCount: geneVal(seed, 'speciesCount', 10),
-        foodWebComplexity: +(geneVal(seed, 'foodWebComplexity', 0.5)).toFixed(2),
-        climateZones: geneVal(seed, 'climateZones', 3),
+        speciesCount: geneNumber(seed, 'speciesCount', 10),
+        foodWebComplexity: +geneNumber(seed, 'foodWebComplexity', 0.5).toFixed(2),
+        climateZones: geneNumber(seed, 'climateZones', 3),
         timeSteps: 1000,
       },
       artifact: { filePath: result.filePath, format: 'JSON', speciesCount: result.speciesCount, workerScript: true },
@@ -532,7 +542,7 @@ async function growAlife(seed: Seed): Promise<Artifact> {
   const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_worker.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
-  let populationSize = geneVal(seed, 'populationSize', 50);
+  let populationSize = geneNumber(seed, 'populationSize', 50);
   if (typeof populationSize === 'number' && populationSize <= 1) populationSize = Math.max(10, Math.floor(populationSize * 100));
 
   try {
@@ -541,7 +551,7 @@ async function growAlife(seed: Seed): Promise<Artifact> {
       type: 'alife', name: seed.$name ?? 'Ecosystem', domain: 'alife',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       simulation: {
-        populationSize, mutationRate: +(geneVal(seed, 'mutationRate', 0.1)).toFixed(3),
+        populationSize, mutationRate: +geneNumber(seed, 'mutationRate', 0.1).toFixed(3),
         environment: geneVal(seed, 'environment', 'forest'),
         timeSteps: 1000,
       },
@@ -593,12 +603,12 @@ async function growParticle(seed: Seed): Promise<Artifact> {
       type: 'particle', name: seed.$name ?? 'Particle System', domain: 'particle',
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       particle: {
-        count: geneVal(seed, 'count', 100),
+        count: geneNumber(seed, 'count', 100),
         emitterType: geneVal(seed, 'emitterType', 'point'),
         particleType: geneVal(seed, 'particleType', 'spark'),
-        lifetime: +(geneVal(seed, 'lifetime', 2.0)).toFixed(1),
-        speed: +(geneVal(seed, 'speed', 5.0)).toFixed(1),
-        spread: +(geneVal(seed, 'spread', 1.0)).toFixed(1),
+        lifetime: +geneNumber(seed, 'lifetime', 2.0).toFixed(1),
+        speed: +geneNumber(seed, 'speed', 5.0).toFixed(1),
+        spread: +geneNumber(seed, 'spread', 1.0).toFixed(1),
       },
       artifact: { filePath: result.filePath, format: 'JSON+GLSL+WGSL', particleCount: result.particleCount, gpuReady: true },
       render_hints: { mode: 'particle_system', animated: true, hasFile: true, gpuReady: true },
@@ -904,10 +914,10 @@ async function growAgent(seed: Seed): Promise<Artifact> {
       seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
       config: {
         persona, name,
-        temperature: +(geneVal(seed, 'temperature', 0.7)).toFixed(2),
-        reasoningDepth: +(geneVal(seed, 'reasoning_depth', 0.5)).toFixed(2),
-        explorationRate: +(geneVal(seed, 'exploration_rate', 0.5)).toFixed(2),
-        maxSteps: Math.floor(geneVal(seed, 'max_steps', 10)),
+        temperature: +geneNumber(seed, 'temperature', 0.7).toFixed(2),
+        reasoningDepth: +geneNumber(seed, 'reasoning_depth', 0.5).toFixed(2),
+        explorationRate: +geneNumber(seed, 'exploration_rate', 0.5).toFixed(2),
+        maxSteps: Math.floor(geneNumber(seed, 'max_steps', 10)),
       },
       artifact: { filePath: result.filePath, format: 'JSON', configSize: result.configSize },
       render_hints: { mode: 'chat_interface', color_scheme: 'dark', animated: false, hasFile: true },
@@ -977,12 +987,12 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
     const outputDir = `data/artifacts/${domain}`;
     const result = await dispatchSeed(seed, outputDir);
     return {
+      ...result,
       type: domain,
       name: seed.$name ?? 'Artifact',
       domain,
       seed_hash: seed.$hash ?? '',
       generation: seed.$lineage?.generation ?? 0,
-      ...result,
       render_hints: { mode: domain, hasFile: !!result }
     };
   } catch (err) {

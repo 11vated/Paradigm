@@ -1,4 +1,7 @@
 import type { Seed } from '../kernel/types';
+import { rngFromHash } from '../kernel/rng';
+import type { InferenceClient } from './types.js';
+import { InferenceTier } from './types.js';
 
 export interface SwarmAgent {
   id: string;
@@ -152,9 +155,9 @@ export class AgentSwarm {
         a => results.votes[a.id] === 'abstain'
       );
       if (approveAgents.length > 0) {
+        const rng = rngFromHash(`${seed.$hash ?? seed.$name ?? 'swarm'}:${results.iterations}`);
         const randomAgent =
-          approveAgents[Math.floor(Math.random() * approveAgents.length)];
-        const voteIdx = this.config.agents.findIndex(a => a.id === randomAgent.id);
+          approveAgents[rng.nextInt(0, approveAgents.length - 1)];
         results.votes[randomAgent.id] = 'approve';
         results.scores[randomAgent.id] += 0.2;
         results.iterations++;
@@ -226,3 +229,150 @@ export const createAgentSwarm = (config?: Partial<SwarmConfig>) =>
   new AgentSwarm(config);
 
 // Types and DEFAULT_AGENTS already exported inline above
+
+export interface SwarmRole {
+  id: string;
+  name: string;
+  systemPrompt: string;
+  tier: InferenceTier;
+  temperature: number;
+}
+
+export interface SwarmTurn {
+  roleId: string;
+  roleName: string;
+  prompt: string;
+  output: string;
+  tier: InferenceTier;
+  tokensUsed: number;
+  latencyMs: number;
+}
+
+export interface SwarmRunResult {
+  turns: SwarmTurn[];
+  finalOutput: string;
+  verdict: 'ship' | 'revise' | null;
+  totalTokens: number;
+  totalLatencyMs: number;
+}
+
+export interface SwarmOrchestratorConfig {
+  roles: SwarmRole[];
+  client: InferenceClient;
+  shareTranscript?: boolean;
+  sharedContext?: string;
+}
+
+export const DEFAULT_ROLES = {
+  idea: {
+    id: 'idea',
+    name: 'Idea',
+    systemPrompt: 'Generate a concise creative proposal.',
+    tier: InferenceTier.STANDARD,
+    temperature: 0.7,
+  },
+  style: {
+    id: 'style',
+    name: 'Style',
+    systemPrompt: 'Refine aesthetic coherence and style.',
+    tier: InferenceTier.STANDARD,
+    temperature: 0.5,
+  },
+  critic: {
+    id: 'critic',
+    name: 'Critic',
+    systemPrompt: 'Critique the proposal and end with VERDICT: ship or VERDICT: revise when appropriate.',
+    tier: InferenceTier.DEEP,
+    temperature: 0.2,
+  },
+} satisfies Record<string, SwarmRole>;
+
+export function parseVerdict(text: string): 'ship' | 'revise' | null {
+  const matches = [...text.matchAll(/verdict\s*:\s*(ship|revise)\b/gi)];
+  if (matches.length === 0) return null;
+  return matches[matches.length - 1][1].toLowerCase() as 'ship' | 'revise';
+}
+
+export class SwarmOrchestrator {
+  private readonly roles: SwarmRole[];
+  private readonly client: InferenceClient;
+  private readonly shareTranscript: boolean;
+  private readonly sharedContext?: string;
+
+  constructor(config: SwarmOrchestratorConfig) {
+    if (config.roles.length === 0) {
+      throw new Error('roles must be non-empty');
+    }
+    const ids = new Set<string>();
+    for (const role of config.roles) {
+      if (ids.has(role.id)) {
+        throw new Error(`duplicate role id: ${role.id}`);
+      }
+      ids.add(role.id);
+    }
+    this.roles = config.roles;
+    this.client = config.client;
+    this.shareTranscript = config.shareTranscript ?? true;
+    this.sharedContext = config.sharedContext;
+  }
+
+  async run(prompt: string): Promise<SwarmRunResult> {
+    const turns: SwarmTurn[] = [];
+    for (const role of this.roles) {
+      const rolePrompt = this.buildPrompt(prompt, turns);
+      const response = await this.client.generate({
+        prompt: rolePrompt,
+        systemPrompt: role.systemPrompt,
+        maxTokens: 512,
+        temperature: role.temperature,
+      }, role.tier);
+      turns.push({
+        roleId: role.id,
+        roleName: role.name,
+        prompt: rolePrompt,
+        output: response.text,
+        tier: response.tier,
+        tokensUsed: response.tokensUsed,
+        latencyMs: response.latencyMs,
+      });
+    }
+    const finalOutput = turns[turns.length - 1]?.output ?? '';
+    return {
+      turns,
+      finalOutput,
+      verdict: parseVerdict(finalOutput),
+      totalTokens: turns.reduce((sum, turn) => sum + turn.tokensUsed, 0),
+      totalLatencyMs: turns.reduce((sum, turn) => sum + turn.latencyMs, 0),
+    };
+  }
+
+  async runUntilShipped(prompt: string, maxRounds: number): Promise<{ shipped: boolean; rounds: SwarmRunResult[] }> {
+    if (maxRounds < 1) {
+      throw new Error('maxRounds must be at least 1');
+    }
+    const rounds: SwarmRunResult[] = [];
+    let currentPrompt = prompt;
+    const hasCritic = this.roles.some(role => role.id === 'critic');
+    for (let round = 0; round < maxRounds; round++) {
+      const result = await this.run(currentPrompt);
+      rounds.push(result);
+      if (result.verdict === 'ship') return { shipped: true, rounds };
+      if (!hasCritic) break;
+      currentPrompt = `${prompt}\n\nPrior critique to address:\n${result.finalOutput}`;
+    }
+    return { shipped: false, rounds };
+  }
+
+  private buildPrompt(prompt: string, turns: SwarmTurn[]): string {
+    const parts: string[] = [];
+    if (this.sharedContext) parts.push(this.sharedContext);
+    parts.push(prompt);
+    if (this.shareTranscript && turns.length > 0) {
+      parts.push('Transcript so far:');
+      for (const turn of turns) {
+        parts.push(`${turn.roleName}: ${turn.output}`);
+      }
+    }
+    return parts.join('\n\n');
+  }
+}

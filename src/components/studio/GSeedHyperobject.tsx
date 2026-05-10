@@ -149,9 +149,9 @@ export const GSeedHyperobject: React.FC<GSeedHyperobjectProps> = ({
         color: 'white',
         fontSize: '12px'
       }}>
-        <div>Seed: {seed.metadata?.name || 'Unknown'}</div>
+        <div>Seed: {(seed.metadata as any)?.name || 'Unknown'}</div>
         <div>Domain: {seed.$domain || 'N/A'}</div>
-        <div>Fitness: {seed.$fitness?.overall?.toFixed(4) || 'N/A'}</div>
+        <div>Fitness: {(seed.$fitness as any)?.overall?.toFixed(4) || 'N/A'}</div>
         <div>Hash: {seed.$hash?.slice(0, 16)}...</div>
       </div>
 
