@@ -94,26 +94,18 @@ export function securityHeaders() {
     // Referrer policy
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-    // Content security policy
-    const isDev = process.env.NODE_ENV !== 'production';
-    const nonce = crypto.randomBytes(16).toString('base64');
-    (res as any).locals.nonce = nonce;
-
-    res.setHeader('Content-Security-Policy', [
-      "default-src 'none'",
-      `script-src ${isDev ? "'unsafe-eval'" : ''} 'nonce-${nonce}' 'strict-dynamic' 'self'`,
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https:",
-      "font-src 'self' data: https:",
-      "connect-src 'self' ws: wss: https:",
-      "worker-src 'self' blob:",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-src 'none'",
-      "object-src 'none'",
-      isDev ? "" : "upgrade-insecure-requests"
-    ].filter(Boolean).join('; '));
+    // Content security policy - Minimal for development
+    res.setHeader('Content-Security-Policy', 
+      "default-src 'unsafe-inline' 'unsafe-eval' 'self'; " +
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
+      "font-src 'self' https://fonts.gstatic.com; " +
+      "img-src 'self' data: blob: https:; " +
+      "connect-src 'self' ws: wss: https: http: localhost:3000; " +
+      "worker-src 'self' blob:; " +
+      "frame-ancestors 'none'; " +
+      "base-uri 'self'; " +
+      "form-action 'self'"
+    );
 
     // Remove powered-by header
     res.removeHeader('X-Powered-By');

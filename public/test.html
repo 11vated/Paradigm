@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradigm Absolute — Test Page</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 { color: #00E5FF; }
+        .status { padding: 20px; background: #2a2a2a; border-radius: 8px; margin: 20px 0; }
+        .success { color: #00ff88; }
+        .error { color: #ff4444; }
+        pre { background: #0a0a0a; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        button {
+            background: #00E5FF;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+        }
+        button:hover { background: #00B8D4; }
+        .endpoint { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🎉 Paradigm Absolute — Frontend Test</h1>
+    
+    <div class="status">
+        <h2>Server Status</h2>
+        <div id="health">Checking...</div>
+    </div>
+
+    <div class="status">
+        <h2>API Endpoints</h2>
+        <div class="endpoint">
+            <button onclick="testEndpoint('/api/domains', 'domainsResult')">Test Domains</button>
+            <pre id="domainsResult">Click button to test</pre>
+        </div>
+        <div class="endpoint">
+            <button onclick="testEndpoint('/api/gene-types', 'genesResult')">Test Gene Types</button>
+            <pre id="genesResult">Click button to test</pre>
+        </div>
+        <div class="endpoint">
+            <button onclick="testEndpoint('/api/seeds', 'seedsResult')">Test Seeds</button>
+            <pre id="seedsResult">Click button to test</pre>
+        </div>
+    </div>
+
+    <div class="status">
+        <h2>Create Test Seed</h2>
+        <button onclick="createSeed()">Create Character Seed</button>
+        <pre id="createResult">Click button to create</pre>
+    </div>
+
+    <div class="status">
+        <h2>Frontend Components</h2>
+        <p>If you can see this page, the server is working. The blank page issue is likely in the React app.</p>
+        <ul>
+            <li>Check browser console for errors (F12)</li>
+            <li>Check if main.tsx loaded correctly</li>
+            <li>Check if React components are rendering</li>
+        </ul>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+
+        async function checkHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                document.getElementById('health').innerHTML = `
+                    <span class="success">✅ Server is running!</span>
+                    <br>Uptime: ${data.uptime_seconds}s
+                    <br>Version: ${data.version}
+                `;
+            } catch (error) {
+                document.getElementById('health').innerHTML = `
+                    <span class="error">❌ Server not responding: ${error.message}</span>
+                `;
+            }
+        }
+
+        async function testEndpoint(endpoint, resultId) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                const data = await response.json();
+                document.getElementById(resultId).textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById(resultId).textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function createSeed() {
+            try {
+                const response = await fetch(`${API_BASE}/seeds`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        domain: 'character',
+                        name: 'Test Character',
+                        genes: {
+                            size: { type: 'scalar', value: 0.7 },
+                            archetype: { type: 'categorical', value: 'warrior' }
+                        }
+                    })
+                });
+                const data = await response.json();
+                document.getElementById('createResult').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById('createResult').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        // Check health on load
+        checkHealth();
+    </script>
+</body>
+</html>
