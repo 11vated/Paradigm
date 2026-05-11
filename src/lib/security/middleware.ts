@@ -19,14 +19,16 @@ export interface CorsOptions {
 }
 
 const DEFAULT_CORS: CorsOptions = {
-  origins: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://127.0.0.1:3000',
-    'http://127.0.0.1:5173',
-  ],
+  origins: process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://127.0.0.1:3000',
+        'http://127.0.0.1:5173',
+      ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Request-Id'],
   exposedHeaders: ['X-Request-Id'],
   credentials: true,
   maxAge: 86400,
@@ -80,8 +82,8 @@ export function securityHeaders() {
     // Prevent MIME type sniffing
     res.setHeader('X-Content-Type-Options', 'nosniff');
 
-    // Prevent clickjacking - Removed to allow AI Studio iframe embedding
-    // res.setHeader('X-Frame-Options', 'DENY');
+    // Prevent clickjacking (defense in depth)
+    res.setHeader('X-Frame-Options', 'DENY');
 
     // XSS protection (legacy browsers)
     res.setHeader('X-XSS-Protection', '0');
@@ -93,27 +95,40 @@ export function securityHeaders() {
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
     // Content security policy
-    res.setHeader('Content-Security-Policy',
-      "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: ws: wss: https: http:; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:; " +
-      "style-src 'self' 'unsafe-inline' https: http:; " +
-      "img-src 'self' data: blob: https: http:; " +
-      "font-src 'self' data: https: http:; " +
-      "connect-src 'self' ws: wss: https: http:; " +
-      "worker-src 'self' blob:;"
-    );
+    const isDev = process.env.NODE_ENV !== 'production';
+    const nonce = crypto.randomBytes(16).toString('base64');
+    (res as any).locals.nonce = nonce;
+
+    res.setHeader('Content-Security-Policy', [
+      "default-src 'none'",
+      `script-src ${isDev ? "'unsafe-eval'" : ''} 'nonce-${nonce}' 'strict-dynamic' 'self'`,
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https:",
+      "font-src 'self' data: https:",
+      "connect-src 'self' ws: wss: https:",
+      "worker-src 'self' blob:",
+      "frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-src 'none'",
+      "object-src 'none'",
+      isDev ? "" : "upgrade-insecure-requests"
+    ].filter(Boolean).join('; '));
 
     // Remove powered-by header
     res.removeHeader('X-Powered-By');
 
     // Permissions policy
     res.setHeader('Permissions-Policy',
-      'camera=(), microphone=(), geolocation=(), payment=()'
+      'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()'
     );
 
-    // Cross-origin policies - Removed to allow iframe embedding
-    // res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-    // res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+    // Cross-origin policies (production only)
+    if (process.env.NODE_ENV === 'production') {
+      res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+      res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
+      res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    }
 
     next();
   };

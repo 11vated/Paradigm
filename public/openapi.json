@@ -1,0 +1,540 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Paradigm Absolute API",
+    "description": "Deterministic Synthetic Evolution Operating System API. Create, mutate, breed, evolve, and compose seeds across 27 domains with full lineage tracking and cryptographic sovereignty.",
+    "version": "2.0.0",
+    "contact": {
+      "name": "Paradigm Absolute",
+      "url": "https://paradigm.gg"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Development server"
+    },
+    {
+      "url": "https://api.paradigm.gg/api",
+      "description": "Production server"
+    }
+  ],
+  "tags": [
+    { "name": "Seeds", "description": "Seed CRUD operations" },
+    { "name": "Operations", "description": "Mutate, breed, evolve, grow operations" },
+    { "name": "Lineage", "description": "Ancestry and descendant tracking" },
+    { "name": "Validation", "description": "Gene validation endpoints" },
+    { "name": "Information", "description": "Domain and gene type information" }
+  ],
+  "paths": {
+    "/seeds": {
+      "get": {
+        "tags": ["Seeds"],
+        "summary": "List all seeds",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": { "type": "integer", "default": 1 }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": { "type": "integer", "default": 20 }
+          },
+          {
+            "name": "domain",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["character", "sprite", "music", "visual2d", "geometry3d", "fullgame"] }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of seeds",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "seeds": {
+                      "type": "array",
+                      "items": { "$ref": "#/components/schemas/Seed" }
+                    },
+                    "pagination": { "$ref": "#/components/schemas/Pagination" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Seeds"],
+        "summary": "Create a new seed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["domain", "name"],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "enum": ["character", "sprite", "music", "visual2d", "geometry3d", "fullgame", "animation", "narrative", "ui", "physics", "audio", "ecosystem", "game", "alife", "shader", "particle", "procedural", "typography", "architecture", "vehicle", "furniture", "fashion", "robotics", "circuit", "food", "choreography", "agent"],
+                    "example": "character"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "My Warrior"
+                  },
+                  "genes": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "required": ["type", "value"],
+                      "properties": {
+                        "type": { "type": "string" },
+                        "value": { "oneOf": [{ "type": "number" }, { "type": "string" }, { "type": "array" }, { "type": "object" }] }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seed created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Seed" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seeds/{id}/grow": {
+      "post": {
+        "tags": ["Operations"],
+        "summary": "Grow a seed into an artifact",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" },
+            "example": "53a6edaf-9a76-46ea-845b-ae283e8ad21c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Artifact generated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Artifact" }
+              }
+            }
+          },
+          "404": {
+            "description": "Seed not found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Error" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seeds/{id}/mutate": {
+      "post": {
+        "tags": ["Operations"],
+        "summary": "Mutate a seed",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "rate": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.1 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Seed mutated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Seed" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seeds/breed": {
+      "post": {
+        "tags": ["Operations"],
+        "summary": "Breed two seeds",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["parent_a_id", "parent_b_id"],
+                "properties": {
+                  "parent_a_id": { "type": "string" },
+                  "parent_b_id": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Child seed created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Seed" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seeds/{id}/lineage": {
+      "get": {
+        "tags": ["Lineage"],
+        "summary": "Get ancestry chain for a seed",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lineage information",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Lineage" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/seeds/{id}/descendants": {
+      "get": {
+        "tags": ["Lineage"],
+        "summary": "Get descendants of a seed",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Descendants list",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Descendants" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gene/validate": {
+      "post": {
+        "tags": ["Validation"],
+        "summary": "Validate a gene value",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["gene_type", "value"],
+                "properties": {
+                  "gene_type": {
+                    "type": "string",
+                    "enum": ["scalar", "categorical", "vector", "expression", "struct", "array", "graph", "topology", "temporal", "regulatory", "field", "symbolic", "quantum", "gematria", "resonance", "dimensional", "sovereignty"]
+                  },
+                  "value": { "oneOf": [{ "type": "number" }, { "type": "string" }, { "type": "array" }, { "type": "object" }] },
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "min": { "type": "number" },
+                      "max": { "type": "number" },
+                      "dimensions": { "type": "integer" },
+                      "choices": { "type": "array", "items": { "type": "string" } }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gene is valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "valid": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "gene_type": { "type": "string" },
+                    "value_type": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Gene is invalid",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/GeneValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gene-types": {
+      "get": {
+        "tags": ["Information"],
+        "summary": "List all 17 gene types",
+        "responses": {
+          "200": {
+            "description": "Gene types information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "types": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "name": { "type": "string" },
+                          "encodes": { "type": "string" },
+                          "example": { "type": "string" }
+                        }
+                      }
+                    },
+                    "count": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/domains": {
+      "get": {
+        "tags": ["Information"],
+        "summary": "List all 27 domains",
+        "responses": {
+          "200": {
+            "description": "Domain list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "domains": {
+                      "type": "array",
+                      "items": { "type": "string" }
+                    },
+                    "count": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Seed": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "$domain": { "type": "string" },
+          "$name": { "type": "string" },
+          "$lineage": {
+            "type": "object",
+            "properties": {
+              "generation": { "type": "integer" },
+              "operation": { "type": "string" },
+              "parents": { "type": "array", "items": { "type": "string" } },
+              "parent_ids": { "type": "array", "items": { "type": "string" } },
+              "ancestry_depth": { "type": "integer" },
+              "timestamp": { "type": "integer" }
+            }
+          },
+          "$hash": { "type": "string" },
+          "$fitness": {
+            "type": "object",
+            "properties": {
+              "overall": { "type": "number" }
+            }
+          },
+          "genes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string" },
+                "value": { "oneOf": [{ "type": "number" }, { "type": "string" }, { "type": "array" }, { "type": "object" }] }
+              }
+            }
+          }
+        }
+      },
+      "Artifact": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "name": { "type": "string" },
+          "domain": { "type": "string" },
+          "seed_hash": { "type": "string" },
+          "generation": { "type": "integer" },
+          "visual": { "type": "object" },
+          "stats": { "type": "object" },
+          "artifact": { "type": "object" },
+          "filePath": { "type": "string" },
+          "render_hints": { "type": "object" }
+        }
+      },
+      "Lineage": {
+        "type": "object",
+        "properties": {
+          "seed_id": { "type": "string" },
+          "seed_hash": { "type": "string" },
+          "lineage": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "hash": { "type": "string" },
+                "name": { "type": "string" },
+                "domain": { "type": "string" },
+                "generation": { "type": "integer" },
+                "operation": { "type": "string" },
+                "parents": { "type": "array", "items": { "type": "string" } },
+                "depth": { "type": "integer" }
+              }
+            }
+          },
+          "total_ancestors": { "type": "integer" },
+          "max_depth": { "type": "integer" }
+        }
+      },
+      "Descendants": {
+        "type": "object",
+        "properties": {
+          "seed_id": { "type": "string" },
+          "seed_hash": { "type": "string" },
+          "descendants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "hash": { "type": "string" },
+                "name": { "type": "string" },
+                "domain": { "type": "string" },
+                "generation": { "type": "integer" },
+                "relationship": { "type": "string" }
+              }
+            }
+          },
+          "total_descendants": { "type": "integer" },
+          "limited": { "type": "boolean" }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" },
+          "total": { "type": "integer" },
+          "totalPages": { "type": "integer" },
+          "hasNext": { "type": "boolean" },
+          "hasPrev": { "type": "boolean" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" },
+          "message": { "type": "string" },
+          "suggestion": { "type": "string" },
+          "example": { "type": "object" },
+          "docs": { "type": "string" },
+          "details": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": { "type": "string" },
+                "message": { "type": "string" },
+                "code": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "GeneValidationError": {
+        "type": "object",
+        "properties": {
+          "valid": { "type": "boolean", "example": false },
+          "error": { "type": "string" },
+          "message": { "type": "string" },
+          "details": { "type": "array", "items": { "type": "string" } },
+          "suggestion": { "type": "string" },
+          "example": { "type": "object" },
+          "docs": { "type": "string" }
+        }
+      }
+    }
+  }
+}

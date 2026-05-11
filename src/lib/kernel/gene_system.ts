@@ -498,11 +498,88 @@ export class GeneSystem {
   static getOps(type: string): GeneTypeOps {
     return GENE_TYPES[type] ?? GENE_TYPES.scalar;
   }
+  
+  /**
+   * Validate a gene with detailed error information
+   */
+  static validateWithDetails(geneType: string, value: any, schema?: GeneSchema): {
+    valid: boolean;
+    errors: string[];
+    suggestion?: string;
+  } {
+    const errors: string[] = [];
+    const ops = GENE_TYPES[geneType];
+    
+    if (!ops) {
+      return {
+        valid: false,
+        errors: [`Unknown gene type: '${geneType}'`],
+        suggestion: `Valid gene types: ${Object.keys(GENE_TYPES).slice(0, 6).join(', ')}...`
+      };
+    }
+    
+    // Type-specific validation
+    if (!ops.validate(value, schema)) {
+      errors.push(`Value does not match gene type '${geneType}'`);
+      
+      // Add specific suggestions based on gene type
+      if (geneType === 'scalar') {
+        errors.push('Expected a number value');
+        if (schema) {
+          errors.push(`Valid range: ${schema.min ?? '-∞'} to ${schema.max ?? '∞'}`);
+        }
+      } else if (geneType === 'categorical') {
+        errors.push('Expected a string value');
+        if (schema?.choices) {
+          errors.push(`Valid choices: ${schema.choices.join(', ')}`);
+        }
+      } else if (geneType === 'vector') {
+        errors.push('Expected an array of numbers');
+        if (schema?.dimensions) {
+          errors.push(`Expected ${schema.dimensions} dimensions`);
+        }
+      } else if (geneType === 'expression') {
+        errors.push('Expected a valid mathematical expression string');
+      } else if (geneType === 'struct') {
+        errors.push('Expected an object with named fields');
+      } else if (geneType === 'array') {
+        errors.push('Expected an array of values');
+      } else if (geneType === 'graph') {
+        errors.push('Expected an object with nodes and edges arrays');
+      }
+    }
+    
+    // Schema validation
+    if (schema && ops.validate(value, schema)) {
+      if (typeof value === 'number' && schema.min !== undefined && value < schema.min) {
+        errors.push(`Value ${value} is below minimum ${schema.min}`);
+      }
+      if (typeof value === 'number' && schema.max !== undefined && value > schema.max) {
+        errors.push(`Value ${value} is above maximum ${schema.max}`);
+      }
+      if (Array.isArray(value) && schema.dimensions && value.length !== schema.dimensions) {
+        errors.push(`Array length ${value.length} doesn't match expected ${schema.dimensions}`);
+      }
+      if (typeof value === 'string' && schema.choices && !schema.choices.includes(value)) {
+        errors.push(`Value '${value}' is not in allowed choices: ${schema.choices.join(', ')}`);
+      }
+    }
+    
+    return {
+      valid: errors.length === 0,
+      errors,
+      suggestion: errors.length > 0 ? 'Check the gene type and value format. See /api/docs#genes for examples.' : undefined
+    };
+  }
 }
 
 export function validateGene(geneType: string, value: any, schema?: GeneSchema): boolean {
   const ops = GENE_TYPES[geneType];
   return ops ? ops.validate(value, schema) : false;
+}
+
+export function validateGeneWithDetails(geneType: string, value: any, schema?: GeneSchema) {
+  return GeneSystem.validateWithDetails(geneType, value, schema);
 }
 
 export function mutateGene(geneType: string, value: any, rate: number, rng: Xoshiro256StarStar, schema?: GeneSchema): any {

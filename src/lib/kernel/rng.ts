@@ -7,6 +7,7 @@
  *
  * Reference: Blackman & Vigna, "Scrambled Linear Pseudorandom Number Generators"
  */
+import type { DeterministicRng } from './rng-contract.js';
 
 /**
  * SplitMix64: used to initialize the xoshiro256** state from a single 64-bit seed.
@@ -38,7 +39,7 @@ function rotl(x: bigint, k: bigint): bigint {
  *   const int = rng.nextInt(0, 10);   // [0, 10]
  *   const gaussian = rng.nextGaussian(); // ~N(0,1)
  */
-export class Xoshiro256StarStar {
+export class Xoshiro256StarStar implements DeterministicRng {
   private s0: bigint;
   private s1: bigint;
   private s2: bigint;

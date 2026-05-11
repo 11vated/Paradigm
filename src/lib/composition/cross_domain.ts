@@ -35,7 +35,7 @@
  */
 
 import crypto from 'crypto';
-import { composeSeed, findCompositionPath, getFunctor } from '../kernel/composition.js';
+import { composeSeed, findCompositionPath, getFunctor, FUNCTOR_REGISTRY } from '../kernel/composition.js';
 import { mergeTrees, type MergeConflict } from '../vcs/operations.js';
 import type { SeedTree, Gene } from '../vcs/objects.js';
 
@@ -84,6 +84,7 @@ export interface ComposeMultiDomainResult {
     sourceDomain: string;
     path: { src: string; tgt: string; functor: string }[];
     reachable: boolean;
+    direct?: boolean;
   }[];
   /** Per-gene record of which strategy resolved which input. */
   resolutions: Record<string, { strategy: MergeStrategy; chosenIndex?: number; mergedFrom?: number[]; conflictResolvedBy?: VcsMergeFallback }>;
@@ -115,17 +116,19 @@ export function composeMultiDomain(
   seeds.forEach((seed, i) => {
     const sourceDomain = seed.$domain ?? '';
     const inputHash = seed.$hash ?? hashSeedShape(seed);
-    const path =
+    const pathResult =
       sourceDomain === targetDomain
-        ? []
-        : findCompositionPath(sourceDomain, targetDomain) ?? [];
-    const directOrPath =
+        ? { source: sourceDomain, target: targetDomain, bridges: [], totalCoherence: 1.0 }
+        : findCompositionPath(sourceDomain, targetDomain);
+    const directFunctor = FUNCTOR_REGISTRY.find(f => f.sourceDomain === sourceDomain && f.targetDomain === targetDomain);
+    const path = pathResult ? pathResult.bridges.map(name => ({ src: sourceDomain, tgt: targetDomain, functor: name })) : [];
+    const hasPath =
       sourceDomain === targetDomain ||
-      Boolean(getFunctor(sourceDomain, targetDomain)) ||
-      (path && path.length > 0);
+      Boolean(directFunctor) ||
+      (pathResult && pathResult.bridges.length > 0);
 
-    if (!directOrPath) {
-      contributions.push({ inputHash, sourceDomain, path: [], reachable: false });
+    if (!hasPath) {
+      contributions.push({ inputHash, sourceDomain, path: [], reachable: false, direct: false });
       if (strict) {
         throw new Error(
           `composeMultiDomain: seed ${inputHash.slice(0, 8)} (${sourceDomain}) cannot reach ${targetDomain}`,
@@ -136,7 +139,7 @@ export function composeMultiDomain(
 
     const projected = composeSeed(seed, targetDomain);
     if (!projected) {
-      contributions.push({ inputHash, sourceDomain, path: path ?? [], reachable: false });
+      contributions.push({ inputHash, sourceDomain, path: path ?? [], reachable: false, direct: false });
       if (strict) {
         throw new Error(
           `composeMultiDomain: composeSeed returned null for ${sourceDomain}->${targetDomain}`,
@@ -145,7 +148,7 @@ export function composeMultiDomain(
       return;
     }
 
-    contributions.push({ inputHash, sourceDomain, path: path ?? [], reachable: true });
+    contributions.push({ inputHash, sourceDomain, path: path ?? [], reachable: true, direct: Boolean(directFunctor) });
 
     const declaredWeight = options.weights?.[i];
     const weight = typeof declaredWeight === 'number' && declaredWeight >= 0 ? declaredWeight : 1;
@@ -638,11 +641,11 @@ export function planMultiDomainComposition(
       reachable++;
       return { sourceDomain, reachable: true, direct: true, path: [] };
     }
-    const direct = Boolean(getFunctor(sourceDomain, targetDomain));
-    const path = direct
-      ? [{ src: sourceDomain, tgt: targetDomain, functor: getFunctor(sourceDomain, targetDomain)!.name }]
-      : findCompositionPath(sourceDomain, targetDomain) ?? [];
-    const ok = path.length > 0;
+    const directFunctor = FUNCTOR_REGISTRY.find(f => f.sourceDomain === sourceDomain && f.targetDomain === targetDomain);
+    const direct = Boolean(directFunctor);
+    const pathResult = findCompositionPath(sourceDomain, targetDomain);
+    const path = pathResult ? pathResult.bridges.map(name => ({ src: sourceDomain, tgt: targetDomain, functor: name })) : [];
+    const ok = direct || (pathResult && pathResult.bridges.length > 0);
     if (ok) reachable++;
     else unreachable++;
     return { sourceDomain, reachable: ok, direct, path };

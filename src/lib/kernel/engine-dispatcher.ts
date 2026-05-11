@@ -5,7 +5,16 @@
  */
 
 import { Xoshiro256StarStar, rngFromHash } from './rng.js';
-import type { Seed } from '../kernel/engines.js';
+import type { Seed as EngineSeed } from '../kernel/engines.js';
+
+interface Seed {
+  $name?: string;
+  $domain?: string;
+  $hash?: string;
+  $lineage?: { generation?: number };
+  genes?: Record<string, { type?: string; value?: any }>;
+  [key: string]: unknown;
+}
 
 // Import all 103+ generators
 import { generateUniverse } from './generators/universe.js';
@@ -112,7 +121,38 @@ import { generateAV } from './generators/av.js';
 import { generatePersonalizedMedicine } from './generators/personalized-medicine.js';
 import { generateSpaceTourism } from './generators/space-tourism.js';
 
-export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ filePath: string; [key: string]: any }>;
+// ═══════════════════════════════════════════════════════════════════════════
+// NEW: 27 Domain Generators (Phase 2 — V3 Generators)
+// ═══════════════════════════════════════════════════════════════════════════
+import { generateCharacterV3 } from './generators/character-v3.js';
+import { generateSpriteV3 } from './generators/sprite-v3.js';
+import { generateMusicV3 } from './generators/music-v3.js';
+import { generateVisual2DV3 } from './generators/visual2d-v3.js';
+import { generateGeometry3DV3 } from './generators/geometry3d-v3.js';
+import { generateFullGameV3 } from './generators/fullgame-v3.js';
+import { generateAnimationV3 } from './generators/animation-v3.js';
+import { generateNarrativeV3 } from './generators/narrative-v3.js';
+import { generateUIV3 } from './generators/ui-v3.js';
+import { generatePhysicsV3 } from './generators/physics-v3.js';
+import { generateAudioV3 } from './generators/audio-v3.js';
+import { generateEcosystemV3 } from './generators/ecosystem-v3.js';
+import { generateGameV3 } from './generators/game-v3.js';
+import { generateALifeV3 } from './generators/alife-v3.js';
+import { generateShaderV3 } from './generators/shader-v3.js';
+import { generateParticleV3 } from './generators/particle-v3.js';
+import { generateProceduralV3 } from './generators/procedural-v3.js';
+import { generateTypographyV3 } from './generators/typography-v3.js';
+import { generateArchitectureV3 } from './generators/architecture-v3.js';
+import { generateVehicleV3 } from './generators/vehicle-v3.js';
+import { generateFurnitureV3 } from './generators/furniture-v3.js';
+import { generateFashionV3 } from './generators/fashion-v3.js';
+import { generateRoboticsV3 } from './generators/robotics-v3.js';
+import { generateCircuitV3 } from './generators/circuit-v3.js';
+import { generateFoodV3 } from './generators/food-v3.js';
+import { generateChoreographyV3 } from './generators/choreography-v3.js';
+import { generateAgentV3 } from './generators/agent-v3.js';
+
+export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ [key: string]: any }>;
 
 // Domain → generator mapping (103+ domains)
 const DOMAIN_MAP: Record<string, GeneratorFn> = {
@@ -129,7 +169,7 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   material: generateMaterial,
   aerospace: generateAerospace,
   genome: generateGenome,
-  robotics: generateRobotics,
+  // robotics: generateRobotics, // Removed - using generateRoboticsV3
   agriculture: generateAgriculture,
   drug: generateDrug,
   blockchain: generateBlockchain,
@@ -152,13 +192,13 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   hospitality: generateHospitality,
   sports: generateSports,
   gaming: generateGaming,
-  fashion: generateFashion,
+  // fashion: generateFashion, // Removed - using generateFashionV3
   cosmetics: generateCosmetics,
-  furniture: generateFurniture,
+  // furniture: generateFurniture, // Removed - using generateFurnitureV3
   textiles: generateTextiles,
   art: generateArt,
   photography: generatePhotography,
-  architecture: generateArchitecture,
+  // architecture: generateArchitecture, // Removed - using generateArchitectureV3
   'interior-design': generateInteriorDesign,
   landscaping: generateLandscaping,
   lighting: generateLighting,
@@ -166,7 +206,7 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   biomedical: generateBiomedical,
   neuroscience: generateNeuroscience,
   edtech: generateEdTech,
-  music: generateMusic,
+  // music: generateMusic, // Removed - using generateMusicV3 below
   film: generateFilm,
   theater: generateTheater,
   dance: generateDance,
@@ -219,6 +259,35 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   av: generateAV,
   'personalized-medicine': generatePersonalizedMedicine,
   'space-tourism': generateSpaceTourism,
+  
+  // 27 New V3 Domains
+  character: generateCharacterV3,
+  sprite: generateSpriteV3,
+  music: generateMusicV3,
+  visual2d: generateVisual2DV3,
+  geometry3d: generateGeometry3DV3,
+  fullgame: generateFullGameV3,
+  animation: generateAnimationV3,
+  narrative: generateNarrativeV3,
+  ui: generateUIV3,
+  physics: generatePhysicsV3,
+  audio: generateAudioV3,
+  ecosystem: generateEcosystemV3,
+  game: generateGameV3,
+  alife: generateALifeV3,
+  shader: generateShaderV3,
+  particle: generateParticleV3,
+  procedural: generateProceduralV3,
+  typography: generateTypographyV3,
+  architecture: generateArchitectureV3,
+  vehicle: generateVehicleV3,
+  furniture: generateFurnitureV3,
+  fashion: generateFashionV3,
+  robotics: generateRoboticsV3,
+  circuit: generateCircuitV3,
+  food: generateFoodV3,
+  choreography: generateChoreographyV3,
+  agent: generateAgentV3,
 };
 
 /**

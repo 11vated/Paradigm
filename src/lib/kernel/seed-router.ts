@@ -77,9 +77,9 @@ export function routeSeed(
 
   // Try composition bridge (cross-domain routing)
   if (config.allowComposition) {
-    const compositionPath = findCompositionPath('agent', domain);
-    if (compositionPath && compositionPath.length > 0) {
-      const functor = compositionPath[compositionPath.length - 1].functor;
+    const pathResult = findCompositionPath('agent', domain);
+    if (pathResult && pathResult.bridges.length > 0) {
+      const functor = pathResult.bridges[pathResult.bridges.length - 1];
       return {
         type: 'composition',
         target: functor,
@@ -88,7 +88,7 @@ export function routeSeed(
         metadata: {
           source: 'agent',
           target: domain,
-          path: compositionPath,
+          path: pathResult.bridges,
           functor
         }
       };

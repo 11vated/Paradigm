@@ -200,12 +200,12 @@ const composeSeedTool: AgentTool = {
     }
 
     composed.id = crypto.randomUUID();
-    const path = findCompositionPath(target.$domain || '', params.targetDomain);
+    const pathResult = findCompositionPath(target.$domain || '', params.targetDomain);
 
     return {
       success: true,
-      data: { seed: composed, path: path?.map(s => `${s.src} →[${s.functor}]→ ${s.tgt}`) },
-      message: `Composed "${target.$name}" from ${target.$domain} → ${params.targetDomain}${path ? ` via ${path.length} functor(s)` : ''}.`,
+      data: { seed: composed, path: pathResult?.bridges || [] },
+      message: `Composed "${target.$name}" from ${target.$domain} → ${params.targetDomain}${pathResult ? ` via ${pathResult.bridges.length} functor(s)` : ''}.`,
       seedsCreated: [composed],
     };
   },
@@ -346,13 +346,13 @@ const findPathTool: AgentTool = {
     target: { type: 'string', description: 'Target domain', required: true },
   },
   execute: async (params) => {
-    const path = findCompositionPath(params.source, params.target);
-    if (!path) return { success: false, data: null, message: `No path from "${params.source}" to "${params.target}".` };
+    const pathResult = findCompositionPath(params.source, params.target);
+    if (!pathResult) return { success: false, data: null, message: `No path from "${params.source}" to "${params.target}".` };
 
     return {
       success: true,
-      data: { path, hops: path.length },
-      message: `Path: ${path.map(s => `${s.src} →[${s.functor}]→ ${s.tgt}`).join(' ')} (${path.length} hop${path.length > 1 ? 's' : ''})`,
+      data: { path: pathResult.bridges, hops: pathResult.bridges.length, coherence: pathResult.totalCoherence },
+      message: `Path: ${pathResult.bridges.join(' → ')} (${pathResult.bridges.length} hop${pathResult.bridges.length > 1 ? 's' : ''})`,
     };
   },
 };

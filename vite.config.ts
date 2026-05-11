@@ -72,6 +72,14 @@ export default defineConfig(({mode}) => {
               if (id.includes('src/lib/gspl') || id.includes('src/gspl')) {
                 return 'gspl';
               }
+              // Rendering
+              if (id.includes('src/lib/rendering')) {
+                return 'rendering';
+              }
+              // Asset pipeline
+              if (id.includes('src/lib/asset_pipeline')) {
+                return 'asset-pipeline';
+              }
             },
           },
         },
@@ -82,5 +90,8 @@ export default defineConfig(({mode}) => {
           drop: ['console', 'debugger'],
         },
       } : undefined,
+    optimizeDeps: {
+      include: [],
+    },
   };
 });

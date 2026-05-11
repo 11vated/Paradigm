@@ -9,7 +9,7 @@
 
 export { Xoshiro256StarStar as Xoshiro256Star, rngFromHash } from './rng.js';
 export {
-  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo
+  GENE_TYPES, validateGene, validateGeneWithDetails, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo
 } from './gene_system.js';
 export {
   ENGINES, growSeed, growSeedSync, getAllDomains

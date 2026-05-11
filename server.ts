@@ -12,6 +12,18 @@
  * ZERO external AI dependency for core logic. All mutation, breeding,
  * composition, and growth operations are handled by the local kernel.
  */
+
+// ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
+import { JSDOM } from 'jsdom';
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+  pretendToBeVisual: true,
+  hasSubresources: false,
+});
+global.window = dom.window as any;
+global.document = dom.window.document;
+global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
+global.ImageData = dom.window.ImageData;
+
 import express from 'express';
 import http from 'http';
 import { createServer as createViteServer } from 'vite';
@@ -35,7 +47,7 @@ import { IntelligenceLayer } from './src/lib/intelligence/index.js';
 // ─── NEW: Deterministic Kernel ───────────────────────────────────────────────
 import {
   Xoshiro256Star, rngFromHash,
-  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
+  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo, validateGeneWithDetails,
   ENGINES, growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph
 } from './src/lib/kernel/index.js';
@@ -841,6 +853,11 @@ async function startServer() {
         generation: Math.max(parentA.$lineage?.generation || 0, parentB.$lineage?.generation || 0) + 1,
         operation: 'breed',
         parents: [parentA.$hash, parentB.$hash],
+        parent_ids: [parentA.id, parentB.id],
+        ancestry_depth: Math.max(
+          parentA.$lineage?.ancestry_depth || 0,
+          parentB.$lineage?.ancestry_depth || 0
+        ) + 1,
       },
       $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
       $fitness: {
@@ -874,19 +891,144 @@ async function startServer() {
 
     // Validate if it's a known type
     if (GENE_TYPES[gene_type]) {
-      const valid = validateGene(gene_type, value);
-      if (!valid) {
-        return res.status(400).json({ detail: `Invalid value for gene type '${gene_type}'` });
+      const result = validateGeneWithDetails(gene_type, value);
+      if (!result.valid) {
+        return res.status(400).json({
+          error: 'Invalid gene value',
+          message: result.errors.join('. '),
+          details: result.errors,
+          suggestion: result.suggestion,
+          docs: '/api/docs#genes'
+        });
       }
     }
 
     if (!seed.genes) seed.genes = {};
     seed.genes[gene_name] = { type: gene_type, value };
-    seed.$lineage = { generation: (seed.$lineage?.generation || 0) + 1, operation: 'mutate_gene' };
+    seed.$lineage = { 
+      generation: (seed.$lineage?.generation || 0) + 1, 
+      operation: 'mutate_gene',
+      timestamp: Date.now()
+    };
     seed.$hash = crypto.createHash('sha256').update(JSON.stringify(seed.genes)).digest('hex');
 
     saveSeeds();
     res.json(seed);
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // LINEAGE TRACKING
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Get full lineage/ancestry chain for a seed
+   * GET /api/seeds/:id/lineage
+   */
+  app.get('/api/seeds/:id/lineage', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) {
+      return res.status(404).json({
+        error: 'Seed not found',
+        message: `No seed found with ID '${req.params.id}'`,
+        suggestion: 'Check the seed ID and try again',
+        example: { id: '53a6edaf-9a76-46ea-845b-ae283e8ad21c' },
+        docs: '/api/docs#lineage'
+      });
+    }
+
+    const lineage: any[] = [];
+    const visited = new Set<string>();
+    const queue = [{ seed, depth: 0 }];
+
+    while (queue.length > 0 && queue.length < 100) { // Limit depth to prevent infinite loops
+      const { seed: current, depth } = queue.shift()!;
+      
+      if (visited.has(current.$hash)) continue;
+      visited.add(current.$hash);
+
+      lineage.push({
+        id: current.id,
+        hash: current.$hash,
+        name: current.$name,
+        domain: current.$domain,
+        generation: current.$lineage?.generation || 0,
+        operation: current.$lineage?.operation || 'primordial',
+        parents: current.$lineage?.parents || [],
+        parent_ids: current.$lineage?.parent_ids || [],
+        depth
+      });
+
+      // Find parents
+      const parentHashes = current.$lineage?.parents || [];
+      for (const parentHash of parentHashes) {
+        const parent = seeds.find((s: any) => s.$hash === parentHash);
+        if (parent && !visited.has(parent.$hash)) {
+          queue.push({ seed: parent, depth: depth + 1 });
+        }
+      }
+    }
+
+    // Sort by depth (ancestors first)
+    lineage.sort((a, b) => a.depth - b.depth);
+
+    res.json({
+      seed_id: req.params.id,
+      seed_hash: seed.$hash,
+      lineage,
+      total_ancestors: lineage.length - 1,
+      max_depth: Math.max(...lineage.map(l => l.depth)),
+      docs: '/api/docs#lineage'
+    });
+  });
+
+  /**
+   * Get descendants of a seed
+   * GET /api/seeds/:id/descendants
+   */
+  app.get('/api/seeds/:id/descendants', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) {
+      return res.status(404).json({
+        error: 'Seed not found',
+        message: `No seed found with ID '${req.params.id}'`,
+        suggestion: 'Check the seed ID and try again',
+        docs: '/api/docs#descendants'
+      });
+    }
+
+    const descendants: any[] = [];
+    const visited = new Set<string>();
+
+    // Find all seeds that have this seed as an ancestor
+    for (const s of seeds) {
+      if (s.id === seed.id) continue;
+      
+      const parents = s.$lineage?.parents || [];
+      if (parents.includes(seed.$hash)) {
+        descendants.push({
+          id: s.id,
+          hash: s.$hash,
+          name: s.$name,
+          domain: s.$domain,
+          generation: s.$lineage?.generation || 0,
+          operation: s.$lineage?.operation || 'unknown',
+          relationship: 'child'
+        });
+        visited.add(s.$hash);
+      }
+    }
+
+    // Limit to first 100 descendants
+    const limited = descendants.slice(0, 100);
+
+    res.json({
+      seed_id: req.params.id,
+      seed_hash: seed.$hash,
+      descendants: limited,
+      total_descendants: descendants.length,
+      limited: descendants.length > 100,
+      docs: '/api/docs#descendants'
+    });
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -895,7 +1037,27 @@ async function startServer() {
 
   app.post('/api/seeds/:id/grow', optionalAuth, validateBody(GrowSeedSchema), async (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
-    if (!seed) return res.status(404).json({ detail: 'Not found' });
+    if (!seed) {
+      return res.status(404).json({ 
+        error: 'Seed not found',
+        message: `No seed found with ID '${req.params.id}'`,
+        suggestion: 'Check the seed ID and try again',
+        example: { id: '53a6edaf-9a76-46ea-845b-ae283e8ad21c' },
+        docs: '/api/docs#seeds'
+      });
+    }
+
+    // Check if domain is supported
+    const supportedDomains = ['character', 'sprite', 'music', 'visual2d', 'geometry3d', 'fullgame', 'animation', 'narrative', 'ui', 'physics', 'audio', 'ecosystem', 'game', 'alife', 'shader', 'particle', 'procedural', 'typography', 'architecture', 'vehicle', 'furniture', 'fashion', 'robotics', 'circuit', 'food', 'choreography', 'agent'];
+    if (!seed.$domain || !supportedDomains.includes(seed.$domain)) {
+      return res.status(400).json({
+        error: 'Unsupported domain',
+        message: `Domain '${seed.$domain}' is not supported for growth`,
+        suggestion: `Supported domains: ${supportedDomains.slice(0, 6).join(', ')}...`,
+        example: { domain: 'character' },
+        docs: '/api/docs#domains'
+      });
+    }
 
     try {
       // Check cache first
@@ -915,6 +1077,19 @@ async function startServer() {
       res.json(grown);
     } catch (e: any) {
       log('ERROR', 'Grow failed', { id: seed.id, error: e.message });
+      
+      // Provide helpful error based on the exception
+      let errorMessage = 'Failed to grow seed';
+      let suggestion = 'Try again or contact support if the issue persists';
+      
+      if (e.message.includes('document is not defined')) {
+        errorMessage = 'Server configuration error - browser APIs not available';
+        suggestion = 'This is a server configuration issue. Please contact support.';
+      } else if (e.message.includes('generator')) {
+        errorMessage = `Domain generator error for '${seed.$domain}'`;
+        suggestion = `The ${seed.$domain} generator encountered an issue. Try a different seed.`;
+      }
+      
       // Fallback: return a basic artifact from the seed
       const artifact: any = {
         id: `artifact-${seed.id}`,
@@ -925,6 +1100,11 @@ async function startServer() {
         type: seed.$domain,
         visual: {},
         stats: {},
+        error: {
+          message: errorMessage,
+          suggestion,
+          originalError: e.message
+        }
       };
       if (seed.genes) {
         for (const [key, gene] of Object.entries(seed.genes) as [string, any][]) {
@@ -959,12 +1139,12 @@ async function startServer() {
     const cached = await cache.get(cacheKey);
     if (cached) return res.json(JSON.parse(cached));
 
-    const path = findCompositionPath(source, target);
-    if (!path) return res.status(404).json({ detail: 'No composition path found' });
+    const pathResult = findCompositionPath(source, target);
+    if (!pathResult) return res.status(404).json({ detail: 'No composition path found' });
 
     // Format for frontend compatibility: [[src, functor, tgt], ...]
-    const formatted = path.map(step => [step.src, step.functor, step.tgt]);
-    const result = { path: formatted, cost: path.length };
+    const formatted = pathResult.bridges.map(name => [source, name, target]);
+    const result = { path: formatted, cost: pathResult.bridges.length, coherence: pathResult.totalCoherence };
 
     // Cache for 1 hour (paths never change at runtime)
     await cache.set(cacheKey, JSON.stringify(result), 3600);
@@ -989,9 +1169,9 @@ async function startServer() {
     saveSeeds();
 
     // Also return the path for UI visualization
-    const pathSteps = findCompositionPath(parent.$domain || '', targetDomain);
-    const pathFormatted = pathSteps
-      ? { path: pathSteps.map(s => [s.src, s.functor, s.tgt]), cost: pathSteps.length }
+    const pathResult = findCompositionPath(parent.$domain || '', targetDomain);
+    const pathFormatted = pathResult
+      ? { path: pathResult.bridges.map(name => [parent.$domain, name, targetDomain]), cost: pathResult.bridges.length, coherence: pathResult.totalCoherence }
       : { path: [[parent.$domain, 'direct', targetDomain]], cost: 1 };
 
     metrics.seedsComposed++;
@@ -1205,6 +1385,73 @@ async function startServer() {
     }
     res.json({ types, count: Object.keys(types).length });
   });
+
+  /**
+   * Validate a gene value
+   * POST /api/gene/validate
+   * Body: { gene_type: string, value: any, schema?: GeneSchema }
+   */
+  app.post('/api/gene/validate', (req: any, res: any) => {
+    const { gene_type, value, schema } = req.body;
+    
+    if (!gene_type) {
+      return res.status(400).json({
+        error: 'Missing gene_type',
+        message: 'The gene_type field is required',
+        suggestion: 'Provide a valid gene type: scalar, categorical, vector, etc.',
+        example: { gene_type: 'scalar', value: 0.5 },
+        docs: '/api/docs#genes'
+      });
+    }
+    
+    const result = validateGeneWithDetails(gene_type, value, schema);
+    
+    if (result.valid) {
+      res.json({
+        valid: true,
+        message: 'Gene value is valid',
+        gene_type,
+        value_type: typeof value,
+        docs: '/api/docs#genes'
+      });
+    } else {
+      res.status(400).json({
+        valid: false,
+        error: 'Gene validation failed',
+        message: result.errors.join('. '),
+        details: result.errors,
+        suggestion: result.suggestion,
+        example: getGeneExample(gene_type),
+        docs: '/api/docs#genes'
+      });
+    }
+  });
+
+  /**
+   * Get example value for a gene type
+   */
+  function getGeneExample(geneType: string): any {
+    const examples: Record<string, any> = {
+      scalar: { gene_type: 'scalar', value: 0.75, schema: { min: 0, max: 1 } },
+      categorical: { gene_type: 'categorical', value: 'warrior', schema: { choices: ['warrior', 'mage', 'rogue'] } },
+      vector: { gene_type: 'vector', value: [0.5, 0.3, 0.9], schema: { dimensions: 3 } },
+      expression: { gene_type: 'expression', value: 'sin(x * PI) / 2' },
+      struct: { gene_type: 'struct', value: { head: 0.5, torso: 0.8, limbs: 0.6 } },
+      array: { gene_type: 'array', value: [1, 2, 3, 4, 5] },
+      graph: { gene_type: 'graph', value: { nodes: [{id: 1}, {id: 2}], edges: [{from: 1, to: 2}] } },
+      topology: { gene_type: 'topology', value: { vertices: [[0,0,0], [1,0,0]], faces: [[0,1,2]] } },
+      temporal: { gene_type: 'temporal', value: { keyframes: [{time: 0, value: 0}, {time: 1, value: 1}] } },
+      regulatory: { gene_type: 'regulatory', value: { activation_threshold: 0.5, inhibition_strength: 0.3 } },
+      field: { gene_type: 'field', value: { resolution: 32, values: new Array(32).fill(0.5) } },
+      symbolic: { gene_type: 'symbolic', value: { grammar: 'S -> NP VP', symbols: ['S', 'NP', 'VP'] } },
+      quantum: { gene_type: 'quantum', value: { superposition: [0.7, 0.3], basis: ['A', 'B'] } },
+      gematria: { gene_type: 'gematria', value: { word: 'PARADIGM', value: 123 } },
+      resonance: { gene_type: 'resonance', value: { frequencies: [440, 880, 1760], amplitudes: [1, 0.5, 0.25] } },
+      dimensional: { gene_type: 'dimensional', value: [0.1, 0.2, 0.3, 0.4, 0.5] },
+      sovereignty: { gene_type: 'sovereignty', value: { author_pubkey: '0x...', timestamp: Date.now() } }
+    };
+    return examples[geneType] || { gene_type: 'scalar', value: 0.5 };
+  }
 
   app.get('/api/engines', (_req, res) => {
     const domains = getAllDomains();

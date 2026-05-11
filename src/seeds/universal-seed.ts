@@ -1,4 +1,13 @@
 import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } from './types';
+import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
+
+const DEFAULT_SEED_TIMESTAMP = 0;
+let deterministicSeedCounter = 0;
+
+function createDeterministicSeedId(): string {
+  deterministicSeedCounter += 1;
+  return `seed-${deterministicSeedCounter.toString(36).padStart(8, '0')}`;
+}
 
 export interface SeedMetadata {
   id: string;
@@ -59,7 +68,7 @@ export class UniversalSeed {
   private isDirty: boolean = false;
 
   constructor(data?: Partial<UniversalSeedData>) {
-    this.id = data?.id ?? crypto.randomUUID();
+    this.id = data?.id ?? createDeterministicSeedId();
     this.metadata = data?.metadata ?? this.createDefaultMetadata();
     this.genes = data?.genes ?? new Map();
     this.expression = data?.expression ?? this.createDefaultExpression();
@@ -75,8 +84,8 @@ export class UniversalSeed {
       id: this.id,
       name: 'Untitled Seed',
       version: '1.0.0',
-      created: Date.now(),
-      updated: Date.now(),
+      created: DEFAULT_SEED_TIMESTAMP,
+      updated: DEFAULT_SEED_TIMESTAMP,
       tags: [],
       lineage: [],
       fitness: undefined
@@ -210,7 +219,7 @@ export class UniversalSeed {
     };
   }
 
-  mutate(rng: { nextFloat?: () => number; nextF64?: () => number }, intensity: number = 0.1): UniversalSeed {
+  mutate(rng: LegacyFloatRng, intensity: number = 0.1): UniversalSeed {
     const nextFloat = this.requireDeterministicFloat(rng);
     const mutated = this.clone();
 
@@ -223,18 +232,18 @@ export class UniversalSeed {
     }
 
     mutated.metadata.lineage.push(this.id);
-    mutated.metadata.updated = Date.now();
+    mutated.metadata.updated = this.metadata.updated;
     mutated.derivation = {
       parents: [this.id],
       operators: ['mutate'],
       generation: (this.derivation?.generation ?? 0) + 1,
-      timestamp: Date.now()
+      timestamp: this.derivation?.timestamp ?? this.metadata.updated
     };
 
     return mutated;
   }
 
-  private mutateValue(value: GeneValue, intensity: number, rng: { nextFloat?: () => number; nextF64?: () => number }): GeneValue {
+  private mutateValue(value: GeneValue, intensity: number, rng: LegacyFloatRng): GeneValue {
     const nextFloat = this.requireDeterministicFloat(rng);
     
     if (typeof value === 'number') {
@@ -273,12 +282,12 @@ export class UniversalSeed {
 
   clone(): UniversalSeed {
     const cloned = new UniversalSeed({
-      id: crypto.randomUUID(),
+      id: `${this.id}:clone`,
       metadata: {
         ...this.metadata,
-        id: '',
-        created: Date.now(),
-        updated: Date.now(),
+        id: `${this.id}:clone`,
+        created: this.metadata.created,
+        updated: this.metadata.updated,
         lineage: [...this.metadata.lineage]
       },
       genes: new Map(this.genes),
@@ -292,8 +301,8 @@ export class UniversalSeed {
     return cloned;
   }
 
-  cross(other: UniversalSeed, rng: { nextFloat?: () => number; nextF64?: () => number }): UniversalSeed {
-    const child = new UniversalSeed();
+  cross(other: UniversalSeed, rng: LegacyFloatRng): UniversalSeed {
+    const child = new UniversalSeed({ id: `${this.id}:x:${other.id}` });
     const nextFloat = this.requireDeterministicFloat(rng);
     
     for (const [type, geneA] of this.genes) {
@@ -314,7 +323,7 @@ export class UniversalSeed {
       parents: [this.id, other.id],
       operators: ['crossover'],
       generation: Math.max(this.derivation?.generation ?? 0, other.derivation?.generation ?? 0) + 1,
-      timestamp: Date.now()
+      timestamp: Math.max(this.derivation?.timestamp ?? this.metadata.updated, other.derivation?.timestamp ?? other.metadata.updated)
     };
 
     return child;
@@ -325,12 +334,8 @@ export class UniversalSeed {
     return this.metadata.fitness;
   }
 
-  private requireDeterministicFloat(rng: { nextFloat?: () => number; nextF64?: () => number }): () => number {
-    const nextFloat = rng.nextFloat ?? rng.nextF64?.bind(rng);
-    if (!nextFloat) {
-      throw new Error('UniversalSeed requires a deterministic RNG with nextFloat() or nextF64().');
-    }
-    return nextFloat;
+  private requireDeterministicFloat(rng: LegacyFloatRng): () => number {
+    return () => nextDeterministicFloat(rng);
   }
 
   serialize(): SerializedSeed {

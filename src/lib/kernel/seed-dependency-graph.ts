@@ -268,15 +268,14 @@ export class SeedDependencyGraph {
     functors: string[];
     totalWeight: number;
   } | null {
-    const compositionPaths = findCompositionPath(fromDomain, toDomain);
-    
-    if (!compositionPaths || compositionPaths.length === 0) return null;
-    
-    const firstPath = compositionPaths[0];
+    const pathResult = findCompositionPath(fromDomain, toDomain);
+
+    if (!pathResult || pathResult.bridges.length === 0) return null;
+
     return {
-      path: firstPath ? [firstPath.src, firstPath.tgt] : [],
-      functors: firstPath ? [firstPath.functor] : [],
-      totalWeight: 1.0, // Simplified
+      path: [fromDomain, toDomain],
+      functors: pathResult.bridges,
+      totalWeight: pathResult.totalCoherence,
     };
   }
 

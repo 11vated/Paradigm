@@ -84,8 +84,18 @@ function EmergentMesh({ meshData, color }) {
   );
 }
 
-function FallbackMesh({ domain, color }) {
+function FallbackMesh({ domain, color, artifact }) {
   const meshRef = useRef();
+  const signature = useMemo(() => {
+    const text = `${artifact?.seed_hash || artifact?.name || domain || 'seed'}`;
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = (Math.imul(hash, 31) + text.charCodeAt(i)) | 0;
+    }
+    return Math.abs(hash);
+  }, [artifact?.seed_hash, artifact?.name, domain]);
+  const variant = signature % 5;
+  const scale = 0.75 + ((signature % 17) / 40);
   
   useFrame(() => {
     if (meshRef.current) {
@@ -94,10 +104,90 @@ function FallbackMesh({ domain, color }) {
     }
   });
 
+  if (domain === 'music' || domain === 'audio') {
+    return (
+      <group ref={meshRef} position={[0, 0.9, 0]} scale={scale}>
+        {Array.from({ length: 9 }).map((_, i) => {
+          const height = 0.25 + (((signature >> (i % 8)) & 7) / 7) * 1.2;
+          return (
+            <mesh key={i} position={[(i - 4) * 0.18, height / 2, 0]} castShadow receiveShadow>
+              <boxGeometry args={[0.1, height, 0.16]} />
+              <meshStandardMaterial color={color} roughness={0.35} metalness={0.25} />
+            </mesh>
+          );
+        })}
+      </group>
+    );
+  }
+
+  if (domain === 'character' || domain === 'agent') {
+    return (
+      <group ref={meshRef} position={[0, 1, 0]} scale={scale}>
+        <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
+          <sphereGeometry args={[0.32, 24, 16]} />
+          <meshStandardMaterial color={color} roughness={0.45} metalness={0.15} />
+        </mesh>
+        <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
+          <capsuleGeometry args={[0.32, 0.75, 8, 16]} />
+          <meshStandardMaterial color={color} roughness={0.55} metalness={0.2} />
+        </mesh>
+        <mesh position={[-0.42, 0.12, 0]} rotation={[0, 0, 0.35]} castShadow receiveShadow>
+          <capsuleGeometry args={[0.08, 0.55, 6, 10]} />
+          <meshStandardMaterial color={color} roughness={0.5} metalness={0.2} />
+        </mesh>
+        <mesh position={[0.42, 0.12, 0]} rotation={[0, 0, -0.35]} castShadow receiveShadow>
+          <capsuleGeometry args={[0.08, 0.55, 6, 10]} />
+          <meshStandardMaterial color={color} roughness={0.5} metalness={0.2} />
+        </mesh>
+      </group>
+    );
+  }
+
+  if (domain === 'architecture' || domain === 'city' || domain === 'interior-design') {
+    return (
+      <group ref={meshRef} position={[0, 0.35, 0]} scale={scale}>
+        {Array.from({ length: 7 }).map((_, i) => {
+          const height = 0.45 + (((signature >> (i % 10)) & 15) / 15) * 1.4;
+          return (
+            <mesh key={i} position={[(i - 3) * 0.28, height / 2, ((i % 2) - 0.5) * 0.3]} castShadow receiveShadow>
+              <boxGeometry args={[0.2, height, 0.22]} />
+              <meshStandardMaterial color={color} roughness={0.65} metalness={0.25} />
+            </mesh>
+          );
+        })}
+      </group>
+    );
+  }
+
+  if (domain === 'vehicle' || domain === 'robotics' || domain === 'drones') {
+    return (
+      <group ref={meshRef} position={[0, 0.75, 0]} scale={scale}>
+        <mesh castShadow receiveShadow>
+          <boxGeometry args={[1.25, 0.32, 0.55]} />
+          <meshStandardMaterial color={color} roughness={0.28} metalness={0.55} />
+        </mesh>
+        <mesh position={[0.2, 0.28, 0]} castShadow receiveShadow>
+          <boxGeometry args={[0.55, 0.28, 0.42]} />
+          <meshStandardMaterial color={color} roughness={0.25} metalness={0.45} />
+        </mesh>
+        {[-0.45, 0.45].map((x) => (
+          <mesh key={x} position={[x, -0.24, 0.32]} rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
+            <torusGeometry args={[0.16, 0.045, 10, 24]} />
+            <meshStandardMaterial color="#111111" roughness={0.5} metalness={0.2} />
+          </mesh>
+        ))}
+      </group>
+    );
+  }
+
   return (
-    <mesh ref={meshRef} castShadow receiveShadow position={[0, 1, 0]}>
-      <icosahedronGeometry args={[0.8, 1]} />
-      <meshStandardMaterial color={color} roughness={0.2} metalness={0.6} />
+    <mesh ref={meshRef} castShadow receiveShadow position={[0, 1, 0]} scale={scale}>
+      {variant === 0 ? <icosahedronGeometry args={[0.8, 1]} /> : null}
+      {variant === 1 ? <octahedronGeometry args={[0.9, 1]} /> : null}
+      {variant === 2 ? <torusKnotGeometry args={[0.42, 0.14, 90, 12]} /> : null}
+      {variant === 3 ? <dodecahedronGeometry args={[0.78, 0]} /> : null}
+      {variant === 4 ? <boxGeometry args={[1.0, 1.0, 1.0]} /> : null}
+      <meshStandardMaterial color={color} roughness={0.2 + variant * 0.08} metalness={0.25 + variant * 0.08} />
     </mesh>
   );
 }
@@ -174,7 +264,7 @@ function ThreeViewport({ artifact }) {
             <meshStandardMaterial color="#00E5FF" roughness={0.3} metalness={0.4} side={THREE.DoubleSide} />
           </mesh>
         ) : (
-          <FallbackMesh domain={artifact?.domain} color={domainColor} />
+          <FallbackMesh domain={artifact?.domain} color={domainColor} artifact={artifact} />
         )}
         
         <ContactShadows position={[0, 0, 0]} opacity={0.4} scale={10} blur={2} far={4} />

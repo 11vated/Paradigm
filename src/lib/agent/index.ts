@@ -595,9 +595,9 @@ export class ParadigmAgent {
       }
 
       case 'find_path': {
-        const path = findCompositionPath(params.source, params.target);
-        if (!path) return { success: false, message: `No path from "${params.source}" to "${params.target}".`, data: null };
-        return { success: true, message: `Path found: ${path.length} hop(s).`, data: { path, hops: path.length } };
+        const pathResult = findCompositionPath(params.source, params.target);
+        if (!pathResult) return { success: false, message: `No path from "${params.source}" to "${params.target}".`, data: null };
+        return { success: true, message: `Path found: ${pathResult.bridges.length} hop(s).`, data: { path: pathResult.bridges, hops: pathResult.bridges.length, coherence: pathResult.totalCoherence } };
       }
 
       case 'query_knowledge': {

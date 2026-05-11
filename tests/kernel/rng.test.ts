@@ -4,6 +4,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { Xoshiro256StarStar, rngFromHash } from '../../src/lib/kernel/rng.js';
+import { nextDeterministicFloat } from '../../src/lib/kernel/rng-contract.js';
+import { UniversalSeed, GeneType } from '../../src/seeds/index.js';
 
 describe('Xoshiro256StarStar', () => {
   describe('determinism', () => {
@@ -174,6 +176,49 @@ describe('Xoshiro256StarStar', () => {
       const c1 = p1.fork('alpha');
       const c2 = p2.fork('beta');
       expect(c1.nextF64()).not.toEqual(c2.nextF64());
+    });
+  });
+
+  describe('deterministic contract adapters', () => {
+    it('reads nextF64 and legacy nextFloat sources consistently', () => {
+      expect(nextDeterministicFloat({ nextF64: () => 0.25 })).toBe(0.25);
+      expect(nextDeterministicFloat({ nextFloat: () => 0.75 })).toBe(0.75);
+    });
+
+    it('throws when no deterministic float source is provided', () => {
+      expect(() => nextDeterministicFloat({} as any)).toThrow(/deterministic RNG/);
+    });
+  });
+
+  describe('UniversalSeed determinism', () => {
+    it('uses deterministic default metadata instead of ambient time', () => {
+      const seed = new UniversalSeed();
+      expect(seed.metadata.created).toBe(0);
+      expect(seed.metadata.updated).toBe(0);
+      expect(seed.id).toMatch(/^seed-[0-9a-z]{8}$/);
+    });
+
+    it('produces identical mutation results from identical explicit seeds and RNGs', () => {
+      const seedA = new UniversalSeed({ id: 'stable-seed' });
+      const seedB = new UniversalSeed({ id: 'stable-seed' });
+      seedA.setGene(GeneType.COLOR, [0.1, 0.2, 0.3], { mutationRate: 1 });
+      seedB.setGene(GeneType.COLOR, [0.1, 0.2, 0.3], { mutationRate: 1 });
+
+      const mutatedA = seedA.mutate(rngFromHash('mutation-regression'), 0.5);
+      const mutatedB = seedB.mutate(rngFromHash('mutation-regression'), 0.5);
+
+      expect(mutatedA.serialize()).toEqual(mutatedB.serialize());
+      expect(mutatedA.derivation?.timestamp).toBe(0);
+    });
+
+    it('produces deterministic clone and crossover identifiers', () => {
+      const parentA = new UniversalSeed({ id: 'parent-a' });
+      const parentB = new UniversalSeed({ id: 'parent-b' });
+      const child = parentA.cross(parentB, rngFromHash('crossover-regression'));
+
+      expect(parentA.clone().id).toBe('parent-a:clone');
+      expect(child.id).toBe('parent-a:x:parent-b');
+      expect(child.derivation?.timestamp).toBe(0);
     });
   });
 });

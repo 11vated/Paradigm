@@ -7,7 +7,14 @@ export interface Seed {
   id: string;
   $domain: string;
   $name: string;
-  $lineage: { generation: number; operation: string; parents?: string[] };
+  $lineage: { 
+    generation: number; 
+    operation: string; 
+    parents?: string[];
+    parent_ids?: string[];
+    ancestry_depth?: number;
+    timestamp?: number;
+  };
   $hash: string;
   $fitness: { overall: number };
   $sovereignty?: Record<string, any>;

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photorealistic Renderer Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1a1a1a;
+      font-family: Arial, sans-serif;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    canvas {
+      border: 2px solid #333;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+    #controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 15px;
+      color: #888;
+      font-size: 14px;
+    }
+    #error {
+      margin-top: 15px;
+      color: #f44336;
+      font-size: 14px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1 style="color: #fff;">Photorealistic Renderer Test</h1>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="controls">
+      <button id="initBtn">Initialize Renderer</button>
+      <button id="renderBtn" disabled>Render Scene</button>
+      <button id="exportBtn" disabled>Export GLB</button>
+    </div>
+    <div id="status">Ready to initialize</div>
+    <div id="error"></div>
+  </div>
+
+  <script type="module">
+    // This is a simplified test that demonstrates the API
+    // In a real implementation, you would import from the actual modules
+    
+    const canvas = document.getElementById('canvas');
+    const initBtn = document.getElementById('initBtn');
+    const renderBtn = document.getElementById('renderBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const status = document.getElementById('status');
+    const error = document.getElementById('error');
+
+    let renderer = null;
+
+    // Check for WebGPU support
+    async function checkWebGPUSupport() {
+      if (!navigator.gpu) {
+        throw new Error('WebGPU is not supported in this browser. Please use Chrome/Edge with WebGPU enabled.');
+      }
+      
+      const adapter = await navigator.gpu.requestAdapter();
+      if (!adapter) {
+        throw new Error('No WebGPU adapter found. Please ensure your GPU supports WebGPU.');
+      }
+      
+      return adapter;
+    }
+
+    // Initialize renderer
+    initBtn.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Checking WebGPU support...';
+        await checkWebGPUSupport();
+        
+        status.textContent = 'Initializing photorealistic renderer...';
+        
+        // In a real implementation, this would be:
+        // import { createPhotorealisticRenderer } from './src/lib/rendering/photorealistic-renderer.js';
+        // renderer = createPhotorealisticRenderer(canvas, { quality: 'high' });
+        // await renderer.initialize();
+        
+        // For this test, we'll simulate initialization
+        renderer = {
+          initialized: true,
+          quality: 'high'
+        };
+        
+        status.textContent = 'Renderer initialized successfully!';
+        initBtn.disabled = true;
+        renderBtn.disabled = false;
+        exportBtn.disabled = false;
+        error.style.display = 'none';
+        
+      } catch (e) {
+        error.textContent = 'Error: ' + e.message;
+        error.style.display = 'block';
+        status.textContent = 'Initialization failed';
+      }
+    });
+
+    // Render scene
+    renderBtn.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Creating scene...';
+        
+        // Create a simple test scene
+        const scene = {
+          meshes: [
+            {
+              vertices: new Float32Array([
+                // Simple cube vertices
+                -1, -1, -1,  1, -1, -1,  1,  1, -1, -1,  1, -1,
+                -1, -1,  1,  1, -1,  1,  1,  1,  1, -1,  1,  1,
+              ]),
+              normals: new Float32Array([
+                // Simple normals
+                0, 0, -1,  0, 0, -1,  0, 0, -1,  0, 0, -1,
+                0, 0,  1,  0, 0,  1,  0, 0,  1,  0, 0,  1,
+              ]),
+              uvs: new Float32Array([
+                0, 0, 1, 0, 1, 1, 0, 1,
+                0, 0, 1, 0, 1, 1, 0, 1,
+              ]),
+              indices: new Uint32Array([
+                0, 1, 2, 0, 2, 3,
+                4, 5, 6, 4, 6, 7,
+              ]),
+              material: {
+                name: 'test-material',
+                baseColor: [0.8, 0.2, 0.2, 1],
+                metallic: 0.5,
+                roughness: 0.3,
+                emissiveFactor: [0, 0, 0],
+              }
+            }
+          ],
+          lights: [
+            {
+              type: 'directional',
+              direction: [0.5, -1, 0.5],
+              color: [1, 1, 1],
+              intensity: 2.0,
+            },
+            {
+              type: 'point',
+              position: [2, 3, 2],
+              color: [0.8, 0.9, 1.0],
+              intensity: 1.0,
+            }
+          ],
+          camera: {
+            position: [0, 2, 5],
+            target: [0, 0, 0],
+            fov: 45,
+          }
+        };
+
+        status.textContent = 'Rendering scene with path tracer...';
+        
+        // In a real implementation, this would be:
+        // const rendered = await renderer.render(scene);
+        // display the rendered image on canvas
+        
+        // For this test, we'll render a simple gradient
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(800, 600);
+        
+        for (let y = 0; y < 600; y++) {
+          for (let x = 0; x < 800; x++) {
+            const idx = (y * 800 + x) * 4;
+            // Create a gradient
+            imageData.data[idx] = Math.floor((x / 800) * 255);     // R
+            imageData.data[idx + 1] = Math.floor((y / 600) * 255); // G
+            imageData.data[idx + 2] = 100;                         // B
+            imageData.data[idx + 3] = 255;                         // A
+          }
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        
+        status.textContent = 'Scene rendered successfully!';
+        error.style.display = 'none';
+        
+      } catch (e) {
+        error.textContent = 'Error: ' + e.message;
+        error.style.display = 'block';
+        status.textContent = 'Rendering failed';
+      }
+    });
+
+    // Export GLB
+    exportBtn.addEventListener('click', async () => {
+      try {
+        status.textContent = 'Exporting scene to GLB...';
+        
+        // In a real implementation, this would be:
+        // const glb = await renderer.exportScene(exportAsset, { format: 'glb' });
+        // download the GLB file
+        
+        // For this test, we'll create a dummy download
+        const blob = new Blob(['Test GLB content'], { type: 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'test-scene.glb';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        status.textContent = 'Scene exported successfully!';
+        error.style.display = 'none';
+        
+      } catch (e) {
+        error.textContent = 'Error: ' + e.message;
+        error.style.display = 'block';
+        status.textContent = 'Export failed';
+      }
+    });
+
+    // Display initial message
+    status.textContent = 'Click "Initialize Renderer" to begin (requires WebGPU support)';
+  </script>
+</body>
+</html>

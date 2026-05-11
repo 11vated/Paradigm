@@ -37,22 +37,32 @@ export const evolveSeed = (id, config) =>
 export const updateGene = (id, geneName, geneType, value) =>
   api.put(`/seeds/${id}/genes`, { gene_name: geneName, gene_type: geneType, value }).then(r => r.data);
 
-export const growSeed = (id) =>
-  api.post(`/pipeline/execute`, { seed_id: id }).then(r => {
+export const growSeed = (id, params = {}) =>
+  api.post(`/seeds/${id}/grow`, params).then(r => {
     const data = r.data;
-    // Map the pipeline result to the artifact structure expected by the frontend
+    // Normalize V3 generator output to frontend artifact structure
     return {
-      id: `artifact-${id}`,
-      name: data.unified_seed?.$name || 'Emerged Asset',
-      domain: data.unified_seed?.$domain || 'field',
-      generation: data.unified_seed?.$lineage?.generation || 0,
-      seed_hash: data.unified_seed?.$hash,
-      type: data.unified_seed?.$domain || 'field',
-      visual: {},
-      stats: {},
-      emergent_assets: data.emergent_assets,
-      physics_summary: data.physics_summary,
-      preview_slice: data.preview_slice,
+      id: data.id || `artifact-${id}`,
+      name: data.name || 'Artifact',
+      domain: data.domain || data.type || 'unknown',
+      type: data.type || data.domain || 'unknown',
+      seed_hash: data.seed_hash,
+      generation: data.generation || 1,
+      visual: data.visual || {},
+      stats: data.stats || {},
+      artifact: data.artifact || {},
+      // Map file paths for frontend consumption
+      filePath: data.artifact?.filePath || data.filePath,
+      objPath: data.artifact?.objPath || data.objPath,
+      gltfPath: data.artifact?.gltfPath || data.gltfPath,
+      pngPath: data.artifact?.pngPath || data.pngPath,
+      wavPath: data.artifact?.wavPath || data.wavPath,
+      // Legacy compatibility
+      emergent_assets: data.emergent_assets || {
+        mesh: data.visual?.mesh || null,
+        textures: data.visual?.textures || {}
+      },
+      render_hints: data.render_hints || {}
     };
   });
 

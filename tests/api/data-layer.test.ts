@@ -28,7 +28,7 @@ describe('JsonStore Data Layer', () => {
   let store: JsonStore;
 
   beforeEach(async () => {
-    // Create fresh test directory
+    fs.rmSync(TEST_DIR, { recursive: true, force: true });
     fs.mkdirSync(TEST_DIR, { recursive: true });
     store = new JsonStore(TEST_DIR);
     await store.init();

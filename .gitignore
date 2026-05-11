@@ -17,6 +17,21 @@ temp_*.txt
 phase3-status.js
 beyond-omega-exec.ts
 demo.html
+*.bak
+*.backup
+*.tmp
+*.new
+*.fixed
+*_backup.ts
+*_clean.ts
+*_fixed.ts
+*_fixed_start.ts
+*_new_start.ts
+*_part1.ts
+*_full.txt
+line*.txt
+.kilo/
+EXECUTION_PLAN_PHASE1.md
 
 # Test files
 test-*.mjs

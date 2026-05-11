@@ -348,3 +348,5 @@ export default function StudioPage() {
     </div>
   );
 }
+
+export { StudioPage };

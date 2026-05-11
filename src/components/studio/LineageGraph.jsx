@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo, memo } from 'react';
 import { DOMAIN_COLORS, OP_COLORS } from '@/lib/constants';
 
 function simpleForceLayout(nodes, edges, width, height) {
@@ -59,7 +59,7 @@ function simpleForceLayout(nodes, edges, width, height) {
   return positions;
 }
 
-export default function LineageGraph({ seeds, currentSeed, onSelect }) {
+function LineageGraph({ seeds, currentSeed, onSelect }) {
   const [dimensions, setDimensions] = useState({ w: 600, h: 400 });
   const containerRef = useRef(null);
 
@@ -137,3 +137,9 @@ export default function LineageGraph({ seeds, currentSeed, onSelect }) {
     </div>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export default memo(LineageGraph, (prevProps, nextProps) => {
+  // Only re-render if seeds array reference changes or currentSeed changes
+  return prevProps.seeds === nextProps.seeds && prevProps.currentSeed === nextProps.currentSeed;
+});
