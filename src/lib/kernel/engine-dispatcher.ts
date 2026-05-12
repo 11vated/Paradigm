@@ -304,8 +304,7 @@ export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain
   }
 
   const result = await generator(seed, outputPath);
-
-  return { domain, result };
+  return { ...result, domain };
 }
 
 /**

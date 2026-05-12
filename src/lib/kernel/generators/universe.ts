@@ -46,13 +46,13 @@ export async function generateUniverse(seed: Seed, outputPath: string): Promise<
   const dir = path.dirname(outputPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  const jsonPath = outputPath.replace(/\.json$/, '_universe.json');
-  fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
-
-  return {
-    filePath: jsonPath,
-    galaxyCount: config.galaxies.length
-  };
+    const jsonPath = outputPath.endsWith('.json') ? outputPath : `${outputPath}.json`;
+    fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
+  
+    return {
+      filePath: jsonPath,
+      galaxyCount: config.galaxies.length
+    };
 }
 
 function generateGalaxies(params: UniverseParams, rng: Xoshiro256StarStar): any[] {

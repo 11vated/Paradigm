@@ -14,15 +14,8 @@
  */
 
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
-import { JSDOM } from 'jsdom';
-const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-  pretendToBeVisual: true,
-  hasSubresources: false,
-});
-global.window = dom.window as any;
-global.document = dom.window.document;
-global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
-global.ImageData = dom.window.ImageData;
+import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
+initServerPolyfills();
 
 import express from 'express';
 import http from 'http';
