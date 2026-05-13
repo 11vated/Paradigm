@@ -3,389 +3,322 @@
 **Deterministic Synthetic Evolution Operating System**
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-0_errors-brightgreen)]()
-[![Test Coverage](https://img.shields.io/badge/coverage-65%25-yellow)]()
-[![API Endpoints](https://img.shields.io/badge/endpoints-35+-blue)]()
-[![Domains](https://img.shields.io/badge/domains-27-purple)]()
+[![Tests](https://img.shields.io/badge/tests-899_passing-brightgreen)]()
+[![API Endpoints](https://img.shields.io/badge/endpoints-66+-blue)]()
+[![Gene Types](https://img.shields.io/badge/gene_types-22-purple)]()
+[![Domains](https://img.shields.io/badge/domains-27-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)]()
 
 ---
 
-## 🎯 Overview
+## Overview
 
-**Paradigm Absolute** is a deterministic synthetic evolution operating system where every digital artifact is a "seed" that can be bred, mutated, evolved, and composed across **27 domains** with full lineage tracking and cryptographic sovereignty.
+Paradigm Absolute is a **deterministic synthetic evolution operating system** where every digital artifact is encoded as a **seed** — a genetic blueprint that can be bred, mutated, evolved, and composed across 27 creative domains with full lineage tracking, cryptographic sovereignty, and per-gene ownership.
 
 **The Core Guarantee:**
 ```
 same seed + same deterministic RNG + same code = bit-identical output forever
 ```
 
+This determinism enables verifiable provenance, trustless collaboration, automatic royalty distribution, and reproducible generative creation across any platform.
+
 ---
 
-## ✨ Features
+## Core Capabilities
 
-### 🧬 27 Domain Generators
-Generate artifacts across 27 creative domains:
-- **Visual:** Character, Sprite, Visual2D, Geometry3D, Architecture, Vehicle, Furniture, Fashion
-- **Audio:** Music, Audio, Sound Design
-- **Interactive:** FullGame, Game, UI, Animation
-- **Creative:** Narrative, Poetry, Typography, Choreography
-- **Technical:** Physics, Circuit, Robotics, Agent, ALife
-- **Procedural:** Procedural, Ecosystem, Particle, Shader, Food
+### 🧬 22-Type Gene System (Evolvable Lattice)
+Not a flat list — a **type hierarchy** where each type inherits operators from its parent. The lattice supports runtime derivation of new gene types:
 
-### 🔬 17 Gene Types
-Comprehensive genetic encoding with validation:
-`scalar`, `categorical`, `vector`, `expression`, `struct`, `array`, `graph`, `topology`, `temporal`, `regulatory`, `field`, `symbolic`, `quantum`, `gematria`, `resonance`, `dimensional`, `sovereignty`
+| Category | Types |
+|---|---|
+| **Primitive** | `boolean`, `scalar`, `categorical` |
+| **Container** | `vector`, `matrix`, `array`, `struct`, `graph` |
+| **Spatial** | `field`, `topology`, `sdf` |
+| **Temporal** | `temporal`, `keyframe`, `envelope` |
+| **Symbolic** | `expression`, `symbolic`, `gematria`, `regulatory` |
+| **Learned** | `dimensional`, `quantum`, `resonance` |
+| **Meta** | `sovereignty` |
 
-### 🌳 Lineage Tracking
-Complete ancestry and descendant tracking:
-- Full ancestry chains with depth tracking
-- Parent hash and ID tracking
-- Timestamp tracking for all operations
-- Royalty calculation through lineage
+- **User-definable types** — register new gene types at runtime via `POST /api/gene-types/register` with law verification
+- **Per-gene sovereignty** — every gene carries its own ownership chain, signature history, and license
+- **Automatic law verification** — identity, symmetry, determinism, zero-rate mutation tested on registration
 
-### ⚡ Deterministic Operations
-All operations are deterministic:
-- Mutation with seeded RNG
-- Breeding with crossover
-- Evolution with fitness ranking
-- Cross-domain composition
+### 🗺️ 27 Domain Engines + 100+ Generators
+
+| Domain | Domain | Domain | Domain |
+|---|---|---|---|
+| Character | Sprite | Music | Visual2D |
+| Geometry3D | FullGame | Animation | Narrative |
+| UI | Physics | Audio | Ecosystem |
+| Game | ALife | Shader | Particle |
+| Procedural | Typography | Architecture | Vehicle |
+| Furniture | Fashion | Robotics | Circuit |
+| Food | Choreography | Agent | |
+
+Plus 100+ industrial domain generators (aerospace, cybersecurity, genomics, nanotechnology, etc.)
+
+### 🔀 Cross-Domain Composition
+12 category-theoretic **functor bridges** with BFS pathfinding and coherence scoring:
+- `character → sprite`, `character → music`, `character → fullgame`
+- `procedural → fullgame`, `music → ecosystem`, `physics → fullgame`
+- `visual2d → animation`, `narrative → fullgame`, `terrain → fullgame`
+- `agent → character`, `agent → narrative`, `agent → mixed`
+
+### 📈 7 Evolution Algorithms
+| Algorithm | Strategy |
+|---|---|
+| **GA** | Tournament selection, crossover, mutation, elitism |
+| **MAP-Elites** | Quality-diversity archive by behavioral descriptors |
+| **CMA-ES** | Covariance Matrix Adaptation — continuous optimization |
+| **Novelty Search** | Rewards behavioral novelty over fitness |
+| **AURORA** | Unsupervised quality-diversity (learns descriptors) |
+| **DQD** | Differentiable Quality-Diversity with gradient guidance |
+| **POET** | Paired Open-Ended Trailblazer (co-evolution) |
+
+### 🔬 Differentiable Substrate
+Gene gradients compute how quality changes w.r.t. gene values — enabling **gradient-guided mutation** and the **inverse pipeline** (description → seed).
 
 ### 🛡️ Cryptographic Sovereignty
-ECDSA P-256 signing for ownership:
-- Seed signing and verification
-- Lineage-based royalty distribution
-- WebAuthn key management
+ECDSA P-256 signing with **stateless verification** — no blockchain required:
+- Per-gene ownership chains with full signature history
+- Configurable licenses (CC-BY, CC-BY-NC, custom, etc.)
+- Permission checking per operation (breed, mutate, commercial)
+- WebAuthn passkey support
+- C2PA Content Credentials on every exported artifact
+
+### 🤖 Native GSPL Agent
+Built-in AI agent with 4 inference tiers, 10 kernel tools, multi-step reasoning, swarm orchestration, and 4-layer memory — all operating above the deterministic boundary.
+
+### 🌐 Substrate Library & Federation
+17 signed namespace libraries (`chem://`, `phys://`, `mat://`, `bio://`, `earth://`, etc.) with:
+- CODATA physics constants, standard materials, music theory primitives
+- P2P federation protocol for peer-to-peer seed sharing
+- Federated knowledge graph with typed edges and tombstone-preserved lineage
+
+### 🏛️ Creative DAO
+On-chain governance with:
+- PIP proposal system (gene types, domains, royalty curves, treasury)
+- Token-weighted voting with configurable thresholds
+- 12 constitutional commitments (non-patchable)
+- Training Data Canon — provably licensed seed corpus for AI training
+
+### 📦 Universal Content Fabric
+```
+GET /api/v1/render/:hash?format=glb   — On-demand artifact rendering (cache-first)
+GET /api/seeds/:id/export/pseed       — Portable .pseed format (5KB → any artifact)
+GET /api/v1/formats/:domain           — Supported output formats per domain
+```
 
 ---
 
-## 🚀 Quick Start
-
-### Installation
+## Quick Start
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/11vated/Paradigm.git
 cd Paradigm
 
-# Install dependencies
+# Install
 npm install
 
-# Run development server
+# Start server
 npm run dev
+
+# In another terminal — create a seed
+curl -X POST http://localhost:3000/api/seeds \
+  -H 'Content-Type: application/json' \
+  -d '{"domain":"character","name":"Hero","genes":{"strength":{"type":"scalar","value":0.8}}}'
+
+# Grow it into an artifact
+curl -X POST http://localhost:3000/api/seeds/<id>/grow
+
+# Export as .pseed
+curl http://localhost:3000/api/seeds/<id>/export/pseed -o hero.pseed
 ```
 
-### Development
+### Testing
 
 ```bash
-# Type check
-npm run typecheck
+# Run all static tests (899 tests, no server needed)
+npx vitest run
 
-# Run tests
-npm run test
+# Run with server for API integration tests
+npm run dev &
+sleep 10
+npx vitest run tests/api.test.ts
 
-# Build for production
-npm run build
-
-# Run with Docker
-docker-compose -f docker-compose.production.yml up -d
+# Run specific test suites
+npx vitest run tests/kernel/       # Kernel: RNG, genes, gradients, sovereignty, types
+npx vitest run tests/e2e/          # End-to-end lifecycle
+npx vitest run tests/agent/        # Agent system
+npx vitest run tests/gspl/         # GSPL language
 ```
 
 ---
 
-## 📡 API Documentation
-
-### Core Endpoints
-
-#### Seeds CRUD
-```bash
-GET    /api/seeds              # List all seeds
-POST   /api/seeds              # Create seed
-GET    /api/seeds/:id          # Get seed
-DELETE /api/seeds/:id          # Delete seed
-PUT    /api/seeds/:id/genes    # Edit genes
-```
-
-#### Operations
-```bash
-POST /api/seeds/:id/grow       # Grow artifact
-POST /api/seeds/:id/mutate     # Mutate seed
-POST /api/seeds/breed          # Breed seeds
-POST /api/seeds/:id/evolve     # Evolve population
-POST /api/seeds/:id/compose    # Cross-domain compose
-```
-
-#### Lineage
-```bash
-GET /api/seeds/:id/lineage     # Get ancestry chain
-GET /api/seeds/:id/descendants # Get descendants
-```
-
-#### Validation
-```bash
-POST /api/gene/validate        # Validate gene value
-GET  /api/gene-types           # List 17 gene types
-GET  /api/domains              # List 27 domains
-```
-
-### OpenAPI Specification
-
-Full API documentation available at:
-- **Local:** `http://localhost:3000/api/docs`
-- **Spec:** `public/openapi.json`
-
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    FRONTEND (React 19)                   │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │   Studio    │  │Evolution    │  │  Lineage    │     │
-│  │   Gallery   │  │  Theater    │  │   Graph     │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│                      API LAYER                           │
-│  /api/seeds  /api/grow  /api/breed  /api/lineage       │
-│  Error handling with suggestions + examples             │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│               KERNEL (Deterministic Core)                │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │   27        │  │   17 Gene   │  │   Lineage   │     │
-│  │  Domains    │  │   Types     │  │  Tracking   │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐     │
-│  │   xoshiro   │  │  Validation │  │ Composition │     │
-│  │  RNG 256**  │  │  (detailed) │  │  System     │     │
-│  └─────────────┘  └─────────────┘  └─────────────┘     │
-└─────────────────────────────────────────────────────────┘
-                          ↓
-┌─────────────────────────────────────────────────────────┐
-│              PERSISTENCE (JSON/MongoDB)                  │
-│  Atomic writes + crash recovery + lineage indexing      │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                LAYER 7 — STUDIO & MARKETPLACE                    │
+│  React 19 SPA | WebSocket agent streaming | REST API Gateway    │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 6 — INTELLIGENCE                            │
+│  GSPL Agent (5-stage pipeline) | 8 sub-agents | 4-layer memory  │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 5 — EVOLUTION & COMPOSITION                 │
+│  GA / MAP-Elites / CMA-ES / Novelty / AURORA / DQD / POET       │
+│  12 functor bridges | BFS pathfinding | Coherence scoring       │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 4 — DOMAIN ENGINES                          │
+│  27 canonical engines + 100+ industrial generators              │
+│  Gradient computation | Inverse pipeline                        │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 3 — GSPL LANGUAGE                           │
+│  Lexer | Parser | Type checker | Interpreter | Bytecode | WGSL  │
+│  LSP server | @gpu annotation                                   │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 2 — SEED SYSTEM                             │
+│  UniversalSeed | 22-type gene lattice | 4 operators per type    │
+│  Per-gene sovereignty | Canonicalization | ECDSA signing        │
+├──────────────────────────────────────────────────────────────────┤
+│                LAYER 1 — KERNEL                                  │
+│  xoshiro256** RNG | FIM | Tick cycle | 8-effect algebraic fx    │
+│  Fisher Information Matrix | Deterministic scheduler            │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📊 Project Status
+## API Endpoints (66+)
 
-### Completion: 100% ✅
+### Seeds
+```
+GET    /api/seeds              — List seeds (paginated, filterable)
+POST   /api/seeds              — Create seed
+GET    /api/seeds/:id          — Get seed by ID
+DELETE /api/seeds/:id          — Delete seed
+PUT    /api/seeds/:id/genes    — Edit genes
+POST   /api/seeds/generate     — Generate deterministically from prompt
+POST   /api/seeds/inverse      — Inverse pipeline (description → seed)
+```
 
-| Category | Status | Progress |
-|---|---|---|
-| **Domain Generators** | ✅ Complete | 27/27 (100%) |
-| **Gene Validation** | ✅ Complete | 17/17 (100%) |
-| **Lineage Tracking** | ✅ Complete | 100% |
-| **Error Handling** | ✅ Complete | 100% |
-| **Frontend Integration** | ✅ Complete | 100% |
-| **Test Coverage** | ✅ Good | 65% |
-| **Documentation** | ✅ Complete | 100% |
-| **API Documentation** | ✅ Complete | OpenAPI 3.0 |
-| **Production Deploy** | ✅ Ready | Docker-ready |
+### Operations
+```
+POST /api/seeds/:id/grow       — Grow artifact via domain engine
+POST /api/seeds/:id/mutate     — Gene-level mutation
+POST /api/seeds/breed          — Crossover breeding
+POST /api/seeds/:id/evolve     — Population evolution
+POST /api/seeds/:id/compose    — Cross-domain composition
+GET  /api/seeds/:id/lineage    — Ancestry chain
+GET  /api/seeds/:id/descendants — Descendant list
+POST /api/seeds/distance       — Genetic distance
+```
 
-### Code Quality
+### Gene System
+```
+GET  /api/gene-types           — List registered types (22)
+POST /api/gene-types/register  — Register custom gene type (law-verified)
+POST /api/gene/validate        — Validate gene value
+GET  /api/domains              — List 27 domains
+```
+
+### Sovereignty
+```
+POST /api/keys/generate        — Generate ECDSA keypair
+POST /api/seeds/:id/sign       — Sign a seed
+POST /api/seeds/:id/verify     — Verify signature
+GET  /api/seeds/:id/gene/:name/provenance  — Per-gene lineage
+POST /api/seeds/:id/gene/:name/license     — Set per-gene license
+GET  /api/seeds/:id/gene/:name/permission  — Check operation permission
+POST /api/seeds/:id/mint       — Mint as NFT
+```
+
+### Agent
+```
+POST /api/agent/query          — Natural language → seed operations
+POST /api/agent/query/async    — Async with LLM enhancement
+GET  /api/agent/help           — Command listing
+```
+
+### Render & Export
+```
+GET  /api/v1/render/:hash      — On-demand artifact rendering
+GET  /api/v1/formats/:domain   — Supported output formats
+GET  /api/seeds/:id/export/pseed — .pseed file export
+POST /api/seeds/import/pseed   — .pseed file import
+```
+
+### DAO & Canon
+```
+GET  /api/v1/dao               — DAO state
+POST /api/v1/dao/propose       — Create PIP proposal
+POST /api/v1/dao/vote/:id      — Vote on proposal
+POST /api/v1/dao/execute/:id   — Execute passed proposal
+POST /api/v1/canon/register    — Register seed in training canon
+GET  /api/v1/canon/query       — Query training data canon
+```
+
+### VCS
+```
+POST /api/seeds/:id/commit     — Content-addressable commit
+GET  /api/seeds/:id/log        — Commit history
+POST /api/seeds/:id/merge      — 3-way merge
+POST /api/seeds/:id/branches   — Branch management
+```
+
+---
+
+## Project Status
 
 | Metric | Value |
 |---|---|
-| TypeScript Errors | 0 |
-| ESLint Issues | 0 |
-| Production Code | ~10,500 lines |
-| Documentation | ~25,000+ lines |
-| Test Files | 4+ |
-| API Endpoints | 35+ |
+| TypeScript Errors | **0** |
+| Tests Passing | **899/899** (50/50 files) |
+| API Endpoints | **66+** |
+| Domain Engines | **27** (+100 industrial) |
+| Gene Types | **22** (17 original + 5 new) |
+| Gene Type Hierarchy | **7 categories** (primitive → meta) |
+| Functor Bridges | **12** (category-theoretic) |
+| Evolution Algorithms | **7** (GA → POET) |
+| Substrate Namespaces | **17** (chem:// → psy://) |
+| Smart Contracts | **3** (ParaToken, SeedNFT, Marketplace) |
+| Docker Services | **10** (app, postgres, redis, caddy, etc.) |
 
 ---
 
-## 🧪 Testing
-
-### Run Tests
+## Deployment
 
 ```bash
-# Run all tests
-npm run test
+# PostgreSQL (production)
+docker compose up -d postgres redis
 
-# Run gene system tests
-npx vitest run tests/gene-system.test.ts
+# Build and run
+npm run build
+npm run dev
 
-# Run API tests
-npx vitest run tests/api.test.ts
-
-# Run E2E tests
-npm run test:e2e
+# Full production stack
+docker compose up -d
 ```
 
-### Test Coverage
-
-- **Gene Validation:** 100%
-- **API Endpoints:** 80%
-- **Overall:** 65%
-
----
-
-## 📚 Documentation
-
-### Technical Guides
-- `PROJECT_COMPLETE_STATUS.md` — Final project report
-- `FINAL_IMPLEMENTATION_STATUS.md` — Implementation summary
-- `ERROR_HANDLING_ENHANCEMENT.md` — Error handling guide
-- `GENE_VALIDATION_COMPLETE.md` — Gene validation guide
-- `GIT_UPDATE_COMPLETE.md` — Repository update report
-
-### API Documentation
-- `public/openapi.json` — OpenAPI 3.0 specification
-- Interactive docs at `/api/docs` (with Swagger UI)
-
-### Progress Reports
-- 8 session reports documenting implementation
-- 30+ technical documents (~25,000 lines total)
+### Environment
+See `.env.example` for all configuration options:
+- `DATABASE_URL` — PostgreSQL connection
+- `REDIS_URL` — Redis for cache + rate limiting
+- `JWT_SECRET` — Authentication (required in production)
+- `SBERT_URL` — Embedding sidecar
+- `WEBAUTHN_RP_ID`, `WEBAUTHN_ORIGIN` — WebAuthn config
 
 ---
 
-## 🎯 Usage Examples
+## License
 
-### Create a Seed
-
-```javascript
-// POST /api/seeds
-{
-  "domain": "character",
-  "name": "My Warrior",
-  "genes": {
-    "size": { "type": "scalar", "value": 0.7 },
-    "archetype": { "type": "categorical", "value": "warrior" },
-    "strength": { "type": "scalar", "value": 0.8 }
-  }
-}
-```
-
-### Grow an Artifact
-
-```javascript
-// POST /api/seeds/:id/grow
-const response = await fetch('/api/seeds/abc123/grow', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' }
-});
-const artifact = await response.json();
-// Returns: { type, name, domain, filePath, visual, stats, ... }
-```
-
-### Validate a Gene
-
-```javascript
-// POST /api/gene/validate
-const response = await fetch('/api/gene/validate', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    gene_type: 'scalar',
-    value: 0.75,
-    schema: { min: 0, max: 1 }
-  })
-});
-// Returns: { valid: true, message: 'Gene value is valid', ... }
-```
-
-### Get Lineage
-
-```javascript
-// GET /api/seeds/:id/lineage
-const response = await fetch('/api/seeds/abc123/lineage');
-const lineage = await response.json();
-// Returns: { seed_id, lineage: [...], total_ancestors, max_depth }
-```
+MIT License — see [LICENSE](LICENSE).
 
 ---
 
-## 🚀 Deployment
-
-### Docker Deployment
-
-```bash
-# Build and run production stack
-docker-compose -f docker-compose.production.yml up -d
-
-# Check health
-curl http://localhost:3000/api/health
-```
-
-### Production Configuration
-
-1. Set environment variables (see `.env.example`)
-2. Configure database (PostgreSQL or MongoDB)
-3. Set up Redis for caching
-4. Configure CORS origins
-5. Set JWT secret
-
----
-
-## 🛡️ Security
-
-- CSP hardening (no unsafe-eval)
-- Rate limiting (100 req/min default)
-- X-Frame-Options: DENY
-- Atomic writes with crash recovery
-- Input validation with detailed errors
-- Authentication with JWT
-
----
-
-## 📈 Roadmap
-
-### Completed ✅
-- [x] 27 domain generators
-- [x] 17 gene type validators
-- [x] Lineage tracking
-- [x] Error handling enhancement
-- [x] Frontend integration
-- [x] Test suite
-- [x] API documentation
-- [x] Onboarding tutorial
-- [x] Example gallery
-
-### Future Enhancements
-- [ ] Increase test coverage to 80%
-- [ ] Advanced onboarding flow
-- [ ] Community features
-- [ ] Marketplace integration
-- [ ] Performance monitoring
-- [ ] Mobile optimization
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests: `npm run test`
-5. Submit a pull request
-
----
-
-## 📄 License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
----
-
-## 🔗 Links
+## Links
 
 - **GitHub:** https://github.com/11vated/Paradigm
-- **API Docs:** http://localhost:3000/api/docs
-- **Health Check:** http://localhost:3000/api/health
-
----
-
-## 🎉 Status: Production Ready
-
-**Paradigm Absolute is now 100% complete and ready for production launch.**
-
-All 27 domains functional, all 17 gene types validated, comprehensive error handling, complete lineage tracking, full documentation, test coverage, onboarding tutorial, example gallery, and API documentation.
-
-**Ready for immediate deployment.**
+- **API Docs:** http://localhost:3000/api-docs/ui
+- **Health:** http://localhost:3000/health
