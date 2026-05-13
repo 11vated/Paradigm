@@ -303,8 +303,8 @@ export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain
     throw new Error(`Unknown domain: ${domain}. Available: ${Object.keys(DOMAIN_MAP).join(', ')}`);
   }
 
-  const result = await generator(seed, outputPath);
-  return { ...result, domain };
+  const output = await generator(seed, outputPath);
+  return { result: output, domain };
 }
 
 /**

@@ -110,7 +110,7 @@ function geneArray(seed: Seed, name: string, fallback: number[]): number[] {
 
 async function growCharacter(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/character';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const size = geneNumber(seed, 'size', 1.0);
@@ -155,7 +155,7 @@ async function growCharacter(seed: Seed): Promise<Artifact> {
 
 async function growSprite(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/sprite';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_animated.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_animated.png`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let resolution = geneNumber(seed, 'resolution', 32);
@@ -192,10 +192,13 @@ async function growSprite(seed: Seed): Promise<Artifact> {
 
 async function growMusic(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/music';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.wav`;
+  const fileName = `${seed.$hash ?? 'unknown'}_enhanced.wav`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
+    // Ensure output directory exists
+    const fs = await import('fs');
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
     const result = await generateMusicEnhanced(seed, outputPath);
     return {
       type: 'music', name: seed.$name ?? 'Music', domain: 'music',
@@ -224,7 +227,7 @@ async function growMusic(seed: Seed): Promise<Artifact> {
 
 async function growVisual2d(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/visual2d';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.svg`;
+  const fileName = `${seed.$hash ?? 'unknown'}.svg`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const style = geneVal(seed, 'style', 'abstract');
@@ -257,7 +260,7 @@ async function growVisual2d(seed: Seed): Promise<Artifact> {
 
 async function growProcedural(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/procedural';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let octaves = geneNumber(seed, 'octaves', 4);
@@ -291,7 +294,7 @@ async function growProcedural(seed: Seed): Promise<Artifact> {
 
 async function growFullgame(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/fullgame';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_electron.html`;
+  const fileName = `${seed.$hash ?? 'unknown'}_electron.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const genre = geneVal(seed, 'genre', 'action');
@@ -319,7 +322,7 @@ async function growFullgame(seed: Seed): Promise<Artifact> {
 
 async function growAnimation(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/animation';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.png`;
+  const fileName = `${seed.$hash ?? 'unknown'}_enhanced.png`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -343,7 +346,7 @@ async function growAnimation(seed: Seed): Promise<Artifact> {
 
 async function growGeometry3d(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/geometry3d';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
     try {
@@ -372,7 +375,7 @@ async function growGeometry3d(seed: Seed): Promise<Artifact> {
 
 async function growNarrative(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/narrative';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.txt`;
+  const fileName = `${seed.$hash ?? 'unknown'}.txt`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -402,7 +405,7 @@ async function growNarrative(seed: Seed): Promise<Artifact> {
 
 async function growUi(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/ui';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
+  const fileName = `${seed.$hash ?? 'unknown'}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
     try {
@@ -426,7 +429,7 @@ async function growUi(seed: Seed): Promise<Artifact> {
 
 async function growPhysics(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/physics';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const grav = geneVal(seed, 'gravity', 0.5);
@@ -452,7 +455,7 @@ async function growPhysics(seed: Seed): Promise<Artifact> {
 
 async function growAudio(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/audio';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.wav`;
+  const fileName = `${seed.$hash ?? 'unknown'}.wav`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -481,7 +484,7 @@ async function growAudio(seed: Seed): Promise<Artifact> {
 
 async function growEcosystem(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/ecosystem';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_worker.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_worker.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -510,7 +513,7 @@ async function growEcosystem(seed: Seed): Promise<Artifact> {
 
 async function growGame(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/game';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_wasm.js`;
+  const fileName = `${seed.$hash ?? 'unknown'}_wasm.js`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -541,7 +544,7 @@ async function growGame(seed: Seed): Promise<Artifact> {
 
 async function growAlife(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/alife';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_worker.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_worker.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let populationSize = geneNumber(seed, 'populationSize', 50);
@@ -572,7 +575,7 @@ async function growAlife(seed: Seed): Promise<Artifact> {
 
 async function growShader(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/shader';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.frag`;
+  const fileName = `${seed.$hash ?? 'unknown'}.frag`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -596,7 +599,7 @@ async function growShader(seed: Seed): Promise<Artifact> {
 
 async function growParticle(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/particle';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_gpu.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_gpu.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -627,7 +630,7 @@ async function growParticle(seed: Seed): Promise<Artifact> {
 
 async function growTypography(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/typography';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_enhanced.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_enhanced.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -657,7 +660,7 @@ async function growTypography(seed: Seed): Promise<Artifact> {
 
 async function growArchitecture(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/architecture';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -687,7 +690,7 @@ async function growArchitecture(seed: Seed): Promise<Artifact> {
 
 async function growVehicle(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/vehicle';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -716,7 +719,7 @@ async function growVehicle(seed: Seed): Promise<Artifact> {
 
 async function growFurniture(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/furniture';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -745,7 +748,7 @@ async function growFurniture(seed: Seed): Promise<Artifact> {
 
 async function growFashion(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/fashion';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -774,7 +777,7 @@ async function growFashion(seed: Seed): Promise<Artifact> {
 
 async function growRobotics(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/robotics';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   let armCount = geneVal(seed, 'armCount', 2);
@@ -805,7 +808,7 @@ async function growRobotics(seed: Seed): Promise<Artifact> {
 
 async function growCircuit(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/circuit';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_interactive.html`;
+  const fileName = `${seed.$hash ?? 'unknown'}_interactive.html`;
   const outputPath = `${outputDir}/${fileName}`;
 
     try {
@@ -834,7 +837,7 @@ async function growCircuit(seed: Seed): Promise<Artifact> {
 
 async function growFood(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/food';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.gltf`;
+  const fileName = `${seed.$hash ?? 'unknown'}.gltf`;
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
@@ -863,7 +866,7 @@ async function growFood(seed: Seed): Promise<Artifact> {
 
 async function growChoreography(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/choreography';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}_motion.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}_motion.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
     try {
@@ -903,7 +906,7 @@ async function growChoreography(seed: Seed): Promise<Artifact> {
  */
 async function growAgent(seed: Seed): Promise<Artifact> {
   const outputDir = 'data/artifacts/agent';
-  const fileName = `${seed.$hash ?? 'unknown'}_${Date.now()}.json`;
+  const fileName = `${seed.$hash ?? 'unknown'}.json`;
   const outputPath = `${outputDir}/${fileName}`;
 
   const persona = geneVal(seed, 'persona', 'architect');
@@ -989,12 +992,18 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
   // Use engine-dispatcher for all 103+ domains
   try {
     const outputDir = `data/artifacts/${domain}`;
-    const result = await dispatchSeed(seed, outputDir);
-    const engineHints = (result && typeof result === 'object' && 'render_hints' in result)
-      ? (result as any).render_hints ?? {}
+    // Ensure output directory exists
+    const fs = await import('fs');
+    if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+    const dispatchResult = await dispatchSeed(seed, outputDir);
+    const generatorOutput = (dispatchResult && typeof dispatchResult === 'object' && 'result' in dispatchResult)
+      ? (dispatchResult as any).result
+      : dispatchResult;
+    const engineHints = (generatorOutput && typeof generatorOutput === 'object' && 'render_hints' in generatorOutput)
+      ? (generatorOutput as any).render_hints ?? {}
       : {};
     return {
-      ...result,
+      ...generatorOutput,
       type: domain,
       name: seed.$name ?? 'Artifact',
       domain,
@@ -1004,7 +1013,7 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
       render_hints: {
         mode: engineHints.mode || domain,
         ...engineHints,
-        hasFile: !!result,
+        hasFile: !!generatorOutput,
       },
     };
   } catch (err) {

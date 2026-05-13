@@ -184,6 +184,158 @@ function evaluateFullgame(seed: Seed): FitnessReport {
   return { overall: clamp01(overall), dimensions: dims, penalties };
 }
 
+function evaluateSprite(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  const gc = geneCount(seed);
+  dims.gene_richness = clamp01(gc / 6);
+  if (gc < 3) penalties.push('Fewer than 3 genes');
+
+  const bodyType = geneVal(seed, 'body_type', null);
+  const validBodies = ['humanoid', 'quadruped', 'flying', 'slime', 'custom'];
+  dims.body_type_valid = bodyType && validBodies.includes(bodyType) ? 1.0 : 0.4;
+
+  const frameCount = geneVal(seed, 'frames', 1);
+  dims.frame_count = isValidNumber(frameCount) && frameCount >= 1 ? clamp01(frameCount / 8) : 0.3;
+
+  const palette = geneVal(seed, 'palette', []);
+  dims.palette_size = Array.isArray(palette) && palette.length >= 3 ? 1.0 : 0.3;
+
+  dims.animation_states = geneVal(seed, 'animations', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateVisual2d(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  const gc = geneCount(seed);
+  dims.gene_richness = clamp01(gc / 5);
+  if (gc < 2) penalties.push('Fewer than 2 genes');
+
+  const style = geneVal(seed, 'style', null);
+  const validStyles = ['abstract', 'geometric', 'organic', 'watercolor', 'pixel', 'isometric'];
+  dims.style_valid = style && validStyles.includes(style) ? 1.0 : 0.4;
+
+  const layers = geneVal(seed, 'layers', 1);
+  dims.layer_count = isValidNumber(layers) ? clamp01(layers / 8) : 0.3;
+
+  const palette = geneVal(seed, 'palette', []);
+  dims.palette_size = Array.isArray(palette) && palette.length >= 2 ? 1.0 : 0.4;
+
+  const resolution = geneVal(seed, 'resolution', 512);
+  dims.resolution_quality = isValidNumber(resolution) ? clamp01(resolution / 4096) : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateShader(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  dims.gene_richness = clamp01(geneCount(seed) / 4);
+  if (geneCount(seed) === 0) penalties.push('No genes defined');
+  else if (geneCount(seed) < 2) penalties.push('Fewer than 2 genes');
+
+  const shaderType = geneVal(seed, 'type', null);
+  const validTypes = ['vertex', 'fragment', 'raymarching', 'pbr', 'compute', 'postprocess'];
+  dims.shader_type_valid = shaderType && validTypes.includes(shaderType) ? 1.0 : 0.4;
+
+  const precision = geneVal(seed, 'precision', 0.5);
+  dims.precision = isValidNumber(precision) ? clamp01(precision) : 0.5;
+
+  dims.effects_present = geneVal(seed, 'effects', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateEcosystem(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  const gc = geneCount(seed);
+  dims.gene_richness = clamp01(gc / 6);
+  if (gc < 3) penalties.push('Fewer than 3 genes');
+
+  const species = geneVal(seed, 'species', []);
+  dims.species_count = Array.isArray(species) ? clamp01(species.length / 10) : 0.3;
+  if (Array.isArray(species) && species.length === 0) penalties.push('No species defined');
+
+  const biome = geneVal(seed, 'biome', null);
+  dims.biome_present = biome ? 1.0 : 0.4;
+
+  dims.interactions_present = geneVal(seed, 'interactions', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateAgent(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  const gc = geneCount(seed);
+  dims.gene_richness = clamp01(gc / 8);
+  if (gc < 4) penalties.push('Fewer than 4 genes');
+
+  dims.personality_present = geneVal(seed, 'personality', null) ? 1.0 : 0.3;
+  dims.knowledge_present = geneVal(seed, 'knowledge', null) ? 1.0 : 0.3;
+  dims.tools_present = geneVal(seed, 'tools', null) ? 1.0 : 0.3;
+  dims.memory_present = geneVal(seed, 'memory', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateGame(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  const gc = geneCount(seed);
+  dims.gene_richness = clamp01(gc / 5);
+  if (gc < 3) penalties.push('Fewer than 3 genes');
+
+  const genre = geneVal(seed, 'genre', null);
+  dims.genre_present = genre ? 1.0 : 0.3;
+
+  const mechanics = geneVal(seed, 'mechanics', []);
+  dims.mechanics_count = Array.isArray(mechanics) ? clamp01(mechanics.length / 3) : 0.3;
+
+  const levels = geneVal(seed, 'levels', 1);
+  dims.level_count = isValidNumber(levels) ? clamp01(levels / 10) : 0.3;
+
+  dims.controls_present = geneVal(seed, 'controls', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
+function evaluateAnimation(seed: Seed): FitnessReport {
+  const dims: Record<string, number> = {};
+  const penalties: string[] = [];
+
+  dims.gene_richness = clamp01(geneCount(seed) / 4);
+  if (geneCount(seed) < 2) penalties.push('Fewer than 2 genes');
+
+  const frames = geneVal(seed, 'frames', 0);
+  dims.frame_count = isValidNumber(frames) && frames >= 2 ? clamp01(frames / 60) : 0.3;
+  if (isValidNumber(frames) && frames < 2) penalties.push('Need at least 2 frames');
+
+  const fps = geneVal(seed, 'fps', 24);
+  dims.fps_valid = isValidNumber(fps) && fps >= 12 && fps <= 60 ? 1.0 : 0.4;
+
+  dims.tween_present = geneVal(seed, 'tween', null) ? 1.0 : 0.3;
+  dims.keyframes_present = geneVal(seed, 'keyframes', null) ? 1.0 : 0.3;
+
+  const overall = Object.values(dims).reduce((a, b) => a + b, 0) / Object.keys(dims).length;
+  return { overall: clamp01(overall), dimensions: dims, penalties };
+}
+
 // ─── Generic Fallback ────────────────────────────────────────────────────────
 
 function evaluateGeneric(seed: Seed): FitnessReport {
@@ -217,6 +369,13 @@ const DOMAIN_EVALUATORS: Record<string, (seed: Seed) => FitnessReport> = {
   physics: evaluatePhysics,
   narrative: evaluateNarrative,
   fullgame: evaluateFullgame,
+  sprite: evaluateSprite,
+  visual2d: evaluateVisual2d,
+  shader: evaluateShader,
+  ecosystem: evaluateEcosystem,
+  agent: evaluateAgent,
+  game: evaluateGame,
+  animation: evaluateAnimation,
 };
 
 export function evaluateFitness(seed: Seed): FitnessReport {

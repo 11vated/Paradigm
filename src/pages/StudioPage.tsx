@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
 import { SeedChatIntegrated } from '@/components/studio/SeedChat-Integrated';
 import { GsplRepl } from '@/components/studio/GsplRepl';
 import PreviewViewport from '@/components/studio/PreviewViewport';
@@ -91,7 +91,7 @@ export function StudioPage() {
           </div>
         )}
         {activePanel === 'genes' && (
-          <GeneEditor seed={selectedSeed} onSeedUpdate={handleSelectSeed} />
+          <GeneEditor seed={selectedSeed} onSeedUpdated={handleSelectSeed} />
         )}
         {activePanel === 'gallery' && (
           <div style={{ height: '100%', overflow: 'auto' }}>
@@ -100,15 +100,15 @@ export function StudioPage() {
         )}
         {activePanel === 'library' && (
           <div style={{ height: '100%', overflow: 'auto' }}>
-            <SeedLibrary onSelectSeed={handleSelectSeed} />
-            <SeedSimilarityList seed={selectedSeed} seeds={seeds} />
+            <SeedLibrary onImport={() => {}} activeSeed={selectedSeed} />
+            <SeedSimilarityList seedId={selectedSeed?.id} onSelect={handleSelectSeed} />
           </div>
         )}
         {activePanel === 'lineage' && (
           <div style={{ height: '100%', overflow: 'auto' }}>
             {selectedSeed ? (
               <>
-                <LineageGraph seed={currentArtifact} />
+                <LineageGraph seeds={currentArtifact ? [currentArtifact.seed] : []} currentSeed={currentArtifact?.seed} onSelect={handleSelectSeed} />
                 <LineageTree seed={selectedSeed} />
               </>
             ) : (
@@ -118,7 +118,7 @@ export function StudioPage() {
         )}
         {activePanel === 'topology' && (
           <div style={{ height: '100%' }}>
-            <TopologyViewer seeds={seeds} />
+            <TopologyViewer seed={selectedSeed} artifact={currentArtifact?.output} />
           </div>
         )}
       </div>
@@ -214,7 +214,7 @@ export function StudioPage() {
               <div style={{ flex: 1 }}><EvolvePanel /></div>
               <div style={{ flex: 1 }}>
                 <EvolutionTheater
-                  config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50 }}
+                  config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
                   onEvolve={() => {}}
                   onSeedSelect={handleSelectSeed}
                 />
@@ -226,7 +226,7 @@ export function StudioPage() {
           {activeBottom === 'mint' && <MintPanel />}
           {activeBottom === 'agent' && (
             <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-              <div style={{ flex: 1 }}><AgentPanel seeds={seeds} /></div>
+              <div style={{ flex: 1 }}><AgentPanel /></div>
             </div>
           )}
         </div>
@@ -236,15 +236,15 @@ export function StudioPage() {
 
   return (
     <div style={styles.container}>
-      <PanelGroup direction="vertical" style={{ height: '100vh' }}>
+      <PanelGroup orientation="vertical" style={{ height: '100vh' }}>
         <Panel defaultSize={75} minSize={40}>
-          <PanelGroup direction="horizontal">
+          <PanelGroup orientation="horizontal">
             <Panel defaultSize={25} minSize={15} maxSize={40}>
               {leftPanel}
             </Panel>
             <PanelResizeHandle style={styles.resizeHandle} />
             <Panel defaultSize={75} minSize={30}>
-              <PanelGroup direction="vertical">
+              <PanelGroup orientation="vertical">
                 <Panel defaultSize={70} minSize={30}>
                   {centerPanel}
                 </Panel>

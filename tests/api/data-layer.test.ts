@@ -36,10 +36,15 @@ describe('JsonStore Data Layer', () => {
 
   afterEach(async () => {
     await store.close();
-    // Clean up test files
-    try {
-      fs.rmSync(TEST_DIR, { recursive: true, force: true });
-    } catch {}
+    // Retry cleanup on Windows where file handles may not be released immediately
+    for (let attempt = 0; attempt < 5; attempt++) {
+      try {
+        fs.rmSync(TEST_DIR, { recursive: true, force: true });
+        break;
+      } catch {
+        await new Promise(r => setTimeout(r, 50));
+      }
+    }
   });
 
   // ─── Seed CRUD ─────────────────────────────────────────────────────────────

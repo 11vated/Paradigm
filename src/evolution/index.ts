@@ -1,7 +1,9 @@
-export { GeneticAlgorithm } from './ga';
-export type { GeneticConfig, GeneticResult, FitnessHistory } from './ga';
-export { MAPElites } from './map-elites';
-export type { MapElitesConfig, MapElitesResult, FeatureVector, EliteCell } from './map-elites';
+/**
+ * @deprecated This evolution module uses UniversalSeed.
+ * Use `src/lib/evolution/` for GA and MAP-Elites with kernel Seed types.
+ * Source kept for CMA-ES and Functors which will be migrated later.
+ */
+
 export { CMAES } from './cmaes';
 export type { CMAESConfig, CMAESResult } from './cmaes';
 export { FunctorRegistry, GameFunctor, MusicFunctor, ArtFunctor, StorytellingFunctor } from './functors';

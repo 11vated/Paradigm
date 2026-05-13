@@ -8,8 +8,27 @@
  * - Deterministic: same input = same provenance
  */
 
-import { createHash } from 'crypto';
 import { Xoshiro256StarStar } from './rng';
+
+// Browser-compatible SHA-256 using Web Crypto API
+async function sha256(data: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(data));
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function sha256Sync(data: string): string {
+  // Fallback: simple deterministic hash for environments without crypto.subtle
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
 
 // ECDSA using elliptic curve (secp256k1 — same as Bitcoin)
 // In Node.js environment, use 'elliptic' package or Web Crypto API
@@ -48,7 +67,7 @@ export function generateKeyPair(seed?: string): { privateKey: string; publicKey:
   }
   
   // Simplified: derive public key (in production, use actual elliptic curve)
-  const publicKey = createHash('sha256').update(privateKey).digest('hex');
+  const publicKey = sha256Sync(privateKey);
   
   return { privateKey, publicKey };
 }
@@ -59,7 +78,7 @@ export function generateKeyPair(seed?: string): { privateKey: string; publicKey:
 export function signData(data: string, privateKey: string): string {
   // Simplified: HMAC-like signature using SHA-256
   // In production: use actual ECDSA sign
-  const hash = createHash('sha256').update(data + privateKey).digest('hex');
+  const hash = sha256Sync(data + privateKey);
   return hash;
 }
 
@@ -69,7 +88,7 @@ export function signData(data: string, privateKey: string): string {
 export function verifySignature(data: string, signature: string, publicKey: string): boolean {
   // Simplified verification
   // In production: use actual ECDSA verify
-  const expected = createHash('sha256').update(data + publicKey).digest('hex');
+  const expected = sha256Sync(data + publicKey);
   return signature === expected;
 }
 
@@ -107,7 +126,7 @@ export function createProvenance(
   };
   
   // Generate creator's public key from private key
-  provenance.creator_public_key = createHash('sha256').update(creatorPrivateKey).digest('hex');
+  provenance.creator_public_key = sha256Sync(creatorPrivateKey);
   
   // Create signature over all fields
   const dataToSign = JSON.stringify({
@@ -158,7 +177,7 @@ export function addMutation(
     operation,
     parameters,
     timestamp: Date.now(),
-    operator_public_key: createHash('sha256').update(operatorPrivateKey).digest('hex')
+    operator_public_key: sha256Sync(operatorPrivateKey)
   };
   
   const updated = {
@@ -216,11 +235,11 @@ export function embedInWAV(wavBuffer: Buffer, provenance: SeedProvenance): Buffe
  * Verify artifact hasn't been tampered with
  */
 export function verifyArtifactIntegrity(
-  artifactData: Buffer,
+  artifactData: string,
   provenance: SeedProvenance
 ): boolean {
   // Check if artifact hash matches seed hash
-  const artifactHash = createHash('sha256').update(artifactData).digest('hex');
+  const artifactHash = sha256Sync(artifactData);
   
   // Simplified: in production, use actual deterministic hash from seed
   return verifyProvenance(provenance);

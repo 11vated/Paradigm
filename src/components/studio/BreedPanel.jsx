@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Heart } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function BreedPanel({ gallery, onBred }) {
   const [parentA, setParentA] = useState('');
@@ -14,7 +15,7 @@ export default function BreedPanel({ gallery, onBred }) {
     try {
       const child = await breedSeedsInStore(parentA, parentB);
       if (onBred) onBred(child);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); toast.error('Breeding failed'); }
     setLoading(false);
   };
 

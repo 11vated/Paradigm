@@ -1,6 +1,8 @@
+import { describe, it, expect } from 'vitest';
 import { UniversalSeed, GeneType } from '../src/seeds';
 import { Kernel } from '../src/kernel';
-import { GeneticAlgorithm } from '../src/evolution';
+import { GeneticAlgorithm } from '../src/lib/evolution/ga';
+import { Xoshiro256StarStar, rngFromHash } from '../src/lib/kernel/rng';
 
 describe('Cross-Engine Parity Tests', () => {
   const testSeed = () => {
@@ -12,7 +14,7 @@ describe('Cross-Engine Parity Tests', () => {
   };
 
   describe('Seed Operations Parity', () => {
-    test('should create identical seeds across all engines', () => {
+    it('should create identical seeds across all engines', () => {
       const kernel = new Kernel({ seed: 42 });
       
       const seeds = [];
@@ -28,7 +30,7 @@ describe('Cross-Engine Parity Tests', () => {
       });
     });
 
-    test('should mutate with consistent probability', () => {
+    it('should mutate with consistent probability', () => {
       const seed = testSeed();
       const originalGenes = seed.getAllGenes();
       
@@ -47,7 +49,7 @@ describe('Cross-Engine Parity Tests', () => {
       expect(Math.abs(actualProbability - expectedProbability)).toBeLessThan(0.05);
     });
 
-    test('should breed consistently', () => {
+    it('should breed consistently', () => {
       const parentA = testSeed();
       const parentB = new UniversalSeed();
       parentB.setGene(GeneType.COLOR, [0, 0, 1]);
@@ -64,14 +66,15 @@ describe('Cross-Engine Parity Tests', () => {
   });
 
 describe('Gene Type Coverage', () => {
-    test('should have 19 gene types', () => {
+    it('should have 19 gene types', () => {
       const types = Object.values(GeneType);
       expect(types.length).toBe(19);
     });
 
-    test('should create seeds with all gene types', () => {
+    it('should create seeds with all gene types', () => {
       const seed = new UniversalSeed();
       
+      const geneTypes = Object.values(GeneType);
       for (const geneType of geneTypes) {
         const defaultValues: Record<string, unknown> = {
           [GeneType.COLOR]: [1, 0, 0],
@@ -92,8 +95,8 @@ describe('Gene Type Coverage', () => {
           [GeneType.STRUCTURE]: { nodes: [] },
           [GeneType.META]: { version: '1.0.0' }
         };
-        
-        seed.setGene(geneType, defaultValues[geneType] ?? null);
+        const val = defaultValues[geneType];
+        if (val !== undefined) seed.setGene(geneType, val as any);
       }
 
       for (const geneType of geneTypes) {
@@ -103,7 +106,7 @@ describe('Gene Type Coverage', () => {
   });
 
   describe('Evolution Algorithm Parity', () => {
-    test('GA should find optimal solution', async () => {
+    it('GA should find optimal solution', async () => {
       const population: UniversalSeed[] = [];
       
       for (let i = 0; i < 50; i++) {
@@ -123,21 +126,24 @@ describe('Gene Type Coverage', () => {
         ) / Math.sqrt(3);
       };
 
-      const ga = new GeneticAlgorithm({
+      const rng = rngFromHash('ga-parity-test');
+      const ga = new GeneticAlgorithm(rng);
+
+      const result = await ga.evolve(population as any, fitnessFn as any, {
         populationSize: 50,
         generationLimit: 10,
         mutationRate: 0.1,
-        crossoverRate: 0.7
+        crossoverRate: 0.7,
+        tournamentSize: 3,
+        elitismCount: 2
       });
 
-      const result = await ga.evolve(population, fitnessFn);
-
-      expect(result.bestSeed).toBeDefined();
-      expect(result.bestFitness).toBeGreaterThan(0);
+      expect(result.best).toBeDefined();
+      expect(result.fitness).toBeGreaterThan(0);
       expect(result.generation).toBeLessThanOrEqual(10);
     });
 
-    test('should preserve diversity', async () => {
+    it('should preserve diversity', async () => {
       const population: UniversalSeed[] = [];
       
       for (let i = 0; i < 20; i++) {
@@ -152,22 +158,24 @@ describe('Gene Type Coverage', () => {
 
       const fitnessFn = (_seed: UniversalSeed) => Math.random();
 
-      const ga = new GeneticAlgorithm({
+      const rng = rngFromHash('ga-diversity-test');
+      const ga = new GeneticAlgorithm(rng);
+
+      const result = await ga.evolve(population as any, fitnessFn as any, {
         populationSize: 20,
         generationLimit: 5,
         mutationRate: 0.1,
         crossoverRate: 0.7,
+        tournamentSize: 3,
         elitismCount: 1
       });
-
-      const result = await ga.evolve(population, fitnessFn);
 
       expect(result.population.length).toBeGreaterThan(0);
     });
   });
 
   describe('Kernel Parity', () => {
-    test('should produce deterministic sequences', () => {
+    it('should produce deterministic sequences', () => {
       const kernelA = new Kernel({ seed: 12345 });
       const kernelB = new Kernel({ seed: 12345 });
 
@@ -182,7 +190,7 @@ describe('Gene Type Coverage', () => {
       expect(resultsA).toEqual(resultsB);
     });
 
-    test('should fork correctly', () => {
+    it('should fork correctly', () => {
       const kernel = new Kernel({ seed: 42 });
       
       const value1 = kernel.getRNG().nextFloat();
@@ -193,7 +201,7 @@ describe('Gene Type Coverage', () => {
       expect(kernel.getRNG().nextFloat()).not.toBe(value2);
     });
 
-    test('should maintain tick consistency', () => {
+    it('should maintain tick consistency', () => {
       const kernel = new Kernel({ seed: 42, tickRate: 60 });
       kernel.initialize();
 
@@ -209,7 +217,7 @@ describe('Gene Type Coverage', () => {
   });
 
   describe('Serialization Parity', () => {
-    test('should serialize and deserialize consistently', () => {
+    it('should serialize and deserialize consistently', () => {
       const original = testSeed();
       original.setGene(GeneType.META, { version: '1.0.0' });
       
@@ -221,7 +229,7 @@ describe('Gene Type Coverage', () => {
       expect(restored.getGeneValue(GeneType.SHAPE)).toBe(original.getGeneValue(GeneType.SHAPE));
     });
 
-    test('should preserve lineage across serialization', () => {
+    it('should preserve lineage across serialization', () => {
       const parent = testSeed();
       const child = parent.mutate({ nextFloat: () => 0.5 });
       
@@ -234,23 +242,23 @@ describe('Gene Type Coverage', () => {
 });
 
 describe('Seed Commons Validation', () => {
-  test('should have 100 reference seeds', () => {
+  it('should have 100 reference seeds', () => {
     const createSeedCommons = require('../commons/data').createSeedCommons;
     const seeds = createSeedCommons();
     
     expect(seeds.length).toBe(100);
   });
 
-  test('should cover all domains', () => {
+  it('should cover all domains', () => {
     const createSeedCommons = require('../commons/data').createSeedCommons;
     const seeds = createSeedCommons();
     
-    const domains = new Set(seeds.map(s => s.getMetadata().domain as string));
+    const domains = new Set(seeds.map((s: any) => s.getMetadata().domain as string));
     
     expect(domains.size).toBeGreaterThanOrEqual(5);
   });
 
-  test('should have valid gene combinations', () => {
+  it('should have valid gene combinations', () => {
     const createSeedCommons = require('../commons/data').createSeedCommons;
     const seeds = createSeedCommons();
     

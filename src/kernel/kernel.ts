@@ -23,7 +23,7 @@ export class Kernel {
 
   constructor(config: Partial<KernelConfig> = {}) {
     this.config = {
-      seed: config.seed ?? Date.now(),
+      seed: config.seed ?? 0,
       tickRate: config.tickRate ?? 60,
       foldProbability: config.foldProbability ?? 0.1,
       mutationRate: config.mutationRate ?? 0.01,

@@ -36,9 +36,43 @@ export const FUNCTOR_REGISTRY: FunctorBridge[] = [
 ];
 
 /**
- * Legacy API compatibility - composeSeed (placeholder)
+ * Compose a seed from one domain to another via functor bridges.
+ * Maps genes to target domain using the functor when available,
+ * falls back to setting the domain flag.
  */
 export function composeSeed(seed: any, targetDomain: string): any {
+  const sourceDomain = seed.$domain ?? seed.metadata?.domain ?? 'unknown';
+
+  // Find direct functor bridge
+  const bridge = FUNCTOR_REGISTRY.find(
+    f => f.sourceDomain === sourceDomain && f.targetDomain === targetDomain
+  );
+
+  if (bridge) {
+    // Transform: keep common genes, add target defaults
+    const transformedGenes: Record<string, any> = {};
+    const sourceGenes = seed.genes ?? {};
+
+    // Project 60% of genes forward (coherence ratio as approximation)
+    if (typeof sourceGenes === 'object') {
+      const geneEntries = Object.entries(sourceGenes);
+      const keepCount = Math.ceil(geneEntries.length * bridge.coherence);
+      for (let i = 0; i < geneEntries.length; i++) {
+        const [key, gene] = geneEntries[i];
+        if (i < keepCount && gene && typeof gene === 'object') {
+          transformedGenes[`${key}_${targetDomain}`] = { ...gene };
+        }
+      }
+    }
+
+    return {
+      ...seed,
+      $domain: targetDomain,
+      genes: transformedGenes,
+    };
+  }
+
+  // No direct functor: BFS fallback just sets domain flag
   return { ...seed, $domain: targetDomain };
 }
 

@@ -246,7 +246,7 @@ export function EvolutionTheater({ config, onEvolve, onSeedSelect }: EvolutionTh
 
   // Initialize Web Worker for background evolution
   useEffect(() => {
-    workerRef.current = new Worker(new URL('./evolution.worker.ts', import.meta.url));
+    workerRef.current = new Worker(new URL('../../workers/evolution.worker.ts', import.meta.url));
     
     workerRef.current.onmessage = (e) => {
       const { type, population: newPop, stats } = e.data;

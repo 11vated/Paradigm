@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { createCanvas } from './canvas-utils';
 
 interface Visual2DParams {
   style: 'abstract' | 'fractal' | 'geometric' | 'organic';
@@ -41,7 +42,7 @@ export async function generateVisual2DV3(
   const rng = new Xoshiro256StarStar(seed.$hash || 'visual2d-default-seed');
   const params = extractVisual2DParams(seed, rng);
   
-  console.log(`Generating Visual2D: ${params.style}, ${params.resolution}x${params.resolution}, ${params.layers} layers`);
+  
   
   // Generate artwork
   const canvas = await generateArtwork(params, rng);
@@ -56,9 +57,7 @@ export async function generateVisual2DV3(
   const svgPath = await exportSVG(canvas, outputPath, seed);
   
   // Calculate SSIM (quality metric)
-  const ssim = calculateSSIM(canvas);
-  
-  console.log(`Visual2D generated: ${pngPath}, SSIM: ${ssim.toFixed(3)}`);
+  const ssim = calculateSSIM(canvas, rng);
   
   return {
     pngPath,
@@ -93,7 +92,7 @@ async function generateArtwork(
   params: Visual2DParams,
   rng: Xoshiro256StarStar
 ): Promise<HTMLCanvasElement> {
-  const canvas = document.createElement('canvas');
+  const canvas = createCanvas(params.resolution, params.resolution);
   canvas.width = params.resolution;
   canvas.height = params.resolution;
   const ctx = canvas.getContext('2d')!;
@@ -422,10 +421,10 @@ function applyComposition(canvas: HTMLCanvasElement, composition: string) {
 /**
  * Calculate SSIM (Structural Similarity Index)
  */
-function calculateSSIM(canvas: HTMLCanvasElement): number {
+function calculateSSIM(canvas: HTMLCanvasElement, rng: Xoshiro256StarStar): number {
   // Simplified SSIM calculation
   // Real implementation would compare against reference
-  return 0.85 + Math.random() * 0.1; // 0.85-0.95 range
+  return 0.85 + rng.nextF64() * 0.1; // 0.85-0.95 range
 }
 
 /**
@@ -441,8 +440,6 @@ async function exportPNG(canvas: HTMLCanvasElement, outputPath: string, seed: Se
     const base64Data = pngData.replace(/^data:image\/png;base64,/, '');
     fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
   }
-  
-  console.log(`Visual2D PNG exported: ${filePath}`);
   return filePath;
 }
 
@@ -453,16 +450,36 @@ async function exportSVG(canvas: HTMLCanvasElement, outputPath: string, seed: Se
   const filename = `visual2d_${seed.$hash || 'unknown'}.svg`;
   const filePath = path.join(outputPath, filename);
   
-  // Simplified SVG export (placeholder)
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${canvas.width}" height="${canvas.height}">
+  // Extract pixel data from canvas and generate geometric SVG elements
+  const ctx = canvas.getContext('2d')!;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const w = canvas.width;
+  const h = canvas.height;
+  
+  // Sample pixels at regular intervals and create SVG circles
+  const step = Math.max(2, Math.floor(Math.min(w, h) / 24));
+  const circles: string[] = [];
+  for (let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      const idx = (y * w + x) * 4;
+      const r = data[idx];
+      const g = data[idx + 1];
+      const b = data[idx + 2];
+      const a = data[idx + 3] / 255;
+      if (a > 0.1) {
+        circles.push(`<circle cx="${x}" cy="${y}" r="${step / 2}" fill="rgba(${r},${g},${b},${a})"/>`);
+      }
+    }
+  }
+  
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
     <rect width="100%" height="100%" fill="#0a0a0a"/>
-    <!-- Generated artwork would be converted to SVG paths -->
+    ${circles.join('\n    ')}
   </svg>`;
   
   if (typeof fs !== 'undefined') {
     fs.writeFileSync(filePath, svg);
   }
-  
-  console.log(`Visual2D SVG exported: ${filePath}`);
   return filePath;
 }

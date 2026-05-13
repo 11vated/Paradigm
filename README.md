@@ -22,6 +22,16 @@ same seed + same deterministic RNG + same code = bit-identical output forever
 
 This determinism enables verifiable provenance, trustless collaboration, automatic royalty distribution, and reproducible generative creation across any platform.
 
+### 🔧 Recent Critical Fixes (May 2026)
+- **GSPL Interpreter:** All 24 interpreter tests now pass — fixed async execution, control flow (if/for/while), function calls, kernel operation wiring, and built-in functions (`len`, `domains`, `range`, `Math.*`)
+- **Determinism Hardened:** Replaced all `Date.now()` / `crypto.randomUUID()` with deterministic IDs and zero-timestamps in seed operations, server endpoints, and provenance
+- **UniversalSeed.distance():** Added genetic distance method for GA diversity calculations
+- **Engine Dispatch:** Fixed `growSeed` to correctly flatten dispatch results, resolving character/agent artifact generation
+- **Fitness Evaluators:** Fixed shader evaluator penalty messages for empty genes
+- **Frontend Cleanup:** Removed 4 JSX shadow duplicates (`StudioPage.jsx`, `AgentPanel.jsx`, `AuthPage.jsx`, `LandingPage.jsx`)
+- **Security:** Tightened CSP headers, replaced misleading API key placeholders
+- **Build:** Externalized Node.js builtins in Vite config for production builds
+
 ---
 
 ## Core Capabilities

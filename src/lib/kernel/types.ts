@@ -1,10 +1,17 @@
 // Local type definitions to avoid circular dependencies
+// Mirrors the Seed class shape in seed-class.ts without importing it
 export interface Seed {
+  id?: string;
+  hash?: string;
   $name?: string;
   $domain?: string;
   $hash?: string;
-  $lineage?: { generation?: number };
-  genes?: Record<string, { type?: string; value?: any }>;
+  $lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number };
+  $fitness?: { overall?: number };
+  metadata?: { name?: string; domain?: string; owner?: string; tags?: string[] };
+  genes?: Record<string, { type?: string; value?: any; schema?: any }>;
+  lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number };
+  signature?: string;
   [key: string]: any;
 }
 

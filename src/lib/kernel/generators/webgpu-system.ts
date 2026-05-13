@@ -39,13 +39,11 @@ export class WebGPUGeneratorSystem {
    */
   async init(): Promise<boolean> {
     if (!this.config.preferGPU) {
-      console.log('WebGPU disabled by config');
       return false;
     }
 
     if (!navigator.gpu) {
       if (this.config.fallbackToCPU) {
-        console.log('WebGPU not available, falling back to CPU');
         return false;
       }
       throw new Error('WebGPU not supported and fallback disabled');

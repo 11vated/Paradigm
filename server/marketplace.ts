@@ -250,7 +250,7 @@ export class EnterpriseFeatures {
   }
 }
 
-export class API Routes {
+export class APIRoutes {
   private marketplace: Marketplace;
   private enterprise: EnterpriseFeatures;
   private agent: GSPLAgent;
@@ -313,6 +313,6 @@ export class API Routes {
 }
 
 export function createServer() {
-  const api = new API Routes();
+  const api = new APIRoutes();
   return api.getRouter();
 }

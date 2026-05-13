@@ -1,8 +1,8 @@
 export { Kernel, Xoshiro256SS, FIM, TickSystem, Effects, GeneOperators } from './kernel';
 export { UniversalSeed, GeneType } from './seeds';
-export { Lexer, Parser, Interpreter, GSPLRuntimeError, TypeChecker, TokenType } from './gspl';
+export { tokenize as Lexer, parse as Parser, executeGSPL as Interpreter, typeCheck as TypeChecker, TokenType } from './gspl';
 export type { ASTNode, Program, Token } from './gspl';
-export { GeneticAlgorithm, MAPElites, CMAES, FunctorRegistry, GameFunctor, MusicFunctor, ArtFunctor, StorytellingFunctor } from './evolution';
+export { CMAES, FunctorRegistry, GameFunctor, MusicFunctor, ArtFunctor, StorytellingFunctor } from './evolution';
 export { GSPLAgent, WorldModel } from './intelligence';
 export { Level4Intelligence } from './intelligence/level4';
 export { BaseEngine, createAllEngines } from './engines';

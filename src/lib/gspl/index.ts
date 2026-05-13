@@ -117,8 +117,8 @@ export function executeGSPL(source: string, context?: any): GSPLExecutionResult 
   return { seeds, output, errors };
 }
 
-// Also export the class for advanced usage
-export { GsplInterpreter };
+// Also export the kernel interpreter class for advanced usage
+export { GsplInterpreter, executeGspl } from '../kernel/gspl-interpreter.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPE CHECKER (Optional)

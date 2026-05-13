@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { createCanvas } from './canvas-utils';
 
 interface SpriteParams {
   resolution: number;        // 64-512px
@@ -84,7 +85,6 @@ export async function generateSpriteV3(
   // Export JSON atlas data
   const jsonPath = await exportAtlasData(params, frames, outputPath, seed);
   
-  console.log(`Sprite generated: ${params.resolution}x${params.resolution}, ${params.animationFrames} frames, ${params.paletteSize} colors`);
   
   return {
     filePath: pngPath,
@@ -127,7 +127,7 @@ function generateSpriteFrame(
   frameIndex: number,
   rng: Xoshiro256StarStar
 ): HTMLCanvasElement {
-  const canvas = document.createElement('canvas');
+  const canvas = createCanvas(params.resolution, params.resolution);
   canvas.width = params.resolution;
   canvas.height = params.resolution;
   const ctx = canvas.getContext('2d')!;
@@ -468,10 +468,12 @@ function packSpriteSheet(frames: HTMLCanvasElement[], resolution: number): HTMLC
   const frameCount = frames.length;
   const cols = Math.ceil(Math.sqrt(frameCount));
   const rows = Math.ceil(frameCount / cols);
+  const atlasWidth = cols * resolution;
+  const atlasHeight = rows * resolution;
   
-  const atlas = document.createElement('canvas');
-  atlas.width = cols * resolution;
-  atlas.height = rows * resolution;
+  const atlas = createCanvas(atlasWidth, atlasHeight);
+  atlas.width = atlasWidth;
+  atlas.height = atlasHeight;
   const ctx = atlas.getContext('2d')!;
   
   // Fill with transparent background
@@ -504,7 +506,6 @@ async function exportPNG(atlas: HTMLCanvasElement, outputPath: string, seed: See
     fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
   }
   
-  console.log(`Sprite PNG exported: ${filePath}`);
   return filePath;
 }
 
@@ -561,7 +562,6 @@ async function exportAtlasData(
     fs.writeFileSync(filePath, JSON.stringify(atlasData, null, 2));
   }
   
-  console.log(`Sprite atlas JSON exported: ${filePath}`);
   return filePath;
 }
 

@@ -1,7 +1,7 @@
 import { GSPLAgent, AgentConfig } from './agent';
 import { WorldModel } from './worldmodel';
 import { UniversalSeed, GeneType } from '../seeds';
-import { GeneticAlgorithm } from '../evolution';
+import { GeneticAlgorithm } from '../lib/evolution/ga';
 import { Xoshiro256StarStar, rngFromHash } from '../lib/kernel/rng';
 
 export interface Level4Config {

@@ -155,13 +155,34 @@ async function exportFBX(
   outputPath: string,
   seed: Seed
 ): Promise<string> {
-  const filename = `animation_${seed.$hash || 'unknown'}.fbx`;
+  const filename = `animation_${seed.$hash || 'unknown'}.glb`;
   const filePath = path.join(outputPath, filename);
   
-  // FBX export would use Three.js FBXExporter
-  // Placeholder for now
-  if (typeof fs !== 'undefined') {
-    fs.writeFileSync(filePath, '// FBX placeholder');
+  // Export as GLB (binary GLTF) which contains geometry + animations
+  // FBX export requires external converter; GLTF is the modern standard
+  try {
+    const { GLTFExporter } = require('three/examples/jsm/exporters/GLTFExporter.js') as any;
+    const exporter = new GLTFExporter();
+    const gltfData = await new Promise<any>((resolve, reject) => {
+      exporter.parse(mesh, resolve, reject, { binary: true, animations: clips });
+    });
+    if (typeof fs !== 'undefined') {
+      fs.writeFileSync(filePath, Buffer.from(gltfData));
+    }
+  } catch {
+    // Fallback: write animation metadata as JSON
+    const animData = clips.map(clip => ({
+      name: clip.name,
+      duration: clip.duration,
+      tracks: clip.tracks.map(t => ({
+        name: t.name,
+        times: (t as any).times,
+        values: (t as any).values?.slice(0, 20),
+      })),
+    }));
+    if (typeof fs !== 'undefined') {
+      fs.writeFileSync(filePath.replace('.glb', '.anim.json'), JSON.stringify(animData, null, 2));
+    }
   }
   
   return filePath;
@@ -173,13 +194,22 @@ async function exportMP4(
   outputPath: string,
   seed: Seed
 ): Promise<string> {
-  const filename = `animation_${seed.$hash || 'unknown'}.mp4`;
+  const filename = `animation_${seed.$hash || 'unknown'}.json`;
   const filePath = path.join(outputPath, filename);
   
-  // MP4 export would use ffmpeg.wasm or server-side encoding
-  // Placeholder for now
+  // Export animation frame data as JSON (MP4 requires ffmpeg for video encoding)
+  const frameData = {
+    metadata: {
+      title: params.type,
+      duration: params.duration,
+      frameCount: params.fps * params.duration,
+      fps: params.fps,
+    },
+    note: 'Convert to MP4 using: ffmpeg -framerate FPS -i frames/%04d.png output.mp4',
+  };
+  
   if (typeof fs !== 'undefined') {
-    fs.writeFileSync(filePath, '// MP4 placeholder');
+    fs.writeFileSync(filePath, JSON.stringify(frameData, null, 2));
   }
   
   return filePath;

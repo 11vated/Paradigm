@@ -1,4 +1,10 @@
-export interface Seed {
+/**
+ * @deprecated This type is from the legacy kernel.
+ * Use `import { Seed } from '@/lib/kernel/seed-class'` or the loose type
+ * from `@/lib/kernel/types` for circular-safe references.
+ */
+
+export interface LegacySeed {
   id: string;
   $domain: string;
   $name: string;
@@ -56,3 +62,6 @@ export type GeneType =
   | 'LOGIC' 
   | 'DATA' 
   | 'META';
+
+/** @deprecated Use LegacySeed or import { Seed } from @/lib/kernel/types */
+export type Seed = LegacySeed;

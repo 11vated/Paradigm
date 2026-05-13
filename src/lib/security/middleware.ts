@@ -4,6 +4,7 @@
  * "zero external dependency for core" philosophy.
  */
 import type { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CORS MIDDLEWARE
@@ -94,9 +95,10 @@ export function securityHeaders() {
     // Referrer policy
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 
-    // Content security policy - Minimal for development
+    // Content security policy
     res.setHeader('Content-Security-Policy', 
-      "default-src 'unsafe-inline' 'unsafe-eval' 'self'; " +
+      "default-src 'self'; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       "font-src 'self' https://fonts.gstatic.com; " +
       "img-src 'self' data: blob: https:; " +
@@ -138,8 +140,6 @@ export function requestId() {
     next();
   };
 }
-
-import crypto from 'crypto';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HTTPS ENFORCEMENT (production only)

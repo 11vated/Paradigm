@@ -1,5 +1,6 @@
 import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } from './types';
 import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
+import { distanceGene } from '../lib/kernel/gene_system.js';
 
 const DEFAULT_SEED_TIMESTAMP = 0;
 let deterministicSeedCounter = 0;
@@ -332,6 +333,23 @@ export class UniversalSeed {
   evaluate(fitnessFn: (seed: UniversalSeed) => number): number {
     this.metadata.fitness = fitnessFn(this);
     return this.metadata.fitness;
+  }
+
+  distance(other: UniversalSeed): number {
+    let totalDistance = 0;
+    let count = 0;
+    const allTypes = new Set([...this.genes.keys(), ...other.genes.keys()]);
+    for (const type of allTypes) {
+      const geneA = this.genes.get(type);
+      const geneB = other.genes.get(type);
+      if (!geneA || !geneB) {
+        totalDistance += 1.0;
+      } else {
+        totalDistance += distanceGene(type, geneA.value, geneB.value, geneA);
+      }
+      count++;
+    }
+    return count > 0 ? totalDistance / count : 0.0;
   }
 
   private requireDeterministicFloat(rng: LegacyFloatRng): () => number {

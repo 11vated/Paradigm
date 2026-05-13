@@ -366,9 +366,18 @@ async function startServer() {
     store.addAuditEntry(entry).catch(() => {}); // Non-blocking
   }
 
-  // Helper: create a deterministic RNG from a seed's hash (or random fallback)
+  // Deterministic ID counter (resets per server start — same inputs → same outputs within a run)
+  let deterministicIdCounter = 0;
+  function deterministicSeedId(parentHash?: string, extra?: string): string {
+    deterministicIdCounter += 1;
+    const base = parentHash ? parentHash.slice(0, 16) : deterministicIdCounter.toString(36);
+    const suffix = extra ? `-${extra}` : '';
+    return `seed-${base}${suffix}-${deterministicIdCounter.toString(36).padStart(4, '0')}`;
+  }
+
+  // Helper: create a deterministic RNG from a seed's hash
   function rngFor(seed: any, extra: string = ''): ReturnType<typeof rngFromHash> {
-    const hashSource = (seed.id || crypto.randomUUID()) + extra;
+    const hashSource = (seed.$hash || seed.id || 'deterministic-fallback') + extra;
     return rngFromHash(hashSource);
   }
 
@@ -590,9 +599,10 @@ async function startServer() {
   });
 
   app.post('/api/seeds', optionalAuth, validateBody(CreateSeedSchema), (req: any, res: any) => {
-    const rng = rngFromHash(crypto.randomUUID());
     const domain = req.body.domain || 'character';
     const genes = req.body.genes || {};
+    const seedHash = crypto.createHash('sha256').update(JSON.stringify({ domain, genes })).digest('hex');
+    const rng = rngFromHash(seedHash);
 
     // Validate provided genes
     for (const [name, gene] of Object.entries(genes) as [string, any][]) {
@@ -605,11 +615,11 @@ async function startServer() {
     }
 
     const newSeed: any = {
-      id: crypto.randomUUID(),
+      id: deterministicSeedId(seedHash),
       $domain: domain,
       $name: req.body.name || 'Untitled Seed',
-      $lineage: { generation: 1, operation: 'primordial' },
-      $hash: crypto.createHash('sha256').update(JSON.stringify(genes) + Date.now()).digest('hex'),
+      $lineage: { generation: 1, operation: 'primordial', timestamp: 0 },
+      $hash: seedHash,
       $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
       genes,
     };
@@ -651,7 +661,7 @@ async function startServer() {
     const domain = req.body.domain || 'character';
 
     // Deterministic generation from prompt hash
-    const promptHash = crypto.createHash('sha256').update(promptStr + Date.now()).digest('hex');
+    const promptHash = crypto.createHash('sha256').update(promptStr).digest('hex');
     const rng = rngFromHash(promptHash);
 
     // Build genes appropriate for the domain using the engine's expected gene names
@@ -760,7 +770,7 @@ async function startServer() {
     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
     const rate = req.body.rate || 0.1;
-    const rng = rngFor(parent, 'mutate' + Date.now());
+    const rng = rngFor(parent, 'mutate');
 
     const newGenes: Record<string, any> = {};
     for (const [key, gene] of Object.entries(parent.genes || {}) as [string, any][]) {
@@ -771,16 +781,18 @@ async function startServer() {
       }
     }
 
+    const mutateHash = crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex');
     const newSeed: any = {
       ...parent,
-      id: crypto.randomUUID(),
+      id: deterministicSeedId(parent.$hash, 'mutate'),
       $name: `${parent.$name} (Mutated)`,
       $lineage: {
         generation: (parent.$lineage?.generation || 0) + 1,
         operation: 'mutate',
         parents: [parent.$hash],
+        timestamp: 0,
       },
-      $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
+      $hash: mutateHash,
       $fitness: { overall: Math.min(1.0, Math.max(0.0, (parent.$fitness?.overall || 0.5) + (rng.nextF64() * 0.2 - 0.1))) },
       genes: newGenes,
     };
@@ -809,7 +821,7 @@ async function startServer() {
     const results: any[] = [];
 
     for (let i = 0; i < popSize; i++) {
-      const rng = rngFor(parent, `evolve_${i}_${Date.now()}`);
+      const rng = rngFor(parent, `evolve_${i}`);
       const mutationRate = 0.1 + rng.nextF64() * 0.3; // 10-40% rate for diversity
 
       const newGenes: Record<string, any> = {};
@@ -821,16 +833,18 @@ async function startServer() {
         }
       }
 
+      const evolveHash = crypto.createHash('sha256').update(JSON.stringify(newGenes) + i).digest('hex');
       const newSeed = {
         ...parent,
-        id: crypto.randomUUID(),
+        id: deterministicSeedId(parent.$hash, `evolve-${i}`),
         $name: `${parent.$name} (Evolved ${i + 1})`,
         $lineage: {
           generation: (parent.$lineage?.generation || 0) + generations,
           operation: 'evolve',
           parents: [parent.$hash],
+          timestamp: 0,
         },
-        $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes) + i).digest('hex'),
+        $hash: evolveHash,
         $fitness: { overall: Math.min(1.0, Math.max(0.0, (parent.$fitness?.overall || 0.5) + (rng.nextF64() * 0.4 - 0.2))) },
         genes: newGenes,
       };
@@ -857,7 +871,7 @@ async function startServer() {
     const parentB = seeds.find((s: any) => s.id === req.body.parent_b_id);
     if (!parentA || !parentB) return res.status(404).json({ detail: 'Parent seed(s) not found' });
 
-    const rng = rngFromHash((parentA.$hash || '') + (parentB.$hash || '') + Date.now());
+    const rng = rngFromHash((parentA.$hash || '') + (parentB.$hash || ''));
 
     const newGenes: Record<string, any> = {};
     const allKeys = new Set([...Object.keys(parentA.genes || {}), ...Object.keys(parentB.genes || {})]);
@@ -879,9 +893,10 @@ async function startServer() {
       }
     }
 
+    const breedHash = crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex');
     const newSeed: any = {
       ...parentA,
-      id: crypto.randomUUID(),
+      id: deterministicSeedId(parentA.$hash, 'breed'),
       $domain: parentA.$domain,
       $name: `${parentA.$name} × ${parentB.$name}`,
       $lineage: {
@@ -893,8 +908,9 @@ async function startServer() {
           parentA.$lineage?.ancestry_depth || 0,
           parentB.$lineage?.ancestry_depth || 0
         ) + 1,
+        timestamp: 0,
       },
-      $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
+      $hash: breedHash,
       $fitness: {
         overall: Math.min(1.0, Math.max(0.0,
           ((parentA.$fitness?.overall || 0.5) + (parentB.$fitness?.overall || 0.5)) / 2 +
@@ -943,7 +959,7 @@ async function startServer() {
     seed.$lineage = { 
       generation: (seed.$lineage?.generation || 0) + 1, 
       operation: 'mutate_gene',
-      timestamp: Date.now()
+      timestamp: 0
     };
     seed.$hash = crypto.createHash('sha256').update(JSON.stringify(seed.genes)).digest('hex');
 
@@ -1409,7 +1425,7 @@ async function startServer() {
         }
       }
 
-      const rng = rngFromHash(name + domain + Date.now());
+      const rng = rngFromHash(name + domain);
       const newSeed = {
         id: crypto.randomUUID(),
         $domain: domain,
@@ -1573,7 +1589,7 @@ async function startServer() {
       gematria: { gene_type: 'gematria', value: { word: 'PARADIGM', value: 123 } },
       resonance: { gene_type: 'resonance', value: { frequencies: [440, 880, 1760], amplitudes: [1, 0.5, 0.25] } },
       dimensional: { gene_type: 'dimensional', value: [0.1, 0.2, 0.3, 0.4, 0.5] },
-      sovereignty: { gene_type: 'sovereignty', value: { author_pubkey: '0x...', timestamp: Date.now() } }
+      sovereignty: { gene_type: 'sovereignty', value: { author_pubkey: '0x...', timestamp: 0 } }
     };
     return examples[geneType] || { gene_type: 'scalar', value: 0.5 };
   }

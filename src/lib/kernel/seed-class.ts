@@ -16,10 +16,18 @@
  * Domains: 26 creative domains (character, music, game, architecture, etc.)
  */
 
-import { createHash } from 'crypto';
-import { v4 as uuidv4 } from 'uuid';
 import { Xoshiro256StarStar } from './rng';
 import { GeneSystem, GeneTypeOps, GeneSchema } from './gene_system';
+
+function sha256Sync(data: string): string {
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash |= 0;
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -95,10 +103,9 @@ export class Seed {
 
   constructor(
     domain: string,
-    name: string = `Seed_${domain}_${Date.now()}`,
+    name: string = `Seed_${domain}`,
     genes?: Map<string, GeneValue>
   ) {
-    this.id = uuidv4();
     this.metadata = {
       name,
       domain,
@@ -115,9 +122,10 @@ export class Seed {
       generation: 0,
       parents: [],
       operators: [],
-      timestamp: Date.now(),
+      timestamp: 0,
     };
     this.hash = this.computeHash();
+    this.id = this.hash;
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -142,7 +150,7 @@ export class Seed {
       type,
       value,
       schema,
-      timestamp: Date.now(),
+      timestamp: 0,
     });
 
     const newSeed = new Seed(this.metadata.domain, this.metadata.name, newGenes);
@@ -207,13 +215,13 @@ export class Seed {
       newGenes.set(type, {
         ...geneValue,
         value: mutatedValue,
-        timestamp: Date.now(),
+        timestamp: 0,
       });
     }
 
     const mutated = new Seed(this.metadata.domain, this.metadata.name, newGenes);
     mutated.copyMetadata(this);
-    mutated.addDerivation('mutate', [this.id], intensity);
+    mutated.addDerivation('mutate', [this.id], [this.lineage.generation], intensity);
     return mutated;
   }
 
@@ -251,13 +259,13 @@ export class Seed {
         type,
         value: childValue,
         schema: geneA.schema || geneB.schema,
-        timestamp: Date.now(),
+        timestamp: 0,
       });
     }
 
     const child = new Seed(this.metadata.domain, 'child', newGenes);
     child.metadata.name = `${this.metadata.name} × ${other.metadata.name}`;
-    child.addDerivation('breed', [this.id, other.id]);
+    child.addDerivation('breed', [this.id, other.id], [this.lineage.generation, other.lineage.generation]);
     return child;
   }
 
@@ -275,7 +283,7 @@ export class Seed {
 
     const cloned = new Seed(this.metadata.domain, this.metadata.name, newGenes);
     cloned.copyMetadata(this);
-    cloned.addDerivation('clone', [this.id]);
+    cloned.addDerivation('clone', [this.id], [this.lineage.generation]);
     return cloned;
   }
 
@@ -365,7 +373,7 @@ export class Seed {
     // Canonical form: sorted genes
     const canonical = this.getCanonicalForm();
     const json = JSON.stringify(canonical);
-    return createHash('sha256').update(json).digest('hex');
+    return sha256Sync(json);
   }
 
   /**
@@ -459,11 +467,11 @@ export class Seed {
     this.lineage.fitness = other.lineage.fitness;
   }
 
-  private addDerivation(operator: string, parentIds: string[], params?: any): void {
-    this.lineage.generation = Math.max(...parentIds.map(() => 0), 0) + 1;
+  private addDerivation(operator: string, parentIds: string[], parentGenerations: number[], params?: any): void {
+    this.lineage.generation = Math.max(...parentGenerations, 0) + 1;
     this.lineage.parents = parentIds;
     this.lineage.operators = [...this.lineage.operators, operator];
-    this.lineage.timestamp = Date.now();
+    this.lineage.timestamp = 0;
   }
 }
 

@@ -12,6 +12,86 @@
 import { GsplLexer, TokenType } from './gspl-lexer';
 import { GsplParser, ASTNodeType, type ASTNode } from './gspl-parser';
 
+/**
+ * Normalize kernel AST (named properties) to generic `.children` format
+ * expected by the bytecode compiler.
+ */
+function normalizeAST(node: ASTNode): ASTNode & { children?: ASTNode[] } {
+  if (!node || typeof node !== 'object') return node;
+
+  const normalized: any = { ...node };
+
+  switch (node.type) {
+    case ASTNodeType.BLOCK:
+      normalized.children = (node as any).statements?.map(normalizeAST) ?? [];
+      break;
+    case ASTNodeType.BINARY_EXPR:
+    case ASTNodeType.PIPE_EXPR:
+      normalized.children = [normalizeAST((node as any).left), normalizeAST((node as any).right)].filter(Boolean);
+      break;
+    case ASTNodeType.UNARY_EXPR:
+      normalized.children = [normalizeAST((node as any).operand)].filter(Boolean);
+      break;
+    case ASTNodeType.CALL_EXPR:
+      normalized.children = [
+        (node as any).callee ? { type: ASTNodeType.IDENTIFIER, value: (node as any).callee } : null,
+        ...((node as any).arguments?.map(normalizeAST) ?? []),
+      ].filter(Boolean);
+      break;
+    case ASTNodeType.IF_STMT:
+      normalized.children = [
+        normalizeAST((node as any).condition),
+        ...((node as any).consequent?.statements?.map(normalizeAST) ?? []),
+        ...((node as any).alternate?.statements?.map(normalizeAST) ?? []),
+      ].filter(Boolean);
+      break;
+    case ASTNodeType.FOR_STMT:
+      normalized.children = [
+        { type: ASTNodeType.IDENTIFIER, value: (node as any).variable },
+        normalizeAST((node as any).iterable),
+        ...((node as any).body?.statements?.map(normalizeAST) ?? []),
+      ].filter(Boolean);
+      break;
+    case ASTNodeType.RETURN_STMT:
+      normalized.children = (node as any).value ? [normalizeAST((node as any).value)] : [];
+      break;
+    case ASTNodeType.LET_DECL:
+      normalized.children = [
+        (node as any).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any).name } : null,
+        normalizeAST((node as any).initializer),
+      ].filter(Boolean);
+      break;
+    case ASTNodeType.SEED_DECL:
+      normalized.children = [
+        (node as any).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any).name } : null,
+        (node as any).domain ? { type: ASTNodeType.STRING_LITERAL, value: (node as any).domain } : null,
+        ...((node as any).genes?.map((g: any) => ({
+          type: 'GENE',
+          children: [
+            { type: ASTNodeType.IDENTIFIER, value: g.name },
+            normalizeAST(g.value),
+          ],
+        })) ?? []),
+      ].filter(Boolean);
+      break;
+    default:
+      // Leaf nodes (LITERAL, IDENTIFIER, etc.) have no children
+      break;
+  }
+
+  return normalized;
+}
+
+/**
+ * Flatten an array of AST nodes into a block with children
+ */
+function flattenToBlock(nodes: ASTNode[]): ASTNode & { children?: ASTNode[] } {
+  return normalizeAST({
+    type: ASTNodeType.BLOCK,
+    statements: nodes,
+  } as any);
+}
+
 // Opcodes
 export enum Opcode {
   // Stack operations
@@ -166,7 +246,9 @@ export class GsplBytecodeCompiler {
     const parser = new GsplParser(tokens);
     const ast = parser.parse();
 
-    this.compileProgram(ast[0] as ASTNode);
+    // Normalize kernel AST to generic `.children` format
+    const normalized = flattenToBlock(ast);
+    this.compileProgram(normalized as ASTNode);
 
     // Add halt instruction
     this.state.emit(Opcode.HALT);

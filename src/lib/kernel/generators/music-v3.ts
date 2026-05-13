@@ -55,26 +55,21 @@ export async function generateMusicV3(
   const rng = new Xoshiro256StarStar(seed.$hash || 'music-default-seed');
   const params = extractMusicParams(seed, rng);
   
-  console.log(`Generating music: ${params.tempo} BPM, ${params.key} ${params.scale}, ${params.duration}s`);
   
   // Generate composition
   const notes: Note[] = composeMusic(params, rng);
   
-  // Synthesize audio (simulated - WebAudio requires browser context)
-  const stems: Stem[] = await synthesizeStems(notes, params, rng);
-  
-  // Export WAV (44.1kHz, 24-bit)
-  const wavPath = await exportWAV(stems, outputPath, seed);
+  // Export WAV with actual synthesized audio
+  const wavPath = await exportWAV(notes, params, outputPath, seed);
   
   // Export MIDI
   const midiPath = await exportMIDI(notes, params, outputPath, seed);
   
-  console.log(`Music generated: ${wavPath}, ${midiPath}, ${stems.length} stems`);
   
   return {
     wavPath,
     midiPath,
-    stems: stems.map(s => s.path),
+    stems: [],
     duration: params.duration,
     tempo: params.tempo
   };
@@ -121,7 +116,6 @@ function composeMusic(params: MusicParams, rng: Xoshiro256StarStar): Note[] {
   const totalBeats = Math.floor((params.duration / 60) * params.tempo);
   const totalMeasures = Math.floor(totalBeats / beatsPerMeasure);
   
-  console.log(`Composing ${totalMeasures} measures, ${totalBeats} beats total`);
   
   // Generate chord progression
   const progression = generateChordProgression(params, rng);
@@ -381,29 +375,101 @@ async function synthesizeStems(
 }
 
 /**
- * Export mixed audio as WAV
+ * Synthesize actual WAV audio from note data
+ */
+function midiToFreq(pitch: number): number {
+  return 440 * Math.pow(2, (pitch - 69) / 12);
+}
+
+function renderNotesToSamples(
+  notes: Note[],
+  tempo: number,
+  sampleRate: number,
+  durationSeconds: number,
+  rng: Xoshiro256StarStar
+): Float32Array {
+  const numSamples = Math.floor(sampleRate * durationSeconds);
+  const buffer = new Float32Array(numSamples);
+  const beatsPerSecond = tempo / 60;
+
+  for (const note of notes) {
+    const startSample = Math.floor(note.start / beatsPerSecond * sampleRate);
+    const durationSamples = Math.floor(note.duration / beatsPerSecond * sampleRate);
+    const freq = midiToFreq(note.pitch);
+    const amplitude = (note.velocity / 127) * 0.3;
+
+    for (let i = 0; i < durationSamples; i++) {
+      const sampleIdx = startSample + i;
+      if (sampleIdx >= numSamples) break;
+
+      const t = i / sampleRate;
+      const envelope = Math.min(1, t * 200) * Math.max(0, 1 - t * 2);
+      let sample = 0;
+
+      if (note.instrument === 'drums') {
+        sample = (rng.nextF64() * 2 - 1) * Math.exp(-t * 40);
+      } else if (note.instrument === 'bass') {
+        sample = Math.sin(2 * Math.PI * freq * t) * 0.8
+          + Math.sin(2 * Math.PI * freq * 2 * t) * 0.2;
+      } else {
+        sample = Math.sin(2 * Math.PI * freq * t) * 0.6
+          + Math.sin(2 * Math.PI * freq * 3 * t) * 0.15
+          + Math.sin(2 * Math.PI * freq * 5 * t) * 0.05;
+      }
+
+      buffer[sampleIdx] += sample * amplitude * envelope;
+    }
+  }
+
+  // Normalize to prevent clipping
+  let maxAbs = 0;
+  for (let i = 0; i < numSamples; i++) {
+    const abs = Math.abs(buffer[i]);
+    if (abs > maxAbs) maxAbs = abs;
+  }
+  if (maxAbs > 1) {
+    for (let i = 0; i < numSamples; i++) {
+      buffer[i] /= maxAbs;
+    }
+  }
+
+  return buffer;
+}
+
+/**
+ * Export mixed audio as WAV (16-bit PCM for compatibility)
  */
 async function exportWAV(
-  stems: Stem[],
+  notes: Note[],
+  params: MusicParams,
   outputPath: string,
   seed: Seed
 ): Promise<string> {
   const filename = `music_${seed.$hash || 'unknown'}.wav`;
   const filePath = path.join(outputPath, filename);
   
-  // Generate WAV file (44.1kHz, 24-bit)
-  // In browser: use AudioWorklet or offline context
-  // In Node: use wav encoder library
-  
-  // Placeholder: create minimal WAV header
   const sampleRate = 44100;
   const numChannels = 2;
-  const bitsPerSample = 24;
-  const duration = 60; // seconds
-  const numSamples = sampleRate * duration;
+  const bitsPerSample = 16;
+  const durationSeconds = params.duration;
+  const numSamples = Math.floor(sampleRate * durationSeconds);
   const byteRate = sampleRate * numChannels * bitsPerSample / 8;
   const blockAlign = numChannels * bitsPerSample / 8;
   const dataSize = numSamples * numChannels * bitsPerSample / 8;
+  
+  // Render mono samples
+  const rng = rngFromHash(seed.$hash || 'music-default');
+  const mono = renderNotesToSamples(notes, params.tempo, sampleRate, durationSeconds, rng);
+  
+  // Interleave to stereo (duplicate mono for now)
+  const audioData = Buffer.alloc(dataSize);
+  for (let i = 0; i < numSamples; i++) {
+    const sample = Math.max(-1, Math.min(1, mono[i]));
+    const intSample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+    const val = Math.floor(intSample);
+    audioData.writeInt16LE(val, i * 4);       // Left
+    audioData.writeInt16LE(val, i * 4 + 2);   // Right
+  }
   
   const header = Buffer.alloc(44);
   header.write('RIFF', 0);
@@ -411,7 +477,7 @@ async function exportWAV(
   header.write('WAVE', 8);
   header.write('fmt ', 12);
   header.writeUInt32LE(16, 16);
-  header.writeUInt16LE(1, 20);
+  header.writeUInt16LE(1, 20);                 // PCM
   header.writeUInt16LE(numChannels, 22);
   header.writeUInt32LE(sampleRate, 24);
   header.writeUInt32LE(byteRate, 28);
@@ -420,16 +486,12 @@ async function exportWAV(
   header.write('data', 36);
   header.writeUInt32LE(dataSize, 40);
   
-  // Generate silent audio data (placeholder)
-  const audioData = Buffer.alloc(dataSize);
-  
   const wavBuffer = Buffer.concat([header, audioData]);
   
   if (typeof fs !== 'undefined') {
     fs.writeFileSync(filePath, wavBuffer);
   }
   
-  console.log(`WAV exported: ${filePath} (${duration}s, ${sampleRate}Hz, ${bitsPerSample}-bit)`);
   return filePath;
 }
 
@@ -472,6 +534,5 @@ async function exportMIDI(
     fs.writeFileSync(filePath, midiBuffer);
   }
   
-  console.log(`MIDI exported: ${filePath} (${notes.length} notes)`);
   return filePath;
 }

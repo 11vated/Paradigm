@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Shield, Download, Check, X } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ExportPanel({ seed, onSeedUpdated }) {
   const [keys, setKeys] = useState(null);
@@ -15,7 +16,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
     try {
       const k = await generateKeysInStore();
       setKeys(k);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); toast.error('Key generation failed'); }
   };
 
   const handleSign = async () => {
@@ -25,7 +26,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
       const result = await signCurrentSeed(keys.private_key);
       if (onSeedUpdated && result) onSeedUpdated(result);
       setVerifyResult(result?.verified);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); toast.error('Signing failed'); }
     setSigning(false);
   };
 
@@ -35,7 +36,7 @@ export default function ExportPanel({ seed, onSeedUpdated }) {
     try {
       const result = await verifyCurrentSeed(keys.public_key);
       setVerifyResult(result?.verified);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); toast.error('Verification failed'); }
     setVerifying(false);
   };
 

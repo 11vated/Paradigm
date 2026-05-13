@@ -3,6 +3,8 @@
  * Features: 4-8 bounces, importance sampling, MIS, next-event estimation
  */
 
+import { Xoshiro256StarStar, rngFromHash } from '../kernel/rng.js';
+
 export interface PathTracerConfig {
   maxBounces: number;
   samplesPerPixel: number;
@@ -16,8 +18,9 @@ export class PathTracer {
   private config: PathTracerConfig;
   private accumulationBuffer: Float32Array | null = null;
   private sampleCount: number = 0;
+  private rng: Xoshiro256StarStar;
 
-  constructor(config: Partial<PathTracerConfig> = {}) {
+  constructor(config: Partial<PathTracerConfig> = {}, seedHash?: string) {
     this.config = {
       maxBounces: config.maxBounces || 4,
       samplesPerPixel: config.samplesPerPixel || 64,
@@ -26,6 +29,7 @@ export class PathTracer {
       enableIndirectLighting: config.enableIndirectLighting !== false,
       enableShadows: config.enableShadows !== false
     };
+    this.rng = rngFromHash(seedHash || 'path-tracer-default');
   }
 
   /**
@@ -71,8 +75,8 @@ export class PathTracer {
     const { width, height } = this.config.resolution;
     
     // Generate camera ray
-    const u = (x + Math.random()) / width;
-    const v = (y + Math.random()) / height;
+    const u = (x + this.rng.nextF64()) / width;
+    const v = (y + this.rng.nextF64()) / height;
     const ray = this.generateCameraRay(u, v, camera);
 
     // Accumulate samples
@@ -293,8 +297,8 @@ export class PathTracer {
    * Generate cosine-weighted random direction for diffuse bounce
    */
   private cosineWeightedDirection(normal: any): any {
-    const u1 = Math.random();
-    const u2 = Math.random();
+    const u1 = this.rng.nextF64();
+    const u2 = this.rng.nextF64();
 
     const z = Math.sqrt(1 - u1);
     const r = Math.sqrt(u1);

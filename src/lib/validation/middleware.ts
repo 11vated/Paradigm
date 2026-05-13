@@ -45,9 +45,9 @@ function getExample(field: string): any {
     gene_name: 'size',
     gene_type: 'scalar',
     value: 0.75,
-    owner: '0x1234567890abcdef1234567890abcdef12345678',
-    private_key: 'sk_...',
-    public_key: 'pk_...',
+    owner: '0x...',
+    private_key: '<redacted>',
+    public_key: '<your-public-key>',
   };
   return examples[field] || '...';
 }

@@ -167,8 +167,6 @@ if (typeof Module !== 'undefined') {
 if (typeof window !== 'undefined') {
   window.GameLogic = { updateGame, GameState, vec2Length, vec2Normalize };
 }
-
-console.log('Game logic loaded (WASM-ready)');
 `;
 }
 

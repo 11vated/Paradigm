@@ -49,7 +49,7 @@ export class MAPElites {
       elitismCount: config.elitismCount || 1,
     };
     this.grid = new Map();
-    this.rng = new Xoshiro256StarStar(Date.now().toString());
+    this.rng = new Xoshiro256StarStar('map-elites-default');
   }
 
   private getCellKey(features: number[]): string {

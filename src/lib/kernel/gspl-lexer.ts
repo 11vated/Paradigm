@@ -174,8 +174,8 @@ export class GsplLexer {
         continue;
       }
 
-      // Identifier or keyword
-      if (this.isAlpha(char) || char === '_') {
+      // Identifier or keyword (including $ prefix for seed metadata)
+      if (this.isAlpha(char) || char === '_' || char === '$') {
         this.tokenizeIdentifier();
         continue;
       }
@@ -337,7 +337,7 @@ export class GsplLexer {
     const startLine = this.line;
     const startCol = this.column;
 
-    while (this.pos < this.source.length && (this.isAlphaNum(this.source[this.pos]) || this.source[this.pos] === '_')) {
+    while (this.pos < this.source.length && (this.isAlphaNum(this.source[this.pos]) || this.source[this.pos] === '_' || this.source[this.pos] === '$')) {
       this.advance();
     }
 

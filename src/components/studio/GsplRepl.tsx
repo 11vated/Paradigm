@@ -54,7 +54,7 @@ export function GsplRepl() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
-  const [activeTab, setActiveTab] = useState<'output' | 'tokens' | 'tokens' | 'ast' | 'preview'>('output');
+  const [activeTab, setActiveTab] = useState<'output' | 'tokens' | 'ast' | 'preview'>('output');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLIFrameElement>(null);

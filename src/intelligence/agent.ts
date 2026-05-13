@@ -1,5 +1,5 @@
 import { UniversalSeed } from '../seeds';
-import { Interpreter } from '../gspl';
+import { executeGSPL } from '../gspl';
 
 export interface AgentConfig {
   name: string;
@@ -24,7 +24,6 @@ export interface AgentContext {
 export class GSPLAgent {
   private config: AgentConfig;
   private context: AgentContext;
-  private interpreter: Interpreter;
   private sessionId: string;
   private state: Map<string, unknown> = new Map();
 
@@ -36,7 +35,6 @@ export class GSPLAgent {
       temperature: config.temperature ?? 0.7,
       contextWindow: config.contextWindow ?? 8192
     };
-    this.interpreter = new Interpreter();
     this.sessionId = crypto.randomUUID();
     this.context = {
       messages: [{
@@ -90,7 +88,7 @@ Always explain your reasoning and show code before execution.`;
     const code = this.extractGSPLCode(input);
     if (code) {
       try {
-        const result = this.interpreter.execute(code);
+        const result = executeGSPL(code);
         return `Executed GSPL code:\n\`\`\`\n${code}\n\`\`\`\nResult: ${JSON.stringify(result, null, 2)}`;
       } catch (error) {
         return `Error: ${error}`;
@@ -143,7 +141,7 @@ Always explain your reasoning and show code before execution.`;
         print("Created seed:", newSeed.name);
       `;
       try {
-        this.interpreter.execute(seedCode);
+        executeGSPL(seedCode);
         return `Created a new seed with color palette and motion configuration.`;
       } catch (e) {
         return `Error creating seed: ${e}`;

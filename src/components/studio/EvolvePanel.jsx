@@ -3,6 +3,7 @@ import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Loader2, Zap } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function EvolvePanel({ seed, onEvolved }) {
   const [algorithm, setAlgorithm] = useState('map_elites');
@@ -17,7 +18,7 @@ export default function EvolvePanel({ seed, onEvolved }) {
     try {
       const evolved = await evolveCurrentSeed({ algorithm, population_size: popSize, generations });
       if (onEvolved && evolved.population) onEvolved(evolved.population);
-    } catch (e) { console.error(e); }
+    } catch (e) { console.error(e); toast.error('Evolution failed'); }
     setLoading(false);
   };
 

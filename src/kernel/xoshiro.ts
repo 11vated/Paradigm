@@ -1,7 +1,7 @@
 export class Xoshiro256SS {
   private s: [number, number, number, number, number, number, number, number];
 
-  constructor(seed: number = Date.now()) {
+  constructor(seed: number) {
     this.s = this.splitMix64(seed);
   }
 
@@ -103,4 +103,7 @@ export function createSeededRNG(seed: number): Xoshiro256SS {
   return new Xoshiro256SS(seed);
 }
 
+/**
+ * @deprecated Legacy 32-bit RNG. Use Xoshiro256StarStar from @/lib/kernel/rng instead.
+ */
 export const Xoshiro256StarStar = Xoshiro256SS;

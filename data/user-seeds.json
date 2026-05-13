@@ -13860,5 +13860,465 @@
         "value": 0.5482187894019861
       }
     }
+  },
+  {
+    "id": "754231d3-3044-4b1f-a782-ec55ee0093d0",
+    "$domain": "character",
+    "$name": "Test Character",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "27f217f04e782d5e632e30741460b0fce97ce68204ef615fb35ba18476669b8f",
+    "$fitness": {
+      "overall": 0.5650237389699787
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "f880384e-845c-4df5-8e0a-70905c713b50",
+    "$domain": "character",
+    "$name": "Test Character (Mutated)",
+    "$lineage": {
+      "generation": 2,
+      "operation": "mutate",
+      "parents": [
+        "27f217f04e782d5e632e30741460b0fce97ce68204ef615fb35ba18476669b8f"
+      ]
+    },
+    "$hash": "199e65236cc6f165f5bcb2f9017bb8afcdaf0871512c0954c98acd18f1b13e31",
+    "$fitness": {
+      "overall": 0.48962079057603153
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "d4815c05-055e-4779-afbb-30e61e892a31",
+    "$domain": "character",
+    "$name": "Parent 1",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "2a956f310592009ac03367174eacf4097b27f6202d956067dc6dc1568f45dc5e",
+    "$fitness": {
+      "overall": 0.5176706022248838
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.5
+      }
+    }
+  },
+  {
+    "id": "db7d9f2d-7274-4cab-bcbb-a628c8295831",
+    "$domain": "character",
+    "$name": "Parent 2",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "87e3a1aed69cb399f14aaf12e011a4a3b7c50ff43e27db49f54b75e0c1ed8a61",
+    "$fitness": {
+      "overall": 0.3288287681415663
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.8
+      }
+    }
+  },
+  {
+    "id": "d278a7bc-8524-43b8-8a57-0cba9a801920",
+    "$domain": "character",
+    "$name": "Parent 1 × Parent 2",
+    "$lineage": {
+      "generation": 2,
+      "operation": "breed",
+      "parents": [
+        "2a956f310592009ac03367174eacf4097b27f6202d956067dc6dc1568f45dc5e",
+        "87e3a1aed69cb399f14aaf12e011a4a3b7c50ff43e27db49f54b75e0c1ed8a61"
+      ],
+      "parent_ids": [
+        "d4815c05-055e-4779-afbb-30e61e892a31",
+        "db7d9f2d-7274-4cab-bcbb-a628c8295831"
+      ],
+      "ancestry_depth": 1
+    },
+    "$hash": "c1f72b2a797190f7289e5cae0820036aaf1d566d850fb817964f3c89e3f755e0",
+    "$fitness": {
+      "overall": 0.45384271217406946
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.6929947007297143
+      }
+    }
+  },
+  {
+    "id": "b582c7e5-5caf-4a40-b0bc-d58cb7b16756",
+    "$domain": "character",
+    "$name": "Test Character",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "c1d579dbae1ce93e0e86685ada64e7c53356b2c54558b0eda763982aad0b2a53",
+    "$fitness": {
+      "overall": 0.4868656638654795
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "62b2ffb8-14e7-4aee-a5c8-e47bfaa10e5a",
+    "$domain": "character",
+    "$name": "Test Character (Mutated)",
+    "$lineage": {
+      "generation": 2,
+      "operation": "mutate",
+      "parents": [
+        "c1d579dbae1ce93e0e86685ada64e7c53356b2c54558b0eda763982aad0b2a53"
+      ]
+    },
+    "$hash": "199e65236cc6f165f5bcb2f9017bb8afcdaf0871512c0954c98acd18f1b13e31",
+    "$fitness": {
+      "overall": 0.5121233031068093
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "67ac5e10-c5e2-444e-99a1-c2efc2489b6b",
+    "$domain": "character",
+    "$name": "Parent 1",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "ee236ca5f5583db1b0891c7ed6eeb24c53f1cf6479f1726e0ba0089b6592d391",
+    "$fitness": {
+      "overall": 0.33478883956497113
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.5
+      }
+    }
+  },
+  {
+    "id": "e8df9d13-7c37-4e12-8e95-76a303180fb2",
+    "$domain": "character",
+    "$name": "Parent 2",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "0fc529d9ef55ebd7bcc9503cde82e0174e3dc7f767594528e1fa002d728b2236",
+    "$fitness": {
+      "overall": 0.32585077266601886
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.8
+      }
+    }
+  },
+  {
+    "id": "7bf1eb1c-5365-476c-80e9-84c74f132f4b",
+    "$domain": "character",
+    "$name": "Parent 1 × Parent 2",
+    "$lineage": {
+      "generation": 2,
+      "operation": "breed",
+      "parents": [
+        "ee236ca5f5583db1b0891c7ed6eeb24c53f1cf6479f1726e0ba0089b6592d391",
+        "0fc529d9ef55ebd7bcc9503cde82e0174e3dc7f767594528e1fa002d728b2236"
+      ],
+      "parent_ids": [
+        "67ac5e10-c5e2-444e-99a1-c2efc2489b6b",
+        "e8df9d13-7c37-4e12-8e95-76a303180fb2"
+      ],
+      "ancestry_depth": 1
+    },
+    "$hash": "50b538f5cda93ff622908b7f17bdd7b2ff0b0d6c380205a3915d6d79fce066bc",
+    "$fitness": {
+      "overall": 0.35850477816641485
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7596620974335808
+      }
+    }
+  },
+  {
+    "id": "276c1625-b13c-4acd-af9c-498cb6cf22a3",
+    "$domain": "character",
+    "$name": "Test Character",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "67a3171e84cbad35f7a0b4485dbb71310aeb4d4108b7ce1412f2d64ed27fcf56",
+    "$fitness": {
+      "overall": 0.5560371706072467
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "a897f486-7c71-45f0-9b85-832e31074b64",
+    "$domain": "character",
+    "$name": "Test Character (Mutated)",
+    "$lineage": {
+      "generation": 2,
+      "operation": "mutate",
+      "parents": [
+        "67a3171e84cbad35f7a0b4485dbb71310aeb4d4108b7ce1412f2d64ed27fcf56"
+      ]
+    },
+    "$hash": "199e65236cc6f165f5bcb2f9017bb8afcdaf0871512c0954c98acd18f1b13e31",
+    "$fitness": {
+      "overall": 0.4698155045683484
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "1518ba49-3072-4412-83cd-e8670136a1d8",
+    "$domain": "character",
+    "$name": "Parent 1",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "b0e1f5052fbb5f3919bef79874e889d898913e66fb7b467ddc1851a0a6ca9de8",
+    "$fitness": {
+      "overall": 0.6364865556550194
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.5
+      }
+    }
+  },
+  {
+    "id": "0af013eb-a786-40c2-9aff-275ebb79acac",
+    "$domain": "character",
+    "$name": "Parent 2",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "1e2a68d4ee7c6ce1bd2b0f749a16adf47238a44d63da4cb4af944f9ff0ed5875",
+    "$fitness": {
+      "overall": 0.6549543902936408
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.8
+      }
+    }
+  },
+  {
+    "id": "32083226-15b7-4a77-8398-700a60d0a36f",
+    "$domain": "character",
+    "$name": "Parent 1 × Parent 2",
+    "$lineage": {
+      "generation": 2,
+      "operation": "breed",
+      "parents": [
+        "b0e1f5052fbb5f3919bef79874e889d898913e66fb7b467ddc1851a0a6ca9de8",
+        "1e2a68d4ee7c6ce1bd2b0f749a16adf47238a44d63da4cb4af944f9ff0ed5875"
+      ],
+      "parent_ids": [
+        "1518ba49-3072-4412-83cd-e8670136a1d8",
+        "0af013eb-a786-40c2-9aff-275ebb79acac"
+      ],
+      "ancestry_depth": 1
+    },
+    "$hash": "c17d5e08777cd14c0f82d47fcd9cafd57975703feee75d643466fa14073fc345",
+    "$fitness": {
+      "overall": 0.6219500630903273
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.5006463303311482
+      }
+    }
+  },
+  {
+    "id": "581325ff-b8d2-4e80-b1bc-abcbbe21a726",
+    "$domain": "character",
+    "$name": "Test Character",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "67d18608d2acbc8440dc2625a248c48a2c6d5acfbad84f9cc2c55796d2ab795d",
+    "$fitness": {
+      "overall": 0.41220707128227846
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "2b309148-9ff4-4c6a-ae7b-71942f340f61",
+    "$domain": "character",
+    "$name": "Test Character (Mutated)",
+    "$lineage": {
+      "generation": 2,
+      "operation": "mutate",
+      "parents": [
+        "67d18608d2acbc8440dc2625a248c48a2c6d5acfbad84f9cc2c55796d2ab795d"
+      ]
+    },
+    "$hash": "199e65236cc6f165f5bcb2f9017bb8afcdaf0871512c0954c98acd18f1b13e31",
+    "$fitness": {
+      "overall": 0.4287645443637077
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7
+      },
+      "archetype": {
+        "type": "categorical",
+        "value": "warrior"
+      }
+    }
+  },
+  {
+    "id": "ad778d15-a43e-4b1a-aec7-b983df6f6e0a",
+    "$domain": "character",
+    "$name": "Parent 1",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "b09ec9d3b71b5f1263e6bba898e3a3bc2ea87f7a767053c9b8433109b5951294",
+    "$fitness": {
+      "overall": 0.5798286295877612
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.5
+      }
+    }
+  },
+  {
+    "id": "28edd013-fa37-4d53-b853-dedbe2356905",
+    "$domain": "character",
+    "$name": "Parent 2",
+    "$lineage": {
+      "generation": 1,
+      "operation": "primordial"
+    },
+    "$hash": "70fb79361b10e820e95149d2d1f016ffe794e2175e8f788fbe83a70561e1520c",
+    "$fitness": {
+      "overall": 0.37107559330750794
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.8
+      }
+    }
+  },
+  {
+    "id": "d03c3cda-dcce-44ef-bbbc-3ec55dfde81e",
+    "$domain": "character",
+    "$name": "Parent 1 × Parent 2",
+    "$lineage": {
+      "generation": 2,
+      "operation": "breed",
+      "parents": [
+        "b09ec9d3b71b5f1263e6bba898e3a3bc2ea87f7a767053c9b8433109b5951294",
+        "70fb79361b10e820e95149d2d1f016ffe794e2175e8f788fbe83a70561e1520c"
+      ],
+      "parent_ids": [
+        "ad778d15-a43e-4b1a-aec7-b983df6f6e0a",
+        "28edd013-fa37-4d53-b853-dedbe2356905"
+      ],
+      "ancestry_depth": 1
+    },
+    "$hash": "2ed7ae160fa5149c86ecfcedb6fa0b1383a63ee70a5fa32b1b6b87b893f61c9a",
+    "$fitness": {
+      "overall": 0.5031862844266836
+    },
+    "genes": {
+      "size": {
+        "type": "scalar",
+        "value": 0.7852393416230176
+      }
+    }
   }
 ]

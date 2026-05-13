@@ -118,7 +118,7 @@ export class AdvancedMaterialSystem {
     let pdf: number;
     let weight: [number, number, number];
     
-    if (Math.random() < avgF) {
+    if (u1 < avgF) {
       // Sample specular
       const alpha = Math.max(0.001, material.roughness * material.roughness);
       const halfDir = this.sampleGGX(N, alpha, u1, u2);

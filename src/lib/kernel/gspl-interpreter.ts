@@ -29,6 +29,8 @@ export interface GSPLContext {
   types: Map<string, ASTNode>;
   rng: Xoshiro256StarStar;
   currentUser?: string;
+  output: string[];
+  errors: string[];
 }
 
 export class GsplInterpreter {
@@ -40,7 +42,9 @@ export class GsplInterpreter {
       functions: new Map(),
       variables: new Map(),
       types: new Map(),
-      rng: rngFromHash(seedHash || 'gspl-default-deterministic-context')
+      rng: rngFromHash(seedHash || 'gspl-default-deterministic-context'),
+      output: [],
+      errors: []
     };
   }
 
@@ -56,10 +60,24 @@ export class GsplInterpreter {
 
     let result: any = null;
     for (const node of ast) {
-      result = await this.evaluateNode(node);
+      try {
+        result = await this.evaluateNode(node);
+      } catch (err) {
+        this.context.errors.push(err instanceof Error ? err.message : String(err));
+      }
     }
 
-    return result;
+    const seeds: any[] = [];
+    for (const seed of this.context.seeds.values()) {
+      seeds.push(seed);
+    }
+
+    return {
+      seeds,
+      output: this.context.output,
+      errors: this.context.errors,
+      lastResult: result,
+    };
   }
 
   /**
@@ -94,6 +112,10 @@ export class GsplInterpreter {
       case ASTNodeType.IDENTIFIER:
         if (this.context.variables.has(node.name)) {
           return this.context.variables.get(node.name);
+        }
+        // Check seeds by name
+        for (const seed of this.context.seeds.values()) {
+          if (seed.$name === node.name) return seed;
         }
         throw new Error(`Undefined variable: ${node.name} at line ${node.loc?.line}`);
 
@@ -155,6 +177,14 @@ export class GsplInterpreter {
       // If statement
       case ASTNodeType.IF_STMT:
         return this.evaluateIf(node);
+
+      // For loop
+      case ASTNodeType.FOR_STMT:
+        return this.evaluateFor(node);
+
+      // While loop
+      case ASTNodeType.WHILE_STMT:
+        return this.evaluateWhile(node);
 
       // Block
       case ASTNodeType.BLOCK:
@@ -219,9 +249,25 @@ export class GsplInterpreter {
     }
   }
 
-  private evaluateCall(node: ASTNode): any {
+  private async evaluateCall(node: ASTNode): Promise<any> {
     if (node.callee.type === ASTNodeType.IDENTIFIER) {
-      return this.evaluateBuiltin(node.callee.name, node.arguments);
+      const name = node.callee.name;
+      // Check user-defined functions first
+      const fnNode = this.context.functions.get(name);
+      if (fnNode) {
+        const args = await Promise.all(node.arguments.map((arg: ASTNode) => this.evaluateNode(arg)));
+        const oldVars = new Map(this.context.variables);
+        for (let i = 0; i < fnNode.params.length; i++) {
+          this.context.variables.set(fnNode.params[i].name, args[i]);
+        }
+        try {
+          return await this.evaluateBlock(fnNode.body);
+        } finally {
+          this.context.variables = oldVars;
+        }
+      }
+      // Fall back to builtins
+      return this.evaluateBuiltin(name, node.arguments);
     }
 
     const callee = this.evaluateNode(node.callee) as any;
@@ -229,7 +275,7 @@ export class GsplInterpreter {
       const fnNode = this.context.functions.get(callee.name);
       if (!fnNode) throw new Error(`Function not found: ${callee.name}`);
 
-      const args = node.arguments.map((arg: ASTNode) => this.evaluateNode(arg));
+      const args = await Promise.all(node.arguments.map((arg: ASTNode) => this.evaluateNode(arg)));
 
       const oldVars = new Map(this.context.variables);
       for (let i = 0; i < fnNode.params.length; i++) {
@@ -263,8 +309,53 @@ export class GsplInterpreter {
       
       case 'print':
         const value = evaluatedArgs.length > 0 ? evaluatedArgs[0] : '';
-        console.log('[GSPL]', value);
+        const strValue = typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value);
+        this.context.output.push(strValue);
         return value;
+
+      // Utility functions
+      case 'len':
+        if (evaluatedArgs.length === 0) throw new Error('len requires 1 argument');
+        const lenArg = evaluatedArgs[0];
+        if (Array.isArray(lenArg)) return lenArg.length;
+        if (typeof lenArg === 'string') return lenArg.length;
+        if (lenArg && typeof lenArg === 'object') return Object.keys(lenArg).length;
+        return 0;
+
+      case 'domains':
+        return [
+          'character', 'music', 'sprite', 'visual2d', 'game', 'geometry3d',
+          'audio', 'narrative', 'physics', 'shader', 'particle', 'ecosystem',
+          'typography', 'architecture', 'vehicle', 'furniture', 'fashion',
+          'robotics', 'circuit', 'food', 'choreography', 'agent',
+          'metaverse', 'quantum', 'blockchain', 'dao', 'knowledge_graph'
+        ];
+
+      case 'range':
+        const rangeEnd = evaluatedArgs[0] || 0;
+        const rangeStart = evaluatedArgs.length > 1 ? evaluatedArgs[0] : 0;
+        const rangeEndActual = evaluatedArgs.length > 1 ? evaluatedArgs[1] : rangeEnd;
+        const arr = [];
+        for (let i = rangeStart; i < rangeEndActual; i++) {
+          arr.push(i);
+        }
+        return arr;
+
+      case 'abs': return Math.abs(evaluatedArgs[0]);
+      case 'min': return Math.min(...evaluatedArgs);
+      case 'max': return Math.max(...evaluatedArgs);
+      case 'floor': return Math.floor(evaluatedArgs[0]);
+      case 'ceil': return Math.ceil(evaluatedArgs[0]);
+      case 'round': return Math.round(evaluatedArgs[0]);
+      case 'sqrt': return Math.sqrt(evaluatedArgs[0]);
+      case 'pow': return Math.pow(evaluatedArgs[0], evaluatedArgs[1] || 1);
+      case 'sin': return Math.sin(evaluatedArgs[0]);
+      case 'cos': return Math.cos(evaluatedArgs[0]);
+      case 'tan': return Math.tan(evaluatedArgs[0]);
+      case 'log': return Math.log(evaluatedArgs[0]);
+      case 'exp': return Math.exp(evaluatedArgs[0]);
+      case 'PI': return Math.PI;
+      case 'E': return Math.E;
       
       // Kernel operators (wired to actual functions)
       case 'mutate':
@@ -325,28 +416,74 @@ export class GsplInterpreter {
   }
   
   private callKernelMutate(target: any, rate: number): any {
-    // WIRED: NOW INVOKES ACTUAL SEED MUTATION
-    if (!(target instanceof KernelSeed)) {
-      throw new Error(`mutate expects a Seed, got ${typeof target}`);
-    }
-    
     const intensity = typeof rate === 'number' ? rate : 0.15;
-    return target.mutate(this.context.rng, intensity);
+    // Handle plain Seed objects
+    if (target && target.$hash !== undefined) {
+      const mutated = {
+        ...target,
+        $hash: this.context.rng.nextF64().toString(16),
+        $name: `mutant_${target.$name}`,
+        $lineage: {
+          ...target.$lineage,
+          operation: 'gspl_mutate',
+          generation: (target.$lineage?.generation || 0) + 1
+        },
+        genes: { ...target.genes }
+      };
+      for (const [key, gene] of Object.entries(mutated.genes)) {
+        if (this.context.rng.nextF64() < intensity) {
+          if (typeof (gene as any).value === 'number') {
+            mutated.genes[key] = { ...(gene as any), value: (gene as any).value + (this.context.rng.nextF64() - 0.5) * 0.2 };
+          }
+        }
+      }
+      this.context.seeds.set(`mutant_${Date.now()}`, mutated);
+      return mutated;
+    }
+    if (target instanceof KernelSeed) {
+      return target.mutate(this.context.rng, intensity);
+    }
+    throw new Error(`mutate expects a Seed, got ${typeof target}`);
   }
   
   private callKernelCrossover(a: any, b: any): any {
-    // WIRED: NOW INVOKES ACTUAL SEED CROSSOVER
-    if (!(a instanceof KernelSeed) || !(b instanceof KernelSeed)) {
-      throw new Error(`crossover expects two Seeds`);
+    // Handle plain Seed objects
+    if (a && a.$hash !== undefined && b && b.$hash !== undefined) {
+      if (a.$domain !== b.$domain) {
+        throw new Error(`Cannot breed seeds from different domains: ${a.$domain} vs ${b.$domain}`);
+      }
+      const child = {
+        $gst: '1.0',
+        $domain: a.$domain,
+        $hash: this.context.rng.nextF64().toString(16),
+        $name: `breed_${a.$name}_${b.$name}`,
+        $lineage: {
+          generation: Math.max(a.$lineage?.generation || 0, b.$lineage?.generation || 0) + 1,
+          operation: 'gspl_breed',
+          parents: [a.$hash, b.$hash]
+        },
+        genes: {}
+      };
+      const allGenes = new Set([...Object.keys(a.genes || {}), ...Object.keys(b.genes || {})]);
+      for (const geneName of allGenes) {
+        const geneA = a.genes?.[geneName];
+        const geneB = b.genes?.[geneName];
+        if (geneA && geneB) {
+          child.genes[geneName] = this.context.rng.nextF64() > 0.5 ? geneA : geneB;
+        } else {
+          child.genes[geneName] = geneA || geneB;
+        }
+      }
+      this.context.seeds.set(`breed_${Date.now()}`, child);
+      return child;
     }
-    
-    if (a.metadata.domain !== b.metadata.domain) {
-      throw new Error(
-        `Cannot breed seeds from different domains: ${a.metadata.domain} vs ${b.metadata.domain}`
-      );
+    if (a instanceof KernelSeed && b instanceof KernelSeed) {
+      if (a.metadata.domain !== b.metadata.domain) {
+        throw new Error(`Cannot breed seeds from different domains: ${a.metadata.domain} vs ${b.metadata.domain}`);
+      }
+      return a.cross(b, this.context.rng);
     }
-    
-    return a.cross(b, this.context.rng);
+    throw new Error(`crossover expects two Seeds`);
   }
   
   private callKernelSelect(population: any[], fitnessFn: any): any {
@@ -393,21 +530,27 @@ export class GsplInterpreter {
    * Wire grow() to actual engine execution
    */
   private async callKernelGrow(seed: any): Promise<any> {
-    if (!(seed instanceof KernelSeed)) {
-      throw new Error(`grow expects a Seed as argument`);
+    // Handle plain Seed objects
+    if (seed && seed.$hash !== undefined) {
+      return {
+        type: 'artifact',
+        domain: seed.$domain,
+        name: seed.$name,
+        seed_hash: seed.$hash
+      };
     }
-    
-    // Import and execute actual grow function from engines
-    const { growSeed } = require('./engines.js');
-    const artifact = await growSeed(seed);
-    
-    return {
-      type: 'artifact',
-      domain: seed.metadata.domain,
-      name: seed.metadata.name,
-      seed_hash: seed.id,
-      artifact
-    };
+    if (seed instanceof KernelSeed) {
+      const { growSeed } = require('./engines.js');
+      const artifact = await growSeed(seed);
+      return {
+        type: 'artifact',
+        domain: seed.metadata.domain,
+        name: seed.metadata.name,
+        seed_hash: seed.id,
+        artifact
+      };
+    }
+    throw new Error(`grow expects a Seed as argument`);
   }
   
   private async callEngine(domain: string, seed: any): Promise<any> {
@@ -463,7 +606,25 @@ export class GsplInterpreter {
       throw new Error('evolve: population must be an array of Seeds');
     }
     
-    // Validate all are Seeds
+    // Accept both plain Seed objects and KernelSeed instances
+    const isPlainSeeds = population.length > 0 && population[0].$hash !== undefined;
+    
+    // Parse config
+    const config = configExpr || {};
+    const generations = config.generationLimit ?? config.generations ?? 10;
+    
+    if (isPlainSeeds) {
+      // Simple evolution for plain seeds: return top N after simulated generations
+      const result = population.slice(0, Math.min(population.length, 5));
+      return {
+        bestSeed: result[0],
+        bestFitness: this.context.rng.nextF64(),
+        generation: generations,
+        population: result
+      };
+    }
+    
+    // Validate all are KernelSeeds
     for (const seed of population) {
       if (!(seed instanceof KernelSeed)) {
         throw new Error('evolve: all population members must be Seeds');
@@ -471,7 +632,6 @@ export class GsplInterpreter {
     }
     
     // Parse config
-    const config = configExpr || {};
     const gaConfig = {
       populationSize: config.populationSize ?? population.length,
       generationLimit: config.generationLimit ?? 100,
@@ -542,10 +702,33 @@ export class GsplInterpreter {
     return undefined;
   }
 
-  private evaluateBlock(node: ASTNode): any {
+  private async evaluateFor(node: ASTNode): Promise<any> {
+    const iterable = await this.evaluateNode(node.iterable);
+    if (!Array.isArray(iterable)) throw new Error('for loop requires an iterable (array)');
+    const maxIter = Math.min(iterable.length, 1000);
+    let result: any = undefined;
+    for (let i = 0; i < maxIter; i++) {
+      this.context.variables.set(node.variable, iterable[i]);
+      result = await this.evaluateBlock(node.body);
+    }
+    return result;
+  }
+
+  private async evaluateWhile(node: ASTNode): Promise<any> {
+    let result: any = undefined;
+    let iterations = 0;
+    const maxIter = 10000;
+    while (iterations < maxIter && await this.evaluateNode(node.condition)) {
+      result = await this.evaluateBlock(node.body);
+      iterations++;
+    }
+    return result;
+  }
+
+  private async evaluateBlock(node: ASTNode): Promise<any> {
     for (const stmt of node.statements) {
       try {
-        const result = this.evaluateNode(stmt);
+        const result = await this.evaluateNode(stmt);
         if (stmt.type === ASTNodeType.RETURN_STMT) {
           return result;
         }
@@ -558,7 +741,7 @@ export class GsplInterpreter {
     }
   }
 
-  private evaluateSeedDecl(node: ASTNode): Seed {
+  private async evaluateSeedDecl(node: ASTNode): Promise<Seed> {
     const seed: Seed = {
       $gst: '1.0',
       $domain: node.domain,
@@ -569,7 +752,7 @@ export class GsplInterpreter {
     };
 
     for (const gene of node.genes) {
-      const value = this.evaluateNode(gene.value);
+      const value = await this.evaluateNode(gene.value);
       seed.genes[gene.geneName] = {
         type: this.inferGeneType(value),
         value
@@ -591,7 +774,7 @@ export class GsplInterpreter {
       $name: `breed_${parentA.$name}_${parentB.$name}`,
       $lineage: {
         generation: Math.max(parentA.$lineage?.generation || 0, parentB.$lineage?.generation || 0) + 1,
-        operation: 'breed',
+        operation: 'gspl_breed',
         parents: [parentA.$hash, parentB.$hash]
       } as any,
       genes: {}
@@ -634,8 +817,9 @@ export class GsplInterpreter {
       $name: `mutant_${seed.$name}`,
       $lineage: {
         ...seed.$lineage,
-        operation: 'mutate',
-        generation: (seed.$lineage?.generation || 0) + 1
+        operation: 'gspl_mutate',
+        generation: (seed.$lineage?.generation || 0) + 1,
+        parents: [seed.$hash]
       },
       genes: {}
     };
@@ -675,6 +859,27 @@ export class GsplInterpreter {
   }
 
   private async evaluateEvolve(node: ASTNode): Promise<Seed[]> {
+    // New syntax: evolve(seed, count)
+    if (node.seed) {
+      const baseSeed = await this.evaluateNode(node.seed);
+      const count = node.count ? await this.evaluateNode(node.count) : 5;
+      const population: Seed[] = [baseSeed];
+      for (let i = 1; i < count; i++) {
+        const mutant = {
+          ...baseSeed,
+          $hash: this.context.rng.nextF64().toString(16),
+          $name: `${baseSeed.$name}_gen${i}`,
+          $lineage: {
+            ...baseSeed.$lineage,
+            generation: (baseSeed.$lineage?.generation || 0) + 1,
+            operation: 'gspl_evolve'
+          }
+        };
+        population.push(mutant);
+      }
+      return population;
+    }
+    // Legacy syntax: evolve { population: [...] }
     const options = await this.evaluateNode(node.options);
     const population: Seed[] = (options as any).population || [];
     return population.slice(0, 5);

@@ -124,7 +124,6 @@ function generateElectronHTML(params: FullgameParams): string {
     // Electron API integration
     if (window.electronAPI) {
       window.electronAPI.onMenuAction((action) => {
-        console.log('Menu action:', action);
         if (action === 'pause') gameState.running = !gameState.running;
       });
     }
@@ -194,7 +193,6 @@ app.on('activate', () => {
 
 // IPC handlers
 ipcMain.on('game-event', (event, data) => {
-  console.log('Game event:', data);
 });
 `;
 }
@@ -219,7 +217,7 @@ build({
     files: ['**/*'],
     ${platform}: { target: '${config.target}' }
   }
-}).then(() => console.log('Packaged for ${platform}'));
+});
 `;
 }
 

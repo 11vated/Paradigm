@@ -57,7 +57,7 @@ export async function generateCircuitV3(
   
   // Export
   const jsonPath = await exportCircuitJSON({ params, components, connections, pcb }, outputPath, seed);
-  const schematicPath = await exportSchematicSVG(components, connections, outputPath, seed);
+  const schematicPath = await exportSchematicSVG(components, connections, outputPath, seed, rng);
   const gerberPath = await exportGerber(pcb, outputPath, seed);
   
   return {
@@ -162,7 +162,7 @@ async function exportCircuitJSON(data: any, outputPath: string, seed: Seed): Pro
   return filePath;
 }
 
-async function exportSchematicSVG(components: Component[], connections: Connection[], outputPath: string, seed: Seed): Promise<string> {
+async function exportSchematicSVG(components: Component[], connections: Connection[], outputPath: string, seed: Seed, rng: Xoshiro256StarStar): Promise<string> {
   const filename = `circuit_${seed.$hash || 'unknown'}_schematic.svg`;
   const filePath = path.join(outputPath, filename);
   
@@ -175,7 +175,7 @@ async function exportSchematicSVG(components: Component[], connections: Connecti
     <text class="label" x="6" y="10">${c.value}</text>
   </g>`).join('')}
   ${connections.map(c => `
-  <line class="wire" x1="${Math.random()*100}" y1="${Math.random()*100}" x2="${Math.random()*100}" y2="${Math.random()*100}"/>`).join('')}
+  <line class="wire" x1="${rng.nextF64()*100}" y1="${rng.nextF64()*100}" x2="${rng.nextF64()*100}" y2="${rng.nextF64()*100}"/>`).join('')}
 </svg>`;
   
   if (typeof fs !== 'undefined') fs.writeFileSync(filePath, svg);

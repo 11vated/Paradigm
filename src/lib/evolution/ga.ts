@@ -156,7 +156,6 @@ export class GeneticAlgorithm {
         const score = await fitnessFn(seed);
         scores.push(Math.max(0, Math.min(1, score)));  // Clamp to [0, 1]
       } catch (error) {
-        console.warn('Fitness evaluation failed:', error);
         scores.push(0);
       }
     }

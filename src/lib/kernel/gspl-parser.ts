@@ -95,6 +95,10 @@ export class GsplParser {
       case 'DOMAIN': return this.parseDomainDecl();
       case 'IMPORT': return this.parseImportDecl();
       case 'EXPORT': return this.parseExportDecl();
+      case 'IF': return this.parseIfStmt();
+      case 'FOR': return this.parseForStmt();
+      case 'WHILE': return this.parseWhileStmt();
+      case 'RETURN': return this.parseReturnStmt();
       case 'EOF': return null;
       default: {
         const expr = this.parseExpression();
@@ -106,8 +110,16 @@ export class GsplParser {
 
   private parseSeedDecl(): ASTNode {
     const seedToken = this.advance(); // seed
-    const name = this.expect('IDENTIFIER').value;
-    const seedName = this.expect('STRING').value;
+    // Optional identifier: `seed "Name"` or `seed varName "Name"`
+    let name: string;
+    let seedName: string;
+    if (this.check('STRING')) {
+      seedName = this.advance().value;
+      name = seedName.replace(/[^a-zA-Z0-9_]/g, '_');
+    } else {
+      name = this.expect('IDENTIFIER').value;
+      seedName = this.expect('STRING').value;
+    }
     this.expect('IN');
     const domain = this.expect('IDENTIFIER').value;
 
@@ -117,10 +129,6 @@ export class GsplParser {
     while (!this.check('RBRACE')) {
       if (this.check('RBRACE')) break;
       genes.push(this.parseGeneDecl());
-      // Expect semicolon after each gene declaration, but not if } is next
-      if (!this.check('RBRACE') && !this.check('EOF')) {
-        this.expect('SEMICOLON');
-      }
     }
 
     this.expect('RBRACE'); // }
@@ -143,9 +151,13 @@ export class GsplParser {
 
     const value = this.parseExpression();
 
-    // Semicolon is optional if } is next
+    // Semicolon or comma is optional if } is next
     if (!this.check('RBRACE') && !this.check('EOF')) {
-      this.expect('SEMICOLON'); // ;
+      if (this.check('COMMA')) {
+        this.advance(); // consume comma
+      } else {
+        this.expect('SEMICOLON'); // ;
+      }
     }
 
     return {
@@ -190,9 +202,11 @@ export class GsplParser {
     if (!this.check('RPAREN')) {
       do {
         const paramName = this.expect('IDENTIFIER').value;
-        this.expect('COLON');
-        const paramType = this.parseType();
-        params.push({ name: paramName, type: paramType.type as ASTNodeType });
+        let paramType = undefined;
+        if (this.match('COLON')) {
+          paramType = this.parseType();
+        }
+        params.push({ name: paramName, type: paramType?.type as ASTNodeType });
       } while (this.match('COMMA'));
     }
 
@@ -271,7 +285,10 @@ export class GsplParser {
       case 'RETURN': return this.parseReturnStmt();
       default: {
         const expr = this.parseExpression();
-        this.expect('SEMICOLON');
+        // Semicolon is optional if next token is } or EOF
+        if (!this.check('RBRACE') && !this.check('EOF')) {
+          this.expect('SEMICOLON');
+        }
         return { type: ASTNodeType.EXPR_STMT, expression: expr };
       }
     }
@@ -279,9 +296,10 @@ export class GsplParser {
 
   private parseIfStmt(): ASTNode {
     const ifToken = this.advance(); // if
-    this.expect('LPAREN');
+    // Optional parentheses around condition
+    const hasParen = this.match('LPAREN');
     const condition = this.parseExpression();
-    this.expect('RPAREN');
+    if (hasParen) this.expect('RPAREN');
 
     const consequent = this.parseBlock();
     let alternate = undefined;
@@ -305,11 +323,12 @@ export class GsplParser {
 
   private parseForStmt(): ASTNode {
     const forToken = this.advance(); // for
-    this.expect('LPAREN');
+    // Optional parentheses
+    const hasParen = this.match('LPAREN');
     const variable = this.expect('IDENTIFIER').value;
     this.expect('IN');
     const iterable = this.parseExpression();
-    this.expect('RPAREN');
+    if (hasParen) this.expect('RPAREN');
     const body = this.parseBlock();
 
     return {
@@ -323,9 +342,10 @@ export class GsplParser {
 
   private parseWhileStmt(): ASTNode {
     const whileToken = this.advance(); // while
-    this.expect('LPAREN');
+    // Optional parentheses
+    const hasParen = this.match('LPAREN');
     const condition = this.parseExpression();
-    this.expect('RPAREN');
+    if (hasParen) this.expect('RPAREN');
     const body = this.parseBlock();
 
     return {
@@ -339,10 +359,13 @@ export class GsplParser {
   private parseReturnStmt(): ASTNode {
     const returnToken = this.advance(); // return
     let value = undefined;
-    if (!this.check('SEMICOLON')) {
+    if (!this.check('SEMICOLON') && !this.check('RBRACE')) {
       value = this.parseExpression();
     }
-    this.expect('SEMICOLON');
+    // Semicolon is optional if next token is }
+    if (!this.check('RBRACE')) {
+      this.expect('SEMICOLON');
+    }
     return {
       type: ASTNodeType.RETURN_STMT,
       value,
@@ -351,52 +374,33 @@ export class GsplParser {
   }
 
   private parseExpression(): ASTNode {
-    let left = this.parsePrimary();
+    return this.parsePipeExpr();
+  }
 
-    while (this.pos < this.tokens.length) {
-      const token = this.tokens[this.pos];
+  private parsePipeExpr(): ASTNode {
+    let left = this.parseLogical();
 
-      // Stop at comma, semicolon, closing brace, or EOF
-      if (token.type === 'COMMA' || token.type === 'SEMICOLON' ||
-          token.type === 'RBRACE' || token.type === 'EOF') {
-        break;
-      }
-
-      if (token.type === 'PLUS' || token.type === 'MINUS' || token.type === 'STAR' ||
-          token.type === 'SLASH' || token.type === 'PERCENT' || token.type === 'DOUBLE_STAR') {
-        const op = this.advance().value;
-        const right = this.parsePrimary();
-        left = {
-          type: ASTNodeType.BINARY_EXPR,
-          operator: op,
-          left,
-          right,
-          loc: { line: token.line, column: token.column }
-        };
-      } else if (token.type === 'PIPE') {
-        const op = this.advance().value;
-        const right = this.parsePrimary();
-        left = {
-          type: ASTNodeType.PIPE_EXPR,
-          left,
-          right,
-          loc: { line: token.line, column: token.column }
-        };
-      } else {
-        break;
-      }
+    while (this.match('PIPE')) {
+      const right = this.parseLogical();
+      left = {
+        type: ASTNodeType.PIPE_EXPR,
+        left,
+        right
+      };
     }
 
     return left;
   }
 
-  private parsePipeExpr(): ASTNode {
+  private parseLogical(): ASTNode {
     let left = this.parseComparison();
 
-    while (this.match('PIPE')) {
+    while (this.match('AND', 'OR')) {
+      const operator = this.previous().value;
       const right = this.parseComparison();
       left = {
-        type: ASTNodeType.PIPE_EXPR,
+        type: ASTNodeType.BINARY_EXPR,
+        operator,
         left,
         right
       };
@@ -518,7 +522,7 @@ export class GsplParser {
       this.advance();
       return {
         type: token.type === 'INT' ? ASTNodeType.INT_LITERAL : ASTNodeType.FLOAT_LITERAL,
-        value: token.value,
+        value: token.type === 'INT' ? parseInt(token.value, 10) : parseFloat(token.value),
         loc: { line: token.line, column: token.column }
       };
     }
@@ -600,8 +604,19 @@ export class GsplParser {
 
   private parseBreedOp(): ASTNode {
     const token = this.advance(); // breed
-    const parentA = this.parseExpression();
-    const parentB = this.parseExpression();
+    let parentA: ASTNode;
+    let parentB: ASTNode;
+
+    // Support both breed a b and breed(a, b) syntax
+    if (this.match('LPAREN')) {
+      parentA = this.parseExpression();
+      this.expect('COMMA');
+      parentB = this.parseExpression();
+      this.expect('RPAREN');
+    } else {
+      parentA = this.parseExpression();
+      parentB = this.parseExpression();
+    }
 
     return {
       type: ASTNodeType.BREED_OP,
@@ -613,12 +628,22 @@ export class GsplParser {
 
   private parseMutateOp(): ASTNode {
     const token = this.advance(); // mutate
-    const seed = this.parseExpression();
-    const options: Record<string, any> = {};
+    let seed: ASTNode;
+    let options: Record<string, any> = {};
 
+    // Support both mutate seed and mutate(seed, rate) syntax
     if (this.match('LPAREN')) {
-      // Parse options like rate: 0.1, genes: [...]
+      seed = this.parseExpression();
+      if (this.match('COMMA')) {
+        const rateExpr = this.parseExpression();
+        options.rate = rateExpr;
+      }
       this.expect('RPAREN');
+    } else {
+      seed = this.parseExpression();
+      if (this.match('LPAREN')) {
+        this.expect('RPAREN');
+      }
     }
 
     return {
@@ -648,11 +673,25 @@ export class GsplParser {
 
   private parseEvolveOp(): ASTNode {
     const token = this.advance(); // evolve
-    const options: ASTNode = this.parseExpression(); // object with population, generations, etc.
+    let seed: ASTNode | undefined;
+    let count: ASTNode | undefined;
+
+    // Support both evolve options and evolve(seed, count) syntax
+    if (this.match('LPAREN')) {
+      seed = this.parseExpression();
+      if (this.match('COMMA')) {
+        count = this.parseExpression();
+      }
+      this.expect('RPAREN');
+    } else {
+      // Legacy: evolve { ... } object syntax
+      seed = this.parseExpression();
+    }
 
     return {
       type: ASTNodeType.EVOLVE_OP,
-      options,
+      seed,
+      count,
       loc: { line: token.line, column: token.column }
     };
   }

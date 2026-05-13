@@ -42,7 +42,7 @@ let population: Seed[] = [];
 let config: any = {};
 let generation = 0;
 
-// Mock fitness evaluation
+// Fitness evaluation
 function evaluateFitness(seed: Seed): number {
   const genes = seed.genes || {};
   let fitness = 0;
@@ -52,7 +52,8 @@ function evaluateFitness(seed: Seed): number {
       fitness += value;
     }
   }
-  const novelty = seed.novelty || Math.random() * 0.1;
+  const localRng = new Xoshiro256StarStar(seed.$hash || 'default');
+  const novelty = seed.novelty || localRng.nextF64() * 0.1;
   return fitness + novelty;
 }
 
@@ -75,7 +76,7 @@ function tournamentSelect(pop: Seed[], tournamentSize: number, rng: Xoshiro256St
 // Crossover two seeds
 function crossover(parent1: Seed, parent2: Seed, rng: Xoshiro256StarStar): Seed {
   const child: Seed = {
-    $hash: `child_${Date.now()}_${rng.nextU64()}`,
+    $hash: `child_${rng.nextU64()}_${rng.nextU64()}`,
     $domain: parent1.$domain,
     genes: {}
   };

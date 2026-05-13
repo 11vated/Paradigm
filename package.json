@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "eslint .",
-    "lint:ci": "eslint scripts/check-no-math-random.mjs src/App.tsx src/pages/StudioPage.jsx src/lib/kernel/rng.ts src/lib/kernel/rng-contract.ts src/seeds/universal-seed.ts tests/kernel/rng.test.ts --quiet",
+    "lint:ci": "eslint scripts/check-no-math-random.mjs src/App.tsx src/lib/kernel/rng.ts src/lib/kernel/rng-contract.ts src/seeds/universal-seed.ts tests/kernel/rng.test.ts --quiet",
     "typecheck": "tsc --noEmit",
     "determinism:check": "node scripts/check-no-math-random.mjs",
     "test": "vitest run",

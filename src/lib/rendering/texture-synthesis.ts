@@ -28,7 +28,7 @@ export interface TextureParams {
 }
 
 export class TextureSynthesisEngine {
-  constructor(private defaultSeed: number = Math.random()) {}
+  constructor(private defaultSeed: number = 0) {}
   
   generateTextureMaps(params: TextureParams): TextureMapSet {
     return generatePBRTextureSet(params);

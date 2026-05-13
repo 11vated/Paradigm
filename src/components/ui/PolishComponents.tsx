@@ -101,11 +101,12 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
+let toastIdCounter = 0;
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (message: string, type: Toast['type'] = 'info', duration: number = 5000) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = `toast-${++toastIdCounter}`;
     setToasts(prev => [...prev, { id, message, type, duration }]);
 
     if (duration > 0) {
