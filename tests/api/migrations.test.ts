@@ -81,7 +81,7 @@ describe('Migration System', () => {
 
     await runMigrations(store, TEST_DIR);
 
-    const seed = store.getSeedById('test-seed-1') as any;
+    const seed = await store.getSeedById('test-seed-1') as any;
     expect(seed.$version).toBe(1);
     expect(seed.$createdAt).toBeTruthy();
     expect(seed.$updatedAt).toBeTruthy();
@@ -100,7 +100,7 @@ describe('Migration System', () => {
 
     await runMigrations(store, TEST_DIR);
 
-    const seed = store.getSeedById('test-seed-upper') as any;
+    const seed = await store.getSeedById('test-seed-upper') as any;
     expect(seed.$domain).toBe('character');
   });
 

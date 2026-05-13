@@ -68,20 +68,20 @@ export interface SeedStore {
   close(): Promise<void>;
 
   // Seeds
-  getAllSeeds(): Seed[];
-  getSeedById(id: string): Seed | undefined;
-  findSeeds(opts: PaginationOptions): PaginatedResult<Seed>;
+  getAllSeeds(): Promise<Seed[]>;
+  getSeedById(id: string): Promise<Seed | undefined>;
+  findSeeds(opts: PaginationOptions): Promise<PaginatedResult<Seed>>;
   addSeed(seed: Seed): Promise<void>;
   addSeeds(seeds: Seed[]): Promise<void>;
   updateSeed(id: string, update: Partial<Seed>): Promise<void>;
   deleteSeed(id: string): Promise<boolean>;
-  getSeedsByDomain(domain: string): Seed[];
-  getSeedCount(): number;
+  getSeedsByDomain(domain: string): Promise<Seed[]>;
+  getSeedCount(): Promise<number>;
   persist(): Promise<void>;
 
   // Users
-  getUsers(): User[];
-  getUserByUsername(username: string): User | undefined;
+  getUsers(): User[] | Promise<User[]>;
+  getUserByUsername(username: string): User | undefined | Promise<User | undefined>;
   addUser(user: User): Promise<void>;
 
   // Audit log
@@ -89,5 +89,5 @@ export interface SeedStore {
   getAuditLog(limit?: number): Promise<AuditEntry[]>;
 
   // Info
-  readonly backend: 'json' | 'mongodb';
+  readonly backend: string;
 }

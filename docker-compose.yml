@@ -32,8 +32,8 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - JWT_SECRET=${JWT_SECRET:?JWT_SECRET must be set in .env}
-      - MONGO_URI=${MONGO_URI:-}   # leave empty to use JsonStore
-      - DATABASE_URL=postgresql://paradigm:${POSTGRES_PASSWORD:-paradigm}@postgres:5432/paradigm
+      - MONGO_URI=${MONGO_URI:-}   # leave empty to use PostgreSQL (primary)
+      - DATABASE_URL=${DATABASE_URL:-postgresql://paradigm:${POSTGRES_PASSWORD:-paradigm}@postgres:5432/paradigm}
       - REDIS_URL=redis://redis:6379
       - SBERT_URL=http://sbert-embedder:8000
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}

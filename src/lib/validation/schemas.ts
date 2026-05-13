@@ -225,3 +225,28 @@ export const SeedDistanceSchema = z.object({
 }).refine(data => data.seed_a_id !== data.seed_b_id, {
   message: 'Must compare different seeds',
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GENE TYPE REGISTRATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+const geneTypeOperatorFn = z.string().min(1, 'Operator function body is required');
+
+export const RegisterGeneTypeSchema = z.object({
+  name: z.string()
+    .min(2, 'Type name must be at least 2 characters')
+    .max(64, 'Type name must be at most 64 characters')
+    .regex(/^[a-z][a-zA-Z0-9_]*$/, 'Type name must start with lowercase, alphanumeric+underscore only'),
+  base_type: z.string().min(1, 'Base type is required'),
+  description: z.string().max(512).optional(),
+  constraints: z.object({
+    min: z.number().optional(),
+    max: z.number().optional(),
+    dimensions: z.number().int().positive().optional(),
+    choices: z.array(z.string()).optional(),
+  }).optional(),
+  validate: geneTypeOperatorFn,
+  mutate: geneTypeOperatorFn,
+  crossover: geneTypeOperatorFn,
+  distance: geneTypeOperatorFn,
+});

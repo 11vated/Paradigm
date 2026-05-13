@@ -11,8 +11,8 @@ import {
   mutateGene,
   crossoverGene,
   distanceGene,
-} from '../kernel/gene_system';
-import { Xoshiro256StarStar } from '../kernel/rng';
+} from '../src/lib/kernel/gene_system';
+import { Xoshiro256StarStar } from '../src/lib/kernel/rng';
 
 const rng = new Xoshiro256StarStar('test-seed-123');
 
@@ -255,8 +255,8 @@ describe('Gene System — All 17 Types', () => {
 
 describe('Gene System Helper Functions', () => {
   describe('getGeneTypeInfo', () => {
-    it('returns info for all 17 gene types', () => {
-      const { getGeneTypeInfo } = await import('../kernel/gene_system');
+    it('returns info for all 17 gene types', async () => {
+      const { getGeneTypeInfo } = await import('../../src/lib/kernel/gene_system');
       const info = getGeneTypeInfo();
       expect(info.length).toBe(17);
       expect(info.map((i) => i.name)).toEqual([

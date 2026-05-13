@@ -1,11 +1,11 @@
 /**
  * Data layer factory — creates the appropriate store backend.
  *
- * If MONGO_URI is set, uses MongoDB with connection pooling and indexes.
- * Otherwise falls back to JSON file storage (development default).
+ * Priority: PostgreSQL (DATABASE_URL) → MongoDB (MONGO_URI) → JSON file fallback.
  */
 import { JsonStore } from './json-store.js';
 import { MongoStore } from './mongo-store.js';
+import { PostgresStore } from './postgres-store.js';
 import { runMigrations, getMigrationStatus } from './migrations.js';
 import type { SeedStore } from './types.js';
 import path from 'path';
@@ -13,47 +13,59 @@ import path from 'path';
 export type { Seed, User, PaginationOptions, PaginatedResult, AuditEntry, SeedStore } from './types.js';
 export { JsonStore } from './json-store.js';
 export { MongoStore } from './mongo-store.js';
+export { PostgresStore } from './postgres-store.js';
 export { getMigrationStatus } from './migrations.js';
+export { persistCustomGeneTypes, loadCustomGeneTypes } from './gene-type-persistence.js';
 
 let _store: SeedStore | null = null;
 
 /**
  * Initialize and return the data store. Call once at server startup.
- * Automatically selects MongoDB or JSON based on MONGO_URI env var.
+ * Priority: PostgreSQL (DATABASE_URL) → MongoDB (MONGO_URI) → JSON file (dev default).
  */
 export async function initStore(): Promise<SeedStore> {
   if (_store) return _store;
 
-  const mongoUri = process.env.MONGO_URI;
+  const dataDir = path.join(process.cwd(), 'data');
 
-  if (mongoUri) {
+  let store: SeedStore | null = null;
+
+  // 1. Try PostgreSQL (production primary)
+  const dbUrl = process.env.DATABASE_URL;
+  if (dbUrl) {
     try {
-      const store = new MongoStore(mongoUri, process.env.MONGO_DB || 'paradigm');
+      store = new PostgresStore(dbUrl);
       await store.init();
-      console.log(`[DATA] Connected to MongoDB: ${mongoUri.replace(/\/\/[^@]+@/, '//***@')}`);
+      console.log(`[DATA] Connected to PostgreSQL: ${dbUrl.replace(/\/\/[^:]+:[^@]+@/, '//***@***@')}`);
       _store = store;
-
-      // Run pending migrations
-      const dataDir = path.join(process.cwd(), 'data');
-      const migrated = await runMigrations(store, dataDir);
-      if (migrated > 0) console.log(`[DATA] Applied ${migrated} migration(s)`);
-
       return store;
     } catch (err: any) {
-      console.error(`[DATA] MongoDB connection failed: ${err.message}`);
-      console.error('[DATA] Falling back to JSON file storage.');
+      console.error(`[DATA] PostgreSQL connection failed: ${err.message}`);
+      store = null;
     }
   }
 
-  const store = new JsonStore();
-  await store.init();
-  console.log(`[DATA] Using JSON file storage (set MONGO_URI for MongoDB)`);
-  _store = store;
+  // 2. Try MongoDB (legacy primary)
+  const mongoUri = process.env.MONGO_URI;
+  if (mongoUri) {
+    try {
+      store = new MongoStore(mongoUri, process.env.MONGO_DB || 'paradigm');
+      await store.init();
+      console.log(`[DATA] Connected to MongoDB: ${mongoUri.replace(/\/\/[^@]+@/, '//***@')}`);
+      _store = store;
+      await runMigrations(store, dataDir);
+      return store;
+    } catch (err: any) {
+      console.error(`[DATA] MongoDB connection failed: ${err.message}`);
+    }
+  }
 
-  // Run pending migrations
-  const dataDir = path.join(process.cwd(), 'data');
-  const migrated = await runMigrations(store, dataDir);
-  if (migrated > 0) console.log(`[DATA] Applied ${migrated} migration(s)`);
+  // 3. JSON file fallback (development default)
+  store = new JsonStore();
+  await store.init();
+  console.log(`[DATA] Using JSON file storage (set DATABASE_URL for PostgreSQL)`);
+  _store = store;
+  await runMigrations(store, dataDir);
 
   return store;
 }

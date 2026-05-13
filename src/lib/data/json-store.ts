@@ -119,29 +119,23 @@ export class JsonStore implements SeedStore {
 
   // ── Seeds ──────────────────────────────────────────────────────────────
 
-  getAllSeeds(): Seed[] { return this.seeds; }
+  async getAllSeeds(): Promise<Seed[]> { return this.seeds; }
 
-  getSeedById(id: string): Seed | undefined {
-    return this.seeds.find(s => s.id === id);
+  async getSeedById(id: string): Promise<Seed | undefined> {
+    return this.seeds.find(s => s.id === id || s.$hash === id);
   }
 
-  findSeeds(opts: PaginationOptions): PaginatedResult<Seed> {
+  async findSeeds(opts: PaginationOptions): Promise<PaginatedResult<Seed>> {
     let filtered = [...this.seeds];
     if (opts.domain) filtered = filtered.filter(s => s.$domain === opts.domain);
-    if (opts.sort === 'fitness') {
-      filtered.sort((a, b) => (b.$fitness?.overall || 0) - (a.$fitness?.overall || 0));
-    } else if (opts.sort === 'domain') {
-      filtered.sort((a, b) => (a.$domain || '').localeCompare(b.$domain || ''));
-    }
+    if (opts.sort === 'fitness') filtered.sort((a, b) => (b.$fitness?.overall ?? 0) - (a.$fitness?.overall ?? 0));
     const total = filtered.length;
-    const totalPages = Math.ceil(total / opts.limit);
-    const offset = (opts.page - 1) * opts.limit;
+    const limit = Math.min(opts.limit ?? 50, 100);
+    const offset = ((opts.page ?? 1) - 1) * limit;
+    const totalPages = Math.ceil(total / limit);
     return {
-      items: filtered.slice(offset, offset + opts.limit),
-      pagination: {
-        page: opts.page, limit: opts.limit, total, totalPages,
-        hasNext: opts.page < totalPages, hasPrev: opts.page > 1,
-      },
+      items: filtered.slice(offset, offset + limit),
+      pagination: { page: opts.page ?? 1, limit, total, totalPages, hasNext: (opts.page ?? 1) < totalPages, hasPrev: (opts.page ?? 1) > 1 },
     };
   }
 
@@ -156,39 +150,43 @@ export class JsonStore implements SeedStore {
   }
 
   async updateSeed(id: string, update: Partial<Seed>): Promise<void> {
-    const idx = this.seeds.findIndex(s => s.id === id);
-    if (idx >= 0) {
-      this.seeds[idx] = { ...this.seeds[idx], ...update };
-      this.dirty = true;
-    }
+    const idx = this.seeds.findIndex(s => s.id === id || s.$hash === id);
+    if (idx !== -1) { Object.assign(this.seeds[idx], update); this.dirty = true; }
   }
 
   async deleteSeed(id: string): Promise<boolean> {
-    const before = this.seeds.length;
-    this.seeds = this.seeds.filter(s => s.id !== id);
-    this.dirty = true;
-    return this.seeds.length < before;
+    const idx = this.seeds.findIndex(s => s.id === id || s.$hash === id);
+    if (idx !== -1) { this.seeds.splice(idx, 1); this.dirty = true; return true; }
+    return false;
   }
 
-  getSeedsByDomain(domain: string): Seed[] {
+  async getSeedsByDomain(domain: string): Promise<Seed[]> {
     return this.seeds.filter(s => s.$domain === domain);
   }
 
-  getSeedCount(): number { return this.seeds.length; }
+  async getSeedCount(): Promise<number> { return this.seeds.length; }
 
   async persist(): Promise<void> {
-    this.dirty = true;
-    this.flushSync();
+    if (!this.dirty) return;
+    this.dirty = false;
+    try {
+      fs.writeFileSync(this.seedsFile, JSON.stringify(this.seeds, null, 2));
+      fs.writeFileSync(this.usersFile, JSON.stringify(this.users, null, 2));
+      fs.writeFileSync(this.auditFile, JSON.stringify(this.auditLog, null, 2));
+    } catch (err) {
+      console.error('[JsonStore] persist error:', err);
+    }
   }
 
-  // ── Users ──────────────────────────────────────────────────────────────
+  // ─── USERS ────────────────────────────────────────────────────────────────
 
-  getUsers(): User[] { return this.users; }
+  async getUsers(): Promise<User[]> { return this.users; }
 
-  getUserByUsername(username: string): User | undefined {
+  async getUserByUsername(username: string): Promise<User | undefined> {
     return this.users.find(u => u.username === username);
   }
 
+  // ── Users ────────────────────────────────────────────────────────────────
   async addUser(user: User): Promise<void> {
     this.users.push(user);
     this.dirty = true;
@@ -198,9 +196,6 @@ export class JsonStore implements SeedStore {
 
   async addAuditEntry(entry: AuditEntry): Promise<void> {
     this.auditLog.push(entry);
-    // Keep the in-memory log bounded so it can never grow unbounded between
-    // flushes. The on-disk copy is already capped to the last 10k entries in
-    // `flushSync`; we mirror that here.
     if (this.auditLog.length > 10000) {
       this.auditLog.splice(0, this.auditLog.length - 10000);
     }
@@ -208,13 +203,15 @@ export class JsonStore implements SeedStore {
   }
 
   async getAuditLog(limit = 1000): Promise<AuditEntry[]> {
-    // Return most-recent-first. Take the last `limit` entries (newest), then
-    // reverse so index 0 is the newest entry. This matches the API contract
-    // tested by "returns most recent entries first".
     const n = Math.max(0, Math.min(limit, this.auditLog.length));
     return this.auditLog.slice(-n).reverse();
   }
-}
 
-// Silence unused-import lint for `crypto`; kept for future audit-ID hashing.
-void crypto;
+  // ── Sync compatibility shims (for older tests that call sync methods) ───
+  // These are NOT part of the SeedStore interface but are present for
+  // backward compatibility with test code that expects sync returns.
+  getUsersSync(): User[] { return this.users; }
+  getUserByUsernameSync(username: string): User | undefined { return this.users.find(u => u.username === username); }
+  getSeedsByDomainSync(domain: string): Seed[] { return this.seeds.filter(s => s.$domain === domain); }
+  getSeedCountSync(): number { return this.seeds.length; }
+}

@@ -73,15 +73,15 @@ export class MongoStore implements SeedStore {
 
   // ── Seeds ──────────────────────────────────────────────────────────────
 
-  getAllSeeds(): Seed[] {
+  async getAllSeeds(): Promise<Seed[]> {
     return this.seedCache;
   }
 
-  getSeedById(id: string): Seed | undefined {
+  async getSeedById(id: string): Promise<Seed | undefined> {
     return this.seedCache.find(s => s.id === id);
   }
 
-  findSeeds(opts: PaginationOptions): PaginatedResult<Seed> {
+  async findSeeds(opts: PaginationOptions): Promise<PaginatedResult<Seed>> {
     // Use in-memory cache for fast pagination
     let filtered = [...this.seedCache];
     if (opts.domain) filtered = filtered.filter(s => s.$domain === opts.domain);
@@ -125,11 +125,11 @@ export class MongoStore implements SeedStore {
     return result.deletedCount > 0;
   }
 
-  getSeedsByDomain(domain: string): Seed[] {
+  async getSeedsByDomain(domain: string): Promise<Seed[]> {
     return this.seedCache.filter(s => s.$domain === domain);
   }
 
-  getSeedCount(): number {
+  async getSeedCount(): Promise<number> {
     return this.seedCache.length;
   }
 
@@ -139,12 +139,12 @@ export class MongoStore implements SeedStore {
 
   // ── Users ──────────────────────────────────────────────────────────────
 
-  getUsers(): User[] {
+  async getUsers(): Promise<User[]> {
     // Synchronous — falls back to empty. In practice, user lookups go through getUserByUsername.
     return [];
   }
 
-  getUserByUsername(username: string): User | undefined {
+  async getUserByUsername(username: string): Promise<User | undefined> {
     // This needs to be async in MongoDB, but the interface is sync for compat.
     // We handle this by maintaining a user cache similar to seeds.
     return undefined; // Overridden by async lookup in auth module

@@ -44,6 +44,19 @@ import {
   ENGINES, growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph
 } from './src/lib/kernel/index.js';
+import { geneTypeRegistry, GENE_TYPE_LIST } from './src/lib/kernel/gene-type-registry.js';
+import {
+  registerGSPLGeneType, parseGSPLGeneType, GSPL_GENE_TYPE_EXAMPLE,
+} from './src/lib/kernel/gspl-gene-type.js';
+import {
+  createSovereignGene, mutateSovereignGene, breedSovereignGenes,
+  licenseSovereignGene, getGeneProvenance, checkGenePermission,
+  extractValue, isSovereignGene,
+} from './src/lib/kernel/gene-sovereignty.js';
+import { inversePipeline, formatInverseResult } from './src/lib/kernel/inverse-pipeline.js';
+import { renderSeed, getSupportedFormats, packagePSeed, parsePSeed } from './src/lib/rendering/seed-render-service.js';
+import { creativeDAO, trainingCanon, DEFAULT_ROYALTY_CURVE } from './src/lib/blockchain/creative-dao.js';
+import { RegisterGeneTypeSchema } from './src/lib/validation/schemas.js';
 
 // ─── NEW: Authentication & Rate Limiting ─────────────────────────────────────
 import {
@@ -101,6 +114,7 @@ import {
   QftSimulateSchema, PipelineExecuteSchema,
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
 } from './src/lib/validation/schemas.js';
+import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.js';
 
 // ─── Structured Logger (Phase 1: pino) ──────────────────────────────────────
 // The shape `log('LEVEL', 'msg', {data})` is preserved so existing call sites
@@ -302,6 +316,9 @@ async function startServer() {
 
   // ── Data Store (MongoDB or JSON fallback) ────────────────────────────────
   const store = await initStore();
+  const dataDir = path.join(process.cwd(), 'data');
+  const loadedTypes = loadCustomGeneTypes(dataDir);
+  if (loadedTypes > 0) log('INFO', `Loaded ${loadedTypes} custom gene type(s) from storage`);
   log('INFO', `Data store initialized: ${store.backend}`, { seedCount: store.getSeedCount() });
 
   // ── Cache Layer (Redis or in-memory LRU) ────────────────────────────────
@@ -317,7 +334,7 @@ async function startServer() {
   log('INFO', 'VCS initialized', { dir: vcsDir });
 
   // If store is empty, seed it from GSPL files
-  if (store.getSeedCount() === 0) {
+  if ((await store.getSeedCount()) === 0) {
     const gsplSeeds = loadAllGsplSeeds();
     if (gsplSeeds.length > 0) {
       await store.addSeeds(gsplSeeds);
@@ -329,7 +346,8 @@ async function startServer() {
 
   // Compatibility shims — `seeds` array and `saveSeeds` function used throughout server.ts.
   // These delegate to the store so existing endpoint code doesn't need a full rewrite.
-  const seeds = store.getAllSeeds();
+  // Must await since all store methods are now async (supports PostgreSQL, MongoDB, and JSON backends).
+  const seeds: any[] = await store.getAllSeeds();
   const saveSeeds = () => { store.persist(); };
 
   // Audit helper — logs mutations with user context
@@ -709,6 +727,30 @@ async function startServer() {
     res.json(newSeed);
   });
 
+  /**
+   * Inverse pipeline: artifact/description → seed
+   * POST /api/seeds/inverse
+   * Body: { data?, mimeType?, description?, domain? }
+   */
+  app.post('/api/seeds/inverse', optionalAuth, async (req: any, res: any) => {
+    const input = req.body || {};
+    if (!input.description && !input.data) {
+      return res.status(400).json({ error: 'Provide description or data' });
+    }
+    try {
+      const result = await inversePipeline(input);
+      if (result.seed) {
+        seeds.push(result.seed);
+        saveSeeds();
+      }
+      log('INFO', 'Inverse pipeline completed', { domain: result.domain, confidence: result.confidence });
+      res.json(formatInverseResult(result));
+    } catch (err: any) {
+      log('ERROR', 'Inverse pipeline failed', { error: err.message });
+      res.status(500).json({ error: 'Inverse pipeline failed', message: err.message });
+    }
+  });
+
   // ═══════════════════════════════════════════════════════════════════════════
   // MUTATION (deterministic kernel — gene-level mutation with xoshiro256**)
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1031,7 +1073,7 @@ async function startServer() {
   app.post('/api/seeds/:id/grow', optionalAuth, validateBody(GrowSeedSchema), async (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: 'Seed not found',
         message: `No seed found with ID '${req.params.id}'`,
         suggestion: 'Check the seed ID and try again',
@@ -1040,16 +1082,87 @@ async function startServer() {
       });
     }
 
-    // Check if domain is supported
-    const supportedDomains = ['character', 'sprite', 'music', 'visual2d', 'geometry3d', 'fullgame', 'animation', 'narrative', 'ui', 'physics', 'audio', 'ecosystem', 'game', 'alife', 'shader', 'particle', 'procedural', 'typography', 'architecture', 'vehicle', 'furniture', 'fashion', 'robotics', 'circuit', 'food', 'choreography', 'agent'];
+    // Check if domain is supported - use dynamic list from kernel
+    const supportedDomains = getAllDomains();
+    
+    // Domain alias mapping for backward compatibility
+    const DOMAIN_ALIASES: Record<string, string> = {
+      '2d': 'visual2d', 'visual-2d': 'visual2d', 'visual_2d': 'visual2d', '2dvisual': 'visual2d',
+      '3d': 'geometry3d', 'geometry-3d': 'geometry3d', 'geometry_3d': 'geometry3d', '3dgeometry': 'geometry3d',
+      'full-game': 'fullgame', 'full_game': 'fullgame', 'full game': 'fullgame',
+      'anims': 'animation', 'animations': 'animation', 'animate': 'animation',
+      'narratives': 'narrative', 'story': 'narrative', 'stories': 'narrative',
+      'sound': 'audio', 'sfx': 'audio',
+      'ecosystems': 'ecosystem', 'eco': 'ecosystem',
+      'shaders': 'shader', 'glsl': 'shader',
+      'particles': 'particle', 'vfx': 'particle',
+      'typo': 'typography', 'type': 'typography', 'fonts': 'typography',
+      'arch': 'architecture', 'buildings': 'architecture',
+      'robot': 'robotics', 'robots': 'robotics',
+      'car': 'vehicle', 'cars': 'vehicle',
+      'furnitures': 'furniture',
+      'fashions': 'fashion', 'cloth': 'fashion', 'clothing': 'fashion',
+      'circuits': 'circuit', 'electronics': 'circuit',
+      'dance': 'choreography',
+      'agents': 'agent', 'npc': 'agent',
+      'recipes': 'food', 'recipe': 'food',
+      'procgen': 'procedural', 'noise': 'procedural',
+      'artificial_life': 'alife',
+      'user_interface': 'ui', 'interface': 'ui',
+      'algorithm': 'procedural', 'algorithms': 'procedural',
+      'biology': 'ecosystem', 'biochemistry': 'ecosystem',
+      'engineering': 'physics',
+      'data': 'procedural', 'analytics': 'procedural',
+      'camera': 'visual2d', 'photography': 'visual2d',
+      'creature': 'character', 'monster': 'character', 'beast': 'character',
+      'scene': 'visual2d', 'environment': 'procedural',
+      'weather': 'procedural', 'climate': 'procedural',
+      'lighting': 'shader', 'illumination': 'shader',
+      'materials': 'procedural',
+      'plant': 'ecosystem', 'plants': 'ecosystem', 'flora': 'ecosystem',
+      'field': 'physics', 'force': 'physics',
+      'style': 'visual2d', 'styling': 'visual2d', 'theme': 'visual2d',
+      'framework': 'agent', 'system': 'agent',
+      'cross-domain': 'agent', 'multidomain': 'agent', 'hybrid': 'agent',
+      'fluid': 'physics', 'liquid': 'physics', 'gas': 'physics',
+      'element': 'alife', 'elements': 'alife',
+      'abstract': 'visual2d', 'generative': 'procedural',
+    };
+
+    // Helper: find closest domain match with alias support
+    function findClosestDomain(input: string, candidates: string[]): string | null {
+      if (!input) return null;
+      const lower = input.toLowerCase().trim();
+      if (candidates.includes(lower)) return lower;
+      if (DOMAIN_ALIASES[lower]) return DOMAIN_ALIASES[lower];
+      for (const c of candidates) {
+        if (c.includes(lower) || lower.includes(c)) return c;
+      }
+      for (const [alias, canonical] of Object.entries(DOMAIN_ALIASES)) {
+        if (candidates.includes(canonical) && (alias.includes(lower) || lower.includes(alias))) return canonical;
+      }
+      return null;
+    }
+
     if (!seed.$domain || !supportedDomains.includes(seed.$domain)) {
-      return res.status(400).json({
-        error: 'Unsupported domain',
-        message: `Domain '${seed.$domain}' is not supported for growth`,
-        suggestion: `Supported domains: ${supportedDomains.slice(0, 6).join(', ')}...`,
-        example: { domain: 'character' },
-        docs: '/api/docs#domains'
-      });
+      const closest = findClosestDomain(seed.$domain || '', supportedDomains);
+      if (closest && supportedDomains.includes(closest)) {
+        // Auto-fix: remap the seed's domain to the closest match
+        const oldDomain = seed.$domain;
+        seed.$domain = closest;
+        log('INFO', `Auto-fixed domain "${oldDomain}" → "${closest}" for seed ${seed.id}`);
+      } else {
+        return res.status(400).json({
+          error: 'Unsupported domain',
+          message: `Domain '${seed.$domain}' is not supported for growth`,
+          supported_domains: supportedDomains,
+          suggestion: closest 
+            ? `Did you mean '${closest}'?`
+            : `Use a seed with one of these domains: ${supportedDomains.slice(0, 5).join(', ')}...`,
+          example: { domain: 'character' },
+          docs: '/api/docs#domains'
+        });
+      }
     }
 
     try {
@@ -1372,11 +1485,30 @@ async function startServer() {
   });
 
   app.get('/api/gene-types', (_req, res) => {
-    const types: Record<string, any> = {};
-    for (const key of Object.keys(GENE_TYPES)) {
-      types[key] = getGeneTypeInfo().find(i => i.name === key);
+    const all = geneTypeRegistry.getAll();
+    res.json({
+      types: all.map(t => ({ name: t.name, parent: t.parent, category: t.category, description: t.description })),
+      count: all.length,
+      can_register: true,
+      example: GSPL_GENE_TYPE_EXAMPLE,
+    });
+  });
+
+  app.post('/api/gene-types/register', optionalAuth, validateBody(RegisterGeneTypeSchema), (req: any, res: any) => {
+    const { name, base_type, description, constraints, validate, mutate, crossover, distance } = req.body;
+
+    const result = registerGSPLGeneType({
+      name, baseType: base_type, description, constraints,
+      validate, mutate, crossover, distance,
+    });
+
+    if (!result.success) {
+      return res.status(400).json({ error: 'Gene type registration failed', errors: result.errors });
     }
-    res.json({ types, count: Object.keys(types).length });
+
+    log('INFO', `Gene type registered: ${result.name}`, { user: req.user?.username });
+    audit('gene_type.register', 'gene_type', result.name, { base_type }, req);
+    res.json({ success: true, name: result.name, message: `Gene type "${result.name}" registered` });
   });
 
   /**
@@ -2576,6 +2708,117 @@ async function startServer() {
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // PER-GENE PROVENANCE (Phase 1.3: Atomic Sovereignty)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Get the full provenance chain for a specific gene
+   * GET /api/seeds/:id/gene/:name/provenance
+   */
+  app.get('/api/seeds/:id/gene/:name/provenance', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const gene = seed.genes?.[req.params.name];
+    if (!gene) return res.status(404).json({ error: 'Gene not found' });
+
+    if (isSovereignGene(gene)) {
+      return res.json(getGeneProvenance(gene));
+    }
+
+    // Non-sovereign: return basic info
+    return res.json({
+      creator: 'legacy',
+      history: [],
+      currentValue: gene.value,
+      legacy: true,
+    });
+  });
+
+  /**
+   * Set a license on a specific gene
+   * POST /api/seeds/:id/gene/:name/license
+   */
+  app.post('/api/seeds/:id/gene/:name/license', optionalAuth, (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const geneName = req.params.name;
+    const rawGene = seed.genes?.[geneName];
+    if (!rawGene) return res.status(404).json({ error: 'Gene not found' });
+
+    const userId = req.user?.sub || req.user?.username || 'anonymous';
+    const { type, commercial, derivatives, attribution, shareAlike, royaltyBps } = req.body;
+
+    let gene = isSovereignGene(rawGene)
+      ? rawGene
+      : createSovereignGene(rawGene.value, rawGene.type || 'scalar', userId);
+
+    gene = licenseSovereignGene(gene, {
+      type: type || 'custom',
+      commercial: commercial !== false,
+      derivatives: derivatives !== false,
+      attribution,
+      shareAlike,
+      royaltyBps,
+    }, userId);
+
+    seed.genes[geneName] = gene;
+    saveSeeds();
+    log('INFO', `Gene ${geneName} licensed`, { seed: seed.id, user: userId });
+    audit('gene.license', 'gene', `${seed.id}:${geneName}`, { license: type }, req);
+    res.json({ success: true, provenance: getGeneProvenance(gene) });
+  });
+
+  /**
+   * Check permissions on a gene
+   * GET /api/seeds/:id/gene/:name/permission?operation=mutate&user=bob
+   */
+  app.get('/api/seeds/:id/gene/:name/permission', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const gene = seed.genes?.[req.params.name];
+    if (!gene) return res.status(404).json({ error: 'Gene not found' });
+    if (!isSovereignGene(gene)) {
+      return res.json({ allowed: true, reason: 'Legacy gene — no restrictions' });
+    }
+
+    const operation = (req.query.operation as string) || 'mutate';
+    const userId = (req.query.user as string) || 'anonymous';
+    const result = checkGenePermission(gene, operation as any, userId);
+    res.json(result);
+  });
+
+  /**
+   * Make a gene sovereign (wrap raw value with creator attribution)
+   * POST /api/seeds/:id/gene/:name/sovereignize
+   */
+  app.post('/api/seeds/:id/gene/:name/sovereignize', optionalAuth, (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const geneName = req.params.name;
+    const rawGene = seed.genes?.[geneName];
+    if (!rawGene) return res.status(404).json({ error: 'Gene not found' });
+
+    if (isSovereignGene(rawGene)) {
+      return res.json({ success: true, message: 'Already sovereign', provenance: getGeneProvenance(rawGene) });
+    }
+
+    const userId = req.user?.sub || req.user?.username || seed.$owner?.userId || 'anonymous';
+    const sovereign = createSovereignGene(
+      rawGene.value,
+      rawGene.type || 'scalar',
+      userId,
+    );
+    seed.genes[geneName] = sovereign;
+    saveSeeds();
+    log('INFO', `Gene ${geneName} sovereignized`, { seed: seed.id, user: userId });
+    res.json({ success: true, message: 'Gene is now sovereign', provenance: getGeneProvenance(sovereign) });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // GLOBAL ERROR HANDLING
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -2604,6 +2847,172 @@ async function startServer() {
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 4: UNIVERSAL CONTENT FABRIC — Seed Render & .pseed
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Render a seed to a requested format (cache-first, grow on miss)
+   * GET /api/v1/render/:hash?format=glb
+   */
+  app.get('/api/v1/render/:hash', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.$hash === req.params.hash || s.id === req.params.hash);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const format = req.query.format || 'json';
+    const supportedFormats = getSupportedFormats(seed.$domain);
+    if (format !== 'json' && !supportedFormats.includes(format)) {
+      return res.status(400).json({ error: `Format '${format}' not supported for domain '${seed.$domain}'`, supported: supportedFormats });
+    }
+
+    try {
+      const result = await renderSeed(seed, format as any);
+      res.set('Content-Type', result.mimeType);
+      res.set('X-Seed-Hash', result.seedHash);
+      res.set('X-Generation-Quality', result.quality);
+      res.set('X-Cache', result.cached ? 'HIT' : 'MISS');
+      res.send(result.data);
+    } catch (err: any) {
+      res.status(500).json({ error: 'Render failed', message: err.message });
+    }
+  });
+
+  /**
+   * Export a seed as .pseed package
+   * GET /api/seeds/:id/export/pseed
+   */
+  app.get('/api/seeds/:id/export/pseed', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const pkg = packagePSeed(seed);
+    res.set('Content-Type', 'application/vnd.paradigm.seed');
+    res.set('Content-Disposition', `attachment; filename="${seed.$name || 'seed'}.pseed"`);
+    res.send(pkg);
+  });
+
+  /**
+   * Import a .pseed package
+   * POST /api/seeds/import/pseed
+   */
+  app.post('/api/seeds/import/pseed', (req: any, res: any) => {
+    try {
+      const { parsePSeed } = require('./src/lib/rendering/seed-render-service.js');
+      const pkg = parsePSeed(Buffer.from(JSON.stringify(req.body)));
+      if (!pkg.seed) return res.status(400).json({ error: 'Invalid .pseed file: missing seed' });
+
+      seeds.push(pkg.seed);
+      saveSeeds();
+      log('INFO', 'Seed imported from .pseed', { name: pkg.metadata.name });
+      res.json({ success: true, seed: { id: pkg.seed.id, name: pkg.metadata.name, domain: pkg.metadata.domain } });
+    } catch (err: any) {
+      res.status(400).json({ error: 'Invalid .pseed file', message: err.message });
+    }
+  });
+
+  /**
+   * Get supported render formats for a domain
+   * GET /api/v1/formats/:domain
+   */
+  app.get('/api/v1/formats/:domain', (req: any, res: any) => {
+    const formats = getSupportedFormats(req.params.domain);
+    res.json({ domain: req.params.domain, formats });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PHASE 5: NETWORK STATE — Creative DAO & Training Canon
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Get DAO state
+   * GET /api/v1/dao
+   */
+  app.get('/api/v1/dao', (_req: any, res: any) => {
+    res.json({
+      name: 'Paradigm Creative DAO',
+      proposals: creativeDAO.getProposals().length,
+      activeProposals: creativeDAO.getProposals('voting').length,
+      approvedGeneTypes: creativeDAO.approvedGeneTypes.length,
+      royaltyCurve: creativeDAO.royaltyCurve,
+      constitutionalCommitments: creativeDAO.commitments.length,
+    });
+  });
+
+  /**
+   * Propose a DAO action
+   * POST /api/v1/dao/propose
+   */
+  app.post('/api/v1/dao/propose', optionalAuth, (req: any, res: any) => {
+    const { title, description, type, payload, stake } = req.body;
+    if (!title || !type || !payload) return res.status(400).json({ error: 'Missing required fields' });
+
+    const result = creativeDAO.propose(
+      title, description || '', req.user?.sub || 'anonymous', type, payload, stake || 0,
+    );
+    if ('error' in result) return res.status(400).json(result);
+    res.json(result);
+  });
+
+  /**
+   * Vote on a proposal
+   * POST /api/v1/dao/vote/:id
+   */
+  app.post('/api/v1/dao/vote/:id', optionalAuth, (req: any, res: any) => {
+    const { support, votingPower } = req.body;
+    const result = creativeDAO.vote(req.params.id, req.user?.sub || 'anonymous', support, votingPower || 1);
+    if ('error' in result) return res.status(400).json(result);
+    res.json(result);
+  });
+
+  /**
+   * Execute a passed proposal
+   * POST /api/v1/dao/execute/:id
+   */
+  app.post('/api/v1/dao/execute/:id', optionalAuth, (req: any, res: any) => {
+    const result = creativeDAO.execute(req.params.id);
+    if ('error' in result) return res.status(400).json(result);
+    log('INFO', `DAO proposal executed: ${req.params.id}`, { user: req.user?.sub });
+    res.json(result);
+  });
+
+  /**
+   * List proposals
+   * GET /api/v1/dao/proposals
+   */
+  app.get('/api/v1/dao/proposals', (_req: any, res: any) => {
+    const status = _req.query.status as any;
+    res.json({ proposals: creativeDAO.getProposals(status) });
+  });
+
+  /**
+   * Register a seed for the AI Training Data Canon
+   * POST /api/v1/canon/register
+   */
+  app.post('/api/v1/canon/register', optionalAuth, (req: any, res: any) => {
+    const { seedId, license } = req.body;
+    const seed = seeds.find((s: any) => s.id === seedId);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const result = trainingCanon.register(seed, license || 'CC-BY-4.0');
+    if ('error' in result) return res.status(400).json(result);
+
+    log('INFO', `Seed registered in training canon: ${seedId}`, { license });
+    res.json(result);
+  });
+
+  /**
+   * Query the Training Data Canon
+   * GET /api/v1/canon/query
+   */
+  app.get('/api/v1/canon/query', (_req: any, res: any) => {
+    const results = trainingCanon.query({
+      domains: _req.query.domains?.split(','),
+      minQuality: parseFloat(_req.query.minQuality || '0'),
+      limit: parseInt(_req.query.limit || '100', 10),
+    });
+    res.json({ count: results.length, entries: results });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // GRACEFUL SHUTDOWN
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -2622,6 +3031,7 @@ async function startServer() {
 
     // Flush data store
     try {
+      persistCustomGeneTypes(dataDir);
       await store.persist();
       await store.close();
       log('INFO', 'Data store flushed and closed');

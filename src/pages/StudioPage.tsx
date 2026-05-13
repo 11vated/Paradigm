@@ -1,13 +1,28 @@
-/**
- * Studio Page — AI-Native Generative Design
- *
- * Main page for the Paradigm Studio with SeedChat AI assistant, GSPL REPL, and Preview.
- */
-
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { SeedChatIntegrated } from '@/components/studio/SeedChat-Integrated';
 import { GsplRepl } from '@/components/studio/GsplRepl';
-import { PreviewViewport } from '@/components/studio/PreviewViewport';
+import PreviewViewport from '@/components/studio/PreviewViewport';
+import GSPLEditor from '@/components/studio/GSPLEditor';
+import GeneEditor from '@/components/studio/GeneEditor';
+import GalleryGrid from '@/components/studio/GalleryGrid';
+import SeedLibrary from '@/components/studio/SeedLibrary';
+import InfiniteCanvas from '@/components/studio/InfiniteCanvas';
+import CompositionPanel from '@/components/studio/CompositionPanel';
+import BreedPanel from '@/components/studio/BreedPanel';
+import EvolvePanel from '@/components/studio/EvolvePanel';
+import ExportPanel from '@/components/studio/ExportPanel';
+import MintPanel from '@/components/studio/MintPanel';
+import AgentPanel from '@/components/studio/AgentPanel';
+import SeedSimilarityList from '@/components/studio/SeedSimilarityList';
+import LineageGraph from '@/components/studio/LineageGraph';
+import LineageTree from '@/components/studio/LineageTree';
+import TopologyViewer from '@/components/studio/TopologyViewer';
+import PromptBar from '@/components/studio/PromptBar';
+import { EvolutionTheater } from '@/components/studio/EvolutionUI';
+
+type PanelTab = 'chat' | 'editor' | 'genes' | 'gallery' | 'library' | 'lineage' | 'topology';
+type BottomTab = 'compose' | 'evolve' | 'breed' | 'export' | 'mint' | 'agent';
 
 interface Artifact {
   seed: any;
@@ -17,205 +32,316 @@ interface Artifact {
 
 export function StudioPage() {
   const [currentArtifact, setCurrentArtifact] = useState<Artifact | null>(null);
-  const [activeTab, setActiveTab] = useState<'chat' | 'repl' | 'preview'>('chat');
+  const [activePanel, setActivePanel] = useState<PanelTab>('chat');
+  const [activeBottom, setActiveBottom] = useState<BottomTab | null>(null);
+  const [seeds, setSeeds] = useState<any[]>([]);
+  const [selectedSeed, setSelectedSeed] = useState<any>(null);
 
-  const handleArtifactGenerated = (artifact: Artifact) => {
+  const handleArtifactGenerated = useCallback((artifact: Artifact) => {
     setCurrentArtifact(artifact);
-    setActiveTab('preview');
-  };
+    if (artifact.seed) {
+      setSeeds(prev => [...prev, artifact.seed].slice(-200));
+    }
+  }, []);
 
-  return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <div style={styles.logo}>
-          <h1 style={styles.title}>Paradigm Studio</h1>
-          <span style={styles.subtitle}>AI-Native Generative Platform</span>
-        </div>
-        <nav style={styles.nav}>
-          <button
-            onClick={() => setActiveTab('chat')}
-            style={{
-              ...styles.navButton,
-              ...(activeTab === 'chat' ? styles.navButtonActive : {}),
-            }}
-          >
-            💬 Chat
-          </button>
-          <button
-            onClick={() => setActiveTab('repl')}
-            style={{
-              ...styles.navButton,
-              ...(activeTab === 'repl' ? styles.navButtonActive : {}),
-            }}
-          >
-            💻 REPL
-          </button>
-          <button
-            onClick={() => setActiveTab('preview')}
-            style={{
-              ...styles.navButton,
-              ...(activeTab === 'preview' ? styles.navButtonActive : {}),
-            }}
-          >
-            👁️ Preview
-          </button>
-        </nav>
-      </header>
+  const handleSelectSeed = useCallback((seed: any) => {
+    setSelectedSeed(seed);
+    setCurrentArtifact(prev => prev ? { ...prev, seed } : null);
+  }, []);
 
-      <main style={styles.main}>
-        {activeTab === 'chat' ? (
-          <div style={styles.chatPanel}>
-            <SeedChatIntegrated onArtifactGenerated={handleArtifactGenerated} />
+  const leftPanel = (
+    <div style={styles.panelContent}>
+      <nav style={styles.sidebarNav}>
+        {[
+          { id: 'chat' as PanelTab, label: 'Chat', icon: '💬' },
+          { id: 'editor' as PanelTab, label: 'Editor', icon: '📝' },
+          { id: 'genes' as PanelTab, label: 'Genes', icon: '🧬' },
+          { id: 'gallery' as PanelTab, label: 'Gallery', icon: '🖼️' },
+          { id: 'library' as PanelTab, label: 'Library', icon: '📚' },
+          { id: 'lineage' as PanelTab, label: 'Lineage', icon: '🌳' },
+          { id: 'topology' as PanelTab, label: 'Topology', icon: '🔮' },
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActivePanel(tab.id)}
+            style={{
+              ...styles.sidebarButton,
+              ...(activePanel === tab.id ? styles.sidebarButtonActive : {}),
+            }}
+            title={tab.label}
+          >
+            <span style={styles.sidebarIcon}>{tab.icon}</span>
+            <span style={styles.sidebarLabel}>{tab.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <div style={styles.panelBody}>
+        {activePanel === 'chat' && (
+          <SeedChatIntegrated onArtifactGenerated={handleArtifactGenerated} />
+        )}
+        {activePanel === 'editor' && (
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1, overflow: 'auto' }}>
+              <GSPLEditor />
+            </div>
+            <div style={{ flex: 1, overflow: 'auto', borderTop: '1px solid #333' }}>
+              <GsplRepl />
+            </div>
           </div>
-        ) : activeTab === 'repl' ? (
-          <div style={styles.replPanel}>
-            <GsplRepl />
+        )}
+        {activePanel === 'genes' && (
+          <GeneEditor seed={selectedSeed} onSeedUpdate={handleSelectSeed} />
+        )}
+        {activePanel === 'gallery' && (
+          <div style={{ height: '100%', overflow: 'auto' }}>
+            <GalleryGrid seeds={seeds} onSelectSeed={handleSelectSeed} />
           </div>
-        ) : (
-          <div style={styles.previewPanel}>
-            {currentArtifact ? (
-              <div>
-                <div style={styles.artifactInfo}>
-                  <h3>{currentArtifact.seed?.$name || 'Generated Artifact'}</h3>
-                  <p>Seed: {currentArtifact.seed?.phrase}</p>
-                  <p>Hash: {currentArtifact.seed?.hash?.substring(0, 16)}...</p>
-                </div>
-                <PreviewViewport
-                  artifact={currentArtifact?.output}
-                  seed={currentArtifact?.seed}
-                  onSeedUpdate={() => {}}
-                  width={800}
-                  height={600}
-                />
-                <details style={styles.codeDetails}>
-                  <summary style={styles.codeSummary}>GSPL Code</summary>
-                  <pre style={styles.codeBlock}>{currentArtifact.gspl}</pre>
-                </details>
-              </div>
+        )}
+        {activePanel === 'library' && (
+          <div style={{ height: '100%', overflow: 'auto' }}>
+            <SeedLibrary onSelectSeed={handleSelectSeed} />
+            <SeedSimilarityList seed={selectedSeed} seeds={seeds} />
+          </div>
+        )}
+        {activePanel === 'lineage' && (
+          <div style={{ height: '100%', overflow: 'auto' }}>
+            {selectedSeed ? (
+              <>
+                <LineageGraph seed={currentArtifact} />
+                <LineageTree seed={selectedSeed} />
+              </>
             ) : (
-              <div style={styles.emptyState}>
-                <p>💬 Start a conversation in the Chat tab to generate artifacts</p>
-              </div>
+              <div style={styles.emptyHint}>Select a seed to view lineage</div>
             )}
           </div>
         )}
-      </main>
+        {activePanel === 'topology' && (
+          <div style={{ height: '100%' }}>
+            <TopologyViewer seeds={seeds} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
-      <footer style={styles.footer}>
-        <span>Paradigm v1.0 — Nobel Prize-Caliber Generative Platform</span>
-        <span>140+ Domains | Deterministic RNG | WebGPU Accelerated</span>
-      </footer>
+  const centerPanel = (
+    <div style={styles.panelContent}>
+      {currentArtifact ? (
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div style={styles.artifactBar}>
+            <h3 style={styles.artifactName}>
+              {currentArtifact.seed?.$name || currentArtifact.seed?.name || 'Artifact'}
+            </h3>
+            <span style={styles.artifactDomain}>
+              {currentArtifact.seed?.$domain || currentArtifact.seed?.domain || ''}
+            </span>
+          </div>
+          <div style={{ flex: 1, overflow: 'hidden' }}>
+            <PreviewViewport
+              artifact={currentArtifact.output}
+              seed={currentArtifact.seed}
+              loading={false}
+            />
+          </div>
+          <div style={styles.promptBar}>
+            <PromptBar
+              onSend={(text: string) => {
+                handleArtifactGenerated({
+                  seed: { $name: text, phrase: text },
+                  output: null,
+                  gspl: '',
+                });
+              }}
+            />
+          </div>
+        </div>
+      ) : (
+        <div style={styles.emptyState}>
+          <div style={styles.emptyIcon}>✦</div>
+          <p style={styles.emptyTitle}>Welcome to Paradigm Studio</p>
+          <p style={styles.emptyText}>
+            Use Chat or Editor to create seeds, then preview them here.
+          </p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+            <button
+              onClick={() => setActivePanel('chat')}
+              style={{ ...styles.actionButton, backgroundColor: '#4a9eff' }}
+            >
+              Start Chatting
+            </button>
+            <button
+              onClick={() => setActivePanel('editor')}
+              style={{ ...styles.actionButton, backgroundColor: '#7c3aed' }}
+            >
+              Open GSPL Editor
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
+  const bottomPanel = (
+    <div style={styles.panelContent}>
+      <nav style={styles.bottomNav}>
+        {[
+          { id: 'compose' as BottomTab, label: 'Compose', icon: '🔀' },
+          { id: 'evolve' as BottomTab, label: 'Evolve', icon: '📈' },
+          { id: 'breed' as BottomTab, label: 'Breed', icon: '🧬' },
+          { id: 'export' as BottomTab, label: 'Export', icon: '💾' },
+          { id: 'mint' as BottomTab, label: 'Mint', icon: '⛓️' },
+          { id: 'agent' as BottomTab, label: 'Agent', icon: '🤖' },
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveBottom(activeBottom === tab.id ? null : tab.id)}
+            style={{
+              ...styles.bottomButton,
+              ...(activeBottom === tab.id ? styles.bottomButtonActive : {}),
+            }}
+          >
+            <span>{tab.icon}</span>
+            <span style={{ marginLeft: 4 }}>{tab.label}</span>
+          </button>
+        ))}
+      </nav>
+      {activeBottom && (
+        <div style={styles.bottomBody}>
+          {activeBottom === 'compose' && <CompositionPanel />}
+          {activeBottom === 'evolve' && (
+            <div style={{ display: 'flex', gap: 8, padding: 8 }}>
+              <div style={{ flex: 1 }}><EvolvePanel /></div>
+              <div style={{ flex: 1 }}>
+                <EvolutionTheater
+                  config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50 }}
+                  onEvolve={() => {}}
+                  onSeedSelect={handleSelectSeed}
+                />
+              </div>
+            </div>
+          )}
+          {activeBottom === 'breed' && <BreedPanel />}
+          {activeBottom === 'export' && <ExportPanel />}
+          {activeBottom === 'mint' && <MintPanel />}
+          {activeBottom === 'agent' && (
+            <div style={{ display: 'flex', gap: 8, padding: 8 }}>
+              <div style={{ flex: 1 }}><AgentPanel seeds={seeds} /></div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div style={styles.container}>
+      <PanelGroup direction="vertical" style={{ height: '100vh' }}>
+        <Panel defaultSize={75} minSize={40}>
+          <PanelGroup direction="horizontal">
+            <Panel defaultSize={25} minSize={15} maxSize={40}>
+              {leftPanel}
+            </Panel>
+            <PanelResizeHandle style={styles.resizeHandle} />
+            <Panel defaultSize={75} minSize={30}>
+              <PanelGroup direction="vertical">
+                <Panel defaultSize={70} minSize={30}>
+                  {centerPanel}
+                </Panel>
+                <PanelResizeHandle style={styles.resizeHandle} />
+                <Panel defaultSize={30} minSize={10} maxSize={60}>
+                  {bottomPanel}
+                </Panel>
+              </PanelGroup>
+            </Panel>
+          </PanelGroup>
+        </Panel>
+      </PanelGroup>
     </div>
   );
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   container: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    height: '100vh',
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
+    display: 'flex', flexDirection: 'column',
+    height: '100vh', backgroundColor: '#0d1117',
+    color: '#c9d1d9', fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
   },
-  header: {
-    padding: '16px 24px',
-    borderBottom: '1px solid #333',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  panelContent: {
+    height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden',
   },
-  logo: {
-    display: 'flex',
-    flexDirection: 'column' as const,
+  resizeHandle: {
+    width: '4px', backgroundColor: '#21262d', cursor: 'col-resize',
+    transition: 'background-color 0.2s',
   },
-  title: {
-    margin: 0,
-    fontSize: '24px',
-    background: 'linear-gradient(135deg, #4a9eff, #ff6b6b)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
+  sidebarNav: {
+    display: 'flex', flexDirection: 'column', gap: '2px',
+    padding: '8px', backgroundColor: '#161b22', borderBottom: '1px solid #21262d',
   },
-  subtitle: {
-    fontSize: '12px',
-    color: '#888',
-    marginTop: '4px',
+  sidebarButton: {
+    display: 'flex', alignItems: 'center', gap: '8px',
+    padding: '8px 12px', border: 'none', borderRadius: '6px',
+    backgroundColor: 'transparent', color: '#8b949e',
+    cursor: 'pointer', fontSize: '13px', textAlign: 'left' as const,
+    transition: 'all 0.15s',
   },
-  nav: {
-    display: 'flex',
-    gap: '8px',
+  sidebarButtonActive: {
+    backgroundColor: '#1f2937', color: '#58a6ff',
   },
-  navButton: {
-    padding: '8px 16px',
-    backgroundColor: 'transparent',
-    border: '1px solid #444',
-    borderRadius: '4px',
-    color: '#fff',
-    cursor: 'pointer',
-    fontSize: '14px',
+  sidebarIcon: { fontSize: '16px' },
+  sidebarLabel: { fontSize: '13px' },
+  panelBody: {
+    flex: 1, overflow: 'hidden',
+    backgroundColor: '#0d1117',
   },
-  navButtonActive: {
-    backgroundColor: '#4a9eff',
-    borderColor: '#4a9eff',
+  artifactBar: {
+    display: 'flex', alignItems: 'center', gap: '12px',
+    padding: '8px 16px', backgroundColor: '#161b22',
+    borderBottom: '1px solid #21262d',
   },
-  main: {
-    flex: 1,
-    overflow: 'hidden',
+  artifactName: { margin: 0, fontSize: '14px', fontWeight: 600, color: '#e6edf3' },
+  artifactDomain: {
+    padding: '2px 8px', borderRadius: '4px', fontSize: '11px',
+    backgroundColor: '#1f2937', color: '#58a6ff',
   },
-  chatPanel: {
-    height: '100%',
-    padding: '16px',
+  promptBar: {
+    padding: '8px 16px', backgroundColor: '#161b22',
+    borderTop: '1px solid #21262d',
   },
-  replPanel: {
-    height: '100%',
-    overflow: 'hidden',
+  bottomNav: {
+    display: 'flex', gap: '2px',
+    padding: '4px 8px', backgroundColor: '#161b22',
+    borderBottom: '1px solid #21262d',
   },
-  previewPanel: {
-    height: '100%',
-    padding: '16px',
-    overflowY: 'auto' as const,
+  bottomButton: {
+    display: 'flex', alignItems: 'center', gap: '4px',
+    padding: '6px 12px', border: 'none', borderRadius: '6px',
+    backgroundColor: 'transparent', color: '#8b949e',
+    cursor: 'pointer', fontSize: '12px',
+    transition: 'all 0.15s',
   },
-  artifactInfo: {
-    marginBottom: '16px',
-    padding: '16px',
-    backgroundColor: '#2a2a2a',
-    borderRadius: '8px',
+  bottomButtonActive: {
+    backgroundColor: '#1f2937', color: '#58a6ff',
   },
-  codeDetails: {
-    marginTop: '16px',
-    padding: '16px',
-    backgroundColor: '#2a2a2a',
-    borderRadius: '8px',
-  },
-  codeSummary: {
-    cursor: 'pointer',
-    color: '#4a9eff',
-    fontSize: '14px',
-  },
-  codeBlock: {
-    marginTop: '8px',
-    padding: '12px',
-    backgroundColor: '#000',
-    borderRadius: '4px',
-    fontSize: '12px',
-    fontFamily: 'monospace',
-    whiteSpace: 'pre-wrap' as const,
-    maxHeight: '400px',
-    overflowY: 'auto' as const,
+  bottomBody: {
+    flex: 1, overflow: 'auto',
+    backgroundColor: '#0d1117',
   },
   emptyState: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    color: '#888',
-    fontSize: '18px',
+    display: 'flex', flexDirection: 'column',
+    justifyContent: 'center', alignItems: 'center',
+    height: '100%', color: '#8b949e', padding: '40px',
+    textAlign: 'center' as const,
   },
-  footer: {
-    padding: '12px 24px',
-    borderTop: '1px solid #333',
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: '12px',
-    color: '#666',
+  emptyIcon: { fontSize: '48px', marginBottom: '16px', color: '#58a6ff' },
+  emptyTitle: { fontSize: '20px', fontWeight: 600, margin: '0 0 8px 0', color: '#e6edf3' },
+  emptyText: { fontSize: '14px', margin: 0, color: '#8b949e' },
+  emptyHint: {
+    display: 'flex', justifyContent: 'center', alignItems: 'center',
+    height: '100%', color: '#8b949e', fontSize: '13px',
+  },
+  actionButton: {
+    padding: '10px 20px', border: 'none', borderRadius: '8px',
+    color: '#fff', fontSize: '14px', fontWeight: 600, cursor: 'pointer',
   },
 };

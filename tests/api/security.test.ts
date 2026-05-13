@@ -90,14 +90,11 @@ describe('Security Headers Middleware', () => {
     expect(res._headers['x-content-type-options']).toBe('nosniff');
   });
 
-  it('X-Frame-Options currently disabled for iframe embedding (Phase 1 TODO: re-enable via frame-ancestors CSP)', () => {
-    const req = mockReq();
+  it('X-Frame-Options set to DENY (prevents clickjacking)', () => {
+    const middleware = securityHeaders();
     const res = mockRes();
-    headers(req, res, () => {});
-    // Intentionally removed from the middleware to allow AI Studio iframe embedding.
-    // Phase 1 security hardening should restore clickjacking protection via a
-    // scoped `Content-Security-Policy: frame-ancestors` directive instead.
-    expect(res._headers['x-frame-options']).toBeUndefined();
+    middleware(mockReq(), res, () => {});
+    expect(res._headers['x-frame-options']).toBe('DENY');
   });
 
   it('sets Strict-Transport-Security', () => {

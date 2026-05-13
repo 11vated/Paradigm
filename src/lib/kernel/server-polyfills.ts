@@ -1,38 +1,105 @@
+import { createCanvas, Image as NodeImage } from 'canvas';
 
-import { JSDOM } from 'jsdom';
+const SHIM_MODE = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
-/**
- * Paradigm Absolute — Server-Side Browser Polyfills
- * This module provides JSDOM-based polyfills for browser APIs (DOM, Canvas)
- * to enable domain generators (like character-v3) to run in Node.js.
- */
 export function initServerPolyfills() {
   if (typeof global.window !== 'undefined') return;
 
-  const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
-    pretendToBeVisual: true,
-    hasSubresources: false,
-    resources: 'usable',
-  });
+  const consoleFn = SHIM_MODE === 'production' ? () => {} : console.log;
+  consoleFn('[Polyfills] Initializing server-side shims (no WebGL)');
 
-  global.window = dom.window as any;
-  global.document = dom.window.document;
-  global.navigator = dom.window.navigator;
-  global.HTMLElement = dom.window.HTMLElement;
-  global.HTMLCanvasElement = dom.window.HTMLCanvasElement;
-  global.CanvasRenderingContext2D = dom.window.CanvasRenderingContext2D;
-  global.ImageData = dom.window.ImageData;
-  global.Blob = dom.window.Blob;
-  global.File = dom.window.File;
+  const fakeDoc = {
+    createElement(tag: string) {
+      if (tag === 'canvas') return createCanvas(1, 1);
+      if (tag === 'img') {
+        const img = new NodeImage();
+        img.width = 1;
+        img.height = 1;
+        return img;
+      }
+      return {} as any;
+    },
+    createElementNS(_ns: string, tag: string) {
+      return this.createElement(tag);
+    },
+    documentElement: { style: {} },
+    createTextNode: () => ({}),
+    head: { appendChild: () => {} },
+    body: { appendChild: () => {} },
+    querySelector: () => null,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    createRange: () => ({
+      setStart: () => {},
+      setEnd: () => {},
+      getClientRects: () => [],
+      getBoundingClientRect: () => ({ top: 0, left: 0, width: 0, height: 0 }),
+    }),
+    getSelection: () => null,
+    visibilityState: 'visible',
+    hidden: false,
+    location: { href: 'http://localhost', protocol: 'http:', host: 'localhost', hostname: 'localhost', port: '3000', pathname: '/', search: '', hash: '' },
+  } as any;
 
-  // Mock requestAnimationFrame for Three.js and animations
-  global.requestAnimationFrame = (callback) => setTimeout(callback, 1000 / 60);
-  global.cancelAnimationFrame = (id) => clearTimeout(id);
-
-  // Add basic CSS support for Three.js
-  (global.window as any).CSS = {
-    supports: () => true,
+  const fakeWin = {
+    innerWidth: 1920,
+    innerHeight: 1080,
+    devicePixelRatio: 1,
+    location: fakeDoc.location,
+    navigator: {
+      userAgent: 'Paradigm-Server/1.0',
+      platform: 'Node.js',
+      gpu: undefined as any,
+    },
+    document: fakeDoc,
+    self: null as any,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    setTimeout: setTimeout.bind(global),
+    clearTimeout: clearTimeout.bind(global),
+    setInterval: setInterval.bind(global),
+    clearInterval: clearInterval.bind(global),
+    requestAnimationFrame: (cb: FrameRequestCallback) => setTimeout(cb, 1000 / 60) as any,
+    cancelAnimationFrame: (id: any) => clearTimeout(id),
+    AudioContext: class {},
+    OffscreenCanvas: class OffscreenCanvasShim {
+      width: number;
+      height: number;
+      constructor(w: number, h: number) { this.width = w; this.height = h; }
+      getContext() { return null as any; }
+    },
+    CSS: { supports: () => true, escape: (s: string) => s },
+    URL: { createObjectURL: () => '', revokeObjectURL: () => {} },
+    Blob: globalThis.Blob || class BlobSim {} as any,
+    File: class FileSim extends (global as any).Blob {
+      name: string;
+      constructor(parts: any[], name: string, _opts?: any) { super(parts); this.name = name; }
+    },
+    Image: NodeImage as any,
+    ImageData: class ImageDataSim {
+      data: Uint8ClampedArray;
+      width: number;
+      height: number;
+      constructor(data: Uint8ClampedArray, width: number, height: number) {
+        this.data = data; this.width = width; this.height = height;
+      }
+    },
+    fetch: global.fetch ? global.fetch.bind(global) : async () => new Response(null, { status: 404 }),
   };
+  fakeWin.self = fakeWin;
 
-  console.log('[Polyfills] Server-side browser APIs initialized via JSDOM');
+  global.window = fakeWin as any;
+  global.document = fakeDoc as any;
+  try { (global as any).navigator = fakeWin.navigator; } catch {}
+  global.Image = NodeImage as any;
+  global.fetch = fakeWin.fetch;
+  global.Blob = fakeWin.Blob as any;
+  global.File = fakeWin.File as any;
+  try { (global as any).HTMLCanvasElement = class {}; } catch {}
+  try { (global as any).CanvasRenderingContext2D = class {}; } catch {}
+  try { (global as any).ImageData = fakeWin.ImageData; } catch {}
+  global.requestAnimationFrame = fakeWin.requestAnimationFrame;
+  global.cancelAnimationFrame = fakeWin.cancelAnimationFrame;
+
+  consoleFn('[Polyfills] Server-side shims ready — GLTF export will use scene graph (no WebGL)');
 }

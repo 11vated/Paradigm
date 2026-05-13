@@ -5,6 +5,7 @@
 
 import type { Seed as SeedType, GeneratorOutput } from './types';
 import { createWebGPUGeneratorSystem, WebGPUGeneratorSystem } from './generators/webgpu-system';
+import { getGenerationQuality, type GenerationQuality } from './generation-quality';
 
 // Lazy-loaded generator system
 let gpuSystem: WebGPUGeneratorSystem | null = null;
@@ -84,6 +85,7 @@ interface Artifact {
   domain: string;
   seed_hash: string;
   generation: number;
+  generation_quality?: GenerationQuality;
   render_hints: Record<string, unknown>;
   [key: string]: unknown;
 }
@@ -958,6 +960,7 @@ function growGeneric(seed: Seed): Artifact {
   return {
     type: seed.$domain ?? 'unknown', name: seed.$name ?? 'Artifact', domain: seed.$domain ?? 'unknown',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
+    generation_quality: 'metadata-only' as GenerationQuality,
     gene_summary: geneSummary,
     render_hints: { mode: 'generic', description_only: true },
   };
@@ -969,6 +972,7 @@ export function growSeedSync(seed: Seed): Artifact {
   artifact.type = domain;
   artifact.name = seed.$name ?? `${domain.charAt(0).toUpperCase() + domain.slice(1)} Artifact`;
   artifact.domain = domain;
+  artifact.generation_quality = 'metadata-only' as GenerationQuality;
   artifact.render_hints = { mode: domain, description_only: true };
 
   if (domain === 'agent') {
@@ -986,6 +990,9 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
   try {
     const outputDir = `data/artifacts/${domain}`;
     const result = await dispatchSeed(seed, outputDir);
+    const engineHints = (result && typeof result === 'object' && 'render_hints' in result)
+      ? (result as any).render_hints ?? {}
+      : {};
     return {
       ...result,
       type: domain,
@@ -993,14 +1000,24 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
       domain,
       seed_hash: seed.$hash ?? '',
       generation: seed.$lineage?.generation ?? 0,
-      render_hints: { mode: domain, hasFile: !!result }
+      generation_quality: getGenerationQuality(),
+      render_hints: {
+        mode: engineHints.mode || domain,
+        ...engineHints,
+        hasFile: !!result,
+      },
     };
   } catch (err) {
-    console.error(`Error growing seed for domain ${domain}:`, err);
     // Fallback to legacy engine
     const engine = ENGINES[domain] ?? growGeneric;
-    const result = engine(seed);
-    return result instanceof Promise ? await result : result;
+    try {
+      const result = engine(seed);
+      const artifact = result instanceof Promise ? await result : result;
+      return { ...artifact, generation_quality: 'reduced' as GenerationQuality };
+    } catch (legacyErr) {
+      const generic = growGeneric(seed);
+      return { ...generic, generation_quality: 'metadata-only' as GenerationQuality };
+    }
   }
 }
 

@@ -17,10 +17,10 @@ export interface GeneSchema {
   [key: string]: any;
 }
 
-type ValidateFn = (value: any, schema?: GeneSchema) => boolean;
-type MutateFn = (value: any, rate: number, rng: Xoshiro256StarStar, schema?: GeneSchema) => any;
-type CrossoverFn = (a: any, b: any, rng: Xoshiro256StarStar) => any;
-type DistanceFn = (a: any, b: any, schema?: GeneSchema) => number;
+export type ValidateFn = (value: any, schema?: GeneSchema) => boolean;
+export type MutateFn = (value: any, rate: number, rng: Xoshiro256StarStar, schema?: GeneSchema) => any;
+export type CrossoverFn = (a: any, b: any, rng: Xoshiro256StarStar) => any;
+export type DistanceFn = (a: any, b: any, schema?: GeneSchema) => number;
 
 export interface GeneTypeOps {
   validate: ValidateFn;

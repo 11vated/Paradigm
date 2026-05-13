@@ -22,3 +22,9 @@ export {
 export {
   dispatch, getDomains, hasDomain, DOMAIN_MAP
 } from './engine-dispatcher';
+
+// Phase 1: Gene Type Registry (hierarchical type system)
+export {
+  geneTypeRegistry, GENE_TYPES as REGISTRY_GENE_TYPES, GENE_TYPE_LIST,
+  type TypeNode, type LawResults,
+} from './gene-type-registry.js';

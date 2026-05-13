@@ -149,11 +149,14 @@ class KnowledgeBase {
     // Index composition graph
     const graph = getCompositionGraph();
     for (const edge of graph.edges) {
+      const functorName = edge.name || edge.functor || '';
+      const source = edge.sourceDomain || edge.source || '';
+      const target = edge.targetDomain || edge.target || '';
       this.entries.push({
         category: 'functor',
-        key: edge.functor,
-        content: `Functor "${edge.functor}" transforms seeds from "${edge.source}" domain to "${edge.target}" domain.`,
-        keywords: [edge.source, edge.target, edge.functor, 'compose', 'transform', 'bridge', 'functor'],
+        key: functorName,
+        content: `Functor "${functorName}" transforms seeds from "${source}" domain to "${target}" domain.`,
+        keywords: [source, target, functorName, 'compose', 'transform', 'bridge', 'functor'].filter(Boolean),
       });
     }
 

@@ -88,10 +88,11 @@ describe('Validation Schemas', () => {
 
     it('accepts all 27 domains', () => {
       const domains = [
-        'character','sprite','music','narrative','level','item','spell','quest',
-        'dialogue','animation','vfx','ui','terrain','biome','faction','economy',
-        'lore','cutscene','shader','physics','ai_behavior','sound_design',
-        'architecture','vehicle','fullgame','cinematic','agent',
+        'character','sprite','music','visual2d','geometry3d','fullgame',
+        'animation','narrative','ui','physics','audio','ecosystem',
+        'game','alife','shader','particle','procedural',
+        'typography','architecture','vehicle','furniture','fashion',
+        'robotics','circuit','food','choreography','agent',
       ];
       for (const domain of domains) {
         expect(valid(CreateSeedSchema, { domain, name: `Test ${domain}` })).toBe(true);

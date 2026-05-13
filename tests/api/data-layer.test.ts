@@ -276,7 +276,7 @@ describe('JsonStore Data Layer', () => {
 
       const store2 = new JsonStore(TEST_DIR);
       await store2.init();
-      const found = store2.getUserByUsername('persist_user');
+      const found = await store2.getUserByUsername('persist_user');
       expect(found).toBeTruthy();
       expect(found!.username).toBe('persist_user');
       await store2.close();
@@ -306,7 +306,7 @@ describe('JsonStore Data Layer', () => {
 
       const store2 = new JsonStore(TEST_DIR);
       await store2.init();
-      const all = store2.getAllSeeds();
+      const all = await store2.getAllSeeds();
       expect(all.length).toBe(1);
       expect(all[0].$name).toBe('Original');
       await store2.close();

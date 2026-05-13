@@ -15,16 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: ESLint
         run: npm run lint
 
@@ -33,80 +30,111 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: TypeScript Check
-        run: npm run typecheck
+        run: npx tsc --noEmit
 
   determinism:
     name: Determinism Purity
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Check deterministic source purity
         run: npm run determinism:check
 
-  test:
-    name: Tests
+  kernel-tests:
+    name: Kernel & Engine Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
+      - name: Run kernel tests
+        run: npx vitest run tests/kernel/ tests/e2e/ tests/gspl/ tests/parity.test.ts tests/composition/ tests/vcs/ tests/sovereignty/ tests/auth/ tests/integration/
 
-      - name: Run tests
-        run: npm run test
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        if: hashFiles('coverage/coverage-final.json') != ''
+  agent-tests:
+    name: Agent Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          files: ./coverage/coverage-final.json
-          fail_ci_if_error: false
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run agent tests
+        run: npx vitest run tests/agent/
+
+  api-tests:
+    name: API Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Start server
+        run: npx tsx server.ts &
+      - name: Wait for server
+        run: sleep 10
+      - name: Run API tests
+        run: npx vitest run tests/api.test.ts
+      - name: Run security & validation tests
+        run: npx vitest run tests/api/security.test.ts tests/api/validation.test.ts tests/api/logger.test.ts tests/api/cache.test.ts tests/api/readiness.test.ts
+
+  full-test-suite:
+    name: Full Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Run all tests (static)
+        run: npx vitest run
 
   build:
-    name: Build
+    name: Production Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build
         run: npm run build
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -118,77 +146,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: npm audit
         run: npm audit --audit-level=high
 
-  cross-engine:
-    name: Cross-Engine Parity
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Test Seed Operations Parity
-        run: npx vitest run tests/parity.test.ts
-
-  seed-commons:
-    name: Seed Commons Validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Validate Seed Commons
-        run: npx vitest run tests/parity.test.ts -t "Seed Commons Validation"
-
   release:
     name: Release
-    needs: [lint, typecheck, determinism, test, build, security, cross-engine, seed-commons]
+    needs: [lint, typecheck, determinism, kernel-tests, agent-tests, full-test-suite, build, security]
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
           cache: npm
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build
         run: npm run build
-
       - name: Publish
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTHOR_TOKEN: ${{ secrets.NPM_TOKEN }}
