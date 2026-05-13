@@ -31,6 +31,8 @@ This determinism enables verifiable provenance, trustless collaboration, automat
 - **Frontend Cleanup:** Removed 4 JSX shadow duplicates (`StudioPage.jsx`, `AgentPanel.jsx`, `AuthPage.jsx`, `LandingPage.jsx`)
 - **Security:** Tightened CSP headers, replaced misleading API key placeholders
 - **Build:** Externalized Node.js builtins in Vite config for production builds
+- **Browser Bundle:** Made `wav`-using generators (`music-enhanced`, `audio`) load via dynamic `import()` so the Node-only `events.EventEmitter` dep no longer crashes the React bundle (was producing a blank Studio page)
+- **Studio UX:** Removed full-pane "Welcome" empty-state that blocked the artifact viewport; added slim top app-bar with brand, server health dot, help button; replaced emoji tab icons with `lucide-react`; thicker resize handles; keyboard shortcuts (`Ctrl/⌘+1..7` for left tabs, `Esc` close bottom panel, `?` help overlay)
 
 ---
 

@@ -26,7 +26,6 @@ import { generateCharacterV3 as generateCharacter } from './generators/character
 import { generateSpriteV2 as generateSprite } from './generators/sprite-v2';
 import { generateSpriteAnimated } from './generators/sprite-animated';
 import { generateMusicV2 as generateMusic } from './generators/music-v2';
-import { generateMusicEnhanced } from './generators/music-enhanced';
 import { generateVisual2DV2 as generateVisual2D } from './generators/visual2d-v2';
 import { generateVisual2DSVG } from './generators/visual2d-svg';
 import { generateNarrative } from './generators/narrative';
@@ -67,7 +66,6 @@ import { generateAlifeWorker } from './generators/alife-worker';
 import { generateAgent } from './generators/agent';
 import { generatePhysics } from './generators/physics';
 import { generatePhysicsEnhanced } from './generators/physics-enhanced';
-import { generateAudio } from './generators/audio';
 import { dispatch as dispatchSeed, getDomains } from './engine-dispatcher.js';
 
 interface Seed {
@@ -199,6 +197,7 @@ async function growMusic(seed: Seed): Promise<Artifact> {
     // Ensure output directory exists
     const fs = await import('fs');
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+    const { generateMusicEnhanced } = await import('./generators/music-enhanced.js');
     const result = await generateMusicEnhanced(seed, outputPath);
     return {
       type: 'music', name: seed.$name ?? 'Music', domain: 'music',
@@ -459,6 +458,7 @@ async function growAudio(seed: Seed): Promise<Artifact> {
   const outputPath = `${outputDir}/${fileName}`;
 
   try {
+    const { generateAudio } = await import('./generators/audio.js');
     const result = await generateAudio(seed, outputPath);
     return {
       type: 'audio', name: seed.$name ?? 'Sound', domain: 'audio',
