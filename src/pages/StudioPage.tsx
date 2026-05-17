@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Panel, Group as PanelGroup, Separator as PanelResizeHandle } from 'react-resizable-panels';
+import { type Seed, type Artifact as ArtifactType } from '@/lib/kernel/types';
 import {
   MessageSquare, FileCode, Dna, Image as ImageIcon, Library, GitBranch, Network,
   Shuffle, TrendingUp, Heart, Download, Coins, Bot, Sparkles, Keyboard, Activity,
 } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { SeedChatIntegrated } from '@/components/studio/SeedChat-Integrated';
 import { GsplRepl } from '@/components/studio/GsplRepl';
 import PreviewViewport from '@/components/studio/PreviewViewport';
@@ -23,6 +24,13 @@ import LineageTree from '@/components/studio/LineageTree';
 import TopologyViewer from '@/components/studio/TopologyViewer';
 import PromptBar from '@/components/studio/PromptBar';
 import { EvolutionTheater } from '@/components/studio/EvolutionUI';
+import { SeedGlyph } from '@/components/shell/SeedGlyph';
+import { GlassPanel } from '@/components/shell/GlassPanel';
+import { HelixDivider } from '@/components/shell/HelixDivider';
+import { HealthPulse } from '@/components/shell/HealthPulse';
+import { HashPill } from '@/components/shell/HashPill';
+import { CommandPalette } from '@/components/shell/CommandPalette';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type PanelTab = 'chat' | 'editor' | 'genes' | 'gallery' | 'library' | 'lineage' | 'topology';
 type BottomTab = 'compose' | 'evolve' | 'breed' | 'export' | 'mint' | 'agent';
@@ -47,8 +55,8 @@ const BOTTOM_TABS: { id: BottomTab; label: string; Icon: React.ComponentType<{ s
 ];
 
 interface Artifact {
-  seed: any;
-  output: any;
+  seed: Seed;
+  output: ArtifactType | null;
   gspl: string;
 }
 
@@ -60,8 +68,10 @@ export function StudioPage() {
   const [selectedSeed, setSelectedSeed] = useState<any>(null);
   const [serverOk, setServerOk] = useState<boolean | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [cmdOpen, setCmdOpen] = useState(false);
+  const [promptText, setPromptText] = useState('');
 
-  // Server health probe (every 15s)
+  // Server health probe
   useEffect(() => {
     let cancelled = false;
     const ping = async () => {
@@ -77,20 +87,29 @@ export function StudioPage() {
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
-  // Keyboard shortcuts: Ctrl/Cmd+1..7 → left tabs; Esc → close bottom; ? → help
+  // Keyboard shortcuts
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setCmdOpen(true);
+        return;
+      }
+
       if ((e.ctrlKey || e.metaKey) && /^[1-7]$/.test(e.key)) {
         e.preventDefault();
         setActivePanel(LEFT_TABS[parseInt(e.key, 10) - 1].id);
         return;
       }
+
       if (e.key === 'Escape' && activeBottom) {
         setActiveBottom(null);
         return;
       }
+
       if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
         e.preventDefault();
         setShowHelp(v => !v);
@@ -112,36 +131,18 @@ export function StudioPage() {
     setCurrentArtifact(prev => prev ? { ...prev, seed } : null);
   }, []);
 
-  const leftPanel = (
-    <div style={styles.panelContent}>
-      <nav style={styles.sidebarNav}>
-        {LEFT_TABS.map((tab, i) => (
-          <button
-            key={tab.id}
-            onClick={() => setActivePanel(tab.id)}
-            style={{
-              ...styles.sidebarButton,
-              ...(activePanel === tab.id ? styles.sidebarButtonActive : {}),
-            }}
-            title={`${tab.label} (Ctrl+${i + 1})`}
-          >
-            <tab.Icon size={15} />
-            <span style={styles.sidebarLabel}>{tab.label}</span>
-            <span style={styles.sidebarKbd}>{i + 1}</span>
-          </button>
-        ))}
-      </nav>
-
-      <div style={styles.panelBody}>
+  const leftPanelContent = (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ flex: 1, overflow: 'hidden' }}>
         {activePanel === 'chat' && (
           <SeedChatIntegrated onArtifactGenerated={handleArtifactGenerated} />
         )}
         {activePanel === 'editor' && (
-          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
             <div style={{ flex: 1, overflow: 'auto' }}>
               <GSPLEditor />
             </div>
-            <div style={{ flex: 1, overflow: 'auto', borderTop: '1px solid #333' }}>
+            <div style={{ flex: 1, overflow: 'auto' }}>
               <GsplRepl />
             </div>
           </div>
@@ -168,7 +169,9 @@ export function StudioPage() {
                 <LineageTree seed={selectedSeed} />
               </>
             ) : (
-              <div style={styles.emptyHint}>Select a seed to view lineage</div>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--p-text-3)', fontSize: 13 }}>
+                Select a seed to view lineage
+              </div>
             )}
           </div>
         )}
@@ -181,327 +184,420 @@ export function StudioPage() {
     </div>
   );
 
-  const centerPanel = (
-    <div style={styles.panelContent}>
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-        {currentArtifact && (
-          <div style={styles.artifactBar}>
-            <h3 style={styles.artifactName}>
-              {currentArtifact.seed?.$name || currentArtifact.seed?.name || 'Artifact'}
-            </h3>
-            <span style={styles.artifactDomain}>
-              {currentArtifact.seed?.$domain || currentArtifact.seed?.domain || ''}
-            </span>
-          </div>
-        )}
-        <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
-          <PreviewViewport
-            artifact={currentArtifact?.output ?? null}
-            seed={currentArtifact?.seed ?? selectedSeed ?? null}
-            loading={false}
-          />
-        </div>
-        <div style={styles.promptBar}>
-          <PromptBar
-            onSend={(text: string) => {
-              handleArtifactGenerated({
-                seed: { $name: text, phrase: text },
-                output: null,
-                gspl: '',
-              });
-            }}
-          />
-        </div>
+  const topBar = (
+    <header
+      className="p-glass"
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        height: 48, padding: '0 16px', flexShrink: 0, zIndex: 10,
+        borderBottom: 'var(--p-glass-border)',
+        borderRadius: 0,
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <SeedGlyph animated size={22} />
+        <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--p-text)', letterSpacing: 0.2 }}>
+          Paradigm
+        </span>
+        <span
+          style={{
+            fontSize: 10, fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase',
+            color: 'var(--p-cyan)', padding: '2px 8px', borderRadius: 4,
+            background: 'rgba(0, 229, 255, 0.08)',
+          }}
+        >
+          Absolute
+        </span>
       </div>
-    </div>
-  );
 
-  const bottomPanel = (
-    <div style={styles.panelContent}>
-      <nav style={styles.bottomNav}>
-        {BOTTOM_TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveBottom(activeBottom === tab.id ? null : tab.id)}
-            style={{
-              ...styles.bottomButton,
-              ...(activeBottom === tab.id ? styles.bottomButtonActive : {}),
-            }}
-          >
-            <tab.Icon size={13} />
-            <span>{tab.label}</span>
-          </button>
-        ))}
-      </nav>
-      {activeBottom && (
-        <div style={styles.bottomBody}>
-          {activeBottom === 'compose' && <CompositionPanel />}
-          {activeBottom === 'evolve' && (
-            <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-              <div style={{ flex: 1 }}><EvolvePanel /></div>
-              <div style={{ flex: 1 }}>
-                <EvolutionTheater
-                  config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
-                  onEvolve={() => {}}
-                  onSeedSelect={handleSelectSeed}
-                />
-              </div>
-            </div>
-          )}
-          {activeBottom === 'breed' && <BreedPanel />}
-          {activeBottom === 'export' && <ExportPanel />}
-          {activeBottom === 'mint' && <MintPanel />}
-          {activeBottom === 'agent' && (
-            <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-              <div style={{ flex: 1 }}><AgentPanel /></div>
-            </div>
+      <div style={{ flex: 1 }} />
+
+      {/* Lineage breadcrumb */}
+      {currentArtifact?.seed?.$lineage && (
+        <div
+          style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '2px 8px', borderRadius: 4,
+            background: 'rgba(255,255,255,0.02)',
+            fontSize: 10, fontFamily: 'var(--p-font-mono)',
+            color: 'var(--p-text-3)',
+          }}
+        >
+          <span>Gen {currentArtifact.seed.$lineage?.generation ?? 0}</span>
+          {(currentArtifact.seed.$lineage as any)?.operators?.[0] && (
+            <>
+              <span style={{ opacity: 0.3 }}>·</span>
+              <span style={{ textTransform: 'capitalize' }}>{(currentArtifact.seed.$lineage as any).operators[0]}</span>
+            </>
           )}
         </div>
       )}
-    </div>
-  );
 
-  const topBar = (
-    <header style={styles.topBar}>
-      <div style={styles.brand}>
-        <Sparkles size={14} style={{ color: '#58a6ff' }} />
-        <span style={styles.brandName}>Paradigm</span>
-        <span style={styles.brandTag}>Absolute</span>
-      </div>
-      <div style={styles.topBarSpacer} />
-      <div style={styles.topBarRight}>
-        <div
-          style={styles.health}
-          title={
-            serverOk === null ? 'Checking server…' :
-            serverOk ? 'Server connected' : 'Server unreachable'
-          }
+      {currentArtifact?.seed?.$hash && (
+        <HashPill hash={currentArtifact.seed.$hash} />
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <HealthPulse status={serverOk === null ? 'loading' : serverOk ? 'ok' : 'error'} />
+
+        <button
+          onClick={() => setCmdOpen(true)}
+          className="p-glass"
+          style={{
+            display: 'flex', alignItems: 'center', gap: 4,
+            padding: '4px 8px', borderRadius: 6, cursor: 'pointer',
+            color: 'var(--p-text-3)', fontSize: 10,
+            fontFamily: 'var(--p-font-mono)',
+            border: '1px solid var(--p-glass-border)',
+            background: 'rgba(255,255,255,0.02)',
+          }}
+          title="Command palette (Ctrl+K)"
         >
-          <Activity size={12} />
-          <span
-            style={{
-              ...styles.healthDot,
-              backgroundColor:
-                serverOk === null ? '#8b949e' :
-                serverOk ? '#3fb950' : '#f85149',
-            }}
-          />
-          <span style={styles.healthLabel}>
-            {serverOk === null ? '…' : serverOk ? 'online' : 'offline'}
-          </span>
-        </div>
+          <Sparkles size={12} />
+          <span>⌘K</span>
+        </button>
+
         <button
           onClick={() => setShowHelp(v => !v)}
-          style={styles.iconBtn}
+          className="p-glass"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 28, height: 28, padding: 0, borderRadius: 6, cursor: 'pointer',
+            color: 'var(--p-text-3)', border: '1px solid var(--p-glass-border)',
+            background: 'rgba(255,255,255,0.02)',
+          }}
           title="Keyboard shortcuts (?)"
         >
-          <Keyboard size={14} />
+          <Keyboard size={13} />
         </button>
       </div>
     </header>
   );
 
+  const iconRail = (
+    <TooltipProvider delayDuration={300}>
+      <nav
+        className="p-glass"
+        style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+          width: 56, padding: '12px 0', flexShrink: 0, zIndex: 5,
+          borderRight: 'var(--p-glass-border)',
+          borderRadius: 0,
+        }}
+      >
+        {LEFT_TABS.map((tab, i) => {
+          const isActive = activePanel === tab.id;
+          return (
+            <Tooltip key={tab.id}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setActivePanel(tab.id)}
+                  style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    width: 36, height: 36, padding: 0, border: 'none', borderRadius: 8,
+                    cursor: 'pointer', position: 'relative',
+                    background: isActive ? 'rgba(0, 229, 255, 0.08)' : 'transparent',
+                    color: isActive ? 'var(--p-cyan)' : 'var(--p-text-3)',
+                    transition: 'all var(--p-dur-fast) var(--p-ease-organic)',
+                  }}
+                >
+                  <tab.Icon size={16} />
+                  {isActive && (
+                    <span
+                      style={{
+                        position: 'absolute', left: -8, top: '50%',
+                        width: 3, height: 16, borderRadius: 2,
+                        background: 'var(--p-cyan)',
+                        transform: 'translateY(-50%)',
+                        boxShadow: '0 0 6px var(--p-cyan)',
+                      }}
+                    />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="p-glass" style={{ fontSize: 11, fontFamily: 'var(--p-font-mono)', padding: '4px 10px', border: '1px solid var(--p-glass-border)' }}>
+                {tab.label}
+                <span style={{ opacity: 0.4, marginLeft: 6 }}>⌘{i + 1}</span>
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </nav>
+    </TooltipProvider>
+  );
+
+  const healthStatus = serverOk === null ? 'loading' : serverOk ? 'ok' : 'error';
+
   return (
-    <div style={styles.container}>
+    <div
+      style={{
+        display: 'flex', flexDirection: 'column',
+        height: '100vh', position: 'relative', zIndex: 1,
+        color: 'var(--p-text)', fontFamily: 'var(--p-font-ui)',
+        fontSize: 13,
+      }}
+    >
       {topBar}
-      <div style={{ flex: 1, minHeight: 0 }}>
-        <PanelGroup orientation="vertical">
-          <Panel defaultSize={75} minSize={40}>
-            <PanelGroup orientation="horizontal">
-              <Panel defaultSize={22} minSize={15} maxSize={40}>
-                {leftPanel}
-              </Panel>
-              <PanelResizeHandle style={styles.resizeHandleV} />
-              <Panel defaultSize={78} minSize={30}>
-                <PanelGroup orientation="vertical">
-                  <Panel defaultSize={70} minSize={30}>
-                    {centerPanel}
-                  </Panel>
-                  <PanelResizeHandle style={styles.resizeHandleH} />
-                  <Panel defaultSize={30} minSize={8} maxSize={60}>
-                    {bottomPanel}
-                  </Panel>
-                </PanelGroup>
-              </Panel>
-            </PanelGroup>
-          </Panel>
-        </PanelGroup>
+
+      <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
+        {iconRail}
+
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          {/* Center workspace + Preview */}
+          <div style={{ flex: 1, minHeight: 0, display: 'flex', position: 'relative' }}>
+            {/* Work pane — chat / editor / genes / etc. */}
+            <div style={{ flex: '1.6 1 0', minWidth: 0, display: 'flex', position: 'relative' }}>
+              <GlassPanel padded={false} className="h-full w-full" style={{ borderRadius: 0, borderLeft: 'none', borderRight: '1px solid var(--p-glass-border)', borderTop: 'none', borderBottom: 'none', height: '100%', width: '100%' }}>
+                {leftPanelContent}
+              </GlassPanel>
+              <div style={{ position: 'absolute', top: 0, right: -3, bottom: 0, width: 6, pointerEvents: 'none' }}>
+                <HelixDivider orientation="vertical" />
+              </div>
+            </div>
+            {/* Preview pane */}
+            <div style={{ flex: '1 1 0', minWidth: 0, display: 'flex' }}>
+              <GlassPanel padded={false} domain={currentArtifact?.seed?.$domain} className="h-full w-full" style={{ borderRadius: 0, borderLeft: 'none', borderRight: 'none', borderTop: 'none', borderBottom: 'none', height: '100%', width: '100%' }}>
+                  <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {currentArtifact && (
+                      <div
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          padding: '8px 16px', flexShrink: 0,
+                          borderBottom: '1px solid var(--p-glass-border)',
+                        }}
+                      >
+                        <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--p-text)' }}>
+                          {currentArtifact.seed?.$name || currentArtifact.seed?.name || 'Artifact'}
+                        </span>
+                        {currentArtifact.seed?.$domain && (
+                          <span
+                            style={{
+                              padding: '2px 8px', borderRadius: 4, fontSize: 10,
+                              fontFamily: 'var(--p-font-mono)', textTransform: 'uppercase',
+                              letterSpacing: 0.4, color: 'var(--p-cyan)',
+                              background: 'rgba(0, 229, 255, 0.08)',
+                            }}
+                          >
+                            {currentArtifact.seed.$domain}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>
+                      <PreviewViewport
+                        artifact={currentArtifact?.output ?? null}
+                        seed={currentArtifact?.seed ?? selectedSeed ?? null}
+                        loading={false}
+                        promptText={promptText}
+                      />
+                    </div>
+                  </div>
+              </GlassPanel>
+            </div>
+          </div>
+
+          {/* Prompt bar — full width glass */}
+          <div
+            className="p-glass"
+            style={{
+              padding: '8px 16px', flexShrink: 0, zIndex: 5,
+              borderTop: '1px solid var(--p-glass-border)',
+              borderBottom: activeBottom ? '1px solid var(--p-glass-border)' : 'none',
+              borderRadius: 0,
+            }}
+          >
+            <PromptBar
+              value={promptText}
+              onChange={setPromptText}
+              onSeedCreated={(seed: any) => {
+                handleArtifactGenerated({
+                  seed,
+                  output: null,
+                  gspl: '',
+                });
+              }}
+            />
+          </div>
+
+          {/* Bottom drawer tab strip */}
+          <div
+            className="p-glass"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0, zIndex: 5,
+              padding: '4px 8px', height: 36, borderRadius: 0,
+              borderTop: '1px solid var(--p-glass-border)',
+            }}
+          >
+            {BOTTOM_TABS.map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveBottom(activeBottom === tab.id ? null : tab.id)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  padding: '4px 12px', border: 'none', borderRadius: 6, cursor: 'pointer',
+                  background: activeBottom === tab.id ? 'rgba(0, 229, 255, 0.08)' : 'transparent',
+                  color: activeBottom === tab.id ? 'var(--p-cyan)' : 'var(--p-text-3)',
+                  fontSize: 11, fontFamily: 'var(--p-font-mono)',
+                  transition: 'all var(--p-dur-fast) var(--p-ease-organic)',
+                }}
+              >
+                <tab.Icon size={12} />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Bottom drawer — animated slide up */}
+          <AnimatePresence>
+            {activeBottom && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 320, opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="p-glass"
+                style={{ overflow: 'hidden', flexShrink: 0, borderRadius: 0, borderTop: '1px solid var(--p-glass-border)' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 12px', borderBottom: '1px solid var(--p-glass-border)' }}>
+                  <span style={{ fontSize: 10, fontFamily: 'var(--p-font-mono)', textTransform: 'uppercase', letterSpacing: 1, color: 'var(--p-text-3)' }}>
+                    {activeBottom}
+                  </span>
+                  <button
+                    onClick={() => setActiveBottom(null)}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      width: 24, height: 24, padding: 0, border: 'none', borderRadius: 4,
+                      cursor: 'pointer', color: 'var(--p-text-3)',
+                      background: 'rgba(255,255,255,0.04)',
+                      fontSize: 12,
+                    }}
+                    title="Close (Esc)"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div style={{ height: 'calc(100% - 37px)', overflow: 'auto' }}>
+                  {activeBottom === 'compose' && <CompositionPanel />}
+                  {activeBottom === 'evolve' && (
+                    <div style={{ display: 'flex', gap: 8, padding: 8 }}>
+                      <div style={{ flex: 1 }}><EvolvePanel /></div>
+                      <div style={{ flex: 1 }}>
+                        <EvolutionTheater
+                          config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
+                          onEvolve={() => {}}
+                          onSeedSelect={handleSelectSeed}
+                        />
+                      </div>
+                    </div>
+                  )}
+                  {activeBottom === 'breed' && <BreedPanel />}
+                  {activeBottom === 'export' && <ExportPanel />}
+                  {activeBottom === 'mint' && <MintPanel />}
+                  {activeBottom === 'agent' && (
+                    <div style={{ display: 'flex', gap: 8, padding: 8 }}>
+                      <div style={{ flex: 1 }}><AgentPanel /></div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
 
-      {showHelp && (
-        <div style={styles.helpOverlay} onClick={() => setShowHelp(false)}>
-          <div style={styles.helpCard} onClick={e => e.stopPropagation()}>
-            <h3 style={styles.helpTitle}>Keyboard Shortcuts</h3>
-            <ul style={styles.helpList}>
-              {LEFT_TABS.map((t, i) => (
-                <li key={t.id} style={styles.helpRow}>
-                  <span style={styles.kbd}>Ctrl/⌘ + {i + 1}</span>
-                  <span>{t.label}</span>
+      {/* Command palette (⌘K) */}
+      <CommandPalette
+        open={cmdOpen}
+        onOpenChange={setCmdOpen}
+        onNavigate={(tab) => setActivePanel(tab as PanelTab)}
+        onBottomNavigate={(tab) => setActiveBottom(tab as BottomTab)}
+      />
+
+      {/* Help side panel - slides from right */}
+      <AnimatePresence>
+        {showHelp && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              style={{
+                position: 'fixed', inset: 0, zIndex: 40,
+                background: 'rgba(0,0,0,0.3)',
+              }}
+              onClick={() => setShowHelp(false)}
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: 'fixed',
+                right: 0, top: 48, bottom: 0, width: 320,
+                zIndex: 50,
+                padding: 20,
+              }}
+              className="p-glass"
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: 'var(--p-text)' }}>
+                  Keyboard Shortcuts
+                </h3>
+                <button
+                  onClick={() => setShowHelp(false)}
+                  style={{
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: 'var(--p-text-3)', padding: 4,
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {LEFT_TABS.map((t, i) => (
+                  <li key={t.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: 'var(--p-text-2)' }}>
+                    <span style={{ fontFamily: 'var(--p-font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--p-cyan)', padding: '2px 8px', borderRadius: 4, border: '1px solid var(--p-glass-border)', background: 'rgba(0,0,0,0.3)' }}>
+                      {navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'} + {i + 1}
+                    </span>
+                    <span>{t.label}</span>
+                  </li>
+                ))}
+                <li style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: 'var(--p-text-2)' }}>
+                  <span style={{ fontFamily: 'var(--p-font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--p-cyan)', padding: '2px 8px', borderRadius: 4, border: '1px solid var(--p-glass-border)', background: 'rgba(0,0,0,0.3)' }}>
+                    ⌘K
+                  </span>
+                  <span>Command palette</span>
                 </li>
-              ))}
-              <li style={styles.helpRow}><span style={styles.kbd}>Esc</span><span>Close bottom panel</span></li>
-              <li style={styles.helpRow}><span style={styles.kbd}>?</span><span>Toggle this help</span></li>
-            </ul>
-            <button onClick={() => setShowHelp(false)} style={styles.helpClose}>Close</button>
-          </div>
-        </div>
-      )}
+                <li style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: 'var(--p-text-2)' }}>
+                  <span style={{ fontFamily: 'var(--p-font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--p-cyan)', padding: '2px 8px', borderRadius: 4, border: '1px solid var(--p-glass-border)', background: 'rgba(0,0,0,0.3)' }}>
+                    Esc
+                  </span>
+                  <span>Close bottom panel</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, color: 'var(--p-text-2)' }}>
+                  <span style={{ fontFamily: 'var(--p-font-mono)', fontSize: 11, fontWeight: 600, color: 'var(--p-cyan)', padding: '2px 8px', borderRadius: 4, border: '1px solid var(--p-glass-border)', background: 'rgba(0,0,0,0.3)' }}>
+                    ?
+                  </span>
+                  <span>Toggle this help</span>
+                </li>
+              </ul>
+              <button
+                onClick={() => setShowHelp(false)}
+                style={{
+                  marginTop: 24, width: '100%', padding: '10px 16px',
+                  border: '1px solid var(--p-glass-border)', borderRadius: 8,
+                  cursor: 'pointer', color: 'var(--p-text)', fontSize: 13,
+                  background: 'var(--p-glass-hover)',
+                }}
+              >
+                Close
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    display: 'flex', flexDirection: 'column',
-    height: '100vh', backgroundColor: '#0d1117',
-    color: '#c9d1d9', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-  },
-
-  // Top app-bar
-  topBar: {
-    display: 'flex', alignItems: 'center',
-    height: 40, padding: '0 12px',
-    backgroundColor: '#0a0d12',
-    borderBottom: '1px solid #21262d',
-    flexShrink: 0,
-  },
-  brand: { display: 'flex', alignItems: 'center', gap: 8 },
-  brandName: { fontSize: 13, fontWeight: 700, color: '#e6edf3', letterSpacing: 0.2 },
-  brandTag: {
-    fontSize: 10, fontWeight: 600, letterSpacing: 1.2, textTransform: 'uppercase',
-    color: '#58a6ff', padding: '2px 6px', borderRadius: 4, backgroundColor: 'rgba(88,166,255,0.1)',
-  },
-  topBarSpacer: { flex: 1 },
-  topBarRight: { display: 'flex', alignItems: 'center', gap: 8 },
-  health: {
-    display: 'flex', alignItems: 'center', gap: 6,
-    padding: '4px 8px', borderRadius: 4, fontSize: 11,
-    color: '#8b949e', backgroundColor: 'rgba(255,255,255,0.02)',
-    border: '1px solid #21262d',
-  },
-  healthDot: {
-    width: 6, height: 6, borderRadius: '50%',
-    boxShadow: '0 0 6px currentColor',
-  },
-  healthLabel: { fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.6 },
-  iconBtn: {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    width: 28, height: 28, padding: 0, borderRadius: 4,
-    border: '1px solid #21262d', backgroundColor: 'transparent',
-    color: '#8b949e', cursor: 'pointer', transition: 'all 0.15s',
-  },
-
-  panelContent: {
-    height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden',
-  },
-
-  // Resize handles (visible)
-  resizeHandleV: {
-    width: 6, backgroundColor: '#21262d', cursor: 'col-resize',
-    transition: 'background-color 0.15s',
-  },
-  resizeHandleH: {
-    height: 6, backgroundColor: '#21262d', cursor: 'row-resize',
-    transition: 'background-color 0.15s',
-  },
-
-  // Left sidebar
-  sidebarNav: {
-    display: 'flex', flexDirection: 'column', gap: 2,
-    padding: 8, backgroundColor: '#161b22', borderBottom: '1px solid #21262d',
-  },
-  sidebarButton: {
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: '7px 10px', border: 'none', borderRadius: 6,
-    backgroundColor: 'transparent', color: '#8b949e',
-    cursor: 'pointer', fontSize: 13, textAlign: 'left' as const,
-    transition: 'all 0.15s',
-  },
-  sidebarButtonActive: {
-    backgroundColor: '#1f2937', color: '#58a6ff',
-  },
-  sidebarLabel: { fontSize: 13, flex: 1 },
-  sidebarKbd: {
-    fontSize: 10, fontWeight: 600, color: '#6e7681',
-    fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-    padding: '1px 5px', borderRadius: 3, border: '1px solid #21262d',
-  },
-  panelBody: {
-    flex: 1, overflow: 'hidden', backgroundColor: '#0d1117',
-  },
-
-  artifactBar: {
-    display: 'flex', alignItems: 'center', gap: 12,
-    padding: '8px 16px', backgroundColor: '#161b22',
-    borderBottom: '1px solid #21262d', flexShrink: 0,
-  },
-  artifactName: { margin: 0, fontSize: 14, fontWeight: 600, color: '#e6edf3' },
-  artifactDomain: {
-    padding: '2px 8px', borderRadius: 4, fontSize: 11,
-    backgroundColor: '#1f2937', color: '#58a6ff',
-    textTransform: 'uppercase', letterSpacing: 0.4,
-  },
-  promptBar: {
-    padding: '8px 16px', backgroundColor: '#161b22',
-    borderTop: '1px solid #21262d', flexShrink: 0,
-  },
-
-  bottomNav: {
-    display: 'flex', gap: 2,
-    padding: '4px 8px', backgroundColor: '#161b22',
-    borderBottom: '1px solid #21262d',
-  },
-  bottomButton: {
-    display: 'flex', alignItems: 'center', gap: 6,
-    padding: '6px 12px', border: 'none', borderRadius: 6,
-    backgroundColor: 'transparent', color: '#8b949e',
-    cursor: 'pointer', fontSize: 12,
-    transition: 'all 0.15s',
-  },
-  bottomButtonActive: {
-    backgroundColor: '#1f2937', color: '#58a6ff',
-  },
-  bottomBody: {
-    flex: 1, overflow: 'auto', backgroundColor: '#0d1117',
-  },
-
-  // Help overlay
-  helpOverlay: {
-    position: 'fixed', inset: 0, zIndex: 50,
-    backgroundColor: 'rgba(0,0,0,0.75)',
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-  },
-  helpCard: {
-    backgroundColor: '#161b22', border: '1px solid #21262d',
-    borderRadius: 10, padding: 24, minWidth: 320, maxWidth: 420,
-    boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-  },
-  helpTitle: {
-    margin: '0 0 16px 0', fontSize: 16, fontWeight: 600, color: '#e6edf3',
-  },
-  helpList: {
-    listStyle: 'none', padding: 0, margin: 0,
-    display: 'flex', flexDirection: 'column', gap: 8,
-  },
-  helpRow: {
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    fontSize: 13, color: '#c9d1d9',
-  },
-  kbd: {
-    fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-    fontSize: 11, fontWeight: 600, color: '#58a6ff',
-    padding: '2px 8px', borderRadius: 4,
-    border: '1px solid #21262d', backgroundColor: '#0d1117',
-  },
-  helpClose: {
-    marginTop: 20, width: '100%',
-    padding: '8px 12px', border: 'none', borderRadius: 6,
-    backgroundColor: '#1f2937', color: '#58a6ff',
-    fontSize: 13, fontWeight: 600, cursor: 'pointer',
-  },
-
-  emptyHint: {
-    display: 'flex', justifyContent: 'center', alignItems: 'center',
-    height: '100%', color: '#8b949e', fontSize: 13,
-  },
-};

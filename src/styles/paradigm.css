@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* ─── Surfaces ─────────────────────────────────────────────────────────── */
+  --p-canvas: #0d1117;
+  --p-glass: rgba(18, 22, 30, 0.62);
+  --p-glass-border: rgba(255, 255, 255, 0.06);
+  --p-glass-hover: rgba(255, 255, 255, 0.10);
+  --p-glass-active: rgba(0, 229, 255, 0.08);
+
+  /* ─── Text ──────────────────────────────────────────────────────────────── */
+  --p-text: #e6edf3;
+  --p-text-2: #c9d1d9;
+  --p-text-3: #8b949e;
+  --p-text-mono: #58a6ff;
+
+  /* ─── Accents (Semantic) ────────────────────────────────────────────────── */
+  --p-cyan: #00E5FF;
+  --p-violet: #a78bfa;
+  --p-amber: #fbbf24;
+  --p-rose: #fb7185;
+  --p-emerald: #34d399;
+
+  /* ─── Motion ────────────────────────────────────────────────────────────── */
+  --p-ease-organic: cubic-bezier(0.22, 1, 0.36, 1);
+  --p-dur-fast: 140ms;
+  --p-dur-base: 240ms;
+  --p-dur-slow: 480ms;
+
+  /* ─── Geometry ──────────────────────────────────────────────────────────── */
+  --p-radius-sm: 6px;
+  --p-radius-md: 10px;
+  --p-radius-lg: 16px;
+  --p-blur: 24px;
+  --p-shadow-glass: 0 4px 24px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --p-shadow-glass-lg: 0 8px 40px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --p-shadow-glass-up: 0 -4px 24px rgba(0, 0, 0, 0.4);
+  --p-shadow-glow-cyan: 0 0 12px rgba(0, 229, 255, 0.15);
+  --p-shadow-glow-violet: 0 0 12px rgba(167, 139, 250, 0.15);
+  --p-shadow-glow-amber: 0 0 12px rgba(251, 191, 36, 0.15);
+
+  /* ─── Typography ────────────────────────────────────────────────────────── */
+  --p-font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --p-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* ─── Navigation Layout ───────────────────────────────────────────────────── */
+  --p-topbar-height: 48px;
+  --p-sidebar-width: 56px;
+  --p-bottombar-height: 36px;
+  --p-drawer-height: 320px;
+
+  /* ─── Domain Colors ───────────────────────────────────────────────────────── */
+  --p-domain-character: #00E5FF;
+  --p-domain-music: #8B5CF6;
+  --p-domain-sprite: #10B981;
+  --p-domain-visual2d: #06B6D4;
+  --p-domain-game: #FB923C;
+  --p-domain-agent: #FF6B6B;
+  --p-domain-architecture: #A855F7;
+  --p-domain-vehicle: #22D3EE;
+  --p-domain-circuit: #4ADE80;
+  --p-domain-narrative: #F59E0B;
+  --p-domain-shader: #D946EF;
+}
+
+/* ─── Glass Panel Base ─────────────────────────────────────────────────── */
+.p-glass {
+  background: var(--p-glass);
+  backdrop-filter: blur(var(--p-blur));
+  -webkit-backdrop-filter: blur(var(--p-blur));
+  border: 1px solid var(--p-glass-border);
+  box-shadow: var(--p-shadow-glass);
+}
+
+.p-glass:hover {
+  border-color: var(--p-glass-hover);
+}
+
+/* ─── Glass with domain tint ───────────────────────────────────────────── */
+.p-glass-domain {
+  border-color: var(--p-glass-border);
+  box-shadow: var(--p-shadow-glass);
+  transition: border-color var(--p-dur-base) var(--p-ease-organic),
+              box-shadow var(--p-dur-base) var(--p-ease-organic);
+}
+
+.p-glass-domain:hover {
+  box-shadow: var(--p-shadow-glass-lg);
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────── */
+.p-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.p-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.p-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+}
+.p-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ─── Helpers ───────────────────────────────────────────────────────────── */
+.p-mono {
+  font-family: var(--p-font-mono);
+}
+
+.p-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ─── Reduced Motion ───────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
