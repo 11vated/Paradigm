@@ -155,7 +155,7 @@ import {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = Number.parseInt(process.env.PORT || '3000', 10);
   const startTime = Date.now();
 
   app.use(express.json({ limit: '2mb' }));
