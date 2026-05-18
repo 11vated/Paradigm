@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "typography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
+  "provenance": "generated",
+  "id": "agent-typography-001",
+  "description": "A {width} {contrast} contrast font",
+  "genes": {
+    "weight": {
+      "value": 500,
+      "type": "scalar"
+    },
+    "width": {
+      "value": "ultra_condensed",
+      "type": "categorical"
+    },
+    "xheight": {
+      "value": 0.68,
+      "type": "scalar"
+    },
+    "contrast": {
+      "value": 0.44,
+      "type": "scalar"
+    },
+    "serif": {
+      "value": "wedge",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Monaco Seed #001",
+  "tags": [
+    "typography",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "agent"
+}

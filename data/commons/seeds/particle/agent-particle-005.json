@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-005",
+  "description": "A {velocity} velocity {particleType} burst",
+  "genes": {
+    "emitter": {
+      "value": "ring",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 346,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 4.4,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 2.7,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "debris",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Emitter Seed #005",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:04.000Z",
+  "author": "agent"
+}

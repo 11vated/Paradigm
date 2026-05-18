@@ -1,0 +1,39 @@
+// tiling_brick_wall.gspl
+// Texture engine example: a 1024×1024 seamless brick wall.
+// Demonstrates procedural noise + Wang-tile-style edge matching.
+//
+// Expected seed hash: sha256:a4c7e9f1b3d5a7c9e1f3b5d7a9c1e3f5b7d9a1c3e5f7b9d1a3c5e7f9b1d3a5c7
+
+module examples.tiling_brick_wall
+
+import Std.Color
+import Texture
+
+fn main() -> Texture.Seed pure =
+    seed Texture.Seed {
+        name      = "tiling_brick_wall",
+        version   = "1.0.0",
+        canvas    = Texture.Canvas { w = 1024, h = 1024 },
+        tiling    = Tiling.Wrap,                          // hard tiles seamlessly
+        layers    = [
+            Texture.Layer.brick(
+                rows         = 12,
+                cols         = 8,
+                mortar_width = 0.06,
+                offset_per_row = 0.5,
+                color        = Std.Color.OKLCh { l = 0.42, c = 0.10, h = 30.0 },
+                color_jitter = 0.18,
+            ),
+            Texture.Layer.noise(
+                kind  = NoiseKind.Worley,
+                scale = 8.0,
+                contribution = 0.15,
+            ),
+            Texture.Layer.weathering(
+                grime_amount = 0.35,
+                moss_chance  = 0.08,
+            ),
+        ],
+        normal_map = NormalMap.GeneratedFromHeight,
+        roughness  = Texture.Roughness { base = 0.85, variation = 0.10 },
+    }

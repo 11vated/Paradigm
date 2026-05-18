@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-027",
+  "description": "A epic with {hasPowerups} powerups",
+  "genes": {
+    "genre": {
+      "value": "rpg",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.94,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 10,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": true,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Blast Seed #027",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:26.000Z",
+  "author": "agent"
+}

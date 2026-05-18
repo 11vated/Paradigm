@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-game-card-v1",
+  "provenance": "genesis",
+  "id": "canonical-game-001",
+  "description": "Canonical Genesis Card Battler — a foundational seed for the game domain",
+  "genes": {
+    "players": {
+      "value": 2,
+      "type": "scalar"
+    },
+    "balance": {
+      "value": 0.72,
+      "type": "scalar"
+    },
+    "complexity": {
+      "value": 0.65,
+      "type": "scalar"
+    },
+    "mechanicType": {
+      "value": "turn_based",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Genesis Card Battler",
+  "tags": [
+    "canonical",
+    "game",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

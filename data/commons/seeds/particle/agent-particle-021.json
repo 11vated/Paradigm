@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-021",
+  "description": "A {particleType} {emitter} particle system",
+  "genes": {
+    "emitter": {
+      "value": "point",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 383,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 1.6,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "debris",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Trail Seed #021",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:20.000Z",
+  "author": "agent"
+}

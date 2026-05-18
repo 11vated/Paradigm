@@ -1,0 +1,102 @@
+{
+  "schema": "https://paradigm.app/schemas/seed/v1.json",
+  "version": "1.0.0",
+  "domain": "sprite",
+  "name": "melancholy_bard",
+  "hash": "sha256:8f3a4c5b9e7d2f1a6c8b4d3e5f7a9c1b2d4e6f8a0c1e3d5f7b9a2c4e6d8f0a2c",
+  "payload": {
+    "canvas": { "w": 1024, "h": 1024 },
+    "style": {
+      "kind": "pixel_art",
+      "scale": 8,
+      "dithering": "bayer8"
+    },
+    "palette": {
+      "space": "oklch",
+      "swatches": [
+        { "l": 0.18, "c": 0.04, "h": 245.0 },
+        { "l": 0.42, "c": 0.06, "h": 235.0 },
+        { "l": 0.74, "c": 0.05, "h": 220.0 },
+        { "l": 0.92, "c": 0.02, "h": 200.0 }
+      ]
+    },
+    "body": {
+      "kind": "humanoid",
+      "height_m": 1.78,
+      "build": "slim",
+      "age": "adult"
+    },
+    "pose": {
+      "kind": "standing",
+      "weight_shift": -0.15,
+      "head_tilt_deg": -8.0
+    },
+    "outfit": {
+      "layers": [
+        {
+          "kind": "cloak",
+          "fabric": "wool",
+          "color_index": 2,
+          "length": "ankle_sweep",
+          "hood": "down"
+        },
+        {
+          "kind": "tunic",
+          "fabric": "linen",
+          "color_index": 1,
+          "belt": { "kind": "leather_simple" }
+        },
+        {
+          "kind": "boots",
+          "material": "leather",
+          "color_index": 0,
+          "height": "mid_calf"
+        }
+      ],
+      "wear_pattern": { "kind": "travelled", "roughness": 0.4 }
+    },
+    "props": [
+      {
+        "kind": "harp",
+        "material": "wood",
+        "age": 0.65
+      }
+    ],
+    "expression": {
+      "kind": "wistful",
+      "intensity": 0.7
+    },
+    "light": {
+      "kind": "soft_rim",
+      "angle_deg": 135.0,
+      "warm_temp_k": 3200.0
+    },
+    "atmosphere": "quiet",
+    "provenance": "human_authored"
+  },
+  "lineage": {
+    "parents": [],
+    "edges": []
+  },
+  "quality_vector": {
+    "coherence": 0.92,
+    "fidelity": 0.88,
+    "novelty": 0.61,
+    "aesthetics": 0.86,
+    "constraint": 1.0,
+    "performance": 0.94
+  },
+  "author": {
+    "thumbprint": "5a8d4e1f3c9b2d7e6a4f8c1b3d5e7f9a2c4b6d8e0f1a3c5b7d9e2f4a6c8b0d2e",
+    "kty": "EC",
+    "crv": "P-256"
+  },
+  "signature": {
+    "alg": "ES256",
+    "kid": "5a8d4e1f3c9b2d7e6a4f8c1b3d5e7f9a2c4b6d8e0f1a3c5b7d9e2f4a6c8b0d2e",
+    "value": "MEUCIQDx7v2P6kKqM3Lm9N4cBwR8fQ2uF1hT3gK5dN7yV4xZ2gIgC8eJ4P5sR9hT2bL6mN8wQ7vK3fY5zX1uA9dM2cE6tBQ"
+  },
+  "created_at": "2026-04-06T12:34:56Z",
+  "license": "CC-BY-4.0",
+  "visibility": "private"
+}

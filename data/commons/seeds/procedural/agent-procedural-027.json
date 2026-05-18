@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "procedural",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "387727c344b5388a80de5306a77b15687b0c6bf10c2bda6db06ac3f8c71fea7b",
+  "provenance": "generated",
+  "id": "agent-procedural-027",
+  "description": "A {octaves}-octave {biome} heightmap",
+  "genes": {
+    "biome": {
+      "value": "desert",
+      "type": "categorical"
+    },
+    "density": {
+      "value": 0.72,
+      "type": "scalar"
+    },
+    "scale": {
+      "value": 1.08,
+      "type": "scalar"
+    },
+    "octaves": {
+      "value": 2,
+      "type": "scalar"
+    },
+    "persistence": {
+      "value": 0.62,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Zone Seed #027",
+  "tags": [
+    "procedural",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:26.000Z",
+  "author": "agent"
+}

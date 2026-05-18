@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "visual2d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "8a88bc10057a6aa701927c556deba071e7f749a4beee8f8a2e8e53cd775b8848",
+  "provenance": "generated",
+  "id": "agent-visual2d-011",
+  "description": "A {composition} arrangement in sketch style",
+  "genes": {
+    "style": {
+      "value": "landscape",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.72,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.41,
+        0.8,
+        0.96
+      ],
+      "type": "vector"
+    },
+    "composition": {
+      "value": "symmetrical",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Spectrum Seed #011",
+  "tags": [
+    "visual2d",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-character-warrior-v1",
+  "provenance": "genesis",
+  "id": "canonical-character-001",
+  "description": "Canonical Genesis Warrior — a foundational seed for the character domain",
+  "genes": {
+    "archetype": {
+      "value": "warrior",
+      "type": "categorical"
+    },
+    "size": {
+      "value": 0.88,
+      "type": "scalar"
+    },
+    "strength": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.72,
+        0.28,
+        0.15
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "determined",
+      "type": "categorical"
+    },
+    "intelligence": {
+      "value": 0.55,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.65,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Genesis Warrior",
+  "tags": [
+    "canonical",
+    "character",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

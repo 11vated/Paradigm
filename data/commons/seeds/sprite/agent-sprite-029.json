@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-029",
+  "description": "A watercolor 68px sprite",
+  "genes": {
+    "resolution": {
+      "value": 0.84,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.68,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.84,
+        0.72,
+        0.56
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Block Seed #029",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

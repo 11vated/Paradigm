@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "alife",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
+  "provenance": "generated",
+  "id": "agent-alife-015",
+  "description": "A {rules} alife simulation with {species} species",
+  "genes": {
+    "species": {
+      "value": 6,
+      "type": "scalar"
+    },
+    "rules": {
+      "value": "conway",
+      "type": "categorical"
+    },
+    "gridSize": {
+      "value": 128,
+      "type": "scalar"
+    },
+    "generations": {
+      "value": 519,
+      "type": "scalar"
+    },
+    "interaction": {
+      "value": "neutral",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.72
+  },
+  "name": "Colony Seed #015",
+  "tags": [
+    "alife",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

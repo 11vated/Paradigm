@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-017",
+  "description": "A {vehicleType} using {propulsion} propulsion",
+  "genes": {
+    "vehicleType": {
+      "value": "ship",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 176.9,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 6517.1,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 533.9,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "electric",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.8
+  },
+  "name": "Cruiser Seed #017",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:16.000Z",
+  "author": "agent"
+}

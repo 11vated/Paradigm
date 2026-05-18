@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "physics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6d9b37b90656fc35d4a5623a1f2136656c6b027d4a09093a89850314a1126b09",
+  "provenance": "generated",
+  "id": "agent-physics-009",
+  "description": "A {bodyCount}-body {integrator} simulation",
+  "genes": {
+    "gravity": {
+      "value": 0.57,
+      "type": "scalar"
+    },
+    "friction": {
+      "value": 0.18,
+      "type": "scalar"
+    },
+    "elasticity": {
+      "value": 0.1,
+      "type": "scalar"
+    },
+    "bodyCount": {
+      "value": 36,
+      "type": "scalar"
+    },
+    "integrator": {
+      "value": "rk4",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Flux Seed #009",
+  "tags": [
+    "physics",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:08.000Z",
+  "author": "agent"
+}

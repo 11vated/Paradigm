@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-025",
+  "description": "A pixel art dragon with 28 colors",
+  "genes": {
+    "resolution": {
+      "value": 0.58,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.45,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "radial",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.56,
+        0.76,
+        0.17
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Pixel Seed #025",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

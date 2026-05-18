@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "audio",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
+  "provenance": "generated",
+  "id": "agent-audio-001",
+  "description": "A {soundType} audio with {attack} attack",
+  "genes": {
+    "soundType": {
+      "value": "synth",
+      "type": "categorical"
+    },
+    "frequency": {
+      "value": 1760,
+      "type": "scalar"
+    },
+    "attack": {
+      "value": 0.149,
+      "type": "scalar"
+    },
+    "decay": {
+      "value": 0.066,
+      "type": "scalar"
+    },
+    "waveform": {
+      "value": "noise",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.84
+  },
+  "name": "Bass Seed #001",
+  "tags": [
+    "audio",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "agent"
+}

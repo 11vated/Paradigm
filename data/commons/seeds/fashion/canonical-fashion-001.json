@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "fashion",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-fashion-gown-v1",
+  "provenance": "genesis",
+  "id": "canonical-fashion-001",
+  "description": "Canonical Genesis Midnight Gown — a foundational seed for the fashion domain",
+  "genes": {
+    "season": {
+      "value": "fall",
+      "type": "categorical"
+    },
+    "silhouette": {
+      "value": "flowing",
+      "type": "categorical"
+    },
+    "garmentType": {
+      "value": "dress",
+      "type": "categorical"
+    },
+    "fabric": {
+      "value": "silk",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.08,
+        0.02,
+        0.18
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Midnight Gown",
+  "tags": [
+    "canonical",
+    "fashion",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

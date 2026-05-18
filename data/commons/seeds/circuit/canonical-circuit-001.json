@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "domain": "circuit",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-circuit-neural-v1",
+  "provenance": "genesis",
+  "id": "canonical-circuit-001",
+  "description": "Canonical Genesis Neural Processor — a foundational seed for the circuit domain",
+  "genes": {
+    "components": {
+      "value": [
+        "nand_gate",
+        "flip_flop",
+        "mux",
+        "alu",
+        "register_file",
+        "cache"
+      ],
+      "type": "array"
+    },
+    "circuitType": {
+      "value": "digital",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.8,
+      "type": "scalar"
+    },
+    "layers": {
+      "value": 0.7,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Genesis Neural Processor",
+  "tags": [
+    "canonical",
+    "circuit",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

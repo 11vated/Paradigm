@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "circuit",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
+  "provenance": "generated",
+  "id": "agent-circuit-008",
+  "description": "A {isDigital} {circuitType} PCB design",
+  "genes": {
+    "circuitType": {
+      "value": "sensor",
+      "type": "categorical"
+    },
+    "componentCount": {
+      "value": 32,
+      "type": "scalar"
+    },
+    "power": {
+      "value": 51.41,
+      "type": "scalar"
+    },
+    "frequency": {
+      "value": 771866.9,
+      "type": "scalar"
+    },
+    "isDigital": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Circuit Seed #008",
+  "tags": [
+    "circuit",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

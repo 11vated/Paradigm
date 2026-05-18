@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-002",
+  "description": "A pixel 47px sprite",
+  "genes": {
+    "resolution": {
+      "value": 0.3,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.93,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "asymmetric",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.74,
+        0.58,
+        0.29
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.8
+  },
+  "name": "Glitch Seed #002",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:01.000Z",
+  "author": "agent"
+}

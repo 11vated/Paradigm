@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-034",
+  "description": "A pixel art sword with 11 colors",
+  "genes": {
+    "resolution": {
+      "value": 0.25,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.44,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.52,
+        0.39,
+        0.74
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Mosaic Seed #034",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

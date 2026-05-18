@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "typography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
+  "provenance": "generated",
+  "id": "agent-typography-011",
+  "description": "A {xheight} x-height display typeface",
+  "genes": {
+    "weight": {
+      "value": 100,
+      "type": "scalar"
+    },
+    "width": {
+      "value": "ultra_expanded",
+      "type": "categorical"
+    },
+    "xheight": {
+      "value": 0.76,
+      "type": "scalar"
+    },
+    "contrast": {
+      "value": 0.27,
+      "type": "scalar"
+    },
+    "serif": {
+      "value": "wedge",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Display Seed #011",
+  "tags": [
+    "typography",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

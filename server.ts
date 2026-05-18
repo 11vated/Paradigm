@@ -55,7 +55,9 @@ import {
 } from './src/lib/kernel/gene-sovereignty.js';
 import { inversePipeline, formatInverseResult } from './src/lib/kernel/inverse-pipeline.js';
 import { renderSeed, getSupportedFormats, packagePSeed, parsePSeed } from './src/lib/rendering/seed-render-service.js';
+import { encodeGseed, decodeGseed, signGseed, verifyGseedSignature, writeGseedFile, readGseedFile, exportGseedToFile } from './src/lib/kernel/binary-format.js';
 import { creativeDAO, trainingCanon, DEFAULT_ROYALTY_CURVE } from './src/lib/blockchain/creative-dao.js';
+import * as daoProvider from './src/lib/blockchain/dao-provider.js';
 import { RegisterGeneTypeSchema } from './src/lib/validation/schemas.js';
 
 // ─── NEW: Authentication & Rate Limiting ─────────────────────────────────────
@@ -72,7 +74,14 @@ import {
 } from './src/lib/auth/ownership.js';
 
 // ─── NEW: Native GSPL Agent ──────────────────────────────────────────────────
-import { agent as gsplAgent } from './src/lib/agent/index.js';
+import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
+
+// ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
+import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
+
+const memorySystem = new MemorySystem('server');
+gsplAgent.setMemorySystem(memorySystem);
+const pipelineOrchestrator = new Orchestrator({ defaultDomain: 'character' });
 
 // ─── NEW: On-Chain Sovereignty (ERC-721 minting) ─────────────────────────────
 import { OnChainSovereignty } from './src/lib/sovereignty/onchain.js';
@@ -2322,6 +2331,44 @@ async function startServer() {
     }
   });
 
+  /**
+   * Get on-chain sovereignty status for a seed
+   * GET /api/seeds/:id/sovereignty/onchain
+   */
+  app.get('/api/seeds/:id/sovereignty/onchain', async (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+
+    const { canonicalJson, digest } = canonicalizeSeed(seed);
+    const onChainConfig = {
+      sepolia: process.env.SEPOLIA_RPC_URL ? {
+        contract: process.env.PARADIGM_NFT_CONTRACT || '0x0000000000000000000000000000000000000000',
+        network: 'sepolia',
+        chain_id: 11155111,
+        explorer: 'https://sepolia.etherscan.io',
+      } : null,
+    };
+
+    res.json({
+      seed_id: seed.id,
+      seed_name: seed.name,
+      digest_hex: digest,
+      canonical_json_length: canonicalJson.length,
+      minted: !!seed.nft?.minted,
+      token_id: seed.nft?.tokenId || null,
+      contract_address: seed.nft?.contractAddress || null,
+      transaction_hash: seed.nft?.transactionHash || null,
+      configured_networks: Object.fromEntries(
+        Object.entries(onChainConfig).filter(([_, v]) => v !== null)
+      ),
+      links: {
+        sovereignty_canonical: `/api/seeds/${seed.id}/sovereignty/canonical`,
+        sovereignty_preview: `/api/seeds/${seed.id}/sovereignty/preview`,
+        sovereignty_verify: `/api/seeds/${seed.id}/sovereignty/verify`,
+      },
+    });
+  });
+
   // ── glTF Binary Export ──
   // Smooth/blocky opt-in via `?smooth=1`. Smooth = Marching Cubes (Phase 4),
   // blocky = legacy voxel-quad extractor. Keeping both so callers migrating
@@ -2516,6 +2563,108 @@ async function startServer() {
     } catch (e: any) {
       log('ERROR', 'Agent async query failed', { error: e.message });
       res.status(500).json({ error: e.message });
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SUB-AGENT PIPELINE (6-Stage Generation via sub-agents)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  app.post('/api/agents/generate-seed', optionalAuth, async (req: any, res: any) => {
+    const { description, domain } = req.body || {};
+    if (!description) {
+      return res.status(400).json({ detail: 'description is required' });
+    }
+    try {
+      const result = await pipelineOrchestrator.runPipeline(description, domain, memorySystem);
+      if (!result.success) {
+        return res.status(500).json({ detail: result.error, duration: result.duration });
+      }
+      // Persist any created seed
+      if (result.growth?.seed) {
+        seeds.push(result.growth.seed);
+        saveSeeds();
+      }
+      log('INFO', 'Pipeline generate-seed', { domain: result.intent?.domain, success: true, refineCount: result.refineCount });
+      res.json(result);
+    } catch (e: any) {
+      log('ERROR', 'Pipeline generate-seed failed', { error: e.message });
+      res.status(500).json({ detail: e.message });
+    }
+  });
+
+  app.post('/api/agents/refine', optionalAuth, async (req: any, res: any) => {
+    const { seedHash, feedback } = req.body || {};
+    if (!seedHash || !feedback) {
+      return res.status(400).json({ detail: 'seedHash and feedback are required' });
+    }
+    try {
+      const existingSeed = seeds.find((s: any) => s.$hash === seedHash || s.id === seedHash);
+      if (!existingSeed) {
+        return res.status(404).json({ detail: 'Seed not found' });
+      }
+      const description = `Refine: ${existingSeed.$name || 'seed'}. Feedback: ${feedback}`;
+      const result = await pipelineOrchestrator.runPipeline(
+        description,
+        existingSeed.$domain,
+        memorySystem,
+        seeds,
+      );
+      if (!result.success) {
+        return res.status(500).json({ detail: result.error });
+      }
+      if (result.growth?.seed) {
+        seeds.push(result.growth.seed);
+        saveSeeds();
+      }
+      res.json({ refinedSeed: result.growth?.seed, confidence: result.validation?.confidence, result });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message });
+    }
+  });
+
+  app.get('/api/agents/memory/exemplars', optionalAuth, async (_req: any, res: any) => {
+    try {
+      const count = memorySystem.exemplar?.count() || 0;
+      res.json({ exemplars: [], count, note: 'Use domain filter for detailed results' });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message });
+    }
+  });
+
+  app.post('/api/agents/memory/record', optionalAuth, async (req: any, res: any) => {
+    const { seed, description, rating } = req.body || {};
+    if (!seed || !description) {
+      return res.status(400).json({ detail: 'seed and description are required' });
+    }
+    try {
+      const seedId = seed.id || seed.$hash || 'unknown';
+      const seedHash = seed.$hash || seed.hash || '';
+      memorySystem.recordEpisode(
+        rating >= 0.7 ? 'success' : 'attempt',
+        seed.$domain || 'unknown',
+        description,
+        seedId,
+        seedHash,
+        (rating || 0) >= 0.5,
+      );
+      res.json({ stored: true });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message });
+    }
+  });
+
+  app.get('/api/agents/stats', optionalAuth, async (_req: any, res: any) => {
+    try {
+      res.json({
+        memory: memorySystem.getStats(),
+        subAgents: pipelineOrchestrator.getAllSubAgents().map(a => ({
+          name: a.name, stage: a.stage, isLLMBacked: a.isLLMBacked, hasToolAccess: a.hasToolAccess,
+        })),
+        orchestratorConfigured: true,
+      });
+    } catch (e: any) {
+      res.status(500).json({ detail: e.message });
     }
   });
 
@@ -2926,6 +3075,72 @@ async function startServer() {
   });
 
   /**
+   * Export a seed as .gseed binary
+   * GET /api/seeds/:id/export.gseed
+   */
+  app.get('/api/seeds/:id/export.gseed', (req: any, res: any) => {
+    try {
+      const seed = seeds.find((s: any) => s.id === req.params.id);
+      if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+      const output = seed.$lastOutput || { format: 'json' };
+      const gseed = encodeGseed({
+        version: { major: 1, minor: 1 },
+        timestamp: Date.now(),
+        flags: { hasC2PA: false, hasOutputs: !!output.mesh, encryptedSeed: false, royaltyEnabled: false, compressed: true },
+        seedHash: seed.$hash || seed.id,
+        metadata: {
+          schema: 'https://paradigm.ai/schema/gseed-metadata/v1',
+          author: seed.$metadata?.author || 'Anonymous',
+          title: seed.$name || 'Untitled Seed',
+          generator: seed.$domain || 'unknown',
+          created: new Date().toISOString(),
+          license: 'CC0',
+        },
+        outputs: output.mesh ? [{ type: 1, index: 0, data: new TextEncoder().encode(output.mesh) }] : undefined,
+      });
+
+      res.set('Content-Type', 'application/x-paradigm-gseed');
+      res.set('Content-Disposition', `attachment; filename="${seed.$name || 'seed'}.gseed"`);
+      res.send(Buffer.from(gseed));
+    } catch (err: any) {
+      res.status(500).json({ error: 'Export failed', message: err.message });
+    }
+  });
+
+  /**
+   * Import a .gseed binary
+   * POST /api/seeds/import.gseed
+   */
+  app.post('/api/seeds/import.gseed', (req: any, res: any) => {
+    try {
+      const raw = req.body;
+      if (!raw || !Buffer.isBuffer(raw) && typeof raw !== 'object') {
+        return res.status(400).json({ error: 'Invalid .gseed: expected binary data' });
+      }
+
+      const buffer = Buffer.isBuffer(raw) ? new Uint8Array(raw) : new Uint8Array(Buffer.from(JSON.stringify(raw)));
+      const pkg = decodeGseed(buffer);
+
+      // Reconstruct a minimal seed from the package
+      const seed: any = {
+        id: pkg.seedHash,
+        $hash: pkg.seedHash,
+        $name: pkg.metadata?.title || 'Imported Seed',
+        $domain: pkg.metadata?.generator || 'unknown',
+        $metadata: pkg.metadata || {},
+      };
+
+      seeds.push(seed);
+      saveSeeds();
+      log('INFO', 'Seed imported from .gseed', { name: seed.$name });
+      res.json({ success: true, seed: { id: seed.id, name: seed.$name, domain: seed.$domain } });
+    } catch (err: any) {
+      res.status(400).json({ error: 'Invalid .gseed file', message: err.message });
+    }
+  });
+
+  /**
    * Get supported render formats for a domain
    * GET /api/v1/formats/:domain
    */
@@ -2938,31 +3153,42 @@ async function startServer() {
   // PHASE 5: NETWORK STATE — Creative DAO & Training Canon
   // ═══════════════════════════════════════════════════════════════════════════
 
+  // Initialize on-chain DAO if configured
+  if (process.env.GOVERNOR_ADDRESS && process.env.TIMELOCK_ADDRESS) {
+    try {
+      const rpcUrl = process.env.ETHEREUM_RPC_URL || process.env.SEPOLIA_RPC_URL;
+      daoProvider.configureOnChainDAO(
+        process.env.GOVERNOR_ADDRESS,
+        process.env.TIMELOCK_ADDRESS,
+        rpcUrl,
+      );
+    } catch (e: any) {
+      log('WARN', 'Failed to initialize on-chain DAO', { error: e.message });
+    }
+  }
+
   /**
    * Get DAO state
    * GET /api/v1/dao
    */
-  app.get('/api/v1/dao', (_req: any, res: any) => {
-    res.json({
-      name: 'Paradigm Creative DAO',
-      proposals: creativeDAO.getProposals().length,
-      activeProposals: creativeDAO.getProposals('voting').length,
-      approvedGeneTypes: creativeDAO.approvedGeneTypes.length,
-      royaltyCurve: creativeDAO.royaltyCurve,
-      constitutionalCommitments: creativeDAO.commitments.length,
-    });
+  app.get('/api/v1/dao', async (_req: any, res: any) => {
+    res.json(await daoProvider.getDAOState());
   });
 
   /**
    * Propose a DAO action
    * POST /api/v1/dao/propose
    */
-  app.post('/api/v1/dao/propose', optionalAuth, (req: any, res: any) => {
-    const { title, description, type, payload, stake } = req.body;
+  app.post('/api/v1/dao/propose', optionalAuth, async (req: any, res: any) => {
+    const { title, description, type, payload, stake, targets, values, calldatas } = req.body;
     if (!title || !type || !payload) return res.status(400).json({ error: 'Missing required fields' });
 
-    const result = creativeDAO.propose(
-      title, description || '', req.user?.sub || 'anonymous', type, payload, stake || 0,
+    const result = await daoProvider.propose(
+      targets || [],
+      values || [],
+      calldatas || [],
+      description || '',
+      title, type, payload, req.user?.sub || 'anonymous', stake || 0,
     );
     if ('error' in result) return res.status(400).json(result);
     res.json(result);
@@ -2972,9 +3198,9 @@ async function startServer() {
    * Vote on a proposal
    * POST /api/v1/dao/vote/:id
    */
-  app.post('/api/v1/dao/vote/:id', optionalAuth, (req: any, res: any) => {
+  app.post('/api/v1/dao/vote/:id', optionalAuth, async (req: any, res: any) => {
     const { support, votingPower } = req.body;
-    const result = creativeDAO.vote(req.params.id, req.user?.sub || 'anonymous', support, votingPower || 1);
+    const result = await daoProvider.vote(req.params.id, req.user?.sub || 'anonymous', support, votingPower || 1);
     if ('error' in result) return res.status(400).json(result);
     res.json(result);
   });
@@ -2983,8 +3209,8 @@ async function startServer() {
    * Execute a passed proposal
    * POST /api/v1/dao/execute/:id
    */
-  app.post('/api/v1/dao/execute/:id', optionalAuth, (req: any, res: any) => {
-    const result = creativeDAO.execute(req.params.id);
+  app.post('/api/v1/dao/execute/:id', optionalAuth, async (req: any, res: any) => {
+    const result = await daoProvider.executeProposal(req.params.id);
     if ('error' in result) return res.status(400).json(result);
     log('INFO', `DAO proposal executed: ${req.params.id}`, { user: req.user?.sub });
     res.json(result);
@@ -2994,9 +3220,9 @@ async function startServer() {
    * List proposals
    * GET /api/v1/dao/proposals
    */
-  app.get('/api/v1/dao/proposals', (_req: any, res: any) => {
+  app.get('/api/v1/dao/proposals', async (_req: any, res: any) => {
     const status = _req.query.status as any;
-    res.json({ proposals: creativeDAO.getProposals(status) });
+    res.json(await daoProvider.getProposals(status));
   });
 
   /**

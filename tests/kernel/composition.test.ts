@@ -14,9 +14,9 @@ describe('Composition Engine', () => {
       expect(Array.isArray(graph.edges)).toBe(true);
     });
 
-    it('has at least 12 edges', () => {
+    it('has at least 50 edges (expanded functor network)', () => {
       const graph = getCompositionGraph();
-      expect(graph.edges.length).toBeGreaterThanOrEqual(12);
+      expect(graph.edges.length).toBeGreaterThanOrEqual(50);
     });
 
     it('edges have sourceDomain, targetDomain, name, coherence properties', () => {
@@ -78,9 +78,11 @@ describe('Composition Engine', () => {
       expect(path!.totalCoherence).toBeGreaterThan(0);
     });
 
-    it('returns null for unreachable paths', () => {
+    it('finds multi-hop path for any two domains (expanded network)', () => {
       const path = findCompositionPath('sprite', 'music');
-      expect(path).toBeNull();
+      expect(path).not.toBeNull();
+      expect(path!.bridges.length).toBeGreaterThanOrEqual(1);
+      expect(path!.totalCoherence).toBeGreaterThan(0);
     });
   });
 

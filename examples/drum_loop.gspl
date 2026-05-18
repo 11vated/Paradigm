@@ -1,0 +1,38 @@
+// drum_loop.gspl
+// Music engine example: an 8-bar deterministic drum loop at 120 BPM.
+// Demonstrates pattern grids and the synthesis chain.
+//
+// Expected seed hash: sha256:7f1e3d5c9b2a4e6c8d0f2a4c6e8b0d2f4a6c8e0b2d4f6a8c0e2b4d6f8a0c2e4b
+
+module examples.drum_loop
+
+import Music
+import Music.Pattern
+
+fn main() -> Music.Seed pure =
+    let kick  = Music.Pattern.steps([1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0,  1, 0, 0, 0])
+    let snare = Music.Pattern.steps([0, 0, 0, 0,  1, 0, 0, 0,  0, 0, 0, 0,  1, 0, 0, 0])
+    let hat   = Music.Pattern.steps([1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0,  1, 0, 1, 0])
+    let oh    = Music.Pattern.steps([0, 0, 0, 0,  0, 0, 1, 0,  0, 0, 0, 0,  0, 0, 1, 0])
+    seed Music.Seed {
+        name        = "drum_loop_120bpm",
+        version     = "1.0.0",
+        duration_s  = 16.0,                       // 8 bars at 120 BPM
+        tempo_bpm   = 120,
+        key         = Music.Key { tonic = Note.C, mode = Mode.Ionian },
+        instruments = [
+            Music.Instrument.DrumKit {
+                kick    = Music.Drum.Kick { punch = 0.85, decay = 0.18 },
+                snare   = Music.Drum.Snare { tone = 0.55, snappiness = 0.7 },
+                hihat   = Music.Drum.HiHat { closed_decay = 0.05, open_decay = 0.4 },
+            },
+        ],
+        tracks      = [
+            Music.Track { instrument = "kick",  pattern = kick,  velocity = 0.95 },
+            Music.Track { instrument = "snare", pattern = snare, velocity = 0.85 },
+            Music.Track { instrument = "hihat_closed", pattern = hat, velocity = 0.6 },
+            Music.Track { instrument = "hihat_open",   pattern = oh,  velocity = 0.7 },
+        ],
+        dynamics    = Dynamics.MF,
+        loudness_target_lufs = -14.0,
+    }

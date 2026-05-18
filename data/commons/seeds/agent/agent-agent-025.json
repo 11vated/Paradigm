@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "domain": "agent",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
+  "provenance": "generated",
+  "id": "agent-agent-025",
+  "description": "A {reasoning} reasoning agent using {tools} tools",
+  "genes": {
+    "persona": {
+      "value": "sage",
+      "type": "categorical"
+    },
+    "temperature": {
+      "value": 0.62,
+      "type": "scalar"
+    },
+    "reasoning": {
+      "value": 0.46,
+      "type": "scalar"
+    },
+    "memory": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "tools": {
+      "value": [
+        "design",
+        "analyze"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Spark Seed #025",
+  "tags": [
+    "agent",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

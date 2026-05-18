@@ -21,6 +21,8 @@ import { SwarmRuntime } from '../lib/kernel/swarm-runtime';
 import { GsplBytecodeCompiler } from '../lib/kernel/gspl-bytecode';
 import { GsplRepl } from '../components/studio/GsplRepl';
 import { rngFromHash } from '../lib/kernel/rng';
+import { GlassPanel } from '@/components/shell/GlassPanel';
+import { SeedGlyph } from '@/components/shell/SeedGlyph';
 
 // World definition
 interface WorldConfig {
@@ -183,31 +185,38 @@ let world = grow(WorldGenesis, "game")
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-900 text-white">
+    <div className="h-screen flex flex-col" style={{ background: 'var(--p-canvas)', color: 'var(--p-text)' }}>
       {/* Header */}
-      <header className="flex items-center justify-between px-6 py-3 bg-gray-800 border-b border-gray-700">
+      <header className="flex items-center justify-between px-6 py-3 p-glass" style={{ borderBottom: '1px solid var(--p-glass-border)' }}>
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Paradigm: World Seed
+          <SeedGlyph size={28} animated />
+          <h1 className="text-xl font-semibold" style={{ color: 'var(--p-text)' }}>
+            World Seed
           </h1>
-          <span className="text-sm text-gray-400">God Mode Demo</span>
+          <span className="text-sm" style={{ color: 'var(--p-text-3)' }}>God Mode Demo</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setWorld(w => ({ ...w, godMode: !w.godMode }))}
-            className={`px-4 py-2 rounded font-semibold transition-colors ${
-              world.godMode
-                ? 'bg-yellow-600 hover:bg-yellow-500 text-black'
-                : 'bg-gray-700 hover:bg-gray-600'
-            }`}
+            style={{
+              padding: '8px 16px', borderRadius: 8, fontWeight: 600,
+              background: world.godMode ? 'var(--p-amber)' : 'var(--p-glass)',
+              color: world.godMode ? '#000' : 'var(--p-text)',
+              border: '1px solid var(--p-glass-border)',
+              cursor: 'pointer', transition: 'all var(--p-dur-fast) var(--p-ease-organic)',
+            }}
           >
-            {world.godMode ? '⚡ God Mode ON' : '🔒 God Mode OFF'}
+            {world.godMode ? 'God Mode ON' : 'God Mode OFF'}
           </button>
 
           <button
             onClick={() => setShowREPL(!showREPL)}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded"
+            style={{
+              padding: '8px 16px', borderRadius: 8,
+              background: 'var(--p-glass)', color: 'var(--p-text)',
+              border: '1px solid var(--p-glass-border)', cursor: 'pointer',
+            }}
           >
             {showREPL ? 'Hide REPL' : 'Show REPL'}
           </button>
@@ -215,9 +224,15 @@ let world = grow(WorldGenesis, "game")
           <button
             onClick={generateWorld}
             disabled={generating}
-            className="px-6 py-2 bg-green-600 hover:bg-green-500 rounded font-semibold disabled:opacity-50"
+            style={{
+              padding: '8px 20px', borderRadius: 8, fontWeight: 600,
+              background: generating ? 'var(--p-glass)' : 'var(--p-emerald)',
+              color: generating ? 'var(--p-text-3)' : '#000',
+              border: '1px solid var(--p-glass-border)', cursor: generating ? 'not-allowed' : 'pointer',
+              opacity: generating ? 0.6 : 1,
+            }}
           >
-            {generating ? 'Generating...' : '🌍 Generate World'}
+            {generating ? 'Generating...' : 'Generate World'}
           </button>
         </div>
       </header>
@@ -225,27 +240,35 @@ let world = grow(WorldGenesis, "game")
       {/* Main Content */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel: World Controls */}
-        <div className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
+        <div className="w-80 p-glass flex flex-col" style={{ borderRight: '1px solid var(--p-glass-border)' }}>
           {/* World Config */}
-          <div className="p-4 border-b border-gray-700">
-            <h3 className="font-semibold mb-3">World Configuration</h3>
+          <div className="p-4" style={{ borderBottom: '1px solid var(--p-glass-border)' }}>
+            <h3 className="font-semibold mb-3" style={{ color: 'var(--p-text)' }}>World Configuration</h3>
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-gray-400">World Name</label>
+                <label className="text-xs" style={{ color: 'var(--p-text-3)' }}>World Name</label>
                 <input
                   type="text"
                   value={world.name}
                   onChange={e => setWorld(w => ({ ...w, name: e.target.value }))}
-                  className="w-full mt-1 px-2 py-1 bg-gray-700 rounded text-sm"
+                  style={{
+                    width: '100%', marginTop: 4, padding: '6px 8px',
+                    background: 'var(--p-glass)', color: 'var(--p-text)',
+                    border: '1px solid var(--p-glass-border)', borderRadius: 6, fontSize: 13,
+                  }}
                 />
               </div>
 
               <div>
-                <label className="text-xs text-gray-400">Biome</label>
+                <label className="text-xs" style={{ color: 'var(--p-text-3)' }}>Biome</label>
                 <select
                   value={world.biome}
                   onChange={e => setWorld(w => ({ ...w, biome: e.target.value as any }))}
-                  className="w-full mt-1 px-2 py-1 bg-gray-700 rounded text-sm"
+                  style={{
+                    width: '100%', marginTop: 4, padding: '6px 8px',
+                    background: 'var(--p-glass)', color: 'var(--p-text)',
+                    border: '1px solid var(--p-glass-border)', borderRadius: 6, fontSize: 13,
+                  }}
                 >
                   <option value="forest">Forest</option>
                   <option value="desert">Desert</option>

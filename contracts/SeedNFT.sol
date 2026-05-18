@@ -72,7 +72,7 @@ contract SeedNFT is ERC721, ERC721URIStorage, Ownable {
         string memory baseURI_,
         address royaltyRecipient_,
         uint256 royaltyBps_
-    ) ERC721(name_, symbol_) Ownable(msg.sender) {
+    ) ERC721(name_, symbol_) Ownable() {
         _baseTokenURI = baseURI_;
         royaltyRecipient = royaltyRecipient_;
         royaltyBps = royaltyBps_;

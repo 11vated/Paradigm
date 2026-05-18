@@ -1,0 +1,43 @@
+// fierce_warrior.gspl
+// Variation example: contrast with melancholy_bard.
+// Same template family (humanoid sprite), opposite mood axis.
+//
+// Expected seed hash: sha256:2e9b7c4a1f3d8e6c5b2a4f7d9c1e3b5a8d4c6e2f9b1a3d5c7e8f0b2a4c6d8e0f
+// Determinism: pure.
+
+module examples.fierce_warrior
+
+import Std.Color
+import Sprite
+
+fn main() -> Sprite.Seed pure =
+    let palette = Std.Color.Palette.from_oklch([
+        Std.Color.OKLCh { l = 0.12, c = 0.05, h = 25.0 },   // deep iron
+        Std.Color.OKLCh { l = 0.38, c = 0.14, h = 30.0 },   // rust red
+        Std.Color.OKLCh { l = 0.66, c = 0.18, h = 40.0 },   // ember
+        Std.Color.OKLCh { l = 0.90, c = 0.10, h = 70.0 },   // gold trim
+    ])
+    seed Sprite.Seed {
+        name        = "fierce_warrior",
+        version     = "1.0.0",
+        canvas      = Sprite.Canvas { w = 1024, h = 1024 },
+        style       = Sprite.Style.PixelArt { scale = 8, dithering = Dither.Bayer8 },
+        palette     = palette,
+        body        = Sprite.Body.humanoid(height = 1.92, build = Build.Heavy, age = Age.Adult),
+        pose        = Sprite.Pose.combat_ready(stance = Stance.Wide, lean_forward = 0.2),
+        outfit      = Sprite.Outfit {
+            layers = [
+                Sprite.Layer.armor(material = Material.Plate, color = palette.shade(0)),
+                Sprite.Layer.cloak(fabric = Fabric.Wool, color = palette.shade(1),
+                                   length = CloakLength.KneeSweep, hood = HoodState.Down),
+                Sprite.Layer.boots(material = Material.Leather, color = palette.shade(0),
+                                   height = BootHeight.MidCalf),
+            ],
+            wear_pattern = WearPattern.Battered { dents = 0.6 },
+        },
+        props       = [Sprite.Prop.greatsword(material = Material.Steel, age = 0.3)],
+        expression  = Expression.Determined { intensity = 0.9 },
+        light       = Sprite.Light.HardKey { angle_deg = 100.0, warm_temp = 5400.0 },
+        atmosphere  = Atmosphere.Charged,
+        provenance  = Provenance.HumanAuthored,
+    }

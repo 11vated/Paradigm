@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-021",
+  "description": "A pixel art heart with 10 colors",
+  "genes": {
+    "resolution": {
+      "value": 0.64,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.83,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "asymmetric",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.56,
+        0.65,
+        0.78
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.79
+  },
+  "name": "Dot Seed #021",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:20.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "circuit",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
+  "provenance": "generated",
+  "id": "agent-circuit-011",
+  "description": "A {componentCount}-component {circuitType} circuit",
+  "genes": {
+    "circuitType": {
+      "value": "amplifier",
+      "type": "categorical"
+    },
+    "componentCount": {
+      "value": 20,
+      "type": "scalar"
+    },
+    "power": {
+      "value": 91.15,
+      "type": "scalar"
+    },
+    "frequency": {
+      "value": 300522.1,
+      "type": "scalar"
+    },
+    "isDigital": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Gate Seed #011",
+  "tags": [
+    "circuit",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

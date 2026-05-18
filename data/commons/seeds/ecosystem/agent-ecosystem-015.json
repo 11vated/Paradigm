@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "ecosystem",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
+  "provenance": "generated",
+  "id": "agent-ecosystem-015",
+  "description": "A 79x{size} {interaction} simulation",
+  "genes": {
+    "species": {
+      "value": 43,
+      "type": "scalar"
+    },
+    "trophic": {
+      "value": 5,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 64,
+      "type": "scalar"
+    },
+    "climate": {
+      "value": "arctic",
+      "type": "categorical"
+    },
+    "interaction": {
+      "value": "symbiotic",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Habitat Seed #015",
+  "tags": [
+    "ecosystem",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

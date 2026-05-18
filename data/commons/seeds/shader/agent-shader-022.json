@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "shader",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
+  "provenance": "generated",
+  "id": "agent-shader-022",
+  "description": "A {noise}-based {technique} fragment shader",
+  "genes": {
+    "technique": {
+      "value": "raymarching",
+      "type": "categorical"
+    },
+    "iterations": {
+      "value": 73,
+      "type": "scalar"
+    },
+    "epsilon": {
+      "value": 0.0023,
+      "type": "scalar"
+    },
+    "noise": {
+      "value": "simplex",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Plasma Seed #022",
+  "tags": [
+    "shader",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:21.000Z",
+  "author": "agent"
+}

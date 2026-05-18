@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "furniture",
+    "table"
+  ],
+  "genes": {
+    "material": {
+      "value": "glass",
+      "type": "categorical"
+    },
+    "furnitureType": {
+      "value": "table",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "minimalist",
+      "type": "categorical"
+    },
+    "ergonomics": {
+      "value": 0.75,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "8a8003ca84e0227169bd4f4e044ea7dc2a1b4018a371155b7ea5dfcddc0ecd2a",
+  "description": "Canonical Glass Horizon Table — a hand-curated seed for the furniture domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Glass Horizon Table",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "furniture",
+  "provenance": "curated",
+  "id": "canonical-furniture-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

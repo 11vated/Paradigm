@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-011",
+  "description": "A {sensors} equipped {robotType} with {payload}kg payload",
+  "genes": {
+    "robotType": {
+      "value": "hexapod",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 6,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 132.8,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 162,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "infrared",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Walker Seed #011",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

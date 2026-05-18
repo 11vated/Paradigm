@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "choreography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "764ed17f3caebc293d0056d127ad744def90340d5feecd9a6cc97660e828fb62",
+  "provenance": "generated",
+  "id": "agent-choreography-016",
+  "description": "A {duration}sec isometric choreography",
+  "genes": {
+    "style": {
+      "value": "hiphop",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.37,
+      "type": "scalar"
+    },
+    "complexity": {
+      "value": 0.88,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 213,
+      "type": "scalar"
+    },
+    "formation": {
+      "value": "quartet",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Step Seed #016",
+  "tags": [
+    "choreography",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:15.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,50 @@
+{
+  "tags": [
+    "canonical",
+    "fashion",
+    "techwear"
+  ],
+  "genes": {
+    "fabric": {
+      "value": "neoprene",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.05,
+        0.05,
+        0.1
+      ],
+      "type": "vector"
+    },
+    "silhouette": {
+      "value": "structured",
+      "type": "categorical"
+    },
+    "season": {
+      "value": "all",
+      "type": "categorical"
+    },
+    "garmentType": {
+      "value": "jacket",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "4e9321d57a3d96c740b72752a7f4d318901ad205be2df543a56b01d53939fb0b",
+  "description": "Canonical Neon Nomad — a hand-curated seed for the fashion domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Neon Nomad",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "fashion",
+  "provenance": "curated",
+  "id": "canonical-fashion-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

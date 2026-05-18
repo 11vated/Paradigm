@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fullgame",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
+  "provenance": "generated",
+  "id": "agent-fullgame-005",
+  "description": "A {theme} experimental featuring {mechanic} mechanics",
+  "genes": {
+    "genre": {
+      "value": "strategy",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.34,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "mechanic": {
+      "value": "stealth",
+      "type": "categorical"
+    },
+    "theme": {
+      "value": "medieval",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Quest Seed #005",
+  "tags": [
+    "fullgame",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:04.000Z",
+  "author": "agent"
+}

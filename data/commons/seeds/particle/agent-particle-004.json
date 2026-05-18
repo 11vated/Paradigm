@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-004",
+  "description": "A {particleType} {emitter} particle system",
+  "genes": {
+    "emitter": {
+      "value": "cylinder",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 314,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 3.9,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 4.9,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "glow",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.72
+  },
+  "name": "Plume Seed #004",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:03.000Z",
+  "author": "agent"
+}

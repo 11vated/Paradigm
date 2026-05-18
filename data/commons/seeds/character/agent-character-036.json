@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-036",
+  "description": "A mysterious monk from distant lands",
+  "genes": {
+    "archetype": {
+      "value": "monk",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.89,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.9,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.49,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 1.13,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.78,
+        0.8,
+        0.98
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "brave",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Crimson monk #036",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:35.000Z",
+  "author": "agent"
+}

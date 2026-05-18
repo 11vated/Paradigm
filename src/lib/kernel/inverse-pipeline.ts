@@ -2,8 +2,7 @@ import crypto from 'crypto';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { growSeed } from './engines';
 import { DOMAIN_ALIASES, resolveDomain } from './domain-constants';
-import { GENE_TYPES } from './gene_system';
-import { mutateGene } from './gene_system';
+import { GENE_TYPES, mutateGene } from './gene_system';
 
 // ─── INPUT TYPES ───────────────────────────────────────────────────────────
 
@@ -57,7 +56,7 @@ const DESCRIPTION_PATTERNS: { pattern: RegExp; domain: string }[] = [
   { pattern: /game|level|world|platformer|rpg|puzzle|shooter|fullgame/i, domain: 'fullgame' },
   { pattern: /animation|motion|keyframe|skeletal|character animation/i, domain: 'animation' },
   { pattern: /story|narrative|tale|plot|fiction|novel|script/i, domain: 'narrative' },
-  { pattern: /ui|interface|button|layout|screen|hud|dashboard/i, domain: 'ui' },
+  { pattern: /\bui\b|interface|button|layout|screen|hud|dashboard/i, domain: 'ui' },
   { pattern: /physics|simulation|force|gravity|collision|rigidbody/i, domain: 'physics' },
   { pattern: /sound|sfx|effect|noise|ambient|foley|explosion/i, domain: 'audio' },
   { pattern: /ecosystem|biome|terrain|nature|forest|ocean|planet/i, domain: 'ecosystem' },
@@ -75,7 +74,7 @@ const DESCRIPTION_PATTERNS: { pattern: RegExp; domain: string }[] = [
   { pattern: /typography|font|typeface|text|letter|glyph|type/i, domain: 'typography' },
 ];
 
-function detectDomain(input: InverseInput): string {
+export function detectDomain(input: InverseInput): string {
   if (input.domain) {
     const resolved = resolveDomain(input.domain);
     if (resolved) return resolved;
@@ -202,9 +201,8 @@ function inferGenesFromDescription(
 export async function inversePipeline(input: InverseInput): Promise<InverseResult> {
   const domain = detectDomain(input);
   const phrase = input.description || 'inverse-generated';
-  const rng = rngFromHash(crypto.createHash('sha256').update(
-    JSON.stringify(input) + Date.now(),
-  ).digest('hex'));
+  const seedKey = `${domain}:${phrase}:${input.mimeType || ''}:${input.referenceSeedHash || ''}`;
+  const rng = rngFromHash(crypto.createHash('sha256').update(seedKey).digest('hex'));
 
   const inferredGenes = inferGenesFromDescription(phrase, domain, rng);
 
@@ -226,13 +224,15 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
   }
 
   // Build seed
+  const seedHash = crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex');
   const seed = {
-    id: crypto.randomUUID(),
+    id: `inverse-${seedHash.slice(0, 12)}`,
     $domain: domain,
     $name: phrase.substring(0, 40),
     $lineage: { generation: 1, operation: 'inverse_pipeline' },
-    $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+    $hash: seedHash,
     $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
+    $description: phrase,
     genes,
   };
 
@@ -248,7 +248,8 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
     // Iterative refinement: mutate toward better quality
     if (artifact && !artifact.render_hints?.error) {
       for (let i = 0; i < 2; i++) {
-        const refined = { ...seed, id: crypto.randomUUID() };
+        const refinedId = `inverse-${crypto.createHash('sha256').update(seedHash + String(i)).digest('hex').slice(0, 12)}`;
+        const refined = { ...seed, id: refinedId };
         const newGenes: Record<string, any> = {};
 
         for (const [key, gene] of Object.entries(genes)) {

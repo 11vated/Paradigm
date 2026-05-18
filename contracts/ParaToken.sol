@@ -18,6 +18,7 @@
  * - Snapshot for off-chain voting
  */
 
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -327,7 +328,7 @@ contract ParaToken is ERC20, ERC20Burnable, ERC20Permit, AccessControl {
     function supportsInterface(bytes4 interfaceId) 
         public 
         view 
-        override(ERC20, AccessControl) 
+        override(AccessControl) 
         returns (bool) 
     {
         return super.supportsInterface(interfaceId);

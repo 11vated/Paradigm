@@ -32,6 +32,7 @@ export enum TokenType {
   NOT = 'NOT',
   AMP = 'AMP',
   PIPE = 'PIPE',
+  PIPE_GT = 'PIPE_GT',
   QUESTION = 'QUESTION',
   AT = 'AT',
   DOLLAR = 'DOLLAR',
@@ -75,6 +76,13 @@ export enum TokenType {
   STATIC = 'STATIC',
   GET = 'GET',
   SET = 'SET',
+  MATCH = 'MATCH',
+  CASE = 'CASE',
+  DEFAULT = 'DEFAULT',
+  FAT_ARROW = 'FAT_ARROW',
+  TYPE = 'TYPE',
+  TRAIT = 'TRAIT',
+  IMPL = 'IMPL',
   SEMICOLON = 'SEMICOLON'
 }
 
@@ -116,7 +124,13 @@ export const Keywords: Record<string, TokenType> = {
   'protected': TokenType.PROTECTED,
   'static': TokenType.STATIC,
   'get': TokenType.GET,
-  'set': TokenType.SET
+  'set': TokenType.SET,
+  'match': TokenType.MATCH,
+  'case': TokenType.CASE,
+  'default': TokenType.DEFAULT,
+  'type': TokenType.TYPE,
+  'trait': TokenType.TRAIT,
+  'impl': TokenType.IMPL
 };
 
 export interface Token {
@@ -351,6 +365,10 @@ export class Lexer {
         this.tokens.push({ type: TokenType.EQEQ, value: '==', line: this.line, column: this.column - 2 });
         this.pos++;
         this.column++;
+      } else if (ch === '=' && this.pos < this.source.length && this.source[this.pos] === '>') {
+        this.tokens.push({ type: TokenType.FAT_ARROW, value: '=>', line: this.line, column: this.column - 2 });
+        this.pos++;
+        this.column++;
       } else if (ch === '<' && this.peek() === '=') {
         this.tokens.push({ type: TokenType.LTE, value: '<=', line: this.line, column: this.column - 2 });
         this.pos++;
@@ -369,6 +387,10 @@ export class Lexer {
         this.column++;
       } else if (ch === '|' && this.peek() === '|') {
         this.tokens.push({ type: TokenType.OR, value: '||', line: this.line, column: this.column - 2 });
+        this.pos++;
+        this.column++;
+      } else if (ch === '|' && this.peek() === '>') {
+        this.tokens.push({ type: TokenType.PIPE_GT, value: '|>', line: this.line, column: this.column - 2 });
         this.pos++;
         this.column++;
       } else if (ch === '!' && this.peek() === '=') {

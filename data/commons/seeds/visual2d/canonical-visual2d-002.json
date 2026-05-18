@@ -1,0 +1,46 @@
+{
+  "tags": [
+    "canonical",
+    "visual2d",
+    "landscape"
+  ],
+  "genes": {
+    "palette": {
+      "value": [
+        0.35,
+        0.55,
+        0.75
+      ],
+      "type": "vector"
+    },
+    "style": {
+      "value": "landscape",
+      "type": "categorical"
+    },
+    "composition": {
+      "value": "rule_of_thirds",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.65,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "ea57b98010d3745b2281ab3ea1f0006e00d75195b738e580306df894ba7fdf1d",
+  "description": "Canonical Mountain Solitude — a hand-curated seed for the visual2d domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Mountain Solitude",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "visual2d",
+  "provenance": "curated",
+  "id": "canonical-visual2d-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

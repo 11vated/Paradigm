@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-024",
+  "description": "A wild warrior known for power",
+  "genes": {
+    "archetype": {
+      "value": "paladin",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.46,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.44,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.61,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.55,
+        0.65,
+        0.99
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "stoic",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.76
+  },
+  "name": "Ash paladin #024",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

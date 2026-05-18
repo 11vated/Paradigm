@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-026",
+  "description": "A light piece in F minor",
+  "genes": {
+    "key": {
+      "value": "D",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "pentatonic",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        73,
+        67,
+        60,
+        64,
+        65,
+        61,
+        49,
+        51
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.05,
+        "brightness": 0.59,
+        "attack": 0.09
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.83
+  },
+  "name": "Hollow Seed #026",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:25.000Z",
+  "author": "agent"
+}

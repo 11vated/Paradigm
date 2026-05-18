@@ -12,7 +12,7 @@ function App() {
         <Route path="/studio" element={<StudioPage />} />
         <Route path="/worldseed" element={<WorldSeedPage />} />
         <Route path="/rendering-demo" element={
-          <div className="min-h-screen bg-gray-900 p-8">
+          <div style={{ minHeight: '100vh', padding: 32, background: 'var(--p-canvas)' }}>
             <PhotorealisticRendererDemo />
           </div>
         } />

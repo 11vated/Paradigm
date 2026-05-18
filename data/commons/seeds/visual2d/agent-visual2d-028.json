@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "visual2d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "8a88bc10057a6aa701927c556deba071e7f749a4beee8f8a2e8e53cd775b8848",
+  "provenance": "generated",
+  "id": "agent-visual2d-028",
+  "description": "A {composition} arrangement in watercolor style",
+  "genes": {
+    "style": {
+      "value": "landscape",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.55,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.66,
+        0.84,
+        0.57
+      ],
+      "type": "vector"
+    },
+    "composition": {
+      "value": "golden_ratio",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Prism Seed #028",
+  "tags": [
+    "visual2d",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:27.000Z",
+  "author": "agent"
+}

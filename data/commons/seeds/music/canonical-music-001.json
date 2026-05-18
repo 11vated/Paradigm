@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-music-anthem-v1",
+  "provenance": "genesis",
+  "id": "canonical-music-001",
+  "description": "Canonical Genesis Anthem — a foundational seed for the music domain",
+  "genes": {
+    "timbre": {
+      "value": {
+        "warmth": 0.7,
+        "brightness": 0.6,
+        "attack": 0.3
+      },
+      "type": "struct"
+    },
+    "scale": {
+      "value": "minor",
+      "type": "categorical"
+    },
+    "melody": {
+      "value": [
+        62,
+        65,
+        69,
+        72,
+        69,
+        67,
+        65,
+        62,
+        60,
+        62,
+        65,
+        69,
+        72,
+        74,
+        72,
+        69
+      ],
+      "type": "array"
+    },
+    "key": {
+      "value": "D",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.55,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Genesis Anthem",
+  "tags": [
+    "canonical",
+    "music",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

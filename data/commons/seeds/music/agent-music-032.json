@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-032",
+  "description": "A experimental piece in C pentatonic",
+  "genes": {
+    "key": {
+      "value": "B",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "dorian",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.68,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        64,
+        59,
+        77,
+        49,
+        53,
+        63,
+        54,
+        61
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.56,
+        "brightness": 0.79,
+        "attack": 0.86
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Echo Seed #032",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:31.000Z",
+  "author": "agent"
+}

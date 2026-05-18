@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-011",
+  "description": "A {dimensions} {furnitureType} with {ergonomics} ergonomic score",
+  "genes": {
+    "furnitureType": {
+      "value": "sofa",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "mid_century",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "bamboo",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        1.85,
+        0.64,
+        0.81
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.53,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Studio Seed #011",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

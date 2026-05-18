@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-008",
+  "description": "A {mass}kg {vehicleType} with {range}km range",
+  "genes": {
+    "vehicleType": {
+      "value": "bike",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 642.2,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 1773.8,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 95.7,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "maglev",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Racer Seed #008",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

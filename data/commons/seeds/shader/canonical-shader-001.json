@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "shader",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-shader-fractal-v1",
+  "provenance": "genesis",
+  "id": "canonical-shader-001",
+  "description": "Canonical Genesis Fractal Shader — a foundational seed for the shader domain",
+  "genes": {
+    "shaderType": {
+      "value": "fragment",
+      "type": "categorical"
+    },
+    "technique": {
+      "value": "raymarching",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.0,
+        0.9,
+        1.0
+      ],
+      "type": "vector"
+    },
+    "complexity": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Genesis Fractal Shader",
+  "tags": [
+    "canonical",
+    "shader",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

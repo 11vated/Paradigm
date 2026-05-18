@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "agent",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
+  "provenance": "generated",
+  "id": "agent-agent-032",
+  "description": "A {memory}-slot memory {persona} assistant",
+  "genes": {
+    "persona": {
+      "value": "composer",
+      "type": "categorical"
+    },
+    "temperature": {
+      "value": 0.49,
+      "type": "scalar"
+    },
+    "reasoning": {
+      "value": 0.27,
+      "type": "scalar"
+    },
+    "memory": {
+      "value": 2,
+      "type": "scalar"
+    },
+    "tools": {
+      "value": [
+        "search",
+        "analyze",
+        "translate"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Aide Seed #032",
+  "tags": [
+    "agent",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:31.000Z",
+  "author": "agent"
+}

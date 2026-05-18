@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-020",
+  "description": "A bilateral symmetrical flat character",
+  "genes": {
+    "resolution": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.51,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.44,
+        0.02,
+        0.11
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Chip Seed #020",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:19.000Z",
+  "author": "agent"
+}

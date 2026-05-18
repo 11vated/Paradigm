@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "domain": "audio",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-audio-pad-v1",
+  "provenance": "genesis",
+  "id": "canonical-audio-001",
+  "description": "Canonical Genesis Synth Pad — a foundational seed for the audio domain",
+  "genes": {
+    "soundType": {
+      "value": "ambient",
+      "type": "categorical"
+    },
+    "frequency": {
+      "value": 220,
+      "type": "scalar"
+    },
+    "waveform": {
+      "value": "sawtooth",
+      "type": "categorical"
+    },
+    "envelope": {
+      "value": {
+        "attack": 0.3,
+        "decay": 0.2,
+        "sustain": 0.8,
+        "release": 0.5
+      },
+      "type": "struct"
+    },
+    "duration": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Synth Pad",
+  "tags": [
+    "canonical",
+    "audio",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

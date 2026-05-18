@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "choreography",
+    "hiphop"
+  ],
+  "genes": {
+    "tempo": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "dancers": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "style": {
+      "value": "hiphop",
+      "type": "categorical"
+    },
+    "energy": {
+      "value": 0.9,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "b1b0884bd9369af457de309683d7c749e3818961c3d78b567d22429cab25ead1",
+  "description": "Canonical Urban Pulse — a hand-curated seed for the choreography domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Urban Pulse",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "choreography",
+  "provenance": "curated",
+  "id": "canonical-choreography-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "agent",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
+  "provenance": "generated",
+  "id": "agent-agent-034",
+  "description": "A {memory}-slot memory {persona} assistant",
+  "genes": {
+    "persona": {
+      "value": "critic",
+      "type": "categorical"
+    },
+    "temperature": {
+      "value": 0.97,
+      "type": "scalar"
+    },
+    "reasoning": {
+      "value": 0.31,
+      "type": "scalar"
+    },
+    "memory": {
+      "value": 3,
+      "type": "scalar"
+    },
+    "tools": {
+      "value": [
+        "search",
+        "debug",
+        "code"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Guide Seed #034",
+  "tags": [
+    "agent",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

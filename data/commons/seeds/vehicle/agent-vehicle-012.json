@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-012",
+  "description": "A {vehicleType} using {propulsion} propulsion",
+  "genes": {
+    "vehicleType": {
+      "value": "bike",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 292.3,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 5819.1,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 383.6,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "solar",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Glider Seed #012",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:11.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fashion",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6101e875eb2b08800180e4fcb4e19c245f5218fe824acea8d144e12fa0a11e65",
+  "provenance": "generated",
+  "id": "agent-fashion-004",
+  "description": "A sketch {fabric} {clothingType}",
+  "genes": {
+    "clothingType": {
+      "value": "dress",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "minimal",
+      "type": "categorical"
+    },
+    "fabric": {
+      "value": "leather",
+      "type": "categorical"
+    },
+    "season": {
+      "value": "autumn",
+      "type": "categorical"
+    },
+    "silhouette": {
+      "value": "oversized",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Satin Seed #004",
+  "tags": [
+    "fashion",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:03.000Z",
+  "author": "agent"
+}

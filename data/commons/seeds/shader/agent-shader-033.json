@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "shader",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
+  "provenance": "generated",
+  "id": "agent-shader-033",
+  "description": "A {technique} shader with {iterations} iterations",
+  "genes": {
+    "technique": {
+      "value": "fbm_noise",
+      "type": "categorical"
+    },
+    "iterations": {
+      "value": 46,
+      "type": "scalar"
+    },
+    "epsilon": {
+      "value": 0.0052,
+      "type": "scalar"
+    },
+    "noise": {
+      "value": "value",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Refract Seed #033",
+  "tags": [
+    "shader",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

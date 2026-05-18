@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "game",
+    "puzzle"
+  ],
+  "genes": {
+    "balance": {
+      "value": 0.95,
+      "type": "scalar"
+    },
+    "players": {
+      "value": 1,
+      "type": "scalar"
+    },
+    "mechanicType": {
+      "value": "puzzle",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "1f54c5d4aecef56c0696f1c1195d2d1f00dc2eaa594d5d34c6e3dca90790c688",
+  "description": "Canonical Quantum Puzzle — a hand-curated seed for the game domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Quantum Puzzle",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "game",
+  "provenance": "curated",
+  "id": "canonical-game-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

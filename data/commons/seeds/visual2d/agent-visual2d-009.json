@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "visual2d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "8a88bc10057a6aa701927c556deba071e7f749a4beee8f8a2e8e53cd775b8848",
+  "provenance": "generated",
+  "id": "agent-visual2d-009",
+  "description": "A vibrant 4 themed retro artwork",
+  "genes": {
+    "style": {
+      "value": "abstract",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.2,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.86,
+        0.81,
+        0.81
+      ],
+      "type": "vector"
+    },
+    "composition": {
+      "value": "symmetrical",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.83
+  },
+  "name": "Chromatic Seed #009",
+  "tags": [
+    "visual2d",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:08.000Z",
+  "author": "agent"
+}

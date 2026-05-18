@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-021",
+  "description": "A retro {furnitureType} in {material}",
+  "genes": {
+    "furnitureType": {
+      "value": "stool",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "minimal",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "marble",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        0.6,
+        1.17,
+        1.13
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.62,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Studio Seed #021",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:20.000Z",
+  "author": "agent"
+}

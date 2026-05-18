@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-029",
+  "description": "A {velocity} velocity {particleType} burst",
+  "genes": {
+    "emitter": {
+      "value": "ring",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 96,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 4.1,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 4.5,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "spark",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Spark Seed #029",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

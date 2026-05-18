@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-007",
+  "description": "A rhythmic light melody with 0.34 tempo",
+  "genes": {
+    "key": {
+      "value": "F",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "mixolydian",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.94,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        54,
+        71,
+        81,
+        73,
+        82,
+        50,
+        81,
+        51
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.26,
+        "brightness": 0.36,
+        "attack": 0.19
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Hollow Seed #007",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:06.000Z",
+  "author": "agent"
+}

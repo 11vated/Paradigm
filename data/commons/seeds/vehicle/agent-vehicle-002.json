@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-002",
+  "description": "A {mass}kg {vehicleType} with {range}km range",
+  "genes": {
+    "vehicleType": {
+      "value": "ship",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 384.6,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 3379.1,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 589.3,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "hybrid",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.74
+  },
+  "name": "Ferry Seed #002",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:01.000Z",
+  "author": "agent"
+}

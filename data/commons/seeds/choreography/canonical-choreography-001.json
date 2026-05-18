@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "choreography",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-choreography-fluid-v1",
+  "provenance": "genesis",
+  "id": "canonical-choreography-001",
+  "description": "Canonical Genesis Fluid Motion — a foundational seed for the choreography domain",
+  "genes": {
+    "style": {
+      "value": "contemporary",
+      "type": "categorical"
+    },
+    "dancers": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "tempo": {
+      "value": 0.45,
+      "type": "scalar"
+    },
+    "energy": {
+      "value": 0.65,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Fluid Motion",
+  "tags": [
+    "canonical",
+    "choreography",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

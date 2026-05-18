@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
+  "provenance": "generated",
+  "id": "agent-food-017",
+  "description": "A {prepTime}min prep {foodType} dish",
+  "genes": {
+    "foodType": {
+      "value": "curry",
+      "type": "categorical"
+    },
+    "cuisine": {
+      "value": "japanese",
+      "type": "categorical"
+    },
+    "spice": {
+      "value": 0.26,
+      "type": "scalar"
+    },
+    "prepTime": {
+      "value": 28,
+      "type": "scalar"
+    },
+    "cookTime": {
+      "value": 102,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Zest Seed #017",
+  "tags": [
+    "food",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:16.000Z",
+  "author": "agent"
+}

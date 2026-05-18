@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-003",
+  "description": "A modern {furnitureType} in {material}",
+  "genes": {
+    "furnitureType": {
+      "value": "shelf",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "industrial",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "concrete",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        1.02,
+        0.57,
+        0.83
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.59,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Form Seed #003",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:02.000Z",
+  "author": "agent"
+}

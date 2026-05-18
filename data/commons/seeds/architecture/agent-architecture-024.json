@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "architecture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
+  "provenance": "generated",
+  "id": "agent-architecture-024",
+  "description": "A {height}m flat {roof} roof structure",
+  "genes": {
+    "style": {
+      "value": "neoclassical",
+      "type": "categorical"
+    },
+    "floors": {
+      "value": 56,
+      "type": "scalar"
+    },
+    "height": {
+      "value": 239,
+      "type": "scalar"
+    },
+    "windows": {
+      "value": "bay",
+      "type": "categorical"
+    },
+    "roof": {
+      "value": "gabled",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Tower Seed #024",
+  "tags": [
+    "architecture",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

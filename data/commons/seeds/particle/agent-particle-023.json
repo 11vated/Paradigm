@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-023",
+  "description": "A {velocity} velocity {particleType} burst",
+  "genes": {
+    "emitter": {
+      "value": "ring",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 244,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 3.3,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 3.8,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "bubble",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.83
+  },
+  "name": "Shower Seed #023",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:22.000Z",
+  "author": "agent"
+}

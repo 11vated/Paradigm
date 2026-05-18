@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "architecture",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-architecture-tower-v1",
+  "provenance": "genesis",
+  "id": "canonical-architecture-001",
+  "description": "Canonical Genesis Tower — a foundational seed for the architecture domain",
+  "genes": {
+    "style": {
+      "value": "modern",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "materials": {
+      "value": [
+        "steel",
+        "glass",
+        "concrete"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Genesis Tower",
+  "tags": [
+    "canonical",
+    "architecture",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

@@ -1,6 +1,8 @@
 import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } from './types';
 import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
 import { distanceGene } from '../lib/kernel/gene_system.js';
+import { canonicalizeSeed } from '../lib/sovereignty/canonical.js';
+import { signData, verifySignature } from '../lib/sovereignty/signing.js';
 
 const DEFAULT_SEED_TIMESTAMP = 0;
 let deterministicSeedCounter = 0;
@@ -60,6 +62,13 @@ export interface UniversalSeedData {
   derivation: SeedDerivation;
 }
 
+export interface SeedSovereignty {
+  authorPubkey: string;
+  signature: string;
+  signedAt: number;
+  genes?: Record<string, { owner: string; license: string; signature: string; transferable: boolean }>;
+}
+
 export class UniversalSeed {
   public readonly id: string;
   public readonly metadata: SeedMetadata;
@@ -67,6 +76,8 @@ export class UniversalSeed {
   private expression: SeedExpression;
   public derivation?: SeedDerivation;
   private isDirty: boolean = false;
+  public hash: string = '';
+  public sovereignty?: SeedSovereignty;
 
   constructor(data?: Partial<UniversalSeedData>) {
     this.id = data?.id ?? createDeterministicSeedId();
@@ -78,6 +89,8 @@ export class UniversalSeed {
     if (data?.genes === undefined) {
       this.initializeDefaultGenes();
     }
+
+    this.hash = this.id;  // Deterministic: id is derived from counter, not random
   }
 
   private createDefaultMetadata(): SeedMetadata {
@@ -413,6 +426,139 @@ export class UniversalSeed {
 
   getParents(): string[] {
     return this.derivation?.parents ?? [];
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SPEC-COMPATIBLE FIELD ACCESSORS ($gst, $domain, $hash, $name, $lineage, $fitness)
+  // Mirrors the UniversalSeed spec format in spec/01-universal-seed.md
+  // Used by code expecting the reference spec's dollar-prefixed field names
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  get $gst(): string {
+    return this.hash ?? '';
+  }
+
+  set $gst(value: string) {
+    this.hash = value;
+  }
+
+  get $domain(): string {
+    return this.metadata.domain ?? this.metadata.tags[0] ?? 'unknown';
+  }
+
+  set $domain(value: string) {
+    this.metadata.domain = value;
+  }
+
+  get $hash(): string {
+    return this.hash ?? '';
+  }
+
+  set $hash(value: string) {
+    this.hash = value;
+  }
+
+  get $name(): string {
+    return this.metadata.name;
+  }
+
+  set $name(value: string) {
+    this.metadata.name = value;
+  }
+
+  get $lineage(): { generation: number; parents: string[]; operators: string[] } {
+    return {
+      generation: this.derivation?.generation ?? 0,
+      parents: this.derivation?.parents ?? [],
+      operators: this.derivation?.operators ?? [],
+    };
+  }
+
+  set $lineage(value: { generation?: number; parents?: string[]; operators?: string[] }) {
+    this.derivation = {
+      parents: value.parents ?? this.derivation?.parents ?? [],
+      operators: value.operators ?? this.derivation?.operators ?? [],
+      generation: value.generation ?? this.derivation?.generation ?? 0,
+      timestamp: this.derivation?.timestamp ?? this.metadata.created,
+    };
+  }
+
+  get $fitness(): Record<string, number> {
+    return { overall: this.metadata.fitness ?? 0 };
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // SOVEREIGNTY (ECDSA P-256 signing)
+  // Per spec/05-sovereignty.md: signatures live inside the seed itself
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  private canonicalForm(): string {
+    const sorted: Record<string, any> = {
+      domain: this.metadata.domain ?? this.metadata.tags[0] ?? 'unknown',
+      name: this.metadata.name,
+    };
+    const genes: Record<string, any> = {};
+    const sortedGenes = Array.from(this.genes.keys()).sort();
+    for (const key of sortedGenes) {
+      const g = this.genes.get(key);
+      if (g) genes[key] = g.value;
+    }
+    sorted.genes = genes;
+    return JSON.stringify(sorted, Object.keys(sorted).sort());
+  }
+
+  async sign(privateKey: CryptoKey, authorPubkey?: string): Promise<UniversalSeed> {
+    const canonical = this.canonicalForm();
+    const pubkey = authorPubkey ?? '';
+    const signature = await signData(canonical + ':' + pubkey, privateKey);
+    const cloned = this.clone();
+    cloned.sovereignty = {
+      authorPubkey: pubkey,
+      signature,
+      signedAt: 0,
+    };
+    return cloned;
+  }
+
+  async verify(publicKey: CryptoKey, authorPubkey?: string): Promise<boolean> {
+    if (!this.sovereignty?.signature) return false;
+    const canonical = this.canonicalForm();
+    const pubkey = authorPubkey ?? this.sovereignty.authorPubkey;
+    return await verifySignature(canonical + ':' + pubkey, this.sovereignty.signature, publicKey);
+  }
+
+  async signGene(geneName: string, privateKey: CryptoKey, license: string, owner?: string): Promise<UniversalSeed> {
+    const gene = this.genes.get(geneName as any);
+    if (!gene) throw new Error(`Gene '${geneName}' not found`);
+    const geneValue = JSON.stringify(gene.value);
+    const signature = await signData(geneValue + ':' + license, privateKey);
+    const cloned = this.clone();
+    cloned.sovereignty = {
+      ...(cloned.sovereignty ?? { authorPubkey: '', signature: '', signedAt: 0 }),
+      genes: {
+        ...(cloned.sovereignty?.genes ?? {}),
+        [geneName]: {
+          owner: owner ?? '',
+          license,
+          signature,
+          transferable: true,
+        },
+      },
+    };
+    return cloned;
+  }
+
+  async verifyGene(geneName: string, publicKey: CryptoKey): Promise<boolean> {
+    const geneSovereignty = this.sovereignty?.genes?.[geneName];
+    if (!geneSovereignty?.signature) return false;
+    const gene = this.genes.get(geneName as any);
+    if (!gene) return false;
+    const geneValue = JSON.stringify(gene.value);
+    return await verifySignature(
+      geneValue + ':' + geneSovereignty.license,
+      geneSovereignty.signature,
+      publicKey
+    );
   }
 }
 

@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-vehicle-cycle-v1",
+  "provenance": "genesis",
+  "id": "canonical-vehicle-001",
+  "description": "Canonical Genesis Hypercycle — a foundational seed for the vehicle domain",
+  "genes": {
+    "speed": {
+      "value": 0.72,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 0.25,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "electric",
+      "type": "categorical"
+    },
+    "aerodynamics": {
+      "value": 0.85,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Hypercycle",
+  "tags": [
+    "canonical",
+    "vehicle",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

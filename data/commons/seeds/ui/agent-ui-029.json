@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "ui",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "ee080ff60374d1f6f5b7808d2f5be3ddf4d2924afca0062b65a17e324dd02a1d",
+  "provenance": "generated",
+  "id": "agent-ui-029",
+  "description": "A {spacing} UI panel with {radius} border radius",
+  "genes": {
+    "theme": {
+      "value": "light",
+      "type": "categorical"
+    },
+    "layout": {
+      "value": "tabs",
+      "type": "categorical"
+    },
+    "spacing": {
+      "value": "spacious",
+      "type": "categorical"
+    },
+    "radius": {
+      "value": 0.95,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Console Seed #029",
+  "tags": [
+    "ui",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "ecosystem",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-ecosystem-forest-v1",
+  "provenance": "genesis",
+  "id": "canonical-ecosystem-001",
+  "description": "Canonical Genesis Ancient Forest — a foundational seed for the ecosystem domain",
+  "genes": {
+    "environment": {
+      "value": "forest",
+      "type": "categorical"
+    },
+    "stability": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "speciesCount": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "biodiversity": {
+      "value": 0.75,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Genesis Ancient Forest",
+  "tags": [
+    "canonical",
+    "ecosystem",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-020",
+  "description": "A rhythmic light melody with 0.77 tempo",
+  "genes": {
+    "key": {
+      "value": "E",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "major",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.36,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        54,
+        61,
+        81,
+        63,
+        80,
+        78,
+        79,
+        49
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.26,
+        "brightness": 0.75,
+        "attack": 0.41
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.79
+  },
+  "name": "Whisper Seed #020",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:19.000Z",
+  "author": "agent"
+}

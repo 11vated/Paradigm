@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-028",
+  "description": "A modern {furnitureType} in {material}",
+  "genes": {
+    "furnitureType": {
+      "value": "cabinet",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "industrial",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "leather",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        0.7,
+        1.59,
+        0.82
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.68,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Craft Seed #028",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:27.000Z",
+  "author": "agent"
+}

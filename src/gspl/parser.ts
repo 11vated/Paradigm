@@ -25,7 +25,7 @@ export enum ASTNodeType {
   FUNCTION_EXPR = 'FunctionExpr',
   SEED_EXPR = 'SeedExpr',
   GENE_EXPR = 'GeneExpr',
-  BREED_EXPR = 'BreedExpr'
+  PIPABLE_EXPR = 'PipableExpr'
 }
 
 export interface ASTNode {
@@ -384,7 +384,24 @@ export class Parser {
   }
 
   private expression(): ASTNode {
-    return this.assignment();
+    return this.pipe();
+  }
+
+  private pipe(): ASTNode {
+    let left = this.assignment();
+
+    while (this.match(TokenType.PIPE_GT)) {
+      const right = this.primary();  // Must be a function call or identifier
+      left = {
+        type: ASTNodeType.PIPABLE_EXPR,
+        left,
+        right,
+        line: left.line,
+        column: left.column
+      };
+    }
+
+    return left;
   }
 
   private assignment(): ASTNode {

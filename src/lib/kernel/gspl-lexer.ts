@@ -16,7 +16,7 @@ export enum TokenType {
   IDENTIFIER = 'IDENTIFIER',
   GENE_NAME = 'GENE_NAME', // Gene names (can't start with $ or _)
 
-  // Keywords (26 reserved words)
+  // Keywords (28 reserved words)
   SEED = 'SEED',
   BREED = 'BREED',
   MUTATE = 'MUTATE',
@@ -43,6 +43,8 @@ export enum TokenType {
   DOMAIN = 'DOMAIN',
   IN = 'IN',
   SIGNED = 'SIGNED',
+  FROM = 'FROM',
+  AS = 'AS',
 
   // Operators
   PLUS = 'PLUS',
@@ -134,13 +136,16 @@ const KEYWORDS: Record<string, TokenType> = {
   'return': TokenType.RETURN,
   'true': TokenType.TRUE,
   'false': TokenType.FALSE,
+  'null': TokenType.NULL,
   'type': TokenType.TYPE,
   'trait': TokenType.TRAIT,
   'impl': TokenType.IMPL,
   'where': TokenType.WHERE,
   'gene': TokenType.GENE,
   'domain': TokenType.DOMAIN,
-  'signed': TokenType.SIGNED
+  'signed': TokenType.SIGNED,
+  'from': TokenType.FROM,
+  'as': TokenType.AS
 };
 
 export class GsplLexer {
@@ -343,7 +348,7 @@ export class GsplLexer {
 
     const value = this.source.slice(start, this.pos);
     // Check if it's a keyword; if not, it's an identifier
-    const type = KEYWORDS[value] || (value === 'in' ? TokenType.IN : TokenType.IDENTIFIER);
+    const type = KEYWORDS[value] || TokenType.IDENTIFIER;
 
     this.tokens.push({ type, value, line: startLine, column: startCol });
   }

@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-018",
+  "description": "An atmospheric pentatonic composition",
+  "genes": {
+    "key": {
+      "value": "C",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "blues",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.31,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        79,
+        48,
+        61,
+        63,
+        70,
+        67,
+        72,
+        76
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.53,
+        "brightness": 0.33,
+        "attack": 0.13
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Whisper Seed #018",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:17.000Z",
+  "author": "agent"
+}

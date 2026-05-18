@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "alife",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
+  "provenance": "generated",
+  "id": "agent-alife-023",
+  "description": "A {generations} generation {gridSize} grid ecosystem",
+  "genes": {
+    "species": {
+      "value": 2,
+      "type": "scalar"
+    },
+    "rules": {
+      "value": "day_night",
+      "type": "categorical"
+    },
+    "gridSize": {
+      "value": 32,
+      "type": "scalar"
+    },
+    "generations": {
+      "value": 141,
+      "type": "scalar"
+    },
+    "interaction": {
+      "value": "neutral",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Organic Seed #023",
+  "tags": [
+    "alife",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:22.000Z",
+  "author": "agent"
+}

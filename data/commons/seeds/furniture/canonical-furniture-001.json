@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-furniture-chair-v1",
+  "provenance": "genesis",
+  "id": "canonical-furniture-001",
+  "description": "Canonical Genesis Parametric Chair — a foundational seed for the furniture domain",
+  "genes": {
+    "style": {
+      "value": "modern",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "wood",
+      "type": "categorical"
+    },
+    "ergonomics": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "furnitureType": {
+      "value": "chair",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Genesis Parametric Chair",
+  "tags": [
+    "canonical",
+    "furniture",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

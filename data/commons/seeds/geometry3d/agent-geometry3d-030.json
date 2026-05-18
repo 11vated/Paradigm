@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
+  "provenance": "generated",
+  "id": "agent-geometry3d-030",
+  "description": "A radial polyhedron with {detail} detail",
+  "genes": {
+    "primitive": {
+      "value": "sphere",
+      "type": "categorical"
+    },
+    "subdivision": {
+      "value": 1,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "tetrahedral",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        0.57,
+        0.58,
+        1.11
+      ],
+      "type": "vector"
+    },
+    "detail": {
+      "value": 0.5,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Vertex Seed #030",
+  "tags": [
+    "geometry3d",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:29.000Z",
+  "author": "agent"
+}

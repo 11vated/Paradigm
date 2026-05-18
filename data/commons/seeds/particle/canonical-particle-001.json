@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-particle-fire-v1",
+  "provenance": "genesis",
+  "id": "canonical-particle-001",
+  "description": "Canonical Genesis Fire Emitter — a foundational seed for the particle domain",
+  "genes": {
+    "spread": {
+      "value": 0.25,
+      "type": "scalar"
+    },
+    "color": {
+      "value": [
+        1.0,
+        0.4,
+        0.05
+      ],
+      "type": "vector"
+    },
+    "velocity": {
+      "value": [
+        0,
+        2.5,
+        0
+      ],
+      "type": "vector"
+    },
+    "gravity": {
+      "value": [
+        0,
+        -0.3,
+        0
+      ],
+      "type": "vector"
+    },
+    "count": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 1.5,
+      "type": "scalar"
+    },
+    "emitter": {
+      "value": "point",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Fire Emitter",
+  "tags": [
+    "canonical",
+    "particle",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-029",
+  "description": "A silent bard of the crystal realm",
+  "genes": {
+    "archetype": {
+      "value": "bard",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.37,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.87,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.2,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.56,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.74,
+        0.2,
+        0.28
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "stoic",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Sage bard #029",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

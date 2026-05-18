@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "audio",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
+  "provenance": "generated",
+  "id": "agent-audio-034",
+  "description": "A {waveform} tone at {frequency} Hz",
+  "genes": {
+    "soundType": {
+      "value": "ambient",
+      "type": "categorical"
+    },
+    "frequency": {
+      "value": 440,
+      "type": "scalar"
+    },
+    "attack": {
+      "value": 0.233,
+      "type": "scalar"
+    },
+    "decay": {
+      "value": 0.395,
+      "type": "scalar"
+    },
+    "waveform": {
+      "value": "noise",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Signal Seed #034",
+  "tags": [
+    "audio",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

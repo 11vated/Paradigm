@@ -12,6 +12,8 @@ export interface GSPLGeneTypeDefinition {
   mutate: string;
   crossover: string;
   distance: string;
+  canonicalize?: string;
+  repair?: string;
 }
 
 const BUILTIN_TYPES = `
@@ -42,6 +44,8 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
   const mutate: string[] = [];
   const crossover: string[] = [];
   const distance: string[] = [];
+  const canonicalize: string[] = [];
+  const repair: string[] = [];
 
   for (const node of ast) {
     if (node.type === 'TYPE_DECL' || node.type === ASTNodeType.FN_DECL) {
@@ -53,6 +57,8 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
       else if (fnName === 'mutate') mutate.push(fnBody);
       else if (fnName === 'crossover') crossover.push(fnBody);
       else if (fnName === 'distance') distance.push(fnBody);
+      else if (fnName === 'canonicalize') canonicalize.push(fnBody);
+      else if (fnName === 'repair') repair.push(fnBody);
     }
   }
 
@@ -65,6 +71,8 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
     mutate: mutate.join('\n') || '(v, rate, rng) => v',
     crossover: crossover.join('\n') || '(a, b, rng) => a',
     distance: distance.join('\n') || '(a, b) => 0',
+    canonicalize: canonicalize.join('\n') || '(v, schema) => v',
+    repair: repair.join('\n') || '(v, schema) => v',
   };
 }
 
@@ -101,6 +109,14 @@ export function compileGSPLOperators(
     }) as any,
     distance: ((a: any, b: any, schema?: any) => {
       return makeFn(definition.distance, ['a','b','s'])(null, null, a, b, null, schema) as number;
+    }) as any,
+    canonicalize: ((value: any, schema?: any) => {
+      try { return makeFn(definition.canonicalize ?? '(v,s) => v', ['v','s'])(value, null, null, null, null, schema); }
+      catch { return value; }
+    }) as any,
+    repair: ((value: any, schema?: any) => {
+      try { return makeFn(definition.repair ?? '(v,s) => v', ['v','s'])(value, null, null, null, null, schema); }
+      catch { return value; }
     }) as any,
   };
 }

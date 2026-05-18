@@ -1,0 +1,52 @@
+{
+  "tags": [
+    "canonical",
+    "narrative",
+    "mystery"
+  ],
+  "genes": {
+    "tone": {
+      "value": "noir",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.82,
+      "type": "scalar"
+    },
+    "characters": {
+      "value": [
+        "Detective",
+        "The Client",
+        "The Suspect",
+        "The Informant",
+        "The Culprit"
+      ],
+      "type": "array"
+    },
+    "plot": {
+      "value": "investigation",
+      "type": "categorical"
+    },
+    "structure": {
+      "value": "whodunit",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "259c359c646b2e8f5a5438eaf164c83dcc3f26867b746966dab9b5fca4e08ee2",
+  "description": "Canonical The Sapphire Key — a hand-curated seed for the narrative domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "The Sapphire Key",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "narrative",
+  "provenance": "curated",
+  "id": "canonical-narrative-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

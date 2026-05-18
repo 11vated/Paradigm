@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-011",
+  "description": "A bilateral symmetrical modern character",
+  "genes": {
+    "resolution": {
+      "value": 0.69,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.66,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.13,
+        0.1,
+        0.36
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Block Seed #011",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:10.000Z",
+  "author": "agent"
+}

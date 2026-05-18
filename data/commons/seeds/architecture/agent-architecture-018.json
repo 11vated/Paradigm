@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "architecture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
+  "provenance": "generated",
+  "id": "agent-architecture-018",
+  "description": "A isometric building with {windows} windows",
+  "genes": {
+    "style": {
+      "value": "modern",
+      "type": "categorical"
+    },
+    "floors": {
+      "value": 14,
+      "type": "scalar"
+    },
+    "height": {
+      "value": 39.9,
+      "type": "scalar"
+    },
+    "windows": {
+      "value": "circular",
+      "type": "categorical"
+    },
+    "roof": {
+      "value": "green",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Palace Seed #018",
+  "tags": [
+    "architecture",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:17.000Z",
+  "author": "agent"
+}

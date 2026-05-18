@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-026",
+  "description": "A {difficulty} difficulty folk experience",
+  "genes": {
+    "genre": {
+      "value": "puzzle",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 1,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": true,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.74
+  },
+  "name": "Speed Seed #026",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:25.000Z",
+  "author": "agent"
+}

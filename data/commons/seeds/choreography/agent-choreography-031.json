@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "choreography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "764ed17f3caebc293d0056d127ad744def90340d5feecd9a6cc97660e828fb62",
+  "provenance": "generated",
+  "id": "agent-choreography-031",
+  "description": "A {duration}sec isometric choreography",
+  "genes": {
+    "style": {
+      "value": "hiphop",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.32,
+      "type": "scalar"
+    },
+    "complexity": {
+      "value": 0.44,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 258,
+      "type": "scalar"
+    },
+    "formation": {
+      "value": "corps",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Rhythm Seed #031",
+  "tags": [
+    "choreography",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:30.000Z",
+  "author": "agent"
+}

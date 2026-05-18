@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "physics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6d9b37b90656fc35d4a5623a1f2136656c6b027d4a09093a89850314a1126b09",
+  "provenance": "generated",
+  "id": "agent-physics-013",
+  "description": "A {bodyCount}-body {integrator} simulation",
+  "genes": {
+    "gravity": {
+      "value": 0.89,
+      "type": "scalar"
+    },
+    "friction": {
+      "value": 0.44,
+      "type": "scalar"
+    },
+    "elasticity": {
+      "value": 0.42,
+      "type": "scalar"
+    },
+    "bodyCount": {
+      "value": 152,
+      "type": "scalar"
+    },
+    "integrator": {
+      "value": "verlet",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Tensor Seed #013",
+  "tags": [
+    "physics",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:12.000Z",
+  "author": "agent"
+}

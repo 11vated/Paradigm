@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
+  "provenance": "generated",
+  "id": "agent-geometry3d-034",
+  "description": "A {primitive} with {subdivision} subdivisions",
+  "genes": {
+    "primitive": {
+      "value": "torus",
+      "type": "categorical"
+    },
+    "subdivision": {
+      "value": 3,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "mirror",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        0.71,
+        0.89,
+        0.92
+      ],
+      "type": "vector"
+    },
+    "detail": {
+      "value": 0.79,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Form Seed #034",
+  "tags": [
+    "geometry3d",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

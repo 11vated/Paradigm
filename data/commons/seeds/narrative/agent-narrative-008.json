@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "narrative",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "24cd953299d304d6747641eb4789c535b631104520c393b7b949701f40b2fc74",
+  "provenance": "generated",
+  "id": "agent-narrative-008",
+  "description": "A {structure} narrative in the folk genre",
+  "genes": {
+    "genre": {
+      "value": "thriller",
+      "type": "categorical"
+    },
+    "tone": {
+      "value": "somber",
+      "type": "categorical"
+    },
+    "length": {
+      "value": 5,
+      "type": "scalar"
+    },
+    "characterCount": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "structure": {
+      "value": "circular",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Allegory Seed #008",
+  "tags": [
+    "narrative",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

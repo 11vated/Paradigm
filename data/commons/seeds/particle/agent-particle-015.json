@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-015",
+  "description": "A {rate} particles/sec {emitter} with {lifetime}s lifetime",
+  "genes": {
+    "emitter": {
+      "value": "plane",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 222,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 2.5,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 4.4,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "smoke",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.83
+  },
+  "name": "Shower Seed #015",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

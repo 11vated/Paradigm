@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-food-ramen-v1",
+  "provenance": "genesis",
+  "id": "canonical-food-001",
+  "description": "Canonical Genesis Umami Ramen — a foundational seed for the food domain",
+  "genes": {
+    "flavor_profile": {
+      "value": [
+        0.15,
+        0.65,
+        0.9,
+        0.2,
+        0.05
+      ],
+      "type": "vector"
+    },
+    "cuisine": {
+      "value": "japanese",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.72,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Genesis Umami Ramen",
+  "tags": [
+    "canonical",
+    "food",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

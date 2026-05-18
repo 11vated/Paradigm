@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "ecosystem",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
+  "provenance": "generated",
+  "id": "agent-ecosystem-005",
+  "description": "A 72x{size} {interaction} simulation",
+  "genes": {
+    "species": {
+      "value": 15,
+      "type": "scalar"
+    },
+    "trophic": {
+      "value": 5,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 64,
+      "type": "scalar"
+    },
+    "climate": {
+      "value": "continental",
+      "type": "categorical"
+    },
+    "interaction": {
+      "value": "predator_prey",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.75
+  },
+  "name": "Cycle Seed #005",
+  "tags": [
+    "ecosystem",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:04.000Z",
+  "author": "agent"
+}

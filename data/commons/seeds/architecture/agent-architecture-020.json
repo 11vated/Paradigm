@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "architecture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
+  "provenance": "generated",
+  "id": "agent-architecture-020",
+  "description": "A pixel building with {windows} windows",
+  "genes": {
+    "style": {
+      "value": "brutalist",
+      "type": "categorical"
+    },
+    "floors": {
+      "value": 37,
+      "type": "scalar"
+    },
+    "height": {
+      "value": 202.7,
+      "type": "scalar"
+    },
+    "windows": {
+      "value": "stained_glass",
+      "type": "categorical"
+    },
+    "roof": {
+      "value": "gabled",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.76
+  },
+  "name": "Villa Seed #020",
+  "tags": [
+    "architecture",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:19.000Z",
+  "author": "agent"
+}

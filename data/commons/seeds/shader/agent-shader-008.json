@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "shader",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
+  "provenance": "generated",
+  "id": "agent-shader-008",
+  "description": "A {technique} shader with {iterations} iterations",
+  "genes": {
+    "technique": {
+      "value": "voronoi",
+      "type": "categorical"
+    },
+    "iterations": {
+      "value": 105,
+      "type": "scalar"
+    },
+    "epsilon": {
+      "value": 0.0098,
+      "type": "scalar"
+    },
+    "noise": {
+      "value": "perlin",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Kaleido Seed #008",
+  "tags": [
+    "shader",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

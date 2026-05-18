@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
+  "provenance": "generated",
+  "id": "agent-geometry3d-006",
+  "description": "A {primitive} with {subdivision} subdivisions",
+  "genes": {
+    "primitive": {
+      "value": "helix",
+      "type": "categorical"
+    },
+    "subdivision": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "icosahedral",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        0.98,
+        0.61,
+        1.33
+      ],
+      "type": "vector"
+    },
+    "detail": {
+      "value": 0.93,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Geo Seed #006",
+  "tags": [
+    "geometry3d",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:05.000Z",
+  "author": "agent"
+}

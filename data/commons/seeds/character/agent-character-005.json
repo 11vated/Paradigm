@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-005",
+  "description": "A fierce necromancer of the verdant realm",
+  "genes": {
+    "archetype": {
+      "value": "necromancer",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.72,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.42,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.41,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.41,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.15,
+        0.35,
+        0.73
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "calm",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Void necromancer #005",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:04.000Z",
+  "author": "agent"
+}

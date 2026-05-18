@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "ui",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "ee080ff60374d1f6f5b7808d2f5be3ddf4d2924afca0062b65a17e324dd02a1d",
+  "provenance": "generated",
+  "id": "agent-ui-010",
+  "description": "A {theme} {layout} interface",
+  "genes": {
+    "theme": {
+      "value": "dark",
+      "type": "categorical"
+    },
+    "layout": {
+      "value": "dashboard",
+      "type": "categorical"
+    },
+    "spacing": {
+      "value": "cozy",
+      "type": "categorical"
+    },
+    "radius": {
+      "value": 0.3,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "View Seed #010",
+  "tags": [
+    "ui",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:09.000Z",
+  "author": "agent"
+}

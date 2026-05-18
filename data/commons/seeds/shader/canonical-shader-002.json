@@ -1,0 +1,46 @@
+{
+  "tags": [
+    "canonical",
+    "shader",
+    "watercolor"
+  ],
+  "genes": {
+    "technique": {
+      "value": "watercolor",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.5,
+        0.7,
+        0.9
+      ],
+      "type": "vector"
+    },
+    "shaderType": {
+      "value": "fragment",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.6,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "66066bb9139103b69c108a7917dadbcc23f1214e459573311ac1dd20a3d4b26b",
+  "description": "Canonical Watercolor Bloom — a hand-curated seed for the shader domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Watercolor Bloom",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "shader",
+  "provenance": "curated",
+  "id": "canonical-shader-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

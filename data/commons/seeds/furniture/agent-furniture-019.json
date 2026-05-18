@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-019",
+  "description": "A {dimensions} {furnitureType} with {ergonomics} ergonomic score",
+  "genes": {
+    "furnitureType": {
+      "value": "desk",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "bohemian",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "leather",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        0.83,
+        1.11,
+        1.25
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.58,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Perch Seed #019",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:18.000Z",
+  "author": "agent"
+}

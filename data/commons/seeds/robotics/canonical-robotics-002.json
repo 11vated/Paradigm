@@ -1,0 +1,47 @@
+{
+  "tags": [
+    "canonical",
+    "robotics",
+    "industrial"
+  ],
+  "genes": {
+    "actuators": {
+      "value": [
+        "stepper_motor",
+        "hydraulic",
+        "servo",
+        "linear_actuator"
+      ],
+      "type": "array"
+    },
+    "autonomy": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "robotType": {
+      "value": "industrial",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "6d9515e34889ac051df96397987176ab48cb55877332f530e684caf4feed5647",
+  "description": "Canonical Industrial Arm MK4 — a hand-curated seed for the robotics domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Industrial Arm MK4",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "robotics",
+  "provenance": "curated",
+  "id": "canonical-robotics-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

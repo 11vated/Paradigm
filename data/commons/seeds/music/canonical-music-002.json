@@ -1,0 +1,67 @@
+{
+  "tags": [
+    "canonical",
+    "music",
+    "jazz"
+  ],
+  "genes": {
+    "tempo": {
+      "value": 0.35,
+      "type": "scalar"
+    },
+    "key": {
+      "value": "Bb",
+      "type": "categorical"
+    },
+    "timbre": {
+      "value": {
+        "attack": 0.2,
+        "brightness": 0.4,
+        "warmth": 0.85
+      },
+      "type": "struct"
+    },
+    "melody": {
+      "value": [
+        55,
+        58,
+        60,
+        63,
+        58,
+        60,
+        55,
+        53,
+        55,
+        58,
+        60,
+        63,
+        65,
+        63,
+        60,
+        58
+      ],
+      "type": "array"
+    },
+    "scale": {
+      "value": "blues",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "39ff1a5f939cbb0d6f2359928af6da471c5ba5d2e7d8c4eb0f2cd9f4a06d6894",
+  "description": "Canonical Midnight Jazz — a hand-curated seed for the music domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Midnight Jazz",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "music",
+  "provenance": "curated",
+  "id": "canonical-music-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

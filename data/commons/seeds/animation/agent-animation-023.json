@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
+  "provenance": "generated",
+  "id": "agent-animation-023",
+  "description": "A {easing} animated {amplitude} motion sequence",
+  "genes": {
+    "frames": {
+      "value": 49,
+      "type": "scalar"
+    },
+    "fps": {
+      "value": 15,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "ease_in_out",
+      "type": "categorical"
+    },
+    "amplitude": {
+      "value": 0.18,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "none",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.7
+  },
+  "name": "Spin Seed #023",
+  "tags": [
+    "animation",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:22.000Z",
+  "author": "agent"
+}

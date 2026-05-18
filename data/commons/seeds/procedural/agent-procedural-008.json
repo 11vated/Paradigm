@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "procedural",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "387727c344b5388a80de5306a77b15687b0c6bf10c2bda6db06ac3f8c71fea7b",
+  "provenance": "generated",
+  "id": "agent-procedural-008",
+  "description": "A {biome} terrain with {density} density",
+  "genes": {
+    "biome": {
+      "value": "jungle",
+      "type": "categorical"
+    },
+    "density": {
+      "value": 0.13,
+      "type": "scalar"
+    },
+    "scale": {
+      "value": 2.22,
+      "type": "scalar"
+    },
+    "octaves": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "persistence": {
+      "value": 0.76,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Noise Seed #008",
+  "tags": [
+    "procedural",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

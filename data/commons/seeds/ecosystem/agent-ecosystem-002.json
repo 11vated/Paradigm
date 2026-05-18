@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "ecosystem",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
+  "provenance": "generated",
+  "id": "agent-ecosystem-002",
+  "description": "A {climate} ecosystem with {species} species",
+  "genes": {
+    "species": {
+      "value": 37,
+      "type": "scalar"
+    },
+    "trophic": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 128,
+      "type": "scalar"
+    },
+    "climate": {
+      "value": "temperate",
+      "type": "categorical"
+    },
+    "interaction": {
+      "value": "competitive",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.88
+  },
+  "name": "Realm Seed #002",
+  "tags": [
+    "ecosystem",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:01.000Z",
+  "author": "agent"
+}

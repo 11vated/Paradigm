@@ -35,6 +35,9 @@ import { parseQuery, buildPlan, executePlan, buildResponse, buildHelpResponse } 
 import { AGENT_TOOLS, executeTool, getAvailableTools } from './tools.js';
 import { AgentMemory } from './memory.js';
 import { getInferenceClient, LocalInferenceClient } from './inference.js';
+import { MemorySystem } from '../commons/memory/memory-system.js';
+import { Orchestrator } from './sub-agents/Orchestrator.js';
+import type { PipelineResult } from './sub-agents/SubAgent.js';
 
 // ─── DEFAULT AGENT CONFIG ───────────────────────────────────────────────────
 
@@ -222,12 +225,36 @@ export class ParadigmAgent {
   private memory: AgentMemory;
   private config: AgentConfig;
   private inferenceClient: LocalInferenceClient;
+  private memorySystem?: MemorySystem;
+  private orchestrator?: Orchestrator;
 
-  constructor(config?: Partial<AgentConfig>) {
+  constructor(config?: Partial<AgentConfig>, memorySystem?: MemorySystem) {
     this.kb = new KnowledgeBase();
     this.config = { ...DEFAULT_AGENT_CONFIG, ...config };
     this.memory = new AgentMemory(this.config.memoryWindow);
     this.inferenceClient = getInferenceClient();
+    this.memorySystem = memorySystem;
+  }
+
+  /** Set or replace the MemorySystem */
+  setMemorySystem(ms: MemorySystem): void {
+    this.memorySystem = ms;
+  }
+
+  /** Get or create the Orchestrator (lazy init) */
+  getOrchestrator(): Orchestrator {
+    if (!this.orchestrator) {
+      this.orchestrator = new Orchestrator({ defaultDomain: this.config.persona });
+    }
+    return this.orchestrator;
+  }
+
+  /**
+   * Run the full 6-stage sub-agent pipeline from a natural language description.
+   * Returns a PipelineResult with all stages.
+   */
+  async runPipeline(description: string, domain?: string): Promise<PipelineResult> {
+    return this.getOrchestrator().runPipeline(description, domain, this.memorySystem);
   }
 
   /**
@@ -431,7 +458,7 @@ export class ParadigmAgent {
    * Get current agent stats.
    */
   getStats(): Record<string, any> {
-    return {
+    const stats: Record<string, any> = {
       config: this.config,
       memorySize: this.memory.size,
       memoryTurns: this.memory.turnCount,
@@ -439,7 +466,13 @@ export class ParadigmAgent {
       domainsKnown: 27,
       geneTypesKnown: Object.keys(GENE_TYPES).length,
       toolsAvailable: AGENT_TOOLS.size,
+      hasMemorySystem: !!this.memorySystem,
+      hasOrchestrator: !!this.orchestrator,
     };
+    if (this.memorySystem) {
+      stats.memorySystem = this.memorySystem.getStats();
+    }
+    return stats;
   }
 
   // ── Private ───────────────────────────────────────────────────────────────
@@ -696,6 +729,9 @@ export { Phi4InferenceClient, getPhi4Client, resetPhi4Client } from './phi4_infe
 export type { Phi4ClientOptions } from './phi4_inference.js';
 export { InferenceTier, INTENT_TIER } from './types.js';
 export type { AgentIntent, AgentResponse, AgentConfig, ParsedQuery, ReasoningPlan } from './types.js';
+export { Orchestrator, IntentOracle, CodeSmith, Validator, Evolver, Composer, SovereignSigner } from './sub-agents/index.js';
+export type { SubAgent, AgentMessage, AgentResult, AgentContext, PipelineResult } from './sub-agents/index.js';
+export type { IntentEnvelope, CodeGenOutput, GrowthOutput, ValidationOutput, EvolutionOutput, SigningOutput } from './sub-agents/index.js';
 
 // ─── SINGLETON ──────────────────────────────────────────────────────────────
 

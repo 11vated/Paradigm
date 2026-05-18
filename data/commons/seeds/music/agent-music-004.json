@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-004",
+  "description": "A rhythmic light melody with 0.31 tempo",
+  "genes": {
+    "key": {
+      "value": "F",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "pentatonic",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.35,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        73,
+        65,
+        65,
+        57,
+        77,
+        74,
+        55,
+        49
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.47,
+        "brightness": 0.22,
+        "attack": 0.01
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Pulse Seed #004",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:03.000Z",
+  "author": "agent"
+}

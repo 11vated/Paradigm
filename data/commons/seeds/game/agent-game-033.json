@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-033",
+  "description": "A {difficulty} difficulty cinematic experience",
+  "genes": {
+    "genre": {
+      "value": "puzzle",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.24,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 3,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": true,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.88
+  },
+  "name": "Puzzle Seed #033",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

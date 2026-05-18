@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-033",
+  "description": "A sacred bard of the shadow realm",
+  "genes": {
+    "archetype": {
+      "value": "bard",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.36,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.48,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.74,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.08,
+        0.98,
+        0.44
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "cunning",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.88
+  },
+  "name": "Dusk bard #033",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

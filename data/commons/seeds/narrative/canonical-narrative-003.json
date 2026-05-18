@@ -1,0 +1,51 @@
+{
+  "tags": [
+    "canonical",
+    "narrative",
+    "scifi"
+  ],
+  "genes": {
+    "tone": {
+      "value": "speculative",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.88,
+      "type": "scalar"
+    },
+    "characters": {
+      "value": [
+        "Chrononaut",
+        "The Signal",
+        "The Echo",
+        "The Origin"
+      ],
+      "type": "array"
+    },
+    "plot": {
+      "value": "time_travel",
+      "type": "categorical"
+    },
+    "structure": {
+      "value": "three_act",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "c590f66dbf2b2ab0db8af8e0e4913bf6acb12f3c7ee833baac79db08a76f633a",
+  "description": "Canonical Echoes of Tomorrow — a hand-curated seed for the narrative domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Echoes of Tomorrow",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "narrative",
+  "provenance": "curated",
+  "id": "canonical-narrative-003",
+  "fitness": {
+    "overall": 0.9
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
+  "provenance": "generated",
+  "id": "agent-food-006",
+  "description": "A {cuisine}-style {foodType} with {cookTime}min cook time",
+  "genes": {
+    "foodType": {
+      "value": "bread",
+      "type": "categorical"
+    },
+    "cuisine": {
+      "value": "thai",
+      "type": "categorical"
+    },
+    "spice": {
+      "value": 0.67,
+      "type": "scalar"
+    },
+    "prepTime": {
+      "value": 90,
+      "type": "scalar"
+    },
+    "cookTime": {
+      "value": 45,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Blend Seed #006",
+  "tags": [
+    "food",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:05.000Z",
+  "author": "agent"
+}

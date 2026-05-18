@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-025",
+  "description": "A flat {material} {furnitureType}",
+  "genes": {
+    "furnitureType": {
+      "value": "shelf",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "minimal",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "walnut",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        1.54,
+        0.77,
+        0.35
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.45,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Comfort Seed #025",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

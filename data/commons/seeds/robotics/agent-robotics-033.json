@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-033",
+  "description": "A {battery}min battery {robotType} robot",
+  "genes": {
+    "robotType": {
+      "value": "quadruped",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 25,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 346,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 216.1,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "infrared",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Cyber Seed #033",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

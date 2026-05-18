@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "alife",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
+  "provenance": "generated",
+  "id": "agent-alife-028",
+  "description": "A {generations} generation {gridSize} grid ecosystem",
+  "genes": {
+    "species": {
+      "value": 5,
+      "type": "scalar"
+    },
+    "rules": {
+      "value": "highlife",
+      "type": "categorical"
+    },
+    "gridSize": {
+      "value": 64,
+      "type": "scalar"
+    },
+    "generations": {
+      "value": 125,
+      "type": "scalar"
+    },
+    "interaction": {
+      "value": "parasitic",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Cellular Seed #028",
+  "tags": [
+    "alife",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:27.000Z",
+  "author": "agent"
+}

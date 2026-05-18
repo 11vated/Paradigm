@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-031",
+  "description": "A light with {hasPowerups} powerups",
+  "genes": {
+    "genre": {
+      "value": "adventure",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.15,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 1,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Puzzle Seed #031",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:30.000Z",
+  "author": "agent"
+}

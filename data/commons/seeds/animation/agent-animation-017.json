@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
+  "provenance": "generated",
+  "id": "agent-animation-017",
+  "description": "A {easing} animated {amplitude} motion sequence",
+  "genes": {
+    "frames": {
+      "value": 18,
+      "type": "scalar"
+    },
+    "fps": {
+      "value": 42,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "linear",
+      "type": "categorical"
+    },
+    "amplitude": {
+      "value": 0.2,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "none",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.84
+  },
+  "name": "Dance Seed #017",
+  "tags": [
+    "animation",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:16.000Z",
+  "author": "agent"
+}

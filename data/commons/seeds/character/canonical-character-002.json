@@ -1,0 +1,59 @@
+{
+  "tags": [
+    "canonical",
+    "character",
+    "mage",
+    "human"
+  ],
+  "genes": {
+    "agility": {
+      "value": 0.55,
+      "type": "scalar"
+    },
+    "archetype": {
+      "value": "mage",
+      "type": "categorical"
+    },
+    "intelligence": {
+      "value": 0.92,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "personality": {
+      "value": "mystical",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.65,
+        0.15,
+        0.85
+      ],
+      "type": "vector"
+    },
+    "strength": {
+      "value": 0.35,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "a13679b6d6df696ff0cd68801901452420c909a5f06b21dc2826004e4d545b43",
+  "description": "Canonical Whisper Mage — a hand-curated seed for the character domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Whisper Mage",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "character",
+  "provenance": "curated",
+  "id": "canonical-character-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

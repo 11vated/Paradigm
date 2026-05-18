@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "typography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
+  "provenance": "generated",
+  "id": "agent-typography-004",
+  "description": "A {weight} weight {serif} serif typeface",
+  "genes": {
+    "weight": {
+      "value": 200,
+      "type": "scalar"
+    },
+    "width": {
+      "value": "ultra_expanded",
+      "type": "categorical"
+    },
+    "xheight": {
+      "value": 0.78,
+      "type": "scalar"
+    },
+    "contrast": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "serif": {
+      "value": "none",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Font Seed #004",
+  "tags": [
+    "typography",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:03.000Z",
+  "author": "agent"
+}

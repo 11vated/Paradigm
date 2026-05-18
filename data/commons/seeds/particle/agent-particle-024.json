@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "particle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
+  "provenance": "generated",
+  "id": "agent-particle-024",
+  "description": "A {velocity} velocity {particleType} burst",
+  "genes": {
+    "emitter": {
+      "value": "cone",
+      "type": "categorical"
+    },
+    "rate": {
+      "value": 43,
+      "type": "scalar"
+    },
+    "lifetime": {
+      "value": 2.4,
+      "type": "scalar"
+    },
+    "velocity": {
+      "value": 1.2,
+      "type": "scalar"
+    },
+    "particleType": {
+      "value": "glow",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Drift Seed #024",
+  "tags": [
+    "particle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

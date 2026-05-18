@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-030",
+  "description": "A sacred warrior known for wisdom",
+  "genes": {
+    "archetype": {
+      "value": "monk",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.92,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.51,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.23,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.49,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.08,
+        0.18,
+        0.52
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "brave",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Ember monk #030",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:29.000Z",
+  "author": "agent"
+}

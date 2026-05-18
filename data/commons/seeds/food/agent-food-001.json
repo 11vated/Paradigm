@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
+  "provenance": "generated",
+  "id": "agent-food-001",
+  "description": "A {cuisine} {foodType} with {spice} spice level",
+  "genes": {
+    "foodType": {
+      "value": "steak",
+      "type": "categorical"
+    },
+    "cuisine": {
+      "value": "mexican",
+      "type": "categorical"
+    },
+    "spice": {
+      "value": 0.32,
+      "type": "scalar"
+    },
+    "prepTime": {
+      "value": 103,
+      "type": "scalar"
+    },
+    "cookTime": {
+      "value": 152,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.83
+  },
+  "name": "Blend Seed #001",
+  "tags": [
+    "food",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "agent"
+}

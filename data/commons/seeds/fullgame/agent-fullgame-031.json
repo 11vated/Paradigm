@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fullgame",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
+  "provenance": "generated",
+  "id": "agent-fullgame-031",
+  "description": "A {theme} folk featuring {mechanic} mechanics",
+  "genes": {
+    "genre": {
+      "value": "shooter",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.88,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 18,
+      "type": "scalar"
+    },
+    "mechanic": {
+      "value": "combat",
+      "type": "categorical"
+    },
+    "theme": {
+      "value": "cyberpunk",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "Pilgrim Seed #031",
+  "tags": [
+    "fullgame",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:30.000Z",
+  "author": "agent"
+}

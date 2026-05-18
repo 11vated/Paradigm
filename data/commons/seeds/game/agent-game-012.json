@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-012",
+  "description": "A ambient game with {levelCount} levels",
+  "genes": {
+    "genre": {
+      "value": "simulation",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.43,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 6,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Clash Seed #012",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:11.000Z",
+  "author": "agent"
+}

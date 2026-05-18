@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "domain": "narrative",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-narrative-epic-v1",
+  "provenance": "genesis",
+  "id": "canonical-narrative-001",
+  "description": "Canonical Genesis Epic: The Last Seed — a foundational seed for the narrative domain",
+  "genes": {
+    "structure": {
+      "value": "heros_journey",
+      "type": "categorical"
+    },
+    "plot": {
+      "value": "quest",
+      "type": "categorical"
+    },
+    "characters": {
+      "value": [
+        "Paradigm",
+        "The Void",
+        "The Architect",
+        "The Rebel",
+        "The Oracle"
+      ],
+      "type": "array"
+    },
+    "tone": {
+      "value": "epic",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.78,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Genesis Epic: The Last Seed",
+  "tags": [
+    "canonical",
+    "narrative",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

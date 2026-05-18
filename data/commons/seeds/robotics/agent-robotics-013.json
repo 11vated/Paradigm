@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-013",
+  "description": "A {robotType} with {dof} DOF",
+  "genes": {
+    "robotType": {
+      "value": "humanoid",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 21,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 38.4,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "radar",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Gear Seed #013",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:12.000Z",
+  "author": "agent"
+}

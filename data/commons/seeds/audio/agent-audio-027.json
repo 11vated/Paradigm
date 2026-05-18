@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "audio",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
+  "provenance": "generated",
+  "id": "agent-audio-027",
+  "description": "A {waveform} tone at {frequency} Hz",
+  "genes": {
+    "soundType": {
+      "value": "synth",
+      "type": "categorical"
+    },
+    "frequency": {
+      "value": 220,
+      "type": "scalar"
+    },
+    "attack": {
+      "value": 0.436,
+      "type": "scalar"
+    },
+    "decay": {
+      "value": 0.361,
+      "type": "scalar"
+    },
+    "waveform": {
+      "value": "sawtooth",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Echo Seed #027",
+  "tags": [
+    "audio",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:26.000Z",
+  "author": "agent"
+}

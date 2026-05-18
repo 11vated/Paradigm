@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-036",
+  "description": "An atmospheric major composition",
+  "genes": {
+    "key": {
+      "value": "B",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "minor",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.51,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        77,
+        54,
+        58,
+        59,
+        55,
+        51,
+        50,
+        51
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.53,
+        "brightness": 0.04,
+        "attack": 0.81
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Whisper Seed #036",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:35.000Z",
+  "author": "agent"
+}

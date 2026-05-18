@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-029",
+  "description": "A {mass}kg {vehicleType} with {range}km range",
+  "genes": {
+    "vehicleType": {
+      "value": "bike",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 493.6,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 3938.1,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 704,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "nuclear",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Rover Seed #029",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

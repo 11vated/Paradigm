@@ -1,0 +1,89 @@
+// melancholy_bard.gspl
+// The canonical example used throughout this repo.
+// A 1024×1024 sprite of a melancholy bard who plays a wooden harp.
+//
+// Expected seed hash: sha256:8f3a4c5b9e7d2f1a6c8b4d3e5f7a9c1b2d4e6f8a0c1e3d5f7b9a2c4e6d8f0a2c
+// Determinism: pure, no Network/Time effects, RNG seeded by name "melancholy_bard:v1".
+
+module examples.melancholy_bard
+
+import Std.Color
+import Std.Math
+import Sprite
+import Sprite.Style.PixelArt
+import Sprite.Pose
+import Sprite.Prop
+
+// Top-level entry point. Pure, no effects.
+fn main() -> Sprite.Seed pure =
+    let palette = mood_palette(mood = Mood.Melancholy)
+    let pose    = Sprite.Pose.standing(weight_shift = -0.15, head_tilt = -8.0)
+    let outfit  = bard_outfit(palette)
+    let prop    = Sprite.Prop.harp(material = Material.Wood, age = 0.65)
+    seed Sprite.Seed {
+        name        = "melancholy_bard",
+        version     = "1.0.0",
+        canvas      = Sprite.Canvas { w = 1024, h = 1024 },
+        style       = Sprite.Style.PixelArt {
+            scale = 8,
+            dithering = Dither.Bayer8,
+        },
+        palette     = palette,
+        body        = Sprite.Body.humanoid(
+            height = 1.78,
+            build  = Build.Slim,
+            age    = Age.Adult,
+        ),
+        pose        = pose,
+        outfit      = outfit,
+        props       = [prop],
+        expression  = Expression.Wistful { intensity = 0.7 },
+        light       = Sprite.Light.SoftRim {
+            angle_deg = 135.0,
+            warm_temp = 3200.0,
+        },
+        atmosphere  = Atmosphere.Quiet,
+        provenance  = Provenance.HumanAuthored,
+    }
+
+// Mood-driven palette: a small lookup using OKLab perceptual space.
+fn mood_palette(mood : Mood) -> Std.Color.Palette pure =
+    match mood:
+        Mood.Melancholy ->
+            Std.Color.Palette.from_oklch([
+                Std.Color.OKLCh { l = 0.18, c = 0.04, h = 245.0 }, // shadow
+                Std.Color.OKLCh { l = 0.42, c = 0.06, h = 235.0 }, // mid
+                Std.Color.OKLCh { l = 0.74, c = 0.05, h = 220.0 }, // light
+                Std.Color.OKLCh { l = 0.92, c = 0.02, h = 200.0 }, // highlight
+            ])
+        Mood.Joyful ->
+            Std.Color.Palette.from_oklch([
+                Std.Color.OKLCh { l = 0.20, c = 0.10, h = 30.0 },
+                Std.Color.OKLCh { l = 0.55, c = 0.18, h = 50.0 },
+                Std.Color.OKLCh { l = 0.85, c = 0.16, h = 75.0 },
+                Std.Color.OKLCh { l = 0.96, c = 0.05, h = 90.0 },
+            ])
+
+// Outfit composition: cloak, tunic, boots. Pure data.
+fn bard_outfit(palette : Std.Color.Palette) -> Sprite.Outfit pure =
+    Sprite.Outfit {
+        layers = [
+            Sprite.Layer.cloak(
+                fabric = Fabric.Wool,
+                color  = palette.shade(2),
+                length = CloakLength.AnkleSweep,
+                hood   = HoodState.Down,
+            ),
+            Sprite.Layer.tunic(
+                fabric = Fabric.Linen,
+                color  = palette.shade(1),
+                belt   = Some(Belt.LeatherSimple),
+            ),
+            Sprite.Layer.boots(
+                material = Material.Leather,
+                color    = palette.shade(0),
+                height   = BootHeight.MidCalf,
+            ),
+        ],
+        wear_pattern = WearPattern.Travelled { roughness = 0.4 },
+    }

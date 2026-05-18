@@ -1,0 +1,50 @@
+{
+  "tags": [
+    "canonical",
+    "circuit",
+    "analog"
+  ],
+  "genes": {
+    "circuitType": {
+      "value": "analog",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.65,
+      "type": "scalar"
+    },
+    "layers": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "components": {
+      "value": [
+        "op_amp",
+        "capacitor",
+        "resistor",
+        "transistor",
+        "vco",
+        "vcf",
+        "vca"
+      ],
+      "type": "array"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "ccf856b64f35d7a0eff328d591fed80153bd2f236898bc43d627c9734ff22f88",
+  "description": "Canonical Analog Synthesizer — a hand-curated seed for the circuit domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Analog Synthesizer",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "circuit",
+  "provenance": "curated",
+  "id": "canonical-circuit-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

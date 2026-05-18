@@ -1,0 +1,59 @@
+{
+  "tags": [
+    "canonical",
+    "character",
+    "rogue",
+    "human"
+  ],
+  "genes": {
+    "agility": {
+      "value": 0.92,
+      "type": "scalar"
+    },
+    "archetype": {
+      "value": "rogue",
+      "type": "categorical"
+    },
+    "intelligence": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 0.45,
+      "type": "scalar"
+    },
+    "personality": {
+      "value": "cunning",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.08,
+        0.08,
+        0.15
+      ],
+      "type": "vector"
+    },
+    "strength": {
+      "value": 0.5,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "ef985784391fddf2902875d168ee9c0392cd54164108dc2a57169a50c396753d",
+  "description": "Canonical Shadow Rogue — a hand-curated seed for the character domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Shadow Rogue",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "character",
+  "provenance": "curated",
+  "id": "canonical-character-003",
+  "fitness": {
+    "overall": 0.9
+  }
+}

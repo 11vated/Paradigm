@@ -21,12 +21,20 @@ export type ValidateFn = (value: any, schema?: GeneSchema) => boolean;
 export type MutateFn = (value: any, rate: number, rng: Xoshiro256StarStar, schema?: GeneSchema) => any;
 export type CrossoverFn = (a: any, b: any, rng: Xoshiro256StarStar) => any;
 export type DistanceFn = (a: any, b: any, schema?: GeneSchema) => number;
+export type CanonicalizeFn = (value: any, schema?: GeneSchema) => any;
+export type RepairFn = (value: any, schema?: GeneSchema) => any;
 
 export interface GeneTypeOps {
   validate: ValidateFn;
   mutate: MutateFn;
   crossover: CrossoverFn;
   distance: DistanceFn;
+  canonicalize: CanonicalizeFn;
+  repair: RepairFn;
+}
+
+function fixedPrecision(v: number, digits: number = 7): number {
+  return parseFloat(v.toFixed(digits));
 }
 
 // ─── 1. SCALAR ────────────────────────────────────────────────────────────────
@@ -55,6 +63,17 @@ const scalar: GeneTypeOps = {
     const hi = schema?.max ?? 1.0;
     const r = hi - lo > 0 ? hi - lo : 1.0;
     return Math.abs(a - b) / r;
+  },
+  canonicalize(value, schema) {
+    return fixedPrecision(value, 7);
+  },
+  repair(value, schema) {
+    if (typeof value !== 'number' || isNaN(value) || !isFinite(value)) {
+      return schema?.min ?? 0.0;
+    }
+    const lo = schema?.min ?? -Infinity;
+    const hi = schema?.max ?? Infinity;
+    return clamp(value, lo, hi);
   }
 };
 
@@ -78,6 +97,14 @@ const categorical: GeneTypeOps = {
   },
   distance(a, b) {
     return a === b ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    return value;
+  },
+  repair(value, schema) {
+    if (typeof value !== 'string') return schema?.choices?.[0] ?? 'default';
+    if (schema?.choices && !schema.choices.includes(value)) return schema.choices[0];
+    return value;
   }
 };
 
@@ -100,6 +127,15 @@ const vector: GeneTypeOps = {
       sum += (a[i] - b[i]) ** 2;
     }
     return Math.sqrt(sum);
+  },
+  canonicalize(value) {
+    return value.map((v: number) => fixedPrecision(v, 7));
+  },
+  repair(value, schema) {
+    if (!Array.isArray(value)) return schema?.dimensions ? new Array(schema.dimensions).fill(0) : [0];
+    const dim = schema?.dimensions ?? value.length;
+    return value.slice(0, dim).map((v: any) => typeof v === 'number' && !isNaN(v) ? clamp(v, 0, 1) : 0)
+      .concat(new Array(Math.max(0, dim - value.length)).fill(0));
   }
 };
 
@@ -126,6 +162,13 @@ const expression: GeneTypeOps = {
   },
   distance(a, b) {
     return a === b ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    return value.trim().replace(/\s+/g, ' ');
+  },
+  repair(value) {
+    if (typeof value !== 'string' || value.length === 0) return '0';
+    return value.trim();
   }
 };
 
@@ -165,6 +208,15 @@ const struct: GeneTypeOps = {
       else if (JSON.stringify(a[k]) !== JSON.stringify(b[k])) diffs += 0.5;
     }
     return diffs / allKeys.size;
+  },
+  canonicalize(value) {
+    const keys = Object.keys(value).sort();
+    const result: Record<string, any> = {};
+    for (const k of keys) result[k] = value[k];
+    return result;
+  },
+  repair(value) {
+    return typeof value === 'object' && value !== null && !Array.isArray(value) ? value : {};
   }
 };
 
@@ -196,6 +248,12 @@ const array: GeneTypeOps = {
       if (JSON.stringify(a[i]) !== JSON.stringify(b[i])) diffs += 1;
     }
     return diffs / maxLen;
+  },
+  canonicalize(value) {
+    return value;
+  },
+  repair(value) {
+    return Array.isArray(value) ? value : [];
   }
 };
 
@@ -234,6 +292,16 @@ const graph: GeneTypeOps = {
     const bGraph = b as any;
     return Math.abs((aGraph.nodes?.length ?? 0) - (bGraph.nodes?.length ?? 0)) +
            Math.abs((aGraph.edges?.length ?? 0) - (bGraph.edges?.length ?? 0));
+  },
+  canonicalize(value) {
+    const result: any = { nodes: [...(value.nodes ?? [])], edges: [...(value.edges ?? [])] };
+    result.nodes.sort((a: any, b: any) => (a.id ?? '').localeCompare(b.id ?? ''));
+    result.edges.sort((a: any, b: any) => ((a.from ?? '') + (a.to ?? '')).localeCompare((b.from ?? '') + (b.to ?? '')));
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { nodes: [], edges: [] };
+    return { nodes: Array.isArray(value.nodes) ? value.nodes : [], edges: Array.isArray(value.edges) ? value.edges : [] };
   }
 };
 
@@ -255,6 +323,16 @@ const topology: GeneTypeOps = {
   },
   distance(a, b) {
     return JSON.stringify(a) === JSON.stringify(b) ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    if (!value || typeof value !== 'object') return value;
+    return JSON.parse(JSON.stringify(value));
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { vertices: [], faces: [] };
+    if (!Array.isArray(value.vertices)) value.vertices = [];
+    if (!Array.isArray(value.faces)) value.faces = [];
+    return value;
   }
 };
 
@@ -284,6 +362,24 @@ const temporal: GeneTypeOps = {
   },
   distance(a, b) {
     return JSON.stringify(a) === JSON.stringify(b) ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    if (!value || typeof value !== 'object') return value;
+    const result: any = {};
+    if (value.keyframes) result.keyframes = value.keyframes;
+    if (value.envelope) result.envelope = value.envelope;
+    if (value.expression) result.expression = value.expression;
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { keyframes: [] };
+    if (!Array.isArray(value.keyframes)) value.keyframes = [];
+    if (value.envelope) {
+      for (const k of ['attack', 'decay', 'sustain', 'release']) {
+        if (typeof value.envelope[k] !== 'number') value.envelope[k] = 0.5;
+      }
+    }
+    return value;
   }
 };
 
@@ -307,6 +403,16 @@ const regulatory: GeneTypeOps = {
   },
   distance(a, b) {
     return JSON.stringify(a) === JSON.stringify(b) ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    const result: any = { nodes: [...(value.nodes ?? [])], edges: [...(value.edges ?? [])] };
+    result.nodes.sort((a: any, b: any) => (a.id ?? '').localeCompare(b.id ?? ''));
+    result.edges.sort((a: any, b: any) => ((a.source ?? '') + (a.target ?? '')).localeCompare((b.source ?? '') + (b.target ?? '')));
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { nodes: [], edges: [] };
+    return { nodes: Array.isArray(value.nodes) ? value.nodes : [], edges: Array.isArray(value.edges) ? value.edges : [] };
   }
 };
 
@@ -331,6 +437,18 @@ const field: GeneTypeOps = {
   },
   distance(a, b) {
     return JSON.stringify(a) === JSON.stringify(b) ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    if (!value || typeof value !== 'object') return value;
+    const result: any = { type: value.type };
+    if (value.parameters) result.parameters = value.parameters;
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { type: 'scalar', parameters: {} };
+    if (typeof value.type !== 'string') value.type = 'scalar';
+    if (!value.parameters || typeof value.parameters !== 'object') value.parameters = {};
+    return value;
   }
 };
 
@@ -350,6 +468,14 @@ const symbolic: GeneTypeOps = {
   },
   distance(a, b) {
     return JSON.stringify(a) === JSON.stringify(b) ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    if (typeof value === 'string') return value.trim();
+    return value;
+  },
+  repair(value) {
+    if (typeof value !== 'string' && typeof value !== 'object' && !Array.isArray(value)) return '';
+    return value;
   }
 };
 
@@ -388,6 +514,21 @@ const quantum: GeneTypeOps = {
     if (a.amplitudes.length !== b.amplitudes.length) return 1.0;
     const dot = a.amplitudes.reduce((s: number, ai: number, i: number) => s + ai * b.amplitudes[i], 0);
     return 1.0 - Math.abs(dot) ** 2;
+  },
+  canonicalize(value) {
+    const amps = (value.amplitudes ?? []).map((a: number) => fixedPrecision(a, 7));
+    return { amplitudes: amps, basis: [...(value.basis ?? [])] };
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { amplitudes: [1], basis: ['default'] };
+    if (!Array.isArray(value.amplitudes)) value.amplitudes = [1];
+    if (!Array.isArray(value.basis)) value.basis = ['default'];
+    if (value.amplitudes.length !== value.basis.length) {
+      const min = Math.min(value.amplitudes.length, value.basis.length);
+      value.amplitudes = value.amplitudes.slice(0, min);
+      value.basis = value.basis.slice(0, min);
+    }
+    return value;
   }
 };
 
@@ -416,6 +557,16 @@ const gematria: GeneTypeOps = {
   },
   distance(a, b) {
     return Math.abs((a.computed_value ?? 0) - (b.computed_value ?? 0));
+  },
+  canonicalize(value) {
+    return { sequence: value.sequence ?? '', system: value.system ?? '', computed_value: value.computed_value ?? 0 };
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { sequence: '', system: 'default', computed_value: 0 };
+    if (typeof value.sequence !== 'string') value.sequence = '';
+    if (typeof value.system !== 'string') value.system = 'default';
+    value.computed_value = value.sequence.split('').reduce((s: number, c: string) => s + c.charCodeAt(0), 0);
+    return value;
   }
 };
 
@@ -444,6 +595,18 @@ const resonance: GeneTypeOps = {
     const bf = b.fundamentals ?? [];
     if (!af.length || !bf.length) return 1.0;
     return Math.abs(af[0] - bf[0]) / Math.max(af[0], bf[0], 1);
+  },
+  canonicalize(value) {
+    const result: any = { fundamentals: [...(value.fundamentals ?? [])] };
+    if (value.partials) result.partials = value.partials;
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { fundamentals: [440], partials: [] };
+    if (!Array.isArray(value.fundamentals) || value.fundamentals.length === 0) value.fundamentals = [440];
+    value.fundamentals = value.fundamentals.map((f: number) => Math.max(20, f));
+    if (!Array.isArray(value.partials)) value.partials = [];
+    return value;
   }
 };
 
@@ -468,6 +631,13 @@ const dimensional: GeneTypeOps = {
     const na = Math.sqrt(a.reduce((s: number, x: number) => s + x * x, 0));
     const nb = Math.sqrt(b.reduce((s: number, x: number) => s + x * x, 0));
     return (na === 0 || nb === 0) ? 1.0 : 1.0 - Math.abs(dot / (na * nb));
+  },
+  canonicalize(value) {
+    return value.map((v: number) => fixedPrecision(v, 7));
+  },
+  repair(value) {
+    if (!Array.isArray(value)) return [0];
+    return value.map((v: any) => typeof v === 'number' && !isNaN(v) ? v : 0);
   }
 };
 
@@ -484,6 +654,21 @@ const sovereignty: GeneTypeOps = {
   },
   distance(a, b) {
     return a?.author_pubkey === b?.author_pubkey ? 0.0 : 1.0;
+  },
+  canonicalize(value) {
+    if (!value || typeof value !== 'object') return value;
+    const keys = Object.keys(value).sort();
+    const result: any = {};
+    for (const k of keys) {
+      if (k !== 'signature') result[k] = value[k];
+    }
+    return result;
+  },
+  repair(value) {
+    if (typeof value !== 'object' || value === null) return { author_pubkey: '', signature: '' };
+    if (typeof value.author_pubkey !== 'string') value.author_pubkey = '';
+    if (typeof value.signature !== 'string') value.signature = '';
+    return value;
   }
 };
 
@@ -497,6 +682,14 @@ export const GENE_TYPES: Record<string, GeneTypeOps> = {
 export class GeneSystem {
   static getOps(type: string): GeneTypeOps {
     return GENE_TYPES[type] ?? GENE_TYPES.scalar;
+  }
+
+  static getCanonicalizeFn(type: string): CanonicalizeFn {
+    return this.getOps(type).canonicalize;
+  }
+
+  static getRepairFn(type: string): RepairFn {
+    return this.getOps(type).repair;
   }
   
   /**
@@ -597,6 +790,16 @@ export function distanceGene(geneType: string, a: any, b: any, schema?: GeneSche
   return ops ? ops.distance(a, b, schema) : 1.0;
 }
 
+export function canonicalizeGene(geneType: string, value: any, schema?: GeneSchema): any {
+  const ops = GENE_TYPES[geneType];
+  return ops ? ops.canonicalize(value, schema) : value;
+}
+
+export function repairGene(geneType: string, value: any, schema?: GeneSchema): any {
+  const ops = GENE_TYPES[geneType];
+  return ops ? ops.repair(value, schema) : value;
+}
+
 export function getGeneTypeInfo() {
   return [
     { id: 1, name: 'scalar', encodes: 'Continuous numeric values', example: 'size, intensity, speed' },
@@ -616,5 +819,5 @@ export function getGeneTypeInfo() {
     { id: 15, name: 'resonance', encodes: 'Harmonic frequency profiles', example: 'voice_timbre, material_tap_tone' },
     { id: 16, name: 'dimensional', encodes: 'Embedding-space coordinates', example: 'style_embedding, semantic_vector' },
     { id: 17, name: 'sovereignty', encodes: 'Cryptographic ownership chains', example: 'author_key, lineage_proof' },
-  ];
+  ].map(t => ({ ...t, operators: 6 })); // validate, mutate, crossover, distance, canonicalize, repair
 }

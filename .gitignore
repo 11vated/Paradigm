@@ -7,16 +7,16 @@ coverage/
 .env*
 !.env.example
 
-
 # Test outputs
 data/artifacts/
 output/
 
-# Temp files
+# Archived content
+.archive/
+
+# Temp / scratch files
+tests/scratch/
 temp_*.txt
-phase3-status.js
-beyond-omega-exec.ts
-demo.html
 *.bak
 *.backup
 *.tmp
@@ -25,17 +25,17 @@ demo.html
 *_backup.ts
 *_clean.ts
 *_fixed.ts
-*_fixed_start.ts
-*_new_start.ts
-*_part1.ts
 *_full.txt
 line*.txt
 .kilo/
-EXECUTION_PLAN_PHASE1.md
 
-# Test files
+# Test files (temp/scratch)
 test-*.mjs
 test-*.js
-test-*.ts
+test-*.ts (except src/ tests/)
 *.cjs
+
+# Test results
+test-results/
+playwright-report/
 

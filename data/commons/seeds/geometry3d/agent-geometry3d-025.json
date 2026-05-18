@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
+  "provenance": "generated",
+  "id": "agent-geometry3d-025",
+  "description": "A {primitive} with {subdivision} subdivisions",
+  "genes": {
+    "primitive": {
+      "value": "cube",
+      "type": "categorical"
+    },
+    "subdivision": {
+      "value": 2,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "tetrahedral",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        1.46,
+        1.33,
+        0.88
+      ],
+      "type": "vector"
+    },
+    "detail": {
+      "value": 0.21,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Poly Seed #025",
+  "tags": [
+    "geometry3d",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

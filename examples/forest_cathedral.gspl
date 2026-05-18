@@ -1,0 +1,67 @@
+// forest_cathedral.gspl
+// Composite scene: a humanoid character placed in an environment with ambient music.
+// Demonstrates cross-engine composition and the Composite gene type.
+//
+// Expected seed hash: sha256:c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3
+// Determinism: pure.
+
+module examples.forest_cathedral
+
+import Std.Color
+import Sprite
+import Environment
+import Music
+import Composite
+
+fn main() -> Composite.Seed pure =
+    let bard      = examples.melancholy_bard.main()
+    let cathedral = environment_seed()
+    let ambience  = music_seed()
+    seed Composite.Seed {
+        name    = "forest_cathedral",
+        version = "1.0.0",
+        scene   = Composite.Scene {
+            stage      = cathedral,
+            characters = [
+                Composite.PlacedCharacter {
+                    seed     = bard,
+                    position = Vec3 { x = 0.0, y = 0.0, z = 0.0 },
+                    facing   = Cardinal.North,
+                },
+            ],
+            audio      = Some(ambience),
+            time_of_day = TimeOfDay.GoldenHour,
+            weather    = Weather.LightMist { density = 0.3 },
+        },
+        provenance = Provenance.HumanAuthored,
+    }
+
+fn environment_seed() -> Environment.Seed pure =
+    seed Environment.Seed {
+        name      = "abandoned_forest_cathedral",
+        version   = "1.0.0",
+        biome     = Biome.TemperateForest { density = 0.7 },
+        structure = Some(Structure.Cathedral {
+            condition = Condition.Ruined { years = 400 },
+            material  = Material.Stone,
+            size      = SizeClass.Modest,
+        }),
+        flora     = [Flora.MossPatches, Flora.IvyClimbers, Flora.MushroomRings],
+        ground    = Ground.LeafLitter { wetness = 0.4 },
+    }
+
+fn music_seed() -> Music.Seed pure =
+    seed Music.Seed {
+        name        = "forest_cathedral_ambience",
+        version     = "1.0.0",
+        duration_s  = 120.0,
+        tempo_bpm   = 52,
+        key         = Music.Key { tonic = Note.D, mode = Mode.Aeolian },
+        instruments = [
+            Music.Instrument.HarpPlucked { warmth = 0.8 },
+            Music.Instrument.StringPad   { detune = 0.04 },
+            Music.Instrument.WindLayer   { intensity = 0.2 },
+        ],
+        dynamics    = Dynamics.PP,
+        atmosphere  = Atmosphere.Quiet,
+    }

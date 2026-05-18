@@ -6,7 +6,7 @@
  * NOW WIRED TO KERNEL: breed, mutate, evolve, crossover all invoke actual operators
  */
 
-import { Seed as KernelSeed } from './seed-class';
+import { UniversalSeed } from '../../seeds/universal-seed';
 import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
@@ -209,6 +209,24 @@ export class GsplInterpreter {
 
       case ASTNodeType.GROW_OP:
         return this.evaluateGrow(node);
+
+      // Match expression
+      case ASTNodeType.MATCH_EXPR:
+        return this.evaluateMatchExpr(node);
+
+      // Import/Export declarations
+      case ASTNodeType.IMPORT_DECL:
+        return this.evaluateImportDecl(node);
+
+      case ASTNodeType.EXPORT_DECL:
+        return this.evaluateExportDecl(node);
+
+      // Type/Trait/Impl declarations
+      case ASTNodeType.TYPE_DECL:
+        return this.evaluateTypeDecl(node);
+
+      case ASTNodeType.IMPL_DECL:
+        return this.evaluateImplDecl(node);
 
       default:
         throw new Error(`Unimplemented AST node: ${node.type} at line ${node.loc?.line}`);
@@ -440,7 +458,7 @@ export class GsplInterpreter {
       this.context.seeds.set(`mutant_${Date.now()}`, mutated);
       return mutated;
     }
-    if (target instanceof KernelSeed) {
+    if (target instanceof UniversalSeed) {
       return target.mutate(this.context.rng, intensity);
     }
     throw new Error(`mutate expects a Seed, got ${typeof target}`);
@@ -477,9 +495,9 @@ export class GsplInterpreter {
       this.context.seeds.set(`breed_${Date.now()}`, child);
       return child;
     }
-    if (a instanceof KernelSeed && b instanceof KernelSeed) {
-      if (a.metadata.domain !== b.metadata.domain) {
-        throw new Error(`Cannot breed seeds from different domains: ${a.metadata.domain} vs ${b.metadata.domain}`);
+    if (a instanceof UniversalSeed && b instanceof UniversalSeed) {
+      if (a.$domain !== b.$domain) {
+        throw new Error(`Cannot breed seeds from different domains: ${a.$domain} vs ${b.$domain}`);
       }
       return a.cross(b, this.context.rng);
     }
@@ -497,7 +515,7 @@ export class GsplInterpreter {
    * Wire compose() to actual cross-domain composition
    */
   private callKernelCompose(seed: any, targetDomain: string): any {
-    if (!(seed instanceof KernelSeed)) {
+    if (!(seed instanceof UniversalSeed)) {
       throw new Error(`compose expects a Seed as first argument`);
     }
     
@@ -508,7 +526,7 @@ export class GsplInterpreter {
     const result = composeSeed(seed, domain);
     
     if (!result) {
-      throw new Error(`No composition functor available for ${seed.metadata.domain} → ${domain}`);
+      throw new Error(`No composition functor available for ${seed.$domain} → ${domain}`);
     }
     
     return result;
@@ -518,7 +536,7 @@ export class GsplInterpreter {
    * Wire distance() to actual genetic distance calculation
    */
   private callKernelDistance(seedA: any, seedB: any): number {
-    if (!(seedA instanceof KernelSeed) || !(seedB instanceof KernelSeed)) {
+    if (!(seedA instanceof UniversalSeed) || !(seedB instanceof UniversalSeed)) {
       throw new Error(`distance expects two Seeds`);
     }
     
@@ -539,13 +557,13 @@ export class GsplInterpreter {
         seed_hash: seed.$hash
       };
     }
-    if (seed instanceof KernelSeed) {
+    if (seed instanceof UniversalSeed) {
       const { growSeed } = require('./engines.js');
       const artifact = await growSeed(seed);
       return {
         type: 'artifact',
-        domain: seed.metadata.domain,
-        name: seed.metadata.name,
+        domain: seed.$domain,
+        name: seed.$name,
         seed_hash: seed.id,
         artifact
       };
@@ -606,7 +624,7 @@ export class GsplInterpreter {
       throw new Error('evolve: population must be an array of Seeds');
     }
     
-    // Accept both plain Seed objects and KernelSeed instances
+    // Accept both plain Seed objects and UniversalSeed instances
     const isPlainSeeds = population.length > 0 && population[0].$hash !== undefined;
     
     // Parse config
@@ -624,9 +642,9 @@ export class GsplInterpreter {
       };
     }
     
-    // Validate all are KernelSeeds
+    // Validate all are UniversalSeeds
     for (const seed of population) {
-      if (!(seed instanceof KernelSeed)) {
+      if (!(seed instanceof UniversalSeed)) {
         throw new Error('evolve: all population members must be Seeds');
       }
     }
@@ -645,7 +663,7 @@ export class GsplInterpreter {
     const ga = new GeneticAlgorithm(this.context.rng);
     
     // Wrap fitness function
-    const fitnessFn = async (seed: KernelSeed): Promise<number> => {
+    const fitnessFn = async (seed: UniversalSeed): Promise<number> => {
       // If fitnessFnExpr is a function AST node, evaluate it with seed context
       if (typeof fitnessFnExpr === 'function') {
         return await fitnessFnExpr(seed);
@@ -655,7 +673,7 @@ export class GsplInterpreter {
     };
     
     // Run evolution
-    const result = await ga.evolve(population as KernelSeed[], fitnessFn, gaConfig);
+    const result = await ga.evolve(population as any, fitnessFn as any, gaConfig);
     
     return {
       bestSeed: result.best,
@@ -892,6 +910,83 @@ export class GsplInterpreter {
       name: seed.$name,
       seed_hash: seed.$hash
     };
+  }
+
+  private async evaluateMatchExpr(node: ASTNode): Promise<any> {
+    const subject = await this.evaluateNode(node.subject);
+
+    for (const arm of node.arms) {
+      if (await this.matchPattern(subject, arm.pattern)) {
+        return this.evaluateNode(arm.value);
+      }
+    }
+
+    throw new Error(`No match arm matched value ${JSON.stringify(subject)} at line ${node.loc?.line}`);
+  }
+
+  private async matchPattern(value: any, pattern: ASTNode): Promise<boolean> {
+    // Wildcard: matches everything
+    if (pattern.type === ASTNodeType.IDENTIFIER && pattern.name === '_') {
+      return true;
+    }
+    // Literal patterns
+    if (pattern.type === ASTNodeType.INT_LITERAL || pattern.type === ASTNodeType.FLOAT_LITERAL) {
+      return typeof value === 'number' && value === pattern.value;
+    }
+    if (pattern.type === ASTNodeType.STRING_LITERAL) {
+      return value === pattern.value;
+    }
+    if (pattern.type === ASTNodeType.BOOLEAN_LITERAL) {
+      return value === pattern.value;
+    }
+    if (pattern.type === ASTNodeType.NULL_LITERAL) {
+      return value === null || value === undefined;
+    }
+    return false;
+  }
+
+  private async evaluateImportDecl(node: ASTNode): Promise<any> {
+    const imports = node.imports as string[];
+    const path = node.path as string;
+
+    // Track imported module for resolution
+    // For now, import is a no-op that records the import
+    // Full module resolution can be added in Phase 2
+    for (const sym of imports) {
+      this.context.variables.set(sym, { _imported: true, _from: path });
+    }
+    return null;
+  }
+
+  private async evaluateExportDecl(node: ASTNode): Promise<any> {
+    // Exports are recorded for the module system
+    // For now, just acknowledge the export
+    return null;
+  }
+
+  private async evaluateTypeDecl(node: ASTNode): Promise<any> {
+    const name = node.name as string;
+    const baseType = node.baseType;
+    const isTrait = node.isTrait === true;
+
+    this.context.types.set(name, node);
+    return { type: 'type_decl', name, isTrait };
+  }
+
+  private async evaluateImplDecl(node: ASTNode): Promise<any> {
+    const traitName = node.traitName as string;
+    const typeName = node.typeName as string;
+
+    // Look up the trait's method signatures
+    const traitNode = this.context.types.get(traitName);
+    if (traitNode && traitNode.isTrait) {
+      // Register implementations for the type
+      for (const method of node.methods) {
+        this.context.functions.set(`${typeName}.${method.name}`, method);
+      }
+    }
+
+    return { type: 'impl_decl', trait: traitName, forType: typeName };
   }
 
   private inferGeneType(value: any): string {

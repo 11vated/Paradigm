@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-021",
+  "description": "A {propulsion} {vehicleType} with {speed} top speed",
+  "genes": {
+    "vehicleType": {
+      "value": "plane",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 323,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 2429,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 888.6,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "solar",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Hauler Seed #021",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:20.000Z",
+  "author": "agent"
+}

@@ -23,7 +23,7 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
   ) : ['hyperobject', '3d'];
 
   return (
-    <div className="flex-1 relative overflow-hidden" data-testid="preview-viewport">
+    <div className="relative overflow-hidden w-full h-full" data-testid="preview-viewport">
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-10"
         style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,229,255,0.4) 1px, transparent 0)',

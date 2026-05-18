@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "physics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6d9b37b90656fc35d4a5623a1f2136656c6b027d4a09093a89850314a1126b09",
+  "provenance": "generated",
+  "id": "agent-physics-020",
+  "description": "A physics system with {gravity} gravity",
+  "genes": {
+    "gravity": {
+      "value": 1.02,
+      "type": "scalar"
+    },
+    "friction": {
+      "value": 0.38,
+      "type": "scalar"
+    },
+    "elasticity": {
+      "value": 0.8,
+      "type": "scalar"
+    },
+    "bodyCount": {
+      "value": 145,
+      "type": "scalar"
+    },
+    "integrator": {
+      "value": "rk4",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "Kinetic Seed #020",
+  "tags": [
+    "physics",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:19.000Z",
+  "author": "agent"
+}

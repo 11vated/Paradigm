@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-034",
+  "description": "A {vehicleType} using {propulsion} propulsion",
+  "genes": {
+    "vehicleType": {
+      "value": "train",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 98.2,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 6659.9,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 460.6,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "maglev",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.84
+  },
+  "name": "Sprinter Seed #034",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

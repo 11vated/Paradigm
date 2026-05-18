@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "shader",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
+  "provenance": "generated",
+  "id": "agent-shader-016",
+  "description": "A {iterations}-step {noise} shader effect",
+  "genes": {
+    "technique": {
+      "value": "conformal",
+      "type": "categorical"
+    },
+    "iterations": {
+      "value": 12,
+      "type": "scalar"
+    },
+    "epsilon": {
+      "value": 0.0046,
+      "type": "scalar"
+    },
+    "noise": {
+      "value": "perlin",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Nova Seed #016",
+  "tags": [
+    "shader",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:15.000Z",
+  "author": "agent"
+}

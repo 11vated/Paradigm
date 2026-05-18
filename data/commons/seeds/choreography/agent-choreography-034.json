@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "choreography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "764ed17f3caebc293d0056d127ad744def90340d5feecd9a6cc97660e828fb62",
+  "provenance": "generated",
+  "id": "agent-choreography-034",
+  "description": "A isometric piece with 0.61 tempo",
+  "genes": {
+    "style": {
+      "value": "salsa",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.51,
+      "type": "scalar"
+    },
+    "complexity": {
+      "value": 0.9,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 136,
+      "type": "scalar"
+    },
+    "formation": {
+      "value": "duet",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Leap Seed #034",
+  "tags": [
+    "choreography",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

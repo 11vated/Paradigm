@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "alife",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
+  "provenance": "generated",
+  "id": "agent-alife-029",
+  "description": "A {rules} alife simulation with {species} species",
+  "genes": {
+    "species": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "rules": {
+      "value": "conway",
+      "type": "categorical"
+    },
+    "gridSize": {
+      "value": 256,
+      "type": "scalar"
+    },
+    "generations": {
+      "value": 458,
+      "type": "scalar"
+    },
+    "interaction": {
+      "value": "competitive",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Life Seed #029",
+  "tags": [
+    "alife",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

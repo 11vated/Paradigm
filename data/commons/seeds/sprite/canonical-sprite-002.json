@@ -1,0 +1,46 @@
+{
+  "tags": [
+    "canonical",
+    "sprite",
+    "creature"
+  ],
+  "genes": {
+    "paletteSize": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "resolution": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "colors": {
+      "value": [
+        0.12,
+        0.55,
+        0.15
+      ],
+      "type": "vector"
+    },
+    "symmetry": {
+      "value": "asymmetric",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "f6bd043662ec90d6f559ee39ec7de0db4ce8294a8afa69e4c1e8c7b3dcc70031",
+  "description": "Canonical Serpent Wyrm — a hand-curated seed for the sprite domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Serpent Wyrm",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "sprite",
+  "provenance": "curated",
+  "id": "canonical-sprite-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

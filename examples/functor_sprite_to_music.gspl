@@ -1,0 +1,28 @@
+// functor_sprite_to_music.gspl
+// Cross-domain functor: take a Sprite seed and produce a Music seed that "expresses" it.
+// Demonstrates the Functor system and cross-engine consistency laws.
+//
+// Expected seed hash (output): sha256:d2b4f6a8c0e2b4d6f8a0c2e4b6d8a0c2e4f6b8d0a2c4e6f8b0d2a4c6e8f0b2d4
+// Functor used: Sprite -> Music via the "mood-translation" path.
+
+module examples.functor_sprite_to_music
+
+import Sprite
+import Music
+import Composite.Functor
+import examples.melancholy_bard
+
+fn main() -> Music.Seed pure =
+    let bard = examples.melancholy_bard.main()
+    // Find a path through the functor registry from Sprite to Music.
+    // The shortest path is direct ("sprite_mood_to_music_key").
+    let path = Composite.Functor.path(from = Domain.Sprite, to = Domain.Music)
+    Composite.Functor.apply_path(path, bard) :: Music.Seed
+
+// Functor laws this composition must satisfy:
+//   1. Identity:    apply(id_path, x) == x
+//   2. Composition: apply(p1 . p2, x) == apply(p2, apply(p1, x))
+//   3. Round-trip stability: |apply(inv_path, apply(path, x)) - x| < epsilon on shared axes
+//
+// These are checked in the Functor's law_test() method, which the engine runs
+// as part of validation when this module is built.

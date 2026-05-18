@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "narrative",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "24cd953299d304d6747641eb4789c535b631104520c393b7b949701f40b2fc74",
+  "provenance": "generated",
+  "id": "agent-narrative-025",
+  "description": "A {tone} ambient story with {characterCount} characters",
+  "genes": {
+    "genre": {
+      "value": "comedy",
+      "type": "categorical"
+    },
+    "tone": {
+      "value": "satirical",
+      "type": "categorical"
+    },
+    "length": {
+      "value": 3,
+      "type": "scalar"
+    },
+    "characterCount": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "structure": {
+      "value": "frame_story",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Tale Seed #025",
+  "tags": [
+    "narrative",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

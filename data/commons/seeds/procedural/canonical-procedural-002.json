@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "procedural",
+    "caves"
+  ],
+  "genes": {
+    "persistence": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "biome": {
+      "value": "subterranean",
+      "type": "categorical"
+    },
+    "octaves": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "scale": {
+      "value": 0.9,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "2760b2b3d75ff88410990030040fb5365b4faaf61f92835eacfb33e9cf3c01ac",
+  "description": "Canonical Infinite Caverns — a hand-curated seed for the procedural domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Infinite Caverns",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "procedural",
+  "provenance": "curated",
+  "id": "canonical-procedural-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

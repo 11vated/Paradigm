@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "typography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
+  "provenance": "generated",
+  "id": "agent-typography-024",
+  "description": "A {weight} weight {serif} serif typeface",
+  "genes": {
+    "weight": {
+      "value": 800,
+      "type": "scalar"
+    },
+    "width": {
+      "value": "condensed",
+      "type": "categorical"
+    },
+    "xheight": {
+      "value": 0.54,
+      "type": "scalar"
+    },
+    "contrast": {
+      "value": 0.93,
+      "type": "scalar"
+    },
+    "serif": {
+      "value": "none",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Letter Seed #024",
+  "tags": [
+    "typography",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

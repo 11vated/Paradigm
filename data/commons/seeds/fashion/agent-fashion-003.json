@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fashion",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6101e875eb2b08800180e4fcb4e19c245f5218fe824acea8d144e12fa0a11e65",
+  "provenance": "generated",
+  "id": "agent-fashion-003",
+  "description": "A {fabric} flat garment for {season}",
+  "genes": {
+    "clothingType": {
+      "value": "coat",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "sportswear",
+      "type": "categorical"
+    },
+    "fabric": {
+      "value": "cotton",
+      "type": "categorical"
+    },
+    "season": {
+      "value": "summer",
+      "type": "categorical"
+    },
+    "silhouette": {
+      "value": "structured",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Wool Seed #003",
+  "tags": [
+    "fashion",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:02.000Z",
+  "author": "agent"
+}

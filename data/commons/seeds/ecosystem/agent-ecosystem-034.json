@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "ecosystem",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
+  "provenance": "generated",
+  "id": "agent-ecosystem-034",
+  "description": "A {trophic}-trophic level {climate} biome",
+  "genes": {
+    "species": {
+      "value": 23,
+      "type": "scalar"
+    },
+    "trophic": {
+      "value": 3,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 512,
+      "type": "scalar"
+    },
+    "climate": {
+      "value": "temperate",
+      "type": "categorical"
+    },
+    "interaction": {
+      "value": "predator_prey",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Eco Seed #034",
+  "tags": [
+    "ecosystem",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

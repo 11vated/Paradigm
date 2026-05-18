@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-geometry3d-crystal-v1",
+  "provenance": "genesis",
+  "id": "canonical-geometry3d-001",
+  "description": "Canonical Genesis Crystal — a foundational seed for the geometry3d domain",
+  "genes": {
+    "detail": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "roughness": {
+      "value": 0.05,
+      "type": "scalar"
+    },
+    "material": {
+      "value": "glass",
+      "type": "categorical"
+    },
+    "color": {
+      "value": [
+        0.3,
+        0.8,
+        0.95
+      ],
+      "type": "vector"
+    },
+    "primitive": {
+      "value": "icosahedron",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        1.2,
+        2.0,
+        1.2
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Genesis Crystal",
+  "tags": [
+    "canonical",
+    "geometry3d",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

@@ -1,32 +1,37 @@
 /**
- * PARADIGM ABSOLUTE — Universal Seed Class
+ * @deprecated Use UniversalSeed from 'src/seeds/universal-seed.ts' instead.
  * 
- * The atomic unit of creation in Paradigm.
- * Every digital artifact is encoded as a genetic blueprint called a Seed.
+ * PARADIGM ABSOLUTE — Universal Seed Class (Legacy)
  * 
- * Properties:
- * - Immutable: operations return new Seed, never mutate existing
- * - Content-addressed: hash = function of genes, not UUID
- * - Deterministic: same seed + same RNG = identical artifact forever
- * - Cryptographically sovereign: signed with ECDSA P-256
- * - Traceable: full lineage (parents, operators, generations)
+ * This class is DEPRECATED and will be removed in v1.1.
+ * Use `UniversalSeed` from `src/seeds/universal-seed.ts` as the canonical seed class.
  * 
- * Gene System: 17+ gene types, each with 4 operators (validate, mutate, crossover, distance)
- * 
- * Domains: 26 creative domains (character, music, game, architecture, etc.)
+ * Migration:
+ *   import { Seed } from './seed-class'  →  import { UniversalSeed } from '../../seeds/universal-seed'
+ *   new Seed(domain, name, genes)        →  new UniversalSeed({ metadata: { name, domain }, genes })
+ *   seed.setGene(type, value, schema)    →  seed.setGene(type, value, metadata)
+ *   seed.getGeneValue(type)              →  seed.getGeneValue(type)
+ *   seed.mutate(rng, intensity)          →  seed.mutate(rng, intensity)
+ *   seed.cross(other, rng)               →  seed.cross(other, rng)
+ *   seed.distance(other)                 →  seed.distance(other)
+ *   seed.clone()                         →  seed.clone()
+ *   seed.toJSON()                        →  seed.toJSON()
+ *   Seed.fromJSON(json)                  →  UniversalSeed.fromJSON(json)
  */
 
 import { Xoshiro256StarStar } from './rng';
 import { GeneSystem, GeneTypeOps, GeneSchema } from './gene_system';
 
-function sha256Sync(data: string): string {
-  let hash = 0;
-  for (let i = 0; i < data.length; i++) {
-    const char = data.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash |= 0;
-  }
-  return (hash >>> 0).toString(16).padStart(8, '0');
+import crypto from 'crypto';
+
+/** @deprecated Use canonical.ts / lib/sovereignty/canonical.ts instead. */
+function computeSeedHash(canonicalJson: string): string {
+  // Uses SHA-256 per spec/01-universal-seed.md
+  // Format: sha256:7f8b3b... (64 hex chars)
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(canonicalJson);
+  const hashHex = crypto.createHash('sha256').update(Buffer.from(bytes)).digest('hex');
+  return `sha256:${hashHex}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -373,7 +378,7 @@ export class Seed {
     // Canonical form: sorted genes
     const canonical = this.getCanonicalForm();
     const json = JSON.stringify(canonical);
-    return sha256Sync(json);
+    return computeSeedHash(json);
   }
 
   /**

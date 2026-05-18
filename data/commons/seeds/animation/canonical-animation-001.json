@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-animation-walk-v1",
+  "provenance": "genesis",
+  "id": "canonical-animation-001",
+  "description": "Canonical Genesis Walk Cycle — a foundational seed for the animation domain",
+  "genes": {
+    "frameCount": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "loop",
+      "type": "categorical"
+    },
+    "fps": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "amplitude": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "ease_in_out",
+      "type": "categorical"
+    },
+    "motionType": {
+      "value": "skeletal",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Walk Cycle",
+  "tags": [
+    "canonical",
+    "animation",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

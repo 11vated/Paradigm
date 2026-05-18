@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-025",
+  "description": "A {battery}min battery {robotType} robot",
+  "genes": {
+    "robotType": {
+      "value": "snake",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 26,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 332.1,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 273.9,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "gps",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "Cyber Seed #025",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:24.000Z",
+  "author": "agent"
+}

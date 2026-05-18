@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-sprite-knight-v1",
+  "provenance": "genesis",
+  "id": "canonical-sprite-001",
+  "description": "Canonical Genesis Pixel Knight — a foundational seed for the sprite domain",
+  "genes": {
+    "resolution": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.08,
+        0.55,
+        0.85
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Genesis Pixel Knight",
+  "tags": [
+    "canonical",
+    "sprite",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

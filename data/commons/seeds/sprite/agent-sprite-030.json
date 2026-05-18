@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-030",
+  "description": "A watercolor 91px sprite",
+  "genes": {
+    "resolution": {
+      "value": 0.29,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.53,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "asymmetric",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.43,
+        0.96,
+        0.36
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.81
+  },
+  "name": "Mosaic Seed #030",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:29.000Z",
+  "author": "agent"
+}

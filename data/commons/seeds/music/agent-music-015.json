@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-015",
+  "description": "A rhythmic experimental melody with 0.41 tempo",
+  "genes": {
+    "key": {
+      "value": "D",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "pentatonic",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.89,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        82,
+        63,
+        66,
+        49,
+        84,
+        59,
+        70,
+        58
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.37,
+        "brightness": 0.84,
+        "attack": 0.97
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Drift Seed #015",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

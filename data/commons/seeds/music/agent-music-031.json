@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-031",
+  "description": "A rhythmic folk melody with 0.5 tempo",
+  "genes": {
+    "key": {
+      "value": "D",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "mixolydian",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        81,
+        57,
+        49,
+        48,
+        71,
+        64,
+        54,
+        81
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.48,
+        "brightness": 0.43,
+        "attack": 0.56
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.82
+  },
+  "name": "Echo Seed #031",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:30.000Z",
+  "author": "agent"
+}

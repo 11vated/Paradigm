@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-019",
+  "description": "A pixel art star with 15 colors",
+  "genes": {
+    "resolution": {
+      "value": 0.79,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.28,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "radial",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.18,
+        0.66,
+        0.16
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Tile Seed #019",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:18.000Z",
+  "author": "agent"
+}

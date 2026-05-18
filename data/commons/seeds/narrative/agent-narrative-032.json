@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "narrative",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "24cd953299d304d6747641eb4789c535b631104520c393b7b949701f40b2fc74",
+  "provenance": "generated",
+  "id": "agent-narrative-032",
+  "description": "A {length}-act cinematic tale",
+  "genes": {
+    "genre": {
+      "value": "fantasy",
+      "type": "categorical"
+    },
+    "tone": {
+      "value": "suspenseful",
+      "type": "categorical"
+    },
+    "length": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "characterCount": {
+      "value": 9,
+      "type": "scalar"
+    },
+    "structure": {
+      "value": "linear",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Legend Seed #032",
+  "tags": [
+    "narrative",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:31.000Z",
+  "author": "agent"
+}

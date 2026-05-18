@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-035",
+  "description": "An atmospheric blues composition",
+  "genes": {
+    "key": {
+      "value": "D",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "dorian",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.28,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        61,
+        80,
+        56,
+        80,
+        84,
+        72,
+        63,
+        70
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.4,
+        "brightness": 0.16,
+        "attack": 0.05
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Drift Seed #035",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:34.000Z",
+  "author": "agent"
+}

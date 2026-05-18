@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "domain": "character",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",
+  "provenance": "generated",
+  "id": "agent-character-019",
+  "description": "A mysterious mage from distant lands",
+  "genes": {
+    "archetype": {
+      "value": "mage",
+      "type": "categorical"
+    },
+    "strength": {
+      "value": 0.66,
+      "type": "scalar"
+    },
+    "agility": {
+      "value": 0.61,
+      "type": "scalar"
+    },
+    "intelligence": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "size": {
+      "value": 1.29,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.1,
+        0.12,
+        0.64
+      ],
+      "type": "vector"
+    },
+    "personality": {
+      "value": "wise",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.74
+  },
+  "name": "Rune mage #019",
+  "tags": [
+    "character",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:18.000Z",
+  "author": "agent"
+}

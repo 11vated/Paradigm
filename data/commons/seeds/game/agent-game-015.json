@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-015",
+  "description": "A experimental game with {levelCount} levels",
+  "genes": {
+    "genre": {
+      "value": "platformer",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.96,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 15,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.7
+  },
+  "name": "Dash Seed #015",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

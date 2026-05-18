@@ -28,6 +28,8 @@ const LATTICE: TypeNode[] = [
       mutate: (v, rate, rng) => rng.nextF64() < rate ? !v : v,
       crossover: (a, b, rng) => rng.nextBool() ? a : b,
       distance: (a, b) => a === b ? 0 : 1,
+      canonicalize: (v) => v,
+      repair: (v) => typeof v === 'boolean' ? v : false,
     },
   },
   { name: 'scalar', parent: null, children: ['vector'], category: 'primitive',
@@ -215,6 +217,8 @@ export class GeneTypeRegistry {
         mutate: wrapMutate(custom.ops?.mutate || base.ops.mutate),
         crossover: custom.ops?.crossover || base.ops.crossover,
         distance: wrapDistance(custom.ops?.distance || base.ops.distance),
+        canonicalize: custom.ops?.canonicalize || base.ops.canonicalize,
+        repair: custom.ops?.repair || base.ops.repair,
       },
     };
 
@@ -333,6 +337,8 @@ export class GeneTypeRegistry {
           mutate: new Function('return ' + entry.opsSource.mutate)(),
           crossover: new Function('return ' + entry.opsSource.crossover)(),
           distance: new Function('return ' + entry.opsSource.distance)(),
+          canonicalize: new Function('return ' + (entry.opsSource.canonicalize ?? '(v) => v'))(),
+          repair: new Function('return ' + (entry.opsSource.repair ?? '(v) => v'))(),
         };
         this.derive(entry.parent, {
           name: entry.name,
@@ -354,7 +360,7 @@ export interface SerializedCustomType {
   parent: string;
   description?: string;
   constraints?: Partial<GeneSchema>;
-  opsSource: { validate: string; mutate: string; crossover: string; distance: string };
+  opsSource: { validate: string; mutate: string; crossover: string; distance: string; canonicalize?: string; repair?: string };
 }
 
 export interface LawResults {
@@ -394,6 +400,8 @@ function deriveSDFOps(): GeneTypeOps {
     mutate: (v, rate, rng, schema) => FLAT_TYPES['field'].mutate(v, rate, rng, schema),
     crossover: (a, b, rng) => FLAT_TYPES['field'].crossover(a, b, rng),
     distance: (a, b, schema) => FLAT_TYPES['field'].distance(a, b, schema),
+    canonicalize: (v, schema) => FLAT_TYPES['field'].canonicalize(v, schema),
+    repair: (v, schema) => FLAT_TYPES['field'].repair(v, schema),
   };
 }
 
@@ -407,6 +415,8 @@ function makeMatrixOps(): GeneTypeOps {
       if (a.length !== b.length) return 1;
       return a.reduce((sum, row, i) => sum + vecOps.distance(row, b[i], schema), 0) / a.length;
     },
+    canonicalize: (v, schema) => (v as any[]).map((row: any) => vecOps.canonicalize(row, schema)),
+    repair: (v, schema) => Array.isArray(v) ? (v as any[]).map((row: any) => vecOps.repair(row, schema)) : [],
   };
 }
 

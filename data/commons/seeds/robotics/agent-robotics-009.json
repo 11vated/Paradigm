@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-009",
+  "description": "A {sensors} equipped {robotType} with {payload}kg payload",
+  "genes": {
+    "robotType": {
+      "value": "submersible",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 16,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 56.1,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 185.5,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "ultrasonic",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Mech Seed #009",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:08.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "game",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
+  "provenance": "generated",
+  "id": "agent-game-013",
+  "description": "A {difficulty} difficulty dark experience",
+  "genes": {
+    "genre": {
+      "value": "racing",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 7,
+      "type": "scalar"
+    },
+    "hasPowerups": {
+      "value": true,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.8
+  },
+  "name": "Arcade Seed #013",
+  "tags": [
+    "game",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:12.000Z",
+  "author": "agent"
+}

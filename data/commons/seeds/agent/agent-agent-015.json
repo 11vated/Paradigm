@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "domain": "agent",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
+  "provenance": "generated",
+  "id": "agent-agent-015",
+  "description": "A {memory}-slot memory {persona} assistant",
+  "genes": {
+    "persona": {
+      "value": "analyst",
+      "type": "categorical"
+    },
+    "temperature": {
+      "value": 0.2,
+      "type": "scalar"
+    },
+    "reasoning": {
+      "value": 0.66,
+      "type": "scalar"
+    },
+    "memory": {
+      "value": 5,
+      "type": "scalar"
+    },
+    "tools": {
+      "value": [
+        "design",
+        "analyze"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.85
+  },
+  "name": "Oracle Seed #015",
+  "tags": [
+    "agent",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:14.000Z",
+  "author": "agent"
+}

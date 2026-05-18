@@ -6,8 +6,13 @@
  * - Version: major.minor (4 bytes total)
  * - Header: timestamp, flags, seed hash
  * - Sections: TLV (Type-Length-Value) encoded
+ * - Compression: zlib deflate per-section (bit 4 in flags)
+ * - Signature: ECDSA P-256 over header + sections
  */
 
+import crypto from 'crypto';
+import fs from 'fs';
+import zlib from 'zlib';
 import type { Seed, GeneratorOutput } from './engines';
 import { rngFromHash } from './rng';
 
@@ -36,6 +41,7 @@ export interface GseedFlags {
   hasOutputs: boolean;
   encryptedSeed: boolean;
   royaltyEnabled: boolean;
+  compressed: boolean;
 }
 
 // Metadata
@@ -83,7 +89,7 @@ export interface GseedPackage {
 }
 
 const MAGIC = new TextEncoder().encode('GSEE');
-const CURRENT_VERSION = { major: 1, minor: 0 };
+const CURRENT_VERSION = { major: 1, minor: 1 };
 
 /**
  * Encode a GseedPackage to binary format
@@ -129,6 +135,16 @@ export function encodeGseed(pkg: GseedPackage): Uint8Array {
     sections.push(encodeSection(SectionType.SIGNATURE, pkg.signature));
   }
 
+  // Apply compression to JSON sections if flag is set
+  if (pkg.flags.compressed) {
+    for (let i = 0; i < sections.length; i++) {
+      const type = getSectionType(sections[i]);
+      if (type === SectionType.METADATA || type === SectionType.PARAMS || type === SectionType.ROYALTY) {
+        sections[i] = compressSection(sections[i]);
+      }
+    }
+  }
+
   // Calculate total size
   for (const section of sections) {
     totalSize += section.length;
@@ -159,20 +175,21 @@ export function encodeGseed(pkg: GseedPackage): Uint8Array {
   if (pkg.flags.hasOutputs) flags |= 0x02;
   if (pkg.flags.encryptedSeed) flags |= 0x04;
   if (pkg.flags.royaltyEnabled) flags |= 0x08;
+  if (pkg.flags.compressed) flags |= 0x10;
   view.setUint32(offset, flags, true);
   offset += 4;
 
-  // Seed hash length (always 64 hex chars = 32 bytes)
-  view.setUint32(offset, 64, true); // 64 hex characters
+  // Seed hash length (32 bytes = 64 hex chars)
+  view.setUint32(offset, 32, true);
   offset += 4;
 
-  // Seed hash (64 hex chars = 32 bytes)
+  // Seed hash (32 bytes)
   const hashBytes = hexToBytes(pkg.seedHash);
   if (hashBytes.length !== 32) {
     throw new Error('Seed hash must be 64 hex chars / 32 bytes (SHA-512/256)');
   }
   buffer.set(hashBytes, offset);
-  offset += 64;
+  offset += 32;
 
   // Section count
   view.setUint32(offset, sections.length, true);
@@ -218,6 +235,7 @@ export function decodeGseed(buffer: Uint8Array): GseedPackage {
     hasOutputs: (flagsBits & 0x02) !== 0,
     encryptedSeed: (flagsBits & 0x04) !== 0,
     royaltyEnabled: (flagsBits & 0x08) !== 0,
+    compressed: (flagsBits & 0x10) !== 0,
   };
 
   // Seed hash length
@@ -242,8 +260,16 @@ export function decodeGseed(buffer: Uint8Array): GseedPackage {
   };
 
   for (let i = 0; i < sectionCount; i++) {
-    const { type, data, newOffset } = decodeSection(buffer, offset);
-    offset = newOffset;
+    const rawType = view.getUint16(offset, true) as SectionType;
+    const length = view.getUint32(offset + 2, true);
+    let data = buffer.slice(offset + 6, offset + 6 + length);
+
+    // Decompress if compressed flag is set (only METADATA/PARAMS/ROYALTY are compressed)
+    if (flags.compressed && (rawType === SectionType.METADATA || rawType === SectionType.PARAMS || rawType === SectionType.ROYALTY)) {
+      data = decompressSectionData(data);
+    }
+
+    const type = rawType;
 
     switch (type) {
       case SectionType.METADATA:
@@ -265,9 +291,35 @@ export function decodeGseed(buffer: Uint8Array): GseedPackage {
         pkg.signature = data;
         break;
     }
+    offset += 6 + length;
   }
 
   return pkg;
+}
+
+// --- Compression ---
+
+function getSectionType(tlvBuffer: Uint8Array): SectionType {
+  const view = new DataView(tlvBuffer.buffer);
+  return view.getUint16(0, true) as SectionType;
+}
+
+function compressSection(tlvBuffer: Uint8Array): Uint8Array {
+  const view = new DataView(tlvBuffer.buffer);
+  const type = view.getUint16(0, true) as SectionType;
+  const rawLength = view.getUint32(2, true);
+  const rawData = tlvBuffer.slice(6, 6 + rawLength);
+  const compressed = zlib.deflateSync(rawData);
+  const buffer = new Uint8Array(2 + 4 + compressed.length);
+  const outView = new DataView(buffer.buffer);
+  outView.setUint16(0, type, true);
+  outView.setUint32(2, compressed.length, true);
+  buffer.set(compressed, 6);
+  return buffer;
+}
+
+function decompressSectionData(compressed: Uint8Array): Uint8Array {
+  return zlib.inflateSync(compressed);
 }
 
 // --- Helpers ---
@@ -279,18 +331,6 @@ function encodeSection(type: SectionType, data: Uint8Array): Uint8Array {
   view.setUint32(2, data.length, true);
   buffer.set(data, 6);
   return buffer;
-}
-
-function decodeSection(buffer: Uint8Array, offset: number): {
-  type: SectionType;
-  data: Uint8Array;
-  newOffset: number;
-} {
-  const view = new DataView(buffer.buffer);
-  const type = view.getUint16(offset, true) as SectionType;
-  const length = view.getUint32(offset + 2, true);
-  const data = buffer.slice(offset + 6, offset + 6 + length);
-  return { type, data, newOffset: offset + 6 + length };
 }
 
 function encodeOutputs(
@@ -360,7 +400,50 @@ function concatBytes(...arrays: Uint8Array[]): Uint8Array {
 }
 
 /**
- * Create a GseedPackage from generator output
+ * Sign a GseedPackage with ECDSA P-256
+ * Signs the binary representation (header + sections, excluding existing signature)
+ */
+export function signGseed(pkg: GseedPackage, privateKeyPem: string): GseedPackage {
+  const buffer = encodeGseed(pkg);
+  const sign = crypto.createSign('SHA256');
+  sign.update(buffer);
+  sign.end();
+  const signature = sign.sign(privateKeyPem);
+  return { ...pkg, signature: new Uint8Array(signature) };
+}
+
+/**
+ * Verify a GseedPackage's ECDSA P-256 signature
+ */
+export function verifyGseedSignature(pkg: GseedPackage, publicKeyPem: string): boolean {
+  if (!pkg.signature) return false;
+  const sig = pkg.signature;
+  const unsigned = { ...pkg, signature: undefined };
+  const buffer = encodeGseed(unsigned);
+  const verify = crypto.createVerify('SHA256');
+  verify.update(buffer);
+  verify.end();
+  return verify.verify(publicKeyPem, Buffer.from(sig));
+}
+
+/**
+ * Write a GseedPackage as a .gseed binary file
+ */
+export function writeGseedFile(filePath: string, pkg: GseedPackage): void {
+  const buffer = encodeGseed(pkg);
+  fs.writeFileSync(filePath, buffer);
+}
+
+/**
+ * Read a .gseed binary file into a GseedPackage
+ */
+export function readGseedFile(filePath: string): GseedPackage {
+  const buffer = fs.readFileSync(filePath);
+  return decodeGseed(new Uint8Array(buffer));
+}
+
+/**
+ * Create a GseedPackage from a Seed and generator output
  */
 export function createGseed(
   seed: Seed,
@@ -376,6 +459,7 @@ export function createGseed(
       hasOutputs: true,
       encryptedSeed: false,
       royaltyEnabled: false,
+      compressed: true,
     },
     seedHash: String(seed.hash),
     metadata: {
@@ -415,5 +499,40 @@ export function createGseed(
     });
   }
 
+  return pkg;
+}
+
+/**
+ * Create and write a .gseed file from a Seed + generator output
+ */
+export function exportGseedToFile(
+  filePath: string,
+  seed: Seed,
+  generatorName: string,
+  output: GeneratorOutput,
+  options?: {
+    metadata?: Partial<GseedMetadata>;
+    privateKeyPem?: string;
+    royalty?: RoyaltyConfig;
+    c2paManifest?: Uint8Array;
+  }
+): GseedPackage {
+  let pkg = createGseed(seed, generatorName, output, options?.metadata);
+
+  if (options?.royalty) {
+    pkg.royalty = options.royalty;
+    pkg.flags.royaltyEnabled = true;
+  }
+
+  if (options?.c2paManifest) {
+    pkg.c2paManifest = options.c2paManifest;
+    pkg.flags.hasC2PA = true;
+  }
+
+  if (options?.privateKeyPem) {
+    pkg = signGseed(pkg, options.privateKeyPem);
+  }
+
+  writeGseedFile(filePath, pkg);
   return pkg;
 }

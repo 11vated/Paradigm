@@ -78,6 +78,8 @@ export class GsplParser {
     while (!this.isAtEnd()) {
       const decl = this.parseTopLevelDecl();
       if (decl) ast.push(decl);
+      // Consume optional semicolons between top-level declarations
+      while (this.check('SEMICOLON')) this.advance();
     }
     return ast;
   }
@@ -102,7 +104,7 @@ export class GsplParser {
       case 'EOF': return null;
       default: {
         const expr = this.parseExpression();
-        this.expect('SEMICOLON');
+        if (!this.isAtEnd()) this.expect('SEMICOLON');
         return { type: ASTNodeType.EXPR_STMT, expression: expr, loc: expr.loc };
       }
     }
@@ -591,6 +593,9 @@ export class GsplParser {
     if (token.type === 'EVOLVE') return this.parseEvolveOp();
     if (token.type === 'GROW') return this.parseGrowOp();
 
+    // Match expression
+    if (token.type === 'MATCH') return this.parseMatchExpr('MATCH');
+
     // Parenthesized expression
     if (token.type === 'LPAREN') {
       this.advance();
@@ -710,6 +715,88 @@ export class GsplParser {
       engine,
       loc: { line: token.line, column: token.column }
     };
+  }
+
+  private parseMatchExpr(_keyword: string): ASTNode {
+    const matchToken = this.advance(); // match
+    const subject = this.parseExpression();
+
+    this.expect('LBRACE'); // {
+
+    const arms: ASTNode[] = [];
+    while (!this.check('RBRACE') && !this.isAtEnd()) {
+      const pattern = this.parseMatchPattern();
+      this.expect('ARROW'); // ->
+      const value = this.parseExpression();
+      arms.push({
+        type: ASTNodeType.MATCH_ARM,
+        pattern,
+        value,
+        loc: { line: pattern.loc?.line ?? matchToken.line, column: pattern.loc?.column ?? matchToken.column }
+      });
+      // Optional semicolons between arms
+      if (this.check('SEMICOLON')) this.advance();
+    }
+
+    this.expect('RBRACE'); // }
+
+    return {
+      type: ASTNodeType.MATCH_EXPR,
+      subject,
+      arms,
+      loc: { line: matchToken.line, column: matchToken.column }
+    };
+  }
+
+  private parseMatchPattern(): ASTNode {
+    // Patterns: literal values or wildcard (`_`)
+    const token = this.peek();
+
+    // Wildcard: identifier `_`
+    if (token.type === 'IDENTIFIER' && token.value === '_') {
+      this.advance();
+      return {
+        type: ASTNodeType.IDENTIFIER,
+        name: '_',
+        loc: { line: token.line, column: token.column }
+      };
+    }
+
+    // Literal patterns
+    if (token.type === 'INT' || token.type === 'FLOAT') {
+      this.advance();
+      return {
+        type: token.type === 'INT' ? ASTNodeType.INT_LITERAL : ASTNodeType.FLOAT_LITERAL,
+        value: token.type === 'INT' ? parseInt(token.value, 10) : parseFloat(token.value),
+        loc: { line: token.line, column: token.column }
+      };
+    }
+    if (token.type === 'STRING') {
+      this.advance();
+      return {
+        type: ASTNodeType.STRING_LITERAL,
+        value: token.value,
+        loc: { line: token.line, column: token.column }
+      };
+    }
+    if (token.type === 'TRUE' || token.type === 'FALSE') {
+      this.advance();
+      return {
+        type: ASTNodeType.BOOLEAN_LITERAL,
+        value: token.type === 'TRUE',
+        loc: { line: token.line, column: token.column }
+      };
+    }
+    if (token.type === 'NULL') {
+      this.advance();
+      return {
+        type: ASTNodeType.NULL_LITERAL,
+        value: null,
+        loc: { line: token.line, column: token.column }
+      };
+    }
+
+    throw new Error(`Unexpected match pattern token ${token.type} at line ${token.line}, col ${token.column}`);
   }
 
   private parseTypeDecl(): ASTNode {

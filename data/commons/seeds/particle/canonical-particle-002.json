@@ -1,0 +1,66 @@
+{
+  "tags": [
+    "canonical",
+    "particle",
+    "galaxy"
+  ],
+  "genes": {
+    "lifetime": {
+      "value": 3.0,
+      "type": "scalar"
+    },
+    "color": {
+      "value": [
+        0.5,
+        0.6,
+        1.0
+      ],
+      "type": "vector"
+    },
+    "emitter": {
+      "value": "spherical",
+      "type": "categorical"
+    },
+    "count": {
+      "value": 0.95,
+      "type": "scalar"
+    },
+    "gravity": {
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "type": "vector"
+    },
+    "velocity": {
+      "value": [
+        0,
+        0,
+        0
+      ],
+      "type": "vector"
+    },
+    "spread": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "975d5853d06278227a90e2b6c124d9726fccf4995289b464ea200d8c8dabfaca",
+  "description": "Canonical Stardust Galaxy — a hand-curated seed for the particle domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Stardust Galaxy",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "particle",
+  "provenance": "curated",
+  "id": "canonical-particle-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

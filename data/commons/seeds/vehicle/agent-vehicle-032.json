@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "vehicle",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
+  "provenance": "generated",
+  "id": "agent-vehicle-032",
+  "description": "A {mass}kg {vehicleType} with {range}km range",
+  "genes": {
+    "vehicleType": {
+      "value": "drone",
+      "type": "categorical"
+    },
+    "speed": {
+      "value": 60.9,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 8625.4,
+      "type": "scalar"
+    },
+    "range": {
+      "value": 640.6,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "nuclear",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Voyager Seed #032",
+  "tags": [
+    "vehicle",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:31.000Z",
+  "author": "agent"
+}

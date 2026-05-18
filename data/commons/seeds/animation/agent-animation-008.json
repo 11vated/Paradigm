@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
+  "provenance": "generated",
+  "id": "agent-animation-008",
+  "description": "A {easing} animated {amplitude} motion sequence",
+  "genes": {
+    "frames": {
+      "value": 24,
+      "type": "scalar"
+    },
+    "fps": {
+      "value": 36,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "linear",
+      "type": "categorical"
+    },
+    "amplitude": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "loop",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Glide Seed #008",
+  "tags": [
+    "animation",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

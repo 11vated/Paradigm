@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-robotics-drone-v1",
+  "provenance": "genesis",
+  "id": "canonical-robotics-001",
+  "description": "Canonical Genesis Scout Drone — a foundational seed for the robotics domain",
+  "genes": {
+    "robotType": {
+      "value": "aerial",
+      "type": "categorical"
+    },
+    "autonomy": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "dof": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "actuators": {
+      "value": [
+        "brushless_motor",
+        "servo"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Scout Drone",
+  "tags": [
+    "canonical",
+    "robotics",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

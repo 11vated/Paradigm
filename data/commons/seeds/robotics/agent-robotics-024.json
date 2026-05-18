@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-024",
+  "description": "A {battery}min battery {robotType} robot",
+  "genes": {
+    "robotType": {
+      "value": "drone",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 14,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 389.3,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 199.9,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "lidar",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Pneumo Seed #024",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "robotics",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
+  "provenance": "generated",
+  "id": "agent-robotics-021",
+  "description": "A {robotType} with {dof} DOF",
+  "genes": {
+    "robotType": {
+      "value": "quadruped",
+      "type": "categorical"
+    },
+    "dof": {
+      "value": 14,
+      "type": "scalar"
+    },
+    "payload": {
+      "value": 194,
+      "type": "scalar"
+    },
+    "battery": {
+      "value": 78.3,
+      "type": "scalar"
+    },
+    "sensors": {
+      "value": "imu",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.79
+  },
+  "name": "Bot Seed #021",
+  "tags": [
+    "robotics",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:20.000Z",
+  "author": "agent"
+}

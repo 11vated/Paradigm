@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "domain": "fullgame",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-fullgame-dungeon-v1",
+  "provenance": "genesis",
+  "id": "canonical-fullgame-001",
+  "description": "Canonical Genesis Dungeon Crawler — a foundational seed for the fullgame domain",
+  "genes": {
+    "difficulty": {
+      "value": 0.65,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "genre": {
+      "value": "roguelike",
+      "type": "categorical"
+    },
+    "replayability": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "mechanics": {
+      "value": [
+        "combat",
+        "exploration",
+        "loot",
+        "permadeath"
+      ],
+      "type": "array"
+    },
+    "pacing": {
+      "value": 0.6,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Dungeon Crawler",
+  "tags": [
+    "canonical",
+    "fullgame",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

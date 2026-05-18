@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "topBarOK": true,
+    "railOK": true,
+    "previewVisible": true,
+    "primordiumVisible": true,
+    "promptInputOK": true,
+    "bottomTabsOK": true,
+    "germinationLive": true,
+    "cmdPaletteOK": true,
+    "drawerOpens": true,
+    "consoleErrorCount": 0
+  },
+  "consoleErrors": [],
+  "rail": {
+    "x": 0,
+    "y": 48,
+    "width": 56,
+    "height": 752
+  },
+  "previewViewport": {
+    "x": 809.234375,
+    "y": 48,
+    "width": 470.765625,
+    "height": 674
+  },
+  "wordmark": {
+    "x": 49,
+    "y": 14,
+    "width": 66.5,
+    "height": 21
+  }
+}

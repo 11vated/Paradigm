@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "choreography",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "764ed17f3caebc293d0056d127ad744def90340d5feecd9a6cc97660e828fb62",
+  "provenance": "generated",
+  "id": "agent-choreography-008",
+  "description": "A {duration}sec retro choreography",
+  "genes": {
+    "style": {
+      "value": "ballroom",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.54,
+      "type": "scalar"
+    },
+    "complexity": {
+      "value": 0.54,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 56,
+      "type": "scalar"
+    },
+    "formation": {
+      "value": "corps",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.72
+  },
+  "name": "Swing Seed #008",
+  "tags": [
+    "choreography",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:07.000Z",
+  "author": "agent"
+}

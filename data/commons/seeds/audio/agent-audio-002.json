@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "audio",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
+  "provenance": "generated",
+  "id": "agent-audio-002",
+  "description": "A {soundType} audio with {attack} attack",
+  "genes": {
+    "soundType": {
+      "value": "ambient",
+      "type": "categorical"
+    },
+    "frequency": {
+      "value": 55,
+      "type": "scalar"
+    },
+    "attack": {
+      "value": 0.11,
+      "type": "scalar"
+    },
+    "decay": {
+      "value": 0.052,
+      "type": "scalar"
+    },
+    "waveform": {
+      "value": "sine",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.88
+  },
+  "name": "Chime Seed #002",
+  "tags": [
+    "audio",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:01.000Z",
+  "author": "agent"
+}

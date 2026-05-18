@@ -145,6 +145,66 @@ async function main() {
   };
 
   // ═══════════════════════════════════════════════════════════════
+  // 4. Deploy Timelock Controller
+  // ═══════════════════════════════════════════════════════════════
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('  [4/5] Deploying Paradigm Timelock...');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+  const Timelock = await ethers.getContractFactory('ParadigmTimelock');
+  const minDelay = 86400; // 1 day in seconds
+  const proposers = [deployer.address];
+  const executors = [deployer.address];
+  const timelock = await Timelock.deploy(minDelay, proposers, executors, deployer.address);
+  await timelock.waitForDeployment();
+  const timelockAddress = await timelock.getAddress();
+  console.log(`✅ Paradigm Timelock deployed at: ${timelockAddress}`);
+
+  deploymentConfig.contracts.ParadigmTimelock = {
+    address: timelockAddress,
+    constructorArgs: [minDelay, proposers, executors, deployer.address],
+    transactionHash: timelock.deploymentTransaction()?.hash || '',
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  // 5. Deploy Governor
+  // ═══════════════════════════════════════════════════════════════
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.log('  [5/5] Deploying Paradigm Governor...');
+  console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+  const Governor = await ethers.getContractFactory('ParadigmGovernor');
+  const votingDelay = 7200; // ~1 day in blocks (assuming 12s block time)
+  const votingPeriod = 21600; // ~3 days in blocks
+  const proposalThreshold = ethers.parseEther('100000'); // 100K PARA to propose
+  const governor = await Governor.deploy(
+    paraTokenAddress,
+    timelockAddress,
+    votingDelay,
+    votingPeriod,
+    proposalThreshold
+  );
+  await governor.waitForDeployment();
+  const governorAddress = await governor.getAddress();
+  console.log(`✅ Paradigm Governor deployed at: ${governorAddress}`);
+
+  deploymentConfig.contracts.ParadigmGovernor = {
+    address: governorAddress,
+    constructorArgs: [paraTokenAddress, timelockAddress, votingDelay, votingPeriod, proposalThreshold.toString()],
+    transactionHash: governor.deploymentTransaction()?.hash || '',
+  };
+
+  // Grant proposer/executor roles to Governor
+  const PROPOSER_ROLE = await timelock.PROPOSER_ROLE();
+  const EXECUTOR_ROLE = await timelock.EXECUTOR_ROLE();
+  await timelock.grantRole(PROPOSER_ROLE, governorAddress);
+  await timelock.grantRole(EXECUTOR_ROLE, governorAddress);
+  await timelock.revokeRole(PROPOSER_ROLE, deployer.address);
+  await timelock.revokeRole(EXECUTOR_ROLE, deployer.address);
+  console.log('✅ Granted PROPOSER/EXECUTOR roles to Governor');
+  console.log('✅ Revoked PROPOSER/EXECUTOR roles from deployer\n');
+
+  // ═══════════════════════════════════════════════════════════════
   // VERIFICATION SUMMARY
   // ═══════════════════════════════════════════════════════════════
   console.log('═══════════════════════════════════════════════════════════');
@@ -154,8 +214,10 @@ async function main() {
   console.log('Contract Addresses:');
   console.log('───────────────────────────────────────────────────────────');
   console.log(`  PARA Token:     ${paraTokenAddress}`);
-  console.log(`  SeedNFT:       ${seedNFTAddress}`);
-  console.log(`  Marketplace:   ${marketplaceAddress}`);
+  console.log(`  SeedNFT:        ${seedNFTAddress}`);
+  console.log(`  Marketplace:    ${marketplaceAddress}`);
+  console.log(`  Timelock:       ${timelockAddress}`);
+  console.log(`  Governor:       ${governorAddress}`);
   console.log('───────────────────────────────────────────────────────────\n');
 
   // Save deployment info

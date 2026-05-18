@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-003",
+  "description": "A asymmetric symmetrical sketch character",
+  "genes": {
+    "resolution": {
+      "value": 0.42,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.93,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.99,
+        0.15,
+        0.73
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Tile Seed #003",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:02.000Z",
+  "author": "agent"
+}

@@ -7,7 +7,7 @@
  * Fully deterministic via seeded RNG (xoshiro256**)
  */
 
-import { Seed } from '../kernel/seed-class';
+import type { Seed } from '../kernel/types';
 import { Xoshiro256StarStar } from '../kernel/rng';
 
 // ─────────────────────────────────────────────────────────────────────────────

@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "domain": "agent",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
+  "provenance": "generated",
+  "id": "agent-agent-029",
+  "description": "A {persona} agent with {temperature} temperature",
+  "genes": {
+    "persona": {
+      "value": "critic",
+      "type": "categorical"
+    },
+    "temperature": {
+      "value": 0.86,
+      "type": "scalar"
+    },
+    "reasoning": {
+      "value": 0.61,
+      "type": "scalar"
+    },
+    "memory": {
+      "value": 6,
+      "type": "scalar"
+    },
+    "tools": {
+      "value": [
+        "optimize",
+        "design",
+        "code",
+        "compose"
+      ],
+      "type": "array"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Aide Seed #029",
+  "tags": [
+    "agent",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:28.000Z",
+  "author": "agent"
+}

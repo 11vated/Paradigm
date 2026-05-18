@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fashion",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6101e875eb2b08800180e4fcb4e19c245f5218fe824acea8d144e12fa0a11e65",
+  "provenance": "generated",
+  "id": "agent-fashion-033",
+  "description": "A modern {fabric} {clothingType}",
+  "genes": {
+    "clothingType": {
+      "value": "scarf",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "sportswear",
+      "type": "categorical"
+    },
+    "fabric": {
+      "value": "linen",
+      "type": "categorical"
+    },
+    "season": {
+      "value": "spring",
+      "type": "categorical"
+    },
+    "silhouette": {
+      "value": "loose",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "Velvet Seed #033",
+  "tags": [
+    "fashion",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

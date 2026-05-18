@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "procedural",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "387727c344b5388a80de5306a77b15687b0c6bf10c2bda6db06ac3f8c71fea7b",
+  "provenance": "generated",
+  "id": "agent-procedural-013",
+  "description": "A procedurally generated {biome} landscape",
+  "genes": {
+    "biome": {
+      "value": "temperate",
+      "type": "categorical"
+    },
+    "density": {
+      "value": 0.96,
+      "type": "scalar"
+    },
+    "scale": {
+      "value": 2.45,
+      "type": "scalar"
+    },
+    "octaves": {
+      "value": 4,
+      "type": "scalar"
+    },
+    "persistence": {
+      "value": 0.22,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Expanse Seed #013",
+  "tags": [
+    "procedural",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:12.000Z",
+  "author": "agent"
+}

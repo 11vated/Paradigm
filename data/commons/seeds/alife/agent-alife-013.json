@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "alife",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
+  "provenance": "generated",
+  "id": "agent-alife-013",
+  "description": "A {rules} alife simulation with {species} species",
+  "genes": {
+    "species": {
+      "value": 1,
+      "type": "scalar"
+    },
+    "rules": {
+      "value": "wireworld",
+      "type": "categorical"
+    },
+    "gridSize": {
+      "value": 256,
+      "type": "scalar"
+    },
+    "generations": {
+      "value": 321,
+      "type": "scalar"
+    },
+    "interaction": {
+      "value": "cooperative",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Swarm Seed #013",
+  "tags": [
+    "alife",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:12.000Z",
+  "author": "agent"
+}

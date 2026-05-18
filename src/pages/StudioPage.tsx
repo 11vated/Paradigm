@@ -90,14 +90,15 @@ export function StudioPage() {
   // Keyboard shortcuts
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
-
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      // ⌘/Ctrl+K must work even when an input is focused
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
         e.preventDefault();
         setCmdOpen(true);
         return;
       }
+
+      const target = e.target as HTMLElement | null;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
 
       if ((e.ctrlKey || e.metaKey) && /^[1-7]$/.test(e.key)) {
         e.preventDefault();

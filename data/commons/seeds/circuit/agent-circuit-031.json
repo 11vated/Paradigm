@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "circuit",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
+  "provenance": "generated",
+  "id": "agent-circuit-031",
+  "description": "A {frequency}Hz {circuitType} with {power}W power",
+  "genes": {
+    "circuitType": {
+      "value": "amplifier",
+      "type": "categorical"
+    },
+    "componentCount": {
+      "value": 83,
+      "type": "scalar"
+    },
+    "power": {
+      "value": 90.27,
+      "type": "scalar"
+    },
+    "frequency": {
+      "value": 510115.5,
+      "type": "scalar"
+    },
+    "isDigital": {
+      "value": false,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.86
+  },
+  "name": "Matrix Seed #031",
+  "tags": [
+    "circuit",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:30.000Z",
+  "author": "agent"
+}

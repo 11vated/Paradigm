@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-018",
+  "description": "A pixel art tree with 15 colors",
+  "genes": {
+    "resolution": {
+      "value": 0.29,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.53,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "radial",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.2,
+        0.45,
+        0.83
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Tile Seed #018",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:17.000Z",
+  "author": "agent"
+}

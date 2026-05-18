@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-024",
+  "description": "A folk piece in B major",
+  "genes": {
+    "key": {
+      "value": "B",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "minor",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.58,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        53,
+        75,
+        55,
+        71,
+        53,
+        82,
+        62,
+        75
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.79,
+        "brightness": 0.82,
+        "attack": 0.12
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.72
+  },
+  "name": "Cascade Seed #024",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:23.000Z",
+  "author": "agent"
+}

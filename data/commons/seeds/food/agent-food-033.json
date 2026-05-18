@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
+  "provenance": "generated",
+  "id": "agent-food-033",
+  "description": "A {prepTime}min prep {foodType} dish",
+  "genes": {
+    "foodType": {
+      "value": "salad",
+      "type": "categorical"
+    },
+    "cuisine": {
+      "value": "korean",
+      "type": "categorical"
+    },
+    "spice": {
+      "value": 0.77,
+      "type": "scalar"
+    },
+    "prepTime": {
+      "value": 76,
+      "type": "scalar"
+    },
+    "cookTime": {
+      "value": 26,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.84
+  },
+  "name": "Flavor Seed #033",
+  "tags": [
+    "food",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:32.000Z",
+  "author": "agent"
+}

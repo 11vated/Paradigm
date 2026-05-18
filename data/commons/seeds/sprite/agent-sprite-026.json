@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "sprite",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "747664887bea7d9d4348ad448072e5f53f55c75bb29a8a5979814182006cc0cf",
+  "provenance": "generated",
+  "id": "agent-sprite-026",
+  "description": "A bilateral symmetrical watercolor character",
+  "genes": {
+    "resolution": {
+      "value": 0.92,
+      "type": "scalar"
+    },
+    "paletteSize": {
+      "value": 0.27,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "bilateral",
+      "type": "categorical"
+    },
+    "colors": {
+      "value": [
+        0.16,
+        0.77,
+        0.82
+      ],
+      "type": "vector"
+    }
+  },
+  "fitness": {
+    "overall": 0.95
+  },
+  "name": "Glitch Seed #026",
+  "tags": [
+    "sprite",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:25.000Z",
+  "author": "agent"
+}

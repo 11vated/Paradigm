@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
+  "provenance": "generated",
+  "id": "agent-animation-019",
+  "description": "A {easing} animated {amplitude} motion sequence",
+  "genes": {
+    "frames": {
+      "value": 54,
+      "type": "scalar"
+    },
+    "fps": {
+      "value": 28,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "ease_in_out",
+      "type": "categorical"
+    },
+    "amplitude": {
+      "value": 0.62,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "ping_pong",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Flow Seed #019",
+  "tags": [
+    "animation",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:18.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,47 @@
+{
+  "tags": [
+    "canonical",
+    "architecture",
+    "organic"
+  ],
+  "genes": {
+    "materials": {
+      "value": [
+        "bamboo",
+        "living_wood",
+        "mycelium",
+        "glass"
+      ],
+      "type": "array"
+    },
+    "style": {
+      "value": "organic",
+      "type": "categorical"
+    },
+    "symmetry": {
+      "value": "radial",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": 0.5,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "fd57d3ab689b24a38496b6f6be6bfeaf015c458a1e2dbf13727690df6e9966be",
+  "description": "Canonical Biophilic Pavilion — a hand-curated seed for the architecture domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Biophilic Pavilion",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "architecture",
+  "provenance": "curated",
+  "id": "canonical-architecture-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

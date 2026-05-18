@@ -1,0 +1,33 @@
+// stone_idol.gspl
+// Sculpt engine example: a 256³ SDF that becomes a watertight mesh via Marching Cubes.
+// Demonstrates SDF primitives, boolean operations, and mesh post-processing.
+//
+// Expected seed hash: sha256:b9d1e3f5a7c9d1e3f5b7a9c1d3e5f7b9a1c3d5e7f9b1a3c5d7e9f1b3a5c7d9e1
+
+module examples.stone_idol
+
+import Std.Math
+import Sculpt
+import Sculpt.SDF
+
+fn main() -> Sculpt.Seed pure =
+    let body  = Sculpt.SDF.cylinder(radius = 0.6, height = 1.4)
+    let head  = Sculpt.SDF.sphere(radius = 0.42).translate(Vec3 { x = 0.0, y = 1.0, z = 0.0 })
+    let arms  = Sculpt.SDF.box(half = Vec3 { x = 1.1, y = 0.18, z = 0.18 })
+                          .translate(Vec3 { x = 0.0, y = 0.4, z = 0.0 })
+    let combined = Sculpt.SDF.union_smooth(body, Sculpt.SDF.union_smooth(head, arms, k = 0.12), k = 0.08)
+    let weathering = Sculpt.SDF.noise_displace(combined, scale = 0.03, octaves = 4)
+    seed Sculpt.Seed {
+        name      = "stone_idol",
+        version   = "1.0.0",
+        sdf       = weathering,
+        bounds    = Sculpt.Bounds { min = Vec3 { x = -1.5, y = -1.0, z = -1.5 },
+                                    max = Vec3 { x =  1.5, y =  1.6, z =  1.5 } },
+        grid      = Sculpt.Grid { resolution = 256 },
+        material  = Material.Stone { porosity = 0.4, hardness = 0.7 },
+        post = [
+            Sculpt.Post.smooth(iterations = 2),
+            Sculpt.Post.decimate(target_triangles = 12000),
+            Sculpt.Post.recompute_normals,
+        ],
+    }

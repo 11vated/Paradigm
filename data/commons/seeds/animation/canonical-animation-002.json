@@ -1,0 +1,50 @@
+{
+  "tags": [
+    "canonical",
+    "animation",
+    "dance"
+  ],
+  "genes": {
+    "loop": {
+      "value": "loop",
+      "type": "categorical"
+    },
+    "fps": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "motionType": {
+      "value": "particle",
+      "type": "categorical"
+    },
+    "easing": {
+      "value": "ease_in_out",
+      "type": "categorical"
+    },
+    "frameCount": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "amplitude": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "2b9d744c832c51f2ff450f5e7e2541790033eddccdf80c3a81d292c98d6fda0d",
+  "description": "Canonical Sakura Drift — a hand-curated seed for the animation domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Sakura Drift",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "animation",
+  "provenance": "curated",
+  "id": "canonical-animation-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

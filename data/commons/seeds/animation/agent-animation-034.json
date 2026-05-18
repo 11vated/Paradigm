@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "animation",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
+  "provenance": "generated",
+  "id": "agent-animation-034",
+  "description": "A looping {loop} animation with {frames} keyframes",
+  "genes": {
+    "frames": {
+      "value": 33,
+      "type": "scalar"
+    },
+    "fps": {
+      "value": 52,
+      "type": "scalar"
+    },
+    "easing": {
+      "value": "linear",
+      "type": "categorical"
+    },
+    "amplitude": {
+      "value": 0.91,
+      "type": "scalar"
+    },
+    "loop": {
+      "value": "none",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.94
+  },
+  "name": "Ripple Seed #034",
+  "tags": [
+    "animation",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:33.000Z",
+  "author": "agent"
+}

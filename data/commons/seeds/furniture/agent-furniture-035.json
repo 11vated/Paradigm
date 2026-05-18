@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "furniture",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
+  "provenance": "generated",
+  "id": "agent-furniture-035",
+  "description": "A pixel {material} {furnitureType}",
+  "genes": {
+    "furnitureType": {
+      "value": "stool",
+      "type": "categorical"
+    },
+    "style": {
+      "value": "scandinavian",
+      "type": "categorical"
+    },
+    "material": {
+      "value": "marble",
+      "type": "categorical"
+    },
+    "dimensions": {
+      "value": [
+        1.8,
+        0.83,
+        1.25
+      ],
+      "type": "vector"
+    },
+    "ergonomics": {
+      "value": 0.42,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.77
+  },
+  "name": "Base Seed #035",
+  "tags": [
+    "furniture",
+    "agent-generated",
+    "batch-4"
+  ],
+  "created": "2026-05-16T00:00:34.000Z",
+  "author": "agent"
+}

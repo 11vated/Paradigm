@@ -1,5 +1,5 @@
-import { Seed } from '../kernel/seed-class';
 import { Xoshiro256StarStar } from '../kernel/rng';
+import type { Seed } from '../kernel/types';
 import {
   computeGeneGradient, gradientGuidedMutate,
   type GeneGradient, type QualityDelta,

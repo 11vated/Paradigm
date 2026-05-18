@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "visual2d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "8a88bc10057a6aa701927c556deba071e7f749a4beee8f8a2e8e53cd775b8848",
+  "provenance": "generated",
+  "id": "agent-visual2d-004",
+  "description": "A flat composition with 0.55 complexity",
+  "genes": {
+    "style": {
+      "value": "portrait",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.76,
+      "type": "scalar"
+    },
+    "palette": {
+      "value": [
+        0.97,
+        0.17,
+        0.03
+      ],
+      "type": "vector"
+    },
+    "composition": {
+      "value": "centered",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Spectrum Seed #004",
+  "tags": [
+    "visual2d",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:03.000Z",
+  "author": "agent"
+}

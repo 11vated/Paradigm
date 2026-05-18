@@ -1,5 +1,8 @@
 import { Lexer } from './lexer';
 import { Parser, Program, ASTNode, ASTNodeType, FunctionDecl, VariableDecl, Assignment, IfStatement, ForStatement, WhileStatement, BreakStatement, ContinueStatement, ReturnStatement, Block, BinaryExpr, UnaryExpr, CallExpr, IndexExpr, MemberExpr, Literal, Identifier, ArrayLiteral, ObjectLiteral, FunctionExpr } from './parser';
+import { UniversalSeed } from '../seeds/universal-seed';
+import { mutateGene, crossoverGene, distanceGene, repairGene } from '../lib/kernel/gene_system';
+import { growSeed } from '../lib/kernel/engines';
 
 export interface RuntimeValue {
   type: string;
@@ -36,24 +39,56 @@ export class Interpreter {
       return null;
     });
 
-    this.globals.set('seed', (name: string, config?: object) => {
-      return { _type: 'seed', name, config: config ?? {} };
+    this.globals.set('seed', (domain: string, genes?: Record<string, any>) => {
+      const geneMap = new Map<string, any>();
+      if (genes) {
+        for (const [key, value] of Object.entries(genes)) {
+          const type = typeof value === 'number' ? 'scalar'
+            : typeof value === 'string' ? 'categorical'
+            : typeof value === 'boolean' ? 'categorical'
+            : Array.isArray(value) ? 'vector'
+            : 'scalar';
+          geneMap.set(key, { value, metadata: { name: key, mutable: true, dominant: false, hidden: false, locked: false, mutationRate: 0.01 } });
+        }
+      }
+      const seed = new UniversalSeed({
+        metadata: {
+          id: `gspl-${domain}-${Date.now()}`,
+          name: `GSPL ${domain} seed`,
+          version: '1.0.0',
+          created: 0,
+          updated: 0,
+          tags: [domain],
+          lineage: []
+        },
+        genes: geneMap
+      });
+      return seed;
     });
 
     this.globals.set('gene', (type: string, value: unknown) => {
       return { _type: 'gene', type, value };
     });
 
-    this.globals.set('breed', (parentA: object, parentB: object) => {
+    this.globals.set('breed', (parentA: any, parentB: any, rng?: any) => {
+      const rngObj = rng ?? (this as any)._rng;
+      if (parentA instanceof UniversalSeed && parentB instanceof UniversalSeed) {
+        const child = parentA.cross(parentB, rngObj);
+        return child;
+      }
       return { _type: 'seed', parents: [parentA, parentB], operation: 'breed' };
     });
 
-    this.globals.set('mutate', (seed: object, intensity: number = 0.1) => {
+    this.globals.set('mutate', (seed: any, intensity: number = 0.1) => {
+      const rngObj = (this as any)._rng;
+      if (seed instanceof UniversalSeed && rngObj) {
+        return seed.mutate(rngObj, intensity);
+      }
       return { _type: 'seed', seed, operation: 'mutate', intensity };
     });
 
-    this.globals.set('evolve', (population: object[], fitnessFn: (s: object) => number) => {
-      const sorted = [...population].sort((a, b) => fitnessFn(b as object) - fitnessFn(a as object));
+    this.globals.set('evolve', (population: any[], fitnessFn: (s: any) => number) => {
+      const sorted = [...population].sort((a, b) => fitnessFn(b) - fitnessFn(a));
       return sorted;
     });
 
@@ -92,6 +127,43 @@ export class Interpreter {
         return val * (max - min) + min;
       }
       return val;
+    });
+
+    this.globals.set('grow', async (seed: any) => {
+      if (seed instanceof UniversalSeed) {
+        return growSeed(seed as any);
+      }
+      throw new Error('grow() requires a UniversalSeed instance');
+    });
+
+    this.globals.set('distance', (a: any, b: any) => {
+      if (a instanceof UniversalSeed && b instanceof UniversalSeed) {
+        return a.distance(b);
+      }
+      return 0;
+    });
+
+    this.globals.set('signed', (seed: any) => {
+      // Signing requires a key — for now return seed as-is
+      // Full implementation in Phase 1.4 sovereignty wiring
+      return seed;
+    });
+
+    this.globals.set('compose', (seeds: any[], targetDomain?: string) => {
+      if (seeds.length >= 2 && seeds.every((s: any) => s instanceof UniversalSeed)) {
+        // Simple composition: breed first two seeds
+        const rng = (this as any)._rng;
+        return seeds[0].cross(seeds[1], rng);
+      }
+      return seeds[0];
+    });
+
+    this.globals.set('domains', () => {
+      return ['character', 'sprite', 'music', 'visual2d', 'geometry3d', 'fullgame',
+        'animation', 'narrative', 'ui', 'physics', 'audio', 'ecosystem',
+        'game', 'alife', 'shader', 'particle', 'procedural',
+        'typography', 'architecture', 'vehicle', 'furniture', 'fashion',
+        'robotics', 'circuit', 'food', 'choreography', 'agent'];
     });
 
     this.globals.set('floor', Math.floor);
@@ -207,6 +279,9 @@ export class Interpreter {
       case ASTNodeType.EXPRESSION_STMT:
         return this.evaluate(node as any);
 
+      case ASTNodeType.PIPABLE_EXPR:
+        return this.evaluatePipeExpr(node as any);
+
       default:
         throw new GSPLRuntimeError(`Unknown node type: ${node.type}`, node.line, node.column);
     }
@@ -273,6 +348,34 @@ export class Interpreter {
     }
 
     throw new GSPLRuntimeError(`Cannot call value of type ${typeof callee}`, expr.line, expr.column);
+  }
+
+  private evaluatePipeExpr(expr: any): unknown {
+    // left |> right
+    // Evaluate left, pass as last argument to right
+    const leftVal = this.evaluate(expr.left);
+    const right = expr.right;
+
+    if (right.type === ASTNodeType.CALL_EXPR) {
+      const callee = this.evaluate(right.callee);
+      const args = (right as CallExpr).arguments.map((arg: any) => this.evaluate(arg));
+      args.push(leftVal);
+
+      if (typeof callee === 'function') {
+        return (callee as Function)(...args);
+      }
+      throw new GSPLRuntimeError(`Cannot pipe to non-function`, expr.line, expr.column);
+    }
+
+    if (right.type === ASTNodeType.IDENTIFIER) {
+      const callee = this.resolveIdentifier(right);
+      if (typeof callee === 'function') {
+        return (callee as Function)(leftVal);
+      }
+      throw new GSPLRuntimeError(`Cannot pipe to non-function`, expr.line, expr.column);
+    }
+
+    throw new GSPLRuntimeError(`Invalid pipe target`, expr.line, expr.column);
   }
 
   private evaluateIndexExpr(expr: IndexExpr): unknown {

@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fullgame",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
+  "provenance": "generated",
+  "id": "agent-fullgame-012",
+  "description": "A {theme} epic featuring {mechanic} mechanics",
+  "genes": {
+    "genre": {
+      "value": "puzzle",
+      "type": "categorical"
+    },
+    "difficulty": {
+      "value": 0.92,
+      "type": "scalar"
+    },
+    "levelCount": {
+      "value": 12,
+      "type": "scalar"
+    },
+    "mechanic": {
+      "value": "dialogue",
+      "type": "categorical"
+    },
+    "theme": {
+      "value": "scifi",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.89
+  },
+  "name": "Dungeon Seed #012",
+  "tags": [
+    "fullgame",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:11.000Z",
+  "author": "agent"
+}

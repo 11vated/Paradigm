@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "vehicle",
+    "space"
+  ],
+  "genes": {
+    "aerodynamics": {
+      "value": 0.3,
+      "type": "scalar"
+    },
+    "mass": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "speed": {
+      "value": 0.95,
+      "type": "scalar"
+    },
+    "propulsion": {
+      "value": "warp",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "e3e7d72010e515a5522defb99c7417ea2d5bc6006facd9f33e03459d47d4b43f",
+  "description": "Canonical Stellar Cruiser — a hand-curated seed for the vehicle domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Stellar Cruiser",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "vehicle",
+  "provenance": "curated",
+  "id": "canonical-vehicle-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

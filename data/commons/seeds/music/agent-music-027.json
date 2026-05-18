@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "domain": "music",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",
+  "provenance": "generated",
+  "id": "agent-music-027",
+  "description": "A rhythmic light melody with 0.54 tempo",
+  "genes": {
+    "key": {
+      "value": "G",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": "dorian",
+      "type": "categorical"
+    },
+    "tempo": {
+      "value": 0.6,
+      "type": "scalar"
+    },
+    "melody": {
+      "value": [
+        63,
+        48,
+        60,
+        73,
+        64,
+        84,
+        68,
+        61
+      ],
+      "type": "array"
+    },
+    "timbre": {
+      "value": {
+        "warmth": 0.93,
+        "brightness": 0.79,
+        "attack": 0.74
+      },
+      "type": "struct"
+    }
+  },
+  "fitness": {
+    "overall": 0.73
+  },
+  "name": "Thunder Seed #027",
+  "tags": [
+    "music",
+    "agent-generated",
+    "batch-3"
+  ],
+  "created": "2026-05-16T00:00:26.000Z",
+  "author": "agent"
+}

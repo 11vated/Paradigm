@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "circuit",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
+  "provenance": "generated",
+  "id": "agent-circuit-007",
+  "description": "A {isDigital} {circuitType} PCB design",
+  "genes": {
+    "circuitType": {
+      "value": "oscillator",
+      "type": "categorical"
+    },
+    "componentCount": {
+      "value": 45,
+      "type": "scalar"
+    },
+    "power": {
+      "value": 18.08,
+      "type": "scalar"
+    },
+    "frequency": {
+      "value": 504047.1,
+      "type": "scalar"
+    },
+    "isDigital": {
+      "value": true,
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.78
+  },
+  "name": "Array Seed #007",
+  "tags": [
+    "circuit",
+    "agent-generated",
+    "batch-1"
+  ],
+  "created": "2026-05-16T00:00:06.000Z",
+  "author": "agent"
+}

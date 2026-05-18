@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "domain": "geometry3d",
+  "lineage": {
+    "operation": "agent_generated",
+    "generation": 1
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
+  "provenance": "generated",
+  "id": "agent-geometry3d-014",
+  "description": "A {primitive} with {subdivision} subdivisions",
+  "genes": {
+    "primitive": {
+      "value": "octahedron",
+      "type": "categorical"
+    },
+    "subdivision": {
+      "value": 0,
+      "type": "scalar"
+    },
+    "symmetry": {
+      "value": "tetrahedral",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": [
+        1.27,
+        1.29,
+        1.01
+      ],
+      "type": "vector"
+    },
+    "detail": {
+      "value": 0.25,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.71
+  },
+  "name": "Crystal Seed #014",
+  "tags": [
+    "geometry3d",
+    "agent-generated",
+    "batch-2"
+  ],
+  "created": "2026-05-16T00:00:13.000Z",
+  "author": "agent"
+}

@@ -1,0 +1,67 @@
+{
+  "tags": [
+    "canonical",
+    "music",
+    "electronic"
+  ],
+  "genes": {
+    "tempo": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "key": {
+      "value": "A",
+      "type": "categorical"
+    },
+    "timbre": {
+      "value": {
+        "attack": 0.6,
+        "brightness": 0.9,
+        "warmth": 0.3
+      },
+      "type": "struct"
+    },
+    "melody": {
+      "value": [
+        69,
+        73,
+        76,
+        69,
+        73,
+        76,
+        81,
+        76,
+        73,
+        69,
+        76,
+        73,
+        69,
+        76,
+        81,
+        76
+      ],
+      "type": "array"
+    },
+    "scale": {
+      "value": "major",
+      "type": "categorical"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "7c0870bdac13fe893b2736b6ee03ccd7a3468ca45bdfb3471ec1cbf8c2c245ca",
+  "description": "Canonical Digital Sunrise — a hand-curated seed for the music domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Digital Sunrise",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "music",
+  "provenance": "curated",
+  "id": "canonical-music-003",
+  "fitness": {
+    "overall": 0.9
+  }
+}

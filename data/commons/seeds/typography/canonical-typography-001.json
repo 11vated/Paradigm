@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "typography",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-typography-sans-v1",
+  "provenance": "genesis",
+  "id": "canonical-typography-001",
+  "description": "Canonical Genesis Sans Display — a foundational seed for the typography domain",
+  "genes": {
+    "style": {
+      "value": "sans_serif",
+      "type": "categorical"
+    },
+    "xHeight": {
+      "value": 0.52,
+      "type": "scalar"
+    },
+    "contrast": {
+      "value": 0.45,
+      "type": "scalar"
+    },
+    "width": {
+      "value": 0.55,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Sans Display",
+  "tags": [
+    "canonical",
+    "typography",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}
