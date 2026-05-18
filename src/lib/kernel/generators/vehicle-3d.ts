@@ -182,15 +182,15 @@ function getVehicleMaterial(style: string, part: string): THREE.MeshStandardMate
 }
 
 function extractParams(seed: Seed): VehicleParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let wheelCount = seed.genes?.wheelCount?.value || 4;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let wheelCount = (seed.genes?.wheelCount?.value as number) || 4;
   if (typeof wheelCount === 'number' && wheelCount <= 1) wheelCount = Math.max(2, Math.floor(wheelCount * 8));
 
   return {
-    vehicleType: seed.genes?.vehicleType?.value || 'car',
-    style: seed.genes?.style?.value || 'modern',
+    vehicleType: (seed.genes?.vehicleType?.value as string) || 'car',
+    style: (seed.genes?.style?.value as string) || 'modern',
     wheelCount,
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

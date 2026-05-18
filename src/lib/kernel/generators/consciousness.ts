@@ -127,13 +127,15 @@ function generateQualia(params: ConsciousnessParams, rng: Xoshiro256StarStar): a
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ConsciousnessParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const type = seed.genes?.type?.value;
+  const types: ConsciousnessParams['type'][] = ['thought', 'memory', 'personality', 'qualia'];
 
   return {
-    type: seed.genes?.type?.value || 'thought',
+    type: types.includes(type as ConsciousnessParams['type']) ? type as ConsciousnessParams['type'] : 'thought',
     neuronCount: Math.floor((seed.genes?.neuronCount?.value as number || 0.5) * 86000000000), // Up to 86B neurons
     synapseDensity: (seed.genes?.synapseDensity?.value as number || rng.nextF64()) * 10000,
     plasticity: (seed.genes?.plasticity?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

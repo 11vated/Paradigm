@@ -49,11 +49,11 @@ function generateSVG(params: NanotechnologyParams, rng: Xoshiro256StarStar): str
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): NanotechnologyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     application: seed.genes?.application?.value || ['materials', 'electronics', 'medicine', 'energy'][rng.nextInt(0, 3)],
     scale: (seed.genes?.scale?.value as number || rng.nextF64()) * 990 + 10,
     novelty: (seed.genes?.novelty?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

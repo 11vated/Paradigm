@@ -39,12 +39,12 @@ export async function generateML(seed: Seed, outputPath: string): Promise<{ file
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MLParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const algorithms = ['Random Forest', 'SVM', 'Neural Network', 'XGBoost', 'Linear Regression', 'K-Means'];
   return {
     modelType: seed.genes?.modelType?.value || ['classification', 'regression', 'clustering', 'deep_learning'][rng.nextInt(0, 3)],
     algorithm: seed.genes?.algorithm?.value || algorithms[rng.nextInt(0, algorithms.length - 1)],
     accuracy: (seed.genes?.accuracy?.value as number || rng.nextF64()) * 0.99 + 0.01,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

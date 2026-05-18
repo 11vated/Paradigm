@@ -51,12 +51,12 @@ function generateYAML(params: DevOpsParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): DevOpsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const allTools = ['Jenkins', 'GitHub Actions', 'GitLab CI', 'Terraform', 'Ansible', 'Kubernetes', 'Docker'];
   return {
     pipelineType: seed.genes?.pipelineType?.value || ['ci_cd', 'iac', 'monitoring', 'full_stack'][rng.nextInt(0, 3)],
     tools: (seed.genes?.tools as string[]) || allTools.slice(0, Math.floor(rng.nextF64() * 5) + 2),
     environments: Math.floor(((seed.genes?.environments?.value as number || rng.nextF64()) * 9) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

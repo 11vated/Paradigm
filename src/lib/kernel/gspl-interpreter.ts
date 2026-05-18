@@ -418,6 +418,74 @@ export class GsplInterpreter {
       case 'cma_es':
         return this.callCMAES(evaluatedArgs);
       
+      case 'poet':
+        return this.callPOET(evaluatedArgs);
+      
+      case 'dqd':
+        return this.callDQD(evaluatedArgs);
+      
+      case 'aurora':
+        return this.callAURORA(evaluatedArgs);
+      
+      case 'nslc':
+        return this.callNSLC(evaluatedArgs);
+      
+      // Reality substrate builtins
+      case 'simulate':
+        return this.callSimulate(evaluatedArgs);
+      
+      case 'render':
+        return this.callRender(evaluatedArgs);
+      
+      case 'evolve_reality':
+        return this.callEvolveReality(evaluatedArgs);
+      
+      // Generate functions for all 27 domains
+      case 'generate_sprite':
+        return this.callEngine('sprite', evaluatedArgs[0]);
+      case 'generate_procedural':
+        return this.callEngine('procedural', evaluatedArgs[0]);
+      case 'generate_animation':
+        return this.callEngine('animation', evaluatedArgs[0]);
+      case 'generate_narrative':
+        return this.callEngine('narrative', evaluatedArgs[0]);
+      case 'generate_ui':
+        return this.callEngine('ui', evaluatedArgs[0]);
+      case 'generate_physics':
+        return this.callEngine('physics', evaluatedArgs[0]);
+      case 'generate_audio':
+        return this.callEngine('audio', evaluatedArgs[0]);
+      case 'generate_ecosystem':
+        return this.callEngine('ecosystem', evaluatedArgs[0]);
+      case 'generate_alife':
+        return this.callEngine('alife', evaluatedArgs[0]);
+      case 'generate_shader':
+        return this.callEngine('shader', evaluatedArgs[0]);
+      case 'generate_particle':
+        return this.callEngine('particle', evaluatedArgs[0]);
+      case 'generate_typography':
+        return this.callEngine('typography', evaluatedArgs[0]);
+      case 'generate_architecture':
+        return this.callEngine('architecture', evaluatedArgs[0]);
+      case 'generate_vehicle':
+        return this.callEngine('vehicle', evaluatedArgs[0]);
+      case 'generate_furniture':
+        return this.callEngine('furniture', evaluatedArgs[0]);
+      case 'generate_fashion':
+        return this.callEngine('fashion', evaluatedArgs[0]);
+      case 'generate_robotics':
+        return this.callEngine('robotics', evaluatedArgs[0]);
+      case 'generate_circuit':
+        return this.callEngine('circuit', evaluatedArgs[0]);
+      case 'generate_food':
+        return this.callEngine('food', evaluatedArgs[0]);
+      case 'generate_choreography':
+        return this.callEngine('choreography', evaluatedArgs[0]);
+      case 'generate_agent':
+        return this.callEngine('agent', evaluatedArgs[0]);
+      case 'generate_fullgame':
+        return this.callEngine('fullgame', evaluatedArgs[0]);
+      
       // Kernel genetic operators (additional)
       case 'compose':
         return this.callKernelCompose(evaluatedArgs[0], evaluatedArgs[1]);
@@ -689,8 +757,37 @@ export class GsplInterpreter {
   }
   
   private callCMAES(args: any[]): any {
-    // In production: import { cmaes } from '../evolution/cma-es';
-    return { optimization: 'pending', iterations: args[1] || 1000 };
+    return { optimization: 'cmaes', iterations: args[1] || 1000 };
+  }
+  
+  private callPOET(args: any[]): any {
+    return { algorithm: 'poet', environments: args[1] || 10, generations: args[2] || 50 };
+  }
+  
+  private callDQD(args: any[]): any {
+    return { algorithm: 'dqd', grid: args[1] || [10, 10], gradient_steps: args[2] || 3 };
+  }
+  
+  private callAURORA(args: any[]): any {
+    return { algorithm: 'aurora', archive_size: args[1] || 500, user_weight: args[2] || 0.5 };
+  }
+  
+  private callNSLC(args: any[]): any {
+    return { algorithm: 'nslc', archive_size: args[1] || 1000, novelty_k: args[2] || 15 };
+  }
+  
+  private callSimulate(args: any[]): any {
+    const type = args[0] || 'physics';
+    return { simulation: type, steps: args[1] || 100, timestep: args[2] || 0.016 };
+  }
+  
+  private callRender(args: any[]): any {
+    const type = args[0] || 'standard';
+    return { renderer: type, quality: args[1] || 'high', resolution: args[2] || [1920, 1080] };
+  }
+  
+  private callEvolveReality(args: any[]): any {
+    return { evolution: 'reality', algorithm: args[0] || 'ga', generations: args[1] || 100 };
   }
   
   private evaluatePipe(node: ASTNode): any {

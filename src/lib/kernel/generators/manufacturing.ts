@@ -88,11 +88,11 @@ function generateLayoutSVG(params: ManufacturingParams, rng: Xoshiro256StarStar)
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ManufacturingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     process: seed.genes?.process?.value || ['cnc', '3d_printing', 'assembly', 'injection_molding'][rng.nextInt(0, 3)],
     throughput: Math.floor(((seed.genes?.throughput?.value as number || rng.nextF64()) * 990) + 10),
     automation: (seed.genes?.automation?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -38,11 +38,11 @@ export async function generateAgent(seed: Seed, outputPath: string): Promise<{ f
       // Knowledge genes (3)
       domains: { type: 'array', value: seed.genes?.domains?.value || ['character', 'music', 'visual2d'] },
       facts: { type: 'float', value: seed.genes?.facts?.value ?? rng.nextF64() },
-      memory_capacity: { type: 'int', value: seed.genes?.memory_capacity?.value || 100 },
+      memory_capacity: { type: 'int', value: (seed.genes?.memory_capacity?.value as number) || 100 },
 
       // Tools genes (2)
       available_tools: { type: 'array', value: seed.genes?.available_tools?.value || ['generate_seed', 'execute_gspl', 'grow_seed', 'evolve_population', 'list_domains', 'reflect'] },
-      tool_preference: { type: 'string', value: seed.genes?.tool_preference?.value || 'generation' },
+      tool_preference: { type: 'string', value: (seed.genes?.tool_preference?.value as string) || 'generation' },
 
       // Memory genes (3)
       episodic_memory: { type: 'bool', value: seed.genes?.episodic_memory?.value ?? true },
@@ -132,9 +132,9 @@ You are a seed that can grow, breed, and evolve. Use your genes to guide your be
 }
 
 function extractParams(seed: Seed): AgentParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    persona: seed.genes?.persona?.value || 'architect',
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    persona: (seed.genes?.persona?.value as string) || 'architect',
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -89,11 +89,11 @@ function generateBlueprintSVG(params: ConstructionParams, rng: Xoshiro256StarSta
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ConstructionParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     projectType: seed.genes?.projectType?.value || ['residential', 'commercial', 'infrastructure', 'renovation'][rng.nextInt(0, 3)],
     area: Math.floor(((seed.genes?.area?.value as number || rng.nextF64()) * 99000) + 1000),
     floors: Math.floor(((seed.genes?.floors?.value as number || rng.nextF64()) * 99) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

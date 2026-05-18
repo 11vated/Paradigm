@@ -12,7 +12,6 @@
 
 import crypto from 'crypto';
 import fs from 'fs';
-import zlib from 'zlib';
 import type { Seed, GeneratorOutput } from './engines';
 import { rngFromHash } from './rng';
 
@@ -90,6 +89,31 @@ export interface GseedPackage {
 
 const MAGIC = new TextEncoder().encode('GSEE');
 const CURRENT_VERSION = { major: 1, minor: 1 };
+
+interface ZlibModule {
+  deflateSync(data: Uint8Array): Uint8Array;
+  inflateSync(data: Uint8Array): Uint8Array;
+}
+
+function getNodeZlib(): ZlibModule | null {
+  const proc = globalThis.process as { getBuiltinModule?: (id: string) => unknown } | undefined;
+  const builtin = proc?.getBuiltinModule?.('zlib') as ZlibModule | undefined;
+  if (builtin?.deflateSync && builtin?.inflateSync) return builtin;
+
+  try {
+    const requireFn = Function('return typeof require !== "undefined" ? require : undefined')() as
+      | ((id: string) => unknown)
+      | undefined;
+    const required = requireFn?.('zlib') as ZlibModule | undefined;
+    return required?.deflateSync && required?.inflateSync ? required : null;
+  } catch {
+    return null;
+  }
+}
+
+function canCompressSections(): boolean {
+  return getNodeZlib() !== null;
+}
 
 /**
  * Encode a GseedPackage to binary format
@@ -305,6 +329,10 @@ function getSectionType(tlvBuffer: Uint8Array): SectionType {
 }
 
 function compressSection(tlvBuffer: Uint8Array): Uint8Array {
+  const zlib = getNodeZlib();
+  if (!zlib) {
+    throw new Error('.gseed compression requires Node zlib; disable compression in browser contexts');
+  }
   const view = new DataView(tlvBuffer.buffer);
   const type = view.getUint16(0, true) as SectionType;
   const rawLength = view.getUint32(2, true);
@@ -319,6 +347,10 @@ function compressSection(tlvBuffer: Uint8Array): Uint8Array {
 }
 
 function decompressSectionData(compressed: Uint8Array): Uint8Array {
+  const zlib = getNodeZlib();
+  if (!zlib) {
+    throw new Error('.gseed decompression requires Node zlib');
+  }
   return zlib.inflateSync(compressed);
 }
 
@@ -459,7 +491,7 @@ export function createGseed(
       hasOutputs: true,
       encryptedSeed: false,
       royaltyEnabled: false,
-      compressed: true,
+      compressed: canCompressSections(),
     },
     seedHash: String(seed.hash),
     metadata: {

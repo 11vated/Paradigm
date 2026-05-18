@@ -113,17 +113,17 @@ function createRNG(seed: number): () => number {
 }
 
 function extractParams(seed: Seed): Visual2DParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  const resolution = seed.genes?.resolution?.value || 512;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const resolution = (seed.genes?.resolution?.value as number) || 512;
   
   return {
-    style: seed.genes?.style?.value || 'abstract',
-    complexity: seed.genes?.complexity?.value || 0.5,
+    style: (seed.genes?.style?.value as string) || 'abstract',
+    complexity: (seed.genes?.complexity?.value as number) || 0.5,
     palette: seed.genes?.palette?.value || [0.5, 0.3, 0.8],
-    composition: seed.genes?.composition?.value || 'centered',
-    layers: Math.max(3, Math.floor((seed.genes?.complexity?.value || 0.5) * 10)),
+    composition: (seed.genes?.composition?.value as string) || 'centered',
+    layers: Math.max(3, Math.floor(((seed.genes?.complexity?.value as number) || 0.5) * 10)),
     resolution: typeof resolution === 'number' && resolution <= 1 ? Math.floor(resolution * 1024) : resolution,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

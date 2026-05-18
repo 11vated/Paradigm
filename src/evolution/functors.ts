@@ -87,7 +87,7 @@ export class MusicFunctor implements FunctorBridge {
 
     return [
       extractNumber(audio, 'volume', 1) * 127,
-      extractNumber(audio, 'frequency', 440),
+      extractNumber(audio, 'frequency', 432),
       extractNumber(motion, 'velocity', 120) * 10,
       extractNumber(motion, 'acceleration', 0) * 10
     ];

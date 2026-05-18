@@ -102,7 +102,7 @@ export const GENE_TYPE_DEFINITIONS: GeneTypeDefinition[] = [
     name: 'Audio',
     description: 'Defines sound characteristics and audio behavior',
     valueType: 'object',
-    defaultValue: { volume: 1, frequency: 440, tempo: 120 },
+    defaultValue: { volume: 1, frequency: 432, tempo: 120 },
     constraints: { min: 0, max: 1 }
   },
   {

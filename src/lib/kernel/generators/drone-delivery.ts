@@ -49,11 +49,11 @@ function generateSVG(params: DroneDeliveryParams, rng: Xoshiro256StarStar): stri
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): DroneDeliveryParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     serviceType: seed.genes?.serviceType?.value || ['last_mile', 'medical', 'food', 'ecommerce'][rng.nextInt(0, 3)],
     range: Math.floor(((seed.genes?.range?.value as number || rng.nextF64()) * 990) + 10),
     payload: (seed.genes?.payload?.value as number || rng.nextF64()) * 25 + 0.1,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

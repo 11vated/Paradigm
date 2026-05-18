@@ -9,6 +9,9 @@ export interface FunctorBridge {
   targetDomain: string;
   coherence: number;
   generic?: boolean;
+  functor?: string;
+  source?: string;
+  target?: string;
 }
 
 export interface CompositionPath {
@@ -230,7 +233,7 @@ export const FUNCTOR_REGISTRY: FunctorBridge[] = [...HAND_CRAFTED, ...AUTO_FUNCT
 
 // ─── Generic Composition via Gene Mapping ────────────────────────────────────
 
-const CATEGORY_DEFAULTS: Record<string, number | string> = {
+const CATEGORY_DEFAULTS: Record<string, number | string | number[]> = {
   scale: 0.5, type: 'default', aesthetic: 'neutral', color: [0.5, 0.5, 0.5],
   power: 0.5, speed: 0.5, detail: 0.5, behavior: 'balanced',
   randomness: 0.5, depth: 0.5, length: 1, zones: 1, structure: 'simple',

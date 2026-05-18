@@ -39,12 +39,12 @@ export async function generateMarketing(seed: Seed, outputPath: string): Promise
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MarketingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const allChannels = ['Google', 'Facebook', 'Instagram', 'LinkedIn', 'TikTok', 'YouTube', 'Email', 'TV', 'Radio'];
   return {
     strategy: seed.genes?.strategy?.value || ['digital', 'brand', 'content', 'influencer'][rng.nextInt(0, 3)],
     channels: (seed.genes?.channels?.value as string[]) || allChannels.slice(0, Math.floor(rng.nextF64() * 5) + 2),
     budget: Math.floor(((seed.genes?.budget?.value as number || rng.nextF64()) * 9900000) + 100000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

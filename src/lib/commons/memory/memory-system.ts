@@ -7,6 +7,15 @@ import { WorkingMemory } from './working-memory';
 import { ExemplarMemory, type ExemplarEntry } from './exemplar-memory';
 import { EpisodicMemory, type Episode } from './episodic-memory';
 import { SubstrateMemory, type SubstrateQuery, type SubstrateResult } from './substrate-memory';
+import { rngFromHash } from '../../kernel/rng';
+
+let _idCounter = 0;
+function deterministicId(prefix: string): string {
+  _idCounter++;
+  const rng = rngFromHash(`memory-id-${_idCounter}`);
+  const suffix = rng.nextU64().toString(36).slice(0, 6);
+  return `${prefix}-${suffix}`;
+}
 
 export class MemorySystem {
   working: WorkingMemory;
@@ -31,7 +40,7 @@ export class MemorySystem {
     tags: string[] = [],
   ): void {
     const episode: Episode = {
-      id: `ep-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: deterministicId('ep'),
       userId: this.working.userId,
       timestamp: Date.now(),
       intent,
@@ -58,7 +67,7 @@ export class MemorySystem {
     tags: string[] = [],
   ): void {
     const entry: ExemplarEntry = {
-      id: `ex-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: deterministicId('ex'),
       description,
       domain,
       seedId,

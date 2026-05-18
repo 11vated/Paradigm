@@ -49,11 +49,11 @@ function generateSVG(params: RenewableEnergyParams, rng: Xoshiro256StarStar): st
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): RenewableEnergyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     source: seed.genes?.source?.value || ['solar', 'wind', 'hydro', 'geothermal', 'tidal'][rng.nextInt(0, 4)],
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 990) + 10),
     storage: seed.genes?.storage?.value || ['battery', 'hydrogen', 'pumped_hydro', 'none'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

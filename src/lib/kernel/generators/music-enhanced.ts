@@ -3,10 +3,10 @@
  * Enhanced with alternative tuning systems (non-440Hz)
  */
 
-import * as wav from 'wav';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { rngFromHash } from '../rng';
 
 interface MusicParams {
   tempo: number;
@@ -26,7 +26,6 @@ export async function generateMusicEnhanced(seed: Seed, outputPath: string): Pro
   const durationSamples = Math.floor(params.duration * sampleRate);
 
   // Create RNG from seed
-  const { rngFromHash } = await import('../rng.js');
   const rng = rngFromHash(seed.$hash ?? 'default');
 
   // Generate audio buffer (stereo for enhanced)
@@ -60,20 +59,30 @@ export async function generateMusicEnhanced(seed: Seed, outputPath: string): Pro
   const dir = path.dirname(outputPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 
-  // Write WAV file
-  return new Promise((resolve, reject) => {
-    const writer = new wav.FileWriter(outputPath, {
-      channels,
-      sampleRate,
-      bitDepth: 16
-    });
+  fs.writeFileSync(outputPath, pcm16ToWav(buffer, channels, sampleRate));
+  return { filePath: outputPath, duration: params.duration, sampleRate };
+}
 
-    writer.write(buffer);
-    writer.end();
+function pcm16ToWav(pcm: Buffer, channels: number, sampleRate: number): Buffer {
+  const header = Buffer.alloc(44);
+  const byteRate = sampleRate * channels * 2;
+  const blockAlign = channels * 2;
 
-    writer.on('finish', () => resolve({ filePath: outputPath, duration: params.duration, sampleRate }));
-    writer.on('error', reject);
-  });
+  header.write('RIFF', 0);
+  header.writeUInt32LE(36 + pcm.length, 4);
+  header.write('WAVE', 8);
+  header.write('fmt ', 12);
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(1, 20);
+  header.writeUInt16LE(channels, 22);
+  header.writeUInt32LE(sampleRate, 24);
+  header.writeUInt32LE(byteRate, 28);
+  header.writeUInt16LE(blockAlign, 32);
+  header.writeUInt16LE(16, 34);
+  header.write('data', 36);
+  header.writeUInt32LE(pcm.length, 40);
+
+  return Buffer.concat([header, pcm]);
 }
 
 function midiToFreq(midiNote: number, tuning: string): number {
@@ -152,7 +161,7 @@ function generateWaveformWithHarmonics(freq: number, time: number, timbre: { war
 }
 
 function extractParams(seed: Seed): MusicParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const sampleRates: Record<string, number> = {
     low: 22050,
     medium: 44100,
@@ -160,13 +169,13 @@ function extractParams(seed: Seed): MusicParams {
     photorealistic: 96000
   };
 
-  let tempo = seed.genes?.tempo?.value || 0.5;
+  let tempo = (seed.genes?.tempo?.value as number) || 0.5;
   if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;
 
   return {
     tempo: typeof tempo === 'number' ? tempo : 120,
-    key: seed.genes?.key?.value || 'C',
-    scale: seed.genes?.scale?.value || 'major',
+    key: (seed.genes?.key?.value as string) || 'C',
+    scale: (seed.genes?.scale?.value as string) || 'major',
     melody: (() => {
       const m = seed.genes?.melody?.value || [];
       return Array.isArray(m) ? m.slice(0, 32) : [];
@@ -178,9 +187,9 @@ function extractParams(seed: Seed): MusicParams {
         brightness: t.brightness || 0.5
       };
     })(),
-    tuning: seed.genes?.tuning?.value || 'a432', // Default to 432Hz (non-440)
-    duration: Math.max(1, Math.min(seed.genes?.duration?.value || 10, 60)),
+    tuning: (seed.genes?.tuning?.value as string) || 'a432', // Default to 432Hz (non-440)
+    duration: Math.max(1, Math.min((seed.genes?.duration?.value as number) || 10, 60)),
     sampleRate: sampleRates[quality] || 44100,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

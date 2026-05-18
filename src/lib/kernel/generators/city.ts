@@ -150,13 +150,13 @@ function generateLayoutSVG(params: CityParams, rng: Xoshiro256StarStar): string 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CityParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     population: Math.floor(((seed.genes?.population?.value as number || rng.nextF64()) * 20000000) + 100000),
     area: ((seed.genes?.area?.value as number || rng.nextF64()) * 9900) + 100, // 100-10000 km^2
     districtCount: Math.floor(((seed.genes?.districtCount?.value as number || rng.nextF64()) * 48) + 2),
     techLevel: (seed.genes?.techLevel?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

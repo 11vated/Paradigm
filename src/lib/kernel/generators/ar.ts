@@ -50,11 +50,11 @@ function generateSVG(params: ARParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ARParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     experienceType: seed.genes?.experienceType?.value || ['mobile', 'glasses', 'industrial', 'gaming'][rng.nextInt(0, 3)],
     fieldOfView: Math.floor(((seed.genes?.fieldOfView?.value as number || rng.nextF64()) * 100) + 30),
     latency: (seed.genes?.latency?.value as number || rng.nextF64()) * 50 + 5,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

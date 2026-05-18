@@ -131,13 +131,16 @@ export function countByDomain(): Record<string, number> {
   return counts;
 }
 
+import { rngFromHash } from '../kernel/rng';
+
 /**
  * Get a random seed from the commons
  */
-export function randomSeed(domain?: string): CanonicalSeedEntry | null {
+export function randomSeed(domain?: string, rngSeed = 'commons-random-seed-deterministic'): CanonicalSeedEntry | null {
   const index = loadIndex();
   let candidates = index.seeds;
   if (domain) candidates = candidates.filter(s => s.domain === domain);
   if (candidates.length === 0) return null;
-  return candidates[Math.floor(Math.random() * candidates.length)];
+  const rng = rngFromHash(rngSeed);
+  return candidates[Math.floor(rng.nextF64() * candidates.length)];
 }

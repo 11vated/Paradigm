@@ -49,12 +49,12 @@ function generateSVG(params: CloudParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CloudParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const allServices = ['EC2', 'S3', 'Lambda', 'RDS', 'DynamoDB', 'Kubernetes', 'Container Registry'];
   return {
     provider: seed.genes?.provider?.value || ['aws', 'azure', 'gcp', 'multi_cloud'][rng.nextInt(0, 3)],
     services: (seed.genes?.services as string[]) || allServices.slice(0, Math.floor(rng.nextF64() * 5) + 2),
     region: seed.genes?.region?.value || ['us-east-1', 'eu-west-1', 'ap-southeast-1'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -128,7 +128,7 @@ import { generateCharacterV3 } from './generators/character-v3.js';
 import { generateSpriteV3 } from './generators/sprite-v3.js';
 import { generateMusicV3 } from './generators/music-v3.js';
 import { generateVisual2DV3 } from './generators/visual2d-v3.js';
-import { generateGeometry3DV3 } from './generators/geometry3d-v3.js';
+import { generateGeometry3DV4 } from './generators/geometry3d-v4.js';
 import { generateFullGameV3 } from './generators/fullgame-v3.js';
 import { generateAnimationV3 } from './generators/animation-v3.js';
 import { generateNarrativeV3 } from './generators/narrative-v3.js';
@@ -265,7 +265,7 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   sprite: generateSpriteV3,
   music: generateMusicV3,
   visual2d: generateVisual2DV3,
-  geometry3d: generateGeometry3DV3,
+  geometry3d: generateGeometry3DV4,
   fullgame: generateFullGameV3,
   animation: generateAnimationV3,
   narrative: generateNarrativeV3,

@@ -58,12 +58,12 @@ function generateSVG(params: LightingParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): LightingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     application: seed.genes?.application?.value || ['architectural', 'stage', 'street', 'smart_home'][rng.nextInt(0, 3)],
     lumens: Math.floor(((seed.genes?.lumens?.value as number || rng.nextF64()) * 99000) + 1000),
     colorTemp: Math.floor(((seed.genes?.colorTemp?.value as number || rng.nextF64()) * 4000) + 2000), // 2000-6000K
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

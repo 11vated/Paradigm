@@ -67,12 +67,12 @@ function generateSVG(params: InteriorDesignParams, rng: Xoshiro256StarStar): str
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): InteriorDesignParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const styles = ['scandinavian', 'industrial', 'mid_century_modern', 'bohemian', 'contemporary', 'traditional'];
   return {
     spaceType: seed.genes?.spaceType?.value || ['living_room', 'bedroom', 'office', 'restaurant'][rng.nextInt(0, 3)],
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
     area: Math.floor(((seed.genes?.area?.value as number || rng.nextF64()) * 990) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

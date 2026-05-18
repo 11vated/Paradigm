@@ -147,13 +147,13 @@ function getFashionMaterial(style: string, garment: string): THREE.MeshStandardM
 }
 
 function extractParams(seed: Seed): FashionParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
-    clothingType: seed.genes?.clothingType?.value || 'shirt',
-    style: seed.genes?.style?.value || 'casual',
-    size: seed.genes?.size?.value || 'M',
+    clothingType: (seed.genes?.clothingType?.value as string) || 'shirt',
+    style: (seed.genes?.style?.value as string) || 'casual',
+    size: (seed.genes?.size?.value as string) || 'M',
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

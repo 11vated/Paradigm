@@ -39,11 +39,11 @@ export async function generateQuantumComputing(seed: Seed, outputPath: string): 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): QuantumComputingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     qubitType: seed.genes?.qubitType?.value || ['superconducting', 'trapped_ion', 'photonic', 'topological'][rng.nextInt(0, 3)],
     qubitCount: Math.floor(((seed.genes?.qubitCount?.value as number || rng.nextF64()) * 990) + 10),
     errorRate: (seed.genes?.errorRate?.value as number || rng.nextF64()) * 0.01,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

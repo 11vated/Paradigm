@@ -50,12 +50,12 @@ function generateSVG(params: TeaParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TeaParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const origins = ['China', 'India', 'Sri Lanka', 'Japan', 'Taiwan'];
   return {
     type: seed.genes?.type?.value || ['green', 'black', 'oolong', 'white', 'herbal'][rng.nextInt(0, 4)],
     origin: seed.genes?.origin?.value || origins[rng.nextInt(0, origins.length - 1)],
     grade: seed.genes?.grade?.value || ['OP', 'BOP', 'FOP', 'GFOP'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

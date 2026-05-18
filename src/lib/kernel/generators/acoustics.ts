@@ -59,11 +59,11 @@ function generateSVG(params: AcousticsParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AcousticsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     roomType: seed.genes?.roomType?.value || ['concert_hall', 'studio', 'home_theater', 'office'][rng.nextInt(0, 3)],
     volume: Math.floor(((seed.genes?.volume?.value as number || rng.nextF64()) * 9900) + 100),
     rt60: (seed.genes?.rt60?.value as number || rng.nextF64()) * 2 + 0.3, // 0.3-2.3s
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

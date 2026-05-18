@@ -49,11 +49,11 @@ function generateSVG(params: AgTechParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AgTechParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     techType: seed.genes?.techType?.value || ['precision', 'drones', 'automated_harvest', 'vertical_farm'][rng.nextInt(0, 3)],
     area: Math.floor(((seed.genes?.area?.value as number || rng.nextF64()) * 9900) + 100),
     automation: (seed.genes?.automation?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

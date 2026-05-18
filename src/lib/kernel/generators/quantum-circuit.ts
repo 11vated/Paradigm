@@ -123,7 +123,7 @@ function generateErrorCorrection(params: QuantumCircuitParams, rng: Xoshiro256St
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): QuantumCircuitParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   let qubitCount = (seed.genes?.qubitCount?.value as number || 0.5);
   if (typeof qubitCount === 'number' && qubitCount <= 1) qubitCount = Math.floor(qubitCount * 1000);
 
@@ -132,6 +132,6 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): QuantumCircuitParam
     depth: Math.floor(((seed.genes?.depth?.value as number || rng.nextF64()) * 100) + 10),
     algorithm: seed.genes?.algorithm?.value || ['QFT', 'Shor', 'Grover', 'VQE', 'QAOA'][rng.nextInt(0, 4)],
     errorRate: (seed.genes?.errorRate?.value as number || rng.nextF64()) * 0.1,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

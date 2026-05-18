@@ -50,13 +50,13 @@ function generateSVG(params: FurnitureParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FurnitureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const materials = ['wood', 'metal', 'plastic', 'glass', 'composite', 'bamboo'];
   const styles = ['modern', 'traditional', 'minimalist', 'industrial', 'scandinavian', 'rustic'];
   return {
     category: seed.genes?.category?.value || ['residential', 'office', 'outdoor', 'smart'][rng.nextInt(0, 3)],
     material: seed.genes?.material?.value || materials[rng.nextInt(0, materials.length - 1)],
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -123,18 +123,18 @@ function noise2D(x: number, y: number): number {
 }
 
 function extractParams(seed: Seed): ProceduralParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const qualitySizes: Record<string, number> = { low: 128, medium: 256, high: 512, photorealistic: 1024 };
 
-  let octaves = seed.genes?.octaves?.value || 4;
+  let octaves = (seed.genes?.octaves?.value as number) || 4;
   if (typeof octaves === 'number' && octaves <= 1) octaves = Math.max(1, Math.floor(octaves * 8));
 
   return {
     octaves,
-    persistence: seed.genes?.persistence?.value || 0.5,
-    scale: seed.genes?.scale?.value || 1.0,
-    biome: seed.genes?.biome?.value || 'temperate',
+    persistence: (seed.genes?.persistence?.value as number) || 0.5,
+    scale: (seed.genes?.scale?.value as number) || 1.0,
+    biome: (seed.genes?.biome?.value as string) || 'temperate',
     heightmapSize: qualitySizes[quality] || 256,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

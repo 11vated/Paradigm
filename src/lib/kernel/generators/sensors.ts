@@ -50,11 +50,11 @@ function generateSVG(params: SensorsParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SensorsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     sensorType: seed.genes?.sensorType?.value || ['temperature', 'pressure', 'proximity', 'imu', 'optical'][rng.nextInt(0, 4)],
     accuracy: (seed.genes?.accuracy?.value as number || rng.nextF64()) * 0.99 + 0.01,
     range: Math.floor(((seed.genes?.range?.value as number || rng.nextF64()) * 990) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

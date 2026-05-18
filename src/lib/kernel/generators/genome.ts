@@ -101,13 +101,13 @@ function generateFASTA(params: GenomeParams, sequence: any, rng: Xoshiro256StarS
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): GenomeParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const genes = ['BRCA1', 'TP53', 'CFTR', 'HBB', 'HTT', 'SOD1', 'DMD'];
 
   return {
     targetGene: seed.genes?.targetGene?.value || genes[rng.nextInt(0, genes.length - 1)],
     therapyType: seed.genes?.therapyType?.value || ['CRISPR', 'RNAi', 'AAV', 'zinc_finger'][rng.nextInt(0, 3)],
     deliveryMethod: seed.genes?.deliveryMethod?.value || ['viral', 'liposome', 'nanoparticle'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

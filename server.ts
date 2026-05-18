@@ -508,7 +508,7 @@ async function startServer() {
       imported++;
     }
 
-    await audit(req, 'seed.import', 'bulk', { imported, skipped, total: importSeeds.length });
+    await audit('seed.import', 'bulk', 'bulk-import', { imported, skipped, total: importSeeds.length }, req);
     log('INFO', 'Seeds imported', { imported, skipped });
 
     res.json({ imported, skipped, total: importSeeds.length });
@@ -821,54 +821,101 @@ async function startServer() {
   // EVOLUTION (deterministic — population of mutants, fitness-ranked)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/seeds/:id/evolve', optionalAuth, validateBody(EvolveSeedSchema), (req: any, res: any) => {
+  app.post('/api/seeds/:id/evolve', optionalAuth, validateBody(EvolveSeedSchema), async (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
     const popSize = Math.min(req.body.population_size || 4, 20);
     const generations = Math.min(req.body.generations || 1, 10);
+    const algorithm = req.body.algorithm || 'ga';
     const results: any[] = [];
 
-    for (let i = 0; i < popSize; i++) {
-      const rng = rngFor(parent, `evolve_${i}`);
-      const mutationRate = 0.1 + rng.nextF64() * 0.3; // 10-40% rate for diversity
+    if (algorithm === 'ga' || algorithm === 'map-elites' || algorithm === 'cmaes' || algorithm === 'poet' || algorithm === 'dqd' || algorithm === 'aurora' || algorithm === 'nslc') {
+      const { GeneticAlgorithm, MAPElites, CMAES, POET, DQD, AURORA, NSLC } = await import('./src/lib/evolution/index.js');
+      const rng = rngFor(parent, `evolve_${algorithm}`);
+      const geneKeys = Object.keys(parent.genes || {});
 
-      const newGenes: Record<string, any> = {};
-      for (const [key, gene] of Object.entries(parent.genes || {}) as [string, any][]) {
-        if (rng.nextF64() < mutationRate && gene.type && GENE_TYPES[gene.type]) {
-          newGenes[key] = { type: gene.type, value: mutateGene(gene.type, gene.value, mutationRate, rng) };
-        } else {
-          newGenes[key] = JSON.parse(JSON.stringify(gene));
-        }
+      if (algorithm === 'ga') {
+        const ga = new GeneticAlgorithm(rng);
+        const gaResult = await ga.evolve([parent], (s) => s.$fitness?.overall || 0.5, {
+          populationSize: popSize, generationLimit: generations, mutationRate: 0.2, crossoverRate: 0.7, tournamentSize: 3, elitismCount: 1,
+        });
+        results.push(...gaResult.population);
+      } else if (algorithm === 'map-elites') {
+        const me = new MAPElites((s) => geneKeys.map(k => (s.genes as any)?.[k]?.value || 0.5), { gridSize: [5, 5], mutationRate: 0.15, crossoverRate: 0.6 });
+        const meResult = me.run([parent], (s) => s.$fitness?.overall || 0.5, generations);
+        results.push(...Array.from(meResult.population.values()).map(c => c.seed));
+      } else if (algorithm === 'cmaes') {
+        const cmaes = new CMAES({ populationSize: popSize, generations, initialSigma: 0.3 });
+        const cmaesResult = await cmaes.optimize(parent, (s) => s.$fitness?.overall || 0.5, geneKeys);
+        results.push(cmaesResult.best);
+      } else if (algorithm === 'dqd') {
+        const dqd = new DQD({ populationSize: popSize, generations, mutationRate: 0.15, gradientSteps: 2 });
+        const dqdResult = await dqd.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+        results.push(dqdResult.best);
+      } else if (algorithm === 'aurora') {
+        const aurora = new AURORA({ archiveSize: popSize * 5, generations, mutationRate: 0.2 });
+        const auroraResult = await aurora.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+        results.push(...auroraResult.archive.slice(0, popSize).map(a => a.seed));
+      } else if (algorithm === 'nslc') {
+        const nslc = new NSLC({ archiveSize: popSize * 5, generations, mutationRate: 0.2 });
+        const nslcResult = await nslc.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+        results.push(...nslcResult.archive.slice(0, popSize).map(a => a.seed));
+      } else {
+        const poet = new POET({ maxEnvironments: popSize, generations, mutationRate: 0.2 });
+        const poetResult = await poet.run([parent], async (env, sol) => sol.$fitness?.overall || 0.5, (env, r) => {
+          const child = JSON.parse(JSON.stringify(env));
+          if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); }
+          return child;
+        });
+        results.push(...poetResult.environments.slice(0, popSize).map(e => e.solution));
       }
-
-      const evolveHash = crypto.createHash('sha256').update(JSON.stringify(newGenes) + i).digest('hex');
-      const newSeed = {
-        ...parent,
-        id: deterministicSeedId(parent.$hash, `evolve-${i}`),
-        $name: `${parent.$name} (Evolved ${i + 1})`,
-        $lineage: {
-          generation: (parent.$lineage?.generation || 0) + generations,
-          operation: 'evolve',
-          parents: [parent.$hash],
-          timestamp: 0,
-        },
-        $hash: evolveHash,
-        $fitness: { overall: Math.min(1.0, Math.max(0.0, (parent.$fitness?.overall || 0.5) + (rng.nextF64() * 0.4 - 0.2))) },
-        genes: newGenes,
-      };
-
-      seeds.push(newSeed);
-      results.push(newSeed);
+    } else {
+      for (let i = 0; i < popSize; i++) {
+        const rng = rngFor(parent, `evolve_${i}`);
+        const mutationRate = 0.1 + rng.nextF64() * 0.3;
+        const newGenes: Record<string, any> = {};
+        for (const [key, gene] of Object.entries(parent.genes || {}) as [string, any][]) {
+          if (rng.nextF64() < mutationRate && gene.type && GENE_TYPES[gene.type]) {
+            newGenes[key] = { type: gene.type, value: mutateGene(gene.type, gene.value, mutationRate, rng) };
+          } else {
+            newGenes[key] = JSON.parse(JSON.stringify(gene));
+          }
+        }
+        const evolveHash = crypto.createHash('sha256').update(JSON.stringify(newGenes) + i).digest('hex');
+        results.push({
+          ...parent,
+          id: deterministicSeedId(parent.$hash, `evolve-${i}`),
+          $name: `${parent.$name} (Evolved ${i + 1})`,
+          $lineage: { generation: (parent.$lineage?.generation || 0) + generations, operation: 'evolve', parents: [parent.$hash], timestamp: 0 },
+          $hash: evolveHash,
+          $fitness: { overall: Math.min(1.0, Math.max(0.0, (parent.$fitness?.overall || 0.5) + (rng.nextF64() * 0.4 - 0.2))) },
+          genes: newGenes,
+        });
+      }
     }
 
-    // Sort by fitness descending
     results.sort((a, b) => (b.$fitness?.overall || 0) - (a.$fitness?.overall || 0));
+    for (const seed of results) { seeds.push(seed); }
     saveSeeds();
     metrics.seedsEvolved++;
-    log('INFO', 'Seed evolved', { parent: parent.id, population: popSize, generations });
-    audit('seed.evolve', 'seed', parent.id, { population: popSize, generations }, req);
-    res.json({ population: results, count: results.length });
+    log('INFO', 'Seed evolved', { parent: parent.id, population: popSize, generations, algorithm });
+    audit('seed.evolve', 'seed', parent.id, { population: popSize, generations, algorithm }, req);
+    res.json({ population: results, count: results.length, algorithm });
+  });
+
+  app.get('/api/evolution/algorithms', (_req: any, res: any) => {
+    res.json({
+      algorithms: [
+        { id: 'ga', name: 'Genetic Algorithm', description: 'Tournament selection + crossover + mutation + elitism' },
+        { id: 'map-elites', name: 'MAP-Elites', description: 'Quality-diversity grid-based population mapping' },
+        { id: 'cmaes', name: 'CMA-ES', description: 'Covariance Matrix Adaptation Evolution Strategy' },
+        { id: 'poet', name: 'POET', description: 'Paired Open-Ended Trailblazer (co-evolves environments + solutions)' },
+        { id: 'dqd', name: 'DQD', description: 'Differentiable Quality Diversity (gradient-based QD)' },
+        { id: 'aurora', name: 'AURORA', description: 'Adaptive User-guided Retrieval for Open-Ended Runtime Adaptation' },
+        { id: 'nslc', name: 'NSLC', description: 'Novelty Search with Local Competition' },
+      ],
+    });
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -2422,6 +2469,99 @@ async function startServer() {
     const svg = OnChainSovereignty.generateGenePortrait(seed);
     res.setHeader('Content-Type', 'image/svg+xml');
     res.send(svg);
+  });
+
+  // ── Per-gene sovereignty ──
+
+  app.post('/api/seeds/:id/genes/:geneKey/sovereignty', optionalAuth, (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+    const geneKey = req.params.geneKey;
+    if (!seed.genes?.[geneKey]) return res.status(404).json({ detail: 'Gene not found' });
+
+    const gene = seed.genes[geneKey];
+    const sovereign = createSovereignGene(gene, req.body.creator || 'anonymous', req.body.license);
+    seed.genes[geneKey] = sovereign;
+    saveSeeds();
+    res.json({ gene: sovereign });
+  });
+
+  app.get('/api/seeds/:id/genes/:geneKey/sovereignty', (req: any, res: any) => {
+    const seed = seeds.find((s: any) => s.id === req.params.id);
+    if (!seed) return res.status(404).json({ detail: 'Seed not found' });
+    const geneKey = req.params.geneKey;
+    if (!seed.genes?.[geneKey]) return res.status(404).json({ detail: 'Gene not found' });
+
+    const gene = seed.genes[geneKey];
+    const ownership = gene.ownership || { creator: 'unknown', lineage: [] };
+    res.json({ geneKey, ownership, license: gene.ownership?.license || null });
+  });
+
+  // ── Evolution worker (async, off-main-thread) ──
+
+  app.post('/api/seeds/:id/evolve/async', optionalAuth, async (req: any, res: any) => {
+    const parent = seeds.find((s: any) => s.id === req.params.id);
+    if (!parent) return res.status(404).json({ detail: 'Not found' });
+
+    const algorithm = req.body.algorithm || 'ga';
+    const popSize = Math.min(req.body.population_size || 20, 100);
+    const generations = Math.min(req.body.generations || 10, 50);
+
+    const jobId = `evolve_${parent.$hash}_${Date.now()}`;
+    res.json({ jobId, status: 'queued', algorithm, population_size: popSize, generations });
+
+    // Run in background
+    (async () => {
+      try {
+        const { GeneticAlgorithm, MAPElites, CMAES, POET, DQD, AURORA, NSLC } = await import('./src/lib/evolution/index.js');
+        const rng = rngFor(parent, `async_evolve_${algorithm}`);
+        const geneKeys = Object.keys(parent.genes || {});
+        let result: any[] = [];
+
+        if (algorithm === 'ga') {
+          const ga = new GeneticAlgorithm(rng);
+          const gaResult = await ga.evolve([parent], (s) => s.$fitness?.overall || 0.5, {
+            populationSize: popSize, generationLimit: generations, mutationRate: 0.2, crossoverRate: 0.7, tournamentSize: 3, elitismCount: 1,
+          });
+          result = gaResult.population;
+        } else if (algorithm === 'map-elites') {
+          const me = new MAPElites((s) => geneKeys.map(k => (s.genes as any)?.[k]?.value || 0.5), { gridSize: [5, 5] });
+          const meResult = me.run([parent], (s) => s.$fitness?.overall || 0.5, generations);
+          result = Array.from(meResult.population.values()).map(c => c.seed);
+        } else if (algorithm === 'cmaes') {
+          const cmaes = new CMAES({ populationSize: popSize, generations });
+          const cmaesResult = await cmaes.optimize(parent, (s) => s.$fitness?.overall || 0.5, geneKeys);
+          result = [cmaesResult.best];
+        } else if (algorithm === 'dqd') {
+          const dqd = new DQD({ populationSize: popSize, generations });
+          const dqdResult = await dqd.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+          result = [dqdResult.best];
+        } else if (algorithm === 'aurora') {
+          const aurora = new AURORA({ archiveSize: popSize * 5, generations });
+          const auroraResult = await aurora.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+          result = auroraResult.archive.slice(0, popSize).map(a => a.seed);
+        } else if (algorithm === 'nslc') {
+          const nslc = new NSLC({ archiveSize: popSize * 5, generations });
+          const nslcResult = await nslc.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+          result = nslcResult.archive.slice(0, popSize).map(a => a.seed);
+        } else {
+          const poet = new POET({ maxEnvironments: popSize, generations });
+          const poetResult = await poet.run([parent], async (env, sol) => sol.$fitness?.overall || 0.5, (env, r) => {
+            const child = JSON.parse(JSON.stringify(env));
+            if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); }
+            return child;
+          });
+          result = poetResult.environments.slice(0, popSize).map(e => e.solution);
+        }
+
+        for (const seed of result) { seeds.push(seed); }
+        saveSeeds();
+        metrics.seedsEvolved++;
+        log('INFO', 'Async evolution complete', { jobId, count: result.length });
+      } catch (e: any) {
+        log('ERROR', 'Async evolution failed', { jobId, error: e.message });
+      }
+    })();
   });
 
   // ── Lightweight 3D mesh preview (Phase 4/5) ──

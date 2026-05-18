@@ -196,15 +196,15 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): any[] {
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): GameParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
   return {
-    genre: seed.genes?.genre?.value || 'platformer',
+    genre: (seed.genes?.genre?.value as string) || 'platformer',
     difficulty: typeof seed.genes?.difficulty?.value === 'number' ? seed.genes.difficulty.value : 0.5,
     levelCount: typeof seed.genes?.levelCount?.value === 'number' ? seed.genes.levelCount.value : 5,
     hasPowerups: seed.genes?.hasPowerups?.value === true,
     hasObstacles: seed.genes?.hasObstacles?.value !== false,
     hasBoss: seed.genes?.hasBoss?.value === true,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

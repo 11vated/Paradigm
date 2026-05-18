@@ -193,7 +193,7 @@ export const DOMAIN_GENE_TEMPLATES: Record<string, Record<string, unknown>> = {
   narrative: { structure: 'linear', tone: 'neutral', chapters: 3 },
   ui: { layout: 'single', theme: 'dark', spacing: 0.5 },
   physics: { gravity: 0.5, friction: 0.3, elasticity: 0.5 },
-  audio: { soundType: 'tone', frequency: 440, duration: 1.0 },
+  audio: { soundType: 'tone', frequency: 432, duration: 1.0 },
   ecosystem: { speciesCount: 0.5, environment: 'forest', stability: 0.7 },
   game: { mechanicType: 'turn_based', complexity: 0.5 },
   alife: { rules: 'conway', gridSize: 0.5, birth: [3], survival: [2, 3] },

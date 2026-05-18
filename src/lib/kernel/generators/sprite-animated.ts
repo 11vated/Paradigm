@@ -95,12 +95,12 @@ function drawSpriteFrame(
 }
 
 function extractParams(seed: Seed): SpriteParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
-  let resolution = seed.genes?.resolution?.value || 32;
+  let resolution = (seed.genes?.resolution?.value as number) || 32;
   if (typeof resolution === 'number' && resolution <= 1) resolution = Math.floor(resolution * 128);
   
-  let paletteSize = seed.genes?.paletteSize?.value || 8;
+  let paletteSize = (seed.genes?.paletteSize?.value as number) || 8;
   if (typeof paletteSize === 'number' && paletteSize <= 1) paletteSize = Math.floor(paletteSize * 16);
   
   const qualityRes: Record<string, number> = {
@@ -114,8 +114,8 @@ function extractParams(seed: Seed): SpriteParams {
     resolution: qualityRes[quality] || resolution,
     paletteSize: Math.max(2, Math.min(paletteSize, 32)),
     colors: seed.genes?.colors?.value || [[0.8, 0.2, 0.3], [0.2, 0.5, 0.8]],
-    symmetry: seed.genes?.symmetry?.value || 'bilateral',
+    symmetry: (seed.genes?.symmetry?.value as string) || 'bilateral',
     animations: seed.genes?.animations?.value || ['idle', 'walk', 'attack', 'death'],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

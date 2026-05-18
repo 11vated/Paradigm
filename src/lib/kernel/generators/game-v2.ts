@@ -78,8 +78,8 @@ export async function generateGameV2(
  * Extract parameters from seed
  */
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): GameParams {
-  const quality = (seed.genes?.quality?.value || 'high') as GameParams['quality'];
-  const genre = (seed.genes?.genre?.value || 'platformer') as GameParams['genre'];
+  const quality = ((seed.genes?.quality?.value as string) || 'high') as GameParams['quality'];
+  const genre = ((seed.genes?.genre?.value as string) || 'platformer') as GameParams['genre'];
   const difficulty = seed.genes?.difficulty?.value || rng.nextF64();
   const levelCount = Math.floor((seed.genes?.levelCount?.value || rng.nextF64()) * 10) + 3;
   

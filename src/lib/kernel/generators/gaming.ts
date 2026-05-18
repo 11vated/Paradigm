@@ -61,13 +61,13 @@ function generateSpecMD(params: GamingParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): GamingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const genres = ['action', 'adventure', 'rpg', 'strategy', 'simulation', 'sports'];
   const platforms = ['PC', 'PlayStation', 'Xbox', 'Mobile', 'VR'];
   return {
     gameType: seed.genes?.gameType?.value || ['video', 'mobile', 'vr', 'esports'][rng.nextInt(0, 3)],
     genre: seed.genes?.genre?.value || genres[rng.nextInt(0, genres.length - 1)],
     platform: seed.genes?.platform?.value || platforms[rng.nextInt(0, platforms.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

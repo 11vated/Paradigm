@@ -16,7 +16,7 @@ import type {
   GrowthResult, ValidationResult, EvolutionResult,
   ArchiveResult, PipelineResult,
 } from './stages';
-import { Xoshiro256Star, rngFromHash } from '../../kernel/rng';
+import { Xoshiro256StarStar, rngFromHash } from '../../kernel/rng';
 import { ENGINES, growSeed } from '../../kernel/engines';
 import { encodeGseed, signGseed, writeGseedFile } from '../../kernel/binary-format';
 import { VerificationGate } from '../verification/verification-gate';
@@ -56,7 +56,7 @@ const DOMAIN_GENE_TEMPLATES: Record<string, Record<string, unknown>> = {
   narrative: { structure: 'linear', tone: 'neutral' },
   ui: { layout: 'single', theme: 'dark' },
   physics: { gravity: 0.5, friction: 0.3, elasticity: 0.5 },
-  audio: { soundType: 'tone', frequency: 440 },
+  audio: { soundType: 'tone', frequency: 432 },
   ecosystem: { speciesCount: 0.5, environment: 'forest', stability: 0.7 },
   game: { mechanicType: 'turn_based', complexity: 0.5 },
   alife: { rules: 'conway', gridSize: 0.5 },
@@ -210,7 +210,7 @@ ${paramEntries}
     let artifact: any;
     let quality = 0.7;
     try {
-      artifact = await growSeed(seed, intent.domain as any);
+      artifact = await growSeed(seed);
       quality = artifact?.quality ? parseFloat(artifact.quality) : 0.8;
     } catch {
       artifact = { format: 'json', data: { domain: intent.domain, hash } };

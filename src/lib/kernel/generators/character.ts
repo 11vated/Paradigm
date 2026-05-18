@@ -34,15 +34,15 @@ export async function generateCharacter(seed: Seed, outputPath: string): Promise
 }
 
 function extractParams(seed: Seed): CharacterParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    size: seed.genes?.size?.value || 1.0,
-    archetype: seed.genes?.archetype?.value || 'warrior',
-    strength: seed.genes?.strength?.value || 0.5,
-    agility: seed.genes?.agility?.value || 0.5,
+    size: (seed.genes?.size?.value as number) || 1.0,
+    archetype: (seed.genes?.archetype?.value as string) || 'warrior',
+    strength: (seed.genes?.strength?.value as number) || 0.5,
+    agility: (seed.genes?.agility?.value as number) || 0.5,
     palette: seed.genes?.palette?.value || [0.5, 0.5, 0.5],
-    personality: seed.genes?.personality?.value || 'neutral',
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    personality: (seed.genes?.personality?.value as string) || 'neutral',
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

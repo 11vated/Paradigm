@@ -49,11 +49,11 @@ function generateSVG(params: SixGParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SixGParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     technology: seed.genes?.technology?.value || ['thz', 'ai_native', 'holographic', 'quantum'][rng.nextInt(0, 3)],
     bandwidth: Math.floor(((seed.genes?.bandwidth?.value as number || rng.nextF64()) * 990) + 10),
     latency: (seed.genes?.latency?.value as number || rng.nextF64()) * 100 + 1,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

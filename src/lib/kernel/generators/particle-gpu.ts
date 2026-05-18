@@ -236,17 +236,17 @@ function getQualitySettings(quality: string): any {
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ParticleParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let count = seed.genes?.count?.value || 100;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let count = (seed.genes?.count?.value as number) || 100;
   if (typeof count === 'number' && count <= 1) count = Math.max(10, Math.floor(count * 1000));
 
   return {
     count,
-    emitterType: seed.genes?.emitterType?.value || 'point',
-    particleType: seed.genes?.particleType?.value || 'spark',
+    emitterType: (seed.genes?.emitterType?.value as string) || 'point',
+    particleType: (seed.genes?.particleType?.value as string) || 'spark',
     lifetime: typeof seed.genes?.lifetime?.value === 'number' ? seed.genes.lifetime.value : 2.0,
     speed: typeof seed.genes?.speed?.value === 'number' ? seed.genes.speed.value : 5.0,
     spread: typeof seed.genes?.spread?.value === 'number' ? seed.genes.spread.value : 1.0,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

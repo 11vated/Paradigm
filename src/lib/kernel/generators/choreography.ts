@@ -363,15 +363,15 @@ function generateDanceSequence(params: ChoreographyParams, rng: Xoshiro256StarSt
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ChoreographyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let tempo = seed.genes?.tempo?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let tempo = (seed.genes?.tempo?.value as number) || 0.5;
   if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;
 
   return {
-    style: seed.genes?.style?.value || 'ballet',
+    style: (seed.genes?.style?.value as string) || 'ballet',
     tempo: typeof tempo === 'number' ? tempo : 120,
-    complexity: seed.genes?.complexity?.value || 0.5,
-    duration: Math.max(10, Math.min(seed.genes?.duration?.value || 60, 300)),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium',
+    complexity: (seed.genes?.complexity?.value as number) || 0.5,
+    duration: Math.max(10, Math.min((seed.genes?.duration?.value as number) || 60, 300)),
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic',
   };
 }

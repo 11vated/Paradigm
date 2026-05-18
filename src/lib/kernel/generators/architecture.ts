@@ -82,12 +82,12 @@ function generateSVG(params: ArchitectureParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ArchitectureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const styles = ['modern', 'brutalist', 'art_deco', 'gothic', 'minimalist', 'biophilic'];
   return {
     buildingType: seed.genes?.buildingType?.value || ['residential', 'commercial', 'public', 'monument'][rng.nextInt(0, 3)],
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
     floors: Math.floor(((seed.genes?.floors?.value as number || rng.nextF64()) * 99) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

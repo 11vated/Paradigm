@@ -131,7 +131,7 @@ M  END`;
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): DrugParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const targets = ['EGFR', 'VEGFR', 'PD-1', 'HER2', 'TNF-alpha'];
   const indications = ['cancer', 'diabetes', 'hypertension', 'depression', 'arthritis'];
 
@@ -139,6 +139,6 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): DrugParams {
     drugType: seed.genes?.drugType?.value || ['small_molecule', 'biologic', 'antisense', 'antibody'][rng.nextInt(0, 3)],
     target: seed.genes?.target?.value || targets[rng.nextInt(0, targets.length - 1)],
     indication: seed.genes?.indication?.value || indications[rng.nextInt(0, indications.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

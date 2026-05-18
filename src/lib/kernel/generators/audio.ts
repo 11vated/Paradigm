@@ -3,7 +3,6 @@
  * Generates audio based on tempo, key, timbre, and melody genes
  */
 
-import * as wav from 'wav';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
@@ -51,24 +50,34 @@ export function generateAudio(seed: Seed, outputPath: string): Promise<{ filePat
   const dir = path.dirname(outputPath);
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   
-  // Write WAV file
-  return new Promise((resolve, reject) => {
-    const writer = new wav.FileWriter(outputPath, {
-      channels,
-      sampleRate,
-      bitDepth: 16
-    });
-    
-    writer.write(buffer);
-    writer.end();
-    
-    writer.on('finish', () => resolve({ filePath: outputPath, duration: params.duration, sampleRate }));
-    writer.on('error', reject);
-  });
+  fs.writeFileSync(outputPath, pcm16ToWav(buffer, channels, sampleRate));
+  return Promise.resolve({ filePath: outputPath, duration: params.duration, sampleRate });
+}
+
+function pcm16ToWav(pcm: Buffer, channels: number, sampleRate: number): Buffer {
+  const header = Buffer.alloc(44);
+  const byteRate = sampleRate * channels * 2;
+  const blockAlign = channels * 2;
+
+  header.write('RIFF', 0);
+  header.writeUInt32LE(36 + pcm.length, 4);
+  header.write('WAVE', 8);
+  header.write('fmt ', 12);
+  header.writeUInt32LE(16, 16);
+  header.writeUInt16LE(1, 20);
+  header.writeUInt16LE(channels, 22);
+  header.writeUInt32LE(sampleRate, 24);
+  header.writeUInt32LE(byteRate, 28);
+  header.writeUInt16LE(blockAlign, 32);
+  header.writeUInt16LE(16, 34);
+  header.write('data', 36);
+  header.writeUInt32LE(pcm.length, 40);
+
+  return Buffer.concat([header, pcm]);
 }
 
 function extractParams(seed: Seed): AudioParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const sampleRates: Record<string, number> = {
     low: 22050,
     medium: 44100,
@@ -76,13 +85,13 @@ function extractParams(seed: Seed): AudioParams {
     photorealistic: 96000
   };
   
-  let tempo = seed.genes?.tempo?.value || 0.5;
+  let tempo = (seed.genes?.tempo?.value as number) || 0.5;
   if (typeof tempo === 'number' && tempo <= 1) tempo = 60 + tempo * 140;
   
   return {
     tempo: typeof tempo === 'number' ? tempo : 120,
-    key: seed.genes?.key?.value || 'C',
-    scale: seed.genes?.scale?.value || 'major',
+    key: (seed.genes?.key?.value as string) || 'C',
+    scale: (seed.genes?.scale?.value as string) || 'major',
     timbre: (() => {
       const t = seed.genes?.timbre?.value || {};
       return {
@@ -96,9 +105,9 @@ function extractParams(seed: Seed): AudioParams {
       const m = seed.genes?.melody?.value || [];
       return Array.isArray(m) ? m.slice(0, 16) : [];
     })(),
-    duration: Math.max(1, Math.min(seed.genes?.duration?.value || 5, 30)),
+    duration: Math.max(1, Math.min((seed.genes?.duration?.value as number) || 5, 30)),
     sampleRate: sampleRates[quality] || 44100,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

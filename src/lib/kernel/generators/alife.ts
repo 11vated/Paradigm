@@ -82,16 +82,16 @@ function countNeighbors(grid: number[][], x: number, y: number, size: number): n
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): AlifeParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const qualitySizes: Record<string, number> = { low: 16, medium: 32, high: 64, photorealistic: 128 };
 
-  let gridSize = seed.genes?.gridSize?.value || 0.5;
+  let gridSize = (seed.genes?.gridSize?.value as number) || 0.5;
   if (typeof gridSize === 'number' && gridSize <= 1) gridSize = Math.floor(gridSize * qualitySizes[quality]);
 
   return {
-    rules: seed.genes?.rules?.value || 'conway',
+    rules: (seed.genes?.rules?.value as string) || 'conway',
     gridSize: Math.max(8, Math.min(gridSize, 256)),
-    initialDensity: seed.genes?.density?.value || 0.3,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    initialDensity: (seed.genes?.density?.value as number) || 0.3,
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

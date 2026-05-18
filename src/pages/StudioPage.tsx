@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { type Seed, type Artifact as ArtifactType } from '@/lib/kernel/types';
+import { useSeedStore } from '@/stores/seedStore';
 import {
   MessageSquare, FileCode, Dna, Image as ImageIcon, Library, GitBranch, Network,
   Shuffle, TrendingUp, Heart, Download, Coins, Bot, Sparkles, Keyboard, Activity,
@@ -11,6 +12,7 @@ import PreviewViewport from '@/components/studio/PreviewViewport';
 import GSPLEditor from '@/components/studio/GSPLEditor';
 import GeneEditor from '@/components/studio/GeneEditor';
 import GalleryGrid from '@/components/studio/GalleryGrid';
+import { VirtualGalleryGrid } from '@/components/studio/VirtualGalleryGrid';
 import SeedLibrary from '@/components/studio/SeedLibrary';
 import CompositionPanel from '@/components/studio/CompositionPanel';
 import BreedPanel from '@/components/studio/BreedPanel';
@@ -64,12 +66,21 @@ export function StudioPage() {
   const [currentArtifact, setCurrentArtifact] = useState<Artifact | null>(null);
   const [activePanel, setActivePanel] = useState<PanelTab>('chat');
   const [activeBottom, setActiveBottom] = useState<BottomTab | null>(null);
-  const [seeds, setSeeds] = useState<any[]>([]);
   const [selectedSeed, setSelectedSeed] = useState<any>(null);
   const [serverOk, setServerOk] = useState<boolean | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [promptText, setPromptText] = useState('');
+
+  const gallery = useSeedStore((s: any) => s.gallery);
+  const fetchSeeds = useSeedStore((s: any) => s.fetchSeeds);
+  const addToGallery = useSeedStore((s: any) => s.addToGallery);
+
+  useEffect(() => {
+    fetchSeeds?.();
+  }, []);
+
+  const seeds = gallery && gallery.length > 0 ? gallery : [];
 
   // Server health probe
   useEffect(() => {
@@ -123,9 +134,9 @@ export function StudioPage() {
   const handleArtifactGenerated = useCallback((artifact: Artifact) => {
     setCurrentArtifact(artifact);
     if (artifact.seed) {
-      setSeeds(prev => [...prev, artifact.seed].slice(-200));
+      addToGallery?.(artifact.seed);
     }
-  }, []);
+  }, [addToGallery]);
 
   const handleSelectSeed = useCallback((seed: any) => {
     setSelectedSeed(seed);
@@ -152,8 +163,30 @@ export function StudioPage() {
           <GeneEditor seed={selectedSeed} onSeedUpdated={handleSelectSeed} />
         )}
         {activePanel === 'gallery' && (
-          <div style={{ height: '100%', overflow: 'auto' }}>
-            <GalleryGrid seeds={seeds} onSelectSeed={handleSelectSeed} />
+          <div style={{ height: '100%', overflow: 'hidden' }}>
+            <VirtualGalleryGrid
+              seeds={seeds}
+              onSelect={handleSelectSeed}
+              onGrow={async (seed: any) => {
+                try {
+                  const artifact = await fetch(`/api/seeds/${seed.id}/grow`, { method: 'POST' }).then(r => r.json());
+                  addToGallery?.(artifact.seed);
+                  setCurrentArtifact({ seed: artifact.seed, output: artifact.artifact, gspl: '' });
+                } catch (e) { console.error('Grow failed:', e); }
+              }}
+              onEvolve={async (seed: any) => {
+                try {
+                  const result = await fetch(`/api/seeds/${seed.id}/evolve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ algorithm: 'GA', populationSize: 50, generations: 100, mutationRate: 0.1 }),
+                  }).then(r => r.json());
+                  if (result.children) {
+                    result.children.forEach((child: any) => addToGallery?.(child));
+                  }
+                } catch (e) { console.error('Evolve failed:', e); }
+              }}
+            />
           </div>
         )}
         {activePanel === 'library' && (
@@ -478,10 +511,10 @@ export function StudioPage() {
                   </button>
                 </div>
                 <div style={{ height: 'calc(100% - 37px)', overflow: 'auto' }}>
-                  {activeBottom === 'compose' && <CompositionPanel />}
+                  {activeBottom === 'compose' && <CompositionPanel seed={selectedSeed} />}
                   {activeBottom === 'evolve' && (
                     <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-                      <div style={{ flex: 1 }}><EvolvePanel /></div>
+                      <div style={{ flex: 1 }}><EvolvePanel seed={selectedSeed} /></div>
                       <div style={{ flex: 1 }}>
                         <EvolutionTheater
                           config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
@@ -491,12 +524,12 @@ export function StudioPage() {
                       </div>
                     </div>
                   )}
-                  {activeBottom === 'breed' && <BreedPanel />}
-                  {activeBottom === 'export' && <ExportPanel />}
-                  {activeBottom === 'mint' && <MintPanel />}
+                  {activeBottom === 'breed' && <BreedPanel seed={selectedSeed} />}
+                  {activeBottom === 'export' && <ExportPanel seed={selectedSeed} />}
+                  {activeBottom === 'mint' && <MintPanel seed={selectedSeed} />}
                   {activeBottom === 'agent' && (
                     <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-                      <div style={{ flex: 1 }}><AgentPanel /></div>
+                      <div style={{ flex: 1 }}><AgentPanel onSeedCreated={handleSelectSeed} /></div>
                     </div>
                   )}
                 </div>

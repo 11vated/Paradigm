@@ -67,11 +67,11 @@ function generateSVG(params: TelecomParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TelecomParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     networkType: seed.genes?.networkType?.value || ['5G', '6G', 'fiber', 'satellite'][rng.nextInt(0, 3)],
     coverage: Math.floor(((seed.genes?.coverage?.value as number || rng.nextF64()) * 9900) + 100),
     bandwidth: Math.floor(((seed.genes?.bandwidth?.value as number || rng.nextF64()) * 990) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

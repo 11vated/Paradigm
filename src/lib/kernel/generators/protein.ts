@@ -113,15 +113,17 @@ function analyzeBinding(params: ProteinParams, rng: Xoshiro256StarStar): any {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ProteinParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let length = seed.genes?.length?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const type = seed.genes?.type?.value;
+  const types: ProteinParams['type'][] = ['enzyme', 'receptor', 'vaccine', 'antibody', 'channel'];
+  let length = (seed.genes?.length?.value as number) || 0.5;
   if (typeof length === 'number' && length <= 1) length = Math.floor(length * 500);
 
   return {
-    type: seed.genes?.type?.value || 'enzyme',
+    type: types.includes(type as ProteinParams['type']) ? type as ProteinParams['type'] : 'enzyme',
     length: typeof length === 'number' ? Math.max(50, Math.min(length, 2000)) : 300,
     stability: seed.genes?.stability?.value || rng.nextF64(),
     bindingAffinity: seed.genes?.bindingAffinity?.value || rng.nextF64() * 1000,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

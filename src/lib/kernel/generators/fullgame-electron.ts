@@ -222,16 +222,16 @@ build({
 }
 
 function extractParams(seed: Seed): FullgameParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
   return {
-    genre: seed.genes?.genre?.value || 'action',
+    genre: (seed.genes?.genre?.value as string) || 'action',
     playerCount: typeof seed.genes?.playerCount?.value === 'number' ? seed.genes.playerCount.value : 1,
     skillCeiling: typeof seed.genes?.skillCeiling?.value === 'number' ? seed.genes.skillCeiling.value : 5,
     hasMultiplayer: seed.genes?.hasMultiplayer?.value === true,
     hasPhysics: seed.genes?.hasPhysics?.value !== false,
     hasInventory: seed.genes?.hasInventory?.value === true,
     hasQuests: seed.genes?.hasQuests?.value === true,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

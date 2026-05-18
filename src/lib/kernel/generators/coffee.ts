@@ -50,12 +50,12 @@ function generateSVG(params: CoffeeParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CoffeeParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const origins = ['Ethiopia', 'Colombia', 'Brazil', 'Guatemala', 'Kenya'];
   return {
     bean: seed.genes?.bean?.value || ['arabica', 'robusta', 'liberica', 'excelsa'][rng.nextInt(0, 3)],
     roast: seed.genes?.roast?.value || ['light', 'medium', 'dark', 'espresso'][rng.nextInt(0, 3)],
     origin: seed.genes?.origin?.value || origins[rng.nextInt(0, origins.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

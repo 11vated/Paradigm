@@ -39,12 +39,12 @@ export async function generateAV(seed: Seed, outputPath: string): Promise<{ file
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AVParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const allSensors = ['camera', 'lidar', 'radar', 'ultrasonic', 'gps', 'imu'];
   return {
     autonomyLevel: seed.genes?.autonomyLevel?.value || [2, 3, 4, 5][rng.nextInt(0, 3)],
     sensors: (seed.genes?.sensors as string[]) || allSensors.slice(0, Math.floor(rng.nextF64() * 5) + 2),
     drivingPolicy: seed.genes?.drivingPolicy?.value || ['conservative', 'moderate', 'agressive'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

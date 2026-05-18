@@ -136,7 +136,7 @@ function generateLayoutSVG(params: AgricultureParams, rng: Xoshiro256StarStar): 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AgricultureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const crops = ['wheat', 'rice', 'corn', 'soybean', 'tomato', 'lettuce', 'strawberry'];
 
   return {
@@ -144,6 +144,6 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): AgricultureParams {
     area: ((seed.genes?.area?.value as number || rng.nextF64()) * 9900) + 100, // 100-10000 hectares
     cropType: seed.genes?.cropType?.value || crops[rng.nextInt(0, crops.length - 1)],
     automation: (seed.genes?.automation?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

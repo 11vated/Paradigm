@@ -54,8 +54,8 @@ export async function generateParticle(seed: Seed, outputPath: string): Promise<
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ParticleParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  const count = seed.genes?.count?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const count = (seed.genes?.count?.value as number) || 0.5;
 
   // Fix: write numbers without any separators
   const qualLow = 100;
@@ -65,10 +65,10 @@ function extractParams(seed: Seed, rng?: Xoshiro256StarStar): ParticleParams {
   const qualityMultipliers: Record<string, number> = { low: qualLow, medium: qualMed, high: qualHigh, photorealistic: qualPR };
 
   return {
-    emitter: seed.genes?.emitter?.value || 'point',
+    emitter: (seed.genes?.emitter?.value as string) || 'point',
     count: Math.max(10, Math.floor((typeof count === 'number' ? count : 0.5) * qualityMultipliers[quality])),
-    lifetime: seed.genes?.lifetime?.value || 2.0,
+    lifetime: (seed.genes?.lifetime?.value as number) || 2.0,
     velocity: seed.genes?.velocity?.value || [0, 1, 0],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

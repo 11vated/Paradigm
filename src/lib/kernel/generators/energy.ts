@@ -87,11 +87,11 @@ function generateLayoutSVG(params: EnergyParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): EnergyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     source: seed.genes?.source?.value || ['solar', 'wind', 'hydro', 'nuclear', 'geothermal'][rng.nextInt(0, 4)],
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 9900) + 100),
     storage: seed.genes?.storage?.value || ['battery', 'pumped_hydro', 'hydrogen', 'none'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

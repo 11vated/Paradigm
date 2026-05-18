@@ -66,15 +66,15 @@ export async function generateTypography(seed: Seed, outputPath: string): Promis
 }
 
 function extractParams(seed: Seed): TypographyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    style: seed.genes?.style?.value || 'sans_serif',
+    style: (seed.genes?.style?.value as string) || 'sans_serif',
     weightRange: (() => {
       const r = seed.genes?.weight_range?.value || [100, 900];
       return Array.isArray(r) && r.length === 2 ? [r[0], r[1]] : [100, 900];
     })(),
-    xHeight: seed.genes?.xHeight?.value || 0.5,
-    contrast: seed.genes?.contrast?.value || 0.3,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    xHeight: (seed.genes?.xHeight?.value as number) || 0.5,
+    contrast: (seed.genes?.contrast?.value as number) || 0.3,
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

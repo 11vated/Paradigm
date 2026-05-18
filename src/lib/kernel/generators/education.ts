@@ -112,12 +112,12 @@ ${content.lessons[0].title}
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): EducationParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     subject: seed.genes?.subject?.value || ['math', 'science', 'programming', 'language', 'history'][rng.nextInt(0, 4)],
     level: seed.genes?.level?.value || ['elementary', 'high_school', 'university', 'professional'][rng.nextInt(0, 3)],
     modality: seed.genes?.modality?.value || ['text', 'video', 'interactive', 'vr'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

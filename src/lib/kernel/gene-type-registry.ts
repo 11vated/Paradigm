@@ -388,7 +388,7 @@ function generateTestValue(typeName: string, constraints?: GeneSchema): any {
     case 'symbolic': return { grammar: 'test', derivation: [] };
     case 'gematria': return { system: 'english', sequence: 'test', value: 42 };
     case 'quantum': return { amplitudes: [{ real: 1, imag: 0 }], basis: ['test'] };
-    case 'resonance': return { fundamentals: [440], partials: [{ freq_ratio: 2, amplitude: 0.5, phase: 0 }], damping: 0.5 };
+    case 'resonance': return { fundamentals: [432], partials: [{ freq_ratio: 2, amplitude: 0.5, phase: 0 }], damping: 0.5 };
     case 'sovereignty': return { author_pubkey: {}, lineage_proof: [], signature: '' };
     default: return undefined;
   }

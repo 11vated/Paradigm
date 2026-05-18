@@ -125,13 +125,13 @@ endsolid nanobot_${params.capability}`;
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): NanobotParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
      botCount: Math.floor(((seed.genes?.botCount?.value as number || rng.nextF64()) * 1000000) + 1000),
     size: ((seed.genes?.size?.value as number || rng.nextF64()) * 990) + 10, // 10-1000 nm
     capability: seed.genes?.capability?.value || ['assembly', 'medical', 'sensor', 'repair'][rng.nextInt(0, 3)],
     autonomy: (seed.genes?.autonomy?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

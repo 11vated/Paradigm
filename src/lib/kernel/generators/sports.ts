@@ -69,12 +69,12 @@ function generateSVG(params: SportsParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SportsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const sports = ['football', 'basketball', 'soccer', 'tennis', 'swimming', 'track'];
   return {
     facilityType: seed.genes?.facilityType?.value || ['stadium', 'gym', 'training_center', 'arena'][rng.nextInt(0, 3)],
     sport: seed.genes?.sport?.value || sports[rng.nextInt(0, sports.length - 1)],
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 99000) + 1000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

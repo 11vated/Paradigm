@@ -146,13 +146,13 @@ function getFoodMaterial(foodType: string): THREE.MeshStandardMaterial {
 }
 
 function extractParams(seed: Seed): FoodParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
-    foodType: seed.genes?.foodType?.value || 'apple',
-    style: seed.genes?.style?.value || 'realistic',
+    foodType: (seed.genes?.foodType?.value as string) || 'apple',
+    style: (seed.genes?.style?.value as string) || 'realistic',
     size: typeof seed.genes?.size?.value === 'number' ? seed.genes.size.value : 1.0,
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

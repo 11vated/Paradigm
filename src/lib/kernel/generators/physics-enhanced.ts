@@ -171,15 +171,15 @@ self.onmessage = function(e) {
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): PhysicsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  const grav = seed.genes?.gravity?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const grav = (seed.genes?.gravity?.value as number) || 0.5;
 
   return {
     gravity: typeof grav === 'number' ? +(grav * 20).toFixed(2) : 9.8,
-    friction: seed.genes?.friction?.value || 0.3,
-    elasticity: seed.genes?.elasticity?.value || 0.8,
-    simulationType: seed.genes?.simulationType?.value || 'rigid_body',
+    friction: (seed.genes?.friction?.value as number) || 0.3,
+    elasticity: (seed.genes?.elasticity?.value as number) || 0.8,
+    simulationType: (seed.genes?.simulationType?.value as string) || 'rigid_body',
     steps: typeof seed.genes?.steps?.value === 'number' ? seed.genes.steps.value : 1000,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

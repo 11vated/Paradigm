@@ -116,13 +116,13 @@ function generateCSV(params: LogisticsParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): LogisticsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     networkType: seed.genes?.networkType?.value || ['last_mile', 'regional', 'global', 'cold_chain'][rng.nextInt(0, 3)],
     hubCount: Math.floor(((seed.genes?.hubCount?.value as number || rng.nextF64()) * 990) + 10), // 10-1000
     vehicleCount: Math.floor(((seed.genes?.vehicleCount?.value as number || rng.nextF64()) * 9900) + 100), // 100-10000
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

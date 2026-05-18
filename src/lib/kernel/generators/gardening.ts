@@ -49,11 +49,11 @@ function generateSVG(params: GardeningParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): GardeningParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     gardenType: seed.genes?.gardenType?.value || ['vegetable', 'flower', 'herb', 'succulent', 'rock'][rng.nextInt(0, 4)],
     size: Math.floor(((seed.genes?.size?.value as number || rng.nextF64()) * 9900) + 100),
     season: seed.genes?.season?.value || ['spring', 'summer', 'fall', 'winter'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

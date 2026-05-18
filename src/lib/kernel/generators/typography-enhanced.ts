@@ -283,8 +283,8 @@ function escapeHtml(text: string): string {
 }
 
 function extractParams(seed: Seed): TypographyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let weight = seed.genes?.weight?.value || 400;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let weight = (seed.genes?.weight?.value as number) || 400;
   if (typeof weight === 'number' && weight <= 1) weight = Math.floor(weight * 900);
 
   const variableAxes: Record<string, number> = {};
@@ -292,12 +292,12 @@ function extractParams(seed: Seed): TypographyParams {
   if (seed.genes?.width?.value) variableAxes.width = typeof seed.genes.width.value === 'number' ? seed.genes.width.value * 100 : 100;
 
   return {
-    fontFamily: seed.genes?.fontFamily?.value || 'Inter',
+    fontFamily: (seed.genes?.fontFamily?.value as string) || 'Inter',
     weight,
-    style: seed.genes?.style?.value || 'normal',
+    style: (seed.genes?.style?.value as string) || 'normal',
     size: typeof seed.genes?.size?.value === 'number' ? seed.genes.size.value : 24,
-    text: seed.genes?.text?.value || 'The quick brown fox jumps over the lazy dog',
+    text: (seed.genes?.text?.value as string) || 'The quick brown fox jumps over the lazy dog',
     variableAxes,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

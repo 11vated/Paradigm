@@ -50,12 +50,12 @@ function generateSVG(params: ElectronicsParams, rng: Xoshiro256StarStar): string
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ElectronicsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const processors = ['Snapdragon 8 Gen 3', 'Apple M3', 'Intel i9', 'AMD Ryzen 9', 'MediaTek Dimensity'];
   return {
     deviceType: seed.genes?.deviceType?.value || ['smartphone', 'laptop', 'tablet', 'wearable', 'iot'][rng.nextInt(0, 4)],
     processor: seed.genes?.processor?.value || processors[rng.nextInt(0, processors.length - 1)],
     ram: Math.floor(((seed.genes?.ram?.value as number || rng.nextF64()) * 124) + 4),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

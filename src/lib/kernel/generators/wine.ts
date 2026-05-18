@@ -50,12 +50,12 @@ function generateSVG(params: WineParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): WineParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const regions = ['Bordeaux', 'Napa', 'Tuscany', 'Rioja', 'Barossa'];
   return {
     type: seed.genes?.type?.value || ['red', 'white', 'rose', 'sparkling'][rng.nextInt(0, 3)],
     region: seed.genes?.region?.value || regions[rng.nextInt(0, regions.length - 1)],
     vintage: Math.floor(((seed.genes?.vintage?.value as number || rng.nextF64()) * 44) + 1980),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -82,8 +82,8 @@ const GENRE_SETTINGS: Record<string, any> = {
  * Extract parameters from seed with music theory
  */
 export function extractParams(seed: Seed, rng: Xoshiro256StarStar): MusicParams {
-  const quality = (seed.genes?.quality?.value || 'medium') as MusicParams['quality'];
-  const genre = (seed.genes?.genre?.value || 'classical') as MusicParams['genre'];
+  const quality = ((seed.genes?.quality?.value as string) || 'medium') as MusicParams['quality'];
+  const genre = ((seed.genes?.genre?.value as string) || 'classical') as MusicParams['genre'];
   const genreSettings = GENRE_SETTINGS[genre] || GENRE_SETTINGS['classical'];
 
   // Tempo from seed or random within genre range

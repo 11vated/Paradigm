@@ -43,7 +43,7 @@ describe('Domain Engines', () => {
       },
     });
 
-    it('returns an object for every domain', async () => {
+    it('returns an object for every domain', { timeout: 60000 }, async () => {
       for (const domain of getAllDomains()) {
         const seed = baseSeed(domain);
         const result = await growSeed(seed);

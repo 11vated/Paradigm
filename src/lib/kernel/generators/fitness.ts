@@ -43,11 +43,11 @@ function generateMD(params: FitnessParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FitnessParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     programType: seed.genes?.programType?.value || ['gym', 'yoga', 'cardio', 'hiit', 'pilates'][rng.nextInt(0, 4)],
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 48) + 4),
     sessions: Math.floor(((seed.genes?.sessions?.value as number || rng.nextF64()) * 6) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -10,7 +10,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { encodeGseed, decodeGseed, readGseedFile, writeGseedFile, verifyGseedSignature } from '../kernel/binary-format';
+import { encodeGseed, decodeGseed, readGseedFile, writeGseedFile, verifyGseedSignature, type GseedPackage } from '../kernel/binary-format';
 
 const [,, command, ...args] = process.argv;
 
@@ -79,7 +79,7 @@ async function main(): Promise<void> {
 
       const seedJson = JSON.parse(fs.readFileSync(seedJsonPath, 'utf-8'));
 
-      const pkg = {
+      const pkg: GseedPackage = {
         version: { major: 1, minor: 1 },
         timestamp: Date.now(),
         flags: {

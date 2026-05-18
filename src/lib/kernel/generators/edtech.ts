@@ -57,12 +57,12 @@ function generateSVG(params: EdTechParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): EdTechParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const subjects = ['math', 'science', 'history', 'language', 'programming'];
   return {
     platformType: seed.genes?.platformType?.value || ['lms', 'virtual_classroom', 'adaptive', 'game_based'][rng.nextInt(0, 3)],
     users: Math.floor(((seed.genes?.users?.value as number || rng.nextF64()) * 99000) + 1000),
     subjects: seed.genes?.subjects?.value || subjects.slice(0, Math.floor(rng.nextF64() * 5) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -39,11 +39,11 @@ export async function generateAerospaceDefense(seed: Seed, outputPath: string): 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AerospaceDefenseParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     systemType: seed.genes?.systemType?.value || ['fighter', 'drone', 'missile', 'satellite'][rng.nextInt(0, 3)],
     range: Math.floor(((seed.genes?.range?.value as number || rng.nextF64()) * 9900) + 100),
     speed: (seed.genes?.speed?.value as number || rng.nextF64()) * 4 + 0.5,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

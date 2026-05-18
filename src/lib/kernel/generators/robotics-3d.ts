@@ -188,15 +188,15 @@ function getRoboticsMaterial(robotType: string, part: string): THREE.MeshStandar
 }
 
 function extractParams(seed: Seed): RoboticsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let armCount = seed.genes?.armCount?.value || 2;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let armCount = (seed.genes?.armCount?.value as number) || 2;
   if (typeof armCount === 'number' && armCount <= 1) armCount = Math.max(2, Math.floor(armCount * 10));
 
   return {
-    robotType: seed.genes?.robotType?.value || 'humanoid',
-    mobility: seed.genes?.mobility?.value || 'wheels',
+    robotType: (seed.genes?.robotType?.value as string) || 'humanoid',
+    mobility: (seed.genes?.mobility?.value as string) || 'wheels',
     armCount,
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

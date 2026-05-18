@@ -95,9 +95,9 @@ function generateFunctorBridges(domains: any[], rng: Xoshiro256StarStar): any[] 
 
 function extractDomainGenParams(seed: Seed, rng: Xoshiro256StarStar): DomainGenParams {
   return {
-    count: Math.floor((seed.genes?.count?.value || 0.5) * 20) + 2,
+    count: Math.floor(((seed.genes?.count?.value as number) || 0.5) * 20) + 2,
     complexity: seed.genes?.complexity?.value || rng.nextF64(),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(seed.genes?.quality?.value) 
+    quality: ['low', 'medium', 'high', 'photorealistic'].includes(seed.genes?.quality?.value as string) 
       ? seed.genes.quality.value : 'medium'
   };
 }

@@ -50,11 +50,11 @@ function generateSVG(params: BeerParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): BeerParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     style: seed.genes?.style?.value || ['lager', 'ale', 'ipa', 'stout', 'pilsner'][rng.nextInt(0, 4)],
     abv: (seed.genes?.abv?.value as number || rng.nextF64()) * 10 + 3,
     ibu: Math.floor(((seed.genes?.ibu?.value as number || rng.nextF64()) * 90) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

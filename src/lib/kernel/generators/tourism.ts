@@ -79,11 +79,11 @@ function generateBrochure(params: TourismParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TourismParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     experienceType: seed.genes?.experienceType?.value || ['hotel', 'resort', 'tour', 'cruise', 'eco'][rng.nextInt(0, 4)],
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 27) + 3),
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 9900) + 100),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

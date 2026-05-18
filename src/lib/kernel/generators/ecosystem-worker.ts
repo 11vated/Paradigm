@@ -233,8 +233,8 @@ self.onmessage = function(e) {
 }
 
 function extractParams(seed: Seed): EcosystemParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let speciesCount = seed.genes?.speciesCount?.value || 10;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let speciesCount = (seed.genes?.speciesCount?.value as number) || 10;
   if (typeof speciesCount === 'number' && speciesCount <= 1) speciesCount = Math.max(5, Math.floor(speciesCount * 50));
 
   return {
@@ -242,6 +242,6 @@ function extractParams(seed: Seed): EcosystemParams {
     foodWebComplexity: typeof seed.genes?.foodWebComplexity?.value === 'number' ? seed.genes.foodWebComplexity.value : 0.5,
     climateZones: typeof seed.genes?.climateZones?.value === 'number' ? seed.genes.climateZones.value : 3,
     timeSteps: typeof seed.genes?.timeSteps?.value === 'number' ? seed.genes.timeSteps.value : 1000,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -39,11 +39,11 @@ export async function generateCybersecurity(seed: Seed, outputPath: string): Pro
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CybersecurityParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     systemType: seed.genes?.systemType?.value || ['firewall', 'ids_ips', 'encryption', 'pentest'][rng.nextInt(0, 3)],
     threatLevel: (seed.genes?.threatLevel?.value as number || rng.nextF64()),
     compliance: (seed.genes?.compliance as string[]) || ['ISO27001', 'SOC2', 'GDPR', 'HIPAA'].slice(0, Math.floor(rng.nextF64() * 4) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

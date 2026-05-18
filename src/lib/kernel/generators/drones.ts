@@ -50,11 +50,11 @@ function generateSVG(params: DronesParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): DronesParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     droneType: seed.genes?.droneType?.value || ['quadcopter', 'fixed_wing', 'delivery', 'racing'][rng.nextInt(0, 3)],
     maxFlightTime: Math.floor(((seed.genes?.maxFlightTime?.value as number || rng.nextF64()) * 110) + 10),
     payload: (seed.genes?.payload?.value as number || rng.nextF64()) * 25 + 0.1,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

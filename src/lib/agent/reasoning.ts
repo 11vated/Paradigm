@@ -45,7 +45,7 @@ const DOMAIN_GENE_TEMPLATES: Record<string, Record<string, { type: string; gener
     key: { type: 'categorical', generate: (rng) => rng.nextChoice(['C', 'D', 'E', 'F', 'G', 'A', 'B']) },
     scale: { type: 'categorical', generate: (rng) => rng.nextChoice(['major', 'minor', 'dorian', 'pentatonic', 'blues', 'mixolydian']) },
     melody: { type: 'array', generate: (rng) => Array.from({ length: 8 }, () => 48 + rng.nextInt(0, 36)) },
-    timbre: { type: 'resonance', generate: (rng) => ({ fundamentals: [220 + rng.nextInt(0, 440)], partials: [{ freq_ratio: 2, amplitude: 0.3 + rng.nextF64() * 0.4, phase: 0 }], damping: 0.05 + rng.nextF64() * 0.15 }) },
+    timbre: { type: 'resonance', generate: (rng) => ({ fundamentals: [216 + rng.nextInt(0, 432)], partials: [{ freq_ratio: 2, amplitude: 0.3 + rng.nextF64() * 0.4, phase: 0 }], damping: 0.05 + rng.nextF64() * 0.15 }) },
   },
   sprite: {
     resolution: { type: 'scalar', generate: (rng) => 0.2 + rng.nextF64() * 0.6 },

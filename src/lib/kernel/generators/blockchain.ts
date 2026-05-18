@@ -128,13 +128,13 @@ contract ${contract.name} {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): BlockchainParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     consensus: seed.genes?.consensus?.value || ['PoW', 'PoS', 'DPoS', 'PoA'][rng.nextInt(0, 3)],
     tps: Math.floor(((seed.genes?.tps?.value as number || rng.nextF64()) * 999900) + 100), // 100-1M TPS
     tokenType: seed.genes?.tokenType?.value || ['utility', 'security', 'governance'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

@@ -153,14 +153,14 @@ function getFurnitureMaterial(style: string, part: string): THREE.MeshStandardMa
 }
 
 function extractParams(seed: Seed): FurnitureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const dimensions = seed.genes?.dimensions?.value || [1, 1, 1];
 
   return {
-    furnitureType: seed.genes?.furnitureType?.value || 'chair',
-    style: seed.genes?.style?.value || 'modern',
+    furnitureType: (seed.genes?.furnitureType?.value as string) || 'chair',
+    style: (seed.genes?.style?.value as string) || 'modern',
     dimensions: Array.isArray(dimensions) && dimensions.length === 3 ? [dimensions[0], dimensions[1], dimensions[2]] : [1, 1, 1],
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

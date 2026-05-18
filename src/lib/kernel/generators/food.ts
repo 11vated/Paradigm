@@ -96,14 +96,14 @@ export async function generateFood(seed: Seed, outputPath: string): Promise<{ fi
 }
 
 function extractParams(seed: Seed, rng?: Xoshiro256StarStar): FoodParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    type: seed.genes?.type?.value || 'pizza',
-    cuisine: seed.genes?.cuisine?.value || 'italian',
+    type: (seed.genes?.type?.value as string) || 'pizza',
+    cuisine: (seed.genes?.cuisine?.value as string) || 'italian',
     ingredients: (() => {
       const i = seed.genes?.ingredients?.value || ['tomato', 'cheese', 'basil'];
       return Array.isArray(i) ? i : ['tomato', 'cheese'];
     })(),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

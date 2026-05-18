@@ -43,11 +43,11 @@ function generateMD(params: EventPlanningParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): EventPlanningParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     eventType: seed.genes?.eventType?.value || ['wedding', 'conference', 'exhibition', 'party'][rng.nextInt(0, 3)],
     guests: Math.floor(((seed.genes?.guests?.value as number || rng.nextF64()) * 9900) + 100),
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 22) + 2),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

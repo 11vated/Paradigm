@@ -66,12 +66,12 @@ function generateSVG(params: LandscapingParams, rng: Xoshiro256StarStar): string
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): LandscapingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const styles = ['japanese', 'english', 'xeriscape', 'tropical', 'minimalist', 'cottage'];
   return {
     projectType: seed.genes?.projectType?.value || ['garden', 'park', 'rooftop', 'courtyard'][rng.nextInt(0, 3)],
     size: Math.floor(((seed.genes?.size?.value as number || rng.nextF64()) * 9900) + 100),
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

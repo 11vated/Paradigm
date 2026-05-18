@@ -50,11 +50,11 @@ function generateSVG(params: AdvertisingParams, rng: Xoshiro256StarStar): string
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AdvertisingParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     medium: seed.genes?.medium?.value || ['digital', 'print', 'tv', 'social'][rng.nextInt(0, 3)],
     budget: Math.floor(((seed.genes?.budget?.value as number || rng.nextF64()) * 9900000) + 100000),
     reach: Math.floor(((seed.genes?.reach?.value as number || rng.nextF64()) * 99000000) + 1000000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

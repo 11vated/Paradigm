@@ -602,8 +602,8 @@ const resonance: GeneTypeOps = {
     return result;
   },
   repair(value) {
-    if (typeof value !== 'object' || value === null) return { fundamentals: [440], partials: [] };
-    if (!Array.isArray(value.fundamentals) || value.fundamentals.length === 0) value.fundamentals = [440];
+    if (typeof value !== 'object' || value === null) return { fundamentals: [432], partials: [] };
+    if (!Array.isArray(value.fundamentals) || value.fundamentals.length === 0) value.fundamentals = [432];
     value.fundamentals = value.fundamentals.map((f: number) => Math.max(20, f));
     if (!Array.isArray(value.partials)) value.partials = [];
     return value;

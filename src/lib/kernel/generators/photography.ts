@@ -67,12 +67,12 @@ function generateSVG(params: PhotographyParams, rng: Xoshiro256StarStar): string
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): PhotographyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const equipment = ['DSLR', 'Mirrorless', 'Medium Format', 'Drone', 'Smartphone'];
   return {
     type: seed.genes?.type?.value || ['portrait', 'landscape', 'commercial', 'drone'][rng.nextInt(0, 3)],
     equipment: seed.genes?.equipment?.value || equipment[rng.nextInt(0, equipment.length - 1)],
     resolution: seed.genes?.resolution?.value || ['24MP', '45MP', '100MP'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

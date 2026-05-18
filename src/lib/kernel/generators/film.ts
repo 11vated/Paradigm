@@ -43,11 +43,11 @@ function generateScript(params: FilmParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FilmParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     genre: seed.genes?.genre?.value || ['action', 'drama', 'comedy', 'documentary', 'animation'][rng.nextInt(0, 4)],
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 120) + 30),
     budget: Math.floor(((seed.genes?.budget?.value as number || rng.nextF64()) * 990e6) + 10e6),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

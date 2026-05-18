@@ -39,11 +39,11 @@ export async function generateLiterature(seed: Seed, outputPath: string): Promis
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): LiteratureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     genre: seed.genes?.genre?.value || ['novel', 'poetry', 'short_story', 'essay', 'biography'][rng.nextInt(0, 4)],
     wordCount: Math.floor(((seed.genes?.wordCount?.value as number || rng.nextF64()) * 99000) + 1000),
     chapters: Math.floor(((seed.genes?.chapters?.value as number || rng.nextF64()) * 48) + 2),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

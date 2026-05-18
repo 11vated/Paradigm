@@ -61,12 +61,12 @@ function generateMenuMD(params: FoodServiceParams, rng: Xoshiro256StarStar): str
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FoodServiceParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const cuisines = ['italian', 'chinese', 'mexican', 'indian', 'french', 'japanese'];
   return {
     serviceType: seed.genes?.serviceType?.value || ['restaurant', 'cloud_kitchen', 'catering', 'food_truck'][rng.nextInt(0, 3)],
     seating: Math.floor(((seed.genes?.seating?.value as number || rng.nextF64()) * 490) + 10),
     cuisine: seed.genes?.cuisine?.value || cuisines[rng.nextInt(0, cuisines.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

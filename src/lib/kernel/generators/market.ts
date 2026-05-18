@@ -250,13 +250,15 @@ function backtestAlgorithm(prices: number[], algorithm: any, rng: Xoshiro256Star
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MarketParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const type = seed.genes?.type?.value;
+  const types: MarketParams['type'][] = ['stock', 'forex', 'crypto', 'futures', 'options'];
 
   return {
-    type: seed.genes?.type?.value || 'stock',
+    type: types.includes(type as MarketParams['type']) ? type as MarketParams['type'] : 'stock',
     volatility: seed.genes?.volatility?.value || rng.nextF64(),
     trend: typeof seed.genes?.trend?.value === 'number' ? (seed.genes.trend.value * 2) - 1 : (rng.nextF64() * 2) - 1,
     timeHorizon: typeof seed.genes?.timeHorizon?.value === 'number' ? Math.floor(seed.genes.timeHorizon.value * 365) : 252,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

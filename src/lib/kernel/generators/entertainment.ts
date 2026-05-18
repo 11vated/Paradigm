@@ -69,11 +69,11 @@ function generateSVG(params: EntertainmentParams, rng: Xoshiro256StarStar): stri
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): EntertainmentParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     venueType: seed.genes?.venueType?.value || ['theater', 'stadium', 'amusement_park', 'casino'][rng.nextInt(0, 3)],
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 99000) + 1000),
     attractionCount: Math.floor(((seed.genes?.attractionCount?.value as number || rng.nextF64()) * 48) + 2),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -122,14 +122,14 @@ function generateCSV(params: ClimateParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ClimateParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     scenario: seed.genes?.scenario?.value || ['RCP2.6', 'RCP4.5', 'RCP6.0', 'RCP8.5'][rng.nextInt(0, 3)],
     timeHorizon: Math.floor(((seed.genes?.timeHorizon?.value as number || rng.nextF64()) * 74) + 26), // 2026-2100
     region: seed.genes?.region?.value || ['Global', 'Arctic', 'Europe', 'Asia', 'North America'][rng.nextInt(0, 4)],
     resolution: Math.floor(((seed.genes?.resolution?.value as number || rng.nextF64()) * 99) + 1), // 1-100 km
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

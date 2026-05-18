@@ -39,12 +39,12 @@ export async function generateSyntheticBiology(seed: Seed, outputPath: string): 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SyntheticBiologyParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const organisms = ['E. coli', 'S. cerevisiae', 'B. subtilis', 'P. putida'];
   return {
     circuitType: seed.genes?.circuitType?.value || ['toggle', 'oscillator', 'logic_gate', 'sensor'][rng.nextInt(0, 3)],
     parts: Math.floor(((seed.genes?.parts?.value as number || rng.nextF64()) * 20) + 5),
     organism: seed.genes?.organism?.value || organisms[rng.nextInt(0, organisms.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

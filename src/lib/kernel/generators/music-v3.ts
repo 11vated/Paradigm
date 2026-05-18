@@ -102,7 +102,7 @@ function extractMusicParams(seed: Seed, rng: Xoshiro256StarStar): MusicParams {
     duration: 30 + Math.floor((seed.genes?.duration?.value || rng.nextF64()) * 270), // 30-300
     instruments: seed.genes?.instruments?.value || selectedInstruments,
     genre: (seed.genes?.genre?.value || genres[Math.floor(rng.nextF64() * genres.length)]) as string,
-    mood: (seed.genes?.mood?.value || 'neutral') as string
+    mood: ((seed.genes?.mood?.value as string) || 'neutral') as string
   };
 }
 

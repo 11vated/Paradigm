@@ -132,13 +132,13 @@ Conductivity: ${params.conductivity} S/m`;
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MaterialParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     type: seed.genes?.type?.value || ['metamaterial', 'superconductor', 'smart', 'composite', '2d_material'][rng.nextInt(0, 4)],
     strength: ((seed.genes?.strength?.value as number || rng.nextF64()) * 99) + 1, // 1-100 GPa
     conductivity: Math.pow(10, (seed.genes?.conductivity?.value as number || rng.nextF64()) * 8 + 2), // 10^2 to 10^10 S/m
     density: ((seed.genes?.density?.value as number || rng.nextF64()) * 19) + 1, // 1-20 g/cm^3
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

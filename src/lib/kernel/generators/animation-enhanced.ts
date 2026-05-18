@@ -164,7 +164,7 @@ function createRNG(seed: number): () => number {
 }
 
 function extractParams(seed: Seed): AnimationParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
   const qualityFrames: Record<string, number> = {
     low: 8,
@@ -173,17 +173,17 @@ function extractParams(seed: Seed): AnimationParams {
     photorealistic: 64
   };
   
-  let frameCount = seed.genes?.frameCount?.value || 0.5;
+  let frameCount = (seed.genes?.frameCount?.value as number) || 0.5;
   if (typeof frameCount === 'number' && frameCount <= 1) frameCount = Math.floor(frameCount * qualityFrames[quality]);
   
-  let fps = seed.genes?.fps?.value || 0.5;
+  let fps = (seed.genes?.fps?.value as number) || 0.5;
   if (typeof fps === 'number' && fps <= 1) fps = Math.floor(fps * 60);
   
   return {
     frameCount: Math.max(4, Math.min(frameCount, 64)),
     fps: Math.max(8, Math.min(fps, 60)),
-    motionType: seed.genes?.motionType?.value || 'skeletal',
-    loop: seed.genes?.loop?.value || 'loop',
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    motionType: (seed.genes?.motionType?.value as string) || 'skeletal',
+    loop: (seed.genes?.loop?.value as string) || 'loop',
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

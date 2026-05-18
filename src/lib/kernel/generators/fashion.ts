@@ -69,12 +69,12 @@ function generateSVG(params: FashionParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FashionParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const styles = ['casual', 'formal', 'streetwear', 'bohemian', 'minimalist', 'avant_garde'];
   return {
     category: seed.genes?.category?.value || ['clothing', 'accessories', 'footwear', 'smart_fabric'][rng.nextInt(0, 3)],
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
     season: seed.genes?.season?.value || ['spring', 'summer', 'fall', 'winter'][rng.nextInt(0, 3)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

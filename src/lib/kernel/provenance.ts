@@ -1,48 +1,62 @@
 /**
  * SeedProvenance — Cryptographic Provenance System
  * Features:
- * - ECDSA signatures (secp256k1 curve)
+ * - ECDSA signatures (P-256 curve via Node.js crypto)
  * - Seed lineage tracking (parent seeds)
  * - Mutation history recording
- * - Timestamp verification
  * - Deterministic: same input = same provenance
  */
 
+import { createHash, createSign, createVerify, generateKeyPairSync } from 'crypto';
 import { Xoshiro256StarStar } from './rng';
 
-// Browser-compatible SHA-256 using Web Crypto API
-async function sha256(data: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const hashBuffer = await crypto.subtle.digest('SHA-256', encoder.encode(data));
-  return Array.from(new Uint8Array(hashBuffer))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+function sha256(data: string): string {
+  return createHash('sha256').update(data).digest('hex');
 }
 
 function sha256Sync(data: string): string {
-  // Fallback: simple deterministic hash for environments without crypto.subtle
-  let hash = 0;
-  for (let i = 0; i < data.length; i++) {
-    const char = data.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash |= 0;
-  }
-  return (hash >>> 0).toString(16).padStart(8, '0');
+  return sha256(data);
 }
 
-// ECDSA using elliptic curve (secp256k1 — same as Bitcoin)
-// In Node.js environment, use 'elliptic' package or Web Crypto API
-// For browser/Node compatibility, we'll implement a simplified version
+/**
+ * Generate ECDSA P-256 keypair
+ */
+export function generateKeyPair(seed?: string): { privateKey: string; publicKey: string } {
+  const { privateKey, publicKey } = generateKeyPairSync('ec', { namedCurve: 'prime256v1' });
+  const privPem = privateKey.export({ format: 'pem', type: 'pkcs8' }) as string;
+  const pubPem = publicKey.export({ format: 'pem', type: 'spki' }) as string;
+  return { privateKey: privPem, publicKey: pubPem };
+}
+
+/**
+ * Sign data with ECDSA P-256
+ */
+export function signData(data: string, privateKeyPem: string): string {
+  const sign = createSign('SHA256');
+  sign.update(data);
+  sign.end();
+  return sign.sign(privateKeyPem, 'hex');
+}
+
+/**
+ * Verify ECDSA P-256 signature
+ */
+export function verifySignature(data: string, signature: string, publicKeyPem: string): boolean {
+  const verify = createVerify('SHA256');
+  verify.update(data);
+  verify.end();
+  return verify.verify(publicKeyPem, signature, 'hex');
+}
 
 export interface SeedProvenance {
   version: number;
-  root_seed_hash: string;        // 256-bit hex string
-  parent_seeds: string[];         // Array of parent seed hashes
-  mutation_history: MutationRecord[];  // Operations applied
-  creation_timestamp: number;     // Unix timestamp
-  creator_public_key: string;     // Hex-encoded public key (64 bytes)
-  signature: string;             // Hex-encoded signature (64 bytes)
-  metadata: Record<string, any>;   // Additional metadata
+  root_seed_hash: string;
+  parent_seeds: string[];
+  mutation_history: MutationRecord[];
+  creation_timestamp: number;
+  creator_public_key: string;
+  signature: string;
+  metadata: Record<string, any>;
 }
 
 export interface MutationRecord {
@@ -51,45 +65,6 @@ export interface MutationRecord {
   timestamp: number;
   operator_public_key?: string;
   operator_signature?: string;
-}
-
-/**
- * Generate ECDSA keypair (simplified for demo)
- * In production, use: const ec = new EC('secp256k1');
- */
-export function generateKeyPair(seed?: string): { privateKey: string; publicKey: string } {
-  const rng = new Xoshiro256StarStar(seed ?? 'provenance-default-deterministic-keypair');
-  
-  // Simplified: generate 32-byte private key from seed
-  let privateKey = '';
-  for (let i = 0; i < 64; i++) {
-    privateKey += Math.floor(rng.nextF64() * 16).toString(16);
-  }
-  
-  // Simplified: derive public key (in production, use actual elliptic curve)
-  const publicKey = sha256Sync(privateKey);
-  
-  return { privateKey, publicKey };
-}
-
-/**
- * Sign data with private key (simplified)
- */
-export function signData(data: string, privateKey: string): string {
-  // Simplified: HMAC-like signature using SHA-256
-  // In production: use actual ECDSA sign
-  const hash = sha256Sync(data + privateKey);
-  return hash;
-}
-
-/**
- * Verify signature
- */
-export function verifySignature(data: string, signature: string, publicKey: string): boolean {
-  // Simplified verification
-  // In production: use actual ECDSA verify
-  const expected = sha256Sync(data + publicKey);
-  return signature === expected;
 }
 
 /**

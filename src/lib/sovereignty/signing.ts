@@ -98,7 +98,7 @@ export async function createSovereignty(
   const timestamp = Date.now();
   const dataToSign = `${seedHash}:${author}:${timestamp}`;
   const signature = await signData(dataToSign, privateKey);
-  const publicKey = await exportPublicKey(await generateKeyPair().then(k => k.publicKey));
+  const publicKey = await exportPublicKey(privateKey);
 
   return {
     author,

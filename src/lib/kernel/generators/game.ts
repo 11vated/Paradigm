@@ -133,18 +133,18 @@ function getGenreScript(genre: string): string {
 }
 
 function extractParams(seed: Seed): GameParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  const diff = seed.genes?.difficulty?.value || 0.5;
-  const levelCount = seed.genes?.levelCount?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const diff = (seed.genes?.difficulty?.value as number) || 0.5;
+  const levelCount = (seed.genes?.levelCount?.value as number) || 0.5;
 
   return {
-    genre: seed.genes?.genre?.value || 'action',
+    genre: (seed.genes?.genre?.value as string) || 'action',
     difficulty: typeof diff === 'number' ? diff : 0.5,
     levelCount: Math.max(3, Math.floor((typeof levelCount === 'number' ? levelCount : 0.5) * 20)),
     mechanics: (() => {
       const m = seed.genes?.mechanics?.value || ['action'];
       return Array.isArray(m) ? m : ['action'];
     })(),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

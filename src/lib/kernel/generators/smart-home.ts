@@ -49,11 +49,11 @@ function generateSVG(params: SmartHomeParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SmartHomeParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     systemType: seed.genes?.systemType?.value || ['starter', 'comprehensive', 'luxury', 'eco_friendly'][rng.nextInt(0, 3)],
     deviceCount: Math.floor(((seed.genes?.deviceCount?.value as number || rng.nextF64()) * 990) + 10),
     automation: (seed.genes?.automation?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

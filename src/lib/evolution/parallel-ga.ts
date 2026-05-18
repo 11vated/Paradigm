@@ -46,13 +46,13 @@ export class ParallelGeneticAlgorithm {
   }
   
   /**
-   * Initialize worker pool
+   * Initialize worker pool using dedicated GA worker
    */
-  async initWorkers(workerScript: string): Promise<void> {
-    const numWorkers = Math.min(this.config.numWorkers, navigator.hardwareConcurrency || 4);
+  async initWorkers(): Promise<void> {
+    const numWorkers = Math.min(this.config.numWorkers, typeof navigator !== 'undefined' ? navigator.hardwareConcurrency || 4 : 4);
     
     for (let i = 0; i < numWorkers; i++) {
-      const worker = new Worker(workerScript);
+      const worker = new Worker(new URL('../../workers/ga-worker.ts', import.meta.url), { type: 'module' });
       
       worker.onmessage = (event: MessageEvent<WorkerResult>) => {
         const { type, data, id, error } = event.data;
@@ -71,7 +71,6 @@ export class ParallelGeneticAlgorithm {
         console.error(`Worker ${i} error:`, error);
       };
       
-      // Initialize worker
       worker.postMessage({ type: 'init', data: { config: this.config, workerId: i } });
       
       this.workers.push(worker);
@@ -249,138 +248,5 @@ export class ParallelGeneticAlgorithm {
     this.workers = [];
   }
 }
-
-/**
- * Worker script content (to be saved as separate file)
- */
-export const GA_WORKER_SCRIPT = `
-let config = {};
-let workerId = 0;
-
-// Simple seeded RNG
-class SeededRandom {
-  constructor(seed) {
-    this.seed = seed;
-  }
-  
-  next() {
-    this.seed = (this.seed * 1103515245 + 12345) & 0x7fffffff;
-    return this.seed / 0x7fffffff;
-  }
-}
-
-self.onmessage = async function(event) {
-  const { type, data, id } = event.data;
-  
-  try {
-    let result;
-    
-    switch (type) {
-      case 'init':
-        config = data.config;
-        workerId = data.workerId;
-        result = { success: true };
-        break;
-        
-      case 'evaluate':
-        // Evaluate batch of seeds
-        const fitnessFn = new Function('return ' + data.fitnessFn)();
-        const results = data.population.map(seed => {
-          try {
-            return typeof fitnessFn === 'function' ? fitnessFn(seed) : 0.5;
-          } catch {
-            return 0.5;
-          }
-        });
-        result = results;
-        break;
-        
-      case 'crossover':
-        // Perform crossover on batch
-        const offspring = [];
-        const rng = new SeededRandom(workerId + data.population.length + Math.floor(data.crossoverRate * 1000000));
-        
-        for (let i = 0; i < data.population.length; i += 2) {
-          if (i + 1 >= data.population.length) break;
-          
-          const parent1 = data.population[i];
-          const parent2 = data.population[i + 1];
-          
-          if (rng.next() < data.crossoverRate) {
-            // Single-point crossover
-            const child = { ...parent1 };
-            child.genes = { ...parent1.genes };
-            
-            // Blend genes (simplified)
-            for (const key in parent1.genes) {
-              if (parent2.genes[key]) {
-                const alpha = rng.next();
-                child.genes[key] = parent1.genes[key] * alpha + parent2.genes[key] * (1 - alpha);
-              }
-            }
-            
-            offspring.push(child);
-          } else {
-            offspring.push(parent1);
-            offspring.push(parent2);
-          }
-        }
-        result = offspring;
-        break;
-        
-      case 'mutate':
-        // Mutate batch
-        const mutated = data.population.map(seed => {
-          const newSeed = { ...seed };
-          newSeed.genes = { ...seed.genes };
-          
-          const rng = new SeededRandom(workerId + data.population.length + Math.floor(data.mutationRate * 1000000));
-          for (const key in newSeed.genes) {
-            if (typeof newSeed.genes[key] === 'number' && rng.next() < data.mutationRate) {
-              newSeed.genes[key] += (rng.next() - 0.5) * data.mutationRate;
-              newSeed.genes[key] = Math.max(0, Math.min(1, newSeed.genes[key]));
-            }
-          }
-          
-          return newSeed;
-        });
-        result = mutated;
-        break;
-        
-      case 'select':
-        // Tournament selection
-        const selected = [];
-        const rng = new SeededRandom(workerId + data.population.length + data.count + data.tournamentSize);
-        
-        for (let i = 0; i < data.count; i++) {
-          let best = null;
-          let bestScore = -Infinity;
-          
-          for (let j = 0; j < data.tournamentSize; j++) {
-            const idx = Math.floor(rng.next() * data.population.length);
-            // Assume population has fitness property or use default
-            const score = data.population[idx]?.fitness ?? 0.5;
-            if (score > bestScore) {
-              bestScore = score;
-              best = data.population[idx];
-            }
-          }
-          
-          if (best) selected.push(best);
-        }
-        result = selected;
-        break;
-        
-      default:
-        result = { error: 'Unknown message type' };
-    }
-    
-    self.postMessage({ type: 'result', data: result, id });
-    
-  } catch (error) {
-    self.postMessage({ type: 'result', error: error.message, id });
-  }
-};
-`;
 
 export default ParallelGeneticAlgorithm;

@@ -84,12 +84,12 @@ function generateMarkdown(params: LegalParams, clauses: any[], rng: Xoshiro256St
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): LegalParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const jurisdictions = ['US', 'EU', 'UK', 'CA', 'AU', 'JP'];
   return {
     documentType: seed.genes?.documentType?.value || ['contract', 'policy', 'terms', 'patent', 'license'][rng.nextInt(0, 4)],
     jurisdiction: seed.genes?.jurisdiction?.value || jurisdictions[rng.nextInt(0, jurisdictions.length - 1)],
     complexity: (seed.genes?.complexity?.value as number || rng.nextF64()),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

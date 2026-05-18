@@ -50,12 +50,12 @@ function generateSVG(params: WearablesParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): WearablesParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const allSensors = ['accelerometer', 'gyroscope', 'heart_rate', 'spo2', 'gps', 'barometer'];
   return {
     deviceType: seed.genes?.deviceType?.value || ['smartwatch', 'fitness_tracker', 'smart_glasses', 'hearables'][rng.nextInt(0, 3)],
     sensors: (seed.genes?.sensors as string[]) || allSensors.slice(0, Math.floor(rng.nextF64() * 5) + 2),
     batteryLife: Math.floor(((seed.genes?.batteryLife?.value as number || rng.nextF64()) * 29) + 1),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

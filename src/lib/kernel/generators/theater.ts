@@ -39,11 +39,11 @@ export async function generateTheater(seed: Seed, outputPath: string): Promise<{
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TheaterParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     productionType: seed.genes?.productionType?.value || ['play', 'musical', 'opera', 'experimental'][rng.nextInt(0, 3)],
     acts: Math.floor(((seed.genes?.acts?.value as number || rng.nextF64()) * 4) + 1),
     cast: Math.floor(((seed.genes?.cast?.value as number || rng.nextF64()) * 90) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -39,11 +39,11 @@ export async function generateJournalism(seed: Seed, outputPath: string): Promis
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): JournalismParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     articleType: seed.genes?.articleType?.value || ['news', 'investigative', 'feature', 'opinion'][rng.nextInt(0, 3)],
     wordCount: Math.floor(((seed.genes?.wordCount?.value as number || rng.nextF64()) * 4900) + 100),
     sources: Math.floor(((seed.genes?.sources?.value as number || rng.nextF64()) * 48) + 2),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

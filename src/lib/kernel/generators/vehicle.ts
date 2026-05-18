@@ -70,11 +70,11 @@ function generateVehicleSVG(params: VehicleParams): string {
 }
 
 function extractParams(seed: Seed): VehicleParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    type: seed.genes?.type?.value || 'car',
-    speed: seed.genes?.speed?.value || 100,
-    capacity: seed.genes?.capacity?.value || 4,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    type: (seed.genes?.type?.value as string) || 'car',
+    speed: (seed.genes?.speed?.value as number) || 100,
+    capacity: (seed.genes?.capacity?.value as number) || 4,
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

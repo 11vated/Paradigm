@@ -13,6 +13,7 @@ import type { Seed } from '../engines';
 import type { CharacterParams } from './character-v2';
 import type { MusicParams, Note } from './music-v2';
 import type { SpriteParams } from './sprite-v2';
+import { rngFromHash } from '../rng';
 import { XOSHIRO256_WGSL, hashToU64, createRNGStateBuffer } from './webgpu-rng';
 import { CHARACTER_COMPUTE_WGSL, createCharacterBuffers, buildCharacterPipeline } from './character-gpu';
 import { MUSIC_SYNTHESIS_WGSL, createMusicBuffers, buildMusicPipeline } from './music-gpu';
@@ -150,7 +151,6 @@ export class WebGPUGeneratorSystem {
     if (!this.device) throw new Error('GPU not initialized');
 
     const { extractParams } = await import('./character-v2');
-    const { rngFromHash } = await import('../rng');
     const rng = rngFromHash(seed.$hash || '');
     const params: CharacterParams = extractParams({} as Seed, rng);
 
@@ -237,7 +237,6 @@ export class WebGPUGeneratorSystem {
     if (!this.device) throw new Error('GPU not initialized');
 
     const { extractParams, generateChordProgression, generateMelody, generateBass, generateDrums } = await import('./music-v2');
-    const { rngFromHash } = await import('../rng');
     const rng = rngFromHash(seed.$hash || '');
     const params: MusicParams = extractParams({} as Seed, rng);
 
@@ -325,7 +324,6 @@ export class WebGPUGeneratorSystem {
     if (!this.device) throw new Error('GPU not initialized');
 
     const { extractParams } = await import('./sprite-v2');
-    const { rngFromHash } = await import('../rng');
     const rng = rngFromHash(seed.$hash || '');
     const params: SpriteParams = extractParams({} as Seed, rng);
 

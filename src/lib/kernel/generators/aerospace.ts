@@ -114,13 +114,13 @@ Paradigm GSPL Beyond Omega — Aerospace`;
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AerospaceParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     vehicleType: seed.genes?.vehicleType?.value || ['satellite', 'rocket', 'spaceship', 'space_station', 'probe'][rng.nextInt(0, 4)],
     mass: ((seed.genes?.mass?.value as number || rng.nextF64()) * 99900) + 100, // 100-100000 kg
     payload: ((seed.genes?.payload?.value as number || rng.nextF64()) * 9900) + 100, // 100-10000 kg
     range: ((seed.genes?.range?.value as number || rng.nextF64()) * 999000) + 1000, // 1000-1000000 km
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

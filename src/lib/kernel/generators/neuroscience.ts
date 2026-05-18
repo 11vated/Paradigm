@@ -55,11 +55,11 @@ function generateCSV(params: NeuroscienceParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): NeuroscienceParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     studyType: seed.genes?.studyType?.value || ['brain_mapping', 'neural_interface', 'cognitive', 'clinical'][rng.nextInt(0, 3)],
     subjects: Math.floor(((seed.genes?.subjects?.value as number || rng.nextF64()) * 990) + 10),
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 48) + 4),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

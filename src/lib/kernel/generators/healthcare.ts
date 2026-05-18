@@ -114,14 +114,14 @@ function generateLayoutSVG(params: HealthcareParams, rng: Xoshiro256StarStar): s
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): HealthcareParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const specialties = ['cardiology', 'oncology', 'neurology', 'orthopedics', 'pediatrics'];
 
   return {
     facilityType: seed.genes?.facilityType?.value || ['hospital', 'clinic', 'telemedicine', 'research_lab'][rng.nextInt(0, 3)],
     bedCount: Math.floor(((seed.genes?.bedCount?.value as number || rng.nextF64()) * 9900) + 100), // 100-10000
     specialty: seed.genes?.specialty?.value || specialties[rng.nextInt(0, specialties.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

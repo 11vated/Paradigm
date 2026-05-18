@@ -93,11 +93,11 @@ Paradigm GSPL Beyond Omega — Automotive`;
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): AutomotiveParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     vehicleClass: seed.genes?.vehicleClass?.value || ['sedan', 'suv', 'truck', 'sports', 'commercial'][rng.nextInt(0, 4)],
     powertrain: seed.genes?.powertrain?.value || ['ice', 'hybrid', 'ev', 'hydrogen'][rng.nextInt(0, 3)],
     autonomy: Math.floor(((seed.genes?.autonomy?.value as number || rng.nextF64()) * 5) + 0.5),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -277,10 +277,12 @@ function attrsToString(attrs: Record<string, string>): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): Visual2DParams {
-  const quality = seed.genes?.quality?.value || 'high';
-  const resolution = seed.genes?.resolution?.value || 512;
-  const style = seed.genes?.style?.value || 'abstract';
-  const complexity = seed.genes?.complexity?.value || 0.5;
+  const quality = (seed.genes?.quality?.value as string) || 'high';
+  const resolution = (seed.genes?.resolution?.value as number) || 512;
+  const style = (seed.genes?.style?.value as string) || 'abstract';
+  const composition = seed.genes?.composition?.value;
+  const compositions: Visual2DParams['composition'][] = ['centered', 'rule-of-thirds', 'golden-spiral', 'symmetrical'];
+  const complexity = (seed.genes?.complexity?.value as number) || 0.5;
   
   // Generate palette from seed
   const palette: number[][] = [];
@@ -296,11 +298,11 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): Visual2DParams {
     style: ['abstract', 'geometric', 'organic', 'watercolor', 'pixel', 'isometric'].includes(style) ? style as any : 'abstract',
     complexity,
     palette: seed.genes?.palette?.value || palette,
-    composition: seed.genes?.composition?.value || 'centered',
+    composition: compositions.includes(composition as Visual2DParams['composition']) ? composition as Visual2DParams['composition'] : 'centered',
     layers: Math.max(3, Math.floor(complexity * 10)),
     resolution: typeof resolution === 'number' && resolution <= 1 ? Math.floor(resolution * 1024) : resolution,
     quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality as any : 'medium',
-    scale: seed.genes?.scale?.value || 1.0
+    scale: (seed.genes?.scale?.value as number) || 1.0
   };
 }
 

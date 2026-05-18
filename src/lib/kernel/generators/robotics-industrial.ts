@@ -51,11 +51,11 @@ function generateSVG(params: RoboticsIndustrialParams, rng: Xoshiro256StarStar):
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): RoboticsIndustrialParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     robotType: seed.genes?.robotType?.value || ['assembly', 'welding', 'palletizing', 'cnc_loading'][rng.nextInt(0, 3)],
     reach: (seed.genes?.reach?.value as number || rng.nextF64()) * 2 + 0.5,
     payload: (seed.genes?.payload?.value as number || rng.nextF64()) * 50 + 5,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

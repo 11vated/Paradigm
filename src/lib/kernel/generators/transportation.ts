@@ -119,13 +119,13 @@ function generateSchematicSVG(params: TransportationParams, rng: Xoshiro256StarS
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TransportationParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     vehicleType: seed.genes?.vehicleType?.value || ['ev', 'hyperloop', 'av', 'rail', 'drone_delivery'][rng.nextInt(0, 4)],
     speed: Math.floor(((seed.genes?.speed?.value as number || rng.nextF64()) * 990) + 10), // 10-1000 km/h
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 9900) + 100), // 100-10000
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

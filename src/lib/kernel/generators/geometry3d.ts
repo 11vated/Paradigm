@@ -94,14 +94,14 @@ function getDetailSegments(detail: number, quality: string): [number, number, nu
 }
 
 function extractParams(seed: Seed): Geometry3DParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
   return {
-    primitive: seed.genes?.primitive?.value || 'sphere',
+    primitive: (seed.genes?.primitive?.value as string) || 'sphere',
     detail: typeof seed.genes?.detail?.value === 'number' ? seed.genes.detail.value : 0.5,
-    material: seed.genes?.material?.value || 'metal',
+    material: (seed.genes?.material?.value as string) || 'metal',
     scale: seed.genes?.scale?.value || [1, 1, 1],
     color: seed.genes?.color?.value || [0.5, 0.5, 0.5],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -49,13 +49,13 @@ function generateSVG(params: TextilesParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TextilesParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const fibers = ['cotton', 'polyester', 'silk', 'wool', 'nylon', 'hemp'];
   const weaves = ['plain', 'twill', 'satin', 'jacquard', 'knit'];
   return {
     type: seed.genes?.type?.value || ['fabric', 'carpet', 'upholstery', 'technical'][rng.nextInt(0, 3)],
     fiber: seed.genes?.fiber?.value || fibers[rng.nextInt(0, fibers.length - 1)],
     weave: seed.genes?.weave?.value || weaves[rng.nextInt(0, weaves.length - 1)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

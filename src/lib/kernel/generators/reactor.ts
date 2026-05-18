@@ -148,14 +148,14 @@ function generateSchematicSVG(params: ReactorParams, rng: Xoshiro256StarStar): s
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ReactorParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
      type: seed.genes?.type?.value || ['tokamak', 'stellarator', 'inertial', 'magnetic'][rng.nextInt(0, 3)],
       powerOutput: Math.floor(((seed.genes?.powerOutput?.value as number || rng.nextF64()) * 1000) + 100), // 100-1100 MW
       temperature: Math.floor(((seed.genes?.temperature?.value as number || rng.nextF64()) * 150) + 50), // 50-200 million K
      magneticField: ((seed.genes?.magneticField?.value as number || rng.nextF64()) * 10) + 2, // 2-12 Tesla
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

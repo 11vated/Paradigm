@@ -117,13 +117,13 @@ function generateBlueprintSVG(params: RealEstateParams, rng: Xoshiro256StarStar)
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): RealEstateParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     propertyType: seed.genes?.propertyType?.value || ['residential', 'commercial', 'mixed_use', 'industrial'][rng.nextInt(0, 3)],
     area: Math.floor(((seed.genes?.area?.value as number || rng.nextF64()) * 99000) + 1000), // 1000-100000 sq m
     floors: Math.floor(((seed.genes?.floors?.value as number || rng.nextF64()) * 99) + 1), // 1-100 floors
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

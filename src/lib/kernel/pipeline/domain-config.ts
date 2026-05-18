@@ -239,7 +239,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
       audio: {
         type: geneVal(s, 'soundType', 'sfx'),
         duration_ms: o.duration ? o.duration * 1000 : 0,
-        frequency: geneVal(s, 'frequency', 440),
+        frequency: geneVal(s, 'frequency', 432),
         sampleRate: o.sampleRate || 44100,
       },
       render_hints: { mode: 'audio_waveform', playable: true },
@@ -275,7 +275,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'alife', version: 'worker', outputExtension: 'json',
-    generator: (s, p) => generateAlife(s, p),
+    generator: (s, p) => generateAlife(s, p) as Promise<GeneratorOutput>,
     postProcess: (o: any, s: Seed) => {
       let populationSize = geneNumber(s, 'populationSize', 50);
       if (populationSize <= 1) populationSize = Math.max(10, Math.floor(populationSize * 100));

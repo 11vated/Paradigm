@@ -39,12 +39,12 @@ export async function generateDataScience(seed: Seed, outputPath: string): Promi
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): DataScienceParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const sources = ['SQL Database', 'CSV Files', 'API', 'Streaming', 'Data Lake'];
   return {
     projectType: seed.genes?.projectType?.value || ['etl', 'ml_pipeline', 'analytics', 'big_data'][rng.nextInt(0, 3)],
     dataSource: seed.genes?.dataSource?.value || sources[rng.nextInt(0, sources.length - 1)],
     records: Math.floor(((seed.genes?.records?.value as number || rng.nextF64()) * 990) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

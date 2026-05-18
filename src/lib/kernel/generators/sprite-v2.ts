@@ -45,15 +45,15 @@ interface PixelArtPalette {
  * Extract parameters from seed
  */
 export function extractParams(seed: Seed, rng: Xoshiro256StarStar): SpriteParams {
-  const quality = (seed.genes?.quality?.value || 'medium') as SpriteParams['quality'];
+  const quality = ((seed.genes?.quality?.value as string) || 'medium') as SpriteParams['quality'];
 
   // Resolution from seed (0-1 maps to 16-128)
-  const resGene = seed.genes?.resolution?.value || 0.5;
+  const resGene = (seed.genes?.resolution?.value as number) || 0.5;
   const resolution = Math.floor(16 + resGene * 112);
   const resolutionPow2 = Math.pow(2, Math.round(Math.log2(resolution))); // Power of 2
 
   // Palette size
-  const palSizeGene = seed.genes?.paletteSize?.value || 0.5;
+  const palSizeGene = (seed.genes?.paletteSize?.value as number) || 0.5;
   const paletteSize = Math.max(2, Math.min(32, Math.floor(palSizeGene * 30) + 2));
 
   // Base colors

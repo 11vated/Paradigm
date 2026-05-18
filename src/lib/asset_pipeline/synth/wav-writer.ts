@@ -38,7 +38,7 @@ const DEFAULT_CHANNELS = 2;
 const DEFAULT_BIT_DEPTH = 16;
 
 function midiToFrequency(midiNote: number): number {
-  return 440 * Math.pow(2, (midiNote - 69) / 12);
+  return 432 * Math.pow(2, (midiNote - 69) / 12);
 }
 
 export class AdsrEnvelope {

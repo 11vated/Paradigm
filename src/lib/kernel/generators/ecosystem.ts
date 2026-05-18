@@ -83,16 +83,16 @@ function getClimate(env: string): string {
   }
 
 function extractParams(seed: Seed): EcosystemParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
-    speciesCount: Math.max(2, Math.floor((seed.genes?.speciesCount?.value || 0.5) * 20)),
-    environment: seed.genes?.environment?.value || 'forest',
-    stability: seed.genes?.stability?.value || 0.6,
+    speciesCount: Math.max(2, Math.floor(((seed.genes?.speciesCount?.value as number) || 0.5) * 20)),
+    environment: (seed.genes?.environment?.value as string) || 'forest',
+    stability: (seed.genes?.stability?.value as number) || 0.6,
     interactions: (() => {
       const i = seed.genes?.interactions?.value || ['predation', 'symbiosis', 'competition'];
       return Array.isArray(i) ? i : ['predation', 'symbiosis', 'competition'];
     })(),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

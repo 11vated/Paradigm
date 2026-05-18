@@ -50,12 +50,12 @@ function generateSVG(params: SemiconductorsParams, rng: Xoshiro256StarStar): str
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SemiconductorsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     nodeSize: Math.floor(((seed.genes?.nodeSize?.value as number || rng.nextF64()) * 195) + 5), // 5-200nm
     transistorCount: Math.floor(((seed.genes?.transistorCount?.value as number || rng.nextF64()) * 99) + 1),
     architecture: seed.genes?.architecture?.value || ['x86', 'ARM', 'RISC-V'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

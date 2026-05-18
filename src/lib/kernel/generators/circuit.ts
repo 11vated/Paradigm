@@ -72,14 +72,14 @@ function generateCircuitSVG(params: CircuitParams): string {
 }
 
 function extractParams(seed: Seed): CircuitParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    type: seed.genes?.type?.value || 'analog',
+    type: (seed.genes?.type?.value as string) || 'analog',
     components: (() => {
       const c = seed.genes?.components?.value || ['resistor', 'capacitor', 'inductor'];
       return Array.isArray(c) ? c : ['resistor', 'capacitor'];
     })(),
-    complexity: seed.genes?.complexity?.value || 0.5,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    complexity: (seed.genes?.complexity?.value as number) || 0.5,
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

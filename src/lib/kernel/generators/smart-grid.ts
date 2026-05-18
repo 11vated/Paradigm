@@ -49,11 +49,11 @@ function generateSVG(params: SmartGridParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SmartGridParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     gridType: seed.genes?.gridType?.value || ['transmission', 'distribution', 'microgrid', 'virtual_power_plant'][rng.nextInt(0, 3)],
     capacity: Math.floor(((seed.genes?.capacity?.value as number || rng.nextF64()) * 990) + 10),
     iotDevices: Math.floor(((seed.genes?.iotDevices?.value as number || rng.nextF64()) * 990000) + 10000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

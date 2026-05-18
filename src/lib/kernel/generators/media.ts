@@ -121,13 +121,13 @@ function getExtension(mediaType: string): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MediaParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
     mediaType: seed.genes?.mediaType?.value || ['video', 'audio', 'image', 'interactive'][rng.nextInt(0, 3)],
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 170) + 10), // 10-180 minutes
     resolution: seed.genes?.resolution?.value || ['1080p', '4K', '8K'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
 

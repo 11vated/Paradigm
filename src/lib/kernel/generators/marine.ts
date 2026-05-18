@@ -88,11 +88,11 @@ function generateLayoutSVG(params: MarineParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): MarineParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     vesselType: seed.genes?.vesselType?.value || ['cargo', 'tanker', 'cruise', 'submarine', 'yacht'][rng.nextInt(0, 4)],
     length: Math.floor(((seed.genes?.length?.value as number || rng.nextF64()) * 390) + 10),
     deadweight: Math.floor(((seed.genes?.deadweight?.value as number || rng.nextF64()) * 199000) + 1000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

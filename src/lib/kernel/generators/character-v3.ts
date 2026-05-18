@@ -204,25 +204,25 @@ export async function generateCharacterV3(
  * Extract parameters from seed (enhanced for V3)
  */
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CharacterParams {
-  const quality = (seed.genes?.quality?.value || 'high') as CharacterParams['quality'];
-  const gender = (seed.genes?.gender?.value || 'neutral') as CharacterParams['gender'];
-  const bodyType = (seed.genes?.bodyType?.value || 'athletic') as CharacterParams['bodyType'];
+  const quality = ((seed.genes?.quality?.value as string) || 'high') as CharacterParams['quality'];
+  const gender = ((seed.genes?.gender?.value as string) || 'neutral') as CharacterParams['gender'];
+  const bodyType = ((seed.genes?.bodyType?.value as string) || 'athletic') as CharacterParams['bodyType'];
 
   // Base height (1.4m - 2.1m)
-  const baseHeight = 1.4 + (seed.genes?.height?.value || 0.5) * 0.7;
+  const baseHeight = 1.4 + ((seed.genes?.height?.value as number) || 0.5) * 0.7;
   const genderFactor = gender === 'male' ? 1.1 : gender === 'female' ? 0.95 : 1.0;
   const bodyFactor = bodyType === 'slim' ? 0.85 : bodyType === 'athletic' ? 1.0 : bodyType === 'heavy' ? 1.15 : 1.0;
 
   const proportions: BodyProportions = {
     height: baseHeight * genderFactor,
-    shoulderWidth: (seed.genes?.shoulderWidth?.value || 0.5) * 0.4 + 0.3,
+    shoulderWidth: ((seed.genes?.shoulderWidth?.value as number) || 0.5) * 0.4 + 0.3,
     torsoLength: baseHeight * 0.35,
     legLength: baseHeight * 0.5,
     armLength: baseHeight * 0.4,
     headSize: 0.11 * baseHeight,
-    waistWidth: (seed.genes?.waistWidth?.value || 0.5) * 0.3 + 0.2,
-    muscleMass: seed.genes?.muscleMass?.value || 0.5,
-    fatDistribution: seed.genes?.fatDistribution?.value || 0.3
+    waistWidth: ((seed.genes?.waistWidth?.value as number) || 0.5) * 0.3 + 0.2,
+    muscleMass: (seed.genes?.muscleMass?.value as number) || 0.5,
+    fatDistribution: (seed.genes?.fatDistribution?.value as number) || 0.3
   };
 
   const face: FaceFeatures = {
@@ -253,9 +253,9 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): CharacterParams {
   ];
 
   const eyeColor: [number, number, number] = [
-    seed.genes?.eyeColorR?.value || 0.3,
-    seed.genes?.eyeColorG?.value || 0.6,
-    seed.genes?.eyeColorB?.value || 0.4
+    (seed.genes?.eyeColorR?.value as number) || 0.3,
+    (seed.genes?.eyeColorG?.value as number) || 0.6,
+    (seed.genes?.eyeColorB?.value as number) || 0.4
   ];
 
   return {
@@ -264,7 +264,7 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): CharacterParams {
     muscles,
     skinTone,
     hairColor,
-    hairStyle: seed.genes?.hairStyle?.value || 'short',
+    hairStyle: (seed.genes?.hairStyle?.value as string) || 'short',
     eyeColor,
     gender,
     bodyType,

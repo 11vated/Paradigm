@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { creativeDAO } from './creative-dao';
+import { creativeDAO, type RoyaltyCurve } from './creative-dao';
 
 let governorContract: ethers.Contract | null = null;
 let timelockContract: ethers.Contract | null = null;
@@ -63,7 +63,7 @@ export interface DAOState {
   proposals: number;
   activeProposals: number;
   approvedGeneTypes: number;
-  royaltyCurve: number[];
+  royaltyCurve: RoyaltyCurve;
   constitutionalCommitments: number;
   onChain: boolean;
   governorAddress: string | null;
@@ -116,7 +116,7 @@ export async function propose(
   calldatas: string[],
   description: string,
   title: string,
-  type: string,
+  type: 'domain' | 'governance' | 'gene_type' | 'royalty_curve' | 'treasury' | 'substrate',
   payload: any,
   userId: string,
   stake: number

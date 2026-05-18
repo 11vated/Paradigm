@@ -66,12 +66,12 @@ function generateSVG(params: ArtParams, rng: Xoshiro256StarStar): string {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): ArtParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const styles = ['impressionism', 'cubism', 'surrealism', 'minimalism', 'abstract', 'pop_art'];
   return {
     medium: seed.genes?.medium?.value || ['painting', 'sculpture', 'digital', 'photography'][rng.nextInt(0, 3)],
     style: seed.genes?.style?.value || styles[rng.nextInt(0, styles.length - 1)],
     dimensions: { width: Math.floor(rng.nextF64() * 200) + 20, height: Math.floor(rng.nextF64() * 200) + 20 },
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -151,7 +151,7 @@ export const DOMAIN_TEMPLATES: Record<string, DomainGeneTemplate> = {
       key: { type: 'categorical', value: 'C' },
       scale: { type: 'categorical', value: 'major' },
       genre: { type: 'categorical', value: 'electronic' },
-      tuning: { type: 'string', value: 'a440' },
+      tuning: { type: 'string', value: 'a432' },
     },
     fitness: (genes) => (genes.tempo?.value ?? 120) / 200,
     description: 'Music compositions with WAV output'

@@ -39,11 +39,11 @@ export async function generateGenomics(seed: Seed, outputPath: string): Promise<
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): GenomicsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     application: seed.genes?.application?.value || ['sequencing', 'editing', 'medicine', 'agriculture'][rng.nextInt(0, 3)],
     genomeSize: (seed.genes?.genomeSize?.value as number || rng.nextF64()) * 3 + 0.5,
     coverage: Math.floor(((seed.genes?.coverage?.value as number || rng.nextF64()) * 90) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

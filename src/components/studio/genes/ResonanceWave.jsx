@@ -10,7 +10,7 @@ export default function ResonanceWave({ value = {}, color = '#00E5FF', height = 
   const timeRef = useRef(0);
 
   // Extract waveform parameters from gene value
-  const frequency = typeof value === 'object' ? (value.frequency || value.fundamental || 440) : (typeof value === 'number' ? value : 440);
+  const frequency = typeof value === 'object' ? (value.frequency || value.fundamental || 432) : (typeof value === 'number' ? value : 432);
   const amplitude = typeof value === 'object' ? (value.amplitude || 0.8) : 0.8;
   const harmonics = typeof value === 'object' ? (value.harmonics || 3) : 3;
   const phase = typeof value === 'object' ? (value.phase || 0) : 0;

@@ -185,7 +185,7 @@ void main() {
 }
 
 function extractParams(seed: Seed): ShaderParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   
   const qualitySettings: Record<string, { iterations: number; epsilon: number }> = {
     low: { iterations: 32, epsilon: 0.01 },
@@ -197,10 +197,10 @@ function extractParams(seed: Seed): ShaderParams {
   const settings = qualitySettings[quality] || qualitySettings.medium;
   
   return {
-    shaderType: seed.genes?.shaderType?.value || 'fragment',
-    technique: seed.genes?.technique?.value || 'raymarching',
+    shaderType: (seed.genes?.shaderType?.value as string) || 'fragment',
+    technique: (seed.genes?.technique?.value as string) || 'raymarching',
     iterations: seed.genes?.iterations?.value || settings.iterations,
     epsilon: seed.genes?.epsilon?.value || settings.epsilon,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

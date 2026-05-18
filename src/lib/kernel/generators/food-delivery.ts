@@ -49,11 +49,11 @@ function generateSVG(params: FoodDeliveryParams, rng: Xoshiro256StarStar): strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): FoodDeliveryParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     serviceType: seed.genes?.serviceType?.value || ['ghost_kitchen', 'delivery_fleet', 'aggregator', 'subscription'][rng.nextInt(0, 3)],
     dailyOrders: Math.floor(((seed.genes?.dailyOrders?.value as number || rng.nextF64()) * 9900) + 100),
     coverage: Math.floor(((seed.genes?.coverage?.value as number || rng.nextF64()) * 990) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

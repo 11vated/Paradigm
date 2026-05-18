@@ -133,11 +133,15 @@ function buildBinarySTL(triangles: Triangle[]): Buffer {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): Printing3DParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const technology = (seed.genes?.technology?.value as string) || 
+    (['fdm', 'sla', 'sls', 'metal'] as const)[rng.nextInt(0, 3)];
   return {
-    technology: seed.genes?.technology?.value || ['fdm', 'sla', 'sls', 'metal'][rng.nextInt(0, 3)],
-    buildVolume: Math.floor(((seed.genes?.buildVolume?.value as number || rng.nextF64()) * 990) + 10),
-    resolution: Math.floor(((seed.genes?.resolution?.value as number || rng.nextF64()) * 190) + 10),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    technology: (['fdm', 'sla', 'sls', 'metal'] as const).includes(technology as any) 
+      ? (technology as 'fdm' | 'sla' | 'sls' | 'metal') 
+      : 'fdm',
+    buildVolume: Math.floor(((typeof seed.genes?.buildVolume?.value === 'number' ? seed.genes.buildVolume.value : rng.nextF64()) * 990) + 10),
+    resolution: Math.floor(((typeof seed.genes?.resolution?.value === 'number' ? seed.genes.resolution.value : rng.nextF64()) * 190) + 10),
+    quality: (['low', 'medium', 'high', 'photorealistic'] as const).includes(quality as any) ? quality as any : 'medium'
   };
 }

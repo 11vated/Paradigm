@@ -39,11 +39,11 @@ export async function generateBattery(seed: Seed, outputPath: string): Promise<{
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): BatteryParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     chemistry: seed.genes?.chemistry?.value || ['li_ion', 'solid_state', 'flow', 'sodium_ion'][rng.nextInt(0, 3)],
     capacity: (seed.genes?.capacity?.value as number || rng.nextF64()) * 100 + 1,
     voltage: (seed.genes?.voltage?.value as number || rng.nextF64()) * 400 + 3,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

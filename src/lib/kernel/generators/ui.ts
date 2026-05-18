@@ -89,14 +89,14 @@ export async function generateUI(seed: Seed, outputPath: string): Promise<{ file
 }
 
 function extractParams(seed: Seed): UIParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
-    layout: seed.genes?.layout?.value || 'dashboard',
-    theme: seed.genes?.theme?.value || 'dark',
+    layout: (seed.genes?.layout?.value as string) || 'dashboard',
+    theme: (seed.genes?.theme?.value as string) || 'dark',
     components: (() => {
       const c = seed.genes?.components?.value || ['header', 'sidebar', 'main'];
       return Array.isArray(c) ? c : ['header', 'main'];
     })(),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

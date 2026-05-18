@@ -9,7 +9,7 @@ import type { Seed, Artifact } from './pipeline/types';
 import { createPipeline, getDomainConfig } from './pipeline';
 import { createWebGPUGeneratorSystem, type WebGPUGeneratorSystem } from './generators/webgpu-system';
 import { getGenerationQuality, type GenerationQuality } from './generation-quality';
-import { dispatch as dispatchSeed } from './engine-dispatcher';
+import { dispatch as dispatchSeed, DOMAIN_MAP } from './engine-dispatcher';
 
 let gpuSystem: WebGPUGeneratorSystem | null = null;
 
@@ -120,39 +120,7 @@ export function getAllDomains(): string[] {
 }
 
 export async function getGenerator(domain: string) {
-  const generators: Record<string, () => Promise<any>> = {
-    character: () => import('./generators/character-v3').then(m => m.generateCharacterV3),
-    sprite: () => import('./generators/sprite-animated').then(m => m.generateSpriteAnimated),
-    music: () => import('./generators/music-v2').then(m => m.generateMusicV2),
-    visual2d: () => import('./generators/visual2d-v2').then(m => m.generateVisual2DV2),
-    procedural: () => import('./generators/procedural-3d').then(m => m.generateProcedural3D),
-    fullgame: () => import('./generators/fullgame').then(m => m.generateFullGame),
-    animation: () => import('./generators/animation-enhanced').then(m => m.generateAnimationEnhanced),
-    geometry3d: () => import('./generators/geometry3d').then(m => m.generateGeometry3D),
-    narrative: () => import('./generators/narrative').then(m => m.generateNarrative),
-    ui: () => import('./generators/ui').then(m => m.generateUI),
-    physics: () => import('./generators/physics').then(m => m.generatePhysics),
-    audio: () => import('./generators/audio').then(m => m.generateAudio),
-    ecosystem: () => import('./generators/ecosystem-worker').then(m => m.generateEcosystemWorker),
-    game: () => import('./generators/game-wasm').then(m => m.generateGameWASM),
-    alife: () => import('./generators/alife').then(m => m.generateAlife),
-    shader: () => import('./generators/shader').then(m => m.generateShader),
-    particle: () => import('./generators/particle-gpu').then(m => m.generateParticleGPU),
-    typography: () => import('./generators/typography-enhanced').then(m => m.generateTypographyEnhanced),
-    architecture: () => import('./generators/architecture-3d').then(m => m.generateArchitecture3D),
-    vehicle: () => import('./generators/vehicle-3d').then(m => m.generateVehicle3D),
-    furniture: () => import('./generators/furniture-3d').then(m => m.generateFurniture3D),
-    fashion: () => import('./generators/fashion-3d').then(m => m.generateFashion3D),
-    robotics: () => import('./generators/robotics-3d').then(m => m.generateRobotics3D),
-    circuit: () => import('./generators/circuit').then(m => m.generateCircuit),
-    food: () => import('./generators/food-3d').then(m => m.generateFood3D),
-    choreography: () => import('./generators/choreography').then(m => m.generateChoreography),
-    agent: () => import('./generators/agent').then(m => m.generateAgent),
-  };
-
-  const loader = generators[domain];
-  if (!loader) return null;
-  return loader();
+  return DOMAIN_MAP[domain] ?? null;
 }
 
 export { WebGPUGeneratorSystem } from './generators/webgpu-system';
@@ -167,5 +135,4 @@ export { encodeGseed, decodeGseed, createGseed, signGseed, verifyGseedSignature,
 export type { GseedPackage, GseedMetadata, GseedFlags, RoyaltyConfig, RoyaltySplit } from './binary-format';
 export { buildC2PAManifest, verifyC2PAManifest } from './c2pa-manifest';
 export type { C2PAClaim } from './c2pa-manifest';
-export type { RoyaltyConfig, RoyaltySplit } from './royalty-system';
 export { createDefaultRoyaltyConfig, validateRoyaltyConfig, ROYALTY_ABI } from './royalty-system';

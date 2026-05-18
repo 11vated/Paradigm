@@ -175,16 +175,16 @@ function getBuildingMaterial(style: string, part: string): THREE.MeshStandardMat
 }
 
 function extractParams(seed: Seed): ArchitectureParams {
-  const quality = seed.genes?.quality?.value || 'medium';
-  let floors = seed.genes?.floors?.value || 3;
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  let floors = (seed.genes?.floors?.value as number) || 3;
   if (typeof floors === 'number' && floors <= 1) floors = Math.max(1, Math.floor(floors * 20));
 
   return {
-    buildingType: seed.genes?.buildingType?.value || 'residential',
+    buildingType: (seed.genes?.buildingType?.value as string) || 'residential',
     floors,
     footprint: [10, 10], // Default footprint
-    style: seed.genes?.style?.value || 'modern',
+    style: (seed.genes?.style?.value as string) || 'modern',
     hasDetails: seed.genes?.hasDetails?.value !== false,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

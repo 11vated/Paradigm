@@ -75,11 +75,11 @@ function generateRisk(params: InsuranceParams, rng: Xoshiro256StarStar): any {
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): InsuranceParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     productType: seed.genes?.productType?.value || ['life', 'health', 'auto', 'property', 'cyber'][rng.nextInt(0, 4)],
     coverage: Math.floor(((seed.genes?.coverage?.value as number || rng.nextF64()) * 9900000) + 10000),
     term: Math.floor(((seed.genes?.term?.value as number || rng.nextF64()) * 45) + 5),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

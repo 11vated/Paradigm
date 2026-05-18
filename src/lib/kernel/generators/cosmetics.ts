@@ -57,11 +57,11 @@ function generateFormulation(params: CosmeticsParams, rng: Xoshiro256StarStar): 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): CosmeticsParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     productType: seed.genes?.productType?.value || ['skincare', 'makeup', 'fragrance', 'personal_care'][rng.nextInt(0, 3)],
     skinType: seed.genes?.skinType?.value || ['dry', 'oily', 'combination', 'sensitive'][rng.nextInt(0, 3)],
     organic: seed.genes?.organic?.value ?? (rng.nextF64() > 0.5),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

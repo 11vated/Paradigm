@@ -114,17 +114,17 @@ function generateGenericAct(act: number, characters: string[], plot: string, ton
 }
 
 function extractParams(seed: Seed): NarrativeParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
 
   return {
-    structure: seed.genes?.structure?.value || 'heros_journey',
-    tone: seed.genes?.tone?.value || 'epic',
+    structure: (seed.genes?.structure?.value as string) || 'heros_journey',
+    tone: (seed.genes?.tone?.value as string) || 'epic',
     characters: (() => {
       const c = seed.genes?.characters?.value || ['hero', 'villain'];
       return Array.isArray(c) ? c : ['hero', 'villain'];
     })(),
-    plot: seed.genes?.plot?.value || 'quest',
+    plot: (seed.genes?.plot?.value as string) || 'quest',
     acts: typeof seed.genes?.acts?.value === 'number' ? seed.genes.acts.value : 3,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -39,11 +39,11 @@ export async function generatePersonalizedMedicine(seed: Seed, outputPath: strin
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): PersonalizedMedicineParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     treatmentType: seed.genes?.treatmentType?.value || ['pharmacogenomics', 'biomarker', 'gene_therapy', 'cell_therapy'][rng.nextInt(0, 3)],
     biomarkers: Math.floor(((seed.genes?.biomarkers?.value as number || rng.nextF64()) * 48) + 2),
     efficacy: (seed.genes?.efficacy?.value as number || rng.nextF64()) * 0.9 + 0.1,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

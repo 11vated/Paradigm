@@ -8,16 +8,16 @@ export interface Seed {
   $domain?: string;
   $hash?: string;
   $lineage?: { generation?: number; operation?: string; parents?: string[] };
-  genes?: Record<string, { type?: string; value?: unknown }>;
+  genes?: Record<string, { type?: string; value?: any }>;
   /** Set by pipeline generateStage to inform generators of the target quality level */
   _quality?: 'full' | 'reduced' | 'metadata-only';
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export interface GeneratorOutput {
   filePath: string;
   format?: string;
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 export interface Artifact {
@@ -27,8 +27,8 @@ export interface Artifact {
   seed_hash: string;
   generation: number;
   generation_quality?: GenerationQuality;
-  render_hints: Record<string, unknown>;
-  [key: string]: unknown;
+  render_hints: Record<string, any>;
+  [key: string]: any;
 }
 
 export interface PipelineContext {

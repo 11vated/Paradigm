@@ -48,12 +48,12 @@ function generateDesign(params: BiomedicalParams, rng: Xoshiro256StarStar): any 
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): BiomedicalParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   const applications = ['cardiology', 'orthopedics', 'neurology', 'dermatology', 'ophthalmology'];
   return {
     deviceType: seed.genes?.deviceType?.value || ['implant', 'prosthetic', 'diagnostic', 'wearable'][rng.nextInt(0, 3)],
     application: seed.genes?.application?.value || applications[rng.nextInt(0, applications.length - 1)],
     fdaClass: seed.genes?.fdaClass?.value || ['I', 'II', 'III'][rng.nextInt(0, 2)],
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

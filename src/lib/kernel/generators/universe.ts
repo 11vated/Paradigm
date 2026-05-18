@@ -97,14 +97,16 @@ function generateInitialConditions(params: UniverseParams, rng: Xoshiro256StarSt
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): UniverseParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
+  const size = seed.genes?.size?.value;
+  const sizes: UniverseParams['size'][] = ['small', 'medium', 'large', 'observable'];
 
   return {
-    size: seed.genes?.size?.value || 'observable',
+    size: sizes.includes(size as UniverseParams['size']) ? size as UniverseParams['size'] : 'observable',
     age: typeof seed.genes?.age?.value === 'number' ? seed.genes.age.value * 13.8 : 13.8,
     curvature: typeof seed.genes?.curvature?.value === 'number' ? (seed.genes.curvature.value * 2) - 1 : 0,
-    darkMatter: seed.genes?.darkMatter?.value || 0.265,
-    expansionRate: seed.genes?.expansionRate?.value || 67.4,
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    darkMatter: (seed.genes?.darkMatter?.value as number) || 0.265,
+    expansionRate: (seed.genes?.expansionRate?.value as number) || 67.4,
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }

@@ -39,11 +39,11 @@ export async function generateSpaceTourism(seed: Seed, outputPath: string): Prom
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): SpaceTourismParams {
-  const quality = seed.genes?.quality?.value || 'medium';
+  const quality = (seed.genes?.quality?.value as string) || 'medium';
   return {
     experienceType: seed.genes?.experienceType?.value || ['orbital', 'suborbital', 'lunar', 'space_hotel'][rng.nextInt(0, 3)],
     duration: Math.floor(((seed.genes?.duration?.value as number || rng.nextF64()) * 27) + 1),
     price: Math.floor(((seed.genes?.price?.value as number || rng.nextF64()) * 99000000) + 100000),
-    quality: ['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium'
+    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
   };
 }
