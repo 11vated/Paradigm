@@ -8,9 +8,11 @@ This document provides context for AI agents working with the Paradigm codebase.
 
 **Paradigm Absolute** is a Deterministic Synthetic Evolution Operating System where every digital artifact is a "seed" that can be bred, mutated, evolved, and composed.
 
+> **GSPL — the Generative Seed Programming Language — is the founding invention.** It is the kernel concept the entire substrate is built around: a language whose every program is a typed seed, whose every output is a deterministic artifact, whose every expression can be evolved, bred, and signed. Paradigm is the operating system GSPL needed to exist.
+
 - **Core guarantee:** Same seed + same RNG = bit-identical output forever
 - **Stack:** TypeScript, React 19, Express, Three.js, WebGPU, Solidity
-- **Scale:** ~50,000 lines across 315+ files
+- **Scale (post-Phase 0):** ~94,666 lines across 523 source files (down from ~382,000 LOC after removing ~288K lines of dead/duplicate code)
 
 ---
 
@@ -19,7 +21,7 @@ This document provides context for AI agents working with the Paradigm codebase.
 ```
 Layer 1:  xoshiro256** RNG (deterministic, 256-bit state)
 Layer 2:  Universal Seed (17 gene types)
-Layer 3:  GSPL Language (lexer → parser → interpreter)
+Layer 3:  GSPL — Generative Seed Programming Language (lexer → parser → interpreter)
 Layer 4:  Cognitive Architecture (reflection, memory, reasoning)
 Layer 5:  27 Domain Engines (166 generators)
 Layer 6:  50+ Cross-domain Functors
@@ -32,6 +34,62 @@ Layer 12: Quantum Physics (QFT solvers)
 Layer 13: DAO Governance
 Layer 14: Federated Knowledge Graph
 ```
+
+---
+
+## Phase 0 Cleanup — what changed
+
+The repo went through a Phase 0 surgical cleanup pass that established a single canonical architecture, deleted ~288,000 lines of dead/duplicate code, and locked the determinism invariant into CI. Commits live on the `phase0` branch (or merged to `main`). Summary:
+
+1. **(1/6) Deleted dead engine files (~136K LOC).**
+   `src/engines/index_fixed_start.ts` (87,783 lines of duplicate class declarations), `index_new_start.ts` (48,469 lines), `index_part1.ts` (300 lines). They were already excluded from `tsconfig`; the `tsconfig.json` exclude list is now clean.
+
+2. **(2/6) Deleted broken `visual2d.ts`** — contained 3 pasted copies of the same generator (19 baseline TS errors). All real callers route through `visual2d-v2.ts` / `visual2d-v3.ts` / `visual2d-svg.ts`.
+
+3. **(3/6) Collapsed 5 duplicate architectural roots.**
+   - `src/kernel/`        (@deprecated) → `src/lib/kernel/`
+   - `src/gspl/`          → `src/lib/gspl/` (+ `src/lib/kernel/gspl-*`)
+   - `src/evolution/`     → `src/lib/evolution/`
+   - `src/intelligence/`  → `src/lib/intelligence/`
+   - `src/studio/`        → orphaned, removed (canonical Studio is `src/pages/StudioPage.tsx`)
+   Two thin re-export shims (`src/lib/evolution/{cmaes,functors}.ts`) deleted along with their parents. `src/index.ts` rewritten to point at canonical paths only.
+
+4. **(4/6) Swept orphan top-level dirs and legacy artifacts (~4 MB, 100+ files).**
+   - `paradigm/`                     (~1.9 MB) — a second, orphaned **Python** implementation (Emergent.sh fork). Never imported by the TS code.
+   - `frontend/next.config.js`       — leftover Next.js config (project is Vite)
+   - `app/applet/`                   — one-shot AI test-rewriter scripts
+   - `conversation history.txt`      (~1.8 MB) — AI chat log committed to repo root
+   - `Paradigm-Planning.txt`         (~28 KB)  — superseded by Documents/Paradigm-Vision/
+   - `docs/history/`                 (~2.2 MB) — legacy analyses and a duplicate of the conversation log
+
+5. **(5/6) Migrated 27 non-UI `.jsx` → `.tsx`.**
+   `src/{stores,services,hooks,lib,components/studio,pages}/*` are now `.tsx`. The 47 shadcn UI components in `src/components/ui/` are deliberately kept as `.jsx` until a focused Typing Sprint properly types their `forwardRef` generics. 13 files received `// @ts-nocheck` headers pointing at that follow-up sprint.
+
+6. **(6/6) Determinism boundary — ESLint-enforced, CI-gated.**
+   The substrate's most important invariant is now enforced in lint.
+   - HARD ERROR: `Math.random`, `crypto.randomBytes`, `crypto.getRandomValues`, `performance.now` inside `src/lib/kernel`, `src/lib/evolution`, `src/seeds`.
+   - WARN (tracked, non-blocking): `Date.now` / `new Date` (122 sites — Wall-clock Sprint follow-up).
+   - Carve-outs: `src/lib/kernel/rng.ts`, `rng-contract.ts`, `src/seeds/types.ts`, and all `**/__tests__/**` + `*.test.{ts,tsx}` paths.
+   - CI gate: `scripts/check-determinism-boundary.mjs`, run via `npm run determinism:check` (wired into `.github/workflows/ci.yml` `determinism` job).
+   - Audit result: **zero true entropy violations** in the kernel today.
+
+### Canonical paths after Phase 0
+
+| Concern | Canonical home |
+|---|---|
+| Deterministic RNG | `src/lib/kernel/rng.ts` (Xoshiro256StarStar) |
+| Seed types & schema | `src/seeds/` |
+| Universal Seed class | `src/seeds/universal-seed.ts` |
+| Domain generators (197) | `src/lib/kernel/generators/` |
+| Engine dispatch | `src/lib/kernel/engine-dispatcher.ts` |
+| GSPL implementation | `src/lib/kernel/gspl-*` + `src/lib/gspl/` |
+| Evolution algorithms | `src/lib/evolution/` |
+| Intelligence / LLM | `src/lib/intelligence/` |
+| Agent system | `src/lib/agent/` |
+| Sovereignty | `src/lib/sovereignty/` |
+| Rendering | `src/lib/rendering/` |
+| Studio UI | `src/pages/StudioPage.tsx`, `src/components/studio/*` |
+| Server routes | `server.ts` (3,500 LOC; route-splitting is a future sprint) |
 
 ---
 
