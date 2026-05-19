@@ -76,6 +76,14 @@ import {
 // ─── NEW: Native GSPL Agent ──────────────────────────────────────────────────
 import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
 
+// ─── NEW: Paradigm Friend (Phase 1) ──────────────────────────────────────────
+import {
+  createFriendSeed,
+  breedFriends,
+  mutateFriend,
+  generateFriend,
+} from './src/lib/friend/index.js';
+
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
 
@@ -138,6 +146,7 @@ import {
   MintSeedSchema,
   QftSimulateSchema, PipelineExecuteSchema,
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
+  FriendGenerateSchema, FriendBreedSchema, FriendMutateSchema,
 } from './src/lib/validation/schemas.js';
 import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.js';
 
@@ -2909,6 +2918,118 @@ async function startServer() {
       res.status(500).json({ detail: e.message });
     }
   });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM FRIEND  (Phase 1)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Grow a Friend from a seed string.
+   * POST /api/v1/friend/generate
+   * Body: { seed: string, name?: string, archetypeBias?: BodyArchetype }
+   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact }
+   *
+   * Determinism contract: same body → byte-identical response (modulo the
+   * `meta.elapsedMs` observability field).
+   */
+  app.post(
+    '/api/v1/friend/generate',
+    optionalAuth,
+    validateBody(FriendGenerateSchema),
+    (req: any, res: any) => {
+      try {
+        const { seed, name, archetypeBias } = req.body;
+        const friendSeed = createFriendSeed(seed, { name, archetypeBias });
+        const artifact = generateFriend(friendSeed);
+        log('INFO', 'Friend generated', {
+          id: friendSeed.id,
+          name: friendSeed.name,
+        });
+        res.json({ friendSeed, artifact });
+      } catch (e: any) {
+        log('ERROR', 'Friend generate error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend generation failed',
+          message: e.message,
+        });
+      }
+    },
+  );
+
+  /**
+   * Breed two Friends — deterministic child given the same parents+salt.
+   * POST /api/v1/friend/breed
+   * Body: { parentA: string, parentB: string, salt?: string }
+   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact,
+   *            parents: { a: FriendSeedData, b: FriendSeedData } }
+   */
+  app.post(
+    '/api/v1/friend/breed',
+    optionalAuth,
+    validateBody(FriendBreedSchema),
+    (req: any, res: any) => {
+      try {
+        const { parentA, parentB, salt } = req.body;
+        const a = createFriendSeed(parentA);
+        const b = createFriendSeed(parentB);
+        const child = breedFriends(a, b, salt ?? '');
+        const artifact = generateFriend(child);
+        log('INFO', 'Friend bred', {
+          id: child.id,
+          parents: [a.id, b.id],
+          generation: child.derivation?.generation,
+        });
+        res.json({
+          friendSeed: child,
+          artifact,
+          parents: { a, b },
+        });
+      } catch (e: any) {
+        log('ERROR', 'Friend breed error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend breed failed',
+          message: e.message,
+        });
+      }
+    },
+  );
+
+  /**
+   * Mutate a Friend — deterministic given (parent, magnitude, salt).
+   * POST /api/v1/friend/mutate
+   * Body: { parent: string, magnitude?: number, salt?: string }
+   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact,
+   *            parent: FriendSeedData }
+   */
+  app.post(
+    '/api/v1/friend/mutate',
+    optionalAuth,
+    validateBody(FriendMutateSchema),
+    (req: any, res: any) => {
+      try {
+        const { parent, magnitude = 0.15, salt = '' } = req.body;
+        const parentSeed = createFriendSeed(parent);
+        const mutated = mutateFriend(parentSeed, magnitude, salt);
+        const artifact = generateFriend(mutated);
+        log('INFO', 'Friend mutated', {
+          id: mutated.id,
+          parent: parentSeed.id,
+          magnitude,
+        });
+        res.json({
+          friendSeed: mutated,
+          artifact,
+          parent: parentSeed,
+        });
+      } catch (e: any) {
+        log('ERROR', 'Friend mutate error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend mutate failed',
+          message: e.message,
+        });
+      }
+    },
+  );
 
   // ═══════════════════════════════════════════════════════════════════════════
   // CATCH-ALL & VITE

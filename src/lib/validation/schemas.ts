@@ -250,3 +250,35 @@ export const RegisterGeneTypeSchema = z.object({
   crossover: geneTypeOperatorFn,
   distance: geneTypeOperatorFn,
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FRIEND  (Phase 1)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FriendArchetypeSchema = z.enum([
+  'slender', 'athletic', 'sturdy', 'soft', 'tall', 'petite',
+]);
+
+export const FriendGenerateSchema = z.object({
+  /** Any string. SHA-256 of this becomes the Friend's seed hash. */
+  seed: z.string().min(1, 'seed string is required').max(2048),
+  /** Optional display name override. */
+  name: z.string().min(1).max(64).optional(),
+  /** Optional body archetype override. */
+  archetypeBias: FriendArchetypeSchema.optional(),
+});
+
+export const FriendBreedSchema = z.object({
+  parentA: z.string().min(1, 'parentA seed string is required').max(2048),
+  parentB: z.string().min(1, 'parentB seed string is required').max(2048),
+  /** Optional salt for the child. Same parents + same salt → same child. */
+  salt: z.string().max(2048).optional(),
+});
+
+export const FriendMutateSchema = z.object({
+  parent: z.string().min(1, 'parent seed string is required').max(2048),
+  /** 0 = identity, 1 = full random replacement. Defaults to 0.15. */
+  magnitude: z.number().min(0).max(1).optional(),
+  /** Optional salt for reproducibility. */
+  salt: z.string().max(2048).optional(),
+});
