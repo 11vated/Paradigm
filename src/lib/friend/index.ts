@@ -39,3 +39,7 @@ export {
   prepareFriendMint, anchorFriendOnChain, verifyFriendAnchor,
 } from './onchain';
 export type { FriendOnChainAnchor, AnchorRequest, AnchorResult, PreparedAnchor, FriendNftMetadata } from './onchain';
+
+// ─── Phase 2 (1/n) — Quality Contract ────────────────────────────────────────
+export { FriendQualityContract } from './contract';
+export type { FriendInvertedGenes } from './contract';

@@ -15,6 +15,7 @@
     "lint:determinism:strict": "eslint src/lib/kernel src/lib/evolution src/seeds --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "determinism:check": "node scripts/check-determinism-boundary.mjs",
+    "contract:report": "tsx scripts/quality-contract-report.mts",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:simple": "node --input-type=module --eval \"import { generateMusicV2 } from './src/lib/kernel/generators/music-v2.ts'; const seed = { \\$domain: 'music', \\$name: 'Test' }; generateMusicV2(seed).then(r => console.log('Success:', r.name)).catch(e => console.error('Error:', e.message));\"",
