@@ -54,6 +54,7 @@ export const FriendSovereigntyCard: React.FC<FriendSovereigntyCardProps> = ({ fr
   const [fp, setFp] = useState<string>('');
   const [status, setStatus] = useState<Status>({ kind: 'idle' });
   const [verifyResult, setVerifyResult] = useState<{ valid: boolean; reason?: string; payloadHash?: string } | null>(null);
+  const [preparedAnchor, setPreparedAnchor] = useState<{ tokenId: string; metadataHash: string; metadataUri: string } | null>(null);
 
   useEffect(() => {
     const existing = loadKeyPair();
@@ -104,6 +105,18 @@ export const FriendSovereigntyCard: React.FC<FriendSovereigntyCardProps> = ({ fr
     setKp(null);
     setFp('');
     setStatus({ kind: 'idle' });
+  };
+
+  const prepareAnchor = async () => {
+    if (!friend) return;
+    setStatus({ kind: 'busy', what: 'preparing anchor' });
+    try {
+      const p = await friendApi.anchorPrepare(friend.id);
+      setPreparedAnchor({ tokenId: p.tokenId, metadataHash: p.metadataHash, metadataUri: p.metadataUri });
+      setStatus({ kind: 'ok', what: 'anchor prepared' });
+    } catch (e: any) {
+      setStatus({ kind: 'err', msg: e.message ?? String(e) });
+    }
   };
 
   if (!friend) {
@@ -174,6 +187,38 @@ export const FriendSovereigntyCard: React.FC<FriendSovereigntyCardProps> = ({ fr
           {verifyResult.valid ? '✓ valid' : `✗ ${verifyResult.reason ?? 'invalid'}`}
         </div>
       )}
+
+      {/* On-chain anchor */}
+      <div className="border border-neutral-900 rounded p-2 space-y-1">
+        <div className="text-neutral-500 flex justify-between items-center">
+          <span>On-chain anchor</span>
+          {!friend.sovereignty?.anchor && (
+            <button
+              onClick={prepareAnchor}
+              disabled={!sov || status.kind === 'busy'}
+              className="px-1.5 py-0.5 text-[9px] bg-indigo-900/50 text-indigo-300 hover:bg-indigo-800 disabled:opacity-30 disabled:cursor-not-allowed rounded"
+              title={sov ? 'Compute the deterministic tokenId + metadata for this friend' : 'Sign first'}
+            >
+              prepare
+            </button>
+          )}
+        </div>
+        {friend.sovereignty?.anchor ? (
+          <>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">network</span><span>{friend.sovereignty.anchor.network}</span></div>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">tokenId</span><span className="truncate" title={friend.sovereignty.anchor.tokenId}>{friend.sovereignty.anchor.tokenId.slice(0, 16)}…</span></div>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">tx</span><span className="truncate" title={friend.sovereignty.anchor.transactionHash}>{friend.sovereignty.anchor.transactionHash.slice(0, 12)}…</span></div>
+          </>
+        ) : preparedAnchor ? (
+          <>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">tokenId</span><span className="truncate" title={preparedAnchor.tokenId}>{preparedAnchor.tokenId.slice(0, 16)}…</span></div>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">md hash</span><span className="truncate" title={preparedAnchor.metadataHash}>{preparedAnchor.metadataHash.slice(0, 12)}…</span></div>
+            <div className="flex justify-between gap-2"><span className="text-neutral-700">uri</span><span>{preparedAnchor.metadataUri.startsWith('ipfs://') ? 'ipfs' : 'data:'}</span></div>
+          </>
+        ) : (
+          <div className="text-neutral-600">{sov ? 'click prepare to compute tokenId' : 'sign first to anchor'}</div>
+        )}
+      </div>
 
       {/* Status line */}
       <div className="text-[9px] text-neutral-600 h-3">

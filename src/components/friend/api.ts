@@ -94,4 +94,14 @@ export const friendApi = {
 
   verify: (id: string) =>
     jsonFetch<FriendVerifyResponse>(`${BASE}/${id}/verify`, { method: 'POST' }),
+
+  anchorPrepare: (id: string) =>
+    jsonFetch<{ tokenId: string; metadataUri: string; metadataHash: string; payloadHash: string; metadata: any }>(
+      `${BASE}/${id}/anchor/prepare`, { method: 'POST' },
+    ),
+
+  anchor: (id: string, body: { ownerAddress: string; privateKey: string; contractAddress?: string; network?: string; rpcUrl?: string; ipfsCid?: string }) =>
+    jsonFetch<{ friendSeed: FriendSeedData; anchor: any }>(
+      `${BASE}/${id}/anchor`, { method: 'POST', body: JSON.stringify(body) },
+    ),
 };

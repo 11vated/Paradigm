@@ -33,3 +33,9 @@ export {
   friendPayloadHash, canonicalFriendJson,
 } from './sovereignty';
 export type { FriendKeyPair, VerifyResult } from './sovereignty';
+
+// ─── Phase 1 (7/n) — on-chain anchoring ──────────────────────────────────────
+export {
+  prepareFriendMint, anchorFriendOnChain, verifyFriendAnchor,
+} from './onchain';
+export type { FriendOnChainAnchor, AnchorRequest, AnchorResult, PreparedAnchor, FriendNftMetadata } from './onchain';

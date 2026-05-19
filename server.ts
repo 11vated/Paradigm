@@ -81,6 +81,7 @@ import {
   createFriendSeed, breedFriends, mutateFriend, generateFriend,
   getFriendStore, type FriendSeedData, type LineageNode,
   generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
+  anchorFriendOnChain, prepareFriendMint,
 } from './src/lib/friend/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
@@ -145,7 +146,7 @@ import {
   MintSeedSchema,
   QftSimulateSchema, PipelineExecuteSchema,
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
-  FriendGenerateSchema, FriendBreedSchema, FriendMutateSchema,
+  FriendGenerateSchema, FriendBreedSchema, FriendMutateSchema, FriendAnchorSchema,
 } from './src/lib/validation/schemas.js';
 import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.js';
 
@@ -3207,15 +3208,76 @@ async function startServer() {
    * authentication. That is the point of public-key sovereignty.
    */
   app.post('/api/v1/friend/:id/verify', async (req: any, res: any) => {
-    const friend = await friendStore.get(req.params.id);
-    if (!friend) return res.status(404).json({ error: 'Friend not found' });
-    const result = await verifyFriendSovereignty(friend);
-    log(result.valid ? 'INFO' : 'WARN', `Friend verify: ${result.valid ? 'OK' : 'FAIL'}`, {
-      id: friend.id,
-      reason: result.reason,
-    });
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const result = await verifyFriendSovereignty(f);
     res.json(result);
   });
+
+  /**
+   * Prepare an on-chain mint (pure, no chain interaction).
+   * POST /api/v1/friend/:id/anchor/prepare
+   * Returns { tokenId, metadataUri, metadataHash, payloadHash, metadata }
+   */
+  app.post('/api/v1/friend/:id/anchor/prepare', optionalAuth, (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    if (!f.sovereignty) {
+      return res.status(400).json({ error: 'friend must be signed before anchoring on-chain' });
+    }
+    const prepared = prepareFriendMint(f);
+    res.json(prepared);
+  });
+
+  /**
+   * Anchor a signed Friend on-chain (ERC-721 mint).
+   * POST /api/v1/friend/:id/anchor
+   * Body: { ownerAddress, privateKey, contractAddress?, rpcUrl?, network?, ipfsCid? }
+   * Returns { friendSeed, anchor } on success, { error } on failure.
+   *
+   * Security: the privateKey is consumed per-request and NEVER logged
+   * or persisted server-side. Caller is responsible for key custody.
+   */
+  app.post(
+    '/api/v1/friend/:id/anchor',
+    optionalAuth,
+    validateBody(FriendAnchorSchema),
+    async (req: any, res: any) => {
+      const f = friendStore.get(req.params.id);
+      if (!f) return res.status(404).json({ error: 'Friend not found' });
+      log('INFO', 'Friend anchor requested', {
+        friendId: f.id,
+        ownerAddress: req.body.ownerAddress,
+        contractAddress: req.body.contractAddress ?? '(env default)',
+        network: req.body.network ?? '(default)',
+      });
+      const result = await anchorFriendOnChain({
+        friend: f,
+        ownerAddress: req.body.ownerAddress,
+        privateKey: req.body.privateKey,
+        contractAddress: req.body.contractAddress,
+        rpcUrl: req.body.rpcUrl,
+        network: req.body.network,
+        ipfsCid: req.body.ipfsCid,
+      });
+      if (!result.success || !result.anchor) {
+        log('WARN', 'Friend anchor failed', { friendId: f.id, error: result.error });
+        return res.status(400).json({ error: result.error ?? 'anchor failed' });
+      }
+      const updated: FriendSeedData = {
+        ...f,
+        sovereignty: { ...f.sovereignty!, anchor: result.anchor },
+      };
+      await friendStore.add(updated);
+      log('INFO', 'Friend anchored on-chain', {
+        friendId: f.id,
+        tokenId: result.anchor.tokenId,
+        txHash: result.anchor.transactionHash,
+        network: result.anchor.network,
+      });
+      res.json({ friendSeed: updated, anchor: result.anchor });
+    },
+  );
 
   // CATCH-ALL & VITE
   // ═══════════════════════════════════════════════════════════════════════════

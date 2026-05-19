@@ -159,8 +159,8 @@ export interface BondGene {
 
 /**
  * Sovereignty receipt — proves a Friend was signed by a specific keypair.
- * Stored as an optional `sovereignty` field on FriendSeedData. The
- * signature covers the canonical JSON of the friend with the sovereignty
+ * Stored as an optional `sovereignty` field on `FriendSeedData`.
+ * The signature covers the canonical JSON of the friend with the sovereignty
  * field itself removed.
  */
 export interface FriendSovereignty {
@@ -174,6 +174,16 @@ export interface FriendSovereignty {
   signedAt: string;
   /** SHA-256 hex of the canonical JSON that was signed (audit aid). */
   payloadHash: string;
+  /** Optional on-chain mint receipt. */
+  anchor?: {
+    tokenId: string;
+    contractAddress: string;
+    transactionHash: string;
+    network: string;
+    anchoredAt: string;
+    metadataUri: string;
+    metadataHash: string;
+  };
 }
 
 export interface FriendSeedData {

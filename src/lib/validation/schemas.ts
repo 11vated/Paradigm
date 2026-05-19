@@ -291,3 +291,12 @@ export const FriendMutateSchema = z.object({
   (v) => v.parent !== undefined || v.parentId !== undefined,
   { message: 'parent (seed string) or parentId required' },
 );
+
+export const FriendAnchorSchema = z.object({
+  ownerAddress: z.string().regex(/^0x[0-9a-fA-F]{40}$/, 'Invalid Ethereum address'),
+  privateKey: z.string().min(64).max(128),
+  contractAddress: z.string().regex(/^0x[0-9a-fA-F]{40}$/).optional(),
+  rpcUrl: z.string().url().optional(),
+  network: z.string().min(1).max(64).optional(),
+  ipfsCid: z.string().min(1).max(128).optional(),
+});
