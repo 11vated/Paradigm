@@ -78,10 +78,8 @@ import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
 
 // ─── NEW: Paradigm Friend (Phase 1) ──────────────────────────────────────────
 import {
-  createFriendSeed,
-  breedFriends,
-  mutateFriend,
-  generateFriend,
+  createFriendSeed, breedFriends, mutateFriend, generateFriend,
+  getFriendStore, type FriendSeedData, type LineageNode,
 } from './src/lib/friend/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
@@ -354,6 +352,11 @@ async function startServer() {
   const loadedTypes = loadCustomGeneTypes(dataDir);
   if (loadedTypes > 0) log('INFO', `Loaded ${loadedTypes} custom gene type(s) from storage`);
   log('INFO', `Data store initialized: ${store.backend}`, { seedCount: store.getSeedCount() });
+
+  // ── Friend Store (Phase 1/4): persistent FriendSeed registry ────────────
+  const friendStore = getFriendStore(path.join(dataDir, 'friends'));
+  await friendStore.load();
+  log('INFO', `Friend store initialized`, { friendCount: friendStore.count() });
 
   // ── Cache Layer (Redis or in-memory LRU) ────────────────────────────────
   const cache = await initCache();
@@ -2922,30 +2925,35 @@ async function startServer() {
   // ═══════════════════════════════════════════════════════════════════════════
   // PARADIGM FRIEND  (Phase 1)
   // ═══════════════════════════════════════════════════════════════════════════
+  //
+  // All friend routes persist results to FriendStore. Breed/mutate accept
+  // either full seed strings (genesis-on-the-fly) OR existing friend IDs
+  // (cheaper, idempotent) via the *Id fields. If both are provided the
+  // ID takes precedence; if neither is provided for breed/mutate, the
+  // request is rejected.
 
   /**
-   * Grow a Friend from a seed string.
+   * Grow a Friend from a seed string. Result is persisted to FriendStore.
    * POST /api/v1/friend/generate
    * Body: { seed: string, name?: string, archetypeBias?: BodyArchetype }
-   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact }
-   *
-   * Determinism contract: same body → byte-identical response (modulo the
-   * `meta.elapsedMs` observability field).
+   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact, stored: boolean }
    */
   app.post(
     '/api/v1/friend/generate',
     optionalAuth,
     validateBody(FriendGenerateSchema),
-    (req: any, res: any) => {
+    async (req: any, res: any) => {
       try {
         const { seed, name, archetypeBias } = req.body;
         const friendSeed = createFriendSeed(seed, { name, archetypeBias });
         const artifact = generateFriend(friendSeed);
-        log('INFO', 'Friend generated', {
+        const existed = friendStore.has(friendSeed.id);
+        await friendStore.add(friendSeed);
+        log('INFO', existed ? 'Friend retrieved (already in store)' : 'Friend generated and stored', {
           id: friendSeed.id,
           name: friendSeed.name,
         });
-        res.json({ friendSeed, artifact });
+        res.json({ friendSeed, artifact, stored: !existed });
       } catch (e: any) {
         log('ERROR', 'Friend generate error', { error: e.message });
         res.status(400).json({
@@ -2959,30 +2967,56 @@ async function startServer() {
   /**
    * Breed two Friends — deterministic child given the same parents+salt.
    * POST /api/v1/friend/breed
-   * Body: { parentA: string, parentB: string, salt?: string }
-   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact,
-   *            parents: { a: FriendSeedData, b: FriendSeedData } }
+   *
+   * Body (one of two forms):
+   *   { parentA: string, parentB: string, salt?: string }   — genesis-on-fly
+   *   { parentAId: string, parentBId: string, salt?: string } — by stored ID
+   *   (mixed: parentAId + parentB also supported)
    */
   app.post(
     '/api/v1/friend/breed',
     optionalAuth,
     validateBody(FriendBreedSchema),
-    (req: any, res: any) => {
+    async (req: any, res: any) => {
       try {
-        const { parentA, parentB, salt } = req.body;
-        const a = createFriendSeed(parentA);
-        const b = createFriendSeed(parentB);
+        const { parentA, parentB, parentAId, parentBId, salt } = req.body as {
+          parentA?: string; parentB?: string;
+          parentAId?: string; parentBId?: string;
+          salt?: string;
+        };
+
+        const resolve = (id?: string, str?: string, label?: string): FriendSeedData => {
+          if (id) {
+            const f = friendStore.get(id);
+            if (!f) throw new Error(`${label} id not found: ${id}`);
+            return f;
+          }
+          if (str) return createFriendSeed(str);
+          throw new Error(`${label} not provided (expected parent string or parentId)`);
+        };
+
+        const a = resolve(parentAId, parentA, 'parentA');
+        const b = resolve(parentBId, parentB, 'parentB');
         const child = breedFriends(a, b, salt ?? '');
         const artifact = generateFriend(child);
+
+        // Ensure all participants are stored (parents may be ephemeral genesis-on-fly)
+        await friendStore.add(a);
+        await friendStore.add(b);
+        const existed = friendStore.has(child.id);
+        await friendStore.add(child);
+
         log('INFO', 'Friend bred', {
           id: child.id,
           parents: [a.id, b.id],
           generation: child.derivation?.generation,
+          newToStore: !existed,
         });
         res.json({
           friendSeed: child,
           artifact,
           parents: { a, b },
+          stored: !existed,
         });
       } catch (e: any) {
         log('ERROR', 'Friend breed error', { error: e.message });
@@ -2997,29 +3031,50 @@ async function startServer() {
   /**
    * Mutate a Friend — deterministic given (parent, magnitude, salt).
    * POST /api/v1/friend/mutate
-   * Body: { parent: string, magnitude?: number, salt?: string }
-   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact,
-   *            parent: FriendSeedData }
+   * Body:
+   *   { parent: string, magnitude?: number, salt?: string }   — genesis-on-fly
+   *   { parentId: string, magnitude?: number, salt?: string } — by stored ID
    */
   app.post(
     '/api/v1/friend/mutate',
     optionalAuth,
     validateBody(FriendMutateSchema),
-    (req: any, res: any) => {
+    async (req: any, res: any) => {
       try {
-        const { parent, magnitude = 0.15, salt = '' } = req.body;
-        const parentSeed = createFriendSeed(parent);
+        const { parent, parentId, magnitude = 0.15, salt = '' } = req.body as {
+          parent?: string; parentId?: string;
+          magnitude?: number; salt?: string;
+        };
+
+        let parentSeed: FriendSeedData;
+        if (parentId) {
+          const found = friendStore.get(parentId);
+          if (!found) throw new Error(`parentId not found: ${parentId}`);
+          parentSeed = found;
+        } else if (parent) {
+          parentSeed = createFriendSeed(parent);
+        } else {
+          throw new Error('parent or parentId required');
+        }
+
         const mutated = mutateFriend(parentSeed, magnitude, salt);
         const artifact = generateFriend(mutated);
+
+        await friendStore.add(parentSeed);
+        const existed = friendStore.has(mutated.id);
+        await friendStore.add(mutated);
+
         log('INFO', 'Friend mutated', {
           id: mutated.id,
           parent: parentSeed.id,
           magnitude,
+          newToStore: !existed,
         });
         res.json({
           friendSeed: mutated,
           artifact,
           parent: parentSeed,
+          stored: !existed,
         });
       } catch (e: any) {
         log('ERROR', 'Friend mutate error', { error: e.message });
@@ -3031,7 +3086,63 @@ async function startServer() {
     },
   );
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  /**
+   * List Friends (paginated, optionally filtered by operator).
+   * GET /api/v1/friend/list?offset=0&limit=50&operator=genesis|breed|mutate
+   */
+  app.get('/api/v1/friend/list', (req: any, res: any) => {
+    const offset = Number.parseInt(String(req.query.offset ?? '0'), 10);
+    const limit = Math.min(Number.parseInt(String(req.query.limit ?? '50'), 10), 200);
+    const operator = req.query.operator as 'genesis' | 'breed' | 'mutate' | undefined;
+    const friends = friendStore.list({ offset, limit, operator });
+    res.json({
+      total: friendStore.count(),
+      offset, limit, operator: operator ?? null,
+      stats: friendStore.stats(),
+      friends,
+    });
+  });
+
+  /**
+   * Get one Friend (with artifact freshly grown — cheap, deterministic).
+   * GET /api/v1/friend/:id
+   */
+  app.get('/api/v1/friend/:id', (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const artifact = generateFriend(f);
+    res.json({ friendSeed: f, artifact });
+  });
+
+  /**
+   * Lineage (ancestors + descendants).
+   * GET /api/v1/friend/:id/lineage?depth=6
+   */
+  app.get('/api/v1/friend/:id/lineage', (req: any, res: any) => {
+    const depth = Math.min(Number.parseInt(String(req.query.depth ?? '6'), 10), 20);
+    const lineage = friendStore.lineage(req.params.id, depth);
+    if (!lineage) return res.status(404).json({ error: 'Friend not found' });
+    const self = friendStore.get(req.params.id)!;
+    res.json({
+      self: { id: self.id, name: self.name, generation: self.derivation?.generation ?? 0 },
+      ancestors: lineage.ancestors,
+      descendants: lineage.descendants,
+      depth,
+    });
+  });
+
+  /**
+   * Delete a Friend from the store (does not affect deterministic
+   * reproducibility — same seed string will recreate the same FriendSeed).
+   * DELETE /api/v1/friend/:id
+   */
+  app.delete('/api/v1/friend/:id', optionalAuth, async (req: any, res: any) => {
+    const removed = await friendStore.remove(req.params.id);
+    if (!removed) return res.status(404).json({ error: 'Friend not found' });
+    log('INFO', 'Friend removed from store', { id: req.params.id });
+    res.json({ removed: true, id: req.params.id });
+  });
+
   // CATCH-ALL & VITE
   // ═══════════════════════════════════════════════════════════════════════════
 

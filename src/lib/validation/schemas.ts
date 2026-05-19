@@ -269,16 +269,25 @@ export const FriendGenerateSchema = z.object({
 });
 
 export const FriendBreedSchema = z.object({
-  parentA: z.string().min(1, 'parentA seed string is required').max(2048),
-  parentB: z.string().min(1, 'parentB seed string is required').max(2048),
+  parentA: z.string().min(1, 'parentA seed string is required').max(2048).optional(),
+  parentB: z.string().min(1, 'parentB seed string is required').max(2048).optional(),
+  parentAId: z.string().regex(/^[0-9a-f]{16}$/, 'parentAId must be 16-char lowercase hex').optional(),
+  parentBId: z.string().regex(/^[0-9a-f]{16}$/, 'parentBId must be 16-char lowercase hex').optional(),
   /** Optional salt for the child. Same parents + same salt → same child. */
-  salt: z.string().max(2048).optional(),
-});
+  salt: z.string().max(256).optional(),
+}).refine(
+  (v) => (v.parentA || v.parentAId) && (v.parentB || v.parentBId),
+  { message: 'Each parent requires either a seed string or an Id (parentA/parentAId, parentB/parentBId)' },
+);
 
 export const FriendMutateSchema = z.object({
-  parent: z.string().min(1, 'parent seed string is required').max(2048),
+  parent: z.string().min(1, 'parent seed string is required').max(2048).optional(),
+  parentId: z.string().regex(/^[0-9a-f]{16}$/, 'parentId must be 16-char lowercase hex').optional(),
   /** 0 = identity, 1 = full random replacement. Defaults to 0.15. */
   magnitude: z.number().min(0).max(1).optional(),
-  /** Optional salt for reproducibility. */
-  salt: z.string().max(2048).optional(),
-});
+  /** Optional salt for the mutation. Same parent + same salt + same magnitude → same child. */
+  salt: z.string().max(256).optional(),
+}).refine(
+  (v) => v.parent !== undefined || v.parentId !== undefined,
+  { message: 'parent (seed string) or parentId required' },
+);
