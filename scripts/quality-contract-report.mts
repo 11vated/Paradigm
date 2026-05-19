@@ -8,6 +8,9 @@ import '../src/lib/friend/contract';
 import '../src/lib/kernel/generators/sprite-contract';
 import '../src/lib/kernel/generators/music-contract';
 import '../src/lib/kernel/generators/narrative-contract';
+import '../src/lib/kernel/generators/visual2d-contract';
+import '../src/lib/kernel/generators/geometry3d-contract';
+import '../src/lib/kernel/generators/character-contract';
 import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();
