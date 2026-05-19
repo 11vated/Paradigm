@@ -198,10 +198,11 @@ export class FriendStore {
   // ─── writes ────────────────────────────────────────────────────────────
 
   async add(f: FriendSeedData): Promise<FriendSeedData> {
-    if (this.byId.has(f.id)) {
-      // Idempotent — same id = same seed (because id is deterministic from genes).
-      return this.byId.get(f.id)!;
-    }
+    // Upsert: same id = always overwrite. id is deterministic from genes,
+    // so the only fields that can legitimately differ across writes are
+    // the sovereignty receipt (signed/re-signed) and the derivation path
+    // (same genome reached via different breed/mutate paths). Both should
+    // overwrite — the new write is the authoritative one.
     this.indexFriend(f);
     await this.enqueueWrite();
     return f;

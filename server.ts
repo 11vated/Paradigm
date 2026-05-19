@@ -80,6 +80,7 @@ import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
 import {
   createFriendSeed, breedFriends, mutateFriend, generateFriend,
   getFriendStore, type FriendSeedData, type LineageNode,
+  generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
 } from './src/lib/friend/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
@@ -3141,6 +3142,79 @@ async function startServer() {
     if (!removed) return res.status(404).json({ error: 'Friend not found' });
     log('INFO', 'Friend removed from store', { id: req.params.id });
     res.json({ removed: true, id: req.params.id });
+  });
+
+  // ─── Friend Sovereignty (Phase 1/5) ──────────────────────────────────────
+
+  /**
+   * Generate a fresh ECDSA-P256 keypair for signing Friends.
+   * POST /api/v1/friend/keys/generate
+   * Returns: { publicKey: string (JWK), privateKey: string (JWK), algorithm }
+   *
+   * SECURITY: the private key is returned exactly once. Persist it
+   * client-side. The server does not store private keys.
+   */
+  app.post('/api/v1/friend/keys/generate', async (_req: any, res: any) => {
+    try {
+      const kp = await generateFriendKeyPair();
+      log('INFO', 'Friend keypair generated', {
+        publicKeyFingerprint: crypto.createHash('sha256').update(kp.publicKey, 'utf8').digest('hex').slice(0, 12),
+      });
+      res.json({ ...kp, algorithm: 'ECDSA-P256-SHA256' });
+    } catch (e: any) {
+      log('ERROR', 'Keypair generation failed', { error: e.message });
+      res.status(500).json({ error: 'Keypair generation failed', detail: e.message });
+    }
+  });
+
+  /**
+   * Sign a stored Friend with a caller-provided keypair.
+   * POST /api/v1/friend/:id/sign
+   * Body: { privateKey: string (JWK), publicKey: string (JWK) }
+   * Returns: { friend: FriendSeedData (with sovereignty), sovereignty: FriendSovereignty }
+   *
+   * Persists the signed friend back to the store, replacing any previous
+   * sovereignty receipt. The signature covers the canonical JSON of the
+   * friend with the sovereignty field stripped — so re-signing is safe.
+   */
+  app.post('/api/v1/friend/:id/sign', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const { privateKey, publicKey } = req.body || {};
+      if (!privateKey || !publicKey) {
+        return res.status(400).json({ error: 'privateKey and publicKey (both JWK strings) are required' });
+      }
+      const signed = await signFriendSeed(friend, privateKey, publicKey);
+      await friendStore.add(signed);
+      log('INFO', 'Friend signed', {
+        id: signed.id,
+        publicKeyFingerprint: crypto.createHash('sha256').update(publicKey, 'utf8').digest('hex').slice(0, 12),
+      });
+      res.json({ friend: signed, sovereignty: signed.sovereignty });
+    } catch (e: any) {
+      log('WARN', 'Friend signing failed', { id: req.params.id, error: e.message });
+      res.status(400).json({ error: 'Signing failed', detail: e.message });
+    }
+  });
+
+  /**
+   * Verify a Friend's sovereignty receipt.
+   * POST /api/v1/friend/:id/verify
+   * Returns: VerifyResult { valid, reason?, payloadHash, author? }
+   *
+   * Public endpoint — anyone can verify any Friend's signature without
+   * authentication. That is the point of public-key sovereignty.
+   */
+  app.post('/api/v1/friend/:id/verify', async (req: any, res: any) => {
+    const friend = await friendStore.get(req.params.id);
+    if (!friend) return res.status(404).json({ error: 'Friend not found' });
+    const result = await verifyFriendSovereignty(friend);
+    log(result.valid ? 'INFO' : 'WARN', `Friend verify: ${result.valid ? 'OK' : 'FAIL'}`, {
+      id: friend.id,
+      reason: result.reason,
+    });
+    res.json(result);
   });
 
   // CATCH-ALL & VITE

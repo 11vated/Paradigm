@@ -157,6 +157,25 @@ export interface BondGene {
 
 // ─── FriendSeed ────────────────────────────────────────────────────────────
 
+/**
+ * Sovereignty receipt — proves a Friend was signed by a specific keypair.
+ * Stored as an optional `sovereignty` field on FriendSeedData. The
+ * signature covers the canonical JSON of the friend with the sovereignty
+ * field itself removed.
+ */
+export interface FriendSovereignty {
+  /** Public key of the signer (JWK string, ECDSA P-256). */
+  author: string;
+  /** Base64-encoded ECDSA-P256-SHA256 signature. */
+  signature: string;
+  /** Cryptographic algorithm identifier. */
+  algorithm: 'ECDSA-P256-SHA256';
+  /** ISO 8601 timestamp the signature was created (informational, NOT signed). */
+  signedAt: string;
+  /** SHA-256 hex of the canonical JSON that was signed (audit aid). */
+  payloadHash: string;
+}
+
 export interface FriendSeedData {
   /** Stable deterministic id, lowercase-hex 16 chars. */
   id: string;
@@ -183,8 +202,11 @@ export interface FriendSeedData {
   derivation?: {
     operator: 'genesis' | 'breed' | 'mutate';
     parents: string[];
+    /** Generation depth — 0 at genesis, +1 per breed/mutate step. */
     generation: number;
   };
+  /** Optional sovereignty receipt — proves this friend was signed by a specific keypair. */
+  sovereignty?: FriendSovereignty;
 }
 
 // ─── Artifact ──────────────────────────────────────────────────────────────

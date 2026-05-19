@@ -20,7 +20,7 @@ export type {
   BodyArchetype, BodyGene, FaceGene, VoiceGene, PersonaGene, BigFive,
   SpeechStyle, MemoryGene, BondGene, FriendSeedData, FriendArtifact,
   FriendPhenotype, VoiceRendering, FriendGenerationOptions,
-  FriendRng, 
+  FriendRng, FriendSovereignty,
 } from './types';
 
 export { createFriendSeed } from './genesis';
@@ -28,3 +28,8 @@ export { breedFriends, mutateFriend } from './breeding';
 export { generateFriend, hashArtifact } from './generator';
 export { FriendStore, getFriendStore, __resetFriendStoreForTests } from './store';
 export type { LineageNode, FriendStoreStats } from './store';
+export {
+  generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
+  friendPayloadHash, canonicalFriendJson,
+} from './sovereignty';
+export type { FriendKeyPair, VerifyResult } from './sovereignty';
