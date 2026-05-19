@@ -43,3 +43,6 @@ export type { FriendOnChainAnchor, AnchorRequest, AnchorResult, PreparedAnchor, 
 // ─── Phase 2 (1/n) — Quality Contract ────────────────────────────────────────
 export { FriendQualityContract } from './contract';
 export type { FriendInvertedGenes } from './contract';
+
+// ─── Phase 3 (1/n) — Composition bridges ─────────────────────────────────────
+export { composeFriend, registerFriendBridges, FRIEND_BRIDGES } from './composition';
