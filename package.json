@@ -29,7 +29,8 @@
     "package:linux": "tsx scripts/package.ts linux",
     "package:all": "tsx scripts/package.ts all",
     "verify:phase0": "node scripts/verify-phase0.js",
-    "quality:contract": "tsx scripts/quality-contract-report.mts"
+    "quality:contract": "tsx scripts/quality-contract-report.mts",
+    "replay": "tsx scripts/replay.mts"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
