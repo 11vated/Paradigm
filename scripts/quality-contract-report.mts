@@ -1,29 +1,21 @@
 #!/usr/bin/env -S npx tsx
 /**
  * Paradigm Quality Contract — CLI report.
- *
  * Loads every contract that self-registers, runs conformance against
- * each, prints the leaderboard, and exits non-zero if any canonical-tier
- * contract is failing.
- *
- * Usage: npx tsx scripts/quality-contract-report.mts
+ * each, prints the leaderboard, exits non-zero if any contract fails.
  */
-
-// Import the contracts (they self-register on import).
-import '../src/lib/friend/contract.ts';
-
-import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract.ts';
+import '../src/lib/friend/contract';
+import '../src/lib/kernel/generators/sprite-contract';
+import '../src/lib/kernel/generators/music-contract';
+import '../src/lib/kernel/generators/narrative-contract';
+import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();
-console.log(formatLeaderboard(results));
-console.log();
-for (const r of results) {
-  if (!r.passed) {
-    console.log(`  ✗ ${r.domain}: ${r.summary}`);
-    for (const [name, cl] of Object.entries(r.clauses)) {
-      if (!cl.passed) console.log(`      ${name}: ${cl.detail}`);
-    }
-  }
+console.log('\n' + formatLeaderboard(results) + '\n');
+const failing = results.filter((r) => !r.passed);
+if (failing.length > 0) {
+  console.error(`✗ ${failing.length} contract(s) failed:`);
+  for (const r of failing) console.error(`  - ${r.domain}@${r.version}`);
+  process.exit(1);
 }
-
-process.exit(results.every((r) => r.passed) ? 0 : 1);
+console.log(`✓ ${results.length} contract(s) green.\n`);
