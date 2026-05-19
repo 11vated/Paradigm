@@ -1,3 +1,6 @@
+// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
+// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
+
 import { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';

@@ -1,3 +1,6 @@
+// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
+// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
+
 /**
  * WebSocket client for the GSPL Agent streaming interface.
  * Falls back to HTTP POST /api/agent/query when WebSocket is unavailable.
