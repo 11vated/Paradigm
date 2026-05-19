@@ -1,60 +1,54 @@
-export { Kernel, Xoshiro256SS, FIM, TickSystem, Effects, GeneOperators } from './kernel';
-export { UniversalSeed, GeneType } from './seeds';
-export { tokenize as Lexer, parse as Parser, executeGSPL as Interpreter, typeCheck as TypeChecker, TokenType } from './gspl';
-export type { ASTNode, Program, Token } from './gspl';
-export { CMAES, FunctorRegistry, GameFunctor, MusicFunctor, ArtFunctor, StorytellingFunctor } from './evolution';
-export { GSPLAgent, WorldModel } from './intelligence';
-export { Level4Intelligence } from './intelligence/level4';
-export { BaseEngine, createAllEngines } from './engines';
-export type { EngineRegistry } from './engines';
-// removed some extra types since they are not explicitly exported by the folder index
-export { ParadigmStudio } from './studio/App';
+/**
+ * Paradigm Absolute — Public API barrel.
+ *
+ * Re-exports the canonical implementations from `src/lib/*`.
+ * (Phase 0 cleanup: removed broken CommonJS `require()` wrappers and
+ * references to the deprecated `src/kernel`, `src/gspl`, `src/evolution`,
+ * `src/intelligence` legacy roots.)
+ */
 
-export class ParadigmPlatform {
-  private kernel: import('./kernel').Kernel;
-  private engines: import('./engines').EngineRegistry;
-  private agent: import('./intelligence').GSPLAgent;
-  private worldModel: import('./intelligence').WorldModel;
+// Seed system
+export { UniversalSeed } from './seeds/universal-seed';
+export { GeneType } from './seeds/types';
 
-  constructor(config?: { seed?: number; tickRate?: number }) {
-    this.kernel = new (require('./kernel').Kernel)(config);
-    this.engines = new (require('./engines').EngineRegistry)();
-    this.agent = new (require('./intelligence').GSPLAgent)();
-    this.worldModel = new (require('./intelligence').WorldModel)();
-  }
+// Kernel (canonical: src/lib/kernel)
+export { Xoshiro256StarStar, rngFromHash } from './lib/kernel/rng';
+export { growSeed, getAllDomains } from './lib/kernel/engines';
+export type { Seed, Artifact, GeneratorOutput } from './lib/kernel/types';
 
-  async initialize(): Promise<void> {
-    this.kernel.initialize();
-    
-    const engineFactories = require('./engines');
-    const engines = engineFactories.createAllEngines();
-    for (const engine of engines) {
-      await engine.initialize();
-      this.engines.register(engine.getName(), engine);
-    }
-  }
+// GSPL language (canonical: src/lib/gspl + src/lib/kernel/gspl-*)
+export {
+  GsplLexer,
+  type Token,
+  TokenType,
+} from './lib/kernel/gspl-lexer';
+export {
+  GsplParser,
+  type ASTNode,
+  ASTNodeType,
+} from './lib/kernel/gspl-parser';
+export {
+  GsplInterpreter,
+  executeGspl,
+} from './lib/kernel/gspl-interpreter';
 
-  getKernel() {
-    return this.kernel;
-  }
+// Evolution (canonical: src/lib/evolution)
+export {
+  GeneticAlgorithm,
+  MAPElites,
+  CMAES,
+  POET,
+  DQD,
+  AURORA,
+  NSLC,
+  EVOLUTION_ALGORITHMS,
+  type EvolutionAlgorithm,
+} from './lib/evolution';
 
-  getAgent() {
-    return this.agent;
-  }
+// Intelligence (canonical: src/lib/intelligence)
+export { IntelligenceLayer } from './lib/intelligence';
 
-  getWorldModel() {
-    return this.worldModel;
-  }
-
-  getEngines() {
-    return this.engines;
-  }
-
-  shutdown(): void {
-    this.kernel.shutdown();
-  }
-}
-
+// Platform metadata
 export const VERSION = '1.0.0';
 export const GENE_COUNT = 17;
 export const ENGINE_COUNT = 26;

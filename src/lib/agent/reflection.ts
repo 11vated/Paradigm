@@ -6,7 +6,7 @@
  * self-reflection instead of weight updates.
  */
 
-import type { Seed } from '../../kernel/types';
+import type { Seed } from '../kernel/types';
 
 export interface ReflectionEntry {
   id: string;
