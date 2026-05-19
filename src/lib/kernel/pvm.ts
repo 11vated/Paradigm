@@ -15,6 +15,7 @@ import type { BytecodeProgram } from './gspl-bytecode';
 import type { Seed } from './types';
 import { growSeed, growSeedSync, type Artifact } from './engines';
 import { Xoshiro256StarStar } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // VM Configuration
 export interface PVMConfig {
@@ -423,7 +424,7 @@ export class PVM {
         const domain = stack.pop(); // String
 
         const seed: Seed = {
-          phrase: `seed_${Date.now()}`,
+          phrase: `seed_${kernelNow()}`,
           hash: '',
           rng: this.state.rng,
           $domain: domain,

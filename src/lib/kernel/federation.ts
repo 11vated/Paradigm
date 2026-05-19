@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import http from 'http';
 import { substrateLibrary, type SubstrateEntry } from './substrate-library';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── PEER STATE ───────────────────────────────────────────────────────────
 
@@ -53,7 +54,7 @@ export class FederationManager {
       type: 'HELLO',
       peerId: this.nodeId,
       payload: { seedCount: this.knownSeeds.size, substrateSize: substrateLibrary.size },
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
     };
 
     try {
@@ -61,7 +62,7 @@ export class FederationManager {
       if (response && response.type === 'HELLO_ACK') {
         const peer: PeerInfo = {
           id: peerId, url: peerUrl, seedCount: response.payload?.seedCount || 0,
-          firstSeen: new Date().toISOString(), lastSeen: new Date().toISOString(),
+          firstSeen: kernelNowIso(), lastSeen: kernelNowIso(),
           trustLevel: 0.5,
         };
         this.peers.set(peerId, peer);
@@ -81,7 +82,7 @@ export class FederationManager {
       type: 'SEED',
       peerId: this.nodeId,
       payload: { hash: seedHash, data: seedData },
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
     };
     for (const [peerId, peer] of this.peers) {
       try {
@@ -99,7 +100,7 @@ export class FederationManager {
       type: 'QUERY',
       peerId: this.nodeId,
       payload: { query },
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
     };
 
     for (const [peerId, peer] of this.peers) {

@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { kernelNow, kernelNowIso } from '../clock';
 
 interface PhysicsParams {
   gravity: number;
@@ -38,7 +39,7 @@ export async function generatePhysicsEnhanced(seed: Seed, outputPath: string): P
     qualitySettings: getQualitySettings(params.quality),
     workerScript: 'physics-worker.js', // For Web Worker offloading
     metadata: {
-      generated: new Date().toISOString(),
+      generated: kernelNowIso(),
       seed_hash: seed.$hash ?? 'unknown',
       engine_version: '2.0.0'
     }

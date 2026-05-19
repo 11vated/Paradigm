@@ -13,6 +13,7 @@
  */
 
 import type { Seed, Artifact } from './types';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── Hook Types (replace Nexus Hook system) ──────────
 export type HookType = 
@@ -141,7 +142,7 @@ class OperatorHookSystem {
       hookType: type,
       seedHash: seed.$hash || '',
       operation: context.operation,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       continued: result.continue,
       reason: result.reason,
     });
@@ -296,7 +297,7 @@ export async function breedWithHooks(
   // Pre-breed hooks
   const preResult = await operatorHooks.executePreHooks('preBreed', parent1, {
     operation: 'breed',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
     parentSeeds: [parent1, parent2],
     childSeed: child,
   });
@@ -310,7 +311,7 @@ export async function breedWithHooks(
   // Post-breed hooks
   await operatorHooks.executePostHooks('postBreed', child, {
     operation: 'breed',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
     parentSeeds: [parent1, parent2],
     childSeed: child,
   });
@@ -328,7 +329,7 @@ export async function mutateWithHooks(
   // Pre-mutate hooks
   const preResult = await operatorHooks.executePreHooks('preMutate', seed, {
     operation: 'mutate',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
   });
 
   if (!preResult.continue) {
@@ -340,7 +341,7 @@ export async function mutateWithHooks(
   // Post-mutate hooks
   await operatorHooks.executePostHooks('postMutate', mutated, {
     operation: 'mutate',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
   });
 
   return { success: true, seed: mutated };
@@ -356,7 +357,7 @@ export async function growWithHooks(
   // Pre-grow hooks
   const preResult = await operatorHooks.executePreHooks('preGrow', seed, {
     operation: 'grow',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
   });
 
   if (!preResult.continue) {
@@ -368,7 +369,7 @@ export async function growWithHooks(
   // Post-grow hooks
   await operatorHooks.executePostHooks('postGrow', seed, {
     operation: 'grow',
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
     artifact,
   });
 

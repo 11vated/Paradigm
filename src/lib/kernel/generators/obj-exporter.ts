@@ -5,6 +5,7 @@
  */
 
 import * as THREE from 'three';
+import { kernelNow, kernelNowIso } from '../clock';
 
 export interface OBJExportOptions {
   includeNormals?: boolean;
@@ -26,7 +27,7 @@ export function exportOBJ(
 
   // OBJ header
   objLines.push('# Paradigm Character Export');
-  objLines.push(`# Generated: ${new Date().toISOString()}`);
+  objLines.push(`# Generated: ${kernelNowIso()}`);
   objLines.push('');
 
   if (options.materialName) {

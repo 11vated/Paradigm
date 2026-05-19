@@ -12,6 +12,7 @@
 
 import type { Seed } from './types';
 import { findCompositionPath } from './composition';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── Graph Node (replaces AST Node) ─────────────────────
 export interface SeedGraphNode {
@@ -88,7 +89,7 @@ export class SeedDependencyGraph {
       phrase: seed.$phrase || '',
       domain: seed.$domain || 'unknown',
       generation: seed.$lineage?.generation || 0,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       genes: { ...seed.genes },
       isRoot: true,
       depth: 0,
@@ -121,7 +122,7 @@ export class SeedDependencyGraph {
       phrase: childSeed.$phrase || '',
       domain: childSeed.$domain || 'unknown',
       generation: (childSeed.$lineage?.generation || parentNode.generation) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       genes: { ...childSeed.genes },
       isRoot: false,
       depth: parentNode.depth + 1,
@@ -135,7 +136,7 @@ export class SeedDependencyGraph {
       toHash: childHash,
       operation: 'fork',
       weight: this.calculateGeneticSimilarity(parentNode.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       metadata: { mutationRate: 0.1 }, // Default
     });
 
@@ -164,7 +165,7 @@ export class SeedDependencyGraph {
       domain: child.$domain || 'unknown',
       generation: (child.$lineage?.generation || 
         Math.max(parent1Node.generation, parent2Node.generation)) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       genes: { ...child.genes },
       isRoot: false,
       depth: Math.max(parent1Node.depth, parent2Node.depth) + 1,
@@ -178,7 +179,7 @@ export class SeedDependencyGraph {
       toHash: childHash,
       operation: 'breed',
       weight: this.calculateGeneticSimilarity(parent1Node.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       metadata: { parents: [hash1, hash2] },
     });
 
@@ -187,7 +188,7 @@ export class SeedDependencyGraph {
       toHash: childHash,
       operation: 'breed',
       weight: this.calculateGeneticSimilarity(parent2Node.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       metadata: { parents: [hash1, hash2] },
     });
 
@@ -214,7 +215,7 @@ export class SeedDependencyGraph {
       phrase: target.$phrase || '',
       domain: target.$domain || 'unknown',
       generation: (target.$lineage?.generation || sourceNode.generation) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       genes: { ...target.genes },
       isRoot: false,
       depth: sourceNode.depth + 1,
@@ -228,7 +229,7 @@ export class SeedDependencyGraph {
       toHash: targetHash,
       operation: 'compose',
       weight: this.calculateGeneticSimilarity(sourceNode.genes, targetNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       metadata: { functor },
     });
 
@@ -254,7 +255,7 @@ export class SeedDependencyGraph {
       toHash: hash,
       operation: 'grow',
       weight: 1.0,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
   }
 
@@ -449,7 +450,7 @@ export class SeedDependencyGraph {
   }
 
   private generateHash(seed: Seed): string {
-    const phrase = seed.$phrase || seed.$hash || Date.now().toString();
+    const phrase = seed.$phrase || seed.$hash || kernelNow().toString();
     const bytes = new TextEncoder().encode(phrase);
     return Array.from(bytes)
       .map(b => b.toString(16).padStart(2, '0'))

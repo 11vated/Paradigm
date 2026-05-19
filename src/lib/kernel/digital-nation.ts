@@ -11,6 +11,7 @@
  */
 
 import { ethers } from 'ethers';
+import { kernelNow, kernelNowIso } from './clock';
 
 export interface NationConfig {
   name: string;
@@ -113,7 +114,7 @@ export class DigitalNation {
     for (const member of config.initialMembers) {
       this.citizens.set(member.toLowerCase(), {
         address: member,
-        joinedAt: Date.now(),
+        joinedAt: kernelNow(),
         reputation: 1000, // Starting reputation for founders
         tokensStaked: 0,
         votingPower: 10,
@@ -135,7 +136,7 @@ export class DigitalNation {
     
     this.citizens.set(address.toLowerCase(), {
       address: address.toLowerCase(),
-      joinedAt: Date.now(),
+      joinedAt: kernelNow(),
       reputation: 100,
       tokensStaked: Number(stakeAmount),
       votingPower: this.calculateVotingPower(100, stakeAmount),
@@ -184,8 +185,8 @@ export class DigitalNation {
       title,
       description,
       proposer: proposer.toLowerCase(),
-      createdAt: Date.now(),
-      deadline: Date.now() + duration,
+      createdAt: kernelNow(),
+      deadline: kernelNow() + duration,
       status: 'active',
       votes: [],
       quorum,
@@ -221,7 +222,7 @@ export class DigitalNation {
       throw new Error('Proposal is not active');
     }
     
-    if (Date.now() > proposal.deadline) {
+    if (kernelNow() > proposal.deadline) {
       throw new Error('Voting period has ended');
     }
     
@@ -239,7 +240,7 @@ export class DigitalNation {
       choice,
       weight,
       reason,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
     
     // Check if proposal should be executed after vote
@@ -273,7 +274,7 @@ export class DigitalNation {
       if (proposal.type === 'treasury' || proposal.type === 'constitutional') {
         this.executeProposal(proposal.id);
       }
-    } else if (Date.now() > proposal.deadline) {
+    } else if (kernelNow() > proposal.deadline) {
       proposal.status = 'rejected';
     }
   }
@@ -316,7 +317,7 @@ export class DigitalNation {
           const amendment = JSON.parse(proposal.executionData);
           this.constitution.amendments.push({
             ...amendment,
-            ratifiedAt: Date.now(),
+            ratifiedAt: kernelNow(),
           });
         }
         break;
@@ -332,7 +333,7 @@ export class DigitalNation {
     type: Treaty['type'],
     terms: Record<string, any>
   ): Promise<string> {
-    const treatyId = `treaty_${Date.now()}`;
+    const treatyId = `treaty_${kernelNow()}`;
     
     const treaty: Treaty = {
       id: treatyId,
@@ -362,7 +363,7 @@ export class DigitalNation {
     
     if (forVotes / totalCitizens > 0.5) {
       treaty.status = 'ratified';
-      treaty.ratifiedAt = Date.now();
+      treaty.ratifiedAt = kernelNow();
     }
   }
   
@@ -472,7 +473,7 @@ export class DigitalNation {
       config: this.config,
       constitution: this.constitution,
       stats: this.getStats(),
-      exportedAt: Date.now(),
+      exportedAt: kernelNow(),
     };
   }
 }

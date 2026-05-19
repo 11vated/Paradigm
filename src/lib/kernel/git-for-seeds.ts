@@ -1,4 +1,5 @@
 import type { Seed } from './types';
+import { kernelNow, kernelNowIso } from './clock';
 
 export interface SeedBranch {
   name: string;
@@ -49,7 +50,7 @@ class GitForSeedsStore {
     const branch: SeedBranch = {
       name,
       head: seedHash,
-      createdAt: new Date().toISOString(),
+      createdAt: kernelNowIso(),
       createdBy: author,
       description,
     };
@@ -129,12 +130,12 @@ class GitForSeedsStore {
       : [];
 
     const commit: SeedCommit = {
-      hash: seed.$hash || `seed-${Date.now()}`,
+      hash: seed.$hash || `seed-${kernelNow()}`,
       parentHashes,
       branch: branchName,
       message,
       author,
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
       geneDiffs,
     };
 
@@ -232,12 +233,12 @@ class GitForSeedsStore {
     const allGeneDiffs = commits.flatMap(c => c.geneDiffs);
 
     const squashed: SeedCommit = {
-      hash: `squashed-${Date.now()}`,
+      hash: `squashed-${kernelNow()}`,
       parentHashes: [firstParent],
       branch: branchName,
       message,
       author,
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
       geneDiffs: allGeneDiffs,
     };
 

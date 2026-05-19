@@ -27,6 +27,7 @@
  */
 
 import { createHash } from 'crypto';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── Contract interface ──────────────────────────────────────────────────────
 
@@ -134,7 +135,7 @@ export async function runConformance<TSeed, TArtifact, TGenes>(
   options: ConformanceOptions = {},
 ): Promise<ConformanceResult> {
   const opts = { ...DEFAULT_OPTS, ...options };
-  const t0 = Date.now();
+  const t0 = kernelNow();
 
   const clauses: ConformanceResult['clauses'] = {
     synthesize: { passed: false, detail: '' },
@@ -281,7 +282,7 @@ function finalize<TSeed, TArtifact, TGenes>(
     passed,
     clauses,
     summary: `${contract.domain}@${contract.version}: ${passedCount}/5 clauses${passed ? ' — ✅ canonical' : ' — ⚠ not yet canonical'}`,
-    durationMs: Date.now() - t0,
+    durationMs: kernelNow() - t0,
   };
 }
 

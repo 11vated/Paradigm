@@ -13,6 +13,7 @@
 
 import type { Seed, Artifact } from './types';
 import { rngFromHash } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── WebRTC Configuration ────────────────────────
 export interface WebRTCConfig {
@@ -482,7 +483,7 @@ export class WebRTCManager {
    * Generate peer ID
    */
   private generatePeerId(): string {
-    const rng = rngFromHash(Date.now().toString());
+    const rng = rngFromHash(kernelNow().toString());
     const bytes = new Uint8Array(8);
     for (let i = 0; i < 8; i++) {
       bytes[i] = Math.floor(rng.nextF64() * 256);
@@ -496,7 +497,7 @@ export class WebRTCManager {
    * Generate room ID
    */
   private generateRoomId(): string {
-    const rng = rngFromHash(Date.now().toString());
+    const rng = rngFromHash(kernelNow().toString());
     const bytes = new Uint8Array(16);
     for (let i = 0; i < 16; i++) {
       bytes[i] = Math.floor(rng.nextF64() * 256);

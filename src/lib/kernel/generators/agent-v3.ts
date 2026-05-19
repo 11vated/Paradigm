@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar } from '../rng';
+import { kernelNow, kernelNowIso } from '../clock';
 
 interface AgentParams {
   role: 'assistant' | 'companion' | 'expert' | 'creative' | 'analyst';
@@ -97,7 +98,7 @@ function generateAgentConfig(params: AgentParams, rng: Xoshiro256StarStar): Agen
   const constraints = ['no-harm', 'honesty', 'privacy', 'transparency', 'consent'];
   
   return {
-    id: `agent_${Date.now()}_${Math.floor(rng.nextF64() * 10000)}`,
+    id: `agent_${kernelNow()}_${Math.floor(rng.nextF64() * 10000)}`,
     name: names[Math.floor(rng.nextF64() * names.length)],
     role: params.role,
     personality: params.personality,
@@ -139,13 +140,13 @@ function generateConversations(config: AgentConfig, params: AgentParams, rng: Xo
       messages.push({
         role: 'user',
         content: `${userQueries[Math.floor(rng.nextF64() * userQueries.length)]} ${topics[Math.floor(rng.nextF64() * topics.length)]}?`,
-        timestamp: Date.now() - (numExchanges - e) * 60000
+        timestamp: kernelNow() - (numExchanges - e) * 60000
       });
       
       messages.push({
         role: 'assistant',
         content: `Based on my ${config.role} capabilities, I can help you with that. Let me think about this...`,
-        timestamp: Date.now() - (numExchanges - e) * 60000 + 1000
+        timestamp: kernelNow() - (numExchanges - e) * 60000 + 1000
       });
     }
     

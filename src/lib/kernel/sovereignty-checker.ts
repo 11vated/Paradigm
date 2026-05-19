@@ -13,6 +13,7 @@
 
 import type { Seed } from './types';
 import { rngFromHash } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── Permission Levels (replaces Nexus READ/WRITE/EXECUTE/DESTRUCTIVE) ─────
 export enum PermissionLevel {
@@ -190,7 +191,7 @@ export class SovereigntyChecker {
         ...seed.$provenance,
         signature,
         signer: seed.genes?.ownership?.value || 'unknown',
-        timestamp: new Date().toISOString(),
+        timestamp: kernelNowIso(),
       },
     };
 
@@ -235,7 +236,7 @@ export class SovereigntyChecker {
       $provenance: {
         ...seed.$provenance,
         signer: newOwner,
-        timestamp: new Date().toISOString(),
+        timestamp: kernelNowIso(),
       },
     };
 

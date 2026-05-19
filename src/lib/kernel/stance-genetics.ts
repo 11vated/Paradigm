@@ -12,6 +12,7 @@
 
 import type { Seed } from './types';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── The 19 Agent Genes (from seed-agent.ts) ─────────────
 export interface StanceGenes {
@@ -311,7 +312,7 @@ export function breedStances(stance1Name: string, stance2Name: string): Partial<
     throw new Error('Unknown stance(s)');
   }
 
-  const rng = rngFromHash(Date.now().toString());
+  const rng = rngFromHash(kernelNow().toString());
   const hybrid: Partial<StanceGenes> = {};
 
   // Uniform crossover: randomly pick from stance 1 or 2
@@ -339,7 +340,7 @@ export function mutateStance(stanceName: string, mutationRate: number = 0.1): Pa
     throw new Error(`Unknown stance: ${stanceName}`);
   }
 
-  const rng = rngFromHash(Date.now().toString());
+  const rng = rngFromHash(kernelNow().toString());
   const mutated: Partial<StanceGenes> = { ...stance.genes };
 
   // Mutate numeric genes

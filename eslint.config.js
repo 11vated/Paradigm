@@ -42,11 +42,11 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
-        'warn',
+        'error',
         { allowConstantExport: true },
       ],
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': 'error',
     },
   },
 
@@ -87,16 +87,16 @@ export default tseslint.config(
         },
       ],
       'no-restricted-syntax': [
-        'warn',
+        'error',
         {
           selector: "MemberExpression[object.name='Date'][property.name='now']",
           message:
-            'Deterministic boundary (WARN): wall-clock entropy. Pass timestamps in or use kernel.now() (sprint pending).',
+            'Deterministic boundary : wall-clock entropy is FORBIDDEN. Use kernelNow() / kernelNowIso() from src/lib/kernel/clock.',
         },
         {
           selector: "NewExpression[callee.name='Date']",
           message:
-            'Deterministic boundary (WARN): `new Date()` reads wall-clock entropy. Pass timestamps in (sprint pending).',
+            'Deterministic boundary : `new Date()` reads wall-clock entropy. Use kernelNowIso() from src/lib/kernel/clock or accept timestamps as input.',
         },
         {
           selector: "MemberExpression[object.name='performance'][property.name='now']",

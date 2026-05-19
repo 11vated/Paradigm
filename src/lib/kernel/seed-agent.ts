@@ -38,6 +38,7 @@ import {
   sovereigntyChecker, checkSovereigntyHook, signAfterOperation,
   PermissionLevel, type SovereigntyCheck 
 } from './sovereignty-checker';
+import { kernelNow, kernelNowIso } from './clock';
 
 // Tool definition
 export interface AgentTool {
@@ -173,7 +174,7 @@ export class SeedAgent {
       this.agentSeed = agentSeed;
     } else {
       // Create default agent seed using ARCHITECT_STANCE
-      const phrase = `agent:default_${Date.now()}`;
+      const phrase = `agent:default_${kernelNow()}`;
       const hash = this.simpleHash64(phrase);
       const defaultStance = STANCE_REGISTRY['architect'];
       
@@ -371,7 +372,7 @@ export class SeedAgent {
         // Record to episodic memory
         if (this.agentSeed.genes.episodic_memory.value) {
           this.state.memory.episodic.push({
-            timestamp: Date.now(),
+            timestamp: kernelNow(),
             event: `Goal: ${goal}`,
             outcome: response.content?.substring(0, 100) || '',
           });
@@ -850,7 +851,7 @@ export class SeedAgent {
         }
         this.state.memory.semantic.set(args.key, {
           value: args.value,
-          timestamp: Date.now(),
+          timestamp: kernelNow(),
         });
         return { success: true, message: `Saved to memory: ${args.key}` };
       },

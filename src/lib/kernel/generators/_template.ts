@@ -12,6 +12,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { kernelNow, kernelNowIso } from '../clock';
 
 // Configuration
 const QUALITY_TIERS = ['low', 'medium', 'high', 'photorealistic'] as const;
@@ -88,7 +89,7 @@ function generateOutput(params: GeneratorParams, rng: Xoshiro256StarStar): any {
     type: 'generator',
     parameters: params,
     generationInfo: {
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       quality: params.quality
     }
     // Add actual generated data here
