@@ -5,8 +5,8 @@
  * Implements the SeedLLM interface with GPT-4/GPT-3.5 models
  */
 
-import type { Seed, GeneratorOutput } from './engines';
-import type { SeedLLM, SeedLLMConfig } from './seed-llm';
+import type { Seed, GeneratorOutput } from '../../kernel/engines';
+import type { SeedLLM, SeedLLMConfig } from './base';
 
 /**
  * OpenAI-specific LLM implementation

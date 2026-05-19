@@ -10,6 +10,11 @@ import * as path from 'path';
 import type { Seed } from '../engines';
 import { exportGLTF, createPBRMaterial } from './gltf-exporter';
 import { generateCharacterV2 } from './character-v2';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
+
+// Configuration
+const QUALITY_TIERS = ['low', 'medium', 'high', 'photorealistic'] as const;
+export type QualityTier = typeof QUALITY_TIERS[number];
 
 interface CharacterParams {
   size: number;
@@ -18,14 +23,32 @@ interface CharacterParams {
   agility: number;
   palette: number[];
   personality: string;
-  quality: 'low' | 'medium' | 'high' | 'photorealistic';
+  quality: QualityTier;
 }
 
 export async function generateCharacter(seed: Seed, outputPath: string): Promise<{ filePath: string; vertices: number; faces: number }> {
+  // ─── Standardized Boilerplate ───────────────────────────────────────
+  const rng = rngFromHash(seed.$hash || '');
+  const params = extractParams(seed, rng);
+
+  // ─── Existing Generation Logic ───────────────────────────────────────
   // Use the world-class V2 generator
   const result = await generateCharacterV2(seed, outputPath);
 
-  // Return in legacy format for compatibility
+  // ─── Standardized JSON Config Output ───────────────────────────────
+  const jsonPath = outputPath.replace(/\.[^.]+$/, '.json');
+  const config = {
+    // Include the parameters and other metadata
+    ...params,
+    gltfFile: outputPath,
+    vertices: result.vertices,
+    faces: result.faces
+  };
+  const dir = path.dirname(jsonPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
+
+  // ─── Return Existing Result ───────────────────────────────────────
   return {
     filePath: result.filePath,
     vertices: result.vertices,
@@ -33,16 +56,34 @@ export async function generateCharacter(seed: Seed, outputPath: string): Promise
   };
 }
 
-function extractParams(seed: Seed): CharacterParams {
-  const quality = (seed.genes?.quality?.value as string) || 'medium';
+// Helper function to extract parameters from seed genes - CUSTOMIZE PER DOMAIN
+function extractParams(seed: Seed, rng: Xoshiro256StarStar): CharacterParams {
+  // Extract and validate parameters from seed genes
+  // Provide sensible defaults and fallback to RNG-based values when needed
+  
+  const quality = (seed.genes?.quality?.value as QualityTier) || 
+                  QUALITY_TIERS[rng.nextInt(0, QUALITY_TIERS.length)];
+                  
+  // Parameter extraction for character domain:
+  const size = (seed.genes?.size?.value as number || rng.nextF64() * 2) + 0.5; // 0.5 to 2.5
+  const archetypeOptions = ['humanoid', 'creature', 'robot', 'alien'] as const;
+  const archetype = seed.genes?.archetype?.value as typeof archetypeOptions[number] || archetypeOptions[rng.nextInt(0, archetypeOptions.length)];
+  const strength = (seed.genes?.strength?.value as number || rng.nextF64()) * 100; // 0-100
+  const agility = (seed.genes?.agility?.value as number || rng.nextF64()) * 100; // 0-100
+  const paletteCount = 3;
+  const palette = Array.from({ length: paletteCount }, () => rng.nextF64()); // 0-1 for each
+  const personalityOptions = ['brave', 'cautious', 'curious', 'aggressive', 'peaceful'] as const;
+  const personality = seed.genes?.personality?.value as typeof personalityOptions[number] || personalityOptions[rng.nextInt(0, personalityOptions.length)];
+  
   return {
-    size: (seed.genes?.size?.value as number) || 1.0,
-    archetype: (seed.genes?.archetype?.value as string) || 'warrior',
-    strength: (seed.genes?.strength?.value as number) || 0.5,
-    agility: (seed.genes?.agility?.value as number) || 0.5,
-    palette: seed.genes?.palette?.value || [0.5, 0.5, 0.5],
-    personality: (seed.genes?.personality?.value as string) || 'neutral',
-    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
+    // Return extracted parameters:
+    size,
+    archetype,
+    strength,
+    agility,
+    palette,
+    personality,
+    quality: quality as QualityTier,
   };
 }
 

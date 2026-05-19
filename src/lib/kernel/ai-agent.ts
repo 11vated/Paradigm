@@ -11,7 +11,7 @@ import { growSeed } from './engines';
 import { executeGspl } from './gspl-interpreter';
 import { encodeGseed, createGseed, SectionType } from './binary-format';
 import { buildC2PAManifest } from './c2pa-manifest';
-import type { SeedLLM } from './seed-llm';
+import type { SeedLLM } from '../intelligence/llm/base';
 
 /**
  * Tool parameter schema (JSON Schema subset)

@@ -83,6 +83,22 @@ const memorySystem = new MemorySystem('server');
 gsplAgent.setMemorySystem(memorySystem);
 const pipelineOrchestrator = new Orchestrator({ defaultDomain: 'character' });
 
+// ─── NEW: Evolution Job Tracking ─────────────────────────────────────────
+interface EvolutionJob {
+  id: string;
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  algorithm: string;
+  populationSize: number;
+  generations: number;
+  seedId: string;
+  createdAt: number;
+  completedAt?: number;
+  result?: any;
+  error?: string;
+}
+
+const evolutionJobs: Map<string, EvolutionJob> = new Map();
+
 // ─── NEW: On-Chain Sovereignty (ERC-721 minting) ─────────────────────────────
 import { OnChainSovereignty } from './src/lib/sovereignty/onchain.js';
 import {
@@ -2499,72 +2515,158 @@ async function startServer() {
 
   // ── Evolution worker (async, off-main-thread) ──
 
-  app.post('/api/seeds/:id/evolve/async', optionalAuth, async (req: any, res: any) => {
-    const parent = seeds.find((s: any) => s.id === req.params.id);
-    if (!parent) return res.status(404).json({ detail: 'Not found' });
+   app.post('/api/seeds/:id/evolve/async', optionalAuth, async (req: any, res: any) => {
+     const parent = seeds.find((s: any) => s.id === req.params.id);
+     if (!parent) return res.status(404).json({ detail: 'Not found' });
 
-    const algorithm = req.body.algorithm || 'ga';
-    const popSize = Math.min(req.body.population_size || 20, 100);
-    const generations = Math.min(req.body.generations || 10, 50);
+     const algorithm = req.body.algorithm || 'ga';
+     const popSize = Math.min(req.body.population_size || 20, 100);
+     const generations = Math.min(req.body.generations || 10, 50);
 
-    const jobId = `evolve_${parent.$hash}_${Date.now()}`;
-    res.json({ jobId, status: 'queued', algorithm, population_size: popSize, generations });
+     const jobId = `evolve_${parent.$hash}_${Date.now()}`;
+     
+     // Create job entry
+     const job: EvolutionJob = {
+       id: jobId,
+       status: 'queued',
+       algorithm,
+       populationSize: popSize,
+       generations,
+       seedId: parent.id,
+       createdAt: Date.now()
+     };
+     evolutionJobs.set(jobId, job);
+     
+     res.json({ jobId, status: 'queued', algorithm, population_size: popSize, generations });
 
-    // Run in background
-    (async () => {
-      try {
-        const { GeneticAlgorithm, MAPElites, CMAES, POET, DQD, AURORA, NSLC } = await import('./src/lib/evolution/index.js');
-        const rng = rngFor(parent, `async_evolve_${algorithm}`);
-        const geneKeys = Object.keys(parent.genes || {});
-        let result: any[] = [];
+     // Run in background
+     (async () => {
+       try {
+         // Update job status
+         job.status = 'running';
+         
+         const { GeneticAlgorithm, MAPElites, CMAES, POET, DQD, AURORA, NSLC } = await import('./src/lib/evolution/index.js');
+         const rng = rngFor(parent, `async_evolve_${algorithm}`);
+         const geneKeys = Object.keys(parent.genes || {});
+         let result: any[] = [];
 
-        if (algorithm === 'ga') {
-          const ga = new GeneticAlgorithm(rng);
-          const gaResult = await ga.evolve([parent], (s) => s.$fitness?.overall || 0.5, {
-            populationSize: popSize, generationLimit: generations, mutationRate: 0.2, crossoverRate: 0.7, tournamentSize: 3, elitismCount: 1,
-          });
-          result = gaResult.population;
-        } else if (algorithm === 'map-elites') {
-          const me = new MAPElites((s) => geneKeys.map(k => (s.genes as any)?.[k]?.value || 0.5), { gridSize: [5, 5] });
-          const meResult = me.run([parent], (s) => s.$fitness?.overall || 0.5, generations);
-          result = Array.from(meResult.population.values()).map(c => c.seed);
-        } else if (algorithm === 'cmaes') {
-          const cmaes = new CMAES({ populationSize: popSize, generations });
-          const cmaesResult = await cmaes.optimize(parent, (s) => s.$fitness?.overall || 0.5, geneKeys);
-          result = [cmaesResult.best];
-        } else if (algorithm === 'dqd') {
-          const dqd = new DQD({ populationSize: popSize, generations });
-          const dqdResult = await dqd.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
-          result = [dqdResult.best];
-        } else if (algorithm === 'aurora') {
-          const aurora = new AURORA({ archiveSize: popSize * 5, generations });
-          const auroraResult = await aurora.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
-          result = auroraResult.archive.slice(0, popSize).map(a => a.seed);
-        } else if (algorithm === 'nslc') {
-          const nslc = new NSLC({ archiveSize: popSize * 5, generations });
-          const nslcResult = await nslc.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
-          result = nslcResult.archive.slice(0, popSize).map(a => a.seed);
-        } else {
-          const poet = new POET({ maxEnvironments: popSize, generations });
-          const poetResult = await poet.run([parent], async (env, sol) => sol.$fitness?.overall || 0.5, (env, r) => {
-            const child = JSON.parse(JSON.stringify(env));
-            if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); }
-            return child;
-          });
-          result = poetResult.environments.slice(0, popSize).map(e => e.solution);
-        }
+         if (algorithm === 'ga') {
+           const ga = new GeneticAlgorithm(rng);
+           const gaResult = await ga.evolve([parent], (s) => s.$fitness?.overall || 0.5, {
+             populationSize: popSize, generationLimit: generations, mutationRate: 0.2, crossoverRate: 0.7, tournamentSize: 3, elitismCount: 1,
+           });
+           result = gaResult.population;
+         } else if (algorithm === 'map-elites') {
+           const me = new MAPElites((s) => geneKeys.map(k => (s.genes as any)?.[k]?.value || 0.5), { gridSize: [5, 5] });
+           const meResult = me.run([parent], (s) => s.$fitness?.overall || 0.5, generations);
+           result = Array.from(meResult.population.values()).map(c => c.seed);
+         } else if (algorithm === 'cmaes') {
+           const cmaes = new CMAES({ populationSize: popSize, generations });
+           const cmaesResult = await cmaes.optimize(parent, (s) => s.$fitness?.overall || 0.5, geneKeys);
+           result = [cmaesResult.best];
+         } else if (algorithm === 'dqd') {
+           const dqd = new DQD({ populationSize: popSize, generations });
+           const dqdResult = await dqd.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+           result = [dqdResult.best];
+         } else if (algorithm === 'aurora') {
+           const aurora = new AURORA({ archiveSize: popSize * 5, generations });
+           const auroraResult = await aurora.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+           result = auroraResult.archive.slice(0, popSize).map(a => a.seed);
+         } else if (algorithm === 'nslc') {
+           const nslc = new NSLC({ archiveSize: popSize * 5, generations });
+           const nslcResult = await nslc.run([parent], async (s) => s.$fitness?.overall || 0.5, (s) => geneKeys.slice(0, 2).map(k => (s.genes as any)?.[k]?.value || 0.5));
+           result = nslcResult.archive.slice(0, popSize).map(a => a.seed);
+         } else {
+           const poet = new POET({ maxEnvironments: popSize, generations });
+           const poetResult = await poet.run([parent], async (env, sol) => sol.$fitness?.overall || 0.5, (env, r) => {
+             const child = JSON.parse(JSON.stringify(env));
+             if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); }
+             return child;
+           });
+           result = poetResult.environments.slice(0, popSize).map(e => e.solution);
+         }
 
-        for (const seed of result) { seeds.push(seed); }
-        saveSeeds();
-        metrics.seedsEvolved++;
-        log('INFO', 'Async evolution complete', { jobId, count: result.length });
-      } catch (e: any) {
-        log('ERROR', 'Async evolution failed', { jobId, error: e.message });
-      }
-    })();
-  });
+         for (const seed of result) { seeds.push(seed); }
+         saveSeeds();
+         metrics.seedsEvolved++;
+         
+         // Update job with result
+         job.status = 'completed';
+         job.completedAt = Date.now();
+         job.result = result;
+         
+         log('INFO', 'Async evolution complete', { jobId, count: result.length });
+       } catch (e: any) {
+         // Update job with error
+         job.status = 'failed';
+         job.error = e.message;
+         job.completedAt = Date.now();
+         
+         log('ERROR', 'Async evolution failed', { jobId, error: e.message });
+       }
+      })();
+    });
 
-  // ── Lightweight 3D mesh preview (Phase 4/5) ──
+   // ─── Evolution Job Management Endpoints ───────────────────────────────────
+   // Get status of an evolution job
+   app.get('/api/evolve/:jobId/status', optionalAuth, (req: any, res: any) => {
+     const job = evolutionJobs.get(req.params.jobId);
+     if (!job) return res.status(404).json({ detail: 'Job not found' });
+     
+     // Return job info without sensitive data
+     res.json({
+       id: job.id,
+       status: job.status,
+       algorithm: job.algorithm,
+       populationSize: job.populationSize,
+       generations: job.generations,
+       seedId: job.seedId,
+       createdAt: job.createdAt,
+       completedAt: job.completedAt
+     });
+   });
+
+   // Get result of a completed evolution job
+   app.get('/api/evolve/:jobId/result', optionalAuth, (req: any, res: any) => {
+     const job = evolutionJobs.get(req.params.jobId);
+     if (!job) return res.status(404).json({ detail: 'Job not found' });
+     
+     if (job.status !== 'completed') {
+       return res.status(400).json({ 
+         detail: `Job is not completed. Current status: ${job.status}` 
+       });
+     }
+     
+     res.json({
+       id: job.id,
+       status: job.status,
+       result: job.result,
+       completedAt: job.completedAt
+     });
+   });
+
+   // Cancel an evolution job (only works if still queued or running)
+   app.delete('/api/evolve/:jobId/cancel', optionalAuth, (req: any, res: any) => {
+     const job = evolutionJobs.get(req.params.jobId);
+     if (!job) return res.status(404).json({ detail: 'Job not found' });
+     
+     if (job.status === 'completed' || job.status === 'failed' || job.status === 'cancelled') {
+       return res.status(400).json({ 
+         detail: `Cannot cancel job with status: ${job.status}` 
+       });
+     }
+     
+     job.status = 'cancelled';
+     job.completedAt = Date.now();
+     
+     res.json({ 
+       id: job.id, 
+       status: job.status, 
+       completedAt: job.completedAt 
+     });
+   });
+
+   // ── Lightweight 3D mesh preview (Phase 4/5) ──
   // Returns a JSON mesh the frontend can render directly in WebGL without
   // running the heavy QFT pipeline. The default path (unknown/custom seed
   // domain) now produces a Marching-Cubes mesh instead of a generic sphere.

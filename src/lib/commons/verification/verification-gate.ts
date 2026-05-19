@@ -1,4 +1,4 @@
-import type { SeedLLM } from '../../kernel/seed-llm';
+import type { SeedLLM } from '../../intelligence/llm/base';
 import { getDomainChecker, type CheckerResult } from './domain-checkers';
 
 export interface VerificationGateConfig {

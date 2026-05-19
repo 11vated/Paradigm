@@ -5,10 +5,10 @@
  * generative system through a language model.
  */
 
-import type { Seed, GeneratorOutput } from './engines';
-import { rngFromHash } from './rng';
-import { executeGspl } from './gspl-interpreter';
-import { growSeed } from './engines';
+import type { Seed, GeneratorOutput } from '../../kernel/engines';
+import { rngFromHash } from '../../kernel/rng';
+import { executeGspl } from '../../kernel/gspl-interpreter';
+import { growSeed } from '../../kernel/engines';
 
 /**
  * Seed LLM interface

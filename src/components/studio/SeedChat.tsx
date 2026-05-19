@@ -6,7 +6,8 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { createSeedLLM, type SeedLLM, type SeedLLMConfig } from '../../lib/kernel/seed-llm';
+import { createSeedLLM, type SeedLLM, type SeedLLMConfig } from 
+'../../lib/intelligence/llm/base';
 import { executeGspl } from '../../lib/kernel/gspl-interpreter';
 import { encodeGseed, createGseed } from '../../lib/kernel/binary-format';
 import { buildC2PAManifest } from '../../lib/kernel/c2pa-manifest';

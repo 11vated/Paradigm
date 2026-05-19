@@ -8,7 +8,7 @@
  */
 
 import type { Seed, GeneratorOutput } from './engines';
-import type { SeedLLM } from './seed-llm';
+import type { SeedLLM } from '../intelligence/llm/base';
 import type { AIAgentTool } from './ai-agent';
 import { createSeedTools, executeTool } from './ai-agent';
 import { growSeed } from './engines';
