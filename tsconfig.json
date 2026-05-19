@@ -30,12 +30,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "src/engines/index_backup.ts",
-    "src/engines/index_clean.ts",
-    "src/engines/index_fixed.ts",
-    "src/engines/index_fixed_start.ts",
-    "src/engines/index_new_start.ts",
-    "src/engines/index_part1.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/__tests__/**"
