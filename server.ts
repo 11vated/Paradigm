@@ -87,7 +87,7 @@ import {
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
 import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
-import { createGameSeed, generateGame, evaluateGame, evolveGames, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
@@ -3426,6 +3426,24 @@ async function startServer() {
       const p = createWorldSeed(String(req.body.parent));
       const child = mutateWorld(p, { salt: req.body.salt, magnitude: Number(req.body.magnitude ?? 0.2) });
       res.json({ worldSeed: child });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/map-elites — quality+diversity grid over (archetype, pace).
+  app.post('/api/v1/game/map-elites', optionalAuth, (req: any, res: any) => {
+    try {
+      const r = mapElitesGames({
+        initialSeed: String(req.body.initialSeed ?? 'me-' + Date.now()),
+        paceBins: Math.min(8, Math.max(1, Number(req.body.paceBins) || 4)),
+        iterations: Math.min(200, Math.max(4, Number(req.body.iterations) || 40)),
+        randomFraction: req.body.randomFraction,
+      });
+      res.json({
+        filled: r.filled, total: r.total, generations: r.generations,
+        best: r.best,
+        cells: [...r.cells.values()],
+      });
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 
