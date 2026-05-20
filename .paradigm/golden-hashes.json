@@ -309,6 +309,60 @@
       "artifactHash": "9a4c93169b6c520e43f90967a6ae607f5d5ed8f7e2f90b52b6f9a5a4ab1de8b3"
     },
     {
+      "contract": "coffee",
+      "contractVersion": "1.0.0",
+      "curatedId": "coffee-bright",
+      "artifactHash": "163a9bf35eb67fbebe176a3d479f66ce4dbc9f897d5968840ee0583db09dbdd8"
+    },
+    {
+      "contract": "coffee",
+      "contractVersion": "1.0.0",
+      "curatedId": "coffee-default",
+      "artifactHash": "163a9bf35eb67fbebe176a3d479f66ce4dbc9f897d5968840ee0583db09dbdd8"
+    },
+    {
+      "contract": "coffee",
+      "contractVersion": "1.0.0",
+      "curatedId": "coffee-quiet",
+      "artifactHash": "163a9bf35eb67fbebe176a3d479f66ce4dbc9f897d5968840ee0583db09dbdd8"
+    },
+    {
+      "contract": "construction",
+      "contractVersion": "1.0.0",
+      "curatedId": "construction-bright",
+      "artifactHash": "8771e173df0af88d2fa930034e3d6bad2a50435ec5e5f5aeb028bad8d04ef52c"
+    },
+    {
+      "contract": "construction",
+      "contractVersion": "1.0.0",
+      "curatedId": "construction-default",
+      "artifactHash": "8771e173df0af88d2fa930034e3d6bad2a50435ec5e5f5aeb028bad8d04ef52c"
+    },
+    {
+      "contract": "construction",
+      "contractVersion": "1.0.0",
+      "curatedId": "construction-quiet",
+      "artifactHash": "8771e173df0af88d2fa930034e3d6bad2a50435ec5e5f5aeb028bad8d04ef52c"
+    },
+    {
+      "contract": "cosmetics",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmetics-bright",
+      "artifactHash": "41238c8e91f8f1f460278fde5429d4bf9386ba23680e123a5e80f9a1ee138a26"
+    },
+    {
+      "contract": "cosmetics",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmetics-default",
+      "artifactHash": "41238c8e91f8f1f460278fde5429d4bf9386ba23680e123a5e80f9a1ee138a26"
+    },
+    {
+      "contract": "cosmetics",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmetics-quiet",
+      "artifactHash": "41238c8e91f8f1f460278fde5429d4bf9386ba23680e123a5e80f9a1ee138a26"
+    },
+    {
       "contract": "cybersecurity",
       "contractVersion": "1.0.0",
       "curatedId": "cybersecurity-bright",
@@ -415,6 +469,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "education-quiet",
       "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
+    },
+    {
+      "contract": "electronics",
+      "contractVersion": "1.0.0",
+      "curatedId": "electronics-bright",
+      "artifactHash": "23a58b6097df4f200e1447fcc117f79db88b33894f345a60b5b1ddbd2edb28d3"
+    },
+    {
+      "contract": "electronics",
+      "contractVersion": "1.0.0",
+      "curatedId": "electronics-default",
+      "artifactHash": "23a58b6097df4f200e1447fcc117f79db88b33894f345a60b5b1ddbd2edb28d3"
+    },
+    {
+      "contract": "electronics",
+      "contractVersion": "1.0.0",
+      "curatedId": "electronics-quiet",
+      "artifactHash": "23a58b6097df4f200e1447fcc117f79db88b33894f345a60b5b1ddbd2edb28d3"
     },
     {
       "contract": "energy",
@@ -573,6 +645,24 @@
       "artifactHash": "dcd75bb153815fcf4556d570d3edd9372b11fec746e69e5ebd1e65b63f0e3e79"
     },
     {
+      "contract": "furniture",
+      "contractVersion": "1.0.0",
+      "curatedId": "furniture-bright",
+      "artifactHash": "f8916e66754984dd43d7b3572a71e4bc3436bf144fa0782fe6a551416ab70966"
+    },
+    {
+      "contract": "furniture",
+      "contractVersion": "1.0.0",
+      "curatedId": "furniture-default",
+      "artifactHash": "f8916e66754984dd43d7b3572a71e4bc3436bf144fa0782fe6a551416ab70966"
+    },
+    {
+      "contract": "furniture",
+      "contractVersion": "1.0.0",
+      "curatedId": "furniture-quiet",
+      "artifactHash": "f8916e66754984dd43d7b3572a71e4bc3436bf144fa0782fe6a551416ab70966"
+    },
+    {
       "contract": "game",
       "contractVersion": "1.0.0",
       "curatedId": "game-iron-survival",
@@ -601,6 +691,42 @@
       "contractVersion": "1.0.0",
       "curatedId": "game-sun-mystery",
       "artifactHash": "9e860baa1401956bf38385576490662cb19cf32c0d29a3d30475c94060e5351a"
+    },
+    {
+      "contract": "gaming",
+      "contractVersion": "1.0.0",
+      "curatedId": "gaming-bright",
+      "artifactHash": "7d6116bba025308606f622022d5532a3dc8e078af996bb4c659bfe4830534442"
+    },
+    {
+      "contract": "gaming",
+      "contractVersion": "1.0.0",
+      "curatedId": "gaming-default",
+      "artifactHash": "7d6116bba025308606f622022d5532a3dc8e078af996bb4c659bfe4830534442"
+    },
+    {
+      "contract": "gaming",
+      "contractVersion": "1.0.0",
+      "curatedId": "gaming-quiet",
+      "artifactHash": "7d6116bba025308606f622022d5532a3dc8e078af996bb4c659bfe4830534442"
+    },
+    {
+      "contract": "gardening",
+      "contractVersion": "1.0.0",
+      "curatedId": "gardening-bright",
+      "artifactHash": "44e749eaab90c102749602dc11e2e91f8e4215c11a0a27ce2760f7efd089cc84"
+    },
+    {
+      "contract": "gardening",
+      "contractVersion": "1.0.0",
+      "curatedId": "gardening-default",
+      "artifactHash": "44e749eaab90c102749602dc11e2e91f8e4215c11a0a27ce2760f7efd089cc84"
+    },
+    {
+      "contract": "gardening",
+      "contractVersion": "1.0.0",
+      "curatedId": "gardening-quiet",
+      "artifactHash": "44e749eaab90c102749602dc11e2e91f8e4215c11a0a27ce2760f7efd089cc84"
     },
     {
       "contract": "healthcare",
@@ -759,6 +885,24 @@
       "artifactHash": "7feca4cbb4d950e40db6816e78d9152ce91f22b261793f077b9bbf5c9ead9ab6"
     },
     {
+      "contract": "photography",
+      "contractVersion": "1.0.0",
+      "curatedId": "photography-bright",
+      "artifactHash": "3bc6b1a7f9603d928a93a5a3f0acfe45f92cc5581beff1e14eba5eb035841ee1"
+    },
+    {
+      "contract": "photography",
+      "contractVersion": "1.0.0",
+      "curatedId": "photography-default",
+      "artifactHash": "3bc6b1a7f9603d928a93a5a3f0acfe45f92cc5581beff1e14eba5eb035841ee1"
+    },
+    {
+      "contract": "photography",
+      "contractVersion": "1.0.0",
+      "curatedId": "photography-quiet",
+      "artifactHash": "3bc6b1a7f9603d928a93a5a3f0acfe45f92cc5581beff1e14eba5eb035841ee1"
+    },
+    {
       "contract": "physics",
       "contractVersion": "1.0.0",
       "curatedId": "physics-fluid",
@@ -871,6 +1015,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "theater",
+      "contractVersion": "1.0.0",
+      "curatedId": "theater-bright",
+      "artifactHash": "db94970cc0628f0d9d7d75e3ca329bd29235119fc8d9baeec6c0f1342c709651"
+    },
+    {
+      "contract": "theater",
+      "contractVersion": "1.0.0",
+      "curatedId": "theater-default",
+      "artifactHash": "db94970cc0628f0d9d7d75e3ca329bd29235119fc8d9baeec6c0f1342c709651"
+    },
+    {
+      "contract": "theater",
+      "contractVersion": "1.0.0",
+      "curatedId": "theater-quiet",
+      "artifactHash": "db94970cc0628f0d9d7d75e3ca329bd29235119fc8d9baeec6c0f1342c709651"
     },
     {
       "contract": "transportation",
