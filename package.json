@@ -33,7 +33,8 @@
     "replay": "tsx scripts/replay.mts",
     "golden:write": "tsx scripts/replay.mts golden",
     "golden:verify": "tsx scripts/replay.mts verify-golden",
-    "evolve": "tsx scripts/evolve_demo.mts"
+    "evolve": "tsx scripts/evolve_demo.mts",
+    "gspl": "tsx scripts/gspl.mts"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
