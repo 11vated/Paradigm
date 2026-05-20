@@ -82,6 +82,7 @@ import {
   getFriendStore, type FriendSeedData, type LineageNode,
   generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
   anchorFriendOnChain, prepareFriendMint,
+  prepareList, prepareDelist, prepareBuy,
 } from './src/lib/friend/index.js';
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
@@ -3340,6 +3341,41 @@ async function startServer() {
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 
+
+
+  // POST /api/v1/friend/:id/list — prepare ABI-encoded listing calldata.
+  app.post('/api/v1/friend/:id/list', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const priceWei = String(req.body?.priceWei || '');
+      if (!/^\d+$/.test(priceWei)) return res.status(400).json({ error: 'priceWei (decimal string) required' });
+      const prep = prepareList(friend, priceWei);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/friend/:id/delist
+  app.post('/api/v1/friend/:id/delist', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const prep = prepareDelist(friend);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/friend/:id/buy — for a buyer to prepare a buy() call.
+  app.post('/api/v1/friend/:id/buy', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const priceWei = String(req.body?.priceWei || '');
+      if (!/^\d+$/.test(priceWei)) return res.status(400).json({ error: 'priceWei (decimal string) required' });
+      const prep = prepareBuy(friend, priceWei);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
 
   // CATCH-ALL & VITE
   // ═══════════════════════════════════════════════════════════════════════════

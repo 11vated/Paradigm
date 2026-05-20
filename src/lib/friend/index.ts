@@ -46,3 +46,7 @@ export type { FriendInvertedGenes } from './contract';
 
 // ─── Phase 3 (1/n) — Composition bridges ─────────────────────────────────────
 export { composeFriend, registerFriendBridges, FRIEND_BRIDGES } from './composition';
+
+// ─── Phase 6 (2/n) — marketplace listing preparation ─────────────────────────
+export { prepareList, prepareDelist, prepareBuy } from './marketplace';
+export type { ListingPrep } from './marketplace';
