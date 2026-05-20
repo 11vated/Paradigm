@@ -327,6 +327,24 @@
       "artifactHash": "dd644b11b969428db3894c072b5914c33b588a19e223b985ca95f61cb1d63afb"
     },
     {
+      "contract": "choreography",
+      "contractVersion": "1.0.0",
+      "curatedId": "choreography-bright",
+      "artifactHash": "0b3fe2fddd845607573cf0afaec86b465d7ec0f2622919a863fd2f395273e394"
+    },
+    {
+      "contract": "choreography",
+      "contractVersion": "1.0.0",
+      "curatedId": "choreography-default",
+      "artifactHash": "0b3fe2fddd845607573cf0afaec86b465d7ec0f2622919a863fd2f395273e394"
+    },
+    {
+      "contract": "choreography",
+      "contractVersion": "1.0.0",
+      "curatedId": "choreography-quiet",
+      "artifactHash": "0b3fe2fddd845607573cf0afaec86b465d7ec0f2622919a863fd2f395273e394"
+    },
+    {
       "contract": "circuit",
       "contractVersion": "1.0.0",
       "curatedId": "circuit-bright",
@@ -505,6 +523,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "devops-quiet",
       "artifactHash": "8fc23f2f2efd6affde8185e4c4378f8bb0d3c51c860b84a8ed2c9472b2e99d42"
+    },
+    {
+      "contract": "drone-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "drone-delivery-bright",
+      "artifactHash": "71f5ee4e19e04df728526805c3d5aca52b553b029a01cdb76b73ac760a7aa562"
+    },
+    {
+      "contract": "drone-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "drone-delivery-default",
+      "artifactHash": "71f5ee4e19e04df728526805c3d5aca52b553b029a01cdb76b73ac760a7aa562"
+    },
+    {
+      "contract": "drone-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "drone-delivery-quiet",
+      "artifactHash": "71f5ee4e19e04df728526805c3d5aca52b553b029a01cdb76b73ac760a7aa562"
     },
     {
       "contract": "drones",
@@ -759,6 +795,42 @@
       "artifactHash": "f9b0040308f83788d9514be0636b9558fa23d8e2ca70f64c07b911e76db3c318"
     },
     {
+      "contract": "food-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-delivery-bright",
+      "artifactHash": "82fbc2165296636d48cf40be66e036c427a6016edb8aa979d525f87f0cfb3a28"
+    },
+    {
+      "contract": "food-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-delivery-default",
+      "artifactHash": "82fbc2165296636d48cf40be66e036c427a6016edb8aa979d525f87f0cfb3a28"
+    },
+    {
+      "contract": "food-delivery",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-delivery-quiet",
+      "artifactHash": "82fbc2165296636d48cf40be66e036c427a6016edb8aa979d525f87f0cfb3a28"
+    },
+    {
+      "contract": "food-service",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-service-bright",
+      "artifactHash": "66c2708175924b49364580b2fd27415a430eb2b7bada24895b5c5d84f47ca14f"
+    },
+    {
+      "contract": "food-service",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-service-default",
+      "artifactHash": "66c2708175924b49364580b2fd27415a430eb2b7bada24895b5c5d84f47ca14f"
+    },
+    {
+      "contract": "food-service",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-service-quiet",
+      "artifactHash": "66c2708175924b49364580b2fd27415a430eb2b7bada24895b5c5d84f47ca14f"
+    },
+    {
       "contract": "friend",
       "contractVersion": "1.0.0",
       "curatedId": "curated.friend.atlas",
@@ -943,6 +1015,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "insurance-quiet",
       "artifactHash": "6a2a22e10509aa435db807dcca94c16175cc64ece0dcf050195f24fdc532b336"
+    },
+    {
+      "contract": "interior-design",
+      "contractVersion": "1.0.0",
+      "curatedId": "interior-design-bright",
+      "artifactHash": "26cc680f93ae628966dad17d56a7cf27f9de6028faaa143e6515ce092b6ce229"
+    },
+    {
+      "contract": "interior-design",
+      "contractVersion": "1.0.0",
+      "curatedId": "interior-design-default",
+      "artifactHash": "26cc680f93ae628966dad17d56a7cf27f9de6028faaa143e6515ce092b6ce229"
+    },
+    {
+      "contract": "interior-design",
+      "contractVersion": "1.0.0",
+      "curatedId": "interior-design-quiet",
+      "artifactHash": "26cc680f93ae628966dad17d56a7cf27f9de6028faaa143e6515ce092b6ce229"
     },
     {
       "contract": "jewelry",
@@ -1335,6 +1425,42 @@
       "artifactHash": "7feca4cbb4d950e40db6816e78d9152ce91f22b261793f077b9bbf5c9ead9ab6"
     },
     {
+      "contract": "personalized-medicine",
+      "contractVersion": "1.0.0",
+      "curatedId": "personalized-medicine-bright",
+      "artifactHash": "85539760aae3a86fcecbb1c9618d78a2cbda92b765fa4971e5dcc1f7809fde50"
+    },
+    {
+      "contract": "personalized-medicine",
+      "contractVersion": "1.0.0",
+      "curatedId": "personalized-medicine-default",
+      "artifactHash": "85539760aae3a86fcecbb1c9618d78a2cbda92b765fa4971e5dcc1f7809fde50"
+    },
+    {
+      "contract": "personalized-medicine",
+      "contractVersion": "1.0.0",
+      "curatedId": "personalized-medicine-quiet",
+      "artifactHash": "85539760aae3a86fcecbb1c9618d78a2cbda92b765fa4971e5dcc1f7809fde50"
+    },
+    {
+      "contract": "pet-care",
+      "contractVersion": "1.0.0",
+      "curatedId": "pet-care-bright",
+      "artifactHash": "38960b057f73b3f44c72a85dbf62b01af85941e1eaa7e6b53eb2a9f676b3cdd7"
+    },
+    {
+      "contract": "pet-care",
+      "contractVersion": "1.0.0",
+      "curatedId": "pet-care-default",
+      "artifactHash": "38960b057f73b3f44c72a85dbf62b01af85941e1eaa7e6b53eb2a9f676b3cdd7"
+    },
+    {
+      "contract": "pet-care",
+      "contractVersion": "1.0.0",
+      "curatedId": "pet-care-quiet",
+      "artifactHash": "38960b057f73b3f44c72a85dbf62b01af85941e1eaa7e6b53eb2a9f676b3cdd7"
+    },
+    {
       "contract": "photography",
       "contractVersion": "1.0.0",
       "curatedId": "photography-bright",
@@ -1461,6 +1587,24 @@
       "artifactHash": "5353cce4b31e0674769b080d2e80238a84739320ba641c97654d31a5fa8ee6d1"
     },
     {
+      "contract": "renewable-energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "renewable-energy-bright",
+      "artifactHash": "93b7153f0944298bbb93b80dcdfb6fecadbef016ab7a1deb5140275759683bc2"
+    },
+    {
+      "contract": "renewable-energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "renewable-energy-default",
+      "artifactHash": "93b7153f0944298bbb93b80dcdfb6fecadbef016ab7a1deb5140275759683bc2"
+    },
+    {
+      "contract": "renewable-energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "renewable-energy-quiet",
+      "artifactHash": "93b7153f0944298bbb93b80dcdfb6fecadbef016ab7a1deb5140275759683bc2"
+    },
+    {
       "contract": "retail",
       "contractVersion": "1.0.0",
       "curatedId": "retail-bright",
@@ -1569,6 +1713,24 @@
       "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
     },
     {
+      "contract": "smart-grid",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-grid-bright",
+      "artifactHash": "f90675d14a6548a58e28f8d509c63c6854174471d7c64aaf5563e10114a638b6"
+    },
+    {
+      "contract": "smart-grid",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-grid-default",
+      "artifactHash": "f90675d14a6548a58e28f8d509c63c6854174471d7c64aaf5563e10114a638b6"
+    },
+    {
+      "contract": "smart-grid",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-grid-quiet",
+      "artifactHash": "f90675d14a6548a58e28f8d509c63c6854174471d7c64aaf5563e10114a638b6"
+    },
+    {
       "contract": "smart-home",
       "contractVersion": "1.0.0",
       "curatedId": "smart-home-bright",
@@ -1585,6 +1747,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "smart-home-quiet",
       "artifactHash": "d05d5d790f9a7af88ec3230d38126e77fc99a133c57375d05c28189e47988f59"
+    },
+    {
+      "contract": "space-tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "space-tourism-bright",
+      "artifactHash": "61c6df11ae118f396e7753879e760207b297b551a8c9bf9da6581a4745fcee56"
+    },
+    {
+      "contract": "space-tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "space-tourism-default",
+      "artifactHash": "61c6df11ae118f396e7753879e760207b297b551a8c9bf9da6581a4745fcee56"
+    },
+    {
+      "contract": "space-tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "space-tourism-quiet",
+      "artifactHash": "61c6df11ae118f396e7753879e760207b297b551a8c9bf9da6581a4745fcee56"
     },
     {
       "contract": "spirits",
@@ -1645,6 +1825,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "synthetic-biology",
+      "contractVersion": "1.0.0",
+      "curatedId": "synthetic-biology-bright",
+      "artifactHash": "c5f2a87b3e83c9a766131e53d3637d75ce2672f706df9a98298111b00524109d"
+    },
+    {
+      "contract": "synthetic-biology",
+      "contractVersion": "1.0.0",
+      "curatedId": "synthetic-biology-default",
+      "artifactHash": "c5f2a87b3e83c9a766131e53d3637d75ce2672f706df9a98298111b00524109d"
+    },
+    {
+      "contract": "synthetic-biology",
+      "contractVersion": "1.0.0",
+      "curatedId": "synthetic-biology-quiet",
+      "artifactHash": "c5f2a87b3e83c9a766131e53d3637d75ce2672f706df9a98298111b00524109d"
     },
     {
       "contract": "tea",
