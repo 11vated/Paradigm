@@ -1,4 +1,5 @@
 export { FriendAvatar } from './FriendAvatar';
+export { Friend3DAvatar } from './Friend3DAvatar';
 export { FriendStats } from './FriendStats';
 export { FriendLibrary } from './FriendLibrary';
 export { FriendLineage } from './FriendLineage';

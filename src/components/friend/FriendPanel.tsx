@@ -15,6 +15,7 @@
 import React, { useState, useCallback } from 'react';
 import { Loader2, Heart, Sparkles, Shuffle, Wand2, GitBranch, ShieldCheck } from 'lucide-react';
 import { FriendAvatar } from './FriendAvatar';
+import { Friend3DAvatar } from './Friend3DAvatar';
 import { FriendStats } from './FriendStats';
 import { FriendLibrary } from './FriendLibrary';
 import { FriendLineage } from './FriendLineage';
@@ -204,6 +205,7 @@ export const FriendPanel: React.FC = () => {
         <div className="flex-1 overflow-auto p-4 flex gap-4">
           <div className="flex-shrink-0">
             <FriendAvatar artifact={artifact} size={320} animated />
+            {seed && <Friend3DAvatar friend={seed} size={320} />}
             {seed && (
               <div className="mt-2 text-center font-mono text-[10px] text-neutral-400">
                 <div className="text-accent text-[12px]">{seed.name}</div>
