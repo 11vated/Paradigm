@@ -86,7 +86,7 @@ import {
 } from './src/lib/friend/index.js';
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
-import { createWorldSeed, generateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
+import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
 import { createGameSeed, generateGame, evaluateGame, evolveGames, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
@@ -3407,6 +3407,26 @@ async function startServer() {
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }
+  });
+
+
+  // POST /api/v1/world/breed — { parentA, parentB, salt? }
+  app.post('/api/v1/world/breed', optionalAuth, (req: any, res: any) => {
+    try {
+      const a = createWorldSeed(String(req.body.parentA));
+      const b = createWorldSeed(String(req.body.parentB));
+      const child = breedWorlds(a, b, { salt: req.body.salt });
+      res.json({ worldSeed: child });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/world/mutate — { parent, salt?, magnitude? }
+  app.post('/api/v1/world/mutate', optionalAuth, (req: any, res: any) => {
+    try {
+      const p = createWorldSeed(String(req.body.parent));
+      const child = mutateWorld(p, { salt: req.body.salt, magnitude: Number(req.body.magnitude ?? 0.2) });
+      res.json({ worldSeed: child });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 
   // CATCH-ALL & VITE
