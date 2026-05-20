@@ -15,6 +15,8 @@
  *   paradigm replay friend --id <hash>                Load + replay stored friend
  *   paradigm replay friend --verify <hash>            Verify byte-identity with store
  *   paradigm replay verify-all                        Replay every stored friend
+  paradigm golden                                   Write .paradigm/golden-hashes.json
+  paradigm verify-golden                            Verify live hashes match the snapshot
  *   paradigm replay leaderboard                       Run conformance, print table
  *   paradigm replay subjects                          List replayable subjects
  *   paradigm replay help                              Show help
@@ -58,6 +60,8 @@ Usage:
   paradigm replay friend --id <hash>                Load + replay an existing friend
   paradigm replay friend --verify <hash>            Replay + verify byte-identity
   paradigm replay verify-all                        Replay every stored friend
+  paradigm golden                                   Write .paradigm/golden-hashes.json
+  paradigm verify-golden                            Verify live hashes match the snapshot
   paradigm replay leaderboard                       Run conformance for all contracts
   paradigm replay subjects                          List replayable subjects
   paradigm replay help                              Show help
@@ -342,6 +346,115 @@ async function subjects(args: Args): Promise<number> {
 
 // ─── entrypoint ────────────────────────────────────────────────────────────
 
+// ───────────────────────────────────────────────────────────────────────────
+// GOLDEN HASH SNAPSHOTS (Phase 4 / 3)
+// ───────────────────────────────────────────────────────────────────────────
+
+const GOLDEN_PATH = '.paradigm/golden-hashes.json';
+const GOLDEN_VERSION = 1;
+
+interface GoldenEntry {
+  contract: string;
+  contractVersion: string;
+  curatedId: string;
+  artifactHash: string;
+}
+
+interface GoldenFile {
+  version: number;
+  generated: string;
+  entries: GoldenEntry[];
+}
+
+async function collectGoldenEntries(args: Args): Promise<GoldenEntry[]> {
+  const contracts = listContracts();
+  const out: GoldenEntry[] = [];
+  for (const c of contracts) {
+    let curated: any[];
+    try {
+      curated = await c.curated();
+    } catch (e) {
+      log(args.quiet, `[skip] ${c.domain}: curated() failed: ${(e as Error).message}`);
+      continue;
+    }
+    for (const s of curated) {
+      try {
+        const artifact = await c.synthesize(s.seed);
+        const hash = c.hashArtifact(artifact);
+        out.push({ contract: c.domain, contractVersion: c.version, curatedId: s.id, artifactHash: hash });
+      } catch (e) {
+        log(args.quiet, `[skip] ${c.domain}/${s.id}: ${(e as Error).message}`);
+      }
+    }
+  }
+  return out.sort((a, b) =>
+    a.contract === b.contract ? a.curatedId.localeCompare(b.curatedId) : a.contract.localeCompare(b.contract)
+  );
+}
+
+async function golden(args: Args): Promise<number> {
+  log(args.quiet, '\n🔒 Paradigm Golden Hash Snapshot\n');
+  const entries = await collectGoldenEntries(args);
+  const file: GoldenFile = {
+    version: GOLDEN_VERSION,
+    generated: '1970-01-01T00:00:00.000Z', // frozen — file content is deterministic
+    entries,
+  };
+  const goldenPath = path.resolve(GOLDEN_PATH);
+  await fs.mkdir(path.dirname(goldenPath), { recursive: true });
+  await fs.writeFile(goldenPath, JSON.stringify(file, null, 2) + '\n', 'utf8');
+  log(args.quiet, `✓ Wrote ${entries.length} golden hashes → ${GOLDEN_PATH}`);
+  if (args.quiet) console.log(`${entries.length} entries`);
+  return 0;
+}
+
+async function verifyGolden(args: Args): Promise<number> {
+  log(args.quiet, '\n🔍 Paradigm Verify Golden\n');
+  const goldenPath = path.resolve(GOLDEN_PATH);
+  let snapshot: GoldenFile;
+  try {
+    snapshot = JSON.parse(await fs.readFile(goldenPath, 'utf8')) as GoldenFile;
+  } catch (e) {
+    console.error(`❌ No golden snapshot at ${GOLDEN_PATH}. Run: npx tsx scripts/replay.mts golden`);
+    return 2;
+  }
+  if (snapshot.version !== GOLDEN_VERSION) {
+    console.error(`❌ Golden file version ${snapshot.version} ≠ expected ${GOLDEN_VERSION}`);
+    return 3;
+  }
+  const live = await collectGoldenEntries(args);
+  const byKey = (e: GoldenEntry) => `${e.contract}@${e.contractVersion}/${e.curatedId}`;
+  const goldenMap = new Map(snapshot.entries.map((e) => [byKey(e), e.artifactHash]));
+  const liveMap = new Map(live.map((e) => [byKey(e), e.artifactHash]));
+
+  const drift: { key: string; expected: string; got: string }[] = [];
+  const missing: string[] = [];
+  const extra: string[] = [];
+  for (const [k, expected] of goldenMap) {
+    const got = liveMap.get(k);
+    if (got === undefined) { missing.push(k); continue; }
+    if (got !== expected) drift.push({ key: k, expected, got });
+  }
+  for (const k of liveMap.keys()) if (!goldenMap.has(k)) extra.push(k);
+
+  for (const k of missing) console.error(`✗ MISSING (was in golden, not produced now): ${k}`);
+  for (const k of extra)   console.error(`! EXTRA   (new since golden was written): ${k}`);
+  for (const d of drift) {
+    console.error(`✗ DRIFT   ${d.key}`);
+    console.error(`    expected: ${d.expected}`);
+    console.error(`    got:      ${d.got}`);
+  }
+  const ok = drift.length === 0 && missing.length === 0;
+  log(args.quiet, '');
+  if (ok) {
+    log(args.quiet, `✓ ${goldenMap.size} golden hashes match. Determinism preserved across machines.`);
+    if (extra.length > 0) log(args.quiet, `  (${extra.length} new entries — run \`golden\` to update snapshot)`);
+    return 0;
+  }
+  console.error(`\n❌ Golden verification failed: ${drift.length} drift, ${missing.length} missing.`);
+  return 1;
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
 
@@ -351,6 +464,8 @@ async function main(): Promise<void> {
   }
 
   if (args.cmd === 'verify-all') process.exit(await verifyAll(args));
+  if (args.cmd === 'golden') process.exit(await golden(args));
+  if (args.cmd === 'verify-golden') process.exit(await verifyGolden(args));
   if (args.cmd === 'leaderboard') process.exit(await leaderboard(args));
   if (args.cmd === 'subjects') process.exit(await subjects(args));
 

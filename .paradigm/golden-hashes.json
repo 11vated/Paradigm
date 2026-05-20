@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "generated": "1970-01-01T00:00:00.000Z",
+  "entries": [
+    {
+      "contract": "friend",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.friend.atlas",
+      "artifactHash": "7037a21df249c8fff0097dfa6d63f27936a671fcf1ac6f9e25d5b2cec33afb97"
+    },
+    {
+      "contract": "friend",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.friend.iris",
+      "artifactHash": "6af95b8ac5cb2c8035c44e9de23ebeb862df71c1efc5e9ee5d7e0568a2f57885"
+    },
+    {
+      "contract": "friend",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.friend.kai",
+      "artifactHash": "63d4f6d2d3eec6308b5e4cd1a48f26987f76fb056d421639a6b7b4bef85fc6db"
+    },
+    {
+      "contract": "friend",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.friend.mira",
+      "artifactHash": "794264eee14e9f545e7127c1e822ffae6f7687d8c0a245b9330f93c37db1374c"
+    },
+    {
+      "contract": "friend",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.friend.vesper",
+      "artifactHash": "dcd75bb153815fcf4556d570d3edd9372b11fec746e69e5ebd1e65b63f0e3e79"
+    },
+    {
+      "contract": "music",
+      "contractVersion": "2.0.0",
+      "curatedId": "music-ambient-drift",
+      "artifactHash": "ba9b73876951384234196963681b75493449d0f6d987accaaf4aa48d8a2a3f61"
+    },
+    {
+      "contract": "music",
+      "contractVersion": "2.0.0",
+      "curatedId": "music-classical-sonata-fragment",
+      "artifactHash": "f6b81e3e3580020e72e6748eeeb6e5f8276f2e7d6984f8b7d01f2f5c77f80129"
+    },
+    {
+      "contract": "music",
+      "contractVersion": "2.0.0",
+      "curatedId": "music-electronic-pulse",
+      "artifactHash": "3ee82279e7a3d968f05e6aae1279db8cb8c0e40b4998e8a2b122ccb87e270115"
+    },
+    {
+      "contract": "music",
+      "contractVersion": "2.0.0",
+      "curatedId": "music-jazz-walking-bass",
+      "artifactHash": "69f5cb749a6c67c446055d8c734d5c3c9c4ea44f8d0ceac43d87ac0c1d678e6d"
+    },
+    {
+      "contract": "narrative",
+      "contractVersion": "3.0.0",
+      "curatedId": "narrative-cyberpunk-noir",
+      "artifactHash": "ec1d7b0708f7b8ad9b2aee097f0bc7bf572f62a33401e4534264ebbc82ff993e"
+    },
+    {
+      "contract": "narrative",
+      "contractVersion": "3.0.0",
+      "curatedId": "narrative-fairy-tale",
+      "artifactHash": "972ee575b3a37d4c9a2562ce547f5772d1c855105fb68e02eda47db3b45560df"
+    },
+    {
+      "contract": "narrative",
+      "contractVersion": "3.0.0",
+      "curatedId": "narrative-forest-mystery-short",
+      "artifactHash": "0eef55899030e01245fd1ec5a7d8db09cde40e0f040dde681e03d91efdf1786c"
+    },
+    {
+      "contract": "narrative",
+      "contractVersion": "3.0.0",
+      "curatedId": "narrative-space-opera-epic",
+      "artifactHash": "b864e327487b7862debb6c1601f292d6551306c8acb7e387e58729abd7ece743"
+    },
+    {
+      "contract": "sprite",
+      "contractVersion": "3.0.0",
+      "curatedId": "sprite-coin-spin",
+      "artifactHash": "aec95509dcf416d8719ca2f1daaed8601c272bd4bb3941f9b847edef8c2976e9"
+    },
+    {
+      "contract": "sprite",
+      "contractVersion": "3.0.0",
+      "curatedId": "sprite-hero-walk",
+      "artifactHash": "4fb1163daaf768bbe00f5152c9f17827f3227f56794b31dab05114b5b5831d94"
+    },
+    {
+      "contract": "sprite",
+      "contractVersion": "3.0.0",
+      "curatedId": "sprite-spell-fx",
+      "artifactHash": "f024de446f5a0124c86f78ea4ba95b431aa495ea2f195bcf8b6652b8dc8ba66b"
+    },
+    {
+      "contract": "sprite",
+      "contractVersion": "3.0.0",
+      "curatedId": "sprite-tile-set",
+      "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "visual2d",
+      "contractVersion": "3.0.0",
+      "curatedId": "v2-architectural",
+      "artifactHash": "d353cbdaf2f605e114ceb9cb6e1180aefd81b96e3738c48d7c508f11eb658b77"
+    },
+    {
+      "contract": "visual2d",
+      "contractVersion": "3.0.0",
+      "curatedId": "v2-glyph",
+      "artifactHash": "df4b26d87bcdc0700b01ba62b24a1a773a434eed43b1326c1fbe624e8c607064"
+    },
+    {
+      "contract": "visual2d",
+      "contractVersion": "3.0.0",
+      "curatedId": "v2-organic",
+      "artifactHash": "7fe001f6348aadc1d2f6717fcb665d704b6df001331cea21f259d8ab65bb0f9e"
+    }
+  ]
+}

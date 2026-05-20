@@ -30,7 +30,9 @@
     "package:all": "tsx scripts/package.ts all",
     "verify:phase0": "node scripts/verify-phase0.js",
     "quality:contract": "tsx scripts/quality-contract-report.mts",
-    "replay": "tsx scripts/replay.mts"
+    "replay": "tsx scripts/replay.mts",
+    "golden:write": "tsx scripts/replay.mts golden",
+    "golden:verify": "tsx scripts/replay.mts verify-golden"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
