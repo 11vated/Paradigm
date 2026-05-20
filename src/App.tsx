@@ -10,6 +10,7 @@ import LineagePage from '@/pages/LineagePage';
 import ChatPage from '@/pages/ChatPage';
 import ReplPage from '@/pages/ReplPage';
 import EvolvePage from '@/pages/EvolvePage';
+import HomePage from '@/pages/HomePage';
 import { WorldSeedPage } from '@/pages/WorldSeedPage';
 import { PhotorealisticRendererDemo } from '@/components/rendering/PhotorealisticRendererDemo';
 
@@ -18,7 +19,7 @@ function App() {
     <BrowserRouter>
       <TopNav />
       <Routes>
-        <Route path="/" element={<Navigate to="/studio" replace />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/studio" element={<StudioPage />} />
         <Route path="/friend" element={<FriendPage />} />
         <Route path="/play" element={<PlayPage />} />
