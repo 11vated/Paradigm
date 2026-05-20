@@ -14,3 +14,5 @@ export { evolveGames } from './evolution';
 export type { Candidate, EvolveOptions } from './evolution';
 export { mapElitesGames } from './map-elites';
 export type { Cell as MapEliteCell, MapEliteResult, MapEliteOptions } from './map-elites';
+export { directorBrief, directedSearch } from './director';
+export type { DirectorSpec } from './director';

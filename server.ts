@@ -87,7 +87,7 @@ import {
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
 import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
-import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, directorBrief, directedSearch, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
@@ -3444,6 +3444,22 @@ async function startServer() {
         best: r.best,
         cells: [...r.cells.values()],
       });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/direct — Director Agent: natural-language → game spec → search.
+  app.post('/api/v1/game/direct', optionalAuth, (req: any, res: any) => {
+    try {
+      const brief = String(req.body.brief ?? '').slice(0, 1024);
+      if (!brief) return res.status(400).json({ error: 'brief required' });
+      const search = (req.body.search ?? true) !== false;
+      const spec = directorBrief(brief);
+      if (!search) return res.json({ spec });
+      const r = directedSearch(brief, {
+        iterations: Math.min(120, Math.max(8, Number(req.body.iterations) || 30)),
+      });
+      res.json(r);
     } catch (e: any) { res.status(500).json({ error: e.message }); }
   });
 
