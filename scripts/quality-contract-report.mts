@@ -40,3 +40,8 @@ if (failing.length > 0) {
   process.exit(1);
 }
 console.log(`✓ ${results.length} contract(s) green.\n`);
+import '../src/lib/kernel/generators/advertising-contract';
+import '../src/lib/kernel/generators/automotive-contract';
+import '../src/lib/kernel/generators/blockchain-contract';
+import '../src/lib/kernel/generators/art-contract';
+import '../src/lib/kernel/generators/legal-contract';

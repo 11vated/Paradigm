@@ -3,6 +3,24 @@
   "generated": "1970-01-01T00:00:00.000Z",
   "entries": [
     {
+      "contract": "advertising",
+      "contractVersion": "1.0.0",
+      "curatedId": "advertising-bright",
+      "artifactHash": "6d885cf9c836754d254294ba63069b7f3e4023be0e787824e8e0ddad78feea3e"
+    },
+    {
+      "contract": "advertising",
+      "contractVersion": "1.0.0",
+      "curatedId": "advertising-default",
+      "artifactHash": "6d885cf9c836754d254294ba63069b7f3e4023be0e787824e8e0ddad78feea3e"
+    },
+    {
+      "contract": "advertising",
+      "contractVersion": "1.0.0",
+      "curatedId": "advertising-quiet",
+      "artifactHash": "6d885cf9c836754d254294ba63069b7f3e4023be0e787824e8e0ddad78feea3e"
+    },
+    {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-bright",
@@ -39,6 +57,24 @@
       "artifactHash": "c4bebc57c5026310d5708b6386dcf6ef4814f61a92cb3e347cf3b12a836c4fc1"
     },
     {
+      "contract": "art",
+      "contractVersion": "1.0.0",
+      "curatedId": "art-bright",
+      "artifactHash": "e6578f1257a1f340f3d0ab687566a40c65d035c823e6c5045f8895061b1e8398"
+    },
+    {
+      "contract": "art",
+      "contractVersion": "1.0.0",
+      "curatedId": "art-default",
+      "artifactHash": "e6578f1257a1f340f3d0ab687566a40c65d035c823e6c5045f8895061b1e8398"
+    },
+    {
+      "contract": "art",
+      "contractVersion": "1.0.0",
+      "curatedId": "art-quiet",
+      "artifactHash": "e6578f1257a1f340f3d0ab687566a40c65d035c823e6c5045f8895061b1e8398"
+    },
+    {
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-melody-c-major",
@@ -55,6 +91,42 @@
       "contractVersion": "1.0.0",
       "curatedId": "audio-warm-pad",
       "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+    },
+    {
+      "contract": "automotive",
+      "contractVersion": "1.0.0",
+      "curatedId": "automotive-bright",
+      "artifactHash": "79e3ca01fdb35a29b1fe6eb11015581a82f839a7364d00ad41e45ee8e83e92ff"
+    },
+    {
+      "contract": "automotive",
+      "contractVersion": "1.0.0",
+      "curatedId": "automotive-default",
+      "artifactHash": "79e3ca01fdb35a29b1fe6eb11015581a82f839a7364d00ad41e45ee8e83e92ff"
+    },
+    {
+      "contract": "automotive",
+      "contractVersion": "1.0.0",
+      "curatedId": "automotive-quiet",
+      "artifactHash": "79e3ca01fdb35a29b1fe6eb11015581a82f839a7364d00ad41e45ee8e83e92ff"
+    },
+    {
+      "contract": "blockchain",
+      "contractVersion": "1.0.0",
+      "curatedId": "blockchain-bright",
+      "artifactHash": "79dcfbfb969821cb4732ef5a3ce9ddd266284f5e2958700dddc2992d09f6201f"
+    },
+    {
+      "contract": "blockchain",
+      "contractVersion": "1.0.0",
+      "curatedId": "blockchain-default",
+      "artifactHash": "79dcfbfb969821cb4732ef5a3ce9ddd266284f5e2958700dddc2992d09f6201f"
+    },
+    {
+      "contract": "blockchain",
+      "contractVersion": "1.0.0",
+      "curatedId": "blockchain-quiet",
+      "artifactHash": "79dcfbfb969821cb4732ef5a3ce9ddd266284f5e2958700dddc2992d09f6201f"
     },
     {
       "contract": "cybersecurity",
@@ -259,6 +331,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "healthcare-quiet",
       "artifactHash": "f1114c5c4e1da29fa836469b9bee5af3b4c97ca024d6591e3d01fd62ea5a68e1"
+    },
+    {
+      "contract": "legal",
+      "contractVersion": "1.0.0",
+      "curatedId": "legal-bright",
+      "artifactHash": "536f7b7ad626458240b7cac6ccbe2835375a8b6c2a98930e51dbc05db56c415a"
+    },
+    {
+      "contract": "legal",
+      "contractVersion": "1.0.0",
+      "curatedId": "legal-default",
+      "artifactHash": "536f7b7ad626458240b7cac6ccbe2835375a8b6c2a98930e51dbc05db56c415a"
+    },
+    {
+      "contract": "legal",
+      "contractVersion": "1.0.0",
+      "curatedId": "legal-quiet",
+      "artifactHash": "536f7b7ad626458240b7cac6ccbe2835375a8b6c2a98930e51dbc05db56c415a"
     },
     {
       "contract": "music",

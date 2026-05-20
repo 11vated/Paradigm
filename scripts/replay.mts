@@ -507,3 +507,8 @@ main().catch((err) => {
   console.error('❌ Replay failed:', err);
   process.exit(99);
 });
+import '../src/lib/kernel/generators/advertising-contract';
+import '../src/lib/kernel/generators/automotive-contract';
+import '../src/lib/kernel/generators/blockchain-contract';
+import '../src/lib/kernel/generators/art-contract';
+import '../src/lib/kernel/generators/legal-contract';
