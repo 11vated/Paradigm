@@ -1,5 +1,6 @@
 import "@/App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { TopNav } from '@/components/TopNav';
 import { StudioPage } from '@/pages/StudioPage';
 import FriendPage from '@/pages/FriendPage';
 import PlayPage from '@/pages/PlayPage';
@@ -11,6 +12,7 @@ import { PhotorealisticRendererDemo } from '@/components/rendering/Photorealisti
 function App() {
   return (
     <BrowserRouter>
+      <TopNav />
       <Routes>
         <Route path="/" element={<Navigate to="/studio" replace />} />
         <Route path="/studio" element={<StudioPage />} />
