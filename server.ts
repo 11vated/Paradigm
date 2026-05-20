@@ -84,6 +84,10 @@ import {
   anchorFriendOnChain, prepareFriendMint,
 } from './src/lib/friend/index.js';
 
+// ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
+import { createWorldSeed, generateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
+import { createGameSeed, generateGame, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
 
@@ -3278,6 +3282,64 @@ async function startServer() {
       res.json({ friendSeed: updated, anchor: result.anchor });
     },
   );
+
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM WORLD + QUEST + GAM
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM WORLD + QUEST + GAME (Phase 3-5)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /** POST /api/v1/world/generate  Body: { seed: string } */
+  app.post('/api/v1/world/generate', async (req: any, res: any) => {
+    try {
+      const seedStr = String(req.body?.seed ?? '');
+      if (!seedStr) return res.status(400).json({ error: 'seed (string) required' });
+      const worldSeed = createWorldSeed(seedStr);
+      const artifact = generateWorld(worldSeed);
+      res.json({ worldSeed, artifact, hash: hashWorldArtifact(artifact) });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  /** POST /api/v1/quest/compose  Body: { friend: friendSeed, world: worldSeed }
+   *  Optional shorthand: { friendSeed: string, worldSeed: string } */
+  app.post('/api/v1/quest/compose', async (req: any, res: any) => {
+    try {
+      const friend = req.body?.friend
+        ?? (req.body?.friendSeed ? createFriendSeed(String(req.body.friendSeed)) : null);
+      const world = req.body?.world
+        ?? (req.body?.worldSeed ? generateWorld(createWorldSeed(String(req.body.worldSeed))) : null);
+      if (!friend || !world) return res.status(400).json({ error: 'friend + world (seed strings or full objects) required' });
+      // composeQuest accepts (friendSeed, worldArtifact)
+      const worldS = (world.genes) ? world : world;
+      const quest = composeQuest(friend, worldS);
+      res.json({ quest });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  /** POST /api/v1/game/generate
+   *  Body: { friendSeed: string, worldSeed: string }  - shorthand
+   *     OR { quest: QuestSeedData }                   - direct
+   *  Returns: { gameSeed, artifact, hash } */
+  app.post('/api/v1/game/generate', async (req: any, res: any) => {
+    try {
+      let quest: QuestSeedData;
+      if (req.body?.quest) {
+        quest = req.body.quest;
+      } else if (req.body?.friendSeed && req.body?.worldSeed) {
+        const f = createFriendSeed(String(req.body.friendSeed));
+        const w = createWorldSeed(String(req.body.worldSeed));
+        quest = composeQuest(f, w);
+      } else {
+        return res.status(400).json({ error: 'quest OR (friendSeed + worldSeed) required' });
+      }
+      const gameSeed = createGameSeed(quest);
+      const artifact = generateGame(gameSeed);
+      res.json({ gameSeed, artifact, hash: hashGameArtifact(artifact) });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
 
   // CATCH-ALL & VITE
   // ═══════════════════════════════════════════════════════════════════════════
