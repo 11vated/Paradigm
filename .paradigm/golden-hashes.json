@@ -111,6 +111,24 @@
       "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
     },
     {
+      "contract": "ar",
+      "contractVersion": "1.0.0",
+      "curatedId": "ar-bright",
+      "artifactHash": "a658b5bedf32a04e1f24ee503fb9191b4c7106a84ac29b9cdf8401646c6ef979"
+    },
+    {
+      "contract": "ar",
+      "contractVersion": "1.0.0",
+      "curatedId": "ar-default",
+      "artifactHash": "a658b5bedf32a04e1f24ee503fb9191b4c7106a84ac29b9cdf8401646c6ef979"
+    },
+    {
+      "contract": "ar",
+      "contractVersion": "1.0.0",
+      "curatedId": "ar-quiet",
+      "artifactHash": "a658b5bedf32a04e1f24ee503fb9191b4c7106a84ac29b9cdf8401646c6ef979"
+    },
+    {
       "contract": "architecture",
       "contractVersion": "1.0.0",
       "curatedId": "architecture-bright",
@@ -181,6 +199,42 @@
       "contractVersion": "1.0.0",
       "curatedId": "automotive-quiet",
       "artifactHash": "79e3ca01fdb35a29b1fe6eb11015581a82f839a7364d00ad41e45ee8e83e92ff"
+    },
+    {
+      "contract": "av",
+      "contractVersion": "1.0.0",
+      "curatedId": "av-bright",
+      "artifactHash": "08f288fe801e7ce86d238f868e3ea1b4e374b96b4ea3d51933eced0dda00e3b9"
+    },
+    {
+      "contract": "av",
+      "contractVersion": "1.0.0",
+      "curatedId": "av-default",
+      "artifactHash": "08f288fe801e7ce86d238f868e3ea1b4e374b96b4ea3d51933eced0dda00e3b9"
+    },
+    {
+      "contract": "av",
+      "contractVersion": "1.0.0",
+      "curatedId": "av-quiet",
+      "artifactHash": "08f288fe801e7ce86d238f868e3ea1b4e374b96b4ea3d51933eced0dda00e3b9"
+    },
+    {
+      "contract": "battery",
+      "contractVersion": "1.0.0",
+      "curatedId": "battery-bright",
+      "artifactHash": "99439113902a6b0f3fa984bb988031c64529af2901634723d31b477ec1e97359"
+    },
+    {
+      "contract": "battery",
+      "contractVersion": "1.0.0",
+      "curatedId": "battery-default",
+      "artifactHash": "99439113902a6b0f3fa984bb988031c64529af2901634723d31b477ec1e97359"
+    },
+    {
+      "contract": "battery",
+      "contractVersion": "1.0.0",
+      "curatedId": "battery-quiet",
+      "artifactHash": "99439113902a6b0f3fa984bb988031c64529af2901634723d31b477ec1e97359"
     },
     {
       "contract": "beer",
@@ -595,6 +649,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "entertainment-quiet",
       "artifactHash": "9cc1e9726ff400021a249935c1a3c4e817b90bd80f629218c1cc284601708d50"
+    },
+    {
+      "contract": "event-planning",
+      "contractVersion": "1.0.0",
+      "curatedId": "event-planning-bright",
+      "artifactHash": "d65bc46be209a312ac023968b760e9989968025c2403abf8b5935ed7cbd1280b"
+    },
+    {
+      "contract": "event-planning",
+      "contractVersion": "1.0.0",
+      "curatedId": "event-planning-default",
+      "artifactHash": "d65bc46be209a312ac023968b760e9989968025c2403abf8b5935ed7cbd1280b"
+    },
+    {
+      "contract": "event-planning",
+      "contractVersion": "1.0.0",
+      "curatedId": "event-planning-quiet",
+      "artifactHash": "d65bc46be209a312ac023968b760e9989968025c2403abf8b5935ed7cbd1280b"
     },
     {
       "contract": "fashion",
@@ -1371,6 +1443,24 @@
       "artifactHash": "dced1a32214cac07875d3b94d34df3127e1104746c55c3fc6dae3364c042b3c2"
     },
     {
+      "contract": "real-estate",
+      "contractVersion": "1.0.0",
+      "curatedId": "real-estate-bright",
+      "artifactHash": "5353cce4b31e0674769b080d2e80238a84739320ba641c97654d31a5fa8ee6d1"
+    },
+    {
+      "contract": "real-estate",
+      "contractVersion": "1.0.0",
+      "curatedId": "real-estate-default",
+      "artifactHash": "5353cce4b31e0674769b080d2e80238a84739320ba641c97654d31a5fa8ee6d1"
+    },
+    {
+      "contract": "real-estate",
+      "contractVersion": "1.0.0",
+      "curatedId": "real-estate-quiet",
+      "artifactHash": "5353cce4b31e0674769b080d2e80238a84739320ba641c97654d31a5fa8ee6d1"
+    },
+    {
       "contract": "retail",
       "contractVersion": "1.0.0",
       "curatedId": "retail-bright",
@@ -1477,6 +1567,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "shader-quiet",
       "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
+    },
+    {
+      "contract": "smart-home",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-home-bright",
+      "artifactHash": "d05d5d790f9a7af88ec3230d38126e77fc99a133c57375d05c28189e47988f59"
+    },
+    {
+      "contract": "smart-home",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-home-default",
+      "artifactHash": "d05d5d790f9a7af88ec3230d38126e77fc99a133c57375d05c28189e47988f59"
+    },
+    {
+      "contract": "smart-home",
+      "contractVersion": "1.0.0",
+      "curatedId": "smart-home-quiet",
+      "artifactHash": "d05d5d790f9a7af88ec3230d38126e77fc99a133c57375d05c28189e47988f59"
     },
     {
       "contract": "spirits",
