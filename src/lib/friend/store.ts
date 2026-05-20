@@ -35,15 +35,29 @@ export interface FriendStoreStats {
   maxGeneration: number;
 }
 
+export interface FriendNote {
+  /** Logical turn number within a session. */
+  turn: number;
+  /** Note kind: user-utterance, friend-reply, observation, milestone. */
+  kind: 'user' | 'friend' | 'observation' | 'milestone';
+  /** The note content. */
+  text: string;
+  /** ISO timestamp from the kernel clock — replay-safe. */
+  recordedAt: string;
+}
+
 export class FriendStore {
   private byId = new Map<string, FriendSeedData>();
+  private notesOf = new Map<string, FriendNote[]>();
   private childrenOf = new Map<string, Set<string>>(); // parent id → child ids
   private filePath: string;
+  private notesPath: string;
   private writeQueue: Promise<void> = Promise.resolve();
   private loaded = false;
 
   constructor(dataDir: string) {
     this.filePath = path.join(dataDir, 'friends.json');
+    this.notesPath = path.join(dataDir, 'friend-notes.json');
   }
 
   // ─── lifecycle ─────────────────────────────────────────────────────────
@@ -53,6 +67,13 @@ export class FriendStore {
       const raw = await fs.readFile(this.filePath, 'utf8');
       const friends = JSON.parse(raw) as FriendSeedData[];
       for (const f of friends) this.indexFriend(f);
+      try {
+        const notesRaw = await fs.readFile(this.notesPath, 'utf8');
+        const notesMap = JSON.parse(notesRaw) as Record<string, FriendNote[]>;
+        for (const [id, list] of Object.entries(notesMap)) this.notesOf.set(id, list);
+      } catch (e: any) {
+        if (e.code !== 'ENOENT') throw e;
+      }
       this.loaded = true;
     } catch (err: any) {
       if (err.code === 'ENOENT') {
@@ -80,6 +101,12 @@ export class FriendStore {
     const tmp = this.filePath + '.tmp';
     await fs.writeFile(tmp, JSON.stringify(all, null, 2), 'utf8');
     await fs.rename(tmp, this.filePath);
+    // Persist notes sidecar.
+    const notesMap: Record<string, FriendNote[]> = {};
+    for (const [id, list] of this.notesOf) notesMap[id] = list;
+    const ntmp = this.notesPath + '.tmp';
+    await fs.writeFile(ntmp, JSON.stringify(notesMap, null, 2), 'utf8');
+    await fs.rename(ntmp, this.notesPath);
   }
 
   private enqueueWrite(): Promise<void> {
@@ -228,6 +255,38 @@ export class FriendStore {
 
   async flush(): Promise<void> {
     await this.writeQueue;
+  }
+
+  // ─── episodic memory (notes) ──────────────────────────────────────────────
+
+  /** Append a note to a friend's memory. Bounded by memory.episodicCapacity. */
+  appendNote(id: string, note: Omit<FriendNote, 'turn' | 'recordedAt'> & { turn?: number; recordedAt?: string }): FriendNote | null {
+    const f = this.byId.get(id);
+    if (!f) return null;
+    const list = this.notesOf.get(id) ?? [];
+    const turn = note.turn ?? list.length;
+    const recordedAt = note.recordedAt ?? new Date(0).toISOString(); // Tests pass explicit value via kernelNow
+    const full: FriendNote = { turn, kind: note.kind, text: note.text, recordedAt };
+    list.push(full);
+    // Bound by capacity from MemoryGene.
+    const cap = Math.max(100, f.genes.memory.episodicCapacity ?? 200);
+    while (list.length > cap) list.shift();
+    this.notesOf.set(id, list);
+    this.enqueueWrite();
+    return full;
+  }
+
+  getNotes(id: string, limit?: number): FriendNote[] {
+    const list = this.notesOf.get(id) ?? [];
+    if (limit && list.length > limit) return list.slice(-limit);
+    return [...list];
+  }
+
+  clearNotes(id: string): number {
+    const n = this.notesOf.get(id)?.length ?? 0;
+    this.notesOf.delete(id);
+    if (n > 0) this.enqueueWrite();
+    return n;
   }
 }
 
