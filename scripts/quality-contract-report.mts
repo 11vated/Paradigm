@@ -20,6 +20,10 @@ import '../src/lib/kernel/generators/typography-contract';
 import '../src/lib/kernel/generators/particle-contract';
 import '../src/lib/kernel/generators/shader-contract';
 import '../src/lib/kernel/generators/optics-contract';
+import '../src/lib/kernel/generators/animation-contract';
+import '../src/lib/kernel/generators/ecosystem-contract';
+import '../src/lib/kernel/generators/edtech-contract';
+import '../src/lib/kernel/generators/education-contract';
 import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();

@@ -3,6 +3,24 @@
   "generated": "1970-01-01T00:00:00.000Z",
   "entries": [
     {
+      "contract": "animation",
+      "contractVersion": "1.0.0",
+      "curatedId": "animation-bright",
+      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+    },
+    {
+      "contract": "animation",
+      "contractVersion": "1.0.0",
+      "curatedId": "animation-default",
+      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+    },
+    {
+      "contract": "animation",
+      "contractVersion": "1.0.0",
+      "curatedId": "animation-quiet",
+      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+    },
+    {
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-melody-c-major",
@@ -37,6 +55,60 @@
       "contractVersion": "1.0.0",
       "curatedId": "dance-hiphop",
       "artifactHash": "dc68c9e422c70c6aaf5a5728b82ba9eba91c68d987883f2e8bb5e09374ab7c04"
+    },
+    {
+      "contract": "ecosystem",
+      "contractVersion": "1.0.0",
+      "curatedId": "ecosystem-bright",
+      "artifactHash": "e8c2b6e079536241a50c183885d743e949a6483ad80c8a899a1ef78c85f963ba"
+    },
+    {
+      "contract": "ecosystem",
+      "contractVersion": "1.0.0",
+      "curatedId": "ecosystem-default",
+      "artifactHash": "e8c2b6e079536241a50c183885d743e949a6483ad80c8a899a1ef78c85f963ba"
+    },
+    {
+      "contract": "ecosystem",
+      "contractVersion": "1.0.0",
+      "curatedId": "ecosystem-quiet",
+      "artifactHash": "e8c2b6e079536241a50c183885d743e949a6483ad80c8a899a1ef78c85f963ba"
+    },
+    {
+      "contract": "edtech",
+      "contractVersion": "1.0.0",
+      "curatedId": "edtech-bright",
+      "artifactHash": "62a846a6a1071a5f7b3faa716b4bf2887af8c48d1ede39f1bd03a8ea218f3b50"
+    },
+    {
+      "contract": "edtech",
+      "contractVersion": "1.0.0",
+      "curatedId": "edtech-default",
+      "artifactHash": "62a846a6a1071a5f7b3faa716b4bf2887af8c48d1ede39f1bd03a8ea218f3b50"
+    },
+    {
+      "contract": "edtech",
+      "contractVersion": "1.0.0",
+      "curatedId": "edtech-quiet",
+      "artifactHash": "62a846a6a1071a5f7b3faa716b4bf2887af8c48d1ede39f1bd03a8ea218f3b50"
+    },
+    {
+      "contract": "education",
+      "contractVersion": "1.0.0",
+      "curatedId": "education-bright",
+      "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
+    },
+    {
+      "contract": "education",
+      "contractVersion": "1.0.0",
+      "curatedId": "education-default",
+      "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
+    },
+    {
+      "contract": "education",
+      "contractVersion": "1.0.0",
+      "curatedId": "education-quiet",
+      "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
     },
     {
       "contract": "friend",
