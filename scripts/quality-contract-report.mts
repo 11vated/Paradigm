@@ -16,6 +16,10 @@ import '../src/lib/kernel/generators/character-contract';
 import '../src/lib/kernel/generators/audio-contract';
 import '../src/lib/kernel/generators/dance-contract';
 import '../src/lib/kernel/generators/physics-contract';
+import '../src/lib/kernel/generators/typography-contract';
+import '../src/lib/kernel/generators/particle-contract';
+import '../src/lib/kernel/generators/shader-contract';
+import '../src/lib/kernel/generators/optics-contract';
 import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();

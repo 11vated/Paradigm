@@ -147,6 +147,42 @@
       "artifactHash": "b864e327487b7862debb6c1601f292d6551306c8acb7e387e58729abd7ece743"
     },
     {
+      "contract": "optics",
+      "contractVersion": "1.0.0",
+      "curatedId": "optics-bright",
+      "artifactHash": "c23cb452cbdc22af3bfb31d61adafac90ba48a38d338ab5f561063b5a4bda4d3"
+    },
+    {
+      "contract": "optics",
+      "contractVersion": "1.0.0",
+      "curatedId": "optics-default",
+      "artifactHash": "c23cb452cbdc22af3bfb31d61adafac90ba48a38d338ab5f561063b5a4bda4d3"
+    },
+    {
+      "contract": "optics",
+      "contractVersion": "1.0.0",
+      "curatedId": "optics-quiet",
+      "artifactHash": "c23cb452cbdc22af3bfb31d61adafac90ba48a38d338ab5f561063b5a4bda4d3"
+    },
+    {
+      "contract": "particle",
+      "contractVersion": "1.0.0",
+      "curatedId": "particle-bright",
+      "artifactHash": "7feca4cbb4d950e40db6816e78d9152ce91f22b261793f077b9bbf5c9ead9ab6"
+    },
+    {
+      "contract": "particle",
+      "contractVersion": "1.0.0",
+      "curatedId": "particle-default",
+      "artifactHash": "7feca4cbb4d950e40db6816e78d9152ce91f22b261793f077b9bbf5c9ead9ab6"
+    },
+    {
+      "contract": "particle",
+      "contractVersion": "1.0.0",
+      "curatedId": "particle-quiet",
+      "artifactHash": "7feca4cbb4d950e40db6816e78d9152ce91f22b261793f077b9bbf5c9ead9ab6"
+    },
+    {
       "contract": "physics",
       "contractVersion": "1.0.0",
       "curatedId": "physics-fluid",
@@ -163,6 +199,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "physics-soft",
       "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
+    },
+    {
+      "contract": "shader",
+      "contractVersion": "1.0.0",
+      "curatedId": "shader-bright",
+      "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
+    },
+    {
+      "contract": "shader",
+      "contractVersion": "1.0.0",
+      "curatedId": "shader-default",
+      "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
+    },
+    {
+      "contract": "shader",
+      "contractVersion": "1.0.0",
+      "curatedId": "shader-quiet",
+      "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
     },
     {
       "contract": "sprite",
@@ -187,6 +241,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "typography",
+      "contractVersion": "1.0.0",
+      "curatedId": "typography-bright",
+      "artifactHash": "ff95d983ba9975574f48fcb5b89ef3d1056695d716656d8943b174361d132688"
+    },
+    {
+      "contract": "typography",
+      "contractVersion": "1.0.0",
+      "curatedId": "typography-default",
+      "artifactHash": "ff95d983ba9975574f48fcb5b89ef3d1056695d716656d8943b174361d132688"
+    },
+    {
+      "contract": "typography",
+      "contractVersion": "1.0.0",
+      "curatedId": "typography-quiet",
+      "artifactHash": "ff95d983ba9975574f48fcb5b89ef3d1056695d716656d8943b174361d132688"
     },
     {
       "contract": "visual2d",
