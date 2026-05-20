@@ -21,6 +21,42 @@
       "artifactHash": "6d885cf9c836754d254294ba63069b7f3e4023be0e787824e8e0ddad78feea3e"
     },
     {
+      "contract": "aerospace",
+      "contractVersion": "1.0.0",
+      "curatedId": "aerospace-bright",
+      "artifactHash": "a03a106dbc19f75c89b164016734c501732fdb85f18139eae2d83e0bc98c533d"
+    },
+    {
+      "contract": "aerospace",
+      "contractVersion": "1.0.0",
+      "curatedId": "aerospace-default",
+      "artifactHash": "a03a106dbc19f75c89b164016734c501732fdb85f18139eae2d83e0bc98c533d"
+    },
+    {
+      "contract": "aerospace",
+      "contractVersion": "1.0.0",
+      "curatedId": "aerospace-quiet",
+      "artifactHash": "a03a106dbc19f75c89b164016734c501732fdb85f18139eae2d83e0bc98c533d"
+    },
+    {
+      "contract": "agriculture",
+      "contractVersion": "1.0.0",
+      "curatedId": "agriculture-bright",
+      "artifactHash": "6d9378b546d4a3df72e1cbf86a58b690d8bfc5cd14d6c96765f65b82d840f667"
+    },
+    {
+      "contract": "agriculture",
+      "contractVersion": "1.0.0",
+      "curatedId": "agriculture-default",
+      "artifactHash": "6d9378b546d4a3df72e1cbf86a58b690d8bfc5cd14d6c96765f65b82d840f667"
+    },
+    {
+      "contract": "agriculture",
+      "contractVersion": "1.0.0",
+      "curatedId": "agriculture-quiet",
+      "artifactHash": "6d9378b546d4a3df72e1cbf86a58b690d8bfc5cd14d6c96765f65b82d840f667"
+    },
+    {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-bright",
@@ -111,6 +147,42 @@
       "artifactHash": "79e3ca01fdb35a29b1fe6eb11015581a82f839a7364d00ad41e45ee8e83e92ff"
     },
     {
+      "contract": "beer",
+      "contractVersion": "1.0.0",
+      "curatedId": "beer-bright",
+      "artifactHash": "3a3974f5a45d04e5bd7860a13f32f3dd9a1bd9b7cf68f183443ebddea1a9061b"
+    },
+    {
+      "contract": "beer",
+      "contractVersion": "1.0.0",
+      "curatedId": "beer-default",
+      "artifactHash": "3a3974f5a45d04e5bd7860a13f32f3dd9a1bd9b7cf68f183443ebddea1a9061b"
+    },
+    {
+      "contract": "beer",
+      "contractVersion": "1.0.0",
+      "curatedId": "beer-quiet",
+      "artifactHash": "3a3974f5a45d04e5bd7860a13f32f3dd9a1bd9b7cf68f183443ebddea1a9061b"
+    },
+    {
+      "contract": "biotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "biotechnology-bright",
+      "artifactHash": "f9e54724b9b43ed79c1977ac0ebf2ee663e052166fdd885aac89412e52a07229"
+    },
+    {
+      "contract": "biotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "biotechnology-default",
+      "artifactHash": "f9e54724b9b43ed79c1977ac0ebf2ee663e052166fdd885aac89412e52a07229"
+    },
+    {
+      "contract": "biotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "biotechnology-quiet",
+      "artifactHash": "f9e54724b9b43ed79c1977ac0ebf2ee663e052166fdd885aac89412e52a07229"
+    },
+    {
       "contract": "blockchain",
       "contractVersion": "1.0.0",
       "curatedId": "blockchain-bright",
@@ -127,6 +199,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "blockchain-quiet",
       "artifactHash": "79dcfbfb969821cb4732ef5a3ce9ddd266284f5e2958700dddc2992d09f6201f"
+    },
+    {
+      "contract": "chemical",
+      "contractVersion": "1.0.0",
+      "curatedId": "chemical-bright",
+      "artifactHash": "dd644b11b969428db3894c072b5914c33b588a19e223b985ca95f61cb1d63afb"
+    },
+    {
+      "contract": "chemical",
+      "contractVersion": "1.0.0",
+      "curatedId": "chemical-default",
+      "artifactHash": "dd644b11b969428db3894c072b5914c33b588a19e223b985ca95f61cb1d63afb"
+    },
+    {
+      "contract": "chemical",
+      "contractVersion": "1.0.0",
+      "curatedId": "chemical-quiet",
+      "artifactHash": "dd644b11b969428db3894c072b5914c33b588a19e223b985ca95f61cb1d63afb"
     },
     {
       "contract": "cybersecurity",
@@ -351,6 +441,42 @@
       "artifactHash": "536f7b7ad626458240b7cac6ccbe2835375a8b6c2a98930e51dbc05db56c415a"
     },
     {
+      "contract": "manufacturing",
+      "contractVersion": "1.0.0",
+      "curatedId": "manufacturing-bright",
+      "artifactHash": "0048c097e2d3fe88f0692c68e28fdf81dc54983912e9d6d4007c3b329f2032dc"
+    },
+    {
+      "contract": "manufacturing",
+      "contractVersion": "1.0.0",
+      "curatedId": "manufacturing-default",
+      "artifactHash": "0048c097e2d3fe88f0692c68e28fdf81dc54983912e9d6d4007c3b329f2032dc"
+    },
+    {
+      "contract": "manufacturing",
+      "contractVersion": "1.0.0",
+      "curatedId": "manufacturing-quiet",
+      "artifactHash": "0048c097e2d3fe88f0692c68e28fdf81dc54983912e9d6d4007c3b329f2032dc"
+    },
+    {
+      "contract": "marine",
+      "contractVersion": "1.0.0",
+      "curatedId": "marine-bright",
+      "artifactHash": "8ca9ed6ffc17aebbe4169921dffffc1b57ff4ff9d57200d8eca41b8af3f23332"
+    },
+    {
+      "contract": "marine",
+      "contractVersion": "1.0.0",
+      "curatedId": "marine-default",
+      "artifactHash": "8ca9ed6ffc17aebbe4169921dffffc1b57ff4ff9d57200d8eca41b8af3f23332"
+    },
+    {
+      "contract": "marine",
+      "contractVersion": "1.0.0",
+      "curatedId": "marine-quiet",
+      "artifactHash": "8ca9ed6ffc17aebbe4169921dffffc1b57ff4ff9d57200d8eca41b8af3f23332"
+    },
+    {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-ambient-drift",
@@ -453,6 +579,24 @@
       "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
     },
     {
+      "contract": "retail",
+      "contractVersion": "1.0.0",
+      "curatedId": "retail-bright",
+      "artifactHash": "885b4040fa093aa6f211664ffc9eb7d9cc1431c2e43e10e04740801d5f95eeaf"
+    },
+    {
+      "contract": "retail",
+      "contractVersion": "1.0.0",
+      "curatedId": "retail-default",
+      "artifactHash": "885b4040fa093aa6f211664ffc9eb7d9cc1431c2e43e10e04740801d5f95eeaf"
+    },
+    {
+      "contract": "retail",
+      "contractVersion": "1.0.0",
+      "curatedId": "retail-quiet",
+      "artifactHash": "885b4040fa093aa6f211664ffc9eb7d9cc1431c2e43e10e04740801d5f95eeaf"
+    },
+    {
       "contract": "shader",
       "contractVersion": "1.0.0",
       "curatedId": "shader-bright",
@@ -469,6 +613,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "shader-quiet",
       "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
+    },
+    {
+      "contract": "sports",
+      "contractVersion": "1.0.0",
+      "curatedId": "sports-bright",
+      "artifactHash": "d3e304e69ed09b59eb89e73cdd3e2f257304158f468e4ec5b0bd00d0136c903c"
+    },
+    {
+      "contract": "sports",
+      "contractVersion": "1.0.0",
+      "curatedId": "sports-default",
+      "artifactHash": "d3e304e69ed09b59eb89e73cdd3e2f257304158f468e4ec5b0bd00d0136c903c"
+    },
+    {
+      "contract": "sports",
+      "contractVersion": "1.0.0",
+      "curatedId": "sports-quiet",
+      "artifactHash": "d3e304e69ed09b59eb89e73cdd3e2f257304158f468e4ec5b0bd00d0136c903c"
     },
     {
       "contract": "sprite",
@@ -493,6 +655,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "transportation",
+      "contractVersion": "1.0.0",
+      "curatedId": "transportation-bright",
+      "artifactHash": "1bfdb090e02dfdbb128fd02863c2f6bb5b6818d566fdcee889b8cbdc44501c71"
+    },
+    {
+      "contract": "transportation",
+      "contractVersion": "1.0.0",
+      "curatedId": "transportation-default",
+      "artifactHash": "1bfdb090e02dfdbb128fd02863c2f6bb5b6818d566fdcee889b8cbdc44501c71"
+    },
+    {
+      "contract": "transportation",
+      "contractVersion": "1.0.0",
+      "curatedId": "transportation-quiet",
+      "artifactHash": "1bfdb090e02dfdbb128fd02863c2f6bb5b6818d566fdcee889b8cbdc44501c71"
     },
     {
       "contract": "typography",
@@ -529,6 +709,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "v2-organic",
       "artifactHash": "7fe001f6348aadc1d2f6717fcb665d704b6df001331cea21f259d8ab65bb0f9e"
+    },
+    {
+      "contract": "wine",
+      "contractVersion": "1.0.0",
+      "curatedId": "wine-bright",
+      "artifactHash": "1e1c8facdca5a53370465b84e628f8c091a597f9109ae703fb0cb347389f0d81"
+    },
+    {
+      "contract": "wine",
+      "contractVersion": "1.0.0",
+      "curatedId": "wine-default",
+      "artifactHash": "1e1c8facdca5a53370465b84e628f8c091a597f9109ae703fb0cb347389f0d81"
+    },
+    {
+      "contract": "wine",
+      "contractVersion": "1.0.0",
+      "curatedId": "wine-quiet",
+      "artifactHash": "1e1c8facdca5a53370465b84e628f8c091a597f9109ae703fb0cb347389f0d81"
     },
     {
       "contract": "world",
