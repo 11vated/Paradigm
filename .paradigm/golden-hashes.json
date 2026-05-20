@@ -1041,6 +1041,24 @@
       "artifactHash": "69f5cb749a6c67c446055d8c734d5c3c9c4ea44f8d0ceac43d87ac0c1d678e6d"
     },
     {
+      "contract": "nanotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanotechnology-bright",
+      "artifactHash": "e69c23b8c00bf0f18809d1cacafc0f8aab0b3f2a47aac904e8da2ebb379a90a9"
+    },
+    {
+      "contract": "nanotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanotechnology-default",
+      "artifactHash": "e69c23b8c00bf0f18809d1cacafc0f8aab0b3f2a47aac904e8da2ebb379a90a9"
+    },
+    {
+      "contract": "nanotechnology",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanotechnology-quiet",
+      "artifactHash": "e69c23b8c00bf0f18809d1cacafc0f8aab0b3f2a47aac904e8da2ebb379a90a9"
+    },
+    {
       "contract": "narrative",
       "contractVersion": "3.0.0",
       "curatedId": "narrative-cyberpunk-noir",
@@ -1063,6 +1081,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "narrative-space-opera-epic",
       "artifactHash": "b864e327487b7862debb6c1601f292d6551306c8acb7e387e58729abd7ece743"
+    },
+    {
+      "contract": "neuroscience",
+      "contractVersion": "1.0.0",
+      "curatedId": "neuroscience-bright",
+      "artifactHash": "77c66619b23195977d65b3f80fe60a3ad03e901db6127d2ebcfd9779050a16a7"
+    },
+    {
+      "contract": "neuroscience",
+      "contractVersion": "1.0.0",
+      "curatedId": "neuroscience-default",
+      "artifactHash": "77c66619b23195977d65b3f80fe60a3ad03e901db6127d2ebcfd9779050a16a7"
+    },
+    {
+      "contract": "neuroscience",
+      "contractVersion": "1.0.0",
+      "curatedId": "neuroscience-quiet",
+      "artifactHash": "77c66619b23195977d65b3f80fe60a3ad03e901db6127d2ebcfd9779050a16a7"
     },
     {
       "contract": "optics",
@@ -1137,6 +1173,78 @@
       "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
     },
     {
+      "contract": "procedural",
+      "contractVersion": "1.0.0",
+      "curatedId": "procedural-bright",
+      "artifactHash": "a2a3e1cbe23b68400080b023825a0083f6db944791f112d2b9665c2a5ef6ae3a"
+    },
+    {
+      "contract": "procedural",
+      "contractVersion": "1.0.0",
+      "curatedId": "procedural-default",
+      "artifactHash": "a2a3e1cbe23b68400080b023825a0083f6db944791f112d2b9665c2a5ef6ae3a"
+    },
+    {
+      "contract": "procedural",
+      "contractVersion": "1.0.0",
+      "curatedId": "procedural-quiet",
+      "artifactHash": "a2a3e1cbe23b68400080b023825a0083f6db944791f112d2b9665c2a5ef6ae3a"
+    },
+    {
+      "contract": "protein",
+      "contractVersion": "1.0.0",
+      "curatedId": "protein-bright",
+      "artifactHash": "62517ef25b075cb3ee8ae69f03df465b5bdb9050f5dd871ca113dc382b6b3673"
+    },
+    {
+      "contract": "protein",
+      "contractVersion": "1.0.0",
+      "curatedId": "protein-default",
+      "artifactHash": "62517ef25b075cb3ee8ae69f03df465b5bdb9050f5dd871ca113dc382b6b3673"
+    },
+    {
+      "contract": "protein",
+      "contractVersion": "1.0.0",
+      "curatedId": "protein-quiet",
+      "artifactHash": "62517ef25b075cb3ee8ae69f03df465b5bdb9050f5dd871ca113dc382b6b3673"
+    },
+    {
+      "contract": "publishing",
+      "contractVersion": "1.0.0",
+      "curatedId": "publishing-bright",
+      "artifactHash": "89388da67244ff6d5b52a169d4b07b93ca1e178c56df1881a7590f65c6abc0a8"
+    },
+    {
+      "contract": "publishing",
+      "contractVersion": "1.0.0",
+      "curatedId": "publishing-default",
+      "artifactHash": "89388da67244ff6d5b52a169d4b07b93ca1e178c56df1881a7590f65c6abc0a8"
+    },
+    {
+      "contract": "publishing",
+      "contractVersion": "1.0.0",
+      "curatedId": "publishing-quiet",
+      "artifactHash": "89388da67244ff6d5b52a169d4b07b93ca1e178c56df1881a7590f65c6abc0a8"
+    },
+    {
+      "contract": "reactor",
+      "contractVersion": "1.0.0",
+      "curatedId": "reactor-bright",
+      "artifactHash": "dced1a32214cac07875d3b94d34df3127e1104746c55c3fc6dae3364c042b3c2"
+    },
+    {
+      "contract": "reactor",
+      "contractVersion": "1.0.0",
+      "curatedId": "reactor-default",
+      "artifactHash": "dced1a32214cac07875d3b94d34df3127e1104746c55c3fc6dae3364c042b3c2"
+    },
+    {
+      "contract": "reactor",
+      "contractVersion": "1.0.0",
+      "curatedId": "reactor-quiet",
+      "artifactHash": "dced1a32214cac07875d3b94d34df3127e1104746c55c3fc6dae3364c042b3c2"
+    },
+    {
       "contract": "retail",
       "contractVersion": "1.0.0",
       "curatedId": "retail-bright",
@@ -1171,6 +1279,60 @@
       "contractVersion": "1.0.0",
       "curatedId": "robotics-quiet",
       "artifactHash": "3bed4035ade046aa60d7077bacc85766d0c77d362a2bd8b084086a95dbdd359b"
+    },
+    {
+      "contract": "security",
+      "contractVersion": "1.0.0",
+      "curatedId": "security-bright",
+      "artifactHash": "3342662ecc58e88ef01db429625faa1434b72fcc44050f65d35f48fe71cb3bc7"
+    },
+    {
+      "contract": "security",
+      "contractVersion": "1.0.0",
+      "curatedId": "security-default",
+      "artifactHash": "3342662ecc58e88ef01db429625faa1434b72fcc44050f65d35f48fe71cb3bc7"
+    },
+    {
+      "contract": "security",
+      "contractVersion": "1.0.0",
+      "curatedId": "security-quiet",
+      "artifactHash": "3342662ecc58e88ef01db429625faa1434b72fcc44050f65d35f48fe71cb3bc7"
+    },
+    {
+      "contract": "semiconductors",
+      "contractVersion": "1.0.0",
+      "curatedId": "semiconductors-bright",
+      "artifactHash": "b407a84ece65da16a171bc78265f65d140cdf9c6400abc264e56016690b43831"
+    },
+    {
+      "contract": "semiconductors",
+      "contractVersion": "1.0.0",
+      "curatedId": "semiconductors-default",
+      "artifactHash": "b407a84ece65da16a171bc78265f65d140cdf9c6400abc264e56016690b43831"
+    },
+    {
+      "contract": "semiconductors",
+      "contractVersion": "1.0.0",
+      "curatedId": "semiconductors-quiet",
+      "artifactHash": "b407a84ece65da16a171bc78265f65d140cdf9c6400abc264e56016690b43831"
+    },
+    {
+      "contract": "sensors",
+      "contractVersion": "1.0.0",
+      "curatedId": "sensors-bright",
+      "artifactHash": "9274ae0f82b1b09cb4cf14a310749977283de479924365b03b3e35aed75e03f6"
+    },
+    {
+      "contract": "sensors",
+      "contractVersion": "1.0.0",
+      "curatedId": "sensors-default",
+      "artifactHash": "9274ae0f82b1b09cb4cf14a310749977283de479924365b03b3e35aed75e03f6"
+    },
+    {
+      "contract": "sensors",
+      "contractVersion": "1.0.0",
+      "curatedId": "sensors-quiet",
+      "artifactHash": "9274ae0f82b1b09cb4cf14a310749977283de479924365b03b3e35aed75e03f6"
     },
     {
       "contract": "shader",
@@ -1233,6 +1395,24 @@
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
     },
     {
+      "contract": "textiles",
+      "contractVersion": "1.0.0",
+      "curatedId": "textiles-bright",
+      "artifactHash": "e0dd8cccc9a42930dcd325e628b170df78baca8f6f105bc1ed5d2779b9608116"
+    },
+    {
+      "contract": "textiles",
+      "contractVersion": "1.0.0",
+      "curatedId": "textiles-default",
+      "artifactHash": "e0dd8cccc9a42930dcd325e628b170df78baca8f6f105bc1ed5d2779b9608116"
+    },
+    {
+      "contract": "textiles",
+      "contractVersion": "1.0.0",
+      "curatedId": "textiles-quiet",
+      "artifactHash": "e0dd8cccc9a42930dcd325e628b170df78baca8f6f105bc1ed5d2779b9608116"
+    },
+    {
       "contract": "theater",
       "contractVersion": "1.0.0",
       "curatedId": "theater-bright",
@@ -1249,6 +1429,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "theater-quiet",
       "artifactHash": "db94970cc0628f0d9d7d75e3ca329bd29235119fc8d9baeec6c0f1342c709651"
+    },
+    {
+      "contract": "tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "tourism-bright",
+      "artifactHash": "fa52b72bd19e1123b5d483820bed34d2ddabc742da4f28694e8eee2fa4c47371"
+    },
+    {
+      "contract": "tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "tourism-default",
+      "artifactHash": "fa52b72bd19e1123b5d483820bed34d2ddabc742da4f28694e8eee2fa4c47371"
+    },
+    {
+      "contract": "tourism",
+      "contractVersion": "1.0.0",
+      "curatedId": "tourism-quiet",
+      "artifactHash": "fa52b72bd19e1123b5d483820bed34d2ddabc742da4f28694e8eee2fa4c47371"
     },
     {
       "contract": "transportation",
@@ -1285,6 +1483,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "typography-quiet",
       "artifactHash": "ff95d983ba9975574f48fcb5b89ef3d1056695d716656d8943b174361d132688"
+    },
+    {
+      "contract": "universe",
+      "contractVersion": "1.0.0",
+      "curatedId": "universe-bright",
+      "artifactHash": "1903f561724147a96517fe3fb1a24e3b9ce340de31b4085c2c3c1922947568e5"
+    },
+    {
+      "contract": "universe",
+      "contractVersion": "1.0.0",
+      "curatedId": "universe-default",
+      "artifactHash": "1903f561724147a96517fe3fb1a24e3b9ce340de31b4085c2c3c1922947568e5"
+    },
+    {
+      "contract": "universe",
+      "contractVersion": "1.0.0",
+      "curatedId": "universe-quiet",
+      "artifactHash": "1903f561724147a96517fe3fb1a24e3b9ce340de31b4085c2c3c1922947568e5"
     },
     {
       "contract": "visual2d",
