@@ -53,3 +53,7 @@ export type { ListingPrep } from './marketplace';
 
 // ─── Tier 1 — Voice synthesis ────────────────────────────────────────────────
 export { speakAs, isSpeechAvailable, genePitch, geneRate, geneVolume, pickVoice } from './voice';
+
+// ─── Tier 1 — Conversation engine ────────────────────────────────────────────
+export { generateReply, greetingFor } from './converse';
+export type { Turn, ReplyContext } from './converse';

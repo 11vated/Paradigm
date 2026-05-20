@@ -7,6 +7,7 @@ import PlayPage from '@/pages/PlayPage';
 import WorldPage from '@/pages/WorldPage';
 import QuestPage from '@/pages/QuestPage';
 import LineagePage from '@/pages/LineagePage';
+import ChatPage from '@/pages/ChatPage';
 import ReplPage from '@/pages/ReplPage';
 import EvolvePage from '@/pages/EvolvePage';
 import { WorldSeedPage } from '@/pages/WorldSeedPage';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/play/:friendSeed/:worldSeed" element={<PlayPage />} />
         <Route path="/world" element={<WorldPage />} />
         <Route path="/quest" element={<QuestPage />} />
+        <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/lineage/:id" element={<LineagePage />} />
         <Route path="/repl" element={<ReplPage />} />
         <Route path="/evolve" element={<EvolvePage />} />
