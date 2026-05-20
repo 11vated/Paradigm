@@ -50,3 +50,6 @@ export { composeFriend, registerFriendBridges, FRIEND_BRIDGES } from './composit
 // ─── Phase 6 (2/n) — marketplace listing preparation ─────────────────────────
 export { prepareList, prepareDelist, prepareBuy } from './marketplace';
 export type { ListingPrep } from './marketplace';
+
+// ─── Tier 1 — Voice synthesis ────────────────────────────────────────────────
+export { speakAs, isSpeechAvailable, genePitch, geneRate, geneVolume, pickVoice } from './voice';

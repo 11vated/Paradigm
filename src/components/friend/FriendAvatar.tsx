@@ -9,11 +9,16 @@
  * the persona vector's energy dimension.
  */
 
-import React, { useMemo } from 'react';
-import type { FriendArtifact } from '@/lib/friend';
+import React, { useMemo, useEffect, useState } from 'react';
+import type { FriendArtifact, FriendSeedData } from '@/lib/friend';
+import { speakAs, isSpeechAvailable } from '@/lib/friend/voice';
 
 interface FriendAvatarProps {
   artifact: FriendArtifact | null;
+  /** When provided, enables a speak button that uses VoiceGene to set pitch/rate/volume. */
+  seed?: FriendSeedData | null;
+  /** Auto-spoken on mount; default false. */
+  greeting?: string | null;
   size?: number;
   animated?: boolean;
   className?: string;
@@ -21,6 +26,8 @@ interface FriendAvatarProps {
 
 export const FriendAvatar: React.FC<FriendAvatarProps> = ({
   artifact,
+  seed = null,
+  greeting = null,
   size = 256,
   animated = true,
   className = '',
@@ -62,6 +69,25 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
     ? Math.max(1.4, 4 - (aura?.energy ?? 0.5) * 2)
     : 0;
 
+  const canSpeak = !!(seed && isSpeechAvailable());
+  const [speaking, setSpeaking] = useState(false);
+
+  useEffect(() => {
+    if (!seed || !greeting || !isSpeechAvailable()) return;
+    const stop = speakAs(seed, greeting);
+    setSpeaking(true);
+    const t = setTimeout(() => setSpeaking(false), Math.max(1200, greeting.length * 70));
+    return () => { stop(); clearTimeout(t); setSpeaking(false); };
+  }, [seed, greeting]);
+
+  const handleSpeak = () => {
+    if (!seed) return;
+    const sample = greeting ?? "Hello. I am " + (seed.name ?? 'your friend') + ". Pleased to meet you.";
+    speakAs(seed, sample);
+    setSpeaking(true);
+    setTimeout(() => setSpeaking(false), Math.max(1200, sample.length * 70));
+  };
+
   return (
     <div
       className={`relative ${className}`}
@@ -84,6 +110,17 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: svgInline }}
       />
+
+      {canSpeak && (
+        <button
+          type="button"
+          onClick={handleSpeak}
+          className={"absolute bottom-2 right-2 px-2 py-1 rounded-md text-xs font-medium bg-neutral-900/80 border border-neutral-700 hover:bg-neutral-800 text-neutral-100 transition-colors " + (speaking ? "ring-2 ring-emerald-400" : "")}
+          aria-label="Speak"
+        >
+          {speaking ? '◎ speaking' : '🔊 speak'}
+        </button>
+      )}
 
       {animated && (
         <style>{`

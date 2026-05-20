@@ -204,7 +204,7 @@ export const FriendPanel: React.FC = () => {
         {/* avatar + stats */}
         <div className="flex-1 overflow-auto p-4 flex gap-4">
           <div className="flex-shrink-0">
-            <FriendAvatar artifact={artifact} size={320} animated />
+            <FriendAvatar artifact={artifact} seed={seed} size={320} animated />
             {seed && <Friend3DAvatar friend={seed} size={320} />}
             {seed && (
               <div className="mt-2 text-center font-mono text-[10px] text-neutral-400">
