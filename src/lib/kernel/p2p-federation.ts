@@ -13,6 +13,7 @@ import crypto from 'crypto';
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
 import { type Seed } from '../kernel/seed-class';
 import { FederationManager, type PeerInfo, type FederationMessage } from './federation';
+import { kernelNow, kernelNowIso } from './clock';
 
 export interface SeedExchangeRecord {
   seedHash: string;
@@ -69,7 +70,7 @@ export class P2PFederationProtocol {
       cells: new Map(),
       dimensions: ['fitness', 'novelty', 'complexity', 'domain'],
       resolution: config.archiveResolution,
-      lastSync: Date.now(),
+      lastSync: kernelNow(),
     };
   }
 
@@ -94,7 +95,7 @@ export class P2PFederationProtocol {
       seedHash: seed.hash || crypto.createHash('sha256').update(JSON.stringify(seed)).digest('hex'),
       seedData: seed,
       originNode: this.config.nodeId,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       signature: this.signRecord(seed.hash || '', seed.metadata.domain || 'unknown'),
       fitness: seed.lineage.fitness || 0,
       domain: seed.metadata.domain || 'unknown',
@@ -122,7 +123,7 @@ export class P2PFederationProtocol {
     }
 
     this.pendingSync = [];
-    this.localArchive.lastSync = Date.now();
+    this.localArchive.lastSync = kernelNow();
 
     return { synced, conflicts };
   }
@@ -136,7 +137,7 @@ export class P2PFederationProtocol {
       payload: { seeds: batch, archiveSize: this.localArchive.cells.size },
       originNode: this.config.nodeId,
       ttl: 3,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       signature: this.signRecord('gossip', String(batch.length)),
     };
 
@@ -220,13 +221,13 @@ export class P2PFederationProtocol {
   }
 
   private signRecord(seedHash: string, domain: string): string {
-    const data = `${this.config.nodeId}:${seedHash}:${domain}:${Date.now()}`;
+    const data = `${this.config.nodeId}:${seedHash}:${domain}:${kernelNow()}`;
     return crypto.createHash('sha256').update(data).digest('hex').slice(0, 32);
   }
 
   private verifyRecord(record: SeedExchangeRecord): boolean {
     if (!record.seedHash || !record.originNode || !record.timestamp) return false;
-    if (Date.now() - record.timestamp > this.config.seedTTL) return false;
+    if (kernelNow() - record.timestamp > this.config.seedTTL) return false;
 
     const expectedSig = crypto
       .createHash('sha256')

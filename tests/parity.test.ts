@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { UniversalSeed, GeneType } from '../src/seeds';
-import { Kernel } from '../src/kernel';
 import { GeneticAlgorithm } from '../src/lib/evolution/ga';
 import { Xoshiro256StarStar, rngFromHash } from '../src/lib/kernel/rng';
 
@@ -15,8 +14,8 @@ describe('Cross-Engine Parity Tests', () => {
 
   describe('Seed Operations Parity', () => {
     it('should create identical seeds across all engines', () => {
-      const kernel = new Kernel({ seed: 42 });
-      
+      const rng = new Xoshiro256StarStar(42n);
+
       const seeds = [];
       for (let i = 0; i < 100; i++) {
         const seed = new UniversalSeed();
@@ -174,45 +173,39 @@ describe('Gene Type Coverage', () => {
     });
   });
 
-  describe('Kernel Parity', () => {
+  describe('RNG Parity', () => {
     it('should produce deterministic sequences', () => {
-      const kernelA = new Kernel({ seed: 12345 });
-      const kernelB = new Kernel({ seed: 12345 });
+      const rngA = new Xoshiro256StarStar(12345n);
+      const rngB = new Xoshiro256StarStar(12345n);
 
-      const resultsA = [];
-      const resultsB = [];
+      const resultsA: number[] = [];
+      const resultsB: number[] = [];
 
       for (let i = 0; i < 100; i++) {
-        resultsA.push(kernelA.getRNG().nextFloat());
-        resultsB.push(kernelB.getRNG().nextFloat());
+        resultsA.push(rngA.nextF64());
+        resultsB.push(rngB.nextF64());
       }
 
       expect(resultsA).toEqual(resultsB);
     });
 
-    it('should fork correctly', () => {
-      const kernel = new Kernel({ seed: 42 });
-      
-      const value1 = kernel.getRNG().nextFloat();
-      const forked = kernel.fork();
-      const value2 = forked.getRNG().nextFloat();
+    it('different seeds yield different sequences', () => {
+      const rng1 = new Xoshiro256StarStar(42n);
+      const rng2 = new Xoshiro256StarStar(43n);
 
-      expect(value1).not.toBe(value2);
-      expect(kernel.getRNG().nextFloat()).not.toBe(value2);
+      const v1 = rng1.nextF64();
+      const v2 = rng2.nextF64();
+
+      expect(v1).not.toBe(v2);
     });
 
-    it('should maintain tick consistency', () => {
-      const kernel = new Kernel({ seed: 42, tickRate: 60 });
-      kernel.initialize();
+    it('rngFromHash is deterministic', () => {
+      const a = rngFromHash('paradigm-seed-hash-1');
+      const b = rngFromHash('paradigm-seed-hash-1');
+      const c = rngFromHash('paradigm-seed-hash-2');
 
-      const startTick = kernel.getTick().getTick();
-      
-      return new Promise(resolve => setTimeout(() => {
-        kernel.shutdown();
-        const endTick = kernel.getTick().getTick();
-        expect(endTick).toBeGreaterThanOrEqual(startTick);
-        resolve(true);
-      }, 100));
+      expect(a.nextF64()).toBe(b.nextF64());
+      expect(a.nextF64()).not.toBe(c.nextF64());
     });
   });
 

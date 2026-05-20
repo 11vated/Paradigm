@@ -23,6 +23,7 @@ import { Xoshiro256StarStar } from './rng';
 import { GeneSystem, GeneTypeOps, GeneSchema } from './gene_system';
 
 import crypto from 'crypto';
+import { kernelNow, kernelNowIso } from './clock';
 
 /** @deprecated Use canonical.ts / lib/sovereignty/canonical.ts instead. */
 function computeSeedHash(canonicalJson: string): string {
@@ -435,7 +436,7 @@ export class Seed {
       genes.set(type, {
         type,
         value,
-        timestamp: Date.now(),
+        timestamp: kernelNow(),
       });
     }
 

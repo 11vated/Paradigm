@@ -250,3 +250,53 @@ export const RegisterGeneTypeSchema = z.object({
   crossover: geneTypeOperatorFn,
   distance: geneTypeOperatorFn,
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FRIEND  (Phase 1)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const FriendArchetypeSchema = z.enum([
+  'slender', 'athletic', 'sturdy', 'soft', 'tall', 'petite',
+]);
+
+export const FriendGenerateSchema = z.object({
+  /** Any string. SHA-256 of this becomes the Friend's seed hash. */
+  seed: z.string().min(1, 'seed string is required').max(2048),
+  /** Optional display name override. */
+  name: z.string().min(1).max(64).optional(),
+  /** Optional body archetype override. */
+  archetypeBias: FriendArchetypeSchema.optional(),
+});
+
+export const FriendBreedSchema = z.object({
+  parentA: z.string().min(1, 'parentA seed string is required').max(2048).optional(),
+  parentB: z.string().min(1, 'parentB seed string is required').max(2048).optional(),
+  parentAId: z.string().regex(/^[0-9a-f]{16}$/, 'parentAId must be 16-char lowercase hex').optional(),
+  parentBId: z.string().regex(/^[0-9a-f]{16}$/, 'parentBId must be 16-char lowercase hex').optional(),
+  /** Optional salt for the child. Same parents + same salt → same child. */
+  salt: z.string().max(256).optional(),
+}).refine(
+  (v) => (v.parentA || v.parentAId) && (v.parentB || v.parentBId),
+  { message: 'Each parent requires either a seed string or an Id (parentA/parentAId, parentB/parentBId)' },
+);
+
+export const FriendMutateSchema = z.object({
+  parent: z.string().min(1, 'parent seed string is required').max(2048).optional(),
+  parentId: z.string().regex(/^[0-9a-f]{16}$/, 'parentId must be 16-char lowercase hex').optional(),
+  /** 0 = identity, 1 = full random replacement. Defaults to 0.15. */
+  magnitude: z.number().min(0).max(1).optional(),
+  /** Optional salt for the mutation. Same parent + same salt + same magnitude → same child. */
+  salt: z.string().max(256).optional(),
+}).refine(
+  (v) => v.parent !== undefined || v.parentId !== undefined,
+  { message: 'parent (seed string) or parentId required' },
+);
+
+export const FriendAnchorSchema = z.object({
+  ownerAddress: z.string().regex(/^0x[0-9a-fA-F]{40}$/, 'Invalid Ethereum address'),
+  privateKey: z.string().min(64).max(128),
+  contractAddress: z.string().regex(/^0x[0-9a-fA-F]{40}$/).optional(),
+  rpcUrl: z.string().url().optional(),
+  network: z.string().min(1).max(64).optional(),
+  ipfsCid: z.string().min(1).max(128).optional(),
+});

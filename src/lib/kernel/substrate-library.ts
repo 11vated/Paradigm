@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── NAMESPACE ────────────────────────────────────────────────────────────
 
@@ -147,7 +148,7 @@ export function seedFoundationPrimitives(): number {
       id: `phys://${c.name}`, namespace: 'phys', name: c.name,
       description: `${c.description} (${c.value} ${c.unit})`,
       tags: ['constant', 'physics'], value: c.value, confidence: 1.0,
-      source: 'CODATA 2018', createdAt: new Date().toISOString(),
+      source: 'CODATA 2018', createdAt: kernelNowIso(),
     });
     count++;
   }
@@ -169,7 +170,7 @@ export function seedFoundationPrimitives(): number {
       description: m.description, tags: ['material'],
       value: { density: m.density, color: m.color },
       confidence: 0.95, source: 'Engineering Toolbox',
-      createdAt: new Date().toISOString(),
+      createdAt: kernelNowIso(),
     });
     count++;
   }
@@ -185,7 +186,7 @@ export function seedFoundationPrimitives(): number {
       description: `Fundamental frequency of ${note}: ${freq} Hz`,
       tags: ['note', 'frequency'], value: freq,
       confidence: 1.0, source: 'ISO 16:1975',
-      createdAt: new Date().toISOString(),
+      createdAt: kernelNowIso(),
     });
     count++;
   }
@@ -197,7 +198,7 @@ export function seedFoundationPrimitives(): number {
       description: `Music theory scale pattern for ${scale}`,
       tags: ['scale', 'music_theory'], value: scale,
       confidence: 1.0, source: 'Music Theory Standard',
-      createdAt: new Date().toISOString(),
+      createdAt: kernelNowIso(),
     });
     count++;
   }

@@ -13,6 +13,7 @@
 
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
 import { type Seed } from '../kernel/seed-class';
+import { kernelNow, kernelNowIso } from '../kernel/clock';
 
 export interface MetaGene {
   key: string;
@@ -123,7 +124,7 @@ export class MetaEvolutionEngine {
         generation: 0,
         parentIds: [],
         algorithmType: this.selectAlgorithmType(rng),
-        timestamp: Date.now(),
+        timestamp: kernelNow(),
       });
     }
   }
@@ -156,7 +157,7 @@ export class MetaEvolutionEngine {
       child = this.mutate(child, rng);
       child.generation = (parentA.generation + parentB.generation) / 2 + 1;
       child.parentIds = [parentA.id, parentB.id];
-      child.timestamp = Date.now();
+      child.timestamp = kernelNow();
 
       nextGen.push(child);
     }
@@ -205,7 +206,7 @@ export class MetaEvolutionEngine {
       generation: 0,
       parentIds: [a.id, b.id],
       algorithmType: rng.nextF64() > 0.5 ? a.algorithmType : b.algorithmType,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     };
   }
 

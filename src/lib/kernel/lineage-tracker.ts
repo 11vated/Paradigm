@@ -10,6 +10,7 @@
 
 import type { Seed } from './types';
 import { rngFromHash } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── Lineage Node (replaces Conversation Node) ─────────────
 export interface LineageNode {
@@ -70,7 +71,7 @@ export class LineageTracker {
       phrase: seed.$phrase || '',
       domain: seed.$domain || 'unknown',
       generation: seed.$lineage?.generation || 0,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       operation: 'primordial',
       parentHashes: [],
       childrenHashes: [],
@@ -105,7 +106,7 @@ export class LineageTracker {
       phrase: childSeed.$phrase || '',
       domain: childSeed.$domain || 'unknown',
       generation: (childSeed.$lineage?.generation || parentNode.generation) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       operation: 'fork',
       parentHashes: [parentHash],
       childrenHashes: [],
@@ -123,7 +124,7 @@ export class LineageTracker {
       toHash: childHash,
       operation: 'fork',
       weight: this.calculateGeneticSimilarity(parentNode.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
 
     this.graph.currentHash = childHash;
@@ -157,7 +158,7 @@ export class LineageTracker {
       phrase: childSeed.$phrase || '',
       domain: childSeed.$domain || 'unknown',
       generation: (childSeed.$lineage?.generation || Math.max(parent1Node.generation, parent2Node.generation)) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       operation: 'breed',
       parentHashes: [parent1Hash, parent2Hash],
       childrenHashes: [],
@@ -176,14 +177,14 @@ export class LineageTracker {
       toHash: childHash,
       operation: 'breed',
       weight: this.calculateGeneticSimilarity(parent1Node.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
     this.graph.edges.push({
       fromHash: parent2Hash,
       toHash: childHash,
       operation: 'breed',
       weight: this.calculateGeneticSimilarity(parent2Node.genes, childNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
 
     this.graph.currentHash = childHash;
@@ -212,7 +213,7 @@ export class LineageTracker {
       phrase: targetSeed.$phrase || '',
       domain: targetSeed.$domain || 'unknown',
       generation: (targetSeed.$lineage?.generation || sourceNode.generation) + 1,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
       operation: 'compose',
       parentHashes: [sourceHash],
       childrenHashes: [],
@@ -230,7 +231,7 @@ export class LineageTracker {
       toHash: targetHash,
       operation: 'compose',
       weight: this.calculateGeneticSimilarity(sourceNode.genes, targetNode.genes),
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
 
     this.graph.currentHash = targetHash;
@@ -248,7 +249,7 @@ export class LineageTracker {
     if (!node) return undefined;
 
     node.artifactHash = artifactHash;
-    node.timestamp = Date.now();
+    node.timestamp = kernelNow();
 
     // Add self-edge for grow
     this.graph.edges.push({
@@ -256,7 +257,7 @@ export class LineageTracker {
       toHash: seedHash,
       operation: 'grow',
       weight: 1.0,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
 
     return node;
@@ -391,7 +392,7 @@ export class LineageTracker {
   }
 
   private generateHash(seed: Seed): string {
-    const rng = rngFromHash(seed.$hash || seed.$phrase || Date.now().toString());
+    const rng = rngFromHash(seed.$hash || seed.$phrase || kernelNow().toString());
     const bytes = new Uint8Array(32);
     for (let i = 0; i < 32; i++) {
       bytes[i] = Math.floor(rng.nextF64() * 256);

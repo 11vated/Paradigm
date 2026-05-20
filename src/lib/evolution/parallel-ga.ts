@@ -8,6 +8,7 @@
  */
 
 import { rngFromHash } from '../kernel/rng';
+import { kernelNow, kernelNowIso } from '../kernel/clock';
 
 export interface WorkerMessage {
   type: 'init' | 'evaluate' | 'crossover' | 'mutate' | 'select' | 'result';
@@ -94,7 +95,7 @@ export class ParallelGeneticAlgorithm {
       
       if (batch.length === 0) continue;
       
-      const id = `eval_${Date.now()}_${i}`;
+      const id = `eval_${kernelNow()}_${i}`;
       
       const promise = new Promise<number[]>((resolve, reject) => {
         this.pendingPromises.set(id, resolve);
@@ -125,7 +126,7 @@ export class ParallelGeneticAlgorithm {
    * Parallel tournament selection
    */
   async selectParallel(population: any[], scores: number[]): Promise<any[]> {
-    const id = `select_${Date.now()}`;
+    const id = `select_${kernelNow()}`;
     
     // Use first available worker for selection
     return new Promise((resolve, reject) => {
@@ -161,7 +162,7 @@ export class ParallelGeneticAlgorithm {
       
       if (batch.length === 0) continue;
       
-      const id = `cross_${Date.now()}_${i}`;
+      const id = `cross_${kernelNow()}_${i}`;
       
       const promise = new Promise<any[]>((resolve, reject) => {
         this.pendingPromises.set(id, resolve);
@@ -194,7 +195,7 @@ export class ParallelGeneticAlgorithm {
       
       if (batch.length === 0) continue;
       
-      const id = `mutate_${Date.now()}_${i}`;
+      const id = `mutate_${kernelNow()}_${i}`;
       
       const promise = new Promise<any[]>((resolve, reject) => {
         this.pendingPromises.set(id, resolve);

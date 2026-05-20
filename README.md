@@ -10,6 +10,54 @@ same seed + same deterministic RNG + same code = reproducible artifact
 
 That guarantee is the center of the system. It turns generative media into something closer to software, biology, and version control: reproducible, inspectable, evolvable, and attributable.
 
+
+## Substrate Pipeline (Phase 0-7, May 2026)
+
+Paradigm now has a complete end-to-end substrate: seed → artifact → composition → playable game, deterministic at every step.
+
+```text
+  FriendSeed ──┐
+               ├─► QuestSeed ──► GameSeed ──► GameArtifact ──► PlayabilityReport
+  WorldSeed  ──┘     (multi-source compose)   (scene graph)    (5-axis fitness)
+```
+
+| Layer | Module | What |
+|---|---|---|
+| **Friend** | `src/lib/friend` | 6-gene companion seed (body, face, voice, persona, memory, bond), sovereignty (ECDSA-P256), on-chain anchor (ERC-721), persistence + lineage |
+| **World** | `src/lib/world` | Era × biome × conflict seed, deterministic locations + factions + hook |
+| **Quest** | `src/lib/world/quest` | Friend × World → QuestSeed with archetype + 3-act structure |
+| **Game** | `src/lib/game` | QuestSeed → scene graph with branching choices, karma, karma-gated endings |
+| **Oracle** | `src/lib/game/oracle` | Deterministic multi-axis fitness: completability, branchingHealth, karmaArc, paceVariance, endingDiversity |
+| **Quality Contract** | `src/lib/kernel/quality-contract` | 5-clause harness (synthesize/invert/rate/curated/det) every Tier-1 generator passes |
+
+**7 generators are contract-conformant**: friend (1.000), sprite (1.000), visual2d (0.981), narrative (0.667), game (0.900), music (0.833), world (1.000).
+
+**30 golden hashes** are committed to `.paradigm/golden-hashes.json`. CI verifies them cross-machine via `npm run golden:verify`.
+
+### Web surfaces
+- `/studio` — original kernel studio
+- `/friend` — Friend generator + library + breeding + sign + on-chain
+- `/world` — World generator with hook + locations + factions
+- `/quest` — visual Friend × World → QuestSeed composer
+- `/play` — game lobby + `/play/:friend/:world` runtime
+- `/lineage/:id` — Friend family tree (ancestors + descendants)
+
+### Determinism guarantees
+- 0 hard entropy violations in `src/lib/kernel`, `src/lib/evolution`, `src/seeds`
+- ESLint determinism boundary fails CI on any `Math.random`, `crypto.random*`, `performance.now`, or wall-clock leak
+- Kernel time is injected via `src/lib/kernel/clock` (`kernelNow`, `kernelNowIso`) — defaults to `Date.now()` but can be frozen/counter-mode in tests + replay
+- Every commit verified with `npm run typecheck && npm run determinism:check && npm run golden:verify`
+
+```bash
+npm run typecheck          # 0 errors
+npm run determinism:check  # 0 hard violations
+npm run quality:contract   # 7/7 contracts green
+npm run golden:verify      # 30/30 golden hashes match
+npm run test               # all suites pass
+```
+
+---
+
 ## Current State
 
 Verified locally on May 18, 2026:

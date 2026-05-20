@@ -12,6 +12,8 @@ export interface FunctorBridge {
   functor?: string;
   source?: string;
   target?: string;
+  /** Optional custom gene-transform function for high-fidelity bridges. */
+  transform?: (sourceGenes: Record<string, any>, seed: any) => Record<string, any>;
 }
 
 export interface CompositionPath {
@@ -53,6 +55,7 @@ const DOMAIN_GENES: Record<string, string[]> = {
   food:        ['foodType', 'style', 'cuisine', 'ingredients'],
   choreography:['style', 'tempo', 'complexity', 'duration', 'formation'],
   agent:       ['persona', 'temperature', 'reasoning_depth', 'exploration_rate', 'max_steps'],
+  friend:      ['body', 'face', 'voice', 'persona', 'memory', 'bond'],
 };
 
 // ─── Gene Category Groups ────────────────────────────────────────────────────
@@ -308,25 +311,32 @@ export function composeSeed(seed: any, targetDomain: string): any {
   );
 
   if (bridge) {
-    const transformedGenes: Record<string, any> = {};
+    let transformedGenes: Record<string, any>;
     const sourceGenes = seed.genes ?? {};
 
-    // Project genes forward: keep ones that map to target domain
-    if (typeof sourceGenes === 'object') {
-      let kept = 0;
-      const targetGeneNames = DOMAIN_GENES[targetDomain] ?? [];
-      for (const [key, gene] of Object.entries(sourceGenes)) {
-        // Keep if the source gene name or category exists in target domain
-        if (targetGeneNames.includes(key) || targetGeneNames.some(tg => geneCategory(tg) === geneCategory(key))) {
-          transformedGenes[key] = typeof gene === 'object' ? { ...gene } : gene;
-          kept++;
+    if (typeof bridge.transform === 'function') {
+      // High-fidelity custom transform — used by domain-specific
+      // bridges (e.g. friend × music) for semantically correct gene mapping.
+      transformedGenes = bridge.transform(sourceGenes, seed);
+    } else {
+      transformedGenes = {};
+      // Project genes forward: keep ones that map to target domain
+      if (typeof sourceGenes === 'object') {
+        let kept = 0;
+        const targetGeneNames = DOMAIN_GENES[targetDomain] ?? [];
+        for (const [key, gene] of Object.entries(sourceGenes)) {
+          // Keep if the source gene name or category exists in target domain
+          if (targetGeneNames.includes(key) || targetGeneNames.some(tg => geneCategory(tg) === geneCategory(key))) {
+            transformedGenes[key] = typeof gene === 'object' ? { ...gene } : gene;
+            kept++;
+          }
         }
-      }
-      // Fill missing genes with defaults
-      for (const geneName of targetGeneNames) {
-        if (!(geneName in transformedGenes)) {
-          const cat = geneCategory(geneName);
-          transformedGenes[geneName] = { type: 'scalar', value: CATEGORY_DEFAULTS[cat] ?? 0.5 };
+        // Fill missing genes with defaults
+        for (const geneName of targetGeneNames) {
+          if (!(geneName in transformedGenes)) {
+            const cat = geneCategory(geneName);
+            transformedGenes[geneName] = { type: 'scalar', value: CATEGORY_DEFAULTS[cat] ?? 0.5 };
+          }
         }
       }
     }

@@ -6,6 +6,7 @@
  */
 
 import type { Seed } from './engines';
+import { kernelNow, kernelNowIso } from './clock';
 
 /**
  * C2PA Claim structure
@@ -91,8 +92,8 @@ export function buildC2PAManifest(
       {
         label: 'paradigm.timestamp',
         data: {
-          created: new Date().toISOString(),
-          unix_ms: Date.now(),
+          created: kernelNowIso(),
+          unix_ms: kernelNow(),
         },
       },
     ],

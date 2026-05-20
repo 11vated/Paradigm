@@ -2,6 +2,7 @@ import { rngFromHash } from '../rng';
 import { getGenerationQuality } from '../generation-quality';
 import type { Stage, Seed, GeneratorOutput, Artifact, PipelineContext, DomainConfig, PipelineReport, EngineVersion } from './types';
 import { validateStage, generateStage, createPostProcessStage, errorFallbackStage } from './stages';
+import { kernelNow, kernelNowIso } from '../clock';
 
 export class PipelineRunner {
   private stages: Stage<any, any>[] = [];
@@ -19,9 +20,9 @@ export class PipelineRunner {
     const outputDir = `data/artifacts/${domain}`;
     const fileName = `${seed.$hash ?? 'unknown'}.${this.config.outputExtension}`;
     const outputPath = `${outputDir}/${fileName}`;
-    const startTime = Date.now();
+    const startTime = kernelNow();
 
-    const rng = rngFromHash(seed.$hash || `pipeline-${domain}-${Date.now()}`);
+    const rng = rngFromHash(seed.$hash || `pipeline-${domain}-${kernelNow()}`);
     const quality = getGenerationQuality();
 
     const ctx: PipelineContext & { config: DomainConfig } = {
@@ -56,7 +57,7 @@ export class PipelineRunner {
       }
 
       const artifact = current as Artifact;
-      const durationMs = Date.now() - startTime;
+      const durationMs = kernelNow() - startTime;
 
       return {
         artifact,
@@ -77,7 +78,7 @@ export class PipelineRunner {
         report: {
           domain,
           version: this.config.version,
-          durationMs: Date.now() - startTime,
+          durationMs: kernelNow() - startTime,
           quality: 'metadata-only',
           stages: executedStages,
         }

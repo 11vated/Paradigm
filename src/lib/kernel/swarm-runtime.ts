@@ -13,6 +13,7 @@
 import { createHash } from 'crypto';
 import { SeedAgent, type SeedAgentConfig as AgentConfig, type AgentState } from './seed-agent';
 import type { Seed, Artifact } from './engines';
+import { kernelNow, kernelNowIso } from './clock';
 
 // Swarm configuration
 export interface SwarmConfig {
@@ -70,7 +71,7 @@ export class SwarmRuntime {
 
   constructor(config: Partial<SwarmConfig> = {}) {
     this.config = {
-      swarmId: `swarm_${Date.now()}`,
+      swarmId: `swarm_${kernelNow()}`,
       maxAgents: 5,
       minAgents: 1,
       strategy: 'parallel',
@@ -100,7 +101,7 @@ export class SwarmRuntime {
         status: 'idle',
         tasksCompleted: 0,
         totalTime: 0,
-        lastHeartbeat: Date.now(),
+        lastHeartbeat: kernelNow(),
       });
     }
 
@@ -180,7 +181,7 @@ export class SwarmRuntime {
     if (!this.running) return;
 
     // Update heartbeats
-    const now = Date.now();
+    const now = kernelNow();
     for (const status of this.agentStatus.values()) {
       if (now - status.lastHeartbeat > 30000) {
         status.status = 'offline';
@@ -224,7 +225,7 @@ export class SwarmRuntime {
     if (status) {
       status.status = 'busy';
       status.currentTask = task.id;
-      status.lastHeartbeat = Date.now();
+      status.lastHeartbeat = kernelNow();
     }
 
     if (this.config.verbose) {
@@ -232,9 +233,9 @@ export class SwarmRuntime {
     }
 
     try {
-      const startTime = Date.now();
+      const startTime = kernelNow();
       const result = await agent.execute(task.goal);
-      const executionTime = Date.now() - startTime;
+      const executionTime = kernelNow() - startTime;
 
       task.status = result.success ? 'completed' : 'failed';
       task.result = {
@@ -281,7 +282,7 @@ export class SwarmRuntime {
       if (status) {
         status.status = 'idle';
         status.currentTask = undefined;
-        status.lastHeartbeat = Date.now();
+        status.lastHeartbeat = kernelNow();
       }
 
       // Move to completed
@@ -359,7 +360,7 @@ export class SwarmRuntime {
    * Wait for all tasks to complete
    */
   async waitForCompletion(timeout: number = 300000): Promise<void> {
-    const startTime = Date.now();
+    const startTime = kernelNow();
 
     return new Promise((resolve, reject) => {
       const check = () => {
@@ -369,7 +370,7 @@ export class SwarmRuntime {
           return;
         }
 
-        if (Date.now() - startTime > timeout) {
+        if (kernelNow() - startTime > timeout) {
           reject(new Error('Timeout waiting for task completion'));
           return;
         }

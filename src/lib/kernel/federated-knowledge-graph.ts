@@ -10,6 +10,7 @@
  */
 
 import { ethers } from 'ethers';
+import { kernelNow, kernelNowIso } from './clock';
 
 export interface KnowledgeNode {
   id: string;                    // Unique identifier (seed hash)
@@ -79,7 +80,7 @@ export class FederatedKnowledgeGraph {
       ...node,
       metadata: {
         ...node.metadata,
-        updatedAt: Date.now(),
+        updatedAt: kernelNow(),
       },
     });
     
@@ -348,7 +349,7 @@ export class FederatedKnowledgeGraph {
       metadata: {
         nodeId: this.nodeId,
         chainId: this.chainId,
-        exportedAt: Date.now(),
+        exportedAt: kernelNow(),
         nodeCount: this.localNodes.size,
       },
     };

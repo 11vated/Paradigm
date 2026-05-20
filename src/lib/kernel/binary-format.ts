@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import type { Seed, GeneratorOutput } from './engines';
 import { rngFromHash } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // Section types
 export enum SectionType {
@@ -485,7 +486,7 @@ export function createGseed(
 ): GseedPackage {
   const pkg: GseedPackage = {
     version: CURRENT_VERSION,
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
     flags: {
       hasC2PA: false,
       hasOutputs: true,
@@ -499,7 +500,7 @@ export function createGseed(
       author: metadata.author || 'Anonymous',
       title: metadata.title || `Generated ${generatorName}`,
       generator: generatorName,
-      created: new Date().toISOString(),
+      created: kernelNowIso(),
       license: metadata.license || 'CC0',
       ...metadata,
     },

@@ -9,6 +9,7 @@
 
 import { createHash, createSign, createVerify, generateKeyPairSync } from 'crypto';
 import { Xoshiro256StarStar } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 function sha256(data: string): string {
   return createHash('sha256').update(data).digest('hex');
@@ -86,7 +87,7 @@ export function createProvenance(
   const mutation: MutationRecord = {
     operation,
     parameters,
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
   };
   
   const provenance: SeedProvenance = {
@@ -94,7 +95,7 @@ export function createProvenance(
     root_seed_hash: seedHash,
     parent_seeds: parentSeeds,
     mutation_history: [mutation],
-    creation_timestamp: Date.now(),
+    creation_timestamp: kernelNow(),
     creator_public_key: '', // Set after key generation
     signature: '',
     metadata: {}
@@ -151,7 +152,7 @@ export function addMutation(
   const mutation: MutationRecord = {
     operation,
     parameters,
-    timestamp: Date.now(),
+    timestamp: kernelNow(),
     operator_public_key: sha256Sync(operatorPrivateKey)
   };
   

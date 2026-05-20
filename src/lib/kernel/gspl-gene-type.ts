@@ -2,6 +2,7 @@ import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar } from './rng';
 import { geneTypeRegistry, type GeneTypeOps, type GeneSchema } from './gene-type-registry';
+import { kernelNow, kernelNowIso } from './clock';
 
 export interface GSPLGeneTypeDefinition {
   name: string;
@@ -183,7 +184,7 @@ export function registerGSPLGeneType(
   }
 
   // Run law verification
-  const lawRng = new Xoshiro256StarStar(`law-${definition.name}-${Date.now()}`);
+  const lawRng = new Xoshiro256StarStar(`law-${definition.name}-${kernelNow()}`);
   const laws = geneTypeRegistry.verifyLaws(definition.name, lawRng);
   if (!laws.valid) {
     geneTypeRegistry.deleteCustom(definition.name);

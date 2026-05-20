@@ -11,6 +11,7 @@ import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { GeneticAlgorithm } from '../evolution/ga';
+import { kernelNow, kernelNowIso } from './clock';
 
 type Seed = {
   $gst?: string;
@@ -523,7 +524,7 @@ export class GsplInterpreter {
           }
         }
       }
-      this.context.seeds.set(`mutant_${Date.now()}`, mutated);
+      this.context.seeds.set(`mutant_${kernelNow()}`, mutated);
       return mutated;
     }
     if (target instanceof UniversalSeed) {
@@ -560,7 +561,7 @@ export class GsplInterpreter {
           child.genes[geneName] = geneA || geneB;
         }
       }
-      this.context.seeds.set(`breed_${Date.now()}`, child);
+      this.context.seeds.set(`breed_${kernelNow()}`, child);
       return child;
     }
     if (a instanceof UniversalSeed && b instanceof UniversalSeed) {
@@ -918,7 +919,7 @@ export class GsplInterpreter {
       }
     }
 
-    this.context.seeds.set(`breed_${Date.now()}`, child);
+    this.context.seeds.set(`breed_${kernelNow()}`, child);
     return child;
   }
 
@@ -964,7 +965,7 @@ export class GsplInterpreter {
       }
     }
     
-    this.context.seeds.set(`mutant_${Date.now()}`, mutated);
+    this.context.seeds.set(`mutant_${kernelNow()}`, mutated);
     return mutated;
   }
 

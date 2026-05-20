@@ -76,6 +76,19 @@ import {
 // ─── NEW: Native GSPL Agent ──────────────────────────────────────────────────
 import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
 
+// ─── NEW: Paradigm Friend (Phase 1) ──────────────────────────────────────────
+import {
+  createFriendSeed, breedFriends, mutateFriend, generateFriend,
+  getFriendStore, type FriendSeedData, type LineageNode,
+  generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
+  anchorFriendOnChain, prepareFriendMint,
+  prepareList, prepareDelist, prepareBuy,
+} from './src/lib/friend/index.js';
+
+// ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
+import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
+import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, directorBrief, directedSearch, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
 
@@ -138,6 +151,7 @@ import {
   MintSeedSchema,
   QftSimulateSchema, PipelineExecuteSchema,
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
+  FriendGenerateSchema, FriendBreedSchema, FriendMutateSchema, FriendAnchorSchema,
 } from './src/lib/validation/schemas.js';
 import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.js';
 
@@ -345,6 +359,11 @@ async function startServer() {
   const loadedTypes = loadCustomGeneTypes(dataDir);
   if (loadedTypes > 0) log('INFO', `Loaded ${loadedTypes} custom gene type(s) from storage`);
   log('INFO', `Data store initialized: ${store.backend}`, { seedCount: store.getSeedCount() });
+
+  // ── Friend Store (Phase 1/4): persistent FriendSeed registry ────────────
+  const friendStore = getFriendStore(path.join(dataDir, 'friends'));
+  await friendStore.load();
+  log('INFO', `Friend store initialized`, { friendCount: friendStore.count() });
 
   // ── Cache Layer (Redis or in-memory LRU) ────────────────────────────────
   const cache = await initCache();
@@ -2911,6 +2930,539 @@ async function startServer() {
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM FRIEND  (Phase 1)
+  // ═══════════════════════════════════════════════════════════════════════════
+  //
+  // All friend routes persist results to FriendStore. Breed/mutate accept
+  // either full seed strings (genesis-on-the-fly) OR existing friend IDs
+  // (cheaper, idempotent) via the *Id fields. If both are provided the
+  // ID takes precedence; if neither is provided for breed/mutate, the
+  // request is rejected.
+
+  /**
+   * Grow a Friend from a seed string. Result is persisted to FriendStore.
+   * POST /api/v1/friend/generate
+   * Body: { seed: string, name?: string, archetypeBias?: BodyArchetype }
+   * Returns: { friendSeed: FriendSeedData, artifact: FriendArtifact, stored: boolean }
+   */
+  app.post(
+    '/api/v1/friend/generate',
+    optionalAuth,
+    validateBody(FriendGenerateSchema),
+    async (req: any, res: any) => {
+      try {
+        const { seed, name, archetypeBias } = req.body;
+        const friendSeed = createFriendSeed(seed, { name, archetypeBias });
+        const artifact = generateFriend(friendSeed);
+        const existed = friendStore.has(friendSeed.id);
+        await friendStore.add(friendSeed);
+        log('INFO', existed ? 'Friend retrieved (already in store)' : 'Friend generated and stored', {
+          id: friendSeed.id,
+          name: friendSeed.name,
+        });
+        res.json({ friendSeed, artifact, stored: !existed });
+      } catch (e: any) {
+        log('ERROR', 'Friend generate error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend generation failed',
+          message: e.message,
+        });
+      }
+    },
+  );
+
+  /**
+   * Breed two Friends — deterministic child given the same parents+salt.
+   * POST /api/v1/friend/breed
+   *
+   * Body (one of two forms):
+   *   { parentA: string, parentB: string, salt?: string }   — genesis-on-fly
+   *   { parentAId: string, parentBId: string, salt?: string } — by stored ID
+   *   (mixed: parentAId + parentB also supported)
+   */
+  app.post(
+    '/api/v1/friend/breed',
+    optionalAuth,
+    validateBody(FriendBreedSchema),
+    async (req: any, res: any) => {
+      try {
+        const { parentA, parentB, parentAId, parentBId, salt } = req.body as {
+          parentA?: string; parentB?: string;
+          parentAId?: string; parentBId?: string;
+          salt?: string;
+        };
+
+        const resolve = (id?: string, str?: string, label?: string): FriendSeedData => {
+          if (id) {
+            const f = friendStore.get(id);
+            if (!f) throw new Error(`${label} id not found: ${id}`);
+            return f;
+          }
+          if (str) return createFriendSeed(str);
+          throw new Error(`${label} not provided (expected parent string or parentId)`);
+        };
+
+        const a = resolve(parentAId, parentA, 'parentA');
+        const b = resolve(parentBId, parentB, 'parentB');
+        const child = breedFriends(a, b, salt ?? '');
+        const artifact = generateFriend(child);
+
+        // Ensure all participants are stored (parents may be ephemeral genesis-on-fly)
+        await friendStore.add(a);
+        await friendStore.add(b);
+        const existed = friendStore.has(child.id);
+        await friendStore.add(child);
+
+        log('INFO', 'Friend bred', {
+          id: child.id,
+          parents: [a.id, b.id],
+          generation: child.derivation?.generation,
+          newToStore: !existed,
+        });
+        res.json({
+          friendSeed: child,
+          artifact,
+          parents: { a, b },
+          stored: !existed,
+        });
+      } catch (e: any) {
+        log('ERROR', 'Friend breed error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend breed failed',
+          message: e.message,
+        });
+      }
+    },
+  );
+
+  /**
+   * Mutate a Friend — deterministic given (parent, magnitude, salt).
+   * POST /api/v1/friend/mutate
+   * Body:
+   *   { parent: string, magnitude?: number, salt?: string }   — genesis-on-fly
+   *   { parentId: string, magnitude?: number, salt?: string } — by stored ID
+   */
+  app.post(
+    '/api/v1/friend/mutate',
+    optionalAuth,
+    validateBody(FriendMutateSchema),
+    async (req: any, res: any) => {
+      try {
+        const { parent, parentId, magnitude = 0.15, salt = '' } = req.body as {
+          parent?: string; parentId?: string;
+          magnitude?: number; salt?: string;
+        };
+
+        let parentSeed: FriendSeedData;
+        if (parentId) {
+          const found = friendStore.get(parentId);
+          if (!found) throw new Error(`parentId not found: ${parentId}`);
+          parentSeed = found;
+        } else if (parent) {
+          parentSeed = createFriendSeed(parent);
+        } else {
+          throw new Error('parent or parentId required');
+        }
+
+        const mutated = mutateFriend(parentSeed, magnitude, salt);
+        const artifact = generateFriend(mutated);
+
+        await friendStore.add(parentSeed);
+        const existed = friendStore.has(mutated.id);
+        await friendStore.add(mutated);
+
+        log('INFO', 'Friend mutated', {
+          id: mutated.id,
+          parent: parentSeed.id,
+          magnitude,
+          newToStore: !existed,
+        });
+        res.json({
+          friendSeed: mutated,
+          artifact,
+          parent: parentSeed,
+          stored: !existed,
+        });
+      } catch (e: any) {
+        log('ERROR', 'Friend mutate error', { error: e.message });
+        res.status(400).json({
+          error: 'Friend mutate failed',
+          message: e.message,
+        });
+      }
+    },
+  );
+
+  /**
+   * List Friends (paginated, optionally filtered by operator).
+   * GET /api/v1/friend/list?offset=0&limit=50&operator=genesis|breed|mutate
+   */
+  app.get('/api/v1/friend/list', (req: any, res: any) => {
+    const offset = Number.parseInt(String(req.query.offset ?? '0'), 10);
+    const limit = Math.min(Number.parseInt(String(req.query.limit ?? '50'), 10), 200);
+    const operator = req.query.operator as 'genesis' | 'breed' | 'mutate' | undefined;
+    const friends = friendStore.list({ offset, limit, operator });
+    res.json({
+      total: friendStore.count(),
+      offset, limit, operator: operator ?? null,
+      stats: friendStore.stats(),
+      friends,
+    });
+  });
+
+  /**
+   * Get one Friend (with artifact freshly grown — cheap, deterministic).
+   * GET /api/v1/friend/:id
+   */
+  app.get('/api/v1/friend/:id', (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const artifact = generateFriend(f);
+    res.json({ friendSeed: f, artifact });
+  });
+
+  /**
+   * Lineage (ancestors + descendants).
+   * GET /api/v1/friend/:id/lineage?depth=6
+   */
+  app.get('/api/v1/friend/:id/lineage', (req: any, res: any) => {
+    const depth = Math.min(Number.parseInt(String(req.query.depth ?? '6'), 10), 20);
+    const lineage = friendStore.lineage(req.params.id, depth);
+    if (!lineage) return res.status(404).json({ error: 'Friend not found' });
+    const self = friendStore.get(req.params.id)!;
+    res.json({
+      self: { id: self.id, name: self.name, generation: self.derivation?.generation ?? 0 },
+      ancestors: lineage.ancestors,
+      descendants: lineage.descendants,
+      depth,
+    });
+  });
+
+  /**
+   * Delete a Friend from the store (does not affect deterministic
+   * reproducibility — same seed string will recreate the same FriendSeed).
+   * DELETE /api/v1/friend/:id
+   */
+  app.delete('/api/v1/friend/:id', optionalAuth, async (req: any, res: any) => {
+    const removed = await friendStore.remove(req.params.id);
+    if (!removed) return res.status(404).json({ error: 'Friend not found' });
+    log('INFO', 'Friend removed from store', { id: req.params.id });
+    res.json({ removed: true, id: req.params.id });
+  });
+
+  // ─── Friend Sovereignty (Phase 1/5) ──────────────────────────────────────
+
+  /**
+   * Generate a fresh ECDSA-P256 keypair for signing Friends.
+   * POST /api/v1/friend/keys/generate
+   * Returns: { publicKey: string (JWK), privateKey: string (JWK), algorithm }
+   *
+   * SECURITY: the private key is returned exactly once. Persist it
+   * client-side. The server does not store private keys.
+   */
+  app.post('/api/v1/friend/keys/generate', async (_req: any, res: any) => {
+    try {
+      const kp = await generateFriendKeyPair();
+      log('INFO', 'Friend keypair generated', {
+        publicKeyFingerprint: crypto.createHash('sha256').update(kp.publicKey, 'utf8').digest('hex').slice(0, 12),
+      });
+      res.json({ ...kp, algorithm: 'ECDSA-P256-SHA256' });
+    } catch (e: any) {
+      log('ERROR', 'Keypair generation failed', { error: e.message });
+      res.status(500).json({ error: 'Keypair generation failed', detail: e.message });
+    }
+  });
+
+  /**
+   * Sign a stored Friend with a caller-provided keypair.
+   * POST /api/v1/friend/:id/sign
+   * Body: { privateKey: string (JWK), publicKey: string (JWK) }
+   * Returns: { friend: FriendSeedData (with sovereignty), sovereignty: FriendSovereignty }
+   *
+   * Persists the signed friend back to the store, replacing any previous
+   * sovereignty receipt. The signature covers the canonical JSON of the
+   * friend with the sovereignty field stripped — so re-signing is safe.
+   */
+  app.post('/api/v1/friend/:id/sign', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const { privateKey, publicKey } = req.body || {};
+      if (!privateKey || !publicKey) {
+        return res.status(400).json({ error: 'privateKey and publicKey (both JWK strings) are required' });
+      }
+      const signed = await signFriendSeed(friend, privateKey, publicKey);
+      await friendStore.add(signed);
+      log('INFO', 'Friend signed', {
+        id: signed.id,
+        publicKeyFingerprint: crypto.createHash('sha256').update(publicKey, 'utf8').digest('hex').slice(0, 12),
+      });
+      res.json({ friend: signed, sovereignty: signed.sovereignty });
+    } catch (e: any) {
+      log('WARN', 'Friend signing failed', { id: req.params.id, error: e.message });
+      res.status(400).json({ error: 'Signing failed', detail: e.message });
+    }
+  });
+
+  /**
+   * Verify a Friend's sovereignty receipt.
+   * POST /api/v1/friend/:id/verify
+   * Returns: VerifyResult { valid, reason?, payloadHash, author? }
+   *
+   * Public endpoint — anyone can verify any Friend's signature without
+   * authentication. That is the point of public-key sovereignty.
+   */
+  app.post('/api/v1/friend/:id/verify', async (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const result = await verifyFriendSovereignty(f);
+    res.json(result);
+  });
+
+  /**
+   * Prepare an on-chain mint (pure, no chain interaction).
+   * POST /api/v1/friend/:id/anchor/prepare
+   * Returns { tokenId, metadataUri, metadataHash, payloadHash, metadata }
+   */
+  app.post('/api/v1/friend/:id/anchor/prepare', optionalAuth, (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    if (!f.sovereignty) {
+      return res.status(400).json({ error: 'friend must be signed before anchoring on-chain' });
+    }
+    const prepared = prepareFriendMint(f);
+    res.json(prepared);
+  });
+
+  /**
+   * Anchor a signed Friend on-chain (ERC-721 mint).
+   * POST /api/v1/friend/:id/anchor
+   * Body: { ownerAddress, privateKey, contractAddress?, rpcUrl?, network?, ipfsCid? }
+   * Returns { friendSeed, anchor } on success, { error } on failure.
+   *
+   * Security: the privateKey is consumed per-request and NEVER logged
+   * or persisted server-side. Caller is responsible for key custody.
+   */
+  app.post(
+    '/api/v1/friend/:id/anchor',
+    optionalAuth,
+    validateBody(FriendAnchorSchema),
+    async (req: any, res: any) => {
+      const f = friendStore.get(req.params.id);
+      if (!f) return res.status(404).json({ error: 'Friend not found' });
+      log('INFO', 'Friend anchor requested', {
+        friendId: f.id,
+        ownerAddress: req.body.ownerAddress,
+        contractAddress: req.body.contractAddress ?? '(env default)',
+        network: req.body.network ?? '(default)',
+      });
+      const result = await anchorFriendOnChain({
+        friend: f,
+        ownerAddress: req.body.ownerAddress,
+        privateKey: req.body.privateKey,
+        contractAddress: req.body.contractAddress,
+        rpcUrl: req.body.rpcUrl,
+        network: req.body.network,
+        ipfsCid: req.body.ipfsCid,
+      });
+      if (!result.success || !result.anchor) {
+        log('WARN', 'Friend anchor failed', { friendId: f.id, error: result.error });
+        return res.status(400).json({ error: result.error ?? 'anchor failed' });
+      }
+      const updated: FriendSeedData = {
+        ...f,
+        sovereignty: { ...f.sovereignty!, anchor: result.anchor },
+      };
+      await friendStore.add(updated);
+      log('INFO', 'Friend anchored on-chain', {
+        friendId: f.id,
+        tokenId: result.anchor.tokenId,
+        txHash: result.anchor.transactionHash,
+        network: result.anchor.network,
+      });
+      res.json({ friendSeed: updated, anchor: result.anchor });
+    },
+  );
+
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM WORLD + QUEST + GAM
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PARADIGM WORLD + QUEST + GAME (Phase 3-5)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /** POST /api/v1/world/generate  Body: { seed: string } */
+  app.post('/api/v1/world/generate', async (req: any, res: any) => {
+    try {
+      const seedStr = String(req.body?.seed ?? '');
+      if (!seedStr) return res.status(400).json({ error: 'seed (string) required' });
+      const worldSeed = createWorldSeed(seedStr);
+      const artifact = generateWorld(worldSeed);
+      res.json({ worldSeed, artifact, hash: hashWorldArtifact(artifact) });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  /** POST /api/v1/quest/compose  Body: { friend: friendSeed, world: worldSeed }
+   *  Optional shorthand: { friendSeed: string, worldSeed: string } */
+  app.post('/api/v1/quest/compose', async (req: any, res: any) => {
+    try {
+      const friend = req.body?.friend
+        ?? (req.body?.friendSeed ? createFriendSeed(String(req.body.friendSeed)) : null);
+      const world = req.body?.world
+        ?? (req.body?.worldSeed ? generateWorld(createWorldSeed(String(req.body.worldSeed))) : null);
+      if (!friend || !world) return res.status(400).json({ error: 'friend + world (seed strings or full objects) required' });
+      // composeQuest accepts (friendSeed, worldArtifact)
+      const worldS = (world.genes) ? world : world;
+      const quest = composeQuest(friend, worldS);
+      res.json({ quest });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  /** POST /api/v1/game/generate
+   *  Body: { friendSeed: string, worldSeed: string }  - shorthand
+   *     OR { quest: QuestSeedData }                   - direct
+   *  Returns: { gameSeed, artifact, hash } */
+  app.post('/api/v1/game/generate', async (req: any, res: any) => {
+    try {
+      let quest: QuestSeedData;
+      if (req.body?.quest) {
+        quest = req.body.quest;
+      } else if (req.body?.friendSeed && req.body?.worldSeed) {
+        const f = createFriendSeed(String(req.body.friendSeed));
+        const w = createWorldSeed(String(req.body.worldSeed));
+        quest = composeQuest(f, w);
+      } else {
+        return res.status(400).json({ error: 'quest OR (friendSeed + worldSeed) required' });
+      }
+      const gameSeed = createGameSeed(quest);
+      const artifact = generateGame(gameSeed);
+      res.json({ gameSeed, artifact, hash: hashGameArtifact(artifact) });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+
+  // POST /api/v1/friend/:id/list — prepare ABI-encoded listing calldata.
+  app.post('/api/v1/friend/:id/list', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const priceWei = String(req.body?.priceWei || '');
+      if (!/^\d+$/.test(priceWei)) return res.status(400).json({ error: 'priceWei (decimal string) required' });
+      const prep = prepareList(friend, priceWei);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/friend/:id/delist
+  app.post('/api/v1/friend/:id/delist', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const prep = prepareDelist(friend);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/friend/:id/buy — for a buyer to prepare a buy() call.
+  app.post('/api/v1/friend/:id/buy', optionalAuth, async (req: any, res: any) => {
+    try {
+      const friend = await friendStore.get(req.params.id);
+      if (!friend) return res.status(404).json({ error: 'Friend not found' });
+      const priceWei = String(req.body?.priceWei || '');
+      if (!/^\d+$/.test(priceWei)) return res.status(400).json({ error: 'priceWei (decimal string) required' });
+      const prep = prepareBuy(friend, priceWei);
+      res.json({ ok: true, prep });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/evaluate — body: { friendSeed, worldSeed } → fitness report
+  app.post('/api/v1/game/evaluate', async (req: any, res: any) => {
+    try {
+      const f = createFriendSeed(String(req.body?.friendSeed || ''));
+      const w = createWorldSeed(String(req.body?.worldSeed || ''));
+      const q = composeQuest(f, w);
+      const game = generateGame(createGameSeed(q));
+      const report = evaluateGame(game);
+      res.json({ ok: true, friend: { id: f.id, name: f.name }, world: { id: w.id, name: w.name }, gameTitle: game.title, report });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/evolve — run a deterministic GA, return best + topK.
+  app.post('/api/v1/game/evolve', optionalAuth, (req: any, res: any) => {
+    try {
+      const opts = {
+        pop: Number(req.body.pop ?? 12),
+        generations: Number(req.body.generations ?? 3),
+        initialSeed: String(req.body.initialSeed ?? `evolve-${Date.now()}`),
+      };
+      if (opts.pop > 64 || opts.generations > 8) {
+        return res.status(400).json({ error: 'pop <= 64, generations <= 8' });
+      }
+      const result = evolveGames(opts);
+      res.json({ best: result.best, history: result.history, topK: result.topK });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+
+  // POST /api/v1/world/breed — { parentA, parentB, salt? }
+  app.post('/api/v1/world/breed', optionalAuth, (req: any, res: any) => {
+    try {
+      const a = createWorldSeed(String(req.body.parentA));
+      const b = createWorldSeed(String(req.body.parentB));
+      const child = breedWorlds(a, b, { salt: req.body.salt });
+      res.json({ worldSeed: child });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+  // POST /api/v1/world/mutate — { parent, salt?, magnitude? }
+  app.post('/api/v1/world/mutate', optionalAuth, (req: any, res: any) => {
+    try {
+      const p = createWorldSeed(String(req.body.parent));
+      const child = mutateWorld(p, { salt: req.body.salt, magnitude: Number(req.body.magnitude ?? 0.2) });
+      res.json({ worldSeed: child });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/map-elites — quality+diversity grid over (archetype, pace).
+  app.post('/api/v1/game/map-elites', optionalAuth, (req: any, res: any) => {
+    try {
+      const r = mapElitesGames({
+        initialSeed: String(req.body.initialSeed ?? 'me-' + Date.now()),
+        paceBins: Math.min(8, Math.max(1, Number(req.body.paceBins) || 4)),
+        iterations: Math.min(200, Math.max(4, Number(req.body.iterations) || 40)),
+        randomFraction: req.body.randomFraction,
+      });
+      res.json({
+        filled: r.filled, total: r.total, generations: r.generations,
+        best: r.best,
+        cells: [...r.cells.values()],
+      });
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/direct — Director Agent: natural-language → game spec → search.
+  app.post('/api/v1/game/direct', optionalAuth, (req: any, res: any) => {
+    try {
+      const brief = String(req.body.brief ?? '').slice(0, 1024);
+      if (!brief) return res.status(400).json({ error: 'brief required' });
+      const search = (req.body.search ?? true) !== false;
+      const spec = directorBrief(brief);
+      if (!search) return res.json({ spec });
+      const r = directedSearch(brief, {
+        iterations: Math.min(120, Math.max(8, Number(req.body.iterations) || 30)),
+      });
+      res.json(r);
+    } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
   // CATCH-ALL & VITE
   // ═══════════════════════════════════════════════════════════════════════════
 

@@ -7,6 +7,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng.js';
+import { kernelNow, kernelNowIso } from '../clock';
 
 interface PhysicsParams {
   gravity: number;
@@ -36,7 +37,7 @@ export async function generatePhysics(seed: Seed, outputPath: string): Promise<{
     bodies: generateBodies(params, rng),
     constraints: generateConstraints(params),
     metadata: {
-      generated: new Date().toISOString(),
+      generated: kernelNowIso(),
       seed_hash: seed.$hash ?? 'unknown',
       engine_version: '2.0.0'
     }

@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { Xoshiro256StarStar } from './rng';
+import { kernelNow, kernelNowIso } from './clock';
 
 // ─── SIGNATURE HISTORY ENTRY ───────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ export interface GeneLicense {
 
 const EMPTY_SIG: GeneSignatureEntry = {
   hash: '', operation: 'create', signer: 'anonymous',
-  timestamp: new Date().toISOString(),
+  timestamp: kernelNowIso(),
 };
 
 /**
@@ -56,11 +57,11 @@ export function createSovereignGene(
   pubkey?: string,
 ): SovereignGeneValue {
   const entry: GeneSignatureEntry = {
-    hash: crypto.createHash('sha256').update(JSON.stringify({ value, type, ts: Date.now() })).digest('hex'),
+    hash: crypto.createHash('sha256').update(JSON.stringify({ value, type, ts: kernelNow() })).digest('hex'),
     operation: 'create',
     signer: creator || 'anonymous',
     signerPubkey: pubkey,
-    timestamp: new Date().toISOString(),
+    timestamp: kernelNowIso(),
   };
 
   return {
@@ -95,12 +96,12 @@ export function mutateSovereignGene(
 
   const entry: GeneSignatureEntry = {
     hash: crypto.createHash('sha256').update(
-      previousHash + JSON.stringify(newValue) + mutator + Date.now(),
+      previousHash + JSON.stringify(newValue) + mutator + kernelNow(),
     ).digest('hex'),
     operation: 'mutate',
     signer: mutator,
     previousValue: gene.value,
-    timestamp: new Date().toISOString(),
+    timestamp: kernelNowIso(),
   };
 
   return {
@@ -137,7 +138,7 @@ export function breedSovereignGenes(
     operation: 'breed',
     signer: breeder,
     previousValue: { parentA: geneA.value, parentB: geneB.value },
-    timestamp: new Date().toISOString(),
+    timestamp: kernelNowIso(),
   };
 
   return {
@@ -166,11 +167,11 @@ export function licenseSovereignGene(
 ): SovereignGeneValue {
   const entry: GeneSignatureEntry = {
     hash: crypto.createHash('sha256').update(
-      JSON.stringify(license) + licensor + Date.now(),
+      JSON.stringify(license) + licensor + kernelNow(),
     ).digest('hex'),
     operation: 'license',
     signer: licensor,
-    timestamp: new Date().toISOString(),
+    timestamp: kernelNowIso(),
   };
 
   return {

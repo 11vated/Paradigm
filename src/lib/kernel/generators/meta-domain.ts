@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { kernelNow, kernelNowIso } from '../clock';
 
 // --- Domain Generator ---
 interface DomainGenParams {
@@ -34,7 +35,7 @@ export async function generateDomainGenerator(seed: Seed, outputPath: string): P
 
   const config = {
     metaDomain: 'domain_generator',
-    generated: new Date().toISOString(),
+    generated: kernelNowIso(),
     seedHash: seed.$hash || '',
     count: domains.length,
     domains,
@@ -158,7 +159,7 @@ export async function generateGeneGenerator(seed: Seed, outputPath: string): Pro
   const rng = rngFromHash(seed.$hash || '');
   
   const newGeneTypes = Array.from({ length: 5 }, (_, i) => ({
-    id: `gene_${Date.now()}_${i}`,
+    id: `gene_${kernelNow()}_${i}`,
     name: `custom_gene_${i}`,
     baseType: ['scalar', 'vector', 'struct', 'graph'][rng.nextInt(0, 3)],
     operators: {
