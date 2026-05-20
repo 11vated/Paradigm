@@ -32,7 +32,8 @@
     "quality:contract": "tsx scripts/quality-contract-report.mts",
     "replay": "tsx scripts/replay.mts",
     "golden:write": "tsx scripts/replay.mts golden",
-    "golden:verify": "tsx scripts/replay.mts verify-golden"
+    "golden:verify": "tsx scripts/replay.mts verify-golden",
+    "evolve": "tsx scripts/evolve_demo.mts"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

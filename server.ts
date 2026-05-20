@@ -87,7 +87,7 @@ import {
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
 import { createWorldSeed, generateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
-import { createGameSeed, generateGame, evaluateGame, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+import { createGameSeed, generateGame, evaluateGame, evolveGames, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
 import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
@@ -3388,6 +3388,25 @@ async function startServer() {
       const report = evaluateGame(game);
       res.json({ ok: true, friend: { id: f.id, name: f.name }, world: { id: w.id, name: w.name }, gameTitle: game.title, report });
     } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // POST /api/v1/game/evolve — run a deterministic GA, return best + topK.
+  app.post('/api/v1/game/evolve', optionalAuth, (req: any, res: any) => {
+    try {
+      const opts = {
+        pop: Number(req.body.pop ?? 12),
+        generations: Number(req.body.generations ?? 3),
+        initialSeed: String(req.body.initialSeed ?? `evolve-${Date.now()}`),
+      };
+      if (opts.pop > 64 || opts.generations > 8) {
+        return res.status(400).json({ error: 'pop <= 64, generations <= 8' });
+      }
+      const result = evolveGames(opts);
+      res.json({ best: result.best, history: result.history, topK: result.topK });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
   });
 
   // CATCH-ALL & VITE

@@ -8,3 +8,7 @@ export { GameQualityContract } from './contract';
 // ─── Phase 7 — Playability Oracle ────────────────────────────────────────────
 export { evaluate as evaluateGame } from './oracle';
 export type { FitnessReport, PathSummary } from './oracle';
+
+// ─── Phase 9 — Evolutionary game search ──────────────────────────────────────
+export { evolveGames } from './evolution';
+export type { Candidate, EvolveOptions } from './evolution';
