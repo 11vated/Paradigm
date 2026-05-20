@@ -42,6 +42,7 @@ import {
 // Self-register all contracts (side-effect imports).
 import '../src/lib/friend/contract';
 import '../src/lib/world/contract';
+import '../src/lib/game/contract';
 import '../src/lib/kernel/generators/sprite-contract';
 import '../src/lib/kernel/generators/music-contract';
 import '../src/lib/kernel/generators/narrative-contract';

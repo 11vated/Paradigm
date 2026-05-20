@@ -33,6 +33,36 @@
       "artifactHash": "dcd75bb153815fcf4556d570d3edd9372b11fec746e69e5ebd1e65b63f0e3e79"
     },
     {
+      "contract": "game",
+      "contractVersion": "1.0.0",
+      "curatedId": "game-iron-survival",
+      "artifactHash": "32245837d58070f3cd92700f70fdf3192907380189d3492706b98611c49c7dc9"
+    },
+    {
+      "contract": "game",
+      "contractVersion": "1.0.0",
+      "curatedId": "game-lyrelm-redemption",
+      "artifactHash": "3aba0db08a9139f36ca7bc61f8a467bdb6cab36bb877c849a2c9c71ff40bfc1d"
+    },
+    {
+      "contract": "game",
+      "contractVersion": "1.0.0",
+      "curatedId": "game-mythic-quest",
+      "artifactHash": "537693d84289a8239e11a9d1558a66608d71c11d44bb651a78b8792808ec1f5c"
+    },
+    {
+      "contract": "game",
+      "contractVersion": "1.0.0",
+      "curatedId": "game-spire-intrigue",
+      "artifactHash": "dba4b9c88e9bf0fac4b3a774ad91bbf178bfdc9097c4280388b81445b6821c20"
+    },
+    {
+      "contract": "game",
+      "contractVersion": "1.0.0",
+      "curatedId": "game-sun-mystery",
+      "artifactHash": "9e860baa1401956bf38385576490662cb19cf32c0d29a3d30475c94060e5351a"
+    },
+    {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-ambient-drift",
