@@ -21,6 +21,24 @@
       "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
     },
     {
+      "contract": "architecture",
+      "contractVersion": "1.0.0",
+      "curatedId": "architecture-bright",
+      "artifactHash": "c4bebc57c5026310d5708b6386dcf6ef4814f61a92cb3e347cf3b12a836c4fc1"
+    },
+    {
+      "contract": "architecture",
+      "contractVersion": "1.0.0",
+      "curatedId": "architecture-default",
+      "artifactHash": "c4bebc57c5026310d5708b6386dcf6ef4814f61a92cb3e347cf3b12a836c4fc1"
+    },
+    {
+      "contract": "architecture",
+      "contractVersion": "1.0.0",
+      "curatedId": "architecture-quiet",
+      "artifactHash": "c4bebc57c5026310d5708b6386dcf6ef4814f61a92cb3e347cf3b12a836c4fc1"
+    },
+    {
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-melody-c-major",
@@ -37,6 +55,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "audio-warm-pad",
       "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+    },
+    {
+      "contract": "cybersecurity",
+      "contractVersion": "1.0.0",
+      "curatedId": "cybersecurity-bright",
+      "artifactHash": "bc884a11f9727fd8f484512b98d5b2abab5335778cd304e94d2f7aec1e8ccf52"
+    },
+    {
+      "contract": "cybersecurity",
+      "contractVersion": "1.0.0",
+      "curatedId": "cybersecurity-default",
+      "artifactHash": "bc884a11f9727fd8f484512b98d5b2abab5335778cd304e94d2f7aec1e8ccf52"
+    },
+    {
+      "contract": "cybersecurity",
+      "contractVersion": "1.0.0",
+      "curatedId": "cybersecurity-quiet",
+      "artifactHash": "bc884a11f9727fd8f484512b98d5b2abab5335778cd304e94d2f7aec1e8ccf52"
     },
     {
       "contract": "dance",
@@ -111,6 +147,42 @@
       "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
     },
     {
+      "contract": "fashion",
+      "contractVersion": "1.0.0",
+      "curatedId": "fashion-bright",
+      "artifactHash": "5f94d29793760cbd1186c3f3f0528e0f4aa5388e9c0dfe55c2635f934db5771a"
+    },
+    {
+      "contract": "fashion",
+      "contractVersion": "1.0.0",
+      "curatedId": "fashion-default",
+      "artifactHash": "5f94d29793760cbd1186c3f3f0528e0f4aa5388e9c0dfe55c2635f934db5771a"
+    },
+    {
+      "contract": "fashion",
+      "contractVersion": "1.0.0",
+      "curatedId": "fashion-quiet",
+      "artifactHash": "5f94d29793760cbd1186c3f3f0528e0f4aa5388e9c0dfe55c2635f934db5771a"
+    },
+    {
+      "contract": "finance",
+      "contractVersion": "1.0.0",
+      "curatedId": "finance-bright",
+      "artifactHash": "779ac8a95f4e7ea34ecaf0156f173d0fb436749a39eac4a8edd8203671b3c5dd"
+    },
+    {
+      "contract": "finance",
+      "contractVersion": "1.0.0",
+      "curatedId": "finance-default",
+      "artifactHash": "779ac8a95f4e7ea34ecaf0156f173d0fb436749a39eac4a8edd8203671b3c5dd"
+    },
+    {
+      "contract": "finance",
+      "contractVersion": "1.0.0",
+      "curatedId": "finance-quiet",
+      "artifactHash": "779ac8a95f4e7ea34ecaf0156f173d0fb436749a39eac4a8edd8203671b3c5dd"
+    },
+    {
       "contract": "friend",
       "contractVersion": "1.0.0",
       "curatedId": "curated.friend.atlas",
@@ -169,6 +241,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "game-sun-mystery",
       "artifactHash": "9e860baa1401956bf38385576490662cb19cf32c0d29a3d30475c94060e5351a"
+    },
+    {
+      "contract": "healthcare",
+      "contractVersion": "1.0.0",
+      "curatedId": "healthcare-bright",
+      "artifactHash": "f1114c5c4e1da29fa836469b9bee5af3b4c97ca024d6591e3d01fd62ea5a68e1"
+    },
+    {
+      "contract": "healthcare",
+      "contractVersion": "1.0.0",
+      "curatedId": "healthcare-default",
+      "artifactHash": "f1114c5c4e1da29fa836469b9bee5af3b4c97ca024d6591e3d01fd62ea5a68e1"
+    },
+    {
+      "contract": "healthcare",
+      "contractVersion": "1.0.0",
+      "curatedId": "healthcare-quiet",
+      "artifactHash": "f1114c5c4e1da29fa836469b9bee5af3b4c97ca024d6591e3d01fd62ea5a68e1"
     },
     {
       "contract": "music",

@@ -24,6 +24,11 @@ import '../src/lib/kernel/generators/animation-contract';
 import '../src/lib/kernel/generators/ecosystem-contract';
 import '../src/lib/kernel/generators/edtech-contract';
 import '../src/lib/kernel/generators/education-contract';
+import '../src/lib/kernel/generators/fashion-contract';
+import '../src/lib/kernel/generators/architecture-contract';
+import '../src/lib/kernel/generators/cybersecurity-contract';
+import '../src/lib/kernel/generators/finance-contract';
+import '../src/lib/kernel/generators/healthcare-contract';
 import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();
