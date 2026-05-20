@@ -13,6 +13,9 @@ import '../src/lib/kernel/generators/narrative-contract';
 import '../src/lib/kernel/generators/visual2d-contract';
 import '../src/lib/kernel/generators/geometry3d-contract';
 import '../src/lib/kernel/generators/character-contract';
+import '../src/lib/kernel/generators/audio-contract';
+import '../src/lib/kernel/generators/dance-contract';
+import '../src/lib/kernel/generators/physics-contract';
 import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
 const results = await runAllConformance();

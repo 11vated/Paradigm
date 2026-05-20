@@ -3,6 +3,42 @@
   "generated": "1970-01-01T00:00:00.000Z",
   "entries": [
     {
+      "contract": "audio",
+      "contractVersion": "1.0.0",
+      "curatedId": "audio-melody-c-major",
+      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+    },
+    {
+      "contract": "audio",
+      "contractVersion": "1.0.0",
+      "curatedId": "audio-percussive",
+      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+    },
+    {
+      "contract": "audio",
+      "contractVersion": "1.0.0",
+      "curatedId": "audio-warm-pad",
+      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+    },
+    {
+      "contract": "dance",
+      "contractVersion": "1.0.0",
+      "curatedId": "dance-ballet",
+      "artifactHash": "dc68c9e422c70c6aaf5a5728b82ba9eba91c68d987883f2e8bb5e09374ab7c04"
+    },
+    {
+      "contract": "dance",
+      "contractVersion": "1.0.0",
+      "curatedId": "dance-contemporary",
+      "artifactHash": "dc68c9e422c70c6aaf5a5728b82ba9eba91c68d987883f2e8bb5e09374ab7c04"
+    },
+    {
+      "contract": "dance",
+      "contractVersion": "1.0.0",
+      "curatedId": "dance-hiphop",
+      "artifactHash": "dc68c9e422c70c6aaf5a5728b82ba9eba91c68d987883f2e8bb5e09374ab7c04"
+    },
+    {
       "contract": "friend",
       "contractVersion": "1.0.0",
       "curatedId": "curated.friend.atlas",
@@ -109,6 +145,24 @@
       "contractVersion": "3.0.0",
       "curatedId": "narrative-space-opera-epic",
       "artifactHash": "b864e327487b7862debb6c1601f292d6551306c8acb7e387e58729abd7ece743"
+    },
+    {
+      "contract": "physics",
+      "contractVersion": "1.0.0",
+      "curatedId": "physics-fluid",
+      "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
+    },
+    {
+      "contract": "physics",
+      "contractVersion": "1.0.0",
+      "curatedId": "physics-rigidbody",
+      "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
+    },
+    {
+      "contract": "physics",
+      "contractVersion": "1.0.0",
+      "curatedId": "physics-soft",
+      "artifactHash": "53a18a4526f6a0b806240af9d6b4ffa81ef535eead3715000faa2554394dc8b7"
     },
     {
       "contract": "sprite",
