@@ -1,0 +1,16 @@
+{
+  "name": "@paradigm/sdk",
+  "version": "0.1.0",
+  "description": "Paradigm Absolute — deterministic substrate SDK (Friend, World, Quest, Game).",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./friend": "./src/friend.ts",
+    "./world": "./src/world.ts",
+    "./game": "./src/game.ts"
+  },
+  "files": ["src/**/*.ts", "README.md"],
+  "license": "MIT",
+  "engines": { "node": ">=20" }
+}
