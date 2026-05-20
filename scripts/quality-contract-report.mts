@@ -5,6 +5,7 @@
  * each, prints the leaderboard, exits non-zero if any contract fails.
  */
 import '../src/lib/friend/contract';
+import '../src/lib/world/contract';
 import '../src/lib/kernel/generators/sprite-contract';
 import '../src/lib/kernel/generators/music-contract';
 import '../src/lib/kernel/generators/narrative-contract';

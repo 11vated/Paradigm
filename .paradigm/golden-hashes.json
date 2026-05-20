@@ -121,6 +121,36 @@
       "contractVersion": "3.0.0",
       "curatedId": "v2-organic",
       "artifactHash": "7fe001f6348aadc1d2f6717fcb665d704b6df001331cea21f259d8ab65bb0f9e"
+    },
+    {
+      "contract": "world",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.world.iron-marsh",
+      "artifactHash": "0115d8273a423d38f884ea5326049d267d68f8af44926807bd5cfc0844cc4211"
+    },
+    {
+      "contract": "world",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.world.lyrelm",
+      "artifactHash": "4614aab22e3b5ebe07d3c7c58dde654a92e364b05ba48dbb6ad9f36ab762de81"
+    },
+    {
+      "contract": "world",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.world.sun-quay",
+      "artifactHash": "a8461a49a9c4ddca0a4ab4765aec5137fe5e5e6ef58df5da0d0762e2751e1e08"
+    },
+    {
+      "contract": "world",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.world.thrice-fallen",
+      "artifactHash": "6ec3cc48cf503159b8d4452fd6d6a3b8a7d2b6d3ca5e030c0c2e8520ff31bac9"
+    },
+    {
+      "contract": "world",
+      "contractVersion": "1.0.0",
+      "curatedId": "curated.world.vellichor",
+      "artifactHash": "f4d0bfe2f48fac294353a7004f8c2336fc87988346b2e36f830f5da18f4dff89"
     }
   ]
 }
