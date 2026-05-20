@@ -3,6 +3,24 @@
   "generated": "1970-01-01T00:00:00.000Z",
   "entries": [
     {
+      "contract": "acoustics",
+      "contractVersion": "1.0.0",
+      "curatedId": "acoustics-bright",
+      "artifactHash": "4093a3232c018d9a396a584de1e579bb5cfe29f700e92535168f798aa2157dca"
+    },
+    {
+      "contract": "acoustics",
+      "contractVersion": "1.0.0",
+      "curatedId": "acoustics-default",
+      "artifactHash": "4093a3232c018d9a396a584de1e579bb5cfe29f700e92535168f798aa2157dca"
+    },
+    {
+      "contract": "acoustics",
+      "contractVersion": "1.0.0",
+      "curatedId": "acoustics-quiet",
+      "artifactHash": "4093a3232c018d9a396a584de1e579bb5cfe29f700e92535168f798aa2157dca"
+    },
+    {
       "contract": "advertising",
       "contractVersion": "1.0.0",
       "curatedId": "advertising-bright",
@@ -219,6 +237,78 @@
       "artifactHash": "dd644b11b969428db3894c072b5914c33b588a19e223b985ca95f61cb1d63afb"
     },
     {
+      "contract": "circuit",
+      "contractVersion": "1.0.0",
+      "curatedId": "circuit-bright",
+      "artifactHash": "7a23c636e21f01173d7ac76dc9095c2901cc93de0b3e96ea221707854aaab453"
+    },
+    {
+      "contract": "circuit",
+      "contractVersion": "1.0.0",
+      "curatedId": "circuit-default",
+      "artifactHash": "7a23c636e21f01173d7ac76dc9095c2901cc93de0b3e96ea221707854aaab453"
+    },
+    {
+      "contract": "circuit",
+      "contractVersion": "1.0.0",
+      "curatedId": "circuit-quiet",
+      "artifactHash": "7a23c636e21f01173d7ac76dc9095c2901cc93de0b3e96ea221707854aaab453"
+    },
+    {
+      "contract": "city",
+      "contractVersion": "1.0.0",
+      "curatedId": "city-bright",
+      "artifactHash": "087c6bd4317fdca48bbcd2f558bbb9a887e92793ec4e6c0e6d8c9942db03cf8e"
+    },
+    {
+      "contract": "city",
+      "contractVersion": "1.0.0",
+      "curatedId": "city-default",
+      "artifactHash": "087c6bd4317fdca48bbcd2f558bbb9a887e92793ec4e6c0e6d8c9942db03cf8e"
+    },
+    {
+      "contract": "city",
+      "contractVersion": "1.0.0",
+      "curatedId": "city-quiet",
+      "artifactHash": "087c6bd4317fdca48bbcd2f558bbb9a887e92793ec4e6c0e6d8c9942db03cf8e"
+    },
+    {
+      "contract": "climate",
+      "contractVersion": "1.0.0",
+      "curatedId": "climate-bright",
+      "artifactHash": "9cad39e841bd329bcdd49368c7dd17f7dcb94b9bb6145e06178dcc4597fec234"
+    },
+    {
+      "contract": "climate",
+      "contractVersion": "1.0.0",
+      "curatedId": "climate-default",
+      "artifactHash": "9cad39e841bd329bcdd49368c7dd17f7dcb94b9bb6145e06178dcc4597fec234"
+    },
+    {
+      "contract": "climate",
+      "contractVersion": "1.0.0",
+      "curatedId": "climate-quiet",
+      "artifactHash": "9cad39e841bd329bcdd49368c7dd17f7dcb94b9bb6145e06178dcc4597fec234"
+    },
+    {
+      "contract": "cloud",
+      "contractVersion": "1.0.0",
+      "curatedId": "cloud-bright",
+      "artifactHash": "9a4c93169b6c520e43f90967a6ae607f5d5ed8f7e2f90b52b6f9a5a4ab1de8b3"
+    },
+    {
+      "contract": "cloud",
+      "contractVersion": "1.0.0",
+      "curatedId": "cloud-default",
+      "artifactHash": "9a4c93169b6c520e43f90967a6ae607f5d5ed8f7e2f90b52b6f9a5a4ab1de8b3"
+    },
+    {
+      "contract": "cloud",
+      "contractVersion": "1.0.0",
+      "curatedId": "cloud-quiet",
+      "artifactHash": "9a4c93169b6c520e43f90967a6ae607f5d5ed8f7e2f90b52b6f9a5a4ab1de8b3"
+    },
+    {
       "contract": "cybersecurity",
       "contractVersion": "1.0.0",
       "curatedId": "cybersecurity-bright",
@@ -253,6 +343,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "dance-hiphop",
       "artifactHash": "dc68c9e422c70c6aaf5a5728b82ba9eba91c68d987883f2e8bb5e09374ab7c04"
+    },
+    {
+      "contract": "devops",
+      "contractVersion": "1.0.0",
+      "curatedId": "devops-bright",
+      "artifactHash": "8fc23f2f2efd6affde8185e4c4378f8bb0d3c51c860b84a8ed2c9472b2e99d42"
+    },
+    {
+      "contract": "devops",
+      "contractVersion": "1.0.0",
+      "curatedId": "devops-default",
+      "artifactHash": "8fc23f2f2efd6affde8185e4c4378f8bb0d3c51c860b84a8ed2c9472b2e99d42"
+    },
+    {
+      "contract": "devops",
+      "contractVersion": "1.0.0",
+      "curatedId": "devops-quiet",
+      "artifactHash": "8fc23f2f2efd6affde8185e4c4378f8bb0d3c51c860b84a8ed2c9472b2e99d42"
     },
     {
       "contract": "ecosystem",
@@ -309,6 +417,42 @@
       "artifactHash": "5de3d19738811c2417a4e05c95b95e2431fc3e15b6f242273d410389f1f550e2"
     },
     {
+      "contract": "energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "energy-bright",
+      "artifactHash": "4a197fd6d18de11c2d6757605101eb8546cb52fdd51a310ae77309f1cd2cb09e"
+    },
+    {
+      "contract": "energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "energy-default",
+      "artifactHash": "4a197fd6d18de11c2d6757605101eb8546cb52fdd51a310ae77309f1cd2cb09e"
+    },
+    {
+      "contract": "energy",
+      "contractVersion": "1.0.0",
+      "curatedId": "energy-quiet",
+      "artifactHash": "4a197fd6d18de11c2d6757605101eb8546cb52fdd51a310ae77309f1cd2cb09e"
+    },
+    {
+      "contract": "entertainment",
+      "contractVersion": "1.0.0",
+      "curatedId": "entertainment-bright",
+      "artifactHash": "9cc1e9726ff400021a249935c1a3c4e817b90bd80f629218c1cc284601708d50"
+    },
+    {
+      "contract": "entertainment",
+      "contractVersion": "1.0.0",
+      "curatedId": "entertainment-default",
+      "artifactHash": "9cc1e9726ff400021a249935c1a3c4e817b90bd80f629218c1cc284601708d50"
+    },
+    {
+      "contract": "entertainment",
+      "contractVersion": "1.0.0",
+      "curatedId": "entertainment-quiet",
+      "artifactHash": "9cc1e9726ff400021a249935c1a3c4e817b90bd80f629218c1cc284601708d50"
+    },
+    {
       "contract": "fashion",
       "contractVersion": "1.0.0",
       "curatedId": "fashion-bright",
@@ -327,6 +471,24 @@
       "artifactHash": "5f94d29793760cbd1186c3f3f0528e0f4aa5388e9c0dfe55c2635f934db5771a"
     },
     {
+      "contract": "film",
+      "contractVersion": "1.0.0",
+      "curatedId": "film-bright",
+      "artifactHash": "a1eca7bfda3dab6b74c5149968c03aca56753554a25eeb21c54c10245a456b58"
+    },
+    {
+      "contract": "film",
+      "contractVersion": "1.0.0",
+      "curatedId": "film-default",
+      "artifactHash": "a1eca7bfda3dab6b74c5149968c03aca56753554a25eeb21c54c10245a456b58"
+    },
+    {
+      "contract": "film",
+      "contractVersion": "1.0.0",
+      "curatedId": "film-quiet",
+      "artifactHash": "a1eca7bfda3dab6b74c5149968c03aca56753554a25eeb21c54c10245a456b58"
+    },
+    {
       "contract": "finance",
       "contractVersion": "1.0.0",
       "curatedId": "finance-bright",
@@ -343,6 +505,42 @@
       "contractVersion": "1.0.0",
       "curatedId": "finance-quiet",
       "artifactHash": "779ac8a95f4e7ea34ecaf0156f173d0fb436749a39eac4a8edd8203671b3c5dd"
+    },
+    {
+      "contract": "fitness",
+      "contractVersion": "1.0.0",
+      "curatedId": "fitness-bright",
+      "artifactHash": "b63fcbd632cd180a323e3ea7898c64423de64728c4a871c2998f585c00327683"
+    },
+    {
+      "contract": "fitness",
+      "contractVersion": "1.0.0",
+      "curatedId": "fitness-default",
+      "artifactHash": "b63fcbd632cd180a323e3ea7898c64423de64728c4a871c2998f585c00327683"
+    },
+    {
+      "contract": "fitness",
+      "contractVersion": "1.0.0",
+      "curatedId": "fitness-quiet",
+      "artifactHash": "b63fcbd632cd180a323e3ea7898c64423de64728c4a871c2998f585c00327683"
+    },
+    {
+      "contract": "food",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-bright",
+      "artifactHash": "f9b0040308f83788d9514be0636b9558fa23d8e2ca70f64c07b911e76db3c318"
+    },
+    {
+      "contract": "food",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-default",
+      "artifactHash": "f9b0040308f83788d9514be0636b9558fa23d8e2ca70f64c07b911e76db3c318"
+    },
+    {
+      "contract": "food",
+      "contractVersion": "1.0.0",
+      "curatedId": "food-quiet",
+      "artifactHash": "f9b0040308f83788d9514be0636b9558fa23d8e2ca70f64c07b911e76db3c318"
     },
     {
       "contract": "friend",
@@ -595,6 +793,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "retail-quiet",
       "artifactHash": "885b4040fa093aa6f211664ffc9eb7d9cc1431c2e43e10e04740801d5f95eeaf"
+    },
+    {
+      "contract": "robotics",
+      "contractVersion": "1.0.0",
+      "curatedId": "robotics-bright",
+      "artifactHash": "3bed4035ade046aa60d7077bacc85766d0c77d362a2bd8b084086a95dbdd359b"
+    },
+    {
+      "contract": "robotics",
+      "contractVersion": "1.0.0",
+      "curatedId": "robotics-default",
+      "artifactHash": "3bed4035ade046aa60d7077bacc85766d0c77d362a2bd8b084086a95dbdd359b"
+    },
+    {
+      "contract": "robotics",
+      "contractVersion": "1.0.0",
+      "curatedId": "robotics-quiet",
+      "artifactHash": "3bed4035ade046aa60d7077bacc85766d0c77d362a2bd8b084086a95dbdd359b"
     },
     {
       "contract": "shader",
