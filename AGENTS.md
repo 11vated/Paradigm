@@ -211,3 +211,54 @@ Required for full functionality:
 ---
 
 *Last updated: May 2026*
+---
+
+## Phase 0–7 Substrate Map (May 2026)
+
+After Phase 0 surgical cleanup and seven phases of substrate work, the canonical modules are:
+
+```
+src/lib/
+├── kernel/                  Deterministic RNG, generators, composition, clock shim, Quality Contract
+│   ├── clock.ts             kernelNow / kernelNowIso — injectable wall-clock
+│   ├── composition.ts       Functor bridges (Friend × any → projection, with custom transforms)
+│   ├── quality-contract.ts  5-clause conformance framework
+│   └── generators/          196 generators, 7 contract-conformant
+├── friend/                  Sovereign digital companion
+│   ├── types.ts             6 gene categories
+│   ├── genesis.ts           createFriendSeed (deterministic from string)
+│   ├── generator.ts         FriendSeed → FriendArtifact (phenotype + voice + SVG portrait)
+│   ├── breeding.ts          breedFriends / mutateFriend
+│   ├── store.ts             FriendStore (persistence + lineage)
+│   ├── sovereignty.ts       ECDSA-P256 sign + verify
+│   ├── onchain.ts           ERC-721 mint preparation
+│   ├── marketplace.ts       list / delist / buy calldata prep
+│   ├── composition.ts       Friend × {music, narrative, visual2d, character, audio, agent}
+│   └── contract.ts          Quality Contract (1.000)
+├── world/
+│   ├── types.ts             Era × biome × conflict
+│   ├── genesis.ts + generator.ts
+│   ├── quest.ts             Friend × World → QuestSeed (composeQuest)
+│   └── contract.ts          (1.000)
+└── game/
+    ├── types.ts + generator.ts   QuestSeed → playable scene graph
+    ├── oracle.ts                 evaluateGame → 5-axis FitnessReport
+    └── contract.ts          (0.900)
+```
+
+### Determinism contract (do not break)
+1. Inside `src/lib/{kernel,evolution,seeds,friend,world,game}` — never call `Math.random`, `crypto.random*`, `performance.now`, or read wall-clock directly. ESLint enforces this as a hard error.
+2. Need a timestamp? Use `kernelNow()` / `kernelNowIso()` from `src/lib/kernel/clock`.
+3. Need entropy? Derive a stable hash from inputs and feed it to `Xoshiro256StarStar` from `src/lib/kernel/rng`.
+4. Adding a new generator? Write a Quality Contract for it (`src/lib/<domain>/contract.ts`), import it from `scripts/quality-contract-report.mts`, and add curated seeds to `npm run golden:write` to lock in cross-machine determinism.
+
+### Web routes
+- `/studio` `/friend` `/world` `/quest` `/play` `/play/:friend/:world` `/lineage/:id` `/photorealistic-renderer`
+
+### Verification commands (always run before commit)
+```bash
+npm run typecheck          # 0 errors
+npm run determinism:check  # 0 hard violations
+npm run quality:contract   # 7/7 contracts green
+npm run golden:verify      # 30/30 hashes match
+```
