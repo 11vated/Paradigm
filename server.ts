@@ -15,6 +15,7 @@
 
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
+import { kernelNowIso } from './src/lib/kernel/clock.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -3461,6 +3462,36 @@ async function startServer() {
       });
       res.json(r);
     } catch (e: any) { res.status(500).json({ error: e.message }); }
+  });
+
+
+  // ── Friend episodic memory (notes) ────────────────────────────────────────
+  app.get('/api/v1/friend/:id/notes', (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const limit = req.query.limit ? Math.max(1, Math.min(500, Number(req.query.limit))) : undefined;
+    return res.json({ notes: friendStore.getNotes(f.id, limit) });
+  });
+
+  app.post('/api/v1/friend/:id/notes', optionalAuth, (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const text = String(req.body?.text ?? '').trim();
+    if (!text) return res.status(400).json({ error: 'text required' });
+    if (text.length > 4096) return res.status(400).json({ error: 'text too long (max 4096)' });
+    const kind = (req.body?.kind ?? 'user') as 'user' | 'friend' | 'observation' | 'milestone';
+    if (!['user', 'friend', 'observation', 'milestone'].includes(kind)) {
+      return res.status(400).json({ error: 'invalid kind' });
+    }
+    const note = friendStore.appendNote(f.id, { text, kind, recordedAt: kernelNowIso() });
+    return res.json({ ok: true, note });
+  });
+
+  app.delete('/api/v1/friend/:id/notes', optionalAuth, (req: any, res: any) => {
+    const f = friendStore.get(req.params.id);
+    if (!f) return res.status(404).json({ error: 'Friend not found' });
+    const cleared = friendStore.clearNotes(f.id);
+    return res.json({ ok: true, cleared });
   });
 
   // CATCH-ALL & VITE

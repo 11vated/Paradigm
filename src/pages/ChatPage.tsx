@@ -52,6 +52,15 @@ export default function ChatPage() {
     setHistory(h => [...h, userTurn, friendTurn]);
     setDraft('');
     if (voiceOn && isSpeechAvailable()) speakAs(friend, reply);
+    // Episodic memory — fire-and-forget; the kernel clock stamps server-side.
+    void fetch(`/api/v1/friend/${friend.id}/notes`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, kind: 'user' }),
+    }).catch(() => {});
+    void fetch(`/api/v1/friend/${friend.id}/notes`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: reply, kind: 'friend' }),
+    }).catch(() => {});
   }
 
   function onKey(e: React.KeyboardEvent<HTMLTextAreaElement>) {
