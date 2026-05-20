@@ -8,6 +8,7 @@ import WorldPage from '@/pages/WorldPage';
 import QuestPage from '@/pages/QuestPage';
 import LineagePage from '@/pages/LineagePage';
 import ReplPage from '@/pages/ReplPage';
+import EvolvePage from '@/pages/EvolvePage';
 import { WorldSeedPage } from '@/pages/WorldSeedPage';
 import { PhotorealisticRendererDemo } from '@/components/rendering/PhotorealisticRendererDemo';
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/quest" element={<QuestPage />} />
         <Route path="/lineage/:id" element={<LineagePage />} />
         <Route path="/repl" element={<ReplPage />} />
+        <Route path="/evolve" element={<EvolvePage />} />
         <Route path="/worldseed" element={<WorldSeedPage />} />
         <Route path="/rendering-demo" element={
           <div style={{ minHeight: '100vh', padding: 32, background: 'var(--p-canvas)' }}>
