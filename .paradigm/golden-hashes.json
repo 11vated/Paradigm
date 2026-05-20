@@ -75,6 +75,24 @@
       "artifactHash": "6d9378b546d4a3df72e1cbf86a58b690d8bfc5cd14d6c96765f65b82d840f667"
     },
     {
+      "contract": "alife",
+      "contractVersion": "1.0.0",
+      "curatedId": "alife-bright",
+      "artifactHash": "61dd48121334cd3a995340e558ed2cc53e89cd7dd54547fca972d048ec99b0e6"
+    },
+    {
+      "contract": "alife",
+      "contractVersion": "1.0.0",
+      "curatedId": "alife-default",
+      "artifactHash": "61dd48121334cd3a995340e558ed2cc53e89cd7dd54547fca972d048ec99b0e6"
+    },
+    {
+      "contract": "alife",
+      "contractVersion": "1.0.0",
+      "curatedId": "alife-quiet",
+      "artifactHash": "61dd48121334cd3a995340e558ed2cc53e89cd7dd54547fca972d048ec99b0e6"
+    },
+    {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-bright",
@@ -181,6 +199,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "beer-quiet",
       "artifactHash": "3a3974f5a45d04e5bd7860a13f32f3dd9a1bd9b7cf68f183443ebddea1a9061b"
+    },
+    {
+      "contract": "biomedical",
+      "contractVersion": "1.0.0",
+      "curatedId": "biomedical-bright",
+      "artifactHash": "dd9298231b7b00d109b2ee4c3d41dbce60b1e7feb7d28f444ab2ac5757f1fc38"
+    },
+    {
+      "contract": "biomedical",
+      "contractVersion": "1.0.0",
+      "curatedId": "biomedical-default",
+      "artifactHash": "dd9298231b7b00d109b2ee4c3d41dbce60b1e7feb7d28f444ab2ac5757f1fc38"
+    },
+    {
+      "contract": "biomedical",
+      "contractVersion": "1.0.0",
+      "curatedId": "biomedical-quiet",
+      "artifactHash": "dd9298231b7b00d109b2ee4c3d41dbce60b1e7feb7d28f444ab2ac5757f1fc38"
     },
     {
       "contract": "biotechnology",
@@ -415,6 +451,42 @@
       "contractVersion": "1.0.0",
       "curatedId": "devops-quiet",
       "artifactHash": "8fc23f2f2efd6affde8185e4c4378f8bb0d3c51c860b84a8ed2c9472b2e99d42"
+    },
+    {
+      "contract": "drones",
+      "contractVersion": "1.0.0",
+      "curatedId": "drones-bright",
+      "artifactHash": "d98f0f4316c3e0d37c78f09e1e0b5cda0ba32fcabcf224c3c935538822ebb182"
+    },
+    {
+      "contract": "drones",
+      "contractVersion": "1.0.0",
+      "curatedId": "drones-default",
+      "artifactHash": "d98f0f4316c3e0d37c78f09e1e0b5cda0ba32fcabcf224c3c935538822ebb182"
+    },
+    {
+      "contract": "drones",
+      "contractVersion": "1.0.0",
+      "curatedId": "drones-quiet",
+      "artifactHash": "d98f0f4316c3e0d37c78f09e1e0b5cda0ba32fcabcf224c3c935538822ebb182"
+    },
+    {
+      "contract": "drug",
+      "contractVersion": "1.0.0",
+      "curatedId": "drug-bright",
+      "artifactHash": "4bcf60c66adc2fc3d7bc3c1b12a728f78ffc0607834b04c3698fcc2cb141b025"
+    },
+    {
+      "contract": "drug",
+      "contractVersion": "1.0.0",
+      "curatedId": "drug-default",
+      "artifactHash": "4bcf60c66adc2fc3d7bc3c1b12a728f78ffc0607834b04c3698fcc2cb141b025"
+    },
+    {
+      "contract": "drug",
+      "contractVersion": "1.0.0",
+      "curatedId": "drug-quiet",
+      "artifactHash": "4bcf60c66adc2fc3d7bc3c1b12a728f78ffc0607834b04c3698fcc2cb141b025"
     },
     {
       "contract": "ecosystem",
@@ -801,6 +873,24 @@
       "artifactHash": "6a2a22e10509aa435db807dcca94c16175cc64ece0dcf050195f24fdc532b336"
     },
     {
+      "contract": "jewelry",
+      "contractVersion": "1.0.0",
+      "curatedId": "jewelry-bright",
+      "artifactHash": "1f16463d8eb137ae1ae8d176a7384a8ddc40427f5185335aca20e5b1d9558ac9"
+    },
+    {
+      "contract": "jewelry",
+      "contractVersion": "1.0.0",
+      "curatedId": "jewelry-default",
+      "artifactHash": "1f16463d8eb137ae1ae8d176a7384a8ddc40427f5185335aca20e5b1d9558ac9"
+    },
+    {
+      "contract": "jewelry",
+      "contractVersion": "1.0.0",
+      "curatedId": "jewelry-quiet",
+      "artifactHash": "1f16463d8eb137ae1ae8d176a7384a8ddc40427f5185335aca20e5b1d9558ac9"
+    },
+    {
       "contract": "journalism",
       "contractVersion": "1.0.0",
       "curatedId": "journalism-bright",
@@ -945,6 +1035,24 @@
       "artifactHash": "8ca9ed6ffc17aebbe4169921dffffc1b57ff4ff9d57200d8eca41b8af3f23332"
     },
     {
+      "contract": "market",
+      "contractVersion": "1.0.0",
+      "curatedId": "market-bright",
+      "artifactHash": "c4f6c396f5f2618d66877b8d390e5963316194cb0bcaaa8ba463c0adc36f6d7d"
+    },
+    {
+      "contract": "market",
+      "contractVersion": "1.0.0",
+      "curatedId": "market-default",
+      "artifactHash": "c4f6c396f5f2618d66877b8d390e5963316194cb0bcaaa8ba463c0adc36f6d7d"
+    },
+    {
+      "contract": "market",
+      "contractVersion": "1.0.0",
+      "curatedId": "market-quiet",
+      "artifactHash": "c4f6c396f5f2618d66877b8d390e5963316194cb0bcaaa8ba463c0adc36f6d7d"
+    },
+    {
       "contract": "marketing",
       "contractVersion": "1.0.0",
       "curatedId": "marketing-bright",
@@ -1039,6 +1147,24 @@
       "contractVersion": "2.0.0",
       "curatedId": "music-jazz-walking-bass",
       "artifactHash": "69f5cb749a6c67c446055d8c734d5c3c9c4ea44f8d0ceac43d87ac0c1d678e6d"
+    },
+    {
+      "contract": "nanobot",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanobot-bright",
+      "artifactHash": "1d5caa1f40fe7316967a2f4fbd1cfd1ff1e7d6bd127dc29b7cd6213ffd3cc5f2"
+    },
+    {
+      "contract": "nanobot",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanobot-default",
+      "artifactHash": "1d5caa1f40fe7316967a2f4fbd1cfd1ff1e7d6bd127dc29b7cd6213ffd3cc5f2"
+    },
+    {
+      "contract": "nanobot",
+      "contractVersion": "1.0.0",
+      "curatedId": "nanobot-quiet",
+      "artifactHash": "1d5caa1f40fe7316967a2f4fbd1cfd1ff1e7d6bd127dc29b7cd6213ffd3cc5f2"
     },
     {
       "contract": "nanotechnology",
@@ -1353,6 +1479,24 @@
       "artifactHash": "244fbf445c921b9203300d587f17fac70a187fec37167ecce17413ab64392532"
     },
     {
+      "contract": "spirits",
+      "contractVersion": "1.0.0",
+      "curatedId": "spirits-bright",
+      "artifactHash": "114ffc76e520eb98457cf9a97eb2b921012ec470bb5ca83528f5394af162bece"
+    },
+    {
+      "contract": "spirits",
+      "contractVersion": "1.0.0",
+      "curatedId": "spirits-default",
+      "artifactHash": "114ffc76e520eb98457cf9a97eb2b921012ec470bb5ca83528f5394af162bece"
+    },
+    {
+      "contract": "spirits",
+      "contractVersion": "1.0.0",
+      "curatedId": "spirits-quiet",
+      "artifactHash": "114ffc76e520eb98457cf9a97eb2b921012ec470bb5ca83528f5394af162bece"
+    },
+    {
       "contract": "sports",
       "contractVersion": "1.0.0",
       "curatedId": "sports-bright",
@@ -1393,6 +1537,42 @@
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
       "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+    },
+    {
+      "contract": "tea",
+      "contractVersion": "1.0.0",
+      "curatedId": "tea-bright",
+      "artifactHash": "0a93815a9f85b774ed17afe4b67088c5f05e66ea070366d7600bd3708f5cd0d0"
+    },
+    {
+      "contract": "tea",
+      "contractVersion": "1.0.0",
+      "curatedId": "tea-default",
+      "artifactHash": "0a93815a9f85b774ed17afe4b67088c5f05e66ea070366d7600bd3708f5cd0d0"
+    },
+    {
+      "contract": "tea",
+      "contractVersion": "1.0.0",
+      "curatedId": "tea-quiet",
+      "artifactHash": "0a93815a9f85b774ed17afe4b67088c5f05e66ea070366d7600bd3708f5cd0d0"
+    },
+    {
+      "contract": "telecommunications",
+      "contractVersion": "1.0.0",
+      "curatedId": "telecommunications-bright",
+      "artifactHash": "2bbbbcab2cfdb940a349791581bf09f1491a6fb05a7ac616d955284796ca60f0"
+    },
+    {
+      "contract": "telecommunications",
+      "contractVersion": "1.0.0",
+      "curatedId": "telecommunications-default",
+      "artifactHash": "2bbbbcab2cfdb940a349791581bf09f1491a6fb05a7ac616d955284796ca60f0"
+    },
+    {
+      "contract": "telecommunications",
+      "contractVersion": "1.0.0",
+      "curatedId": "telecommunications-quiet",
+      "artifactHash": "2bbbbcab2cfdb940a349791581bf09f1491a6fb05a7ac616d955284796ca60f0"
     },
     {
       "contract": "textiles",
@@ -1485,6 +1665,24 @@
       "artifactHash": "ff95d983ba9975574f48fcb5b89ef3d1056695d716656d8943b174361d132688"
     },
     {
+      "contract": "ui",
+      "contractVersion": "1.0.0",
+      "curatedId": "ui-bright",
+      "artifactHash": "ed6a7cc856c4a978b4d713771d336ca8661b83d0d4baf160285670856630f164"
+    },
+    {
+      "contract": "ui",
+      "contractVersion": "1.0.0",
+      "curatedId": "ui-default",
+      "artifactHash": "ed6a7cc856c4a978b4d713771d336ca8661b83d0d4baf160285670856630f164"
+    },
+    {
+      "contract": "ui",
+      "contractVersion": "1.0.0",
+      "curatedId": "ui-quiet",
+      "artifactHash": "ed6a7cc856c4a978b4d713771d336ca8661b83d0d4baf160285670856630f164"
+    },
+    {
       "contract": "universe",
       "contractVersion": "1.0.0",
       "curatedId": "universe-bright",
@@ -1503,6 +1701,24 @@
       "artifactHash": "1903f561724147a96517fe3fb1a24e3b9ce340de31b4085c2c3c1922947568e5"
     },
     {
+      "contract": "vehicle",
+      "contractVersion": "1.0.0",
+      "curatedId": "vehicle-bright",
+      "artifactHash": "e48e8902835f9a20cd7cdc8de481a99c3a11a112d09aae44853feb92a8ce2425"
+    },
+    {
+      "contract": "vehicle",
+      "contractVersion": "1.0.0",
+      "curatedId": "vehicle-default",
+      "artifactHash": "e48e8902835f9a20cd7cdc8de481a99c3a11a112d09aae44853feb92a8ce2425"
+    },
+    {
+      "contract": "vehicle",
+      "contractVersion": "1.0.0",
+      "curatedId": "vehicle-quiet",
+      "artifactHash": "e48e8902835f9a20cd7cdc8de481a99c3a11a112d09aae44853feb92a8ce2425"
+    },
+    {
       "contract": "visual2d",
       "contractVersion": "3.0.0",
       "curatedId": "v2-architectural",
@@ -1519,6 +1735,42 @@
       "contractVersion": "3.0.0",
       "curatedId": "v2-organic",
       "artifactHash": "7fe001f6348aadc1d2f6717fcb665d704b6df001331cea21f259d8ab65bb0f9e"
+    },
+    {
+      "contract": "vr",
+      "contractVersion": "1.0.0",
+      "curatedId": "vr-bright",
+      "artifactHash": "2bed3424e811f56129a11473d4ec2934a7628dfcedf540f7199150dff0d9d2f2"
+    },
+    {
+      "contract": "vr",
+      "contractVersion": "1.0.0",
+      "curatedId": "vr-default",
+      "artifactHash": "2bed3424e811f56129a11473d4ec2934a7628dfcedf540f7199150dff0d9d2f2"
+    },
+    {
+      "contract": "vr",
+      "contractVersion": "1.0.0",
+      "curatedId": "vr-quiet",
+      "artifactHash": "2bed3424e811f56129a11473d4ec2934a7628dfcedf540f7199150dff0d9d2f2"
+    },
+    {
+      "contract": "wearables",
+      "contractVersion": "1.0.0",
+      "curatedId": "wearables-bright",
+      "artifactHash": "a4e4915c7b775715ca944178afb028928176b28620632ca1dd541994460d2445"
+    },
+    {
+      "contract": "wearables",
+      "contractVersion": "1.0.0",
+      "curatedId": "wearables-default",
+      "artifactHash": "a4e4915c7b775715ca944178afb028928176b28620632ca1dd541994460d2445"
+    },
+    {
+      "contract": "wearables",
+      "contractVersion": "1.0.0",
+      "curatedId": "wearables-quiet",
+      "artifactHash": "a4e4915c7b775715ca944178afb028928176b28620632ca1dd541994460d2445"
     },
     {
       "contract": "wine",
