@@ -1,4 +1,5 @@
 // Domain Generators Index — Beyond Omega (100+ domains)
+import './contracts'; // side-effect: registers all 126 generator quality contracts
 // Auto-generated export file
 
 // Core domains (built earlier)
