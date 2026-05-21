@@ -34,8 +34,28 @@ export const AcousticsQualityContract: QualityContract<S, A, any> = {
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {
-    const score = a.filePath.length > 0 ? 0.9 : 0;
-    return { score, axes: { hasOutput: score }, notes: [] };
+    const axes: Record<string, number> = {};
+    const notes: string[] = [];
+    axes.hasOutput = a.filePath.length > 0 ? 1 : 0;
+    if (!axes.hasOutput) return { score: 0, axes, notes: ['Empty output'], conformsTo: '1.0.0' };
+    let parsed: any = null;
+    try { parsed = JSON.parse(a.filePath); } catch { /* not JSON, ignore */ }
+    if (parsed && typeof parsed === 'object') {
+      axes.isJson = 1;
+      axes.hasReverb = parsed.reverb !== undefined ? 1 : 0;
+      axes.hasResonance = parsed.resonance !== undefined ? 1 : 0;
+      axes.hasFrequencies = Array.isArray(parsed.frequencies) ? 1 : 0;
+      axes.hasIR = Array.isArray(parsed.impulseResponse) || Array.isArray(parsed.ir) ? 1 : 0;
+      notes.push(`fields=${Object.keys(parsed).length}`);
+    } else {
+      axes.isJson = 0;
+      notes.push('output is not JSON-decodable');
+    }
+    const sizeBytes = a.filePath.length;
+    axes.sizeOk = sizeBytes > 50 ? 1 : sizeBytes / 50;
+    const filled = ['hasReverb','hasResonance','hasFrequencies','hasIR'].reduce((s,k)=>s+(axes[k]??0),0);
+    const score = 0.3 * axes.isJson + 0.5 * (filled / 4) + 0.2 * axes.sizeOk;
+    return { score: Math.round(score * 100) / 100, axes, notes, conformsTo: '1.0.0' };
   },
   hashArtifact,
 };

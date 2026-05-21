@@ -6,6 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateAudio } from './audio';
+import { analyzePcm, audioQualityAxes } from '../quality/audio-features';
 import { registerContract, type QualityContract } from '../quality-contract';
 
 interface AudioSeed { $hash?: string; $name?: string; genes?: any; }
@@ -31,11 +32,20 @@ export const AudioQualityContract: QualityContract<AudioSeed, AudioArtifact, Aud
   synthesize: synth,
   invert: (a) => ({ sampleRate: a.meta.sampleRate, durationS: a.meta.duration, bytes: a.meta.size }),
   rate: (a) => {
-    const ok = a.wav.length > 44 && a.wav.slice(0, 4).toString() === 'RIFF';
+    const isWav = a.wav.length > 44 && a.wav.slice(0, 4).toString() === 'RIFF';
+    if (!isWav) {
+      return { score: 0, axes: { isWav: 0 }, notes: ['Invalid WAV header'], conformsTo: '1.0.0' };
+    }
+    const stats = analyzePcm(a.wav);
+    if (!stats) {
+      return { score: 0.2, axes: { isWav: 1, decodable: 0 }, notes: ['WAV header OK but PCM not decodable'], conformsTo: '1.0.0' };
+    }
+    const axes: Record<string, number> = { isWav: 1, decodable: 1, ...audioQualityAxes(stats) };
+    const score = (axes.dynamicRangeOk * 0.25 + axes.nonSilent * 0.25 + axes.spectralBalance * 0.20 + axes.notDcOffset * 0.15 + axes.notClipping * 0.15);
     return {
-      score: ok ? 0.9 : 0,
-      axes: { isWav: ok ? 1 : 0, hasContent: a.wav.length > 1000 ? 1 : 0 },
-      notes: [ok ? 'Valid WAV header' : 'Invalid WAV'],
+      score: Math.round(score * 100) / 100,
+      axes,
+      notes: [`rms=${stats.rms.toFixed(3)}, peak=${stats.peakAmp.toFixed(3)}, centroidHz=${stats.spectralCentroidHz.toFixed(0)}`],
     };
   },
   curated: () => [
