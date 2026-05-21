@@ -15,6 +15,12 @@ export default defineConfig(({mode}) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
+        crypto: path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
+        'node:crypto': path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
+        fs: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'node:fs': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        os: path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
+        'node:os': path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
       },
     },
     server: {
