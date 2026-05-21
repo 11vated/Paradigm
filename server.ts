@@ -17,6 +17,7 @@
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
 import { kernelNowIso } from './src/lib/kernel/clock.js';
 import { registerHealthRoutes } from './src/server/routes/health.js';
+import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -307,6 +308,9 @@ async function startServer() {
     checkSbert, checkPostgres, checkStore, checkRedis, buildReport,
     getAllDomains, GENE_TYPES,
   });
+
+  // ── Sovereign Agent — POST /run, /canon/ingest, GET /canon/search, /info ──
+  registerSovereignAgentRoutes(app);
   const saveSeeds = () => { store.persist(); };
 
   // Audit helper — logs mutations with user context
