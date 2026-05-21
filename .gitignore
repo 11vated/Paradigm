@@ -39,3 +39,6 @@ test-*.ts (except src/ tests/)
 test-results/
 playwright-report/
 
+artifacts/
+cache/
+.compile-token.cjs
