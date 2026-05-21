@@ -169,6 +169,18 @@ export class SovereignAgent {
       (assembled.seed as { $reality?: typeof reality }).$reality = reality;
     }
 
+    // Working — recent utterance trail (kept around for live-context Stage 0)
+    if (!opts.ephemeral && this.memory) {
+      try {
+        await this.memory.writeTo('working', {
+          key: `utt:${kernelNow()}`,
+          topic: 'utterance',
+          value: { raw, intentTop: intent.top, seedHash: assembled.seed.$hash },
+          source: 'sovereign-agent',
+        } as any);
+      } catch { /* working memory is best-effort */ }
+    }
+
     // Stage 6 — canonical archive (episodic + semantic + canon RAG)
     if (!opts.ephemeral) {
       const t6 = kernelNow();
