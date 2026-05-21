@@ -34,6 +34,8 @@ export interface MemoryEntry {
 }
 
 export interface MemoryQuery {
+  library?: string;
+  key?: string;
   topic?: string;
   /** Substring / phrase match on serialized value */
   text?: string;
