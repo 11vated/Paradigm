@@ -76,3 +76,12 @@ export interface MemoryOrchestrator {
   /** Direct access for layer-specific operations */
   layer(name: MemoryLayerName): MemoryLayer;
 }
+
+/** Local embedder contract — Transformers.js, llama.cpp embeddings, or any future provider. */
+export interface Embedder {
+  readonly model: string;
+  readonly dim: number;
+  ready(): Promise<void>;
+  embed(text: string): Promise<Float32Array>;
+  embedBatch(texts: string[]): Promise<Float32Array[]>;
+}
