@@ -28,6 +28,7 @@ import { assemble } from './stages/stage-4-assemble';
 import { validate, defaultOracle, type Oracle, type Signer } from './stages/stage-5-validate';
 import { defaultSubAgents } from './sub-agents';
 import { runFeedbackLoop, type FeedbackLoopOptions } from '../feedback';
+import type { CanonMemory } from '../memory/canon';
 import { signatureFor, dominantDimension, signatureMagnitude, type DimensionalSignature } from '../reality/dimensions';
 // resonance scoring is exposed as a separate API for comparing seed pairs
 import type {
@@ -76,6 +77,7 @@ export class SovereignAgent {
     private readonly memory: MemoryOrchestrator,
     private readonly subAgents: SubAgent[] = defaultSubAgents(),
     private readonly version = '0.1',
+    private readonly canon?: CanonMemory,
   ) {}
 
   /** Single-shot run: utterance in, validated seed out. */
@@ -198,6 +200,12 @@ export class SovereignAgent {
         topic: 'name-registry',
         source: 'agent',
       });
+    }
+
+    // Canon RAG — embed + index the seed when canon is configured
+    if (this.canon && validated.passed) {
+      try { await this.canon.ingest(validated.seed); }
+      catch (e) { /* canon ingest is best-effort; never block the run */ }
     }
 
     // Episodic — full run report, if the layer is configured

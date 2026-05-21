@@ -40,3 +40,4 @@ export { SovereignAgent, createSovereignAgent } from './orchestrator';
 export type { RunOptions, AgentRunReport } from './orchestrator';
 
 export type { Oracle, Signer } from './stages/stage-5-validate';
+export { archive as archiveStage6, type ArchiveOptions, type ArchiveReceipt } from './stages/stage-6-archive';
