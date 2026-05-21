@@ -47,18 +47,29 @@ for (const domain of ALL_DOMAINS) {
   ENGINES[domain] = growViaPipeline;
 }
 
-function growGeneric(seed: Seed): Artifact {
+function growGeneric(seed: Seed): Artifact & { filePath?: string } {
   const geneSummary: Record<string, any> = {};
   for (const [name, gene] of Object.entries(seed.genes ?? {})) {
     geneSummary[name] = { type: gene.type, value_preview: String(gene.value ?? '').slice(0, 50) };
   }
-  return {
+  const artifact: Artifact & { filePath?: string } = {
     type: seed.$domain ?? 'unknown', name: seed.$name ?? 'Artifact', domain: seed.$domain ?? 'unknown',
     seed_hash: seed.$hash ?? '', generation: seed.$lineage?.generation ?? 0,
     generation_quality: 'metadata-only' as GenerationQuality,
     gene_summary: geneSummary,
     render_hints: { mode: 'generic', description_only: true },
   };
+  try {
+    const fs = require('fs') as typeof import('fs');
+    const path = require('path') as typeof import('path');
+    const dir = path.join('data', 'artifacts', String(artifact.domain ?? 'unknown'));
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    const hash = String(artifact.seed_hash || 'no-hash').slice(0, 16);
+    const fp = path.join(dir, `${hash}.metadata.json`);
+    fs.writeFileSync(fp, JSON.stringify(artifact, null, 2), 'utf-8');
+    artifact.filePath = fp;
+  } catch { /* fallback path unavailable - skip */ }
+  return artifact;
 }
 
 export function growSeedSync(seed: Seed): Artifact {

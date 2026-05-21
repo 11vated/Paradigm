@@ -63,6 +63,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
     domain: 'character', version: 'v3', outputExtension: 'gltf',
     generator: (s, p) => generateCharacter(s, p),
     postProcess: (o: GeneratorOutput, s: Seed) => ({
+      ...o,           // preserve filePath + structural fields from V3 generator
       archetype: geneVal(s, 'archetype', 'warrior'),
       visual: {
         body_width: +(0.3 + geneNumber(s, 'strength', 0.5) * 0.4).toFixed(2),
