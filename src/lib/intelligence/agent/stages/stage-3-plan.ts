@@ -38,6 +38,10 @@ export interface PlanOptions {
   llmTag?: { provider: string; model: string };
   /** Hash of the parent / base seed (or 'genesis') */
   base?: string;
+  /** Re-plan iteration counter from the Oracle feedback loop (0-based). */
+  iteration?: number;
+  /** Notes from prior iteration's Oracle/Critique — fed into LLM enrichment prompt. */
+  iterationNotes?: string[];
 }
 
 export async function plan(
