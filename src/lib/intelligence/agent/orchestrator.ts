@@ -28,6 +28,7 @@ import { assemble } from './stages/stage-4-assemble';
 import { validate, defaultOracle, type Oracle, type Signer } from './stages/stage-5-validate';
 import { defaultSubAgents } from './sub-agents';
 import { runFeedbackLoop, type FeedbackLoopOptions } from '../feedback';
+import { gatherLiveContext, type LiveContext, type LiveContextOptions } from './stages/stage-0-context';
 import type { CanonMemory } from '../memory/canon';
 import { signatureFor, dominantDimension, signatureMagnitude, type DimensionalSignature } from '../reality/dimensions';
 // resonance scoring is exposed as a separate API for comparing seed pairs
@@ -54,6 +55,7 @@ export interface RunOptions {
   passThreshold?: number;
   /** Skip Stage-5 validation entirely (e.g. for preview UI) */
   skipValidate?: boolean;
+  liveContext?: LiveContextOptions & { enabled?: boolean };
   /** Don't write Stage-6 archive entries (e.g. for trial-runs) */
   ephemeral?: boolean;
   feedbackLoop?: Omit<FeedbackLoopOptions, 'oracle' | 'critique' | 'lookupSeed' | 'planLlm' | 'planLlmTag'> & { enabled?: boolean };
@@ -69,6 +71,7 @@ export interface AgentRunReport {
   timings: Record<string, number>;
   reality?: { signature: DimensionalSignature; dominant: string; magnitude: number };
   iterations?: number;
+  liveContext?: LiveContext;
 }
 
 export class SovereignAgent {
@@ -85,13 +88,22 @@ export class SovereignAgent {
     const timings: Record<string, number> = {};
     const t0 = kernelNow();
 
+    // Stage 0 — live context (optional; default ON when memory or canon present)
+    let liveContext: LiveContext | undefined;
+    const stage0Enabled = opts.liveContext?.enabled !== false && (this.memory || this.canon);
+    if (stage0Enabled) {
+      liveContext = await gatherLiveContext(raw, this.memory, this.canon, opts.liveContext ?? {});
+      timings.stage0 = kernelNow() - t0;
+    }
+
     // Stage 1
+    const t1 = kernelNow();
     const intent = await parse(raw, {
       llm: this.llm,
       recentDomains: opts.recentDomains,
       knownNames: opts.knownNames,
     });
-    timings.stage1 = kernelNow() - t0;
+    timings.stage1 = kernelNow() - t1;
 
     // Stage 2
     const t2 = kernelNow();
@@ -172,6 +184,7 @@ export class SovereignAgent {
       ...(validated ? { validated } : {}),
       ...(reality ? { reality } : {}),
       ...(iterations !== undefined ? { iterations } : {}),
+      ...(liveContext ? { liveContext } : {}),
       timings,
     };
   }

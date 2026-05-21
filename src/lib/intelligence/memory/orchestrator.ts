@@ -24,7 +24,8 @@ import { SemanticMemory } from './semantic';
 
 export interface OrchestratorOpts {
   workspaceRoot?: string;
-  /** If episodic / world layers are not provided, only working+semantic are used */
+  working?: MemoryLayer;
+  semantic?: MemoryLayer;
   episodic?: MemoryLayer;
   world?: MemoryLayer;
 }
@@ -35,8 +36,8 @@ export class DefaultMemoryOrchestrator implements MemoryOrchestrator {
 
   constructor(opts: OrchestratorOpts = {}) {
     const root = opts.workspaceRoot ?? 'data/memory';
-    this.layers.working = new WorkingMemory();
-    this.layers.semantic = new SemanticMemory(`${root}/semantic.json`);
+    this.layers.working = opts.working ?? new WorkingMemory();
+    this.layers.semantic = opts.semantic ?? new SemanticMemory(`${root}/semantic.json`);
     if (opts.episodic) this.layers.episodic = opts.episodic;
     if (opts.world) this.layers.world = opts.world;
   }

@@ -95,6 +95,7 @@ export const DEFAULT_TOOL_GRANTS: SubAgentToolGrants = {
   physics: ['world_lookup', 'simulate'],
   style: ['world_lookup', 'image_describe'],
   critique: ['oracle_score', 'gene_diff', 'resonance_score'],
+  researcher: ['web_search', 'browse_page', 'fetch_json', 'world_lookup'],
 };
 
 export type Json = string | number | boolean | null | { [k: string]: Json } | Json[];

@@ -13,6 +13,7 @@ export { MechanicsAgent } from './mechanics-agent';
 export { PhysicsAgent } from './physics-agent';
 export { StyleAgent } from './style-agent';
 export { CritiqueAgent } from './critique-agent';
+export { ResearcherAgent } from './researcher-agent';
 
 import { VisionAgent } from './vision-agent';
 import { PersonalityAgent } from './personality-agent';
@@ -22,6 +23,7 @@ import { MechanicsAgent } from './mechanics-agent';
 import { PhysicsAgent } from './physics-agent';
 import { StyleAgent } from './style-agent';
 import { CritiqueAgent } from './critique-agent';
+import { ResearcherAgent } from './researcher-agent';
 import type { SubAgent } from '../types';
 
 /** The canonical 8-sub-agent roster (7 specialists + 1 critic). */
@@ -35,5 +37,6 @@ export function defaultSubAgents(): SubAgent[] {
     new PhysicsAgent(),
     new StyleAgent(),
     new CritiqueAgent(),
+    new ResearcherAgent(),
   ];
 }
