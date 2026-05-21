@@ -47,9 +47,10 @@ function invert(a: MusicArtifact): MusicInverted {
   };
 }
 
+import { analyzePcm, audioQualityAxes } from '../quality/audio-features';
+
 function rate(a: MusicArtifact): QualityReport {
   const axes: Record<string, number> = {};
-  // RIFF + WAVE header signature
   const riff = a.wavBuffer.slice(0, 4).toString('ascii');
   const wave = a.wavBuffer.slice(8, 12).toString('ascii');
   axes.wavSignature = (riff === 'RIFF' && wave === 'WAVE') ? 1 : 0;
@@ -58,8 +59,17 @@ function rate(a: MusicArtifact): QualityReport {
   axes.sampleRateValid = [22050, 44100, 48000].includes(a.meta.sampleRate) ? 1 : 0;
   axes.durationPositive = a.meta.duration > 0 ? 1 : 0;
   axes.keyPresent = typeof a.meta.key === 'string' && a.meta.key.length > 0 ? 1 : 0;
+  // Content-aware: actually decode the PCM and inspect.
+  const stats = analyzePcm(a.wavBuffer);
+  const notes = [`music ${a.meta.tempo}bpm ${a.meta.key} ${a.meta.duration.toFixed(1)}s wav=${a.wavBuffer.length}B`];
+  if (stats) {
+    Object.assign(axes, audioQualityAxes(stats));
+    notes.push(`rms=${stats.rms.toFixed(3)} crest=${stats.crestFactor.toFixed(2)} centroidHz=${stats.spectralCentroidHz.toFixed(0)} silence=${(stats.silenceRatio*100).toFixed(1)}%`);
+  } else {
+    axes.pcmAnalyzable = 0;
+  }
   const score = Object.values(axes).reduce((s, v) => s + v, 0) / Object.values(axes).length;
-  return { score, axes, notes: [`music ${a.meta.tempo}bpm ${a.meta.key} ${a.meta.duration.toFixed(1)}s wav=${a.wavBuffer.length}B`] };
+  return { score, axes, notes };
 }
 
 const CURATED: readonly { id: string; name: string; seed: MusicSeed; intent: string; tags: readonly string[] }[] = [
