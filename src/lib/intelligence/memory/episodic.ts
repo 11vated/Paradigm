@@ -186,3 +186,50 @@ function cosineF32(a: Float32Array | undefined, b: Float32Array): number {
   const denom = Math.sqrt(na) * Math.sqrt(nb);
   return denom < 1e-9 ? 0 : dot / denom;
 }
+
+// ─── Sovereignty key derivation (HKDF-SHA-256) ──────────────────────────────
+/**
+ * Derive a 32-byte AES-256-GCM key from the user's sovereignty private key.
+ *
+ *  derivedKey = HKDF-SHA-256(
+ *    ikm    = pkcs8(privateKey),
+ *    salt   = utf8(userId),
+ *    info   = 'paradigm:episodic-memory:v1',
+ *    length = 32 bytes,
+ *  )
+ *
+ * Same sovereignty key + same userId → same derived key, byte-for-byte.
+ * Different user namespace per userId; rotate by bumping the `info` string.
+ */
+export async function deriveEpisodicKeyFromSovereignty(
+  privateKey: CryptoKey,
+  userId: string,
+): Promise<Uint8Array> {
+  const subtle = (globalThis.crypto || (await import('node:crypto')).webcrypto).subtle;
+  const pkcs8 = await subtle.exportKey('pkcs8', privateKey);
+  const ikm = await subtle.importKey('raw', pkcs8, { name: 'HKDF' }, false, ['deriveBits']);
+  const bits = await subtle.deriveBits(
+    {
+      name: 'HKDF',
+      hash: 'SHA-256',
+      salt: new TextEncoder().encode(userId),
+      info: new TextEncoder().encode('paradigm:episodic-memory:v1'),
+    },
+    ikm,
+    256,
+  );
+  return new Uint8Array(bits);
+}
+
+/**
+ * Convenience factory — instantiate EpisodicMemory wired to the user's
+ * sovereignty identity in one call. Key derivation is deterministic.
+ */
+export async function createEpisodicMemoryFromSovereignty(
+  privateKey: CryptoKey,
+  userId: string,
+  opts: { persistPath?: string } = {},
+): Promise<EpisodicMemory> {
+  const key = await deriveEpisodicKeyFromSovereignty(privateKey, userId);
+  return new EpisodicMemory({ userId, encryptionKey: key, persistPath: opts.persistPath });
+}
