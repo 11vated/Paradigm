@@ -13,12 +13,12 @@ export interface AlifeWorkerParams extends AlifeParams {
   useWorker?: boolean;
 }
 
-const defaultAlifeParams: AlifeParams = {
+const defaultAlifeParams: AlifeParams = ({
   rules: 'conway',
   gridSize: 32,
   initialDensity: 0.3,
   quality: 'medium',
-};
+} as any);
 
 /**
  * Generate ALife simulation, optionally using Web Worker

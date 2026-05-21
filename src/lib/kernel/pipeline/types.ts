@@ -15,7 +15,7 @@ export interface Seed {
 }
 
 export interface GeneratorOutput {
-  filePath: string;
+  filePath?: string;
   format?: string;
   [key: string]: any;
 }

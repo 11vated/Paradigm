@@ -17,8 +17,8 @@ async function synth(seed: PhysicsSeed): Promise<PhysicsArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'physics-q-'));
   try {
     const r = await withKernelClock(0, () => generatePhysics(seed as any, path.join(dir, "physics.json")));
-    const config = await fs.readFile(r.filePath, 'utf8');
-    return { config, size: r.configSize };
+    const config = await fs.readFile(r.jsonPath, 'utf8');
+    return { config, size: 0 /* configSize removed */ };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

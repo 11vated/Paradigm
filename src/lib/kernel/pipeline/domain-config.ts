@@ -2,7 +2,7 @@ import type { DomainConfig } from './types';
 import type { GeneratorOutput, Seed } from './types';
 
 // Generator imports
-import { generateCharacterV3 as generateCharacter } from '../generators/character-v3';
+import { generateCharacterV3 as generateCharacter } from '../generators/character';
 import { generateSpriteAnimated } from '../generators/sprite-animated';
 import { generateMusicV2 as generateMusic } from '../generators/music-v2';
 import { generateVisual2DV2 as generateVisual2D } from '../generators/visual2d-v2';

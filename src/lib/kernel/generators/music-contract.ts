@@ -5,7 +5,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateMusicV2 } from './music-v2.js';
+import { generateMusicV2 } from './music-v2';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 

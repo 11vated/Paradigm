@@ -483,3 +483,6 @@ async function exportSVG(canvas: HTMLCanvasElement, outputPath: string, seed: Se
   }
   return filePath;
 }
+
+// ── Canonical aliases (added by phase-0.5 consolidation) ──
+export { generateVisual2DV3 as generateVisual2D };

@@ -8,7 +8,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateVisual2DV3 } from './visual2d-v3.js';
+import { generateVisual2DV3 } from './visual2d';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 

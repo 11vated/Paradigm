@@ -16,7 +16,7 @@ async function synth(seed: AudioSeed): Promise<AudioArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'audio-q-'));
   try {
     const r = await generateAudio(seed as any, path.join(dir, "audio.wav"));
-    const wav = await fs.readFile(r.filePath);
+    const wav = await fs.readFile(r.wavPath);
     return { wav, meta: { duration: r.duration, sampleRate: r.sampleRate, size: wav.length } };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
