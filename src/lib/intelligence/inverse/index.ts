@@ -4,6 +4,9 @@ export { DefaultInverterRegistry, selectInverter } from './registry';
 export { WavAudioInverter } from './audio-inverter';
 export { RgbImageInverter } from './image-inverter';
 export { CharacterTextInverter } from './text-inverter';
+export { NarrativeTextInverter } from './narrative-inverter';
+export { SeedGraphInverter, type LineageNode, type LineageGraph } from './seed-graph-inverter';
+export { PersonaVectorInverter, type PersonaVector } from './persona-inverter';
 
 import { DefaultInverterRegistry } from './registry';
 import { WavAudioInverter } from './audio-inverter';
