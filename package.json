@@ -34,7 +34,9 @@
     "golden:write": "tsx scripts/replay.mts golden",
     "golden:verify": "tsx scripts/replay.mts verify-golden",
     "evolve": "tsx scripts/evolve_demo.mts",
-    "gspl": "tsx scripts/gspl.mts"
+    "gspl": "tsx scripts/gspl.mts",
+    "test:webllm:smoke": "npx playwright test tests/browser/webllm-smoke.spec.ts",
+    "test:webllm:full": "ENABLE_WEBLLM_SMOKE=1 npx playwright test tests/browser/webllm-smoke.spec.ts"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

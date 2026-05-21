@@ -15,3 +15,16 @@ To install:
   guard) and the `tests/determinism` + `tests/composition` vitest suites
   on every PR and push to `main`. Hard-fails if the substrate's
   byte-identical reproducibility is broken.
+
+## Deferred — .jsx → .tsx migration
+
+47 shadcn UI files in `src/components/ui/*.jsx` are intentionally not migrated.
+Pure rename produces ~374 cons
+
+## Deferred — .jsx → .tsx migration
+
+47 shadcn UI files in src/components/ui/*.jsx are intentionally not migrated.
+Pure rename produces ~374 consumer-side type errors because shadcn components
+use React.forwardRef patterns that need explicit type parameters in TS.
+Recommended path: one focused session, one component family at a time
+(command/dialog first since they have the most consumers).
