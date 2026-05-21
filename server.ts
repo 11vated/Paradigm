@@ -21,6 +21,7 @@ import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agen
 import { registerCompositionRoutes } from './src/server/routes/composition.js';
 import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
+import { registerAuthRoutes } from './src/server/routes/auth.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -445,44 +446,7 @@ async function startServer() {
 
   const authLimiter = createRateLimiter(60000, 20); // 20 req/min for auth
 
-  app.post('/api/auth/register', authLimiter, validateBody(RegisterSchema), (req: any, res: any) => {
-    const { username, password } = req.body;
-    const result = registerUser(username, password);
-    if ('error' in result) return res.status(400).json(result);
-    metrics.authAttempts++;
-    metrics.authSuccesses++;
-    log('INFO', 'User registered', { username });
-    res.json(result);
-  });
-
-  app.post('/api/auth/login', authLimiter, validateBody(LoginSchema), (req: any, res: any) => {
-    const { username, password } = req.body;
-    const result = loginUser(username, password);
-    if ('error' in result) return res.status(401).json(result);
-    metrics.authAttempts++;
-    metrics.authSuccesses++;
-    log('INFO', 'User logged in', { username });
-    audit('auth.login', 'user', undefined, { username }, req);
-    res.json(result);
-  });
-
-  app.post('/api/auth/refresh', (req: any, res: any) => {
-    const { refreshToken } = req.body;
-    if (!refreshToken) return res.status(400).json({ error: 'refreshToken required' });
-    const result = refreshAccessToken(refreshToken);
-    if ('error' in result) return res.status(401).json(result);
-    res.json(result);
-  });
-
-  app.post('/api/auth/logout', optionalAuth, (req: any, res: any) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader?.slice(7);
-    if (token) revokeToken(token);
-    // Also revoke refresh token if provided
-    if (req.body.refreshToken) revokeToken(req.body.refreshToken);
-    audit('auth.logout', 'user', req.user?.sub, {}, req);
-    res.json({ success: true });
-  });
+  registerAuthRoutes(app, { authLimiter, optionalAuth, validateBody, RegisterSchema, LoginSchema, registerUser, loginUser, refreshAccessToken, audit, metrics, log, revokeToken });
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SEED CRUD
