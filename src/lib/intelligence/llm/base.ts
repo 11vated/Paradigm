@@ -9,6 +9,8 @@ import type { Seed, GeneratorOutput } from '../../kernel/engines';
 import { rngFromHash } from '../../kernel/rng';
 import { executeGspl } from '../../kernel/gspl-interpreter';
 import { growSeed } from '../../kernel/engines';
+import { OpenAISeedLLM } from './openai';
+import { AnthropicSeedLLM } from './anthropic';
 
 /**
  * Seed LLM interface
@@ -144,22 +146,57 @@ export class MockSeedLLM implements SeedLLM {
 }
 
 /**
- * Create a Seed LLM instance
+ * Create a Seed LLM instance.
+ *
+ * Routing:
+ *   - explicit provider in config takes priority
+ *   - else if OPENAI_API_KEY is set → OpenAI
+ *   - else if ANTHROPIC_API_KEY is set → Anthropic
+ *   - else fall back to MockSeedLLM (with a warning)
  */
 export function createSeedLLM(config: Partial<SeedLLMConfig> = {}): SeedLLM {
-  const fullConfig: SeedLLMConfig = {
-    provider: 'mock',
-    model: 'mock-v1',
-    temperature: 0.7,
-    maxTokens: 2048,
-    ...config,
-  };
+  const envOpenAI = typeof process !== 'undefined' ? process.env?.OPENAI_API_KEY : undefined;
+  const envAnthropic = typeof process !== 'undefined' ? process.env?.ANTHROPIC_API_KEY : undefined;
 
-  if (fullConfig.provider === 'mock') {
-    return new MockSeedLLM(fullConfig);
+  const explicit = config.provider;
+  let provider: SeedLLMConfig['provider'];
+  if (explicit) {
+    provider = explicit;
+  } else if (envOpenAI) {
+    provider = 'openai';
+  } else if (envAnthropic) {
+    provider = 'anthropic';
+  } else {
+    provider = 'mock';
+    // eslint-disable-next-line no-console
+    console.warn('[paradigm/llm] No OPENAI_API_KEY or ANTHROPIC_API_KEY found — falling back to MockSeedLLM. Set a provider key for real responses.');
   }
 
-  throw new Error(`Seed LLM provider '${fullConfig.provider}' not yet implemented`);
+  switch (provider) {
+    case 'openai':
+      return new OpenAISeedLLM({
+        provider: 'openai',
+        model: config.model ?? 'gpt-4o-mini',
+        apiKey: config.apiKey ?? envOpenAI,
+        temperature: config.temperature ?? 0.7,
+        maxTokens: config.maxTokens ?? 2048,
+        baseUrl: config.baseUrl,
+      });
+    case 'anthropic':
+      return new AnthropicSeedLLM({
+        provider: 'anthropic',
+        model: config.model ?? 'claude-3-5-sonnet-20241022',
+        apiKey: config.apiKey ?? envAnthropic,
+        temperature: config.temperature ?? 0.7,
+        maxTokens: config.maxTokens ?? 2048,
+        baseUrl: config.baseUrl,
+      });
+    case 'ollama':
+      throw new Error("Seed LLM provider 'ollama' not yet implemented");
+    case 'mock':
+    default:
+      return new MockSeedLLM({ provider: 'mock', model: 'mock-v1', ...config });
+  }
 }
 
 /**
