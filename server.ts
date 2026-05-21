@@ -22,6 +22,7 @@ import { registerCompositionRoutes } from './src/server/routes/composition.js';
 import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
+import { registerEvolveRoutes } from './src/server/routes/evolve.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -2394,62 +2395,7 @@ async function startServer() {
 
    // ─── Evolution Job Management Endpoints ───────────────────────────────────
    // Get status of an evolution job
-   app.get('/api/evolve/:jobId/status', optionalAuth, (req: any, res: any) => {
-     const job = evolutionJobs.get(req.params.jobId);
-     if (!job) return res.status(404).json({ detail: 'Job not found' });
-     
-     // Return job info without sensitive data
-     res.json({
-       id: job.id,
-       status: job.status,
-       algorithm: job.algorithm,
-       populationSize: job.populationSize,
-       generations: job.generations,
-       seedId: job.seedId,
-       createdAt: job.createdAt,
-       completedAt: job.completedAt
-     });
-   });
-
-   // Get result of a completed evolution job
-   app.get('/api/evolve/:jobId/result', optionalAuth, (req: any, res: any) => {
-     const job = evolutionJobs.get(req.params.jobId);
-     if (!job) return res.status(404).json({ detail: 'Job not found' });
-     
-     if (job.status !== 'completed') {
-       return res.status(400).json({ 
-         detail: `Job is not completed. Current status: ${job.status}` 
-       });
-     }
-     
-     res.json({
-       id: job.id,
-       status: job.status,
-       result: job.result,
-       completedAt: job.completedAt
-     });
-   });
-
-   // Cancel an evolution job (only works if still queued or running)
-   app.delete('/api/evolve/:jobId/cancel', optionalAuth, (req: any, res: any) => {
-     const job = evolutionJobs.get(req.params.jobId);
-     if (!job) return res.status(404).json({ detail: 'Job not found' });
-     
-     if (job.status === 'completed' || job.status === 'failed' || job.status === 'cancelled') {
-       return res.status(400).json({ 
-         detail: `Cannot cancel job with status: ${job.status}` 
-       });
-     }
-     
-     job.status = 'cancelled';
-     job.completedAt = Date.now();
-     
-     res.json({ 
-       id: job.id, 
-       status: job.status, 
-       completedAt: job.completedAt 
-     });
-   });
+  registerEvolveRoutes(app, { optionalAuth, evolutionJobs });
 
    // ── Lightweight 3D mesh preview (Phase 4/5) ──
   // Returns a JSON mesh the frontend can render directly in WebGL without
