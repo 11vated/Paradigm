@@ -11,6 +11,9 @@ import { executeGspl } from '../../kernel/gspl-interpreter';
 import { growSeed } from '../../kernel/engines';
 import { OpenAISeedLLM } from './openai';
 import { AnthropicSeedLLM } from './anthropic';
+import { OllamaSeedLLM } from './ollama';
+import { LlamaCppSeedLLM } from './llamacpp';
+import { WebLLMSeedLLM } from './webllm';
 
 /**
  * Seed LLM interface
@@ -36,7 +39,7 @@ export interface SeedLLM {
  * Seed LLM configuration
  */
 export interface SeedLLMConfig {
-  provider: 'openai' | 'anthropic' | 'ollama' | 'mock';
+  provider: 'webllm' | 'ollama' | 'llamacpp' | 'openai' | 'anthropic' | 'mock';
   model: string;
   apiKey?: string;
   baseUrl?: string;
@@ -148,55 +151,94 @@ export class MockSeedLLM implements SeedLLM {
 /**
  * Create a Seed LLM instance.
  *
- * Routing:
- *   - explicit provider in config takes priority
- *   - else if OPENAI_API_KEY is set → OpenAI
- *   - else if ANTHROPIC_API_KEY is set → Anthropic
- *   - else fall back to MockSeedLLM (with a warning)
+ * Sovereignty-first routing:
+ *   - explicit `config.provider` always wins
+ *   - browser + WebGPU → WebLLM (zero install, runs locally)
+ *   - OLLAMA_HOST env  → Ollama
+ *   - LLAMACPP_URL env → llama.cpp / LM Studio compatible endpoint
+ *   - otherwise → MockSeedLLM (test mode, no warnings)
+ *
+ * Commercial APIs (OpenAI, Anthropic) are opt-in only — they will NEVER
+ * be selected automatically, even if their API key env vars are set.
+ * Pass `provider: 'openai' | 'anthropic'` explicitly to use them.
+ *
+ * For true runtime auto-detection that probes localhost services, use
+ * `selectSovereignProvider()` instead.
  */
 export function createSeedLLM(config: Partial<SeedLLMConfig> = {}): SeedLLM {
-  const envOpenAI = typeof process !== 'undefined' ? process.env?.OPENAI_API_KEY : undefined;
-  const envAnthropic = typeof process !== 'undefined' ? process.env?.ANTHROPIC_API_KEY : undefined;
-
   const explicit = config.provider;
-  let provider: SeedLLMConfig['provider'];
+
+  // Explicit provider wins — no auto-detect, no warnings.
   if (explicit) {
-    provider = explicit;
-  } else if (envOpenAI) {
-    provider = 'openai';
-  } else if (envAnthropic) {
-    provider = 'anthropic';
-  } else {
-    provider = 'mock';
-    // eslint-disable-next-line no-console
-    console.warn('[paradigm/llm] No OPENAI_API_KEY or ANTHROPIC_API_KEY found — falling back to MockSeedLLM. Set a provider key for real responses.');
+    return constructProvider(explicit, config);
   }
 
-  switch (provider) {
-    case 'openai':
-      return new OpenAISeedLLM({
-        provider: 'openai',
-        model: config.model ?? 'gpt-4o-mini',
-        apiKey: config.apiKey ?? envOpenAI,
-        temperature: config.temperature ?? 0.7,
-        maxTokens: config.maxTokens ?? 2048,
-        baseUrl: config.baseUrl,
-      });
-    case 'anthropic':
-      return new AnthropicSeedLLM({
-        provider: 'anthropic',
-        model: config.model ?? 'claude-3-5-sonnet-20241022',
-        apiKey: config.apiKey ?? envAnthropic,
-        temperature: config.temperature ?? 0.7,
-        maxTokens: config.maxTokens ?? 2048,
-        baseUrl: config.baseUrl,
-      });
+  // No provider specified — pick the best sovereign-local default for
+  // the current environment. Server-side / Node / Bun → Ollama or llama.cpp
+  // (sync availability decision deferred to the caller via constructProvider;
+  // construction never makes a network call). Browser → WebLLM (if WebGPU).
+  // If nothing sovereign is configured, return MockSeedLLM — the test path.
+
+  const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined';
+  if (isBrowser && WebLLMSeedLLM.isAvailable()) {
+    return new WebLLMSeedLLM({
+      provider: 'webllm',
+      model: config.model ?? 'Llama-3.2-3B-Instruct-q4f16_1-MLC',
+      temperature: config.temperature,
+      maxTokens: config.maxTokens,
+    });
+  }
+
+  // Server-side default: Ollama if reachable env hint is set, else llama.cpp,
+  // else mock. We don't make blocking network calls here — callers who
+  // want runtime auto-detection should use `selectSovereignProvider()` below.
+  if (typeof process !== 'undefined' && process.env?.OLLAMA_HOST) {
+    return new OllamaSeedLLM({ provider: 'ollama', model: config.model, baseUrl: process.env.OLLAMA_HOST, temperature: config.temperature, maxTokens: config.maxTokens });
+  }
+  if (typeof process !== 'undefined' && process.env?.LLAMACPP_URL) {
+    return new LlamaCppSeedLLM({ provider: 'llamacpp', model: config.model, baseUrl: process.env.LLAMACPP_URL, temperature: config.temperature, maxTokens: config.maxTokens });
+  }
+
+  // No sovereign-local available — quiet mock fallback. Operators may
+  // opt into commercial APIs explicitly via config.provider = 'openai' | 'anthropic'.
+  return new MockSeedLLM({ provider: 'mock', model: 'mock-v1', ...config });
+}
+
+function constructProvider(p: SeedLLMConfig['provider'], config: Partial<SeedLLMConfig>): SeedLLM {
+  switch (p) {
+    case 'webllm':
+      return new WebLLMSeedLLM({ ...config, provider: 'webllm', model: config.model ?? 'Llama-3.2-3B-Instruct-q4f16_1-MLC' });
     case 'ollama':
-      throw new Error("Seed LLM provider 'ollama' not yet implemented");
+      return new OllamaSeedLLM({ ...config, provider: 'ollama' });
+    case 'llamacpp':
+      return new LlamaCppSeedLLM({ ...config, provider: 'llamacpp' });
+    case 'openai':
+      return new OpenAISeedLLM({ ...config, provider: 'openai', model: config.model ?? 'gpt-4o-mini', apiKey: config.apiKey ?? (typeof process !== 'undefined' ? process.env?.OPENAI_API_KEY : undefined) });
+    case 'anthropic':
+      return new AnthropicSeedLLM({ ...config, provider: 'anthropic', model: config.model ?? 'claude-3-5-sonnet-20241022', apiKey: config.apiKey ?? (typeof process !== 'undefined' ? process.env?.ANTHROPIC_API_KEY : undefined) });
     case 'mock':
     default:
-      return new MockSeedLLM({ provider: 'mock', model: 'mock-v1', ...config });
+      return new MockSeedLLM({ ...config, provider: 'mock', model: config.model ?? 'mock-v1' });
   }
+}
+
+/**
+ * Probe localhost services at runtime and pick the best sovereign-local
+ * provider available right now. Use this from server bootstrap or studio
+ * UI; do NOT use from hot paths (it makes network calls).
+ */
+export async function selectSovereignProvider(config: Partial<SeedLLMConfig> = {}): Promise<SeedLLM> {
+  const isBrowser = typeof window !== 'undefined';
+  if (isBrowser && WebLLMSeedLLM.isAvailable()) {
+    return new WebLLMSeedLLM({ provider: 'webllm', ...config });
+  }
+  if (await OllamaSeedLLM.isAvailable()) {
+    return new OllamaSeedLLM({ provider: 'ollama', ...config });
+  }
+  if (await LlamaCppSeedLLM.isAvailable()) {
+    return new LlamaCppSeedLLM({ provider: 'llamacpp', ...config });
+  }
+  return new MockSeedLLM({ provider: 'mock', model: 'mock-v1', ...config });
 }
 
 /**
