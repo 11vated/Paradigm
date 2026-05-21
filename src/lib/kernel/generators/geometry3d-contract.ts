@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateGeometry3DV4 } from './geometry3d-v4.js';
+import { generateGeometry3DV4 } from './geometry3d';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 

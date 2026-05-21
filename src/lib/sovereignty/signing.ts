@@ -92,13 +92,13 @@ export async function verifySignature(
 export async function createSovereignty(
   seedHash: string,
   author: string,
-  privateKey: CryptoKey,
+  keyPair: CryptoKeyPair,
   lineage: string[] = []
 ): Promise<SovereigntyData> {
   const timestamp = Date.now();
   const dataToSign = `${seedHash}:${author}:${timestamp}`;
-  const signature = await signData(dataToSign, privateKey);
-  const publicKey = await exportPublicKey(privateKey);
+  const signature = await signData(dataToSign, keyPair.privateKey);
+  const publicKey = await exportPublicKey(keyPair.publicKey);
 
   return {
     author,

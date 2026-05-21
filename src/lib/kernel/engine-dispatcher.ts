@@ -100,7 +100,6 @@ import { generateDevOps } from './generators/devops.js';
 import { generateDataScience } from './generators/data-science.js';
 import { generateML } from './generators/ml.js';
 import { generateRoboticsIndustrial } from './generators/robotics-industrial.js';
-import { generateAerospaceDefense } from './generators/aerospace-defense.js';
 import { generateBiotechnology } from './generators/biotechnology.js';
 import { generateNanotechnology } from './generators/nanotechnology.js';
 import { generateRenewableEnergy } from './generators/renewable-energy.js';
@@ -124,33 +123,33 @@ import { generateSpaceTourism } from './generators/space-tourism.js';
 // ═══════════════════════════════════════════════════════════════════════════
 // NEW: 27 Domain Generators (Phase 2 — V3 Generators)
 // ═══════════════════════════════════════════════════════════════════════════
-import { generateCharacterV3 } from './generators/character-v3.js';
-import { generateSpriteV3 } from './generators/sprite-v3.js';
-import { generateMusicV3 } from './generators/music-v3.js';
-import { generateVisual2DV3 } from './generators/visual2d-v3.js';
-import { generateGeometry3DV4 } from './generators/geometry3d-v4.js';
-import { generateFullGameV3 } from './generators/fullgame-v3.js';
-import { generateAnimationV3 } from './generators/animation-v3.js';
-import { generateNarrativeV3 } from './generators/narrative-v3.js';
-import { generateUIV3 } from './generators/ui-v3.js';
-import { generatePhysicsV3 } from './generators/physics-v3.js';
-import { generateAudioV3 } from './generators/audio-v3.js';
-import { generateEcosystemV3 } from './generators/ecosystem-v3.js';
-import { generateGameV3 } from './generators/game-v3.js';
-import { generateALifeV3 } from './generators/alife-v3.js';
-import { generateShaderV3 } from './generators/shader-v3.js';
-import { generateParticleV3 } from './generators/particle-v3.js';
-import { generateProceduralV3 } from './generators/procedural-v3.js';
-import { generateTypographyV3 } from './generators/typography-v3.js';
-import { generateArchitectureV3 } from './generators/architecture-v3.js';
-import { generateVehicleV3 } from './generators/vehicle-v3.js';
-import { generateFurnitureV3 } from './generators/furniture-v3.js';
-import { generateFashionV3 } from './generators/fashion-v3.js';
-import { generateRoboticsV3 } from './generators/robotics-v3.js';
-import { generateCircuitV3 } from './generators/circuit-v3.js';
-import { generateFoodV3 } from './generators/food-v3.js';
-import { generateChoreographyV3 } from './generators/choreography-v3.js';
-import { generateAgentV3 } from './generators/agent-v3.js';
+import { generateCharacterV3 } from './generators/character';
+import { generateSpriteV3 } from './generators/sprite';
+import { generateMusicV3 } from './generators/music';
+import { generateVisual2DV3 } from './generators/visual2d';
+import { generateGeometry3DV4 } from './generators/geometry3d';
+import { generateFullGameV3 } from './generators/fullgame';
+import { generateAnimationV3 } from './generators/animation';
+import { generateNarrativeV3 } from './generators/narrative';
+import { generateUIV3 } from './generators/ui';
+import { generatePhysicsV3 } from './generators/physics';
+import { generateAudioV3 } from './generators/audio';
+import { generateEcosystemV3 } from './generators/ecosystem';
+import { generateGameV3 } from './generators/game';
+import { generateALifeV3 } from './generators/alife';
+import { generateShaderV3 } from './generators/shader';
+import { generateParticleV3 } from './generators/particle';
+import { generateProceduralV3 } from './generators/procedural';
+import { generateTypographyV3 } from './generators/typography';
+import { generateArchitectureV3 } from './generators/architecture';
+import { generateVehicleV3 } from './generators/vehicle';
+import { generateFurnitureV3 } from './generators/furniture';
+import { generateFashionV3 } from './generators/fashion';
+import { generateRoboticsV3 } from './generators/robotics';
+import { generateCircuitV3 } from './generators/circuit';
+import { generateFoodV3 } from './generators/food';
+import { generateChoreographyV3 } from './generators/choreography';
+import { generateAgentV3 } from './generators/agent';
 
 export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ [key: string]: any }>;
 
@@ -239,7 +238,6 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   'data-science': generateDataScience,
   ml: generateML,
   'robotics-industrial': generateRoboticsIndustrial,
-  'aerospace-defense': generateAerospaceDefense,
   biotechnology: generateBiotechnology,
   nanotechnology: generateNanotechnology,
   'renewable-energy': generateRenewableEnergy,

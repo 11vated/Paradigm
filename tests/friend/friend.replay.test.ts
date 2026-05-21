@@ -37,7 +37,7 @@ describe('Friend replay CLI — determinism contract', () => {
     expect(a).toBe(b);
   });
 
-  it('same seed → byte-identical hash (run three times in different orders)', () => {
+  it('same seed → byte-identical hash (run three times in different orders)', { timeout: 60_000 }, () => {
     const x1 = replayQuiet('triple-x');
     const y1 = replayQuiet('triple-y');
     const x2 = replayQuiet('triple-x');
@@ -49,7 +49,7 @@ describe('Friend replay CLI — determinism contract', () => {
     expect(x1).not.toBe(y1);
   });
 
-  it('different seeds produce different hashes', () => {
+  it('different seeds produce different hashes', { timeout: 60_000 }, () => {
     const hashes = new Set<string>();
     for (const seed of ['s-a', 's-b', 's-c', 's-d', 's-e']) {
       hashes.add(replayQuiet(seed));

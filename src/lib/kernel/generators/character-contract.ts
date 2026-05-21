@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateCharacterV3 } from './character-v3.js';
+import { generateCharacterV3 } from './character';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 

@@ -1,4 +1,5 @@
 // Domain Generators Index — Beyond Omega (100+ domains)
+import './contracts'; // side-effect: registers all 126 generator quality contracts
 // Auto-generated export file
 
 // Core domains (built earlier)
@@ -8,7 +9,7 @@ export { generateMarket } from './market';
 export { generateDomainGenerator as generateMetaDomain } from './meta-domain';
 
 // V2 World-Class Generators (new)
-export { generateCharacterV3 as generateCharacter } from './character-v3';
+export { generateCharacterV3 as generateCharacter } from './character';
 export { generateCharacterV2 } from './character-v2'; // OBJ fallback
 export { generateMusicV2 as generateMusic } from './music-v2';
 export { generateSpriteV2 as generateSprite } from './sprite-v2';
@@ -116,7 +117,6 @@ export { generateDevOps } from './devops';
 export { generateDataScience } from './data-science';
 export { generateML } from './ml';
 export { generateRoboticsIndustrial } from './robotics-industrial';
-export { generateAerospaceDefense } from './aerospace-defense';
 
 // Session 11: Biotechnology, Nanotechnology, Renewable Energy, Battery, Smart Grid, 5G, 6G
 export { generateBiotechnology } from './biotechnology';

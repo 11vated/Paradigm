@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateSpriteV3 } from './sprite-v3.js';
+import { generateSpriteV3 } from './sprite';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 

@@ -1,206 +1,224 @@
 /**
- * Shader Generator — produces GLSL shader code
- * Generates fragment/vertex shaders based on seed genes
+ * Shader Generator V3 — GLSL/WGSL Shader Programs
+ * Features: Vertex, fragment, compute shaders
+ * Export: GLSL, WGSL, HLSL
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
+import { Xoshiro256StarStar } from '../rng';
 
 interface ShaderParams {
-  shaderType: string;
-  technique: string;
-  iterations: number;
-  epsilon: number;
-  quality: 'low' | 'medium' | 'high' | 'photorealistic';
+  type: 'vertex' | 'fragment' | 'compute' | 'raytracing';
+  effects: string[];
+  target: 'glsl' | 'wgsl' | 'hlsl';
+  quality: 'low' | 'medium' | 'high';
 }
 
-export async function generateShader(seed: Seed, outputPath: string): Promise<{ filePath: string; shaderCount: number }> {
-  const params = extractParams(seed);
+export async function generateShaderV3(
+  seed: Seed,
+  outputPath: string
+): Promise<{
+  glslPath: string;
+  wgslPath: string;
+  hlslPath: string;
+  effectCount: number;
+}> {
+  const rng = new Xoshiro256StarStar(seed.$hash || 'shader-default');
+  const params = extractShaderParams(seed, rng);
   
-  // Generate vertex shader
-  const vertexShader = generateVertexShader(params);
+  // Generate shader code
+  const glsl = generateGLSL(params, rng);
+  const wgsl = generateWGSL(params, rng);
+  const hlsl = generateHLSL(params, rng);
   
-  // Generate fragment shader
-  const fragmentShader = generateFragmentShader(params);
-  
-  // Ensure output directory exists
-  const dir = path.dirname(outputPath);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  
-  // Write shader files
-  const vertPath = outputPath.replace(/\.gltf$/, '.vert');
-  const fragPath = outputPath.replace(/\.gltf$/, '.frag');
-  
-  fs.writeFileSync(vertPath, vertexShader);
-  fs.writeFileSync(fragPath, fragmentShader);
-  
-  // Write metadata JSON
-  const metaPath = outputPath.replace(/\.gltf$/, '_meta.json');
-  fs.writeFileSync(metaPath, JSON.stringify({
-    shaderType: params.shaderType,
-    technique: params.technique,
-    iterations: params.iterations,
-    epsilon: params.epsilon,
-    files: { vertex: path.basename(vertPath), fragment: path.basename(fragPath) }
-  }, null, 2));
+  // Export
+  const glslPath = await exportShader(glsl, 'glsl', outputPath, seed);
+  const wgslPath = await exportShader(wgsl, 'wgsl', outputPath, seed);
+  const hlslPath = await exportShader(hlsl, 'hlsl', outputPath, seed);
   
   return {
-    filePath: fragPath,
-    shaderCount: 2
+    glslPath,
+    wgslPath,
+    hlslPath,
+    effectCount: params.effects.length
   };
 }
 
-function generateVertexShader(params: ShaderParams): string {
-  return `#version 300 es
-precision highp float;
+function extractShaderParams(seed: Seed, rng: Xoshiro256StarStar): ShaderParams {
+  const types = ['vertex', 'fragment', 'compute', 'raytracing'] as const;
+  const targets = ['glsl', 'wgsl', 'hlsl'] as const;
+  const qualities = ['low', 'medium', 'high'] as const;
+  const effectList = ['noise', 'blur', 'glow', 'shadow', 'reflection', 'refraction', 'bloom', 'chromatic', 'pixelate', 'scanlines'];
+  
+  const numEffects = 2 + Math.floor(rng.nextF64() * 4);
+  const effects: string[] = [];
+  for (let i = 0; i < numEffects; i++) {
+    const effect = effectList[Math.floor(rng.nextF64() * effectList.length)];
+    if (!effects.includes(effect)) effects.push(effect);
+  }
+  
+  return {
+    type: types[Math.floor(rng.nextF64() * types.length)],
+    effects,
+    target: targets[Math.floor(rng.nextF64() * targets.length)],
+    quality: qualities[Math.floor(rng.nextF64() * qualities.length)]
+  };
+}
 
-in vec3 aPosition;
-in vec3 aNormal;
-in vec2 aUV;
+function generateGLSL(params: ShaderParams, rng: Xoshiro256StarStar): string {
+  const isVertex = params.type === 'vertex';
+  
+  let code = `// Generated Shader - ${params.type}
+#version 450 core
 
-uniform mat4 uModelView;
-uniform mat4 uProjection;
-uniform mat3 uNormalMatrix;
+`;
+  
+  if (isVertex) {
+    code += `layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec2 aTexCoord;
+layout(location = 0) out vec2 vTexCoord;
 
-out vec3 vNormal;
-out vec2 vUV;
+uniform mat4 uModelMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uProjectionMatrix;
 
 void main() {
-  vNormal = normalize(uNormalMatrix * aNormal);
-  vUV = aUV;
-  gl_Position = uProjection * uModelView * vec4(aPosition, 1.0);
+    vTexCoord = aTexCoord;
+    gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aPosition, 1.0);
 }
 `;
-}
-
-function generateFragmentShader(params: ShaderParams): string {
-  const technique = params.technique;
-  
-  if (technique === 'raymarching') {
-    return generateRaymarchingShader(params);
-  } else if (technique === 'pbr') {
-    return generatePBRShader(params);
   } else {
-    return generateBasicShader(params);
-  }
-}
-
-function generateRaymarchingShader(params: ShaderParams): string {
-  return `#version 300 es
-precision highp float;
-
-in vec3 vNormal;
-in vec2 vUV;
-out vec4 fragColor;
+    code += `layout(location = 0) in vec2 vTexCoord;
+layout(location = 0) out vec4 fragColor;
 
 uniform float uTime;
-uniform vec3 uCameraPos;
-uniform int uMaxSteps;
-uniform float uEpsilon;
+uniform vec2 uResolution;
 
-float scene(vec3 p) {
-  // Sphere at origin
-  return length(p) - 1.0;
-}
-
-vec3 getNormal(vec3 p) {
-  float eps = uEpsilon;
-  return normalize(vec3(
-    scene(vec3(p.x+eps, p.y, p.z)) - scene(vec3(p.x-eps, p.y, p.z)),
-    scene(vec3(p.x, p.y+eps, p.z)) - scene(vec3(p.x, p.y-eps, p.z)),
-    scene(vec3(p.x, p.y, p.z+eps)) - scene(vec3(p.x, p.y, p.z-eps))
-  ));
-}
+${generateGLSLEffects(params.effects, rng)}
 
 void main() {
-  vec3 ro = uCameraPos;
-  vec3 rd = normalize(vec3(vUV - 0.5, -1.0));
-  
-  float t = 0.0;
-  int steps = uMaxSteps;
-  
-  for (int i = 0; i < steps; i++) {
-    vec3 p = ro + rd * t;
-    float d = scene(p);
-    if (d < uEpsilon) {
-      vec3 normal = getNormal(p);
-      vec3 light = normalize(vec3(1.0, 1.0, 1.0));
-      float diff = max(dot(normal, light), 0.0);
-      fragColor = vec4(vec3(diff), 1.0);
-      return;
-    }
-    t += d;
-    if (t > 100.0) break;
+    vec2 uv = vTexCoord;
+    vec3 color = ${params.effects.includes('noise') ? 'proceduralNoise(uv, uTime)' : 'vec3(0.0)'};
+    ${params.effects.includes('glow') ? 'color += bloomEffect(uv);' : ''}
+    ${params.effects.includes('pixelate') ? 'color = pixelate(uv, color, 0.01);' : ''}
+    fragColor = vec4(color, 1.0);
+}
+`;
   }
   
-  fragColor = vec4(0.0, 0.0, 0.0, 1.0);
+  return code;
 }
+
+function generateGLSLEffects(effects: string[], rng: Xoshiro256StarStar): string {
+  let functions = '\n';
+  
+  if (effects.includes('noise')) {
+    functions += `float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float noise(vec2 uv) {
+    vec2 i = floor(uv);
+    vec2 f = fract(uv);
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+}
+vec3 proceduralNoise(vec2 uv, float time) {
+    float n = noise(uv * 10.0 + time * 0.5);
+    return vec3(n) * vec3(0.5, 0.8, 1.0);
+}
+
+`;
+  }
+  
+  if (effects.includes('glow') || effects.includes('bloom')) {
+    functions += `vec3 bloomEffect(vec2 uv) {
+    float glow = 0.0;
+    for(float i = 1.0; i <= 4.0; i++) {
+        glow += noise(uv * i) / i;
+    }
+    return glow * vec3(1.0, 0.8, 0.5) * 0.3;
+}
+
+`;
+  }
+  
+  if (effects.includes('pixelate')) {
+    functions += `vec3 pixelate(vec2 uv, vec3 color, float pixelSize) {
+    vec2 pixelatedUV = floor(uv / pixelSize) * pixelSize;
+    return color;
+}
+
+`;
+  }
+  
+  return functions;
+}
+
+function generateWGSL(params: ShaderParams, rng: Xoshiro256StarStar): string {
+  return `// Generated WGSL Shader - ${params.type}
+
+${params.type === 'vertex' ? `
+@vertex
+fn vs_main(
+    @location(0) aPosition: vec3<f32>,
+    @location(1) aTexCoord: vec2<f32>
+) -> @builtin(position) vec4<f32> {
+    return vec4<f32>(aPosition, 1.0);
+}
+` : `
+@fragment
+fn fs_main(@location(0) vTexCoord: vec2<f32>) -> @location(0) vec4<f32> {
+    let color = vec3<f32>(vTexCoord.x, vTexCoord.y, 0.5);
+    return vec4<f32>(color, 1.0);
+}
+`}
 `;
 }
 
-function generatePBRShader(params: ShaderParams): string {
-  return `#version 300 es
-precision highp float;
+function generateHLSL(params: ShaderParams, rng: Xoshiro256StarStar): string {
+  return `// Generated HLSL Shader - ${params.type}
 
-in vec3 vNormal;
-in vec2 vUV;
-out vec4 fragColor;
+${params.type === 'vertex' ? `
+struct VS_INPUT {
+    float3 aPosition : POSITION;
+    float2 aTexCoord : TEXCOORD0;
+};
 
-uniform vec3 uAlbedo;
-uniform float uMetallic;
-uniform float uRoughness;
+struct VS_OUTPUT {
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
+};
 
-void main() {
-  vec3 N = normalize(vNormal);
-  vec3 V = vec3(0.0, 0.0, 1.0); // View direction
-  
-  // Simplified PBR
-  float NdotV = max(dot(N, V), 0.0);
-  vec3 diffuse = uAlbedo * (1.0 - uMetallic);
-  vec3 specular = mix(vec3(0.04), uAlbedo, uMetallic);
-  
-  vec3 color = diffuse + specular * pow(NdotV, 1.0 / max(uRoughness, 0.01));
-  fragColor = vec4(color, 1.0);
+VS_OUTPUT vs_main(VS_INPUT input) {
+    VS_OUTPUT output;
+    output.position = float4(input.aPosition, 1.0);
+    output.texCoord = input.aTexCoord;
+    return output;
 }
+` : `
+struct PS_INPUT {
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD0;
+};
+
+float4 ps_main(PS_INPUT input) : SV_TARGET {
+    float3 color = float3(input.texCoord.x, input.texCoord.y, 0.5);
+    return float4(color, 1.0);
+}
+`}
 `;
 }
 
-function generateBasicShader(params: ShaderParams): string {
-  return `#version 300 es
-precision highp float;
-
-in vec3 vNormal;
-in vec2 vUV;
-out vec4 fragColor;
-
-uniform vec3 uColor;
-
-void main() {
-  vec3 light = normalize(vec3(1.0, 1.0, 1.0));
-  float diff = max(dot(normalize(vNormal), light), 0.0);
-  fragColor = vec4(uColor * (0.3 + 0.7 * diff), 1.0);
-}
-`;
+async function exportShader(code: string, ext: string, outputPath: string, seed: Seed): Promise<string> {
+  const filename = `shader_${seed.$hash || 'unknown'}.${ext}`;
+  const filePath = path.join(outputPath, filename);
+  if (typeof fs !== 'undefined') fs.writeFileSync(filePath, code);
+  return filePath;
 }
 
-function extractParams(seed: Seed): ShaderParams {
-  const quality = (seed.genes?.quality?.value as string) || 'medium';
-  
-  const qualitySettings: Record<string, { iterations: number; epsilon: number }> = {
-    low: { iterations: 32, epsilon: 0.01 },
-    medium: { iterations: 64, epsilon: 0.001 },
-    high: { iterations: 128, epsilon: 0.0001 },
-    photorealistic: { iterations: 256, epsilon: 0.00001 }
-  };
-  
-  const settings = qualitySettings[quality] || qualitySettings.medium;
-  
-  return {
-    shaderType: (seed.genes?.shaderType?.value as string) || 'fragment',
-    technique: (seed.genes?.technique?.value as string) || 'raymarching',
-    iterations: seed.genes?.iterations?.value || settings.iterations,
-    epsilon: seed.genes?.epsilon?.value || settings.epsilon,
-    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
-  };
-}
+// ── Canonical aliases (added by phase-0.5 consolidation) ──
+export { generateShaderV3 as generateShader };

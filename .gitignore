@@ -33,9 +33,11 @@ line*.txt
 test-*.mjs
 test-*.js
 test-*.ts (except src/ tests/)
-*.cjs
+/.compile-token.cjs
 
 # Test results
 test-results/
 playwright-report/
 
+artifacts/
+cache/

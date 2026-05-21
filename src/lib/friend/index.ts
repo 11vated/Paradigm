@@ -57,3 +57,4 @@ export { speakAs, isSpeechAvailable, genePitch, geneRate, geneVolume, pickVoice 
 // ─── Tier 1 — Conversation engine ────────────────────────────────────────────
 export { generateReply, greetingFor } from './converse';
 export type { Turn, ReplyContext } from './converse';
+export * from './from-agent';

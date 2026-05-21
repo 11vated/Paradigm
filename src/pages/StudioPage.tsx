@@ -7,7 +7,8 @@ import { type Seed, type Artifact as ArtifactType } from '@/lib/kernel/types';
 import { useSeedStore } from '@/stores/seedStore';
 import {
   MessageSquare, FileCode, Dna, Image as ImageIcon, Library, GitBranch, Network,
-  Shuffle, TrendingUp, Heart, Download, Coins, Bot, Sparkles, Keyboard, Activity,
+  Shuffle, TrendingUp, Heart, Download, Coins, Bot,
+  Brain, Sparkles, Keyboard, Activity,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SeedChatIntegrated } from '@/components/studio/SeedChat-Integrated';
@@ -16,6 +17,7 @@ import PreviewViewport from '@/components/studio/PreviewViewport';
 import GSPLEditor from '@/components/studio/GSPLEditor';
 import GeneEditor from '@/components/studio/GeneEditor';
 import GalleryGrid from '@/components/studio/GalleryGrid';
+import SovereignAgentPanel from '@/components/studio/SovereignAgentPanel';
 import { VirtualGalleryGrid } from '@/components/studio/VirtualGalleryGrid';
 import SeedLibrary from '@/components/studio/SeedLibrary';
 import CompositionPanel from '@/components/studio/CompositionPanel';
@@ -39,7 +41,7 @@ import { CommandPalette } from '@/components/shell/CommandPalette';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 type PanelTab = 'chat' | 'editor' | 'genes' | 'gallery' | 'library' | 'lineage' | 'topology';
-type BottomTab = 'compose' | 'evolve' | 'breed' | 'export' | 'mint' | 'agent';
+type BottomTab = 'compose' | 'evolve' | 'breed' | 'export' | 'mint' | 'agent' | 'sovereign';
 
 const LEFT_TABS: { id: PanelTab; label: string; Icon: React.ComponentType<{ size?: number }> }[] = [
   { id: 'chat',     label: 'Chat',     Icon: MessageSquare },
@@ -57,7 +59,8 @@ const BOTTOM_TABS: { id: BottomTab; label: string; Icon: React.ComponentType<{ s
   { id: 'breed',   label: 'Breed',   Icon: Heart },
   { id: 'export',  label: 'Export',  Icon: Download },
   { id: 'mint',    label: 'Mint',    Icon: Coins },
-  { id: 'agent',   label: 'Agent',   Icon: Bot },
+  { id: 'agent',   label: 'Agent',     Icon: Bot },
+  { id: 'sovereign', label: 'Sovereign', Icon: Brain },
 ];
 
 interface Artifact {
@@ -534,6 +537,11 @@ export function StudioPage() {
                   {activeBottom === 'agent' && (
                     <div style={{ display: 'flex', gap: 8, padding: 8 }}>
                       <div style={{ flex: 1 }}><AgentPanel onSeedCreated={handleSelectSeed} /></div>
+                    </div>
+                  )}
+                  {activeBottom === 'sovereign' && (
+                    <div style={{ display: 'flex', padding: 8, height: '100%' }}>
+                      <div style={{ flex: 1, overflow: 'auto' }}><SovereignAgentPanel /></div>
                     </div>
                   )}
                 </div>

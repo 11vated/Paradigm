@@ -16,6 +16,12 @@
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
 import { kernelNowIso } from './src/lib/kernel/clock.js';
+import { registerHealthRoutes } from './src/server/routes/health.js';
+import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
+import { registerCompositionRoutes } from './src/server/routes/composition.js';
+import { registerLibraryRoutes } from './src/server/routes/library.js';
+import { registerGsplRoutes } from './src/server/routes/gspl.js';
+import { registerAuthRoutes } from './src/server/routes/auth.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -246,100 +252,6 @@ async function startServer() {
     next();
   });
 
-  app.get('/metrics', (_req, res) => {
-    const lines: string[] = [];
-    const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
-    const memUsage = process.memoryUsage();
-
-    // Process metrics
-    lines.push('# HELP process_uptime_seconds Server uptime in seconds');
-    lines.push('# TYPE process_uptime_seconds gauge');
-    lines.push(`process_uptime_seconds ${uptimeSec}`);
-    lines.push('# HELP process_resident_memory_bytes Resident memory size');
-    lines.push('# TYPE process_resident_memory_bytes gauge');
-    lines.push(`process_resident_memory_bytes ${memUsage.rss}`);
-    lines.push('# HELP process_heap_used_bytes Heap used');
-    lines.push('# TYPE process_heap_used_bytes gauge');
-    lines.push(`process_heap_used_bytes ${memUsage.heapUsed}`);
-
-    // HTTP request totals
-    lines.push('# HELP http_requests_total Total HTTP requests');
-    lines.push('# TYPE http_requests_total counter');
-    for (const [key, count] of metrics.httpRequestsTotal) {
-      const [method, route, status] = key.split(':');
-      lines.push(`http_requests_total{method="${method}",route="${route}",status="${status}"} ${count}`);
-    }
-
-    // HTTP request duration histogram
-    lines.push('# HELP http_request_duration_ms HTTP request duration histogram');
-    lines.push('# TYPE http_request_duration_ms histogram');
-    let cumulative = 0;
-    for (const le of DURATION_BUCKETS) {
-      const bucketKey = String(le === Infinity ? '+Inf' : le);
-      cumulative += metrics.httpRequestDurationBuckets.get(bucketKey) || 0;
-      lines.push(`http_request_duration_ms_bucket{le="${bucketKey}"} ${cumulative}`);
-    }
-    const totalRequests = metrics.httpRequestDurationMs.length;
-    const totalDuration = metrics.httpRequestDurationMs.reduce((a, b) => a + b, 0);
-    lines.push(`http_request_duration_ms_count ${totalRequests}`);
-    lines.push(`http_request_duration_ms_sum ${totalDuration}`);
-
-    // Domain metrics
-    lines.push('# HELP paradigm_seeds_total Total seeds in store');
-    lines.push('# TYPE paradigm_seeds_total gauge');
-    lines.push(`paradigm_seeds_total ${seeds.length}`);
-
-    lines.push('# HELP paradigm_seeds_created_total Seeds created');
-    lines.push('# TYPE paradigm_seeds_created_total counter');
-    lines.push(`paradigm_seeds_created_total ${metrics.seedsCreated}`);
-
-    lines.push('# HELP paradigm_seeds_mutated_total Seeds mutated');
-    lines.push('# TYPE paradigm_seeds_mutated_total counter');
-    lines.push(`paradigm_seeds_mutated_total ${metrics.seedsMutated}`);
-
-    lines.push('# HELP paradigm_seeds_bred_total Seeds bred');
-    lines.push('# TYPE paradigm_seeds_bred_total counter');
-    lines.push(`paradigm_seeds_bred_total ${metrics.seedsBred}`);
-
-    lines.push('# HELP paradigm_seeds_evolved_total Seeds evolved');
-    lines.push('# TYPE paradigm_seeds_evolved_total counter');
-    lines.push(`paradigm_seeds_evolved_total ${metrics.seedsEvolved}`);
-
-    lines.push('# HELP paradigm_seeds_composed_total Seeds composed');
-    lines.push('# TYPE paradigm_seeds_composed_total counter');
-    lines.push(`paradigm_seeds_composed_total ${metrics.seedsComposed}`);
-
-    lines.push('# HELP paradigm_agent_queries_total Agent queries');
-    lines.push('# TYPE paradigm_agent_queries_total counter');
-    lines.push(`paradigm_agent_queries_total ${metrics.agentQueries}`);
-
-    lines.push('# HELP paradigm_auth_attempts_total Auth attempts');
-    lines.push('# TYPE paradigm_auth_attempts_total counter');
-    lines.push(`paradigm_auth_attempts_total ${metrics.authAttempts}`);
-
-    lines.push('# HELP paradigm_auth_successes_total Auth successes');
-    lines.push('# TYPE paradigm_auth_successes_total counter');
-    lines.push(`paradigm_auth_successes_total ${metrics.authSuccesses}`);
-
-    lines.push('# HELP paradigm_ws_connections_total Total WS connections');
-    lines.push('# TYPE paradigm_ws_connections_total counter');
-    lines.push(`paradigm_ws_connections_total ${metrics.wsConnections}`);
-
-    lines.push('# HELP paradigm_ws_active_connections Active WS connections');
-    lines.push('# TYPE paradigm_ws_active_connections gauge');
-    lines.push(`paradigm_ws_active_connections ${metrics.wsActiveConnections}`);
-
-    lines.push('# HELP paradigm_kernel_engines Total domain engines');
-    lines.push('# TYPE paradigm_kernel_engines gauge');
-    lines.push(`paradigm_kernel_engines ${getAllDomains().length}`);
-
-    lines.push('# HELP paradigm_kernel_gene_types Total gene types');
-    lines.push('# TYPE paradigm_kernel_gene_types gauge');
-    lines.push(`paradigm_kernel_gene_types ${Object.keys(GENE_TYPES).length}`);
-
-    res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
-    res.send(lines.join('\n') + '\n');
-  });
 
   // ── Global Rate Limiter (100 req/min per IP) ────────────────────────────
   const globalLimiter = createRateLimiter(60000, 100);
@@ -393,6 +305,16 @@ async function startServer() {
   // These delegate to the store so existing endpoint code doesn't need a full rewrite.
   // Must await since all store methods are now async (supports PostgreSQL, MongoDB, and JSON backends).
   const seeds: any[] = await store.getAllSeeds();
+
+  // ── Health, readiness, and metrics (extracted to src/server/routes/health.ts) ──
+  registerHealthRoutes(app, {
+    startTime, metrics, DURATION_BUCKETS, seeds, cache, store,
+    checkSbert, checkPostgres, checkStore, checkRedis, buildReport,
+    getAllDomains, GENE_TYPES,
+  });
+
+  // ── Sovereign Agent — POST /run, /canon/ingest, GET /canon/search, /info ──
+  registerSovereignAgentRoutes(app);
   const saveSeeds = () => { store.persist(); };
 
   // Audit helper — logs mutations with user context
@@ -430,50 +352,6 @@ async function startServer() {
   // HEALTH & STATUS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/health', (_req, res) => {
-    const cacheStats = cache.stats();
-    res.json({
-      status: 'ok',
-      uptime_seconds: Math.floor((Date.now() - startTime) / 1000),
-      version: '2.0.0',
-      backend: store.backend,
-      cache: {
-        backend: cache.backend,
-        hits: cacheStats.hits,
-        misses: cacheStats.misses,
-        hitRate: cacheStats.hits + cacheStats.misses > 0
-          ? (cacheStats.hits / (cacheStats.hits + cacheStats.misses) * 100).toFixed(1) + '%'
-          : 'N/A',
-      },
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // Readiness probe — separate from liveness so load balancers can drain
-  // traffic from degraded instances without killing the process. Checks run
-  // in parallel so a single slow dep can't blow the client's timeout.
-  // See src/lib/health/readiness.ts for per-check semantics.
-  app.get('/ready', async (_req, res) => {
-    const sbertUrl = process.env.SBERT_URL;
-    // Only attempt a pg probe when DATABASE_URL is set — otherwise importing
-    // the pg module would construct a pool that immediately fails.
-    const pgProbe: (() => Promise<unknown>) | undefined = process.env.DATABASE_URL
-      ? async () => {
-          const { probePg } = await import('./src/lib/intelligence/pgvector.js');
-          await probePg();
-        }
-      : undefined;
-
-    const [sbert, postgres, storeCheck, redisCheck] = await Promise.all([
-      checkSbert(sbertUrl),
-      checkPostgres(pgProbe),
-      checkStore(async () => store.getAllSeeds()),
-      checkRedis(),
-    ]);
-
-    const report = buildReport([storeCheck, postgres, sbert, redisCheck]);
-    res.status(report.ready ? 200 : 503).json(report);
-  });
 
   // ── Audit Log (admin only) ─────────────────────────────────────────────
   app.get('/api/audit', optionalAuth, async (req: any, res: any) => {
@@ -568,44 +446,7 @@ async function startServer() {
 
   const authLimiter = createRateLimiter(60000, 20); // 20 req/min for auth
 
-  app.post('/api/auth/register', authLimiter, validateBody(RegisterSchema), (req: any, res: any) => {
-    const { username, password } = req.body;
-    const result = registerUser(username, password);
-    if ('error' in result) return res.status(400).json(result);
-    metrics.authAttempts++;
-    metrics.authSuccesses++;
-    log('INFO', 'User registered', { username });
-    res.json(result);
-  });
-
-  app.post('/api/auth/login', authLimiter, validateBody(LoginSchema), (req: any, res: any) => {
-    const { username, password } = req.body;
-    const result = loginUser(username, password);
-    if ('error' in result) return res.status(401).json(result);
-    metrics.authAttempts++;
-    metrics.authSuccesses++;
-    log('INFO', 'User logged in', { username });
-    audit('auth.login', 'user', undefined, { username }, req);
-    res.json(result);
-  });
-
-  app.post('/api/auth/refresh', (req: any, res: any) => {
-    const { refreshToken } = req.body;
-    if (!refreshToken) return res.status(400).json({ error: 'refreshToken required' });
-    const result = refreshAccessToken(refreshToken);
-    if ('error' in result) return res.status(401).json(result);
-    res.json(result);
-  });
-
-  app.post('/api/auth/logout', optionalAuth, (req: any, res: any) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader?.slice(7);
-    if (token) revokeToken(token);
-    // Also revoke refresh token if provided
-    if (req.body.refreshToken) revokeToken(req.body.refreshToken);
-    audit('auth.logout', 'user', req.user?.sub, {}, req);
-    res.json({ success: true });
-  });
+  registerAuthRoutes(app, { authLimiter, optionalAuth, validateBody, RegisterSchema, LoginSchema, registerUser, loginUser, refreshAccessToken, audit, metrics, log, revokeToken });
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SEED CRUD
@@ -1339,32 +1180,7 @@ async function startServer() {
   // COMPOSITION (deterministic — kernel functor bridges + BFS)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/api/composition/graph', (_req, res) => {
-    res.json(getCompositionGraph());
-  });
-
-  app.get('/api/composition/path', async (req: any, res: any) => {
-    const source = String(req.query.source || '');
-    const target = String(req.query.target || '');
-    if (!source || !target) return res.status(400).json({ detail: 'source and target required' });
-
-    // Check cache (paths are deterministic, long TTL)
-    const cacheKey = compositionPathKey(source, target);
-    const cached = await cache.get(cacheKey);
-    if (cached) return res.json(JSON.parse(cached));
-
-    const pathResult = findCompositionPath(source, target);
-    if (!pathResult) return res.status(404).json({ detail: 'No composition path found' });
-
-    // Format for frontend compatibility: [[src, functor, tgt], ...]
-    const formatted = pathResult.bridges.map(name => [source, name, target]);
-    const result = { path: formatted, cost: pathResult.bridges.length, coherence: pathResult.totalCoherence };
-
-    // Cache for 1 hour (paths never change at runtime)
-    await cache.set(cacheKey, JSON.stringify(result), 3600);
-
-    res.json(result);
-  });
+  registerCompositionRoutes(app, { getCompositionGraph, findCompositionPath, cache, compositionPathKey });
 
   app.post('/api/seeds/:id/compose', optionalAuth, validateBody(ComposeSeedSchema), (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
@@ -1546,41 +1362,8 @@ async function startServer() {
     });
   });
 
-  app.post('/api/gspl/parse', validateBody(GsplParseSchema), (req: any, res: any) => {
-    const { parse: parseGSPL } = require('./src/lib/gspl/parser.js');
-    const { tokenize } = require('./src/lib/gspl/lexer.js');
-    const source = req.body.source;
-    const { tokens } = tokenize(source);
-    const { ast, errors: parseErrors } = parseGSPL(source);
-    const declarations = ast.body.filter((s: any) => s.kind === 'seed_decl' || s.kind === 'let_binding' || s.kind === 'fn_decl').length;
-
-    res.json({
-      ast,
-      errors: parseErrors.map((e: any) => `Line ${e.line}:${e.col}: ${e.message}`),
-      warnings: [],
-      stats: { tokens: tokens.length, declarations },
-    });
-  });
-
-  app.post('/api/gspl/execute', optionalAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
-    const { executeGSPL } = require('./src/lib/gspl/interpreter.js');
-    const source = req.body.source || '';
-
-    const result = executeGSPL(source, seeds);
-
-    // Persist any newly created seeds
-    if (result.seeds.length > 0) {
-      for (const s of result.seeds) seeds.push(s);
-      saveSeeds();
-    }
-
-    res.json({
-      seeds: result.seeds,
-      errors: result.errors,
-      output: result.output,
-      stats: { seeds_created: result.seeds.length, operations: result.seeds.length + result.output.length },
-      types: {},
-    });
+  registerGsplRoutes(app, {
+    validateBody, optionalAuth, GsplParseSchema, GsplExecuteSchema, seeds, saveSeeds,
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -2212,25 +1995,7 @@ async function startServer() {
   // LIBRARY
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/api/library', (_req, res) => {
-    res.json({ seeds, stats: { total_seeds: seeds.length } });
-  });
-
-  app.post('/api/library/import', optionalAuth, validateBody(LibraryImportSchema), (req: any, res: any) => {
-    const seedToImport = seeds.find((s: any) => s.$hash === req.body.seed_hash);
-    if (!seedToImport) return res.status(404).json({ detail: 'Seed not found in library' });
-
-    const newSeed = {
-      ...seedToImport,
-      id: crypto.randomUUID(),
-      $lineage: { generation: 0, operation: 'import' },
-      $fitness: { overall: 1.0 },
-    };
-    seeds.push(newSeed);
-    saveSeeds();
-    res.json(newSeed);
-  });
-
+  registerLibraryRoutes(app, { seeds, saveSeeds, validateBody, optionalAuth, LibraryImportSchema });
   // ═══════════════════════════════════════════════════════════════════════════
   // ON-CHAIN SOVEREIGNTY (ERC-721 NFT minting on Sepolia)
   // ═══════════════════════════════════════════════════════════════════════════

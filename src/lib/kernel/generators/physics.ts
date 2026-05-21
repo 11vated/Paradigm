@@ -1,110 +1,164 @@
 /**
- * Physics Generator — produces simulation configuration files
- * Exports physics parameters for use in external engines
+ * Physics Generator V3 — Physics Simulations
+ * Features: Rigid body, soft body, fluid, particle physics
+ * Export: JSON simulation data, video, interactive HTML
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
-import { Xoshiro256StarStar, rngFromHash } from '../rng.js';
-import { kernelNow, kernelNowIso } from '../clock';
+import { Xoshiro256StarStar } from '../rng';
 
 interface PhysicsParams {
+  type: 'rigid' | 'soft' | 'fluid' | 'particle' | 'cloth';
+  objects: number;
   gravity: number;
   friction: number;
   elasticity: number;
-  simulationType: string;
-  steps: number;
-  quality: 'low' | 'medium' | 'high' | 'photorealistic';
+  duration: number;
+  timestep: number;
 }
 
-export async function generatePhysics(seed: Seed, outputPath: string): Promise<{ filePath: string; configSize: number }> {
-  const rng = rngFromHash(seed.$hash || '');
-  const params = extractParams(seed);
+interface PhysicsObject {
+  id: string;
+  type: 'sphere' | 'box' | 'plane';
+  mass: number;
+  position: [number, number, number];
+  velocity: [number, number, number];
+}
 
-  // Generate physics simulation config
-  const config = {
-    simulation: {
-      type: params.simulationType,
-      gravity: params.gravity,
-      friction: params.friction,
-      elasticity: params.elasticity,
-      steps: params.steps,
-      timeStep: 1 / 60,
-      solver: 'sequential_impulse',
-      quality: params.quality
-    },
-    bodies: generateBodies(params, rng),
-    constraints: generateConstraints(params),
-    metadata: {
-      generated: kernelNowIso(),
-      seed_hash: seed.$hash ?? 'unknown',
-      engine_version: '2.0.0'
-    }
-  };
+interface SimulationFrame {
+  time: number;
+  objects: PhysicsObject[];
+}
 
-  // Ensure output directory exists
-  const dir = path.dirname(outputPath);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
-  // Write JSON config
-  const jsonPath = outputPath.replace(/\.gltf$/, '.json');
-  fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
-
+export async function generatePhysicsV3(
+  seed: Seed,
+  outputPath: string
+): Promise<{
+  jsonPath: string;
+  htmlPath: string;
+  frameCount: number;
+  objectCount: number;
+}> {
+  const rng = new Xoshiro256StarStar(seed.$hash || 'physics-default');
+  const params = extractPhysicsParams(seed, rng);
+  
+  // Create initial objects
+  const objects = createPhysicsObjects(params, rng);
+  
+  // Run simulation
+  const frames = runSimulation(params, objects, rng);
+  
+  // Export formats
+  const jsonPath = await exportSimulationJSON(frames, outputPath, seed);
+  const htmlPath = await exportInteractiveHTML(params, frames, outputPath, seed);
+  
   return {
-    filePath: jsonPath,
-    configSize: JSON.stringify(config).length
+    jsonPath,
+    htmlPath,
+    frameCount: frames.length,
+    objectCount: objects.length
   };
 }
 
-function generateBodies(params: PhysicsParams, rng: Xoshiro256StarStar): any[] {
-  const bodyCount = params.quality === 'photorealistic' ? 50 :
-                   params.quality === 'high' ? 30 :
-                   params.quality === 'medium' ? 15 : 8;
+function extractPhysicsParams(seed: Seed, rng: Xoshiro256StarStar): PhysicsParams {
+  const types = ['rigid', 'soft', 'fluid', 'particle', 'cloth'] as const;
+  
+  return {
+    type: types[Math.floor(rng.nextF64() * types.length)],
+    objects: 5 + Math.floor(rng.nextF64() * 45),
+    gravity: -9.8 + rng.nextF64() * 5,
+    friction: rng.nextF64(),
+    elasticity: 0.1 + rng.nextF64() * 0.9,
+    duration: 5 + rng.nextF64() * 25,
+    timestep: 0.016
+  };
+}
 
-  const bodies = [];
-  for (let i = 0; i < bodyCount; i++) {
-    bodies.push({
-      id: `body_${i}`,
-      type: i === 0 ? 'dynamic' : 'static',
-      shape: ['box', 'sphere', 'cylinder'][i % 3],
-      position: [rng.nextF64() * 10 - 5, rng.nextF64() * 10, rng.nextF64() * 10 - 5],
-      rotation: [0, 0, 0],
-      mass: i === 0 ? 1.0 : 0,
-      friction: params.friction,
-      restitution: params.elasticity,
-      dimensions: [1, 1, 1]
+function createPhysicsObjects(params: PhysicsParams, rng: Xoshiro256StarStar): PhysicsObject[] {
+  const objects: PhysicsObject[] = [];
+  const shapeTypes = ['sphere', 'box', 'plane'] as const;
+  
+  for (let i = 0; i < params.objects; i++) {
+    objects.push({
+      id: `obj_${i}`,
+      type: shapeTypes[Math.floor(rng.nextF64() * shapeTypes.length)],
+      mass: 0.1 + rng.nextF64() * 10,
+      position: [(rng.nextF64() - 0.5) * 20, rng.nextF64() * 10, (rng.nextF64() - 0.5) * 20],
+      velocity: [(rng.nextF64() - 0.5) * 5, 0, (rng.nextF64() - 0.5) * 5]
     });
   }
-
-  return bodies;
+  
+  return objects;
 }
 
-function generateConstraints(params: PhysicsParams): any[] {
-  return [
-    {
-      type: 'gravity',
-      value: params.gravity,
-      direction: [0, -1, 0]
-    },
-    {
-      type: 'ground',
-      position: [0, 0, 0],
-      normal: [0, 1, 0]
-    }
-  ];
+function runSimulation(params: PhysicsParams, initialObjects: PhysicsObject[], rng: Xoshiro256StarStar): SimulationFrame[] {
+  const frames: SimulationFrame[] = [];
+  const objects = JSON.parse(JSON.stringify(initialObjects));
+  const frameCount = Math.floor(params.duration / params.timestep);
+  
+  for (let f = 0; f < Math.min(frameCount, 300); f++) {
+    const time = f * params.timestep;
+    
+    // Update physics (Euler integration)
+    objects.forEach(obj => {
+      // Apply gravity
+      obj.velocity[1] += params.gravity * params.timestep;
+      
+      // Update position
+      obj.position[0] += obj.velocity[0] * params.timestep;
+      obj.position[1] += obj.velocity[1] * params.timestep;
+      obj.position[2] += obj.velocity[2] * params.timestep;
+      
+      // Ground collision
+      if (obj.position[1] < 0) {
+        obj.position[1] = 0;
+        obj.velocity[1] = -obj.velocity[1] * params.elasticity;
+        obj.velocity[0] *= (1 - params.friction);
+        obj.velocity[2] *= (1 - params.friction);
+      }
+    });
+    
+    frames.push({ time, objects: JSON.parse(JSON.stringify(objects)) });
+  }
+  
+  return frames;
 }
 
-function extractParams(seed: Seed): PhysicsParams {
-  const quality = (seed.genes?.quality?.value as string) || 'medium';
-  const grav = (seed.genes?.gravity?.value as number) || 0.5;
-
-  return {
-    gravity: typeof grav === 'number' ? +(grav * 20).toFixed(2) : 9.8,
-    friction: (seed.genes?.friction?.value as number) || 0.3,
-    elasticity: (seed.genes?.elasticity?.value as number) || 0.8,
-    simulationType: (seed.genes?.simulationType?.value as string) || 'rigid_body',
-    steps: typeof seed.genes?.steps?.value === 'number' ? seed.genes.steps.value : 1000,
-    quality: (['low', 'medium', 'high', 'photorealistic'].includes(quality) ? quality : 'medium') as 'low' | 'medium' | 'high' | 'photorealistic'
-  };
+async function exportSimulationJSON(frames: SimulationFrame[], outputPath: string, seed: Seed): Promise<string> {
+  const filename = `physics_${seed.$hash || 'unknown'}.json`;
+  const filePath = path.join(outputPath, filename);
+  
+  if (typeof fs !== 'undefined') {
+    fs.writeFileSync(filePath, JSON.stringify(frames, null, 2));
+  }
+  
+  return filePath;
 }
+
+async function exportInteractiveHTML(params: PhysicsParams, frames: SimulationFrame[], outputPath: string, seed: Seed): Promise<string> {
+  const filename = `physics_${seed.$hash || 'unknown'}.html`;
+  const filePath = path.join(outputPath, filename);
+  
+  const html = `<!DOCTYPE html>
+<html><head><title>Physics Sim - ${seed.$hash}</title>
+<style>body{margin:0;background:#1a1a1a}canvas{display:block;margin:0 auto}</style>
+</head><body><canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=800;c.height=600;
+const frames=${JSON.stringify(frames)};
+let f=0;
+function render(){const frame=frames[f%c.frames.length];x.fillStyle='#1a1a1a';x.fillRect(0,0,800,600);
+frame.objects.forEach(o=>{x.fillStyle='#3b82f6';x.beginPath();x.arc(400+o.position[0]*20,580-o.position[1]*40,Math.max(5,o.mass*3),0,Math.PI*2);x.fill();});
+f++;requestAnimationFrame(render);}
+render();
+</script></body></html>`;
+  
+  if (typeof fs !== 'undefined') fs.writeFileSync(filePath, html);
+  return filePath;
+}
+
+// ── Canonical aliases (added by phase-0.5 consolidation) ──
+export { generatePhysicsV3 as generatePhysics };
