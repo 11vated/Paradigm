@@ -38,6 +38,7 @@ import crypto from 'crypto';
 import { composeSeed, findCompositionPath, getFunctor, FUNCTOR_REGISTRY } from '../kernel/composition.js';
 import { mergeTrees, type MergeConflict } from '../vcs/operations.js';
 import type { SeedTree, Gene } from '../vcs/objects.js';
+import { kernelNowIso } from '../kernel/clock';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -194,7 +195,7 @@ export function composeMultiDomain(
       parents,
       operation: `compose:multi:${strategy}`,
       generation: generationMax + 1,
-      timestamp: new Date().toISOString(),
+      timestamp: kernelNowIso(),
     },
     genes: merged.genes,
     $metadata: { composition: compositionMeta },
