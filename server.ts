@@ -18,6 +18,8 @@ import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
 import { kernelNowIso } from './src/lib/kernel/clock.js';
 import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
+import { registerCompositionRoutes } from './src/server/routes/composition.js';
+import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 initServerPolyfills();
 
@@ -1214,32 +1216,7 @@ async function startServer() {
   // COMPOSITION (deterministic — kernel functor bridges + BFS)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/api/composition/graph', (_req, res) => {
-    res.json(getCompositionGraph());
-  });
-
-  app.get('/api/composition/path', async (req: any, res: any) => {
-    const source = String(req.query.source || '');
-    const target = String(req.query.target || '');
-    if (!source || !target) return res.status(400).json({ detail: 'source and target required' });
-
-    // Check cache (paths are deterministic, long TTL)
-    const cacheKey = compositionPathKey(source, target);
-    const cached = await cache.get(cacheKey);
-    if (cached) return res.json(JSON.parse(cached));
-
-    const pathResult = findCompositionPath(source, target);
-    if (!pathResult) return res.status(404).json({ detail: 'No composition path found' });
-
-    // Format for frontend compatibility: [[src, functor, tgt], ...]
-    const formatted = pathResult.bridges.map(name => [source, name, target]);
-    const result = { path: formatted, cost: pathResult.bridges.length, coherence: pathResult.totalCoherence };
-
-    // Cache for 1 hour (paths never change at runtime)
-    await cache.set(cacheKey, JSON.stringify(result), 3600);
-
-    res.json(result);
-  });
+  registerCompositionRoutes(app, { getCompositionGraph, findCompositionPath, cache, compositionPathKey });
 
   app.post('/api/seeds/:id/compose', optionalAuth, validateBody(ComposeSeedSchema), (req: any, res: any) => {
     const parent = seeds.find((s: any) => s.id === req.params.id);
@@ -2054,25 +2031,7 @@ async function startServer() {
   // LIBRARY
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/api/library', (_req, res) => {
-    res.json({ seeds, stats: { total_seeds: seeds.length } });
-  });
-
-  app.post('/api/library/import', optionalAuth, validateBody(LibraryImportSchema), (req: any, res: any) => {
-    const seedToImport = seeds.find((s: any) => s.$hash === req.body.seed_hash);
-    if (!seedToImport) return res.status(404).json({ detail: 'Seed not found in library' });
-
-    const newSeed = {
-      ...seedToImport,
-      id: crypto.randomUUID(),
-      $lineage: { generation: 0, operation: 'import' },
-      $fitness: { overall: 1.0 },
-    };
-    seeds.push(newSeed);
-    saveSeeds();
-    res.json(newSeed);
-  });
-
+  registerLibraryRoutes(app, { seeds, saveSeeds, validateBody, optionalAuth, LibraryImportSchema });
   // ═══════════════════════════════════════════════════════════════════════════
   // ON-CHAIN SOVEREIGNTY (ERC-721 NFT minting on Sepolia)
   // ═══════════════════════════════════════════════════════════════════════════
