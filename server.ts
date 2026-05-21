@@ -16,6 +16,7 @@
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
 import { kernelNowIso } from './src/lib/kernel/clock.js';
+import { registerHealthRoutes } from './src/server/routes/health.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -246,100 +247,6 @@ async function startServer() {
     next();
   });
 
-  app.get('/metrics', (_req, res) => {
-    const lines: string[] = [];
-    const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
-    const memUsage = process.memoryUsage();
-
-    // Process metrics
-    lines.push('# HELP process_uptime_seconds Server uptime in seconds');
-    lines.push('# TYPE process_uptime_seconds gauge');
-    lines.push(`process_uptime_seconds ${uptimeSec}`);
-    lines.push('# HELP process_resident_memory_bytes Resident memory size');
-    lines.push('# TYPE process_resident_memory_bytes gauge');
-    lines.push(`process_resident_memory_bytes ${memUsage.rss}`);
-    lines.push('# HELP process_heap_used_bytes Heap used');
-    lines.push('# TYPE process_heap_used_bytes gauge');
-    lines.push(`process_heap_used_bytes ${memUsage.heapUsed}`);
-
-    // HTTP request totals
-    lines.push('# HELP http_requests_total Total HTTP requests');
-    lines.push('# TYPE http_requests_total counter');
-    for (const [key, count] of metrics.httpRequestsTotal) {
-      const [method, route, status] = key.split(':');
-      lines.push(`http_requests_total{method="${method}",route="${route}",status="${status}"} ${count}`);
-    }
-
-    // HTTP request duration histogram
-    lines.push('# HELP http_request_duration_ms HTTP request duration histogram');
-    lines.push('# TYPE http_request_duration_ms histogram');
-    let cumulative = 0;
-    for (const le of DURATION_BUCKETS) {
-      const bucketKey = String(le === Infinity ? '+Inf' : le);
-      cumulative += metrics.httpRequestDurationBuckets.get(bucketKey) || 0;
-      lines.push(`http_request_duration_ms_bucket{le="${bucketKey}"} ${cumulative}`);
-    }
-    const totalRequests = metrics.httpRequestDurationMs.length;
-    const totalDuration = metrics.httpRequestDurationMs.reduce((a, b) => a + b, 0);
-    lines.push(`http_request_duration_ms_count ${totalRequests}`);
-    lines.push(`http_request_duration_ms_sum ${totalDuration}`);
-
-    // Domain metrics
-    lines.push('# HELP paradigm_seeds_total Total seeds in store');
-    lines.push('# TYPE paradigm_seeds_total gauge');
-    lines.push(`paradigm_seeds_total ${seeds.length}`);
-
-    lines.push('# HELP paradigm_seeds_created_total Seeds created');
-    lines.push('# TYPE paradigm_seeds_created_total counter');
-    lines.push(`paradigm_seeds_created_total ${metrics.seedsCreated}`);
-
-    lines.push('# HELP paradigm_seeds_mutated_total Seeds mutated');
-    lines.push('# TYPE paradigm_seeds_mutated_total counter');
-    lines.push(`paradigm_seeds_mutated_total ${metrics.seedsMutated}`);
-
-    lines.push('# HELP paradigm_seeds_bred_total Seeds bred');
-    lines.push('# TYPE paradigm_seeds_bred_total counter');
-    lines.push(`paradigm_seeds_bred_total ${metrics.seedsBred}`);
-
-    lines.push('# HELP paradigm_seeds_evolved_total Seeds evolved');
-    lines.push('# TYPE paradigm_seeds_evolved_total counter');
-    lines.push(`paradigm_seeds_evolved_total ${metrics.seedsEvolved}`);
-
-    lines.push('# HELP paradigm_seeds_composed_total Seeds composed');
-    lines.push('# TYPE paradigm_seeds_composed_total counter');
-    lines.push(`paradigm_seeds_composed_total ${metrics.seedsComposed}`);
-
-    lines.push('# HELP paradigm_agent_queries_total Agent queries');
-    lines.push('# TYPE paradigm_agent_queries_total counter');
-    lines.push(`paradigm_agent_queries_total ${metrics.agentQueries}`);
-
-    lines.push('# HELP paradigm_auth_attempts_total Auth attempts');
-    lines.push('# TYPE paradigm_auth_attempts_total counter');
-    lines.push(`paradigm_auth_attempts_total ${metrics.authAttempts}`);
-
-    lines.push('# HELP paradigm_auth_successes_total Auth successes');
-    lines.push('# TYPE paradigm_auth_successes_total counter');
-    lines.push(`paradigm_auth_successes_total ${metrics.authSuccesses}`);
-
-    lines.push('# HELP paradigm_ws_connections_total Total WS connections');
-    lines.push('# TYPE paradigm_ws_connections_total counter');
-    lines.push(`paradigm_ws_connections_total ${metrics.wsConnections}`);
-
-    lines.push('# HELP paradigm_ws_active_connections Active WS connections');
-    lines.push('# TYPE paradigm_ws_active_connections gauge');
-    lines.push(`paradigm_ws_active_connections ${metrics.wsActiveConnections}`);
-
-    lines.push('# HELP paradigm_kernel_engines Total domain engines');
-    lines.push('# TYPE paradigm_kernel_engines gauge');
-    lines.push(`paradigm_kernel_engines ${getAllDomains().length}`);
-
-    lines.push('# HELP paradigm_kernel_gene_types Total gene types');
-    lines.push('# TYPE paradigm_kernel_gene_types gauge');
-    lines.push(`paradigm_kernel_gene_types ${Object.keys(GENE_TYPES).length}`);
-
-    res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
-    res.send(lines.join('\n') + '\n');
-  });
 
   // ── Global Rate Limiter (100 req/min per IP) ────────────────────────────
   const globalLimiter = createRateLimiter(60000, 100);
@@ -393,6 +300,13 @@ async function startServer() {
   // These delegate to the store so existing endpoint code doesn't need a full rewrite.
   // Must await since all store methods are now async (supports PostgreSQL, MongoDB, and JSON backends).
   const seeds: any[] = await store.getAllSeeds();
+
+  // ── Health, readiness, and metrics (extracted to src/server/routes/health.ts) ──
+  registerHealthRoutes(app, {
+    startTime, metrics, DURATION_BUCKETS, seeds, cache, store,
+    checkSbert, checkPostgres, checkStore, checkRedis, buildReport,
+    getAllDomains, GENE_TYPES,
+  });
   const saveSeeds = () => { store.persist(); };
 
   // Audit helper — logs mutations with user context
@@ -430,50 +344,6 @@ async function startServer() {
   // HEALTH & STATUS
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.get('/health', (_req, res) => {
-    const cacheStats = cache.stats();
-    res.json({
-      status: 'ok',
-      uptime_seconds: Math.floor((Date.now() - startTime) / 1000),
-      version: '2.0.0',
-      backend: store.backend,
-      cache: {
-        backend: cache.backend,
-        hits: cacheStats.hits,
-        misses: cacheStats.misses,
-        hitRate: cacheStats.hits + cacheStats.misses > 0
-          ? (cacheStats.hits / (cacheStats.hits + cacheStats.misses) * 100).toFixed(1) + '%'
-          : 'N/A',
-      },
-      timestamp: new Date().toISOString(),
-    });
-  });
-
-  // Readiness probe — separate from liveness so load balancers can drain
-  // traffic from degraded instances without killing the process. Checks run
-  // in parallel so a single slow dep can't blow the client's timeout.
-  // See src/lib/health/readiness.ts for per-check semantics.
-  app.get('/ready', async (_req, res) => {
-    const sbertUrl = process.env.SBERT_URL;
-    // Only attempt a pg probe when DATABASE_URL is set — otherwise importing
-    // the pg module would construct a pool that immediately fails.
-    const pgProbe: (() => Promise<unknown>) | undefined = process.env.DATABASE_URL
-      ? async () => {
-          const { probePg } = await import('./src/lib/intelligence/pgvector.js');
-          await probePg();
-        }
-      : undefined;
-
-    const [sbert, postgres, storeCheck, redisCheck] = await Promise.all([
-      checkSbert(sbertUrl),
-      checkPostgres(pgProbe),
-      checkStore(async () => store.getAllSeeds()),
-      checkRedis(),
-    ]);
-
-    const report = buildReport([storeCheck, postgres, sbert, redisCheck]);
-    res.status(report.ready ? 200 : 503).json(report);
-  });
 
   // ── Audit Log (admin only) ─────────────────────────────────────────────
   app.get('/api/audit', optionalAuth, async (req: any, res: any) => {
