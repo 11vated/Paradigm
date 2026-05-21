@@ -29,6 +29,7 @@ import { validate, defaultOracle, type Oracle, type Signer } from './stages/stag
 import { defaultSubAgents } from './sub-agents';
 import { runFeedbackLoop, type FeedbackLoopOptions } from '../feedback';
 import { gatherLiveContext, type LiveContext, type LiveContextOptions } from './stages/stage-0-context';
+import { archive as archiveStage6 } from './stages/stage-6-archive';
 import type { CanonMemory } from '../memory/canon';
 import { signatureFor, dominantDimension, signatureMagnitude, type DimensionalSignature } from '../reality/dimensions';
 // resonance scoring is exposed as a separate API for comparing seed pairs
@@ -168,10 +169,20 @@ export class SovereignAgent {
       (assembled.seed as { $reality?: typeof reality }).$reality = reality;
     }
 
-    // Stage 6 — archival
+    // Stage 6 — canonical archive (episodic + semantic + canon RAG)
     if (!opts.ephemeral) {
       const t6 = kernelNow();
-      await this.archive(intent, resolved, plan, validated ?? { seed: assembled.seed, passed: true, oracle: { overall: 0, axes: {}, notes: [], conformsTo: 'unvalidated' } });
+      const layers = (this.memory as any)?.layers ?? {};
+      await archiveStage6(
+        validated ?? { seed: assembled.seed, passed: true, oracle: { overall: 0, axes: {}, notes: [], conformsTo: 'unvalidated' } },
+        {
+          episodic: layers.episodic,
+          semantic: layers.semantic,
+          canon: this.canon,
+          agentId: 'sovereign-agent',
+          skipCanon: false,
+        },
+      );
       timings.stage6 = kernelNow() - t6;
     }
 
