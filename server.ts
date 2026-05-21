@@ -18,6 +18,7 @@ import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
 import { kernelNowIso } from './src/lib/kernel/clock.js';
 import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
+import { registerGsplRoutes } from './src/server/routes/gspl.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -1420,41 +1421,8 @@ async function startServer() {
     });
   });
 
-  app.post('/api/gspl/parse', validateBody(GsplParseSchema), (req: any, res: any) => {
-    const { parse: parseGSPL } = require('./src/lib/gspl/parser.js');
-    const { tokenize } = require('./src/lib/gspl/lexer.js');
-    const source = req.body.source;
-    const { tokens } = tokenize(source);
-    const { ast, errors: parseErrors } = parseGSPL(source);
-    const declarations = ast.body.filter((s: any) => s.kind === 'seed_decl' || s.kind === 'let_binding' || s.kind === 'fn_decl').length;
-
-    res.json({
-      ast,
-      errors: parseErrors.map((e: any) => `Line ${e.line}:${e.col}: ${e.message}`),
-      warnings: [],
-      stats: { tokens: tokens.length, declarations },
-    });
-  });
-
-  app.post('/api/gspl/execute', optionalAuth, validateBody(GsplExecuteSchema), (req: any, res: any) => {
-    const { executeGSPL } = require('./src/lib/gspl/interpreter.js');
-    const source = req.body.source || '';
-
-    const result = executeGSPL(source, seeds);
-
-    // Persist any newly created seeds
-    if (result.seeds.length > 0) {
-      for (const s of result.seeds) seeds.push(s);
-      saveSeeds();
-    }
-
-    res.json({
-      seeds: result.seeds,
-      errors: result.errors,
-      output: result.output,
-      stats: { seeds_created: result.seeds.length, operations: result.seeds.length + result.output.length },
-      types: {},
-    });
+  registerGsplRoutes(app, {
+    validateBody, optionalAuth, GsplParseSchema, GsplExecuteSchema, seeds, saveSeeds,
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
