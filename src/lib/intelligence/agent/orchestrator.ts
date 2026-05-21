@@ -27,6 +27,9 @@ import { plan as planStage } from './stages/stage-3-plan';
 import { assemble } from './stages/stage-4-assemble';
 import { validate, defaultOracle, type Oracle, type Signer } from './stages/stage-5-validate';
 import { defaultSubAgents } from './sub-agents';
+import { runFeedbackLoop, type FeedbackLoopOptions } from '../feedback';
+import { signatureFor, dominantDimension, signatureMagnitude, type DimensionalSignature } from '../reality/dimensions';
+// resonance scoring is exposed as a separate API for comparing seed pairs
 import type {
   ConstructionPlan,
   ParsedIntent,
@@ -52,6 +55,8 @@ export interface RunOptions {
   skipValidate?: boolean;
   /** Don't write Stage-6 archive entries (e.g. for trial-runs) */
   ephemeral?: boolean;
+  feedbackLoop?: Omit<FeedbackLoopOptions, 'oracle' | 'critique' | 'lookupSeed' | 'planLlm' | 'planLlmTag'> & { enabled?: boolean };
+  annotateReality?: boolean;
 }
 
 export interface AgentRunReport {
@@ -61,6 +66,8 @@ export interface AgentRunReport {
   seed: Seed;
   validated?: ValidatedSeed;
   timings: Record<string, number>;
+  reality?: { signature: DimensionalSignature; dominant: string; magnitude: number };
+  iterations?: number;
 }
 
 export class SovereignAgent {
@@ -107,16 +114,44 @@ export class SovereignAgent {
     });
     timings.stage4 = kernelNow() - t4;
 
-    // Stage 5
+    // Stage 5 — optionally with self-critique feedback loop
     let validated: ValidatedSeed | undefined;
+    let iterations: number | undefined;
     if (!opts.skipValidate) {
       const t5 = kernelNow();
-      validated = await validate(assembled, {
-        oracle: opts.oracle ?? defaultOracle,
-        signer: opts.signer,
-        passThreshold: opts.passThreshold,
-      });
+      if (opts.feedbackLoop?.enabled) {
+        const loop = await runFeedbackLoop(resolved, {
+          oracle: opts.oracle ?? defaultOracle,
+          signer: opts.signer,
+          maxIterations: opts.feedbackLoop.maxIterations ?? 3,
+          scoreThreshold: opts.feedbackLoop.scoreThreshold ?? 0.7,
+          minImprovement: opts.feedbackLoop.minImprovement ?? 0.02,
+          timeBudgetMs: opts.feedbackLoop.timeBudgetMs,
+        });
+        validated = loop.best;
+        iterations = loop.iterations.length;
+        // Re-assign assembled.seed to the loop's chosen seed for downstream use
+        (assembled as { seed: typeof assembled.seed }).seed = loop.best.seed;
+      } else {
+        validated = await validate(assembled, {
+          oracle: opts.oracle ?? defaultOracle,
+          signer: opts.signer,
+          passThreshold: opts.passThreshold,
+        });
+      }
       timings.stage5 = kernelNow() - t5;
+    }
+
+    // Reality-OS annotation — attach dimensional signature to the seed
+    let reality: { signature: DimensionalSignature; dominant: string; magnitude: number } | undefined;
+    if (opts.annotateReality !== false) {
+      const geneTypeKey = (assembled.seed.$domain ?? plan.domain ?? 'misc') as string;
+      const signature = signatureFor(geneTypeKey);
+      const dominant = dominantDimension(signature);
+      const magnitude = signatureMagnitude(signature);
+      reality = { signature, dominant, magnitude };
+      // Attach to the seed (additive; keeps determinism since signatureFor is pure)
+      (assembled.seed as { $reality?: typeof reality }).$reality = reality;
     }
 
     // Stage 6 — archival
@@ -133,6 +168,8 @@ export class SovereignAgent {
       plan,
       seed: assembled.seed,
       ...(validated ? { validated } : {}),
+      ...(reality ? { reality } : {}),
+      ...(iterations !== undefined ? { iterations } : {}),
       timings,
     };
   }

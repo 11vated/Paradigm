@@ -25,6 +25,7 @@ import type {
   SubAgentOutput,
 } from '../types';
 import { scopedMemoryView } from '../sub-agents/base';
+import { selectTemplate as bridgeSelect, type Template } from '../template-bridge';
 
 export interface ResolveOptions {
   subAgents: SubAgent[];
@@ -144,7 +145,9 @@ function consolidateByPath(specs: ResolvedGeneSpec[]): ResolvedGeneSpec[] {
 }
 
 function selectTemplate(intent: ParsedIntent): string {
-  // Lightweight Template Bridge: maps (top, primary-domain) → template id
+  // Delegate to the canonical Template Bridge.
+  const template = bridgeSelect(intent.top, intent.sub, intent.domains);
+  if (template) return template.id;
   const primary = intent.domains[0] ?? 'misc';
   return `${intent.top.toLowerCase()}.${primary}`;
 }
