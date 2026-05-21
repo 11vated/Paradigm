@@ -77,8 +77,16 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
       res.json({
         ok: true,
         elapsedMs: kernelNow() - t0,
-        intent: { top: report.intent.top, sub: report.intent.sub, domains: report.intent.domains },
+        intent: {
+          top: report.intent.top,
+          sub: report.intent.sub,
+          domains: report.intent.domains,
+          adjectives: report.intent.adjectives.map((a) => ({ word: a.word, valence: a.vector[0] ?? 0, arousal: a.vector[1] ?? 0, dominance: a.vector[2] ?? 0 })),
+          entities: report.intent.entities.map((e) => ({ kind: e.kind, text: e.text, canonRef: e.canonRef })),
+        },
         planHash: report.plan.planHash,
+        planStepsCount: report.plan.steps.length,
+        planSteps: report.plan.steps.slice(0, 6).map((s) => ({ op: (s as any).op, path: (s as any).path ?? null })),
         seed: report.seed,
         oracle: report.validated?.oracle,
         signed: !!report.validated?.signature,

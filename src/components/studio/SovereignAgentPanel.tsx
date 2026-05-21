@@ -113,7 +113,37 @@ export function SovereignAgentPanel(): React.ReactElement {
             <Kv k="planHash" v={report.planHash?.slice(0, 16) + '…'} mono />
             <Kv k="seedHash" v={(report.seed?.$hash ?? '').slice(0, 16) + '…'} mono />
             <Kv k="iterations" v={String(report.iterations ?? 0)} />
+            <Kv k="planSteps" v={String(report.planStepsCount ?? 0)} />
           </div>
+
+          {report.intent?.adjectives && report.intent.adjectives.length > 0 && (
+            <div className="border border-zinc-800 rounded p-2 bg-zinc-900/50">
+              <div className="text-zinc-500 mb-1">Adjectives → 12-D space</div>
+              <div className="flex flex-wrap gap-1.5">
+                {report.intent.adjectives.slice(0, 12).map((a) => (
+                  <span key={a.word} className="inline-flex items-center gap-1 bg-zinc-800 border border-zinc-700 rounded px-2 py-0.5 text-xs">
+                    <span className="text-purple-300">{a.word}</span>
+                    <span className="text-zinc-500 font-mono">V{a.valence.toFixed(1)}·A{a.arousal.toFixed(1)}·D{a.dominance.toFixed(1)}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {report.planSteps && report.planSteps.length > 0 && (
+            <div className="border border-zinc-800 rounded p-2 bg-zinc-900/50">
+              <div className="text-zinc-500 mb-1">Plan steps (first {report.planSteps.length} of {report.planStepsCount})</div>
+              <ul className="space-y-0.5 text-xs font-mono">
+                {report.planSteps.map((s, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                    <span className="text-zinc-500 w-4">{i + 1}</span>
+                    <span className="text-blue-300 w-16 shrink-0">{s.op}</span>
+                    <span className="text-zinc-300 truncate">{s.path ?? '—'}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {report.reality && (
             <div className="border border-zinc-800 rounded p-2 bg-zinc-900/50">
@@ -193,7 +223,9 @@ export function SovereignAgentPanel(): React.ReactElement {
         {hits.length > 0 && (
           <ul className="text-xs space-y-1 max-h-48 overflow-y-auto">
             {hits.map((h) => (
-              <li key={h.hash} className="border border-zinc-800 rounded px-2 py-1.5 flex items-center gap-2">
+              <li key={h.hash} className="border border-zinc-800 rounded px-2 py-1.5 flex items-center gap-2 hover:bg-zinc-900/80 cursor-pointer"
+                  onClick={() => setUtterance(`evolve ${h.text.slice(0, 80)}`)}
+                  title="Click to use as next utterance">
                 <span className="text-purple-400 font-mono w-12 shrink-0">{h.similarity.toFixed(2)}</span>
                 <span className="text-zinc-300 truncate flex-1">{h.text}</span>
                 <span className="text-zinc-500 font-mono shrink-0">{h.hash.slice(0, 10)}…</span>

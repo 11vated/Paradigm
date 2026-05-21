@@ -5,8 +5,16 @@
 export interface SovereignAgentRunResponse {
   ok: boolean;
   elapsedMs?: number;
-  intent?: { top: string; sub?: string; domains: string[] };
+  intent?: {
+    top: string;
+    sub?: string;
+    domains: string[];
+    adjectives?: Array<{ word: string; valence: number; arousal: number; dominance: number }>;
+    entities?: Array<{ kind: string; text: string; canonRef?: string }>;
+  };
   planHash?: string;
+  planStepsCount?: number;
+  planSteps?: Array<{ op: string; path: string | null }>;
   seed?: any;
   oracle?: { overall: number; axes: Record<string, number>; notes: string[]; conformsTo: string };
   signed?: boolean;
