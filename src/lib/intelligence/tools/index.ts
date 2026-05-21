@@ -31,3 +31,14 @@ export function createStandardHarness(memory: MemoryOrchestrator, opts: HarnessO
   harness.registry.register(makeWorldLookupTool(memory));
   return harness;
 }
+
+// ─── Network-tier tools (opt-in only, denied by default) ───
+export {
+  createWebSearchTool,
+  createBrowsePageTool,
+  createFetchJsonTool,
+  installNetworkTools,
+  type WebSearchOpts,
+  type WebSearchResult,
+  type BrowsePageOpts,
+} from './network';
