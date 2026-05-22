@@ -48,6 +48,8 @@ import { generateField } from '../generators/field';
 import { generateQuantum } from '../generators/quantum';
 import { generateMolecule } from '../generators/molecule';
 import { generateCosmology } from '../generators/cosmology';
+import { generateWorld } from '../generators/world';
+import { generateApp } from '../generators/app';
 
 function geneVal(seed: Seed, name: string, fallback: unknown = null): unknown {
   return seed.genes?.[name]?.value ?? fallback;
@@ -521,6 +523,36 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
       },
       render_hints: { mode: 'cosmology_simulation', svg: true },
     }),
+  },
+  {
+    domain: 'world',
+    label: 'World',
+    description: 'Topographic world map with biomes, rivers, cities, political borders',
+    viewportType: '2d',
+    outputMimeTypes: ['image/svg+xml', 'application/json'],
+    tier: 1,
+    generator: generateWorld,
+    defaultGenes: {
+      size:         { gene_type: 'categorical', value: 'continent' },
+      biome:        { gene_type: 'categorical', value: 'temperate' },
+      era:          { gene_type: 'categorical', value: 'medieval' },
+      sea_level:    { gene_type: 'scalar',      value: 0.35 },
+      tectonic_activity: { gene_type: 'scalar', value: 0.6 },
+    },
+  },
+  {
+    domain: 'app',
+    label: 'App',
+    description: 'Full React/TypeScript application codebase from seed',
+    viewportType: 'code',
+    outputMimeTypes: ['application/zip', 'text/plain'],
+    tier: 1,
+    generator: generateApp,
+    defaultGenes: {
+      archetype:   { gene_type: 'categorical', value: 'dashboard' },
+      theme_mode:  { gene_type: 'categorical', value: 'dark' },
+      page_count:  { gene_type: 'scalar',      value: 4 },
+    },
   },
 ];
 

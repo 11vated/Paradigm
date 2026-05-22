@@ -12,6 +12,7 @@ import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { GeneticAlgorithm } from '../evolution/ga';
 import { kernelNow, kernelNowIso } from './clock';
+import { GsplModuleResolver } from './gspl-module-resolver';
 
 type Seed = {
   $gst?: string;
@@ -36,6 +37,7 @@ export interface GSPLContext {
 
 export class GsplInterpreter {
   private context: GSPLContext;
+  private _resolver: GsplModuleResolver = new GsplModuleResolver();
 
   constructor(seedHash?: string) {
     this.context = {
@@ -1045,14 +1047,34 @@ export class GsplInterpreter {
 
   private async evaluateImportDecl(node: ASTNode): Promise<any> {
     const imports = node.imports as string[];
-    const path = node.path as string;
+    const modulePath = node.path as string;
 
-    // Track imported module for resolution
-    // For now, import is a no-op that records the import
-    // Full module resolution can be added in Phase 2
-    for (const sym of imports) {
-      this.context.variables.set(sym, { _imported: true, _from: path });
+    try {
+      const resolution = this._resolver.resolve(modulePath);
+      // Parse and evaluate the resolved module source in the current context
+      const lexer  = new GsplLexer(resolution.source);
+      const tokens = lexer.tokenize();
+      const parser = new GsplParser(tokens);
+      const ast    = parser.parse();
+
+      // Evaluate top-level declarations from the module (functions, seeds, lets)
+      for (const decl of ast.body ?? []) {
+        try { await this.evaluate(decl); } catch { /* skip errors in module bodies */ }
+      }
+
+      // Bind requested symbols from context into current scope
+      for (const sym of imports) {
+        if (!this.context.variables.has(sym)) {
+          this.context.variables.set(sym, { _imported: true, _from: modulePath });
+        }
+      }
+    } catch {
+      // Graceful degradation: record the import but don't fail the program
+      for (const sym of imports) {
+        this.context.variables.set(sym, { _imported: true, _from: modulePath });
+      }
     }
+
     return null;
   }
 

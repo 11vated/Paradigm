@@ -10,14 +10,15 @@ export { default as DomainIcon } from './DomainIcon';
 export type { ViewportProps } from './types';
 
 export const VIEWPORT_TYPES: Record<string, string[]> = {
-  '3d': ['character', 'geometry3d', 'architecture', 'vehicle', 'furniture', 'fashion', 'robotics'],
-  'svg': ['typography', 'visual2d'],
+  '3d': ['character', 'geometry3d', 'architecture', 'vehicle', 'furniture', 'fashion', 'robotics', 'aerospace'],
+  'svg': ['typography', 'visual2d', 'sprite', 'ui', 'circuit', 'molecule'],
   'audio': ['music', 'audio'],
   'game': ['fullgame', 'game'],
-  'code': ['narrative', 'circuit', 'procedural'],
-  'sim': ['physics', 'ecosystem', 'alife'],
+  'code': ['narrative', 'circuit', 'procedural', 'shader', 'agent', 'website', 'app'],
+  'sim': ['physics', 'ecosystem', 'alife', 'field', 'quantum', 'cosmology'],
   'anim': ['animation', 'choreography', 'sprite'],
-  '2d': ['ui', 'particle', 'shader', 'food', 'agent'],
+  '2d': ['ui', 'particle', 'shader', 'food', 'agent', 'world'],
+  'hyperobject': [],
 };
 
 export function getViewportType(domain?: string): string {

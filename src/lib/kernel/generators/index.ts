@@ -151,3 +151,7 @@ export { generateField } from './field';
 export { generateQuantum } from './quantum';
 export { generateMolecule } from './molecule';
 export { generateCosmology } from './cosmology';
+
+// Phase 2 — additional sovereign domains
+export { generateWorld } from './world';
+export { generateApp } from './app';

@@ -393,6 +393,158 @@ async function startServer() {
     res.type('json').send(JSON.stringify(exportData, null, 2));
   });
 
+  // ── Per-format export endpoints (used by ExportPanel) ──────────────────────
+
+  app.post('/api/seeds/export/json', optionalAuth, (req: any, res: any) => {
+    const { seed } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.json"`);
+    res.type('json').send(JSON.stringify(seed, null, 2));
+  });
+
+  app.post('/api/seeds/export/svg', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const svgPath = artifact?.svgPath as string | undefined;
+    if (svgPath && require('fs').existsSync(svgPath)) {
+      const svg = require('fs').readFileSync(svgPath, 'utf-8');
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.svg"`);
+      return res.type('image/svg+xml').send(svg);
+    }
+    // Fallback: generate inline SVG from seed hash
+    const h = (seed.$hash || 'aabbccdd').slice(0, 6);
+    const fallback = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#${h}"/><text x="128" y="135" text-anchor="middle" fill="white" font-size="14" font-family="monospace">${h}</text></svg>`;
+    res.setHeader('Content-Disposition', `attachment; filename="seed-${h}.svg"`);
+    res.type('image/svg+xml').send(fallback);
+  });
+
+  app.post('/api/seeds/export/html', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const htmlPath = artifact?.htmlPath as string | undefined;
+    if (htmlPath && require('fs').existsSync(htmlPath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.html"`);
+      return res.type('text/html').send(require('fs').readFileSync(htmlPath, 'utf-8'));
+    }
+    const fallback = `<!DOCTYPE html><html><head><title>Paradigm Seed ${seed.$hash?.slice(0,8)}</title></head><body><pre>${JSON.stringify(seed,null,2)}</pre></body></html>`;
+    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.html"`);
+    res.type('text/html').send(fallback);
+  });
+
+  app.post('/api/seeds/export/wav', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const wavPath = artifact?.wavPath as string | undefined;
+    if (wavPath && require('fs').existsSync(wavPath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.wav"`);
+      return res.type('audio/wav').send(require('fs').readFileSync(wavPath));
+    }
+    return res.status(404).json({ error: 'WAV artifact not yet generated. Grow this seed first.' });
+  });
+
+  app.post('/api/seeds/export/markdown', optionalAuth, (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const story = artifact?.story ?? artifact?.narrative ?? JSON.stringify(seed, null, 2);
+    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.md"`);
+    res.type('text/markdown').send(story);
+  });
+
+  app.post('/api/seeds/export/gltf', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const gltfPath = artifact?.gltfPath ?? artifact?.outputPath as string | undefined;
+    if (gltfPath && require('fs').existsSync(gltfPath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gltf"`);
+      return res.type('model/gltf+json').send(require('fs').readFileSync(gltfPath, 'utf-8'));
+    }
+    return res.status(404).json({ error: 'GLTF artifact not yet generated. Grow this seed first.' });
+  });
+
+  app.post('/api/seeds/export/pdb', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const pdbPath = artifact?.pdbPath as string | undefined;
+    if (pdbPath && require('fs').existsSync(pdbPath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.pdb"`);
+      return res.type('chemical/x-pdb').send(require('fs').readFileSync(pdbPath, 'utf-8'));
+    }
+    return res.status(404).json({ error: 'PDB artifact not yet generated. Grow this seed first.' });
+  });
+
+  app.post('/api/seeds/export/glsl', optionalAuth, async (req: any, res: any) => {
+    const { seed, artifact } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const glslPath = artifact?.glslPath ?? artifact?.fragPath as string | undefined;
+    if (glslPath && require('fs').existsSync(glslPath)) {
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.glsl"`);
+      return res.type('text/plain').send(require('fs').readFileSync(glslPath, 'utf-8'));
+    }
+    return res.status(404).json({ error: 'GLSL artifact not yet generated. Grow this seed first.' });
+  });
+
+  // ── Sovereignty endpoints ────────────────────────────────────────────────────
+
+  app.get('/api/sovereignty/receipt', optionalAuth, async (req: any, res: any) => {
+    const hash = req.query.hash as string;
+    if (!hash) return res.status(400).json({ error: 'hash required' });
+    const seed = seeds.find((s: any) => s.$hash === hash || s.id === hash);
+    if (!seed) return res.status(404).json({ error: 'Seed not found' });
+
+    const receipt = {
+      seedHash:    hash,
+      domain:      seed.$domain ?? 'unknown',
+      sovereignty: {
+        signed:               !!(seed.$sovereignty?.signature),
+        valid:                seed.$sovereignty?.signature ? true : null,
+        publicKeyFingerprint: seed.$sovereignty?.author_pubkey ?? null,
+        algorithm:            'ECDSA P-256',
+        signedAt:             seed.$sovereignty?.timestamp ?? null,
+      },
+      lineage: (seed.$lineage ?? []).slice(0, 8).map((h: string, i: number) => ({
+        hash: h, depth: i + 1, domain: seed.$domain ?? 'unknown', operation: 'mutate',
+      })),
+      commits: [],
+      anchor: { minted: false },
+    };
+    res.json(receipt);
+  });
+
+  app.post('/api/sovereignty/export/gseed', optionalAuth, async (req: any, res: any) => {
+    const { seed } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    try {
+      const { encodeSeedPackage } = await import('./src/lib/kernel/binary-format.js');
+      const pkg = {
+        metadata: { domain: seed.$domain ?? 'unknown', hash: seed.$hash ?? '', version: '1.0.0', timestamp: new Date().toISOString() },
+        params: seed,
+        outputs: [],
+        royalty: null,
+        c2paManifest: null,
+        signature: null,
+      };
+      const buf = encodeSeedPackage(pkg);
+      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gseed"`);
+      res.type('application/octet-stream').send(Buffer.from(buf));
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  app.post('/api/gspl/export', optionalAuth, async (req: any, res: any) => {
+    const { seed, domain } = req.body;
+    if (!seed) return res.status(400).json({ error: 'seed required' });
+    const genes = (seed as any).genes ?? seed;
+    const geneLines = Object.entries(genes).filter(([k]) => !k.startsWith('$')).map(([k, v]: [string, any]) => {
+      const type  = v?.gene_type ?? v?.type ?? 'scalar';
+      const value = JSON.stringify(v?.value ?? v);
+      return `  gene ${k}: ${type} = ${value}`;
+    }).join('\n');
+    const gspl = `// Generated by Paradigm\nimport "std/core";\n\nseed ${(domain ?? seed.$domain ?? 'Unnamed').replace(/[^a-zA-Z0-9]/g,'_')} {\n${geneLines}\n}\n`;
+    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gspl"`);
+    res.type('text/plain').send(gspl);
+  });
+
   // ── Seed Import (JSON restore — admin only) ────────────────────────────
   app.post('/api/seeds/import', optionalAuth, async (req: any, res: any) => {
     if (req.user?.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
@@ -796,6 +948,74 @@ async function startServer() {
     });
   });
 
+  // GET /api/evolve/map-elites — return current archive state for a domain
+  // POST /api/evolve/map-elites/step — run N evolution steps
+  app.get('/api/evolve/map-elites', optionalAuth, async (req: any, res: any) => {
+    const domain  = (req.query.domain as string) || 'visual2d';
+    const gridX   = Math.min(parseInt(req.query.gridX  as string) || 16, 32);
+    const gridY   = Math.min(parseInt(req.query.gridY  as string) || 16, 32);
+
+    // Build archive from seeds in memory filtered by domain
+    const domainSeeds = seeds.filter((s: any) => s.$domain === domain || s.domain === domain);
+    const { MAPElites } = await import('./src/lib/evolution/index.js');
+    const rng = rngFromHash(`me_${domain}_${gridX}_${gridY}`);
+
+    const me = new MAPElites(
+      (s: any) => {
+        const genes = Object.values(s.genes || {}) as any[];
+        const v0 = genes[0]?.value ?? 0.5;
+        const v1 = genes[1]?.value ?? 0.5;
+        return [typeof v0 === 'number' ? v0 : 0.5, typeof v1 === 'number' ? v1 : 0.5];
+      },
+      { gridSize: [gridX, gridY], mutationRate: 0.15, crossoverRate: 0.6 },
+    );
+
+    const pool = domainSeeds.length >= 2 ? domainSeeds : seeds.slice(0, Math.max(2, seeds.length));
+    const result = me.run(pool, (s: any) => s.$fitness?.overall ?? 0.5, 0);
+
+    const cells: any[] = [];
+    let maxFitness = 0;
+    result.population.forEach((cell: any, key: string) => {
+      const [cx, cy] = key.split(',').map(Number);
+      maxFitness = Math.max(maxFitness, cell.fitness);
+      cells.push({ x: cx, y: cy, fitness: cell.fitness, seed: cell.seed, domain, discoveredAt: 0 });
+    });
+
+    const geneKeys = pool.length > 0 ? Object.keys(pool[0].genes || {}) : ['x', 'y'];
+    return res.json({
+      cells,
+      gridX, gridY,
+      behaviorX: geneKeys[0] ?? 'dim-1',
+      behaviorY: geneKeys[1] ?? 'dim-2',
+      generation: 0,
+      coverage: result.population.size / (gridX * gridY),
+      maxFitness: maxFitness || 1,
+    });
+  });
+
+  app.post('/api/evolve/map-elites/step', optionalAuth, async (req: any, res: any) => {
+    const domain = req.body.domain || 'visual2d';
+    const steps  = Math.min(req.body.steps || 10, 50);
+    const { MAPElites } = await import('./src/lib/evolution/index.js');
+    const gridX = 16; const gridY = 16;
+
+    const domainSeeds = seeds.filter((s: any) => s.$domain === domain || s.domain === domain);
+    const pool = domainSeeds.length >= 2 ? domainSeeds : seeds.slice(0, Math.max(2, seeds.length));
+
+    const me = new MAPElites(
+      (s: any) => {
+        const genes = Object.values(s.genes || {}) as any[];
+        const v0 = genes[0]?.value ?? 0.5;
+        const v1 = genes[1]?.value ?? 0.5;
+        return [typeof v0 === 'number' ? v0 : 0.5, typeof v1 === 'number' ? v1 : 0.5];
+      },
+      { gridSize: [gridX, gridY], mutationRate: 0.2, crossoverRate: 0.65 },
+    );
+
+    const result = me.run(pool, (s: any) => s.$fitness?.overall ?? 0.5, steps);
+    return res.json({ ok: true, cells: result.population.size, generation: steps });
+  });
+
   // ═══════════════════════════════════════════════════════════════════════════
   // BREEDING (deterministic — gene-level crossover via kernel)
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1130,6 +1350,8 @@ async function startServer() {
       'molecule': 'molecule', 'chemistry': 'molecule', 'chemical': 'molecule', 'mol': 'molecule', 'chem': 'molecule', 'smiles': 'molecule',
       'cosmology': 'cosmology', 'nbody': 'cosmology', 'n-body': 'cosmology', 'galaxy': 'cosmology', 'universe': 'cosmology', 'astrophysics': 'cosmology',
       'website': 'website', 'web': 'website', 'landing': 'website', 'site': 'website', 'html': 'website', 'page': 'website',
+      'world': 'world', 'map': 'world', 'terrain': 'world', 'planet': 'world', 'continent': 'world',
+      'app': 'app', 'application': 'app', 'webapp': 'app', 'react-app': 'app', 'frontend': 'app',
     };
 
     // Helper: find closest domain match with alias support
