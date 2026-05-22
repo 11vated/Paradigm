@@ -43,6 +43,11 @@ import { generateAgent } from '../generators/agent';
 import { generatePhysics } from '../generators/physics';
 import { generatePhysicsEnhanced } from '../generators/physics-enhanced';
 import { generateAudio } from '../generators/audio';
+import { generateWebsite } from '../generators/website';
+import { generateField } from '../generators/field';
+import { generateQuantum } from '../generators/quantum';
+import { generateMolecule } from '../generators/molecule';
+import { generateCosmology } from '../generators/cosmology';
 
 function geneVal(seed: Seed, name: string, fallback: unknown = null): unknown {
   return seed.genes?.[name]?.value ?? fallback;
@@ -443,6 +448,78 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
         explorationRate: +geneNumber(s, 'exploration_rate', 0.5).toFixed(2),
       },
       render_hints: { mode: 'chat_interface', color_scheme: 'dark', animated: false },
+    }),
+  },
+  {
+    domain: 'website', version: 'v1', outputExtension: 'html',
+    generator: (s, p) => generateWebsite(s, p),
+    postProcess: (o: any, s: Seed) => ({
+      website: {
+        purpose: s.genes?.purpose?.value ?? 'landing',
+        aesthetic: s.genes?.aesthetic?.value ?? 'minimal',
+        brandName: o.indexHtml?.match(/<title>(.*?)<\/title>/)?.[1] ?? s.$name ?? 'Site',
+        sectionCount: o.sectionCount ?? 0,
+        lineCount: o.lineCount ?? 0,
+      },
+      render_hints: { mode: 'website_preview', interactive: true, html: true },
+    }),
+  },
+  {
+    domain: 'field', version: 'v1', outputExtension: 'svg',
+    generator: (s, p) => generateField(s, p),
+    postProcess: (o: any, _s: Seed) => ({
+      simulation: {
+        fieldType: o.fieldType ?? 'electromagnetic',
+        gridSize: o.gridSize ?? 64,
+        steps: o.steps ?? 200,
+        peakMagnitude: o.peakMagnitude ?? 0,
+        energyDensity: o.energyDensity ?? 0,
+      },
+      render_hints: { mode: 'field_visualization', animated: false, svg: true },
+    }),
+  },
+  {
+    domain: 'quantum', version: 'v1', outputExtension: 'svg',
+    generator: (s, p) => generateQuantum(s, p),
+    postProcess: (o: any, _s: Seed) => ({
+      wavefunction: {
+        normalization: o.normalization ?? 1,
+        expectationX: o.expectationX ?? 0,
+        expectationP: o.expectationP ?? 0,
+        groundStateEnergy: o.groundStateEnergy ?? 0,
+        tunnelingProbability: o.tunnelingProbability ?? 0,
+      },
+      render_hints: { mode: 'quantum_visualization', svg: true },
+    }),
+  },
+  {
+    domain: 'molecule', version: 'v1', outputExtension: 'svg',
+    generator: (s, p) => generateMolecule(s, p),
+    postProcess: (o: any, _s: Seed) => ({
+      chemistry: {
+        formula: o.formula ?? '',
+        mw: o.mw ?? 0,
+        smiles: o.smiles ?? '',
+        atomCount: o.atomCount ?? 0,
+        bondCount: o.bondCount ?? 0,
+        logP: o.logP ?? 0,
+        tpsa: o.tpsa ?? 0,
+      },
+      render_hints: { mode: 'molecule_2d', svg: true },
+    }),
+  },
+  {
+    domain: 'cosmology', version: 'v1', outputExtension: 'svg',
+    generator: (s, p) => generateCosmology(s, p),
+    postProcess: (o: any, _s: Seed) => ({
+      universe: {
+        scenario: o.scenario ?? 'galaxy',
+        bodyCount: o.bodyCount ?? 0,
+        timeSteps: o.timeSteps ?? 0,
+        finalKE: o.finalKE ?? 0,
+        finalPE: o.finalPE ?? 0,
+      },
+      render_hints: { mode: 'cosmology_simulation', svg: true },
     }),
   },
 ];

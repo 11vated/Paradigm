@@ -144,3 +144,10 @@ export { generateDroneDelivery } from './drone-delivery';
 export { generateAV } from './av';
 export { generatePersonalizedMedicine } from './personalized-medicine';
 export { generateSpaceTourism } from './space-tourism';
+
+// Paradigm Core — Real-artifact generators (Phase 1 completion)
+export { generateWebsite } from './website';
+export { generateField } from './field';
+export { generateQuantum } from './quantum';
+export { generateMolecule } from './molecule';
+export { generateCosmology } from './cosmology';

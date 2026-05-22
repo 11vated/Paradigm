@@ -1020,6 +1020,53 @@ async function startServer() {
   // GROW (domain engine execution — deterministic)
   // ═══════════════════════════════════════════════════════════════════════════
 
+  // Body-based grow: POST /api/seeds/grow { seed, domain }
+  // Used by SubstratePage, CLI, external integrations — no stored seed ID required.
+  app.post('/api/seeds/grow', optionalAuth, async (req: any, res: any) => {
+    try {
+      const { seed: rawSeed, domain: domainOverride } = req.body ?? {};
+      if (!rawSeed) return res.status(400).json({ error: 'Missing seed in body' });
+
+      const domain = domainOverride ?? rawSeed.$domain ?? 'visual2d';
+      const seed = { ...rawSeed, $domain: domain };
+
+      // Route to domain-specific generators for new domains
+      const NEW_DOMAIN_GENERATORS: Record<string, (s: any, p: string) => Promise<any>> = {
+        website:   async (s, p) => { const { generateWebsite }   = await import('./src/lib/kernel/generators/website.js');   return generateWebsite(s, p); },
+        field:     async (s, p) => { const { generateField }     = await import('./src/lib/kernel/generators/field.js');     return generateField(s, p); },
+        quantum:   async (s, p) => { const { generateQuantum }   = await import('./src/lib/kernel/generators/quantum.js');   return generateQuantum(s, p); },
+        molecule:  async (s, p) => { const { generateMolecule }  = await import('./src/lib/kernel/generators/molecule.js');  return generateMolecule(s, p); },
+        cosmology: async (s, p) => { const { generateCosmology } = await import('./src/lib/kernel/generators/cosmology.js'); return generateCosmology(s, p); },
+      };
+
+      const outputDir = `data/artifacts/${domain}`;
+      const outputPath = `${outputDir}/${seed.$hash ?? 'seed'}-${Date.now()}.out`;
+
+      let result: any;
+      if (NEW_DOMAIN_GENERATORS[domain]) {
+        result = await NEW_DOMAIN_GENERATORS[domain](seed, outputPath);
+      } else {
+        result = await growSeed(seed);
+      }
+
+      // Inline SVG content for immediate rendering (avoids a second round-trip)
+      if (result?.svgPath) {
+        try {
+          const { readFileSync } = await import('fs');
+          result.svgContent = readFileSync(result.svgPath, 'utf-8');
+        } catch {}
+      }
+      if (result?.indexHtml || result?.htmlContent) {
+        result.htmlContent = result.htmlContent ?? result.indexHtml;
+      }
+
+      res.json(result);
+    } catch (e: any) {
+      log('ERROR', 'Body-grow failed', { error: e.message });
+      res.status(500).json({ error: 'Growth failed', message: e.message });
+    }
+  });
+
   app.post('/api/seeds/:id/grow', optionalAuth, validateBody(GrowSeedSchema), async (req: any, res: any) => {
     const seed = seeds.find((s: any) => s.id === req.params.id);
     if (!seed) {
@@ -1070,13 +1117,19 @@ async function startServer() {
       'lighting': 'shader', 'illumination': 'shader',
       'materials': 'procedural',
       'plant': 'ecosystem', 'plants': 'ecosystem', 'flora': 'ecosystem',
-      'field': 'physics', 'force': 'physics',
+      'field': 'field', 'force': 'physics',
       'style': 'visual2d', 'styling': 'visual2d', 'theme': 'visual2d',
       'framework': 'agent', 'system': 'agent',
       'cross-domain': 'agent', 'multidomain': 'agent', 'hybrid': 'agent',
       'fluid': 'physics', 'liquid': 'physics', 'gas': 'physics',
       'element': 'alife', 'elements': 'alife',
       'abstract': 'visual2d', 'generative': 'procedural',
+      // New sovereign domains (Phase 1 completion)
+      'em_field': 'field', 'electromagnetic': 'field', 'fdtd': 'field', 'em': 'field',
+      'quantum': 'quantum', 'wavefunction': 'quantum', 'schrodinger': 'quantum', 'qm': 'quantum', 'dirac': 'quantum',
+      'molecule': 'molecule', 'chemistry': 'molecule', 'chemical': 'molecule', 'mol': 'molecule', 'chem': 'molecule', 'smiles': 'molecule',
+      'cosmology': 'cosmology', 'nbody': 'cosmology', 'n-body': 'cosmology', 'galaxy': 'cosmology', 'universe': 'cosmology', 'astrophysics': 'cosmology',
+      'website': 'website', 'web': 'website', 'landing': 'website', 'site': 'website', 'html': 'website', 'page': 'website',
     };
 
     // Helper: find closest domain match with alias support
