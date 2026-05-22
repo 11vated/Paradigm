@@ -1,0 +1,10 @@
+services:
+  scurebase:
+    image: scurebase
+    build:
+      context: node_modules/@scure/base
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000

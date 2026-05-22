@@ -4834,5 +4834,65 @@
       "parentB": "seed-3f5cef7744343f5d-004k"
     },
     "ip": "127.0.0.1"
+  },
+  {
+    "id": "16233cdf-0bc7-4f41-9af7-862c7f61565e",
+    "timestamp": "2026-05-22T00:30:06.519Z",
+    "action": "seed.create",
+    "resource": "seed",
+    "resourceId": "seed-239a393fd2395663-0001",
+    "details": {
+      "domain": "character",
+      "owner": null
+    },
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "543485d2-7edb-4ef5-ae48-c23ea6bc7e6c",
+    "timestamp": "2026-05-22T00:30:06.923Z",
+    "action": "seed.mutate",
+    "resource": "seed",
+    "resourceId": "seed-239a393fd2395663-mutate-0002",
+    "details": {
+      "parent": "seed-239a393fd2395663-0001",
+      "rate": 0.1
+    },
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "329f4deb-de4b-4875-a219-a8427c55f3ca",
+    "timestamp": "2026-05-22T00:30:07.010Z",
+    "action": "seed.create",
+    "resource": "seed",
+    "resourceId": "seed-d48da81118aeabd0-0003",
+    "details": {
+      "domain": "character",
+      "owner": null
+    },
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "0516c98d-f6e7-4fc8-9090-b9f9ca0a35e6",
+    "timestamp": "2026-05-22T00:30:07.071Z",
+    "action": "seed.create",
+    "resource": "seed",
+    "resourceId": "seed-3f5cef7744343f5d-0004",
+    "details": {
+      "domain": "character",
+      "owner": null
+    },
+    "ip": "127.0.0.1"
+  },
+  {
+    "id": "8d4809c7-c94e-4450-b7d5-a3c1ef450916",
+    "timestamp": "2026-05-22T00:30:07.152Z",
+    "action": "seed.breed",
+    "resource": "seed",
+    "resourceId": "seed-d48da81118aeabd0-breed-0005",
+    "details": {
+      "parentA": "seed-d48da81118aeabd0-0003",
+      "parentB": "seed-3f5cef7744343f5d-0004"
+    },
+    "ip": "127.0.0.1"
   }
 ]

@@ -32,6 +32,10 @@
     "dist",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/__tests__/**"
+    "src/**/__tests__/**",
+    "src/engines/index_fixed.ts",
+    "src/engines/index_clean.ts",
+    "src/engines/index_backup.ts",
+    "src/engines/index_full.txt"
   ]
 }

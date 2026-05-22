@@ -1,0 +1,348 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * Paradigm — Reality OS HUD
+ * Design tokens + substrate for the three-pane studio shell.
+ * Scoped by [data-paradigm-shell="reality-os"] so legacy `/classic/*` UIs
+ * are completely unaffected.
+ * ──────────────────────────────────────────────────────────────────────── */
+
+[data-paradigm-shell="reality-os"] {
+  /* ─── Substrate (matte near-black, dimensional) ─────────────────────── */
+  --r-void:      #07080B;
+  --r-void-2:    #0B0D12;
+  --r-void-3:    #10131A;
+  --r-pane:      rgba(13, 16, 23, 0.78);
+  --r-pane-edge: rgba(255, 255, 255, 0.04);
+  --r-pane-hi:   rgba(255, 255, 255, 0.08);
+  --r-grid:      rgba(255, 255, 255, 0.035);
+  --r-grid-hi:   rgba(255, 255, 255, 0.07);
+
+  /* ─── Ink (typography hierarchy) ────────────────────────────────────── */
+  --r-ink-0:  #F2F4F8;   /* primary */
+  --r-ink-1:  #C8CCD4;   /* secondary */
+  --r-ink-2:  #8A8F9A;   /* tertiary */
+  --r-ink-3:  #5A5F69;   /* quaternary, muted captions */
+  --r-ink-4:  #353841;   /* hairlines */
+
+  /* ─── Default seed prism (deterministic accents, overridden per-seed) ─ */
+  --r-prism-core:        #00E5FF;     /* core resonance */
+  --r-prism-resonant:    #8A2BE2;     /* second harmonic */
+  --r-prism-grad-a:      #34D399;     /* lower gradient */
+  --r-prism-grad-b:      #FBBF24;     /* upper gradient */
+  --r-prism-warm:        #FB7185;     /* warm accent */
+  --r-prism-cool:        #38BDF8;     /* cool accent */
+  --r-prism-resonance-hz: 432;        /* seed-driven frequency, scaled */
+
+  /* ─── Semantic ──────────────────────────────────────────────────────── */
+  --r-ok:    #34D399;
+  --r-warn:  #FBBF24;
+  --r-fail:  #F87171;
+  --r-mute:  #4B5260;
+
+  /* ─── Typography ────────────────────────────────────────────────────── */
+  --r-font-display: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --r-font-prose:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --r-font-num:     'JetBrains Mono', ui-monospace, monospace;
+
+  /* ─── Spacing ───────────────────────────────────────────────────────── */
+  --r-px-1: 2px;
+  --r-px-2: 4px;
+  --r-px-3: 6px;
+  --r-px-4: 8px;
+  --r-px-5: 12px;
+  --r-px-6: 16px;
+  --r-px-7: 20px;
+  --r-px-8: 24px;
+  --r-px-9: 32px;
+  --r-px-10: 48px;
+
+  /* ─── Geometry ──────────────────────────────────────────────────────── */
+  --r-radius-1: 2px;
+  --r-radius-2: 4px;
+  --r-radius-3: 8px;
+  --r-radius-4: 12px;
+
+  /* ─── Motion ────────────────────────────────────────────────────────── */
+  --r-ease:   cubic-bezier(0.22, 1, 0.36, 1);
+  --r-ease-2: cubic-bezier(0.65, 0, 0.35, 1);
+  --r-dur-1: 120ms;
+  --r-dur-2: 220ms;
+  --r-dur-3: 420ms;
+  --r-dur-4: 800ms;
+
+  /* ─── Layout (the three-pane studio) ────────────────────────────────── */
+  --r-topbar-h:   28px;
+  --r-bottom-h:   32px;
+  --r-rail-min:   220px;
+  --r-rail-max:   480px;
+  --r-agent-min:  340px;
+  --r-agent-max:  680px;
+
+  /* ─── Z-stack ───────────────────────────────────────────────────────── */
+  --r-z-substrate: 0;
+  --r-z-grid:      1;
+  --r-z-pane:      10;
+  --r-z-chrome:    20;
+  --r-z-overlay:   100;
+  --r-z-toast:     1000;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Shell root — the matte void + drifting noise field
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.022) 0%, transparent 60%),
+    radial-gradient(ellipse at 100% 100%, color-mix(in oklab, var(--r-prism-core) 6%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 0% 100%, color-mix(in oklab, var(--r-prism-resonant) 5%, transparent) 0%, transparent 55%),
+    var(--r-void);
+  color: var(--r-ink-0);
+  font-family: var(--r-font-prose);
+  font-feature-settings: 'ss01', 'cv11', 'tnum';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Dimensional grid — a CSS-only first pass.
+ * Hairlines that drift faintly. WGSL shader replaces this in Phase F.
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-grid {
+  position: fixed;
+  inset: 0;
+  z-index: var(--r-z-grid);
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right,  var(--r-grid) 0, var(--r-grid) 1px, transparent 1px, transparent 100%),
+    linear-gradient(to bottom, var(--r-grid) 0, var(--r-grid) 1px, transparent 1px, transparent 100%);
+  background-size: 64px 64px, 64px 64px;
+  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
+  animation: r-grid-drift 60s linear infinite;
+}
+
+@keyframes r-grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 64px 64px, 64px 64px; }
+}
+
+/* fiducial corner brackets, used as "this surface is alive" markers */
+[data-paradigm-shell="reality-os"] .r-fiducial {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  color: var(--r-ink-3);
+  opacity: 0.55;
+}
+[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="tl"] { top: 6px; left: 6px;  border-top: 1px solid currentColor; border-left: 1px solid currentColor; }
+[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="tr"] { top: 6px; right: 6px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
+[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="bl"] { bottom: 6px; left: 6px;  border-bottom: 1px solid currentColor; border-left: 1px solid currentColor; }
+[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="br"] { bottom: 6px; right: 6px; border-bottom: 1px solid currentColor; border-right: 1px solid currentColor; }
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Pane — translucent backdrop with chromatic edge.
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-pane {
+  position: relative;
+  background: var(--r-pane);
+  backdrop-filter: blur(20px) saturate(118%);
+  -webkit-backdrop-filter: blur(20px) saturate(118%);
+  border: 1px solid var(--r-pane-edge);
+  border-radius: var(--r-radius-2);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.025) inset,
+    0 0 0 1px var(--r-pane-edge) inset,
+    0 30px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Prism strip — the spectral signature of a seed.
+ * Materializes as a thin animated gradient. Frequency comes from the seed.
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-prism {
+  position: relative;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--r-prism-grad-a) 0%,
+    var(--r-prism-core)   28%,
+    var(--r-prism-resonant) 52%,
+    var(--r-prism-warm)   74%,
+    var(--r-prism-grad-b) 100%
+  );
+  background-size: 220% 100%;
+  animation: r-prism-flow calc(60000ms / max(var(--r-prism-resonance-hz), 60)) linear infinite;
+  filter: saturate(120%);
+}
+
+[data-paradigm-shell="reality-os"] .r-prism::after {
+  content: '';
+  position: absolute;
+  inset: -1px 0;
+  background: inherit;
+  background-size: inherit;
+  filter: blur(6px);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+@keyframes r-prism-flow {
+  from { background-position: 0% 50%; }
+  to   { background-position: 220% 50%; }
+}
+
+/* tall vertical prism */
+[data-paradigm-shell="reality-os"] .r-prism[data-orient="v"] {
+  height: 100%;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--r-prism-grad-a) 0%,
+    var(--r-prism-core)   28%,
+    var(--r-prism-resonant) 52%,
+    var(--r-prism-warm)   74%,
+    var(--r-prism-grad-b) 100%
+  );
+  background-size: 100% 220%;
+  animation-name: r-prism-flow-v;
+}
+
+@keyframes r-prism-flow-v {
+  from { background-position: 50% 0%; }
+  to   { background-position: 50% 220%; }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Resonance pulse — emitted on every kernel op.
+ * ──────────────────────────────────────────────────────────────────────── */
+@keyframes r-pulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--r-prism-core) 50%, transparent); }
+  100% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--r-prism-core) 0%,  transparent); }
+}
+
+[data-paradigm-shell="reality-os"] [data-pulse="on"] {
+  animation: r-pulse var(--r-dur-3) var(--r-ease) 1;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Hairlines + dividers
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-hr {
+  height: 1px;
+  background: var(--r-ink-4);
+  border: 0;
+  width: 100%;
+}
+[data-paradigm-shell="reality-os"] .r-vr {
+  width: 1px;
+  background: var(--r-ink-4);
+  height: 100%;
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Buttons + chips
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--r-px-3);
+  height: 26px;
+  padding: 0 var(--r-px-5);
+  font-family: var(--r-font-display);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--r-ink-1);
+  background: transparent;
+  border: 1px solid var(--r-ink-4);
+  border-radius: var(--r-radius-1);
+  cursor: pointer;
+  transition: color var(--r-dur-1) var(--r-ease),
+              border-color var(--r-dur-1) var(--r-ease),
+              background var(--r-dur-1) var(--r-ease);
+}
+[data-paradigm-shell="reality-os"] .r-btn:hover {
+  color: var(--r-ink-0);
+  border-color: color-mix(in oklab, var(--r-prism-core) 50%, var(--r-ink-4));
+  background: color-mix(in oklab, var(--r-prism-core) 6%, transparent);
+}
+[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"] {
+  color: var(--r-void);
+  background: var(--r-prism-core);
+  border-color: var(--r-prism-core);
+}
+[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"]:hover {
+  background: color-mix(in oklab, var(--r-prism-core) 80%, white);
+}
+
+[data-paradigm-shell="reality-os"] .r-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--r-px-2);
+  height: 20px;
+  padding: 0 var(--r-px-4);
+  font-family: var(--r-font-display);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--r-ink-2);
+  border: 1px solid var(--r-ink-4);
+  border-radius: var(--r-radius-1);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Inputs (composer)
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--r-ink-4);
+  color: var(--r-ink-0);
+  font-family: var(--r-font-prose);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: var(--r-px-5);
+  border-radius: var(--r-radius-2);
+  resize: none;
+  outline: none;
+  transition: border-color var(--r-dur-1) var(--r-ease);
+}
+[data-paradigm-shell="reality-os"] .r-input:focus {
+  border-color: color-mix(in oklab, var(--r-prism-core) 60%, var(--r-ink-4));
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Scrollbar
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-track { background: transparent; }
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-thumb {
+  background: var(--r-ink-4);
+  border-radius: var(--r-radius-1);
+}
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-thumb:hover {
+  background: var(--r-ink-3);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Selection
+ * ──────────────────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] ::selection {
+  background: color-mix(in oklab, var(--r-prism-core) 32%, transparent);
+  color: var(--r-ink-0);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * Reduced motion
+ * ──────────────────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-paradigm-shell="reality-os"] .r-grid,
+  [data-paradigm-shell="reality-os"] .r-prism,
+  [data-paradigm-shell="reality-os"] .r-prism::after {
+    animation: none !important;
+  }
+}
