@@ -14,9 +14,13 @@ output/
 # Runtime data (user-generated, never commit)
 data/audit-log.json
 data/user-seeds.json
+data/users.json
 data/friends/friends.json
 data/friends/friend-notes.json
 data/migrations.json
+data/migration-report.json
+data/composition-recipes.json
+data/genesis-seeds.json
 
 # Archived content
 .archive/
