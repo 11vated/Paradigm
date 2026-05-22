@@ -8,10 +8,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 const TABS: Array<{ to: string; label: string; hint: string }> = [
-  { to: '/friend', label: 'friend', hint: 'sovereign companion' },
-  { to: '/world', label: 'world', hint: 'deterministic setting' },
-  { to: '/quest', label: 'quest', hint: 'friend × world' },
-  { to: '/play', label: 'play', hint: 'playable scene graph' },
+  { to: '/classic/friend', label: 'friend', hint: 'sovereign companion' },
+  { to: '/classic/world', label: 'world', hint: 'deterministic setting' },
+  { to: '/classic/quest', label: 'quest', hint: 'friend × world' },
+  { to: '/classic/play', label: 'play', hint: 'playable scene graph' },
 ];
 
 export const TopNav: React.FC = () => (

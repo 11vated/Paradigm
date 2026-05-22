@@ -1,36 +1,23 @@
 /**
- * Root — the Reality OS three-pane studio.
- *
- *   ┌─ TopBar (28px) ─────────────────────────────────────────────────┐
- *   │ wordmark · mode · kernel gauge · cosmos · you                   │
- *   ├─ LeftRail │     CenterStage          │ AgentPanel ──────────────┤
- *   │ threads   │ living artifact          │ identity · cards · chat  │
- *   │ library   │ (mode-routed canvas)     │ composer · footer        │
- *   │ sovereignty│                         │                          │
- *   │ modes     │                         │                          │
- *   ├───────────┴──────────────────────────┴──────────────────────────┤
- *   │ AmbientStrip — hidden until federated data exists               │
- *   └─────────────────────────────────────────────────────────────────┘
- *
- * The shell is keyboard-first:
- *   1-7      — switch center stage mode (no modifier)
- *   r        — toggle photoreal renderer (in Crucible)
- *   cmd+\    — calm focus (collapse left rail)
- *   cmd+↩   — expand agent fullscreen
- *   esc      — restore layout
+ * Root — Reality OS three-pane studio (magic-first).
  */
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import '@/styles/reality-os.css';
 
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useSeedTheme, themeToCssVars } from '@/hooks/useSeedTheme';
 import { usePaneLayout } from '@/hooks/usePaneLayout';
+import { useCreativeActs } from '@/hooks/useCreativeActs';
+import { getInstallGenesisHash } from '@/lib/ui/genesisSuggestions';
 
 import { TopBar } from '@/ui/chrome/TopBar';
 import { AmbientStrip } from '@/ui/chrome/AmbientStrip';
 import { LeftRail } from '@/ui/rails/LeftRail';
+import { CollapsedLeftRail } from '@/ui/rails/CollapsedLeftRail';
 import { AgentPanel } from '@/ui/rails/AgentPanel';
 import { CenterStage } from '@/ui/stage/CenterStage';
+import { DomainCosmosOverlay } from '@/ui/overlays/DomainCosmosOverlay';
+import { Onboarding } from '@/components/onboarding/Onboarding';
 
 const Gripper: React.FC<
   React.HTMLAttributes<HTMLDivElement> & {
@@ -65,12 +52,18 @@ const Gripper: React.FC<
 
 export const Root: React.FC = () => {
   const seed = useActiveSeed((s) => s.seed);
-  const theme = useSeedTheme(seed?.hash);
+  const themeHash = seed?.hash ?? getInstallGenesisHash();
+  const theme = useSeedTheme(themeHash);
   const cssVars = useMemo(() => themeToCssVars(theme), [theme]);
+  const [cosmosOpen, setCosmosOpen] = useState(false);
+  const openCosmos = useCallback(() => setCosmosOpen(true), []);
+  const closeCosmos = useCallback(() => setCosmosOpen(false), []);
+
+  useCreativeActs({ onCosmos: openCosmos });
+
   const {
     leftPct,
     agentPct,
-    centerPct,
     focusMode,
     leftGripper,
     agentGripper,
@@ -79,11 +72,20 @@ export const Root: React.FC = () => {
   const calm = focusMode === 'calm';
   const agentFull = focusMode === 'agent-fullscreen';
 
-  // In agent-fullscreen, the agent column expands to ~78%, center pinned to ~22%,
-  // left rail hidden. Restore via Escape (handled in usePaneLayout).
-  const computedLeftPct  = agentFull ? 0   : (calm ? 0  : leftPct);
-  const computedAgentPct = agentFull ? 78  : agentPct;
+  const computedLeftPct = agentFull ? 0 : calm ? 0 : leftPct;
+  const computedAgentPct = agentFull ? 78 : agentPct;
   const computedCenterPct = Math.max(8, 100 - computedLeftPct - computedAgentPct);
+
+  useEffect(() => {
+    const handler = (ev: KeyboardEvent) => {
+      if ((ev.metaKey || ev.ctrlKey) && ev.key === ' ') {
+        ev.preventDefault();
+        setCosmosOpen((o) => !o);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   return (
     <div
@@ -95,10 +97,11 @@ export const Root: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        background: `radial-gradient(ellipse 120% 80% at 50% 0%, color-mix(in oklab, var(--r-prism-core) 6%, var(--r-void)), var(--r-void))`,
       } as React.CSSProperties}
     >
-      <div className="r-grid" />
-      <TopBar />
+      <TopBar onCosmos={openCosmos} />
+      <Onboarding onComplete={() => {}} onSkip={() => {}} />
 
       <div
         style={{
@@ -110,6 +113,10 @@ export const Root: React.FC = () => {
           zIndex: 'var(--r-z-pane)' as unknown as number,
         }}
       >
+        {calm && !agentFull && (
+          <CollapsedLeftRail onCosmos={openCosmos} />
+        )}
+
         {computedLeftPct > 0 && (
           <>
             <div
@@ -124,7 +131,7 @@ export const Root: React.FC = () => {
                 WebkitBackdropFilter: 'blur(16px)',
               }}
             >
-              <LeftRail />
+              <LeftRail onCosmos={openCosmos} />
             </div>
             <Gripper bind={leftGripper} />
           </>
@@ -156,6 +163,7 @@ export const Root: React.FC = () => {
       </div>
 
       <AmbientStrip />
+      <DomainCosmosOverlay open={cosmosOpen} onClose={closeCosmos} />
     </div>
   );
 };

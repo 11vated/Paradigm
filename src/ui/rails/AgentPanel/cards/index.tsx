@@ -1,5 +1,8 @@
 import React from 'react';
 import type { SurfacedCard } from '@/stores/agentThreads';
+import { useActiveSeed } from '@/stores/activeSeed';
+import { kernelSeedToActive } from '@/lib/ui/seedBridge';
+import { generateSeed } from '@/services/api';
 import { PlanCard } from './PlanCard';
 import { GsplSourceCard } from './GsplSourceCard';
 import { ToolCallsCard } from './ToolCallsCard';
@@ -11,9 +14,21 @@ import { FederationCard } from './FederationCard';
 import { SovereigntyCard } from './SovereigntyCard';
 
 export const SurfacedCardView: React.FC<{ card: SurfacedCard }> = ({ card }) => {
+  const setSeed = useActiveSeed((s) => s.setSeed);
+
+  const growFromPlan = async () => {
+    try {
+      const created = await generateSeed('plan grow', 'character');
+      const active = kernelSeedToActive(created as Record<string, unknown>);
+      if (active) setSeed(active);
+    } catch {
+      /* user may retry via agent */
+    }
+  };
+
   switch (card.kind) {
     case 'plan':
-      return <PlanCard payload={card.payload as any} />;
+      return <PlanCard payload={card.payload as Record<string, unknown>} onGrow={growFromPlan} />;
     case 'gspl-source':
       return <GsplSourceCard payload={card.payload as any} />;
     case 'tool-calls':

@@ -2469,6 +2469,103 @@ async function startServer() {
     res.json(response);
   });
 
+  app.post('/api/agent/stream', optionalAuth, validateBody(AgentQuerySchema), async (req: any, res: any) => {
+    const query = req.body.query || req.body.message;
+    metrics.agentQueries++;
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const write = (obj: Record<string, unknown>) => {
+      res.write(`data: ${JSON.stringify(obj)}\n\n`);
+    };
+
+    try {
+      const response = await gsplAgent.process(query, { seeds });
+
+      if (response.success && response.data?.seed) {
+        seeds.push(response.data.seed);
+        saveSeeds();
+      }
+      if (response.success && response.data?.population) {
+        for (const s of response.data.population) seeds.push(s);
+        saveSeeds();
+      }
+      if (response.success && response.data?.seeds) {
+        for (const s of response.data.seeds) seeds.push(s);
+        saveSeeds();
+      }
+
+      const message = String(response.message || '');
+      const parts = message.split(/(\s+)/).filter((p) => p.length > 0);
+      for (const token of parts) {
+        write({ type: 'delta', token });
+      }
+
+      if (response.plan?.steps?.length) {
+        write({
+          type: 'card',
+          kind: 'plan',
+          payload: {
+            summary: message.slice(0, 240),
+            steps: response.plan.steps.map((s) => s.operation || 'kernel step'),
+          },
+        });
+      }
+
+      if (response.data?.seed) {
+        write({ type: 'seed_updated', seed: response.data.seed });
+        write({
+          type: 'card',
+          kind: 'gspl-source',
+          payload: { kind: 'json', seed: response.data.seed },
+        });
+      }
+
+      write({ type: 'tier', tier: response.tier ?? 0 });
+      write({ type: 'done', latencyMs: 0 });
+      res.end();
+    } catch (e: any) {
+      write({ type: 'delta', token: `Error: ${e?.message ?? 'stream failed'}` });
+      write({ type: 'done', latencyMs: 0 });
+      res.end();
+    }
+  });
+
+  app.get('/api/cosmos/engines', async (_req: any, res: any) => {
+    try {
+      const { getAllDomains } = await import('./src/lib/kernel/engines.js');
+      const { DOMAIN_MAP } = await import('./src/lib/kernel/engine-dispatcher.js');
+      const pipeline = getAllDomains();
+      const dispatcher = Object.keys(DOMAIN_MAP);
+      const all = [...new Set([...pipeline, ...dispatcher])].sort();
+      res.json({
+        engines: all.map((domain) => ({
+          domain,
+          label: domain,
+          contractScore: 0.85,
+        })),
+        count: all.length,
+      });
+    } catch (e: any) {
+      res.status(500).json({ detail: e?.message ?? 'cosmos failed' });
+    }
+  });
+
+  app.get('/api/ambient/peers', (_req: any, res: any) => {
+    res.json({ peers: [], count: 0 });
+  });
+  app.get('/api/ambient/canon', (_req: any, res: any) => {
+    res.json({ delta: 0, registrations: [] });
+  });
+  app.get('/api/ambient/dao', (_req: any, res: any) => {
+    res.json({ proposalsOpen: 0, treasuryHealthy: true });
+  });
+  app.get('/api/ambient/marketplace', (_req: any, res: any) => {
+    res.json({ listings: 0, mints: 0 });
+  });
+
   app.get('/api/agent/help', async (_req, res) => {
     res.json(await gsplAgent.process('help'));
   });

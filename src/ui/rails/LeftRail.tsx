@@ -4,10 +4,12 @@
  * Four collapsible sections. The Modes section doubles as a status
  * panel for the canvas (the active mode glows).
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { useMode, MODES, MODE_LABEL, MODE_HINT, type Mode } from '@/stores/modeStore';
 import { useActiveSeed } from '@/stores/activeSeed';
+import { kernelSeedToActive } from '@/lib/ui/seedBridge';
+import { listSeeds } from '@/services/api';
 import { PrismStrip } from '@/ui/primitives/PrismStrip';
 
 const Section: React.FC<{
@@ -55,10 +57,32 @@ const Section: React.FC<{
   );
 };
 
-export const LeftRail: React.FC = () => {
+interface LeftRailProps {
+  onCosmos?: () => void;
+}
+
+export const LeftRail: React.FC<LeftRailProps> = ({ onCosmos }) => {
   const { threads, currentThreadId, setCurrent, newThread } = useAgentThreads();
   const { mode, setMode } = useMode();
   const seed = useActiveSeed((s) => s.seed);
+  const setSeed = useActiveSeed((s) => s.setSeed);
+  const [library, setLibrary] = useState<Array<Record<string, unknown>>>([]);
+  const [libSearch, setLibSearch] = useState('');
+
+  useEffect(() => {
+    listSeeds()
+      .then((list) => setLibrary(Array.isArray(list) ? list : []))
+      .catch(() => setLibrary([]));
+  }, [seed?.id]);
+
+  const filteredLib = library.filter((s) => {
+    const q = libSearch.trim().toLowerCase();
+    if (!q) return true;
+    const name = String((s as { name?: string }).name ?? '');
+    const domain = String((s as { domain?: string }).domain ?? '');
+    const hash = String((s as { hash?: string; $hash?: string }).hash ?? (s as { $hash?: string }).$hash ?? '');
+    return name.toLowerCase().includes(q) || domain.includes(q) || hash.includes(q);
+  });
 
   return (
     <aside
@@ -140,6 +164,40 @@ export const LeftRail: React.FC = () => {
       </Section>
 
       <Section label="Library">
+        <input
+          className="r-input"
+          placeholder="search seeds…"
+          value={libSearch}
+          onChange={(e) => setLibSearch(e.target.value)}
+          style={{ width: '100%', marginBottom: 6, fontSize: 10 }}
+        />
+        <ul style={{ listStyle: 'none', margin: '0 0 8px', padding: 0, display: 'grid', gap: 4, maxHeight: 120, overflowY: 'auto' }}>
+          {filteredLib.slice(0, 12).map((s) => {
+            const id = String((s as { id?: string }).id ?? (s as { $hash?: string }).$hash ?? '');
+            const active = kernelSeedToActive(s);
+            return (
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => active && setSeed(active)}
+                  style={{
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '4px 6px',
+                    background: 'transparent',
+                    border: '1px solid var(--r-ink-4)',
+                    borderRadius: 'var(--r-radius-1)',
+                    color: 'var(--r-ink-2)',
+                    fontSize: 10,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {(s as { name?: string }).name ?? id.slice(0, 8)} · {(s as { domain?: string }).domain ?? '?'}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
         {seed ? (
           <div
             style={{
@@ -241,6 +299,18 @@ export const LeftRail: React.FC = () => {
             );
           })}
         </ul>
+      </Section>
+
+      <Section label="Cosmos" defaultOpen={false}>
+        <button
+          type="button"
+          className="r-btn"
+          data-tone="primary"
+          onClick={onCosmos}
+          style={{ width: '100%', height: 28, fontSize: 10 }}
+        >
+          ✦ 200+ engines · explore
+        </button>
       </Section>
 
       <div

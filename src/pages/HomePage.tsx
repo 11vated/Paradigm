@@ -113,14 +113,14 @@ export default function HomePage() {
         <section>
           <div className="text-xs uppercase tracking-wider text-neutral-500 mb-3">explore the substrate</div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <Tile to="/friend"  title="Friend"  sub="compose a companion" />
-            <Tile to="/world"   title="World"   sub="conjure a setting" />
-            <Tile to="/quest"   title="Quest"   sub="friend × world" />
-            <Tile to="/play"    title="Play"    sub="walk a game" />
-            <Tile to="/evolve"  title="Evolve"  sub="director + MAP-elites" />
-            <Tile to="/repl"    title="REPL"    sub="GSPL live" />
-            <Tile to="/lineage" title="Lineage" sub="ancestry trees" />
-            <Tile to="/studio"  title="Studio"  sub="full kernel" />
+            <Tile to="/classic/friend"  title="Friend"  sub="compose a companion" />
+            <Tile to="/classic/world"   title="World"   sub="conjure a setting" />
+            <Tile to="/classic/quest"   title="Quest"   sub="friend × world" />
+            <Tile to="/classic/play"    title="Play"    sub="walk a game" />
+            <Tile to="/classic/evolve"  title="Evolve"  sub="director + MAP-elites" />
+            <Tile to="/classic/repl"    title="REPL"    sub="GSPL live" />
+            <Tile to="/classic/lineage/demo" title="Lineage" sub="ancestry trees" />
+            <Tile to="/"  title="Studio"  sub="full kernel" />
           </div>
         </section>
 

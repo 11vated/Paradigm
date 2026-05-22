@@ -1,15 +1,5 @@
 /**
  * useAgent — SSE streaming agent hook with POST /api/agent/query fallback.
- *
- * Emits typed events from /api/agent/stream (when available):
- *   delta {token}       — streaming text token
- *   tool_call_start {name, args}
- *   tool_call_end {name, latencyMs, ok}
- *   card {kind, payload}
- *   done {latencyMs}
- *   tier {tier}
- *
- * Falls back to POST /api/agent/query when SSE is unavailable.
  */
 import { useCallback, useRef } from 'react';
 import {
@@ -20,14 +10,19 @@ import {
   type SurfacedCard,
   type CardKind,
 } from '@/stores/agentThreads';
+import { useActiveSeed } from '@/stores/activeSeed';
+import { kernelSeedToActive } from '@/lib/ui/seedBridge';
 import { kernelNowIso } from '@/lib/kernel/clock';
 
 interface AgentResponse {
   success: boolean;
   intent?: string;
   message?: string;
-  data?: any;
+  data?: Record<string, unknown>;
   tier?: number;
+  plan?: {
+    steps?: Array<{ tool?: string; description?: string; status?: string }>;
+  };
 }
 
 const TIER_NAMES: Record<number, string> = {
@@ -37,16 +32,75 @@ const TIER_NAMES: Record<number, string> = {
   3: 'deep',
 };
 
+function extractSeedFromResponse(json: AgentResponse): Record<string, unknown> | null {
+  const data = json.data;
+  if (!data) return null;
+  const s =
+    (data.seed as Record<string, unknown>) ??
+    ((data.population as Record<string, unknown>[])?.[0]) ??
+    ((data.seeds as Record<string, unknown>[])?.[0]);
+  return s ?? null;
+}
+
+function buildCardsFromResponse(json: AgentResponse, startedAt: number): SurfacedCard[] {
+  const cards: SurfacedCard[] = [];
+
+  if (json.plan?.steps?.length) {
+    cards.push({
+      id: newCardId(),
+      kind: 'plan' as CardKind,
+      payload: {
+        summary: json.message,
+        steps: json.plan.steps.map(
+          (s) => s.description || `${s.tool ?? 'step'} · ${s.status ?? 'pending'}`,
+        ),
+      },
+    });
+  }
+
+  if (json.intent && json.intent !== 'help' && json.intent !== 'unknown') {
+    cards.push({
+      id: newCardId(),
+      kind: 'tool-calls' as CardKind,
+      payload: {
+        intent: json.intent,
+        data: json.data ?? null,
+        latencyMs: Math.max(1, Math.round(performance.now() - startedAt)),
+        ok: json.success,
+      },
+    });
+  }
+
+  const grown = extractSeedFromResponse(json);
+  if (grown) {
+    cards.push({
+      id: newCardId(),
+      kind: 'gspl-source' as CardKind,
+      payload: { kind: 'json', seed: grown },
+    });
+  }
+
+  return cards;
+}
+
 export function useAgent() {
   const { threads, currentThreadId, appendTurn, patchTurn } = useAgentThreads();
+  const setSeed = useActiveSeed((s) => s.setSeed);
   const abortRef = useRef<AbortController | null>(null);
+
+  const applyKernelSeed = useCallback(
+    (raw: Record<string, unknown> | null | undefined) => {
+      const active = kernelSeedToActive(raw);
+      if (active) setSeed(active);
+    },
+    [setSeed],
+  );
 
   const send = useCallback(
     async (text: string): Promise<void> => {
       if (!currentThreadId || !text.trim()) return;
       const tid = currentThreadId;
 
-      // Optimistic user turn
       const userTurn: Turn = {
         id: newTurnId(),
         role: 'user',
@@ -55,7 +109,6 @@ export function useAgent() {
       };
       appendTurn(tid, userTurn);
 
-      // Pending agent turn
       const agentTurnId = newTurnId();
       const startedAt = performance.now();
       appendTurn(tid, {
@@ -66,6 +119,10 @@ export function useAgent() {
         streaming: true,
         parentId: userTurn.id,
       });
+
+      const finishTurn = (partial: Partial<Turn>) => {
+        patchTurn(tid, agentTurnId, { streaming: false, ...partial });
+      };
 
       const trySse = async (): Promise<boolean> => {
         try {
@@ -86,12 +143,12 @@ export function useAgent() {
           let buffer = '';
           let collectedCards: SurfacedCard[] = [];
           let tier: string | undefined;
-
           let accumulatedText = '';
+          let done = false;
 
           while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+            const { value, done: readDone } = await reader.read();
+            if (readDone) break;
 
             buffer += decoder.decode(value, { stream: true });
             const lines = buffer.split('\n');
@@ -103,67 +160,51 @@ export function useAgent() {
               if (!data) continue;
 
               try {
-                const event = JSON.parse(data);
+                const event = JSON.parse(data) as Record<string, unknown>;
 
                 switch (event.type) {
                   case 'delta':
-                    accumulatedText += event.token;
+                    accumulatedText += String(event.token ?? '');
                     patchTurn(tid, agentTurnId, { text: accumulatedText });
                     break;
-
-                  case 'tool_call_start':
-                    collectedCards.push({
-                      id: newCardId(),
-                      kind: 'tool-calls' as CardKind,
-                      payload: { tool: event.name, args: event.args, status: 'running' },
-                    });
-                    break;
-
-                  case 'tool_call_end':
-                    collectedCards.push({
-                      id: newCardId(),
-                      kind: 'tool-calls' as CardKind,
-                      payload: { tool: event.name, latencyMs: event.latencyMs, ok: event.ok },
-                    });
-                    break;
-
                   case 'card':
                     if (event.kind && event.payload) {
                       collectedCards.push({
                         id: newCardId(),
                         kind: event.kind as CardKind,
-                        payload: event.payload,
+                        payload: event.payload as Record<string, unknown>,
                       });
+                      if (event.kind === 'gspl-source' && (event.payload as { seed?: unknown }).seed) {
+                        applyKernelSeed((event.payload as { seed: Record<string, unknown> }).seed);
+                      }
                     }
                     break;
-
-                  case 'tier':
-                    tier = TIER_NAMES[event.tier] ?? event.tier;
+                  case 'seed_updated':
+                    applyKernelSeed(event.seed as Record<string, unknown>);
                     break;
-
+                  case 'tier':
+                    tier = TIER_NAMES[event.tier as number] ?? String(event.tier);
+                    break;
                   case 'done':
-                    patchTurn(tid, agentTurnId, {
-                      streaming: false,
-                      inferenceTier: tier as any,
+                    done = true;
+                    finishTurn({
+                      text: accumulatedText || 'Done.',
+                      inferenceTier: tier as Turn['inferenceTier'],
                       cards: collectedCards.length ? collectedCards : undefined,
-                      fingerprint: {
-                        latencyMs: Math.round(performance.now() - startedAt),
-                      },
+                      fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
                     });
                     break;
                 }
               } catch {
-                // skip malformed events
+                /* skip malformed */
               }
             }
           }
 
-          // Final flush after stream ends
-          if (accumulatedText && !threads.find(t => t.id === tid)?.turns.find(u => u.id === agentTurnId)?.streaming === false) {
-            patchTurn(tid, agentTurnId, {
-              text: accumulatedText,
-              streaming: false,
-              inferenceTier: tier as any,
+          if (!done) {
+            finishTurn({
+              text: accumulatedText || "I'll keep working on that — check the plan below.",
+              inferenceTier: tier as Turn['inferenceTier'],
               cards: collectedCards.length ? collectedCards : undefined,
               fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
             });
@@ -177,11 +218,9 @@ export function useAgent() {
         }
       };
 
-      // Try SSE first, fallback to POST
       const sseWorked = await trySse();
       if (sseWorked) return;
 
-      // Fallback: POST /api/agent/query
       try {
         const res = await fetch('/api/agent/query', {
           method: 'POST',
@@ -191,52 +230,33 @@ export function useAgent() {
 
         const json: AgentResponse = await res.json().catch(() => ({
           success: false,
-          message: 'agent · failed to parse response',
+          message: "I couldn't parse the kernel response.",
         }));
 
-        const cards: SurfacedCard[] = [];
-
-        if (json.intent && json.intent !== 'help' && json.intent !== 'unknown') {
-          cards.push({
-            id: newCardId(),
-            kind: 'tool-calls',
-            payload: {
-              intent: json.intent,
-              data: json.data ?? null,
-              latencyMs: Math.max(1, Math.round(performance.now() - startedAt)),
-              ok: json.success,
-            },
-          });
-        }
-
-        const grown = json.data?.seed ?? json.data?.population?.[0] ?? null;
-        if (grown) {
-          cards.push({
-            id: newCardId(),
-            kind: 'gspl-source',
-            payload: { kind: 'json', seed: grown },
-          });
-        }
+        const cards = buildCardsFromResponse(json, startedAt);
+        const grown = extractSeedFromResponse(json);
+        if (grown) applyKernelSeed(grown);
 
         const replyText =
           (json.message && String(json.message).trim()) ||
-          (json.success ? `intent · ${json.intent ?? 'ok'}` : 'agent · no message returned');
+          (json.success
+            ? `I'll run that through the kernel — ${json.intent ?? 'ok'}.`
+            : "Something went wrong. Try rephrasing, or type /help.");
 
-        patchTurn(tid, agentTurnId, {
+        finishTurn({
           text: replyText,
-          streaming: false,
-          inferenceTier: TIER_NAMES[json.tier ?? 2] as any,
+          inferenceTier: TIER_NAMES[json.tier ?? 0] as Turn['inferenceTier'],
           cards: cards.length ? cards : undefined,
           fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
         });
-      } catch (err: any) {
-        patchTurn(tid, agentTurnId, {
-          text: `agent · transport error · ${err?.message ?? String(err)}`,
-          streaming: false,
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        finishTurn({
+          text: `I lost connection to the kernel — ${msg}`,
         });
       }
     },
-    [currentThreadId, appendTurn, patchTurn],
+    [currentThreadId, appendTurn, patchTurn, applyKernelSeed],
   );
 
   const cancel = useCallback(() => {

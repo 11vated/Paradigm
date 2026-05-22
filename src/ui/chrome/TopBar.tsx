@@ -13,7 +13,11 @@ import { useActiveSeed } from '@/stores/activeSeed';
 import { useMode, MODE_LABEL } from '@/stores/modeStore';
 import { KernelGauge } from './KernelGauge';
 
-export const TopBar: React.FC = () => {
+interface TopBarProps {
+  onCosmos?: () => void;
+}
+
+export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
   const seed = useActiveSeed((s) => s.seed);
   const { mode } = useMode();
 
@@ -75,18 +79,21 @@ export const TopBar: React.FC = () => {
       <KernelGauge />
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <span
+        <button
+          type="button"
           className="r-chip"
+          onClick={onCosmos}
           style={{
             cursor: 'pointer',
             borderColor: 'var(--r-ink-4)',
             fontSize: 8,
             color: 'var(--r-ink-3)',
+            background: 'transparent',
           }}
           title="Domain Cosmos (cmd+space)"
         >
           ✦ cosmos
-        </span>
+        </button>
         <span
           className="r-chip"
           style={{

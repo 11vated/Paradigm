@@ -28,7 +28,7 @@ export const LegacyShell: React.FC = () => (
     <TopNav />
     <Routes>
       <Route index element={<HomePage />} />
-      <Route path="studio" element={<StudioPage />} />
+      <Route path="studio" element={<Navigate to="/" replace />} />
       <Route path="friend" element={<FriendPage />} />
       <Route path="play" element={<PlayPage />} />
       <Route path="play/:friendSeed/:worldSeed" element={<PlayPage />} />

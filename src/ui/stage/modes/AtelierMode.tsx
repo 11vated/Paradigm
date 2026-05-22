@@ -1,56 +1,114 @@
-import React, { useState, useCallback } from 'react';
+/**
+ * AtelierMode — Crucible + floating tool panels (studio components).
+ */
+import React, { useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
-import { useSeedTheme } from '@/hooks/useSeedTheme';
+import { kernelSeedToActive } from '@/lib/ui/seedBridge';
+import { CrucibleMode } from './CrucibleMode';
+import GeneEditor from '@/components/studio/GeneEditor';
+import GSPLEditor from '@/components/studio/GSPLEditor';
+
+type PanelId = 'genes' | 'gspl';
+
+const PANELS: { id: PanelId; label: string }[] = [
+  { id: 'genes', label: 'Genes' },
+  { id: 'gspl', label: 'GSPL' },
+];
 
 export const AtelierMode: React.FC = () => {
+  const [open, setOpen] = useState<Set<PanelId>>(new Set(['genes']));
   const seed = useActiveSeed((s) => s.seed);
-  const theme = useSeedTheme(seed?.hash);
-  const [gspl, setGspl] = useState('// write GSPL here\n');
-  const [output, setOutput] = useState<string | null>(null);
+  const setSeed = useActiveSeed((s) => s.setSeed);
 
-  const evaluate = useCallback(() => {
-    try {
-      const result = { evaluated: true, source: gspl };
-      setOutput(JSON.stringify(result, null, 2));
-    } catch (e: any) {
-      setOutput(`error: ${e?.message ?? String(e)}`);
-    }
-  }, [gspl]);
+  const toggle = (id: PanelId) => {
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const studioSeed = seed?.raw ?? seed;
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <header style={{ padding: 'var(--r-px-4) var(--r-px-5)', borderBottom: '1px solid var(--r-ink-4)', display: 'flex', alignItems: 'center', gap: 8 }}>
-        <span style={{ fontFamily: 'var(--r-font-display)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: theme.core }}>Atelier · GSPL Workspace</span>
-        <span style={{ fontFamily: 'var(--r-font-num)', fontSize: 9, color: 'var(--r-ink-3)' }}>{seed?.hash.slice(0, 12) ?? '—'}</span>
-        <div style={{ flex: 1 }} />
-        <button className="r-btn" data-tone="primary" onClick={evaluate} style={{ height: 22, fontSize: 9, padding: '0 10px' }}>evaluate</button>
-      </header>
-      <div style={{ flex: 1, display: 'flex', gap: 1, minHeight: 0 }}>
-        <textarea
-          value={gspl}
-          onChange={(e) => setGspl(e.target.value)}
-          spellCheck={false}
-          style={{
-            flex: 1,
-            background: 'rgba(255,255,255,0.008)',
-            border: 'none',
-            borderRight: '1px solid var(--r-ink-4)',
-            color: 'var(--r-ink-1)',
-            fontFamily: 'var(--r-font-display)',
-            fontSize: 12,
-            lineHeight: 1.6,
-            padding: 'var(--r-px-4)',
-            resize: 'none',
-          }}
-        />
-        <div style={{ flex: 1, padding: 'var(--r-px-4)', overflow: 'auto', background: 'rgba(255,255,255,0.008)' }}>
-          {output ? (
-            <pre style={{ margin: 0, fontSize: 11, color: 'var(--r-ink-1)', whiteSpace: 'pre-wrap' }}>{output}</pre>
-          ) : (
-            <span style={{ color: 'var(--r-ink-3)', fontSize: 11, fontStyle: 'italic' }}>output will appear here</span>
-          )}
-        </div>
+    <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+      <CrucibleMode />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: 48,
+          left: 12,
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 4,
+          zIndex: 20,
+        }}
+      >
+        {PANELS.map((p) => (
+          <button
+            key={p.id}
+            type="button"
+            className="r-chip"
+            onClick={() => toggle(p.id)}
+            style={{
+              cursor: 'pointer',
+              borderColor: open.has(p.id) ? 'var(--r-prism-core)' : 'var(--r-ink-4)',
+              fontSize: 9,
+            }}
+          >
+            {open.has(p.id) ? '▾' : '▸'} {p.label}
+          </button>
+        ))}
+        <span className="r-chip" style={{ fontSize: 8, color: 'var(--r-ink-3)' }}>
+          b breed · c compose · e evolve — ask agent
+        </span>
       </div>
+
+      {open.has('genes') && studioSeed && (
+        <div
+          className="r-pane"
+          style={{
+            position: 'absolute',
+            right: 12,
+            top: 80,
+            width: 280,
+            maxHeight: '45%',
+            overflow: 'auto',
+            zIndex: 15,
+          }}
+        >
+          <GeneEditor
+            seed={studioSeed}
+            onSeedUpdated={(s: Record<string, unknown>) => {
+              const active = kernelSeedToActive(s);
+              if (active) setSeed(active);
+            }}
+          />
+        </div>
+      )}
+      {open.has('gspl') && (
+        <div
+          className="r-pane"
+          style={{
+            position: 'absolute',
+            left: 12,
+            bottom: 48,
+            width: 360,
+            height: 220,
+            overflow: 'hidden',
+            zIndex: 15,
+          }}
+        >
+          <GSPLEditor
+            onSeedFromGSPL={(s: Record<string, unknown>) => {
+              const active = kernelSeedToActive(s);
+              if (active) setSeed(active);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

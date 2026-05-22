@@ -39,7 +39,8 @@ export const DEFAULT_SEED: ActiveSeed = {
 };
 
 export const useActiveSeed = create<ActiveSeedState>((set) => ({
-  seed: DEFAULT_SEED,
+  /** null until first grow — drives empty-state magic moment. */
+  seed: null,
   setSeed: (seed) => set({ seed }),
   patchSeed: (patch) =>
     set((s) => (s.seed ? { seed: { ...s.seed, ...patch } } : s)),

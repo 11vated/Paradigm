@@ -20,8 +20,9 @@ interface LayoutShape {
 
 const DEFAULTS: LayoutShape = {
   leftPct: 18,
-  agentPct: 30,
-  focusMode: 'normal',
+  agentPct: 28,
+  /** Magic-first: left rail collapsed until user expands (cmd+\). */
+  focusMode: 'calm',
   reducedMotion: false,
 };
 

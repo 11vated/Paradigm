@@ -7,7 +7,7 @@
 
 [data-paradigm-shell="reality-os"] {
   /* ─── Substrate (matte near-black, dimensional) ─────────────────────── */
-  --r-void:      #07080B;
+  --r-void:      #050508;
   --r-void-2:    #0B0D12;
   --r-void-3:    #10131A;
   --r-pane:      rgba(13, 16, 23, 0.78);
@@ -107,6 +107,7 @@
  * Hairlines that drift faintly. WGSL shader replaces this in Phase F.
  * ──────────────────────────────────────────────────────────────────────── */
 [data-paradigm-shell="reality-os"] .r-grid {
+  display: none;
   position: fixed;
   inset: 0;
   z-index: var(--r-z-grid);

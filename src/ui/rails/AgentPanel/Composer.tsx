@@ -14,7 +14,7 @@ interface ComposerProps {
   voiceSupported?: boolean;
 }
 
-export const Composer: React.FC<ComposerProps> = ({ voiceSupported = false }) => {
+export const Composer: React.FC<ComposerProps> = ({ voiceSupported = true }) => {
   const { send } = useAgent();
   const { currentThreadId, forkFrom } = useAgentThreads();
   const seed = useActiveSeed((s) => s.seed);
@@ -33,6 +33,22 @@ export const Composer: React.FC<ComposerProps> = ({ voiceSupported = false }) =>
   useEffect(() => {
     setShowSuggestions(filteredCommands.length > 0 && text.startsWith('/'));
   }, [filteredCommands, text]);
+
+  const sendRef = useRef(send);
+  sendRef.current = send;
+
+  useEffect(() => {
+    taRef.current?.focus();
+    const onPrompt = (e: Event) => {
+      const detail = (e as CustomEvent<{ text?: string }>).detail;
+      if (detail?.text) {
+        setText(detail.text);
+        void sendRef.current(detail.text);
+      }
+    };
+    window.addEventListener('paradigm:compose-prompt', onPrompt);
+    return () => window.removeEventListener('paradigm:compose-prompt', onPrompt);
+  }, []);
 
   const submit = useCallback(async () => {
     const t = text.trim();
