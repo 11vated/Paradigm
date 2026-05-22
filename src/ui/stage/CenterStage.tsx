@@ -20,6 +20,9 @@ import { ResonanceMode } from './modes/ResonanceMode';
 import { LineageMode } from './modes/LineageMode';
 import { CodexMode } from './modes/CodexMode';
 import { TopologyMode } from './modes/TopologyMode';
+import { EvolutionMode } from './modes/EvolutionMode';
+import { SubstrateMode } from './modes/SubstrateMode';
+import { SovereigntyMode } from './modes/SovereigntyMode';
 
 const ModeRouter: React.FC<{ mode: Mode }> = ({ mode }) => {
   switch (mode) {
@@ -30,6 +33,9 @@ const ModeRouter: React.FC<{ mode: Mode }> = ({ mode }) => {
     case 'lineage':  return <LineageMode />;
     case 'codex':    return <CodexMode />;
     case 'topology': return <TopologyMode />;
+    case 'evolution': return <EvolutionMode />;
+    case 'substrate': return <SubstrateMode />;
+    case 'sovereignty': return <SovereigntyMode />;
   }
 };
 

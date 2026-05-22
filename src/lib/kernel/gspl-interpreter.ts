@@ -1051,25 +1051,44 @@ export class GsplInterpreter {
 
     try {
       const resolution = this._resolver.resolve(modulePath);
-      // Parse and evaluate the resolved module source in the current context
       const lexer  = new GsplLexer(resolution.source);
       const tokens = lexer.tokenize();
       const parser = new GsplParser(tokens);
       const ast    = parser.parse();
 
-      // Evaluate top-level declarations from the module (functions, seeds, lets)
+      // Evaluate in an ISOLATED child interpreter so seed/type declarations
+      // from stdlib don't register new gene types in the global registry.
+      const child = new GsplInterpreter();
       for (const decl of ast.body ?? []) {
-        try { await this.evaluate(decl); } catch { /* skip errors in module bodies */ }
+        // Skip seed and type declarations — they would register gene types in the
+        // global geneTypeRegistry singleton, polluting the parent context.
+        if (
+          decl.type === ASTNodeType.SeedDecl ||
+          decl.type === ASTNodeType.TypeDecl ||
+          decl.type === ASTNodeType.TraitDecl ||
+          decl.type === ASTNodeType.ImplDecl
+        ) continue;
+        try { await child.evaluate(decl); } catch { /* skip */ }
       }
 
-      // Bind requested symbols from context into current scope
+      // Only promote function and let bindings into the parent scope.
+      // Seed and type declarations stay isolated to prevent global registry pollution.
+      child.context.variables.forEach((val: unknown, key: string) => {
+        if (typeof val === 'function' || (val && typeof val === 'object' && (val as any)._fn)) {
+          this.context.variables.set(key, val);
+        }
+      });
+
+      // Bind explicitly requested symbols
       for (const sym of imports) {
-        if (!this.context.variables.has(sym)) {
+        const v = child.context.variables.get(sym);
+        if (v !== undefined) {
+          this.context.variables.set(sym, v);
+        } else {
           this.context.variables.set(sym, { _imported: true, _from: modulePath });
         }
       }
     } catch {
-      // Graceful degradation: record the import but don't fail the program
       for (const sym of imports) {
         this.context.variables.set(sym, { _imported: true, _from: modulePath });
       }
