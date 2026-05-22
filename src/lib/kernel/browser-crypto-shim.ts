@@ -153,7 +153,7 @@ export function randomBytes(size: number): Uint8Array {
 
 export function randomUUID(): string {
   if (typeof globalThis.crypto?.randomUUID === 'function') {
-    return globalThis.crypto.randomUUID();
+    return globalThis.crypto.randomUUID(); // PARADIGM-WALL-CLOCK-OK: browser-crypto-shim forwards to platform UUID generator
   }
   // Fallback: build a v4-shaped UUID from randomBytes.
   const b = randomBytes(16);

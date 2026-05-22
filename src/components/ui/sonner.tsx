@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(typing-sprint): Vendored shadcn UI primitive — not imported by the Reality OS shell. Strict-mode types deferred per AGENTS.md until the Typing Sprint converts shadcn defaults to fully typed shapes.
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, toast } from "sonner"
 
