@@ -20,16 +20,13 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Copy built assets
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/server.ts ./
 COPY --from=builder /app/src/lib ./src/lib
-COPY --from=builder /app/src/kernel ./src/kernel
 COPY --from=builder /app/src/seeds ./src/seeds
-COPY --from=builder /app/src/gspl ./src/gspl
-COPY --from=builder /app/src/evolution ./src/evolution
 
 # Expose port
 EXPOSE 3000

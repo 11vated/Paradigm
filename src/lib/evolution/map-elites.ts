@@ -38,7 +38,8 @@ export class MAPElites {
 
   constructor(
     featureExtractor: (seed: Seed) => number[],
-    config: Partial<MapElitesConfig> = {}
+    config: Partial<MapElitesConfig> = {},
+    rngSeed?: string
   ) {
     this.featureExtractor = featureExtractor;
     this.config = {
@@ -49,7 +50,7 @@ export class MAPElites {
       elitismCount: config.elitismCount || 1,
     };
     this.grid = new Map();
-    this.rng = new Xoshiro256StarStar('map-elites-default');
+    this.rng = new Xoshiro256StarStar(rngSeed ?? 'map-elites-default');
   }
 
   private getCellKey(features: number[]): string {

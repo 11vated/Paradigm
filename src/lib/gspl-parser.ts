@@ -136,7 +136,7 @@ export function parseGsplFile(content: string, domain: string): GsplSeed[] {
 
 export function loadAllGsplSeeds(): GsplSeed[] {
   const seeds: GsplSeed[] = [];
-  const dataDir = path.join(process.cwd(), 'data', 'seed-commons', 'inventories');
+  const dataDir = path.join(process.cwd(), 'data', 'commons', 'inventories');
   
   if (!fs.existsSync(dataDir)) return seeds;
 

@@ -213,10 +213,10 @@ export class TextureBaker {
           const srcIdx = (y * texRes + x) * 4;
           const dstIdx = ((currentY + y) * atlasSize + (currentX + x)) * 4;
           
-          atlas[dstIdx] = set.textureMaps.albedo[srcIdx];
-          atlas[dstIdx + 1] = set.textureMaps.albedo[srcIdx + 1];
-          atlas[dstIdx + 2] = set.textureMaps.albedo[srcIdx + 2];
-          atlas[dstIdx + 3] = set.textureMaps.albedo[srcIdx + 3];
+          atlas[dstIdx] = (set.textureMaps.albedo as any)[srcIdx];
+          atlas[dstIdx + 1] = (set.textureMaps.albedo as any)[srcIdx + 1];
+          atlas[dstIdx + 2] = (set.textureMaps.albedo as any)[srcIdx + 2];
+          atlas[dstIdx + 3] = (set.textureMaps.albedo as any)[srcIdx + 3];
         }
       }
       
@@ -340,9 +340,9 @@ export class TextureBaker {
       const texY = Math.floor(v * texRes) % texRes;
       const texIdx = (texY * texRes + texX) * 4;
       
-      mesh.colors[i] = textureMaps.albedo[texIdx];
-      mesh.colors[i + 1] = textureMaps.albedo[texIdx + 1];
-      mesh.colors[i + 2] = textureMaps.albedo[texIdx + 2];
+      (mesh.colors as any)[i] = (textureMaps.albedo as any)[texIdx];
+      (mesh.colors as any)[i + 1] = (textureMaps.albedo as any)[texIdx + 1];
+      (mesh.colors as any)[i + 2] = (textureMaps.albedo as any)[texIdx + 2];
     }
     
     return mesh;

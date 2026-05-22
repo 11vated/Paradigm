@@ -13,6 +13,7 @@
  * 7 → Topology   (functor neighborhood)
  */
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export const MODES = [
   'crucible',
@@ -61,7 +62,12 @@ interface ModeState {
   setMode: (m: Mode) => void;
 }
 
-export const useMode = create<ModeState>((set) => ({
-  mode: 'crucible',
-  setMode: (mode) => set({ mode }),
-}));
+export const useMode = create<ModeState>()(
+  persist(
+    (set) => ({
+      mode: 'crucible',
+      setMode: (mode) => set({ mode }),
+    }),
+    { name: 'paradigm.mode' },
+  ),
+);

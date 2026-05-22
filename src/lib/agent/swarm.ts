@@ -116,7 +116,7 @@ export class AgentSwarm {
     let score = 0.5;
 
     const fitness = (seed.$fitness && typeof seed.$fitness === 'object' && 'overall' in seed.$fitness)
-      ? seed.$fitness.overall
+      ? (seed.$fitness.overall ?? 0)
       : (seed.$fitness as number) || 0;
     const lineage = seed.$lineage?.generation || 0;
 

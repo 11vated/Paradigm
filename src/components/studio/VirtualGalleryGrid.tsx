@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 /**
  * Virtualized Gallery Grid — handles 10k+ seeds at 60fps
  *

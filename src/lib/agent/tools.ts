@@ -21,16 +21,37 @@ import { ParadigmPipeline } from '../pipeline/index.js';
 import { InferenceTier } from './types.js';
 import type { AgentTool, ToolContext, ToolResult, ToolParameter } from './types.js';
 
-// ─── HELPER ─────────────────────────────────────────────────────────────────
+// ─── DETERMINISTIC HELPERS ───────────────────────────────────────────────────
+
+/**
+ * Deterministic counter-based seed ID generator.
+ * Replaces crypto.randomUUID() to preserve seed reproducibility.
+ */
+let agentSeedCounter = 0;
+
+function nextSeedId(): string {
+  agentSeedCounter += 1;
+  return agentSeedCounter.toString(36);
+}
+
+/**
+ * Build a deterministic RNG salt from seed-relevant content.
+ * Replaces Date.now()-based seeding to preserve determinism.
+ */
+function deterministicSalt(...parts: (string | undefined | null)[]): string {
+  return parts.filter(Boolean).join('|');
+}
 
 function makeSeed(domain: string, name: string, genes: Record<string, any>, parentHashes: string[] = []): any {
-  const rng = rngFromHash(name + domain + Date.now());
+  const genesStr = JSON.stringify(genes);
+  const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
+  const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
   return {
-    id: crypto.randomUUID(),
+    id: nextSeedId(),
     $domain: domain,
     $name: name,
     $lineage: { generation: parentHashes.length > 0 ? 1 : 0, operation: 'agent_tool', parents: parentHashes },
-    $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+    $hash: genesHash,
     $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
     genes,
   };
@@ -92,7 +113,7 @@ const mutateSeedTool: AgentTool = {
     if (!target) return { success: false, data: null, message: 'No seed found to mutate.' };
 
     const rate = Math.max(0, Math.min(1, params.rate ?? 0.15));
-    const rng = rngFromHash((target.$hash || '') + 'mutate' + Date.now());
+    const rng = rngFromHash(deterministicSalt(target.$hash, 'mutate'));
 
     const newGenes: Record<string, any> = {};
     let mutationCount = 0;
@@ -107,7 +128,7 @@ const mutateSeedTool: AgentTool = {
 
     const mutated = {
       ...target,
-      id: crypto.randomUUID(),
+      id: nextSeedId(),
       $name: `${target.$name} (Mutated)`,
       $lineage: { generation: (target.$lineage?.generation || 0) + 1, operation: 'agent_mutate', parents: [target.$hash] },
       $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
@@ -141,7 +162,7 @@ const breedSeedsTool: AgentTool = {
 
     if (!parentA || !parentB) return { success: false, data: null, message: 'Need at least 2 seeds to breed.' };
 
-    const rng = rngFromHash((parentA.$hash || '') + (parentB.$hash || '') + Date.now());
+    const rng = rngFromHash(deterministicSalt(parentA.$hash, parentB.$hash, 'breed'));
     const newGenes: Record<string, any> = {};
     const allKeys = new Set([...Object.keys(parentA.genes || {}), ...Object.keys(parentB.genes || {})]);
 
@@ -158,7 +179,7 @@ const breedSeedsTool: AgentTool = {
     }
 
     const child = {
-      id: crypto.randomUUID(),
+      id: nextSeedId(),
       $domain: parentA.$domain,
       $name: `${parentA.$name} × ${parentB.$name}`,
       $lineage: {
@@ -199,7 +220,7 @@ const composeSeedTool: AgentTool = {
       return { success: false, data: null, message: `No composition path from "${target.$domain}" to "${params.targetDomain}".` };
     }
 
-    composed.id = crypto.randomUUID();
+    composed.id = nextSeedId();
     const pathResult = findCompositionPath(target.$domain || '', params.targetDomain);
 
     return {
@@ -255,7 +276,7 @@ const evolveSeedTool: AgentTool = {
     const population: any[] = [];
 
     for (let i = 0; i < popSize; i++) {
-      const rng = rngFromHash((target.$hash || '') + `evolve_${i}_${Date.now()}`);
+      const rng = rngFromHash(deterministicSalt(target.$hash, `evolve_${i}`));
       const rate = 0.1 + rng.nextF64() * 0.3;
       const newGenes: Record<string, any> = {};
 
@@ -268,7 +289,7 @@ const evolveSeedTool: AgentTool = {
       }
 
       population.push({
-        id: crypto.randomUUID(),
+        id: nextSeedId(),
         $domain: target.$domain,
         $name: `${target.$name} (Gen ${i + 1})`,
         $lineage: { generation: (target.$lineage?.generation || 0) + 1, operation: 'agent_evolve', parents: [target.$hash] },
@@ -472,13 +493,15 @@ const executeGsplTool: AgentTool = {
         }
       }
 
-      const rng = rngFromHash(name + domain + Date.now());
+      const genesStr = JSON.stringify(genes);
+      const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
+      const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
       const newSeed = {
-        id: crypto.randomUUID(),
+        id: nextSeedId(),
         $domain: domain,
         $name: name,
         $lineage: { generation: 0, operation: 'gspl' },
-        $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+        $hash: genesHash,
         $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
         genes,
       };

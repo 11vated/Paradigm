@@ -68,16 +68,9 @@ const STEPS: OnboardingStep[] = [
 
 export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(false);
-
-  useEffect(() => {
-    // Check if user has seen onboarding before
-    const seen = localStorage.getItem('paradigm_onboarding_seen');
-    if (seen) {
-      setHasSeenOnboarding(true);
-      onComplete();
-    }
-  }, [onComplete]);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(
+    () => localStorage.getItem('paradigm_onboarding_seen') !== null,
+  );
 
   const step = STEPS[currentStep];
   const progress = ((currentStep + 1) / STEPS.length) * 100;
@@ -87,6 +80,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
       setCurrentStep((prev) => prev + 1);
     } else {
       localStorage.setItem('paradigm_onboarding_seen', 'true');
+      setHasSeenOnboarding(true);
       onComplete();
     }
   };
@@ -99,6 +93,7 @@ export function Onboarding({ onComplete, onSkip }: OnboardingProps) {
 
   const handleSkip = () => {
     localStorage.setItem('paradigm_onboarding_seen', 'true');
+    setHasSeenOnboarding(true);
     if (onSkip) onSkip();
     onComplete();
   };

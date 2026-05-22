@@ -146,7 +146,7 @@ function consolidateByPath(specs: ResolvedGeneSpec[]): ResolvedGeneSpec[] {
 
 function selectTemplate(intent: ParsedIntent): string {
   // Delegate to the canonical Template Bridge.
-  const template = bridgeSelect(intent.top, intent.sub, intent.domains);
+  const template = bridgeSelect(intent.top, intent.sub ?? '', intent.domains);
   if (template) return template.id;
   const primary = intent.domains[0] ?? 'misc';
   return `${intent.top.toLowerCase()}.${primary}`;

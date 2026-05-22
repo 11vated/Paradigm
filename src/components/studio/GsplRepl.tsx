@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 /**
  * GSPL REPL (Read-Eval-Print Loop) with Live Preview
  * Phase I.3: Interactive GSPL coding environment with real-time output

@@ -18,6 +18,7 @@ import { AgentPanel } from '@/ui/rails/AgentPanel';
 import { CenterStage } from '@/ui/stage/CenterStage';
 import { DomainCosmosOverlay } from '@/ui/overlays/DomainCosmosOverlay';
 import { Onboarding } from '@/components/onboarding/Onboarding';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 const Gripper: React.FC<
   React.HTMLAttributes<HTMLDivElement> & {
@@ -131,7 +132,9 @@ export const Root: React.FC = () => {
                 WebkitBackdropFilter: 'blur(16px)',
               }}
             >
-              <LeftRail onCosmos={openCosmos} />
+              <ErrorBoundary fallback={() => <div className="p-4 text-sm text-destructive">Left rail crashed</div>}>
+                <LeftRail onCosmos={openCosmos} />
+              </ErrorBoundary>
             </div>
             <Gripper bind={leftGripper} />
           </>
@@ -145,7 +148,9 @@ export const Root: React.FC = () => {
             height: '100%',
           }}
         >
-          <CenterStage />
+          <ErrorBoundary fallback={() => <div className="p-4 text-sm text-destructive">Center stage crashed</div>}>
+            <CenterStage />
+          </ErrorBoundary>
         </div>
 
         <Gripper bind={agentGripper} />
@@ -158,7 +163,9 @@ export const Root: React.FC = () => {
             height: '100%',
           }}
         >
-          <AgentPanel />
+          <ErrorBoundary fallback={() => <div className="p-4 text-sm text-destructive">Agent panel crashed</div>}>
+            <AgentPanel />
+          </ErrorBoundary>
         </div>
       </div>
 

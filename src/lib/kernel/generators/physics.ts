@@ -102,7 +102,7 @@ function runSimulation(params: PhysicsParams, initialObjects: PhysicsObject[], r
     const time = f * params.timestep;
     
     // Update physics (Euler integration)
-    objects.forEach(obj => {
+    objects.forEach((obj: any) => {
       // Apply gravity
       obj.velocity[1] += params.gravity * params.timestep;
       

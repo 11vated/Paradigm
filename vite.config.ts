@@ -33,7 +33,6 @@ export default defineConfig(({mode}) => {
     },
     build: isProduction ? {
         rollupOptions: {
-          external: ['fs', 'path', 'crypto', 'assert', 'stream', 'events', 'util', 'buffer'],
           output: {
             // Aggressive chunking strategy for large app
             manualChunks(id) {

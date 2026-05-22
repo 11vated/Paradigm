@@ -34,11 +34,11 @@ export const AudioQualityContract: QualityContract<AudioSeed, AudioArtifact, Aud
   rate: (a) => {
     const isWav = a.wav.length > 44 && a.wav.slice(0, 4).toString() === 'RIFF';
     if (!isWav) {
-      return { score: 0, axes: { isWav: 0 }, notes: ['Invalid WAV header'], conformsTo: '1.0.0' };
+      return { score: 0, axes: { isWav: 0 }, notes: ['Invalid WAV header'] };
     }
     const stats = analyzePcm(a.wav);
     if (!stats) {
-      return { score: 0.2, axes: { isWav: 1, decodable: 0 }, notes: ['WAV header OK but PCM not decodable'], conformsTo: '1.0.0' };
+      return { score: 0.2, axes: { isWav: 1, decodable: 0 }, notes: ['WAV header OK but PCM not decodable'] };
     }
     const axes: Record<string, number> = { isWav: 1, decodable: 1, ...audioQualityAxes(stats) };
     const score = (axes.dynamicRangeOk * 0.25 + axes.nonSilent * 0.25 + axes.spectralBalance * 0.20 + axes.notDcOffset * 0.15 + axes.notClipping * 0.15);

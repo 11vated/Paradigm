@@ -292,8 +292,8 @@ export function applyStance(seed: Seed, stanceName: string): Seed {
       ...seed.genes,
       ...stance.genes,
       // Preserve sovereignty genes
-      signature: seed.genes?.signature,
-      ownership: seed.genes?.ownership,
+      signature: seed.genes?.signature ?? {},
+      ownership: seed.genes?.ownership ?? {},
     }
   };
 

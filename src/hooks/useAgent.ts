@@ -125,8 +125,10 @@ export function useAgent() {
       };
 
       const trySse = async (): Promise<boolean> => {
+        let controller: AbortController | undefined;
         try {
-          const controller = new AbortController();
+          abortRef.current?.abort();
+          controller = new AbortController();
           abortRef.current = controller;
 
           const res = await fetch('/api/agent/stream', {
@@ -214,7 +216,9 @@ export function useAgent() {
         } catch {
           return false;
         } finally {
-          abortRef.current = null;
+          if (controller && abortRef.current?.signal === controller.signal) {
+            abortRef.current = null;
+          }
         }
       };
 

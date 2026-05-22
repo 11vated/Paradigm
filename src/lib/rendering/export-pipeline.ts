@@ -238,7 +238,7 @@ export class ProductionExportPipeline {
 
       if (samplerIndex === undefined) {
         samplerIndex = gltfAnimation.samplers.length;
-        samplerMap.set(samplerKey, samplerIndex);
+        samplerMap.set(samplerKey, samplerIndex!);
 
         const times = track.keyframes.map((kf) => kf.time);
         const values = track.keyframes.flatMap((kf) => kf.value);

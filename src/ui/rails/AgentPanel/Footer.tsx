@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAgentThreads } from '@/stores/agentThreads';
-import { kernelNowIso } from '@/lib/kernel/clock';
+import { kernelNow, kernelNowIso } from '@/lib/kernel/clock';
 
 export const AgentFooter: React.FC = () => {
   const { threads, currentThreadId } = useAgentThreads();
@@ -17,7 +17,7 @@ export const AgentFooter: React.FC = () => {
   }, []);
 
   const lastAt = lastTurn?.at
-    ? `${Math.round((Date.now() - new Date(lastTurn.at).getTime()) / 1000)}s ago`
+    ? `${Math.round((kernelNow() - new Date(lastTurn.at).getTime()) / 1000)}s ago`
     : '—';
 
   return (

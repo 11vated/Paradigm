@@ -23,7 +23,7 @@ export function useSeeds(initialDomain?: string) {
     try {
       const result = await api.listSeeds({ domain: domain || initialDomain, page });
       setSeeds(result.seeds);
-      setTotal(result.total);
+      setTotal(result.pagination?.total ?? result.seeds.length);
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -47,7 +47,7 @@ export function useSeed(id: string) {
     if (!id) return;
     setLoading(true);
     api.getSeed(id)
-      .then(result => setSeed(result.seed))
+      .then(result => setSeed(result))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
   }, [id]);
@@ -64,7 +64,7 @@ export function useCreateSeed() {
     setError(null);
     try {
       const result = await api.createSeed(domain, genes, name);
-      return result.seed;
+      return result;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -89,7 +89,7 @@ export function useMutate(seedId: string) {
     setError(null);
     try {
       const result = await api.mutateSeed(seedId, intensity);
-      return result.seed;
+      return result;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -110,7 +110,7 @@ export function useBreed() {
     setError(null);
     try {
       const result = await api.breedSeeds(parent1Id, parent2Id);
-      return result.child;
+      return result;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -138,14 +138,9 @@ export function useEvolve(seedId: string) {
     setHistory([]);
     try {
       const evolutionResult = await api.evolveSeed(seedId, config);
-      setResult(evolutionResult.result);
+      setResult({ population: evolutionResult.population, count: evolutionResult.count, algorithm: evolutionResult.algorithm });
       
-      // Poll for updates if supported, or just get final result
-      if (evolutionResult.result?.history) {
-        setHistory(evolutionResult.result.history);
-      }
-      
-      return evolutionResult.result;
+      return evolutionResult;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -171,8 +166,8 @@ export function useGrow(seedId: string) {
     setError(null);
     try {
       const result = await api.growSeed(seedId);
-      setArtifact(result.artifact);
-      return result.artifact;
+      setArtifact(result);
+      return result;
     } catch (e: any) {
       setError(e.message);
       throw e;
@@ -212,7 +207,7 @@ export function useComposition() {
 
   const compose = useCallback(async (seedId: string, targetDomain: string) => {
     const result = await api.composeSeed(seedId, targetDomain);
-    return result.composedSeed;
+    return result.seed;
   }, []);
 
   const findPath = useCallback(async (source: string, target: string) => {
@@ -249,7 +244,7 @@ export function useGspl() {
     setError(null);
     try {
       // First parse
-      const { ast, errors, types } = await parse(code);
+      const { ast, errors } = await parse(code);
       if (errors?.length) {
         throw new Error(errors.map((e: any) => e.message).join('\n'));
       }
@@ -284,7 +279,7 @@ export function useAgent(seedContext?: string) {
     try {
       const result = await api.queryAgent(prompt, seedContext);
       setResponse(result.message);
-      setGeneratedSeed(result.generatedSeed);
+      setGeneratedSeed((result as any).generatedSeed);
       return result;
     } catch (e: any) {
       setError(e.message);
@@ -316,7 +311,7 @@ export function useSearch() {
     try {
       const result = await api.searchSeeds(query, options);
       setResults(result.seeds);
-      setTotal(result.total);
+      setTotal(result.pagination?.total ?? result.seeds.length);
       return result;
     } catch (e: any) {
       setError(e.message);
@@ -328,7 +323,7 @@ export function useSearch() {
 
   const getSimilar = useCallback(async (seedId: string, limit: number = 10) => {
     const result = await api.getSimilarSeeds(seedId, limit);
-    return result.seeds;
+    return result;
   }, []);
 
   return { search, results, total, loading, error, getSimilar };

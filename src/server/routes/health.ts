@@ -35,7 +35,7 @@ export interface HealthDeps {
 export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
   const { startTime, metrics, DURATION_BUCKETS, seeds, cache, store } = deps;
 
-  app.get('/metrics', (_req, res) => {
+  const metricsHandler = (_req: Request, res: Response) => {
     const lines: string[] = [];
     const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
     const memUsage = process.memoryUsage();
@@ -128,9 +128,11 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
 
     res.set('Content-Type', 'text/plain; version=0.0.4; charset=utf-8');
     res.send(lines.join('\n') + '\n');
-  });
+  };
+  app.get('/api/metrics', metricsHandler);
+  app.get('/metrics', metricsHandler);
 
-  app.get('/health', (_req, res) => {
+  const healthHandler = (_req: Request, res: Response) => {
     const cacheStats = cache.stats();
     res.json({
       status: 'ok',
@@ -147,13 +149,15 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
       },
       timestamp: new Date().toISOString(),
     });
-  });
+  };
+  app.get('/api/health', healthHandler);
+  app.get('/health', healthHandler);
 
   // Readiness probe — separate from liveness so load balancers can drain
   // traffic from degraded instances without killing the process. Checks run
   // in parallel so a single slow dep can't blow the client's timeout.
   // See src/lib/health/readiness.ts for per-check semantics.
-  app.get('/ready', async (_req, res) => {
+  const readyHandler = async (_req: Request, res: Response) => {
     const sbertUrl = process.env.SBERT_URL;
     // Only attempt a pg probe when DATABASE_URL is set — otherwise importing
     // the pg module would construct a pool that immediately fails.
@@ -173,5 +177,7 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
 
     const report = deps.buildReport([storeCheck, postgres, sbert, redisCheck]);
     res.status(report.ready ? 200 : 503).json(report);
-  });
+  };
+  app.get('/api/ready', readyHandler);
+  app.get('/ready', readyHandler);
 }

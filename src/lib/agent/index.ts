@@ -220,6 +220,22 @@ class KnowledgeBase {
 
 // ─── PARADIGM AGENT v2 ─────────────────────────────────────────────────────
 
+
+
+// --- DETERMINISTIC HELPERS (mirrors tools.ts) ---
+// NOTE: executeFallback() is dead code since all operations route through tools.ts.
+// These helpers exist only for completeness. See tools.ts for the canonical implementations.
+let indexSeedCounter = 0;
+
+function nextSeedId(): string {
+  indexSeedCounter += 1;
+  return indexSeedCounter.toString(36);
+}
+
+function deterministicSalt(...parts: (string | undefined | null)[]): string {
+  return parts.filter(Boolean).join('|');
+}
+
 export class ParadigmAgent {
   private kb: KnowledgeBase;
   private memory: AgentMemory;
@@ -487,13 +503,15 @@ export class ParadigmAgent {
         const domain = params.domain || 'character';
         const name = params.name || `New ${domain} seed`;
         const genes = params.genes || {};
-        const rng = rngFromHash(name + domain + Date.now());
+        const genesStr = JSON.stringify(genes);
+        const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
+        const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
         const seed = {
-          id: crypto.randomUUID(),
+          id: nextSeedId(),
           $domain: domain,
           $name: name,
           $lineage: { generation: 0, operation: 'agent_create' },
-          $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
+          $hash: genesHash,
           $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
           genes,
         };
@@ -505,7 +523,7 @@ export class ParadigmAgent {
         const target = seeds[idx];
         if (!target) return { success: false, message: 'No seed to mutate.', data: null };
         const rate = params.rate || 0.15;
-        const rng = rngFromHash((target.$hash || '') + 'mutate' + Date.now());
+        const rng = rngFromHash(deterministicSalt(target.$hash, 'mutate'));
         const newGenes: Record<string, any> = {};
         let mc = 0;
         for (const [k, g] of Object.entries(target.genes || {}) as [string, any][]) {
@@ -517,7 +535,7 @@ export class ParadigmAgent {
           }
         }
         const mutated = {
-          ...target, id: crypto.randomUUID(),
+          ...target, id: nextSeedId(),
           $name: `${target.$name} (Mutated)`,
           $lineage: { generation: (target.$lineage?.generation || 0) + 1, operation: 'agent_mutate', parents: [target.$hash] },
           $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
@@ -533,7 +551,7 @@ export class ParadigmAgent {
         const parentA = seeds[idxA];
         const parentB = seeds[idxB];
         if (!parentA || !parentB) return { success: false, message: 'Need at least 2 seeds to breed.', data: null };
-        const rng = rngFromHash((parentA.$hash || '') + (parentB.$hash || '') + Date.now());
+        const rng = rngFromHash(deterministicSalt(parentA.$hash, parentB.$hash, 'breed'));
         const newGenes: Record<string, any> = {};
         const allKeys = new Set([...Object.keys(parentA.genes || {}), ...Object.keys(parentB.genes || {})]);
         for (const key of allKeys) {
@@ -548,7 +566,7 @@ export class ParadigmAgent {
           }
         }
         const child = {
-          id: crypto.randomUUID(), $domain: parentA.$domain,
+          id: nextSeedId(), $domain: parentA.$domain,
           $name: `${parentA.$name} × ${parentB.$name}`,
           $lineage: { generation: Math.max(parentA.$lineage?.generation || 0, parentB.$lineage?.generation || 0) + 1, operation: 'agent_breed', parents: [parentA.$hash, parentB.$hash] },
           $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes)).digest('hex'),
@@ -564,7 +582,7 @@ export class ParadigmAgent {
         if (!csrc) return { success: false, message: 'No seed to compose.', data: null };
         const composed = composeSeed(csrc, params.targetDomain);
         if (!composed) return { success: false, message: `No composition path from "${csrc.$domain}" to "${params.targetDomain}".`, data: null };
-        composed.id = crypto.randomUUID();
+        composed.id = nextSeedId();
         const path = findCompositionPath(csrc.$domain || '', params.targetDomain);
         return { success: true, message: `Composed "${csrc.$name}" to ${params.targetDomain}.`, data: { seed: composed, path }, seedsCreated: [composed] };
       }
@@ -588,7 +606,7 @@ export class ParadigmAgent {
         const popSize = Math.min(params.populationSize || 4, 20);
         const population: any[] = [];
         for (let i = 0; i < popSize; i++) {
-          const rng = rngFromHash((etarget.$hash || '') + `evolve_${i}_${Date.now()}`);
+          const rng = rngFromHash(deterministicSalt(etarget.$hash, `evolve_${i}`));
           const rate = 0.1 + rng.nextF64() * 0.3;
           const newGenes: Record<string, any> = {};
           for (const [k, g] of Object.entries(etarget.genes || {}) as [string, any][]) {
@@ -599,7 +617,7 @@ export class ParadigmAgent {
             }
           }
           population.push({
-            id: crypto.randomUUID(), $domain: etarget.$domain,
+            id: nextSeedId(), $domain: etarget.$domain,
             $name: `${etarget.$name} (Gen ${i + 1})`,
             $lineage: { generation: (etarget.$lineage?.generation || 0) + 1, operation: 'agent_evolve', parents: [etarget.$hash] },
             $hash: crypto.createHash('sha256').update(JSON.stringify(newGenes) + i).digest('hex'),

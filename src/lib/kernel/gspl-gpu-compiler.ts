@@ -153,6 +153,7 @@ function compileStatement(node: ASTNode, indent: number): string {
     default:
       return `${pad}// Unsupported statement: ${node.type}\n`;
   }
+  return '';
 }
 
 /**

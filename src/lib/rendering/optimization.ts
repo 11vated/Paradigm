@@ -385,7 +385,7 @@ export class OptimizationSystem {
 
       if (bestTriangle === -1) {
         // No triangle in cache, pick any
-        bestTriangle = remainingTriangles.values().next().value;
+        bestTriangle = remainingTriangles.values().next().value ?? -1;
       }
 
       // Add triangle to output

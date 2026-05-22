@@ -95,7 +95,7 @@ export function attachRoyalty(
           role: 'author'
         }
       ],
-      resaleSplits: lineage.slice(0, 5).map((hash, idx) => ({
+      resaleSplits: lineage.slice(0, 5).map((hash: any, idx: any) => ({
         address: `ANCESTOR_${idx}`,
         percentage: Math.floor(config.ancestorSplits / Math.max(1, lineage.length)) / 100,
         role: 'contributor'

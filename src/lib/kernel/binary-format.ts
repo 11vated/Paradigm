@@ -99,14 +99,14 @@ interface ZlibModule {
 function getNodeZlib(): ZlibModule | null {
   const proc = globalThis.process as { getBuiltinModule?: (id: string) => unknown } | undefined;
   const builtin = proc?.getBuiltinModule?.('zlib') as ZlibModule | undefined;
-  if (builtin?.deflateSync && builtin?.inflateSync) return builtin;
+  if (builtin) return builtin;
 
   try {
     const requireFn = Function('return typeof require !== "undefined" ? require : undefined')() as
       | ((id: string) => unknown)
       | undefined;
     const required = requireFn?.('zlib') as ZlibModule | undefined;
-    return required?.deflateSync && required?.inflateSync ? required : null;
+    return required || null;
   } catch {
     return null;
   }

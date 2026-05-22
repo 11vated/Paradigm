@@ -11,6 +11,13 @@ coverage/
 data/artifacts/
 output/
 
+# Runtime data (user-generated, never commit)
+data/audit-log.json
+data/user-seeds.json
+data/friends/friends.json
+data/friends/friend-notes.json
+data/migrations.json
+
 # Archived content
 .archive/
 

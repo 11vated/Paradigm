@@ -11,11 +11,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictBindCallApply": true,
-    "strictPropertyInitialization": false,
-    "noImplicitAny": false,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
     "noImplicitThis": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
@@ -32,10 +32,6 @@
     "dist",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/__tests__/**",
-    "src/engines/index_fixed.ts",
-    "src/engines/index_clean.ts",
-    "src/engines/index_backup.ts",
-    "src/engines/index_full.txt"
+    "src/**/__tests__/**"
   ]
 }

@@ -2,6 +2,7 @@ import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } 
 import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
 import { distanceGene } from '../lib/kernel/gene_system.js';
 import { canonicalizeSeed } from '../lib/sovereignty/canonical.js';
+import crypto from 'crypto';
 import { signData, verifySignature } from '../lib/sovereignty/signing.js';
 
 const DEFAULT_SEED_TIMESTAMP = 0;
@@ -90,7 +91,7 @@ export class UniversalSeed {
       this.initializeDefaultGenes();
     }
 
-    this.hash = this.id;  // Deterministic: id is derived from counter, not random
+    this.hash = this.computeHash();  // Deterministic content hash from genes
   }
 
   private createDefaultMetadata(): SeedMetadata {
@@ -451,7 +452,10 @@ export class UniversalSeed {
   }
 
   get $hash(): string {
-    return this.hash ?? '';
+    if (!this.hash) {
+      this.hash = this.computeHash();
+    }
+    return this.hash;
   }
 
   set $hash(value: string) {
@@ -485,6 +489,19 @@ export class UniversalSeed {
 
   get $fitness(): Record<string, number> {
     return { overall: this.metadata.fitness ?? 0 };
+  }
+
+  /**
+   * Compute a deterministic content hash from the seed's genes.
+   * Uses SHA-256 over sorted gene entries for reproducible output.
+   */
+  private computeHash(): string {
+    const sortedGenes = Array.from(this.genes.entries())
+      .sort(([a], [b]) => a.localeCompare(b));
+    const hashInput = sortedGenes
+      .map(([type, gene]) => `${type}:${JSON.stringify(gene.value)}`)
+      .join('|');
+    return crypto.createHash('sha256').update(hashInput).digest('hex');
   }
 
   // ─────────────────────────────────────────────────────────────────────────────

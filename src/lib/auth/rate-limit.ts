@@ -15,7 +15,7 @@ async function getRedis(): Promise<RedisClientType | null> {
   if (!redisUrl || redisUrl === 'redis://redis:6379') {
     try {
        redisClient = createClient() as any;
-      await redisClient.connect();
+      await redisClient!.connect();
       useRedis = true;
       console.log('[RateLimiter] Using Redis backend');
       return redisClient;

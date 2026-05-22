@@ -41,7 +41,7 @@ export class CMAES {
     fitnessFn: (seed: Seed) => Promise<number> | number,
     geneKeys: string[]
   ): Promise<CMAESResult> {
-    const rng = rngFromHash(seed.$hash || 'cmaes-default');
+    const rng = rngFromHash(seed.$hash ?? 'cmaes-default');
     const dim = geneKeys.length;
     const lambda = this.config.populationSize;
     const mu = Math.floor(lambda / 2);

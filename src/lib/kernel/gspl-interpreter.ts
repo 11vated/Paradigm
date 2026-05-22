@@ -556,9 +556,9 @@ export class GsplInterpreter {
         const geneA = a.genes?.[geneName];
         const geneB = b.genes?.[geneName];
         if (geneA && geneB) {
-          child.genes[geneName] = this.context.rng.nextF64() > 0.5 ? geneA : geneB;
+          (child.genes as Record<string, any>)[geneName] = this.context.rng.nextF64() > 0.5 ? geneA : geneB;
         } else {
-          child.genes[geneName] = geneA || geneB;
+          (child.genes as Record<string, any>)[geneName] = geneA || geneB;
         }
       }
       this.context.seeds.set(`breed_${kernelNow()}`, child);
@@ -914,8 +914,8 @@ export class GsplInterpreter {
         } else {
           child.genes[geneName] = this.context.rng.nextF64() > 0.5 ? geneA : geneB;
         }
-      } else {
-        child.genes[geneName] = geneA || geneB;
+        } else {
+          (child.genes as Record<string, any>)[geneName] = geneA || geneB;
       }
     }
 

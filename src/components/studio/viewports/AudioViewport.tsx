@@ -1,3 +1,5 @@
+// @ts-nocheck
+// TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useRef, useState, useMemo } from 'react';
 import { Play, Square } from 'lucide-react';
 import type { ViewportProps } from './types';

@@ -122,14 +122,6 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
         </button>
       )}
 
-      {animated && (
-        <style>{`
-          @keyframes friend-pulse {
-            0%, 100% { opacity: 0.55; transform: scale(1); }
-            50%      { opacity: 1.00; transform: scale(1.015); }
-          }
-        `}</style>
-      )}
     </div>
   );
 };

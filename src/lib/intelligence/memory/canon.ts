@@ -79,7 +79,7 @@ export class CanonMemory {
 
   /** Embed and persist a seed into the canon. Returns the entry id. */
   async ingest(seed: Seed, extra?: { linkedTo?: string; tags?: string[] }): Promise<string> {
-    const hash = seed.$hash ?? `unhashed:${seed.$name ?? Math.random()}`;
+    const hash = seed.$hash ?? `unhashed:${seed.$name ?? 'unnamed'}`;
     const summary = summarizeSeed(seed);
     const embedding = await this.embedder.embed(summary);
     const entry: MemoryEntry = {

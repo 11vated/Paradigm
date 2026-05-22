@@ -649,7 +649,7 @@ export function planMultiDomainComposition(
     const ok = direct || (pathResult && pathResult.bridges.length > 0);
     if (ok) reachable++;
     else unreachable++;
-    return { sourceDomain, reachable: ok, direct, path };
+    return { sourceDomain, reachable: ok ?? false, direct, path };
   });
   return { reachable, unreachable, perInput };
 }

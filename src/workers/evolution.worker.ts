@@ -80,18 +80,19 @@ function crossover(parent1: Seed, parent2: Seed, rng: Xoshiro256StarStar): Seed 
     $domain: parent1.$domain,
     genes: {}
   };
+  const g = child.genes!;
   for (const key in parent1.genes) {
     if (parent2.genes && parent2.genes[key]) {
       const t = rng.nextF64();
       const v1 = parent1.genes[key].value;
       const v2 = parent2.genes[key].value;
       if (typeof v1 === 'number' && typeof v2 === 'number') {
-        child.genes[key] = { value: v1 * (1 - t) + v2 * t };
+        g[key] = { value: v1 * (1 - t) + v2 * t };
       } else {
-        child.genes[key] = rng.nextF64() > 0.5 ? parent1.genes[key] : parent2.genes[key];
+        g[key] = rng.nextF64() > 0.5 ? parent1.genes[key] : parent2.genes[key];
       }
     } else {
-      child.genes[key] = parent1.genes[key];
+      g[key] = parent1.genes[key];
     }
   }
   return child;

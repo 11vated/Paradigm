@@ -71,12 +71,6 @@ export const MarketplacePulse: React.FC = () => {
           </span>
         ))}
       </div>
-      <style>{`
-        @keyframes r-pulse-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-33.33%); }
-        }
-      `}</style>
     </div>
   );
 };

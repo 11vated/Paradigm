@@ -399,7 +399,7 @@ export async function executePlan(
  * This replaces the old hardcoded 3-gene approach with domain-appropriate genes.
  */
 function buildDefaultGenes(domain: string, queryHint: string = ''): Record<string, any> {
-  const rng = rngFromHash(domain + queryHint + Date.now());
+  const rng = rngFromHash(domain + queryHint);
   const template = DOMAIN_GENE_TEMPLATES[domain];
 
   if (template) {

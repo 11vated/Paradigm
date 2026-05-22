@@ -214,7 +214,7 @@ export const GENE_TYPE_DEFINITIONS: GeneTypeDefinition[] = [
     name: 'Meta',
     description: 'Metadata about the seed itself',
     valueType: 'object',
-    defaultValue: { version: '1.0', author: '', created: Date.now(), tags: [] },
+    defaultValue: { version: '1.0', author: '', created: 0, tags: [] },
     constraints: {}
   }
 ];

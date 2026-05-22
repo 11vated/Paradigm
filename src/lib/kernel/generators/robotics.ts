@@ -117,7 +117,7 @@ function generateKinematics(params: RoboticsParams, rng: Xoshiro256StarStar): { 
 
 function generateComponents(params: RoboticsParams, kinematics: any, rng: Xoshiro256StarStar): any {
   return {
-    actuators: kinematics.joints.map(j => ({
+    actuators: kinematics.joints.map((j: any) => ({
       type: j.type === 'prismatic' ? 'linear' : 'rotary',
       torque: 10 + rng.nextF64() * 100,
       speed: 0.5 + rng.nextF64() * 3
@@ -166,7 +166,7 @@ async function exportURDF(kinematics: any, outputPath: string, seed: Seed): Prom
   
   const urdf = `<?xml version="1.0"?>
 <robot name="paradigm_robot_${seed.$hash || 'unknown'}">
-  ${kinematics.links.map(l => `
+  ${kinematics.links.map((l: any) => `
   <link name="${l.name}">
     <inertial><mass value="${l.mass.toFixed(2)}"/></inertial>
     <visual><geometry><box size="${l.dimensions.join(' ')}"/></geometry></visual>

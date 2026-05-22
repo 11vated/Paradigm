@@ -132,7 +132,7 @@ function runParticleSimulation(particles: Particle[], emitters: Emitter[], param
   for (let f = 0; f < frames; f++) {
     const snapshot: any[] = [];
     
-    simParticles.forEach(p => {
+    simParticles.forEach((p: any) => {
       // Apply forces
       if (params.forces.includes('gravity')) p.velocity[1] -= 0.01;
       if (params.forces.includes('wind')) p.velocity[0] += 0.001;
