@@ -31,15 +31,35 @@ async function initNodeCanvas(): Promise<void> {
   }
 }
 
-// Eagerly initialize at module load. Browser-safe: returns immediately when
-// document is defined. Vite/Rollup's static analyzer handles the dynamic
-// import gracefully (it's preserved as a runtime import).
-await initNodeCanvas();
+// Lazy initialization: initNodeCanvas() is invoked on first createCanvas()
+// call in Node, never at module load. Vite/Rollup cannot statically resolve
+// top-level await across a `node:module` dynamic import for the browser
+// bundle, so the initialization is deferred to first use. Browser-safe: the
+// browser path of createCanvas() never reaches initNodeCanvas().
+let _nodeInitPromise: Promise<void> | null = null;
 
 export function createCanvas(width: number, height: number): HTMLCanvasElement {
   if (typeof document !== 'undefined') return document.createElement('canvas');
-  if (!_nodeCanvasModule) throw new Error('Canvas not available. Install/build the "canvas" package for Node.js usage.');
+  // Node path: lazy sync init via global require (tsx/CJS). Pure-ESM consumers
+  // must call `await ensureNodeCanvas()` before reaching createCanvas.
+  if (!_nodeCanvasModule) {
+    const globalRequire = (globalThis as { require?: NodeRequire }).require;
+    if (typeof globalRequire === 'function') {
+      try {
+        _nodeCanvasModule = globalRequire('canvas');
+        _nodeCanvasInitialized = true;
+      } catch { /* fall through */ }
+    }
+  }
+  if (!_nodeCanvasModule) throw new Error('Canvas not available. Install/build the "canvas" package for Node.js usage, or call `await ensureNodeCanvas()` first.');
   return _nodeCanvasModule.createCanvas(width, height) as unknown as HTMLCanvasElement;
+}
+
+/** Public lazy initializer for pure-ESM Node consumers. Safe to await in the browser. */
+export function ensureNodeCanvas(): Promise<void> {
+  if (_nodeCanvasInitialized) return Promise.resolve();
+  if (!_nodeInitPromise) _nodeInitPromise = initNodeCanvas();
+  return _nodeInitPromise;
 }
 
 export function isBrowser(): boolean {
