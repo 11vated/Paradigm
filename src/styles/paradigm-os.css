@@ -1831,3 +1831,108 @@
   color: var(--p-ink-4);
   letter-spacing: 0.1em;
 }
+
+/* ════════════════════════════════════
+
+/* ============================================================================
+ * Layer 16 — SovereigntyMode (sign / verify / anchor / export)
+ * ========================================================================== */
+[data-paradigm-shell="paradigm-os"] .p-sov-empty {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--p-font-mono); font-size: 13px; color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-page {
+  height: 100%; padding: 20px 28px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 20px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-header {
+  display: flex; align-items: center; gap: 16px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--p-line);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-h-stack {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-name {
+  font-size: 17px; font-weight: 500; color: var(--p-ink-0);
+  font-family: var(--p-font-sans); letter-spacing: -0.01em;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-meta {
+  display: flex; gap: 10px; align-items: center; font-family: var(--p-font-mono);
+  font-size: 11px; color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-hash,
+[data-paradigm-shell="paradigm-os"] .p-sov-gen { letter-spacing: 0.04em; }
+[data-paradigm-shell="paradigm-os"] .p-sov-status { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+[data-paradigm-shell="paradigm-os"] .p-sov-badge {
+  font-family: var(--p-font-mono); font-size: 11px; letter-spacing: 0.08em;
+  padding: 6px 10px; border-radius: 4px; text-transform: uppercase;
+  border: 1px solid var(--p-line);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-badge[data-state="unsigned"] { color: var(--p-ink-3); background: var(--p-deep); }
+[data-paradigm-shell="paradigm-os"] .p-sov-badge[data-state="signed"]   { color: var(--p-gold); background: rgba(216, 160, 23, 0.08); border-color: rgba(216, 160, 23, 0.4); }
+[data-paradigm-shell="paradigm-os"] .p-sov-badge[data-state="anchored"] { color: var(--p-violet); background: rgba(124, 71, 239, 0.10); border-color: rgba(124, 71, 239, 0.5); }
+[data-paradigm-shell="paradigm-os"] .p-sov-score {
+  font-family: var(--p-font-mono); font-size: 10px; color: var(--p-ink-4);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-error {
+  padding: 12px 16px; border: 1px solid rgba(225, 29, 72, 0.4); border-radius: 6px;
+  background: rgba(225, 29, 72, 0.05); color: #fb7185; font-family: var(--p-font-mono); font-size: 12px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-card {
+  display: flex; flex-direction: column; min-height: 200px;
+  border: 1px solid var(--p-line); border-radius: 6px; overflow: hidden;
+  background: var(--p-deep);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-card-head {
+  padding: 9px 14px; font-family: var(--p-font-mono); font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--p-ink-3); background: var(--p-void); border-bottom: 1px solid var(--p-line);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-card-body {
+  flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-empty-row {
+  font-family: var(--p-font-mono); font-size: 11px; color: var(--p-ink-4); font-style: italic;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-row {
+  display: flex; gap: 12px; font-family: var(--p-font-mono); font-size: 11px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-k {
+  color: var(--p-ink-4); min-width: 60px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-v { color: var(--p-ink-1); flex: 1; word-break: break-all; }
+[data-paradigm-shell="paradigm-os"] .p-sov-mono { font-family: var(--p-font-mono); color: var(--p-ink-2); }
+[data-paradigm-shell="paradigm-os"] .p-sov-card-foot {
+  padding: 10px 14px; border-top: 1px solid var(--p-line);
+  display: flex; gap: 8px; align-items: center;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-action {
+  font-family: var(--p-font-mono); font-size: 11px; padding: 6px 12px;
+  border-radius: 4px; border: 1px solid var(--p-line); background: transparent;
+  color: var(--p-ink-1); cursor: pointer; transition: all 120ms ease;
+  letter-spacing: 0.04em; text-transform: lowercase;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-action:hover:not(:disabled) {
+  border-color: var(--p-violet); color: var(--p-violet); background: rgba(124, 71, 239, 0.08);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-action:disabled { opacity: 0.4; cursor: not-allowed; }
+[data-paradigm-shell="paradigm-os"] .p-sov-hint {
+  font-family: var(--p-font-mono); font-size: 10px; color: var(--p-ink-4); letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-export-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-export-btn {
+  font-family: var(--p-font-mono); font-size: 11px; padding: 10px 12px;
+  border-radius: 4px; border: 1px solid var(--p-line); background: var(--p-void);
+  color: var(--p-ink-1); cursor: pointer; transition: all 120ms ease;
+  text-align: left; text-decoration: none; letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-export-btn:hover:not(:disabled) {
+  border-color: var(--p-violet); color: var(--p-violet); background: rgba(124, 71, 239, 0.06);
+}
+[data-paradigm-shell="paradigm-os"] .p-sov-export-btn:disabled { opacity: 0.4; cursor: not-allowed; }
