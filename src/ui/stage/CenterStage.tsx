@@ -10,6 +10,7 @@ import { TopologyMode }    from './modes/TopologyMode';
 import { EvolutionMode }   from './modes/EvolutionMode';
 import { SubstrateMode }   from './modes/SubstrateMode';
 import { SovereigntyMode } from './modes/SovereigntyMode';
+import { SubstrateField } from '@/ui/stage/SubstrateField';
 
 const MODE_GLYPHS: Record<string, string> = {
   crucible: '◈', atelier: '⬡', anatomy: '⬟',
@@ -52,7 +53,7 @@ export const CenterStage: React.FC = () => {
   return (
     <main aria-label="Living artifact" className="p-center">
       {/* Substrate field (animated background) */}
-      <div className="p-substrate-field" aria-hidden />
+      <SubstrateField />
 
       {/* Mode strip */}
       <div className="p-mode-strip">
