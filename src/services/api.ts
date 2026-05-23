@@ -3,7 +3,7 @@
  * Minimal implementation that works with minimal server
  */
 
-const API_BASE = process.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE = (typeof window !== 'undefined' && (window as any).VITE_API_URL) || '';
 
 // Helper: make API request
 async function apiRequest(endpoint: string, options: RequestInit = {}) {
