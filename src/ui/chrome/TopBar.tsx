@@ -29,6 +29,12 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
 
   // Engine count for atlas chip
   const [engineCount, setEngineCount] = useState(0);
+  useEffect(() => {
+    fetch('/api/cosmos/engines')
+      .then((r) => r.json())
+      .then((j) => setEngineCount(j.count ?? (j.engines?.length ?? 0)))
+      .catch(() => {});
+  }, []);
 
   // Tick the kernel-state counter on a 2s heartbeat. Visual only — the real
   // RNG advance is driven by grow operations, not by this counter.
