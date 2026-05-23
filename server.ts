@@ -639,7 +639,21 @@ async function startServer() {
 
   app.post('/api/seeds', optionalAuth, validateBody(CreateSeedSchema), (req: any, res: any) => {
     const domain = req.body.domain || 'character';
-    const genes = req.body.genes || {};
+    let genes = req.body.genes || {};
+    // Auto-populate default genes if caller passed none — gives the seed a real
+    // genome on creation so AnatomyMode + grow can do something meaningful.
+    if (Object.keys(genes).length === 0) {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { getDomainConfig } = require('./src/lib/kernel/pipeline/domain-config');
+        const cfg = getDomainConfig?.(domain);
+        if (cfg?.defaultGenes && typeof cfg.defaultGenes === 'object') {
+          genes = { ...cfg.defaultGenes };
+        }
+      } catch {
+        /* fallback: leave genes empty */
+      }
+    }
     const seedHash = crypto.createHash('sha256').update(JSON.stringify({ domain, genes })).digest('hex');
     const rng = rngFromHash(seedHash);
 
