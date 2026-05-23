@@ -1,0 +1,8 @@
+{
+  "name": "@paradigm/cli",
+  "version": "0.1.0",
+  "description": "Paradigm CLI — Universal Seed Command Line Interface",
+  "bin": { "paradigm": "./paradigm.ts" },
+  "scripts": { "start": "bun paradigm.ts" },
+  "license": "MIT"
+}
