@@ -137,6 +137,21 @@
   --p-domain-app:         hsl(176, 68%, 50%);
   /*  World + spaces */
   --p-domain-world:       hsl(146, 56%, 52%);
+  /*  Curated inventory domains */
+  --p-domain-algorithm:    hsl(272, 70%, 62%);
+  --p-domain-building:     hsl( 16, 52%, 56%);
+  --p-domain-camera:       hsl(196, 50%, 56%);
+  --p-domain-creature:     hsl( 32, 64%, 56%);
+  --p-domain-cross-domain: hsl(258, 40%, 64%);
+  --p-domain-fluid:        hsl(186, 70%, 54%);
+  --p-domain-framework:    hsl(228, 44%, 60%);
+  --p-domain-fx:           hsl(316, 76%, 62%);
+  --p-domain-lighting:     hsl( 44, 78%, 60%);
+  --p-domain-materials:    hsl( 26, 48%, 54%);
+  --p-domain-plant:        hsl(116, 50%, 52%);
+  --p-domain-scene:        hsl(244, 56%, 60%);
+  --p-domain-style:        hsl(336, 56%, 60%);
+  --p-domain-weather:      hsl(202, 56%, 60%);
   /*  Generic / fallback domain hue */
   --p-domain-default:     hsl(258, 60%, 58%);
 }
@@ -262,6 +277,154 @@
   z-index: 0;
   pointer-events: none;
   opacity: 0.95;
+}
+
+/* ─── Crucible HUD (slice 2) ───────────────────────────────────── */
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 12px;
+  background: color-mix(in oklab, var(--p-deep) 70%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--p-border);
+  border-radius: var(--p-radius-2);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.4s var(--p-ease), transform 0.4s var(--p-ease);
+  pointer-events: none;
+  z-index: 10;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud[data-visible="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-name {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-2);
+  color: var(--p-ink-0);
+  font-weight: 500;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-hash { color: var(--p-ink-2); }
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-sig { color: var(--p-ink-3); }
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-gen { color: var(--p-ink-3); }
+
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  border-radius: var(--p-radius-1);
+  border: 1px solid var(--p-border);
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-status[data-state="busy"] {
+  color: var(--p-prism-core);
+  border-color: color-mix(in oklab, var(--p-prism-core) 40%, var(--p-border));
+  background: color-mix(in oklab, var(--p-prism-core) 8%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-status[data-state="error"] {
+  color: var(--p-prism-rose);
+  border-color: color-mix(in oklab, var(--p-prism-rose) 40%, var(--p-border));
+  background: color-mix(in oklab, var(--p-prism-rose) 8%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-hud-status[data-state="ok"] {
+  color: var(--p-prism-jade);
+  border-color: color-mix(in oklab, var(--p-prism-jade) 40%, var(--p-border));
+  background: color-mix(in oklab, var(--p-prism-jade) 8%, transparent);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-spinner {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid color-mix(in oklab, currentColor 30%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: p-spin 0.8s linear infinite;
+}
+@keyframes p-spin { to { transform: rotate(360deg); } }
+
+[data-paradigm-shell="paradigm-os"] .p-crucible-error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 9;
+  padding: 24px;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-error-card {
+  pointer-events: auto;
+  max-width: 480px;
+  padding: 24px;
+  background: var(--p-deep);
+  border: 1px solid color-mix(in oklab, var(--p-prism-rose) 40%, var(--p-border));
+  border-radius: var(--p-radius-3);
+  box-shadow: 0 16px 48px -16px color-mix(in oklab, var(--p-prism-rose) 30%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-error-title {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-5);
+  color: var(--p-prism-rose);
+  margin-bottom: 12px;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-error-body {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-2);
+  color: var(--p-ink-1);
+  word-break: break-word;
+  padding: 12px;
+  background: color-mix(in oklab, var(--p-prism-rose) 6%, var(--p-void));
+  border: 1px solid color-mix(in oklab, var(--p-prism-rose) 20%, var(--p-border));
+  border-radius: var(--p-radius-1);
+  margin-bottom: 12px;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-error-hint {
+  font-size: var(--p-text-2);
+  color: var(--p-ink-3);
+  line-height: 1.5;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-crucible-keybinds {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  color: var(--p-ink-3);
+  opacity: 0;
+  transition: opacity 0.4s var(--p-ease);
+  pointer-events: none;
+  z-index: 10;
+}
+[data-paradigm-shell="paradigm-os"] .p-crucible-keybinds[data-visible="true"] { opacity: 1; }
+
+[data-paradigm-shell="paradigm-os"] .p-chip-domain[data-domain] {
+  background: color-mix(in oklab, var(--p-domain-default) 18%, var(--p-surface-0));
+  border-color: color-mix(in oklab, var(--p-domain-default) 36%, var(--p-border));
+  color: color-mix(in oklab, var(--p-domain-default) 80%, var(--p-ink-0));
 }
 
 /* ════════════════════════════════════════════════════════════════════════════

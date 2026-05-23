@@ -1,7 +1,10 @@
 /**
  * useGrowArtifact — grow active seed and return artifact for PreviewViewport.
+ *
+ * Refetches automatically when the active seed changes, or when a
+ * `paradigm:grow-success` window event fires (from a manual grow action).
  */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { growSeed } from '@/services/api';
 
@@ -11,41 +14,59 @@ export function useGrowArtifact() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const grow = useCallback(async (signal?: { cancelled: boolean }) => {
     if (!seed?.id) {
       setArtifact(null);
       setLoading(false);
+      setError(null);
       return;
     }
 
-    let cancelled = false;
     setLoading(true);
     setError(null);
 
-    growSeed(seed.id)
-      .then((a) => {
-        if (!cancelled) {
-          setArtifact(a as Record<string, unknown>);
-          setLoading(false);
-        }
-      })
-      .catch((e: Error) => {
-        if (!cancelled) {
-          setError(e.message);
-          setArtifact({
-            domain: seed.domain,
-            name: seed.name,
-            seed_hash: seed.hash,
-            generation: seed.generation ?? 0,
-          });
-          setLoading(false);
-        }
+    try {
+      const a = await growSeed(seed.id);
+      if (signal?.cancelled) return;
+      setArtifact(a as Record<string, unknown>);
+    } catch (e: any) {
+      if (signal?.cancelled) return;
+      const msg = String(e?.message ?? e);
+      setError(msg);
+      // Fallback artifact so PreviewViewport has something to show
+      setArtifact({
+        domain: seed.domain,
+        name: seed.name,
+        seed_hash: seed.hash,
+        generation: seed.generation ?? 0,
+        error: msg,
       });
+    } finally {
+      if (!signal?.cancelled) setLoading(false);
+    }
+  }, [seed?.id, seed?.domain, seed?.hash, seed?.name, seed?.generation]);
 
-    return () => {
-      cancelled = true;
+  useEffect(() => {
+    const signal = { cancelled: false };
+    grow(signal);
+    return () => { signal.cancelled = true; };
+  }, [grow]);
+
+  // Listen for manual grow events fired from action chips / agent commands
+  useEffect(() => {
+    const onGrowSuccess = (ev: Event) => {
+      const detail = (ev as CustomEvent).detail;
+      if (detail?.artifact) {
+        setArtifact(detail.artifact as Record<string, unknown>);
+        setError(null);
+      } else {
+        // Fallback — re-run grow
+        grow();
+      }
     };
-  }, [seed?.id, seed?.hash, seed?.domain, seed?.name, seed?.generation]);
+    window.addEventListener('paradigm:grow-success', onGrowSuccess as EventListener);
+    return () => window.removeEventListener('paradigm:grow-success', onGrowSuccess as EventListener);
+  }, [grow]);
 
-  return { artifact, loading, error };
+  return { artifact, loading, error, refetch: grow };
 }

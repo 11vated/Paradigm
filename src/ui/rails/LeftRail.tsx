@@ -14,6 +14,7 @@ import { useActiveSeed, type ActiveSeed } from '@/stores/activeSeed';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
+import { growSeed, mutateSeed } from '@/services/api';
 
 type LibraryTab = 'mine' | 'curated' | 'lineage';
 
@@ -118,6 +119,58 @@ export const LeftRail: React.FC<{
 
   const activeHue = domainColor(seed?.domain);
 
+  // Active-seed action handlers (slice 2 wiring). Fire the corresponding
+  // server-side mutation, broadcast the result so other panes (CrucibleMode,
+  // ConversationFooter, etc.) can react.
+  const [actionState, setActionState] = useState<{ kind: string; busy: boolean; error?: string } | null>(null);
+  const setActive = useActiveSeed((s) => s.setSeed);
+
+  const fireGrow = useCallback(async () => {
+    if (!seed?.id) return;
+    setActionState({ kind: 'grow', busy: true });
+    try {
+      const artifact = await growSeed(seed.id);
+      window.dispatchEvent(new CustomEvent('paradigm:grow-success', { detail: { seedId: seed.id, artifact } }));
+      setActionState(null);
+    } catch (e: any) {
+      setActionState({ kind: 'grow', busy: false, error: String(e?.message ?? e) });
+      window.setTimeout(() => setActionState(null), 4000);
+    }
+  }, [seed?.id]);
+
+  const fireMutate = useCallback(async () => {
+    if (!seed?.id) return;
+    setActionState({ kind: 'mutate', busy: true });
+    try {
+      const next = await mutateSeed(seed.id);
+      if (next && next.id) {
+        setActive({
+          id: next.id,
+          name: next.name ?? next.$name ?? next.id,
+          domain: next.domain ?? next.$domain ?? seed.domain,
+          hash: next.hash ?? next.$hash ?? seed.hash,
+          generation: (seed.generation ?? 0) + 1,
+        });
+      }
+      setActionState(null);
+    } catch (e: any) {
+      setActionState({ kind: 'mutate', busy: false, error: String(e?.message ?? e) });
+      window.setTimeout(() => setActionState(null), 4000);
+    }
+  }, [seed?.id, seed?.domain, seed?.hash, seed?.generation, setActive]);
+
+  const fireBreed = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('paradigm:open-breed-picker', { detail: { seedId: seed?.id } }));
+  }, [seed?.id]);
+
+  const fireEvolve = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('paradigm:open-evolve', { detail: { seedId: seed?.id } }));
+  }, [seed?.id]);
+
+  const fireCompose = useCallback(() => {
+    window.dispatchEvent(new CustomEvent('paradigm:open-compose', { detail: { seedId: seed?.id } }));
+  }, [seed?.id]);
+
   /* ─── Collapsed render ─────────────────────────────────────────── */
   if (collapsed) {
     return (
@@ -211,12 +264,44 @@ export const LeftRail: React.FC<{
                 </div>
               </div>
               <div className="p-action-chips">
-                <button className="p-chip" title="Grow this seed">grow</button>
-                <button className="p-chip" title="Mutate this seed">mutate</button>
-                <button className="p-chip" title="Breed with another seed">breed</button>
-                <button className="p-chip" title="Evolve">evolve</button>
-                <button className="p-chip" title="Compose">compose</button>
+                <button
+                  className="p-chip"
+                  title="Grow this seed → real artifact"
+                  onClick={fireGrow}
+                  disabled={actionState?.kind === 'grow' && actionState.busy}
+                  data-state={actionState?.kind === 'grow' ? (actionState.error ? 'error' : actionState.busy ? 'busy' : '') : ''}
+                >
+                  {actionState?.kind === 'grow' && actionState.busy ? 'growing…' : 'grow'}
+                </button>
+                <button
+                  className="p-chip"
+                  title="Mutate this seed → child seed"
+                  onClick={fireMutate}
+                  disabled={actionState?.kind === 'mutate' && actionState.busy}
+                  data-state={actionState?.kind === 'mutate' ? (actionState.error ? 'error' : actionState.busy ? 'busy' : '') : ''}
+                >
+                  {actionState?.kind === 'mutate' && actionState.busy ? 'mutating…' : 'mutate'}
+                </button>
+                <button className="p-chip" title="Breed with another seed" onClick={fireBreed}>breed</button>
+                <button className="p-chip" title="Evolve a population" onClick={fireEvolve}>evolve</button>
+                <button className="p-chip" title="Compose with other domains" onClick={fireCompose}>compose</button>
               </div>
+              {actionState?.error && (
+                <div
+                  style={{
+                    marginTop: 'var(--p-space-2)',
+                    padding: 'var(--p-space-2)',
+                    background: 'color-mix(in oklab, var(--p-prism-rose) 12%, var(--p-deep))',
+                    border: '1px solid color-mix(in oklab, var(--p-prism-rose) 30%, var(--p-border))',
+                    borderRadius: 'var(--p-radius-1)',
+                    fontSize: 'var(--p-text-1)',
+                    color: 'var(--p-prism-rose)',
+                    fontFamily: 'var(--p-font-mono)',
+                  }}
+                >
+                  {actionState.kind} failed: {actionState.error.slice(0, 120)}
+                </div>
+              )}
             </>
           ) : (
             <div style={{ color: 'var(--p-ink-3)', fontSize: 'var(--p-text-2)' }}>
