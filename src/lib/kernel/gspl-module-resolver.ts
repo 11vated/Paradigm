@@ -21,6 +21,17 @@
 
 import * as fs   from 'fs';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+// ESM-safe __dirname polyfill
+const __dirname = (() => {
+  try {
+    return path.dirname(fileURLToPath(import.meta.url));
+  } catch {
+    // CommonJS / Bun context where __dirname is already defined globally
+    return typeof __dirname !== 'undefined' ? __dirname : process.cwd();
+  }
+})();
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
