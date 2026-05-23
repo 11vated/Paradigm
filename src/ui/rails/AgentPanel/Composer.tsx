@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react'
 import { useAgent } from '@/hooks/useAgent';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { useActiveSeed } from '@/stores/activeSeed';
+import { parseSlashCommand } from '@/lib/ui/seedActions';
 
 const AGENT_TOOLS = [
   '/grow', '/mutate', '/breed', '/compose', '/sign', '/verify',
@@ -56,7 +57,16 @@ export const Composer: React.FC<ComposerProps> = ({ voiceSupported = true }) => 
     setBusy(true);
     setText('');
     try {
-      await send(t);
+      const slash = parseSlashCommand(t);
+      if (slash) {
+        const result = await slash;
+        // Inform the user in the conversation log
+        window.dispatchEvent(new CustomEvent('paradigm:agent-system', {
+          detail: { tier: result.ok ? 'ok' : 'warn', text: result.message },
+        }));
+      } else {
+        await send(t);
+      }
     } finally {
       setBusy(false);
       requestAnimationFrame(() => taRef.current?.focus());
