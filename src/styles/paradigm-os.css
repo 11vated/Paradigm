@@ -1460,3 +1460,263 @@
   word-break: break-all;
   line-height: 1.45;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * Layer 14 — CodexMode (real GSPL editor)
+ * ════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-codex {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+  background: var(--p-deep);
+  color: var(--p-ink-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--p-line);
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(0,0,0,0.18);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-label {
+  font: 11px/1 var(--p-font-mono);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-meta {
+  font: 11px/1 var(--p-font-mono);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-spacer { flex: 1; }
+[data-paradigm-shell="paradigm-os"] .p-codex-action {
+  padding: 6px 14px;
+  background: var(--p-surface);
+  border: 1px solid var(--p-line);
+  border-radius: 4px;
+  font: 11px/1 var(--p-font-mono);
+  color: var(--p-ink-2);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: border-color 0.12s, color 0.12s;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-action:hover {
+  border-color: var(--p-prism-2);
+  color: var(--p-ink-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-action.p-codex-primary {
+  background: var(--p-prism-2);
+  color: var(--p-void);
+  border-color: var(--p-prism-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-action.p-codex-primary:hover {
+  background: var(--p-prism-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-action:disabled {
+  opacity: 0.5; cursor: wait;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-body {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  overflow: hidden;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-edit {
+  position: relative;
+  background: var(--p-deep);
+  overflow: auto;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-paint,
+[data-paradigm-shell="paradigm-os"] .p-codex-input {
+  position: absolute; inset: 0;
+  margin: 0; padding: 16px 20px;
+  font: 13px/1.5 var(--p-font-mono);
+  white-space: pre;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  overflow: auto;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-paint {
+  color: var(--p-ink-1);
+  pointer-events: none;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-input {
+  resize: none; outline: none;
+  caret-color: var(--p-prism-2);
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-paint .t-k { color: var(--p-prism-2); font-weight: 600; }
+[data-paradigm-shell="paradigm-os"] .p-codex-paint .t-s { color: var(--p-prism-3); }
+[data-paradigm-shell="paradigm-os"] .p-codex-paint .t-t { color: var(--p-prism-4); }
+[data-paradigm-shell="paradigm-os"] .p-codex-paint .t-n { color: var(--p-prism-1); }
+[data-paradigm-shell="paradigm-os"] .p-codex-paint .t-c { color: var(--p-ink-4); font-style: italic; }
+
+[data-paradigm-shell="paradigm-os"] .p-codex-output {
+  border-left: 1px solid var(--p-line);
+  background: rgba(0,0,0,0.24);
+  overflow: auto;
+  padding: 16px;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-empty {
+  color: var(--p-ink-4);
+  font: 11px/1.5 var(--p-font-mono);
+  text-align: center;
+  padding: 40px 12px;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-output-label {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--p-line);
+  font: 10px/1 var(--p-font-mono);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-output-label[data-state="ok"] {
+  border-color: var(--p-prism-3);
+  color: var(--p-prism-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-output-label[data-state="error"] {
+  border-color: var(--p-prism-1);
+  color: var(--p-prism-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-error-line {
+  font: 12px/1.4 var(--p-font-mono);
+  color: var(--p-prism-1);
+  margin-bottom: 4px;
+  padding-left: 8px;
+  border-left: 2px solid var(--p-prism-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-tree,
+[data-paradigm-shell="paradigm-os"] .p-codex-exec-output {
+  font: 11px/1.4 var(--p-font-mono);
+  color: var(--p-ink-2);
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-exec-seed {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--p-line);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  font: 11px/1 var(--p-font-mono);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-exec-domain {
+  padding: 2px 6px;
+  background: var(--p-surface);
+  border-radius: 3px;
+  color: var(--p-prism-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-codex-exec-name {
+  color: var(--p-ink-1);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * Layer 15 — LineageMode (real ancestry tree)
+ * ════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-lineage {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+  background: var(--p-deep);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-empty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: var(--p-ink-4);
+  font: 12px/1 var(--p-font-mono);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--p-line);
+  display: flex; align-items: baseline; gap: 14px;
+  background: rgba(0,0,0,0.18);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-label {
+  font: 11px/1 var(--p-font-mono);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-meta {
+  font: 11px/1 var(--p-font-mono);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-error {
+  padding: 12px 18px;
+  background: rgba(225,29,72,0.08);
+  border-bottom: 1px solid rgba(225,29,72,0.32);
+  color: var(--p-prism-1);
+  font: 11px/1.4 var(--p-font-mono);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-body {
+  flex: 1; min-height: 0; overflow: auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--p-line);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-section {
+  background: var(--p-deep);
+  padding: 14px 16px;
+  overflow: auto;
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-section-label {
+  margin: 0 0 12px 0;
+  font: 10px/1 var(--p-font-mono);
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--p-ink-4);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-empty-section {
+  font: 11px/1.4 var(--p-font-mono);
+  color: var(--p-ink-4);
+  font-style: italic;
+  padding: 18px 10px;
+  border: 1px dashed var(--p-line);
+  border-radius: 4px;
+  text-align: center;
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-row {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid var(--p-line);
+  border-radius: 4px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.12s, background 0.12s;
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-row:hover {
+  border-color: var(--p-prism-2);
+  background: rgba(124,58,237,0.04);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-row[data-active="true"] {
+  border-color: var(--p-prism-2);
+  background: rgba(124,58,237,0.10);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-row-main { flex: 1; min-width: 0; }
+[data-paradigm-shell="paradigm-os"] .p-lineage-row-name {
+  font: 12px/1.2 var(--p-font-mono);
+  color: var(--p-ink-1);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-row-sub {
+  display: flex; gap: 8px;
+  font: 10px/1 var(--p-font-mono);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-domain {
+  color: var(--p-accent, var(--p-prism-2));
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-op {
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-gen {
+  color: var(--p-ink-4);
+}
+[data-paradigm-shell="paradigm-os"] .p-lineage-depth {
+  font: 10px/1 var(--p-font-mono);
+  color: var(--p-ink-4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--p-surface);
+}
