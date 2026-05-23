@@ -51,6 +51,7 @@ export const CrucibleMode: React.FC = () => {
 
   if (!seed) {
     const onPickPrompt = async (text: string) => {
+      console.log('[Paradigm.onPickPrompt] start', text);
       // Mirror to agent composer for reference
       window.dispatchEvent(new CustomEvent('paradigm:compose-prompt', { detail: { text } }));
       // Infer domain, create seed, set as active. useGrowArtifact will auto-fetch the artifact.
