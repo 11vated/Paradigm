@@ -12,7 +12,7 @@ import { useGrowArtifact } from '@/hooks/useGrowArtifact';
 import { getGenesisSuggestions } from '@/lib/ui/genesisSuggestions';
 import { inferDomain } from '@/lib/ui/inferDomain';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
-import PreviewViewport from '@/components/studio/PreviewViewport';
+import { ArtifactRenderer } from '@/ui/stage/ArtifactRenderer';
 import { EmptyState } from '../EmptyState';
 import { createSeed } from '@/services/api';
 
@@ -87,7 +87,7 @@ export const CrucibleMode: React.FC = () => {
       style={{ flex: 1, position: 'relative', overflow: 'hidden' }}
       onMouseMove={() => revealHud()}
     >
-      <PreviewViewport artifact={artifact} seed={seed} loading={loading} />
+      <ArtifactRenderer artifact={artifact} seed={seed} />
 
       {/* Hovering HUD — top */}
       <div
