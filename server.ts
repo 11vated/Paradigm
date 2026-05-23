@@ -640,19 +640,35 @@ async function startServer() {
   app.post('/api/seeds', optionalAuth, validateBody(CreateSeedSchema), (req: any, res: any) => {
     const domain = req.body.domain || 'character';
     let genes = req.body.genes || {};
-    // Auto-populate default genes if caller passed none — gives the seed a real
-    // genome on creation so AnatomyMode + grow can do something meaningful.
     if (Object.keys(genes).length === 0) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { getDomainConfig } = require('./src/lib/kernel/pipeline/domain-config');
         const cfg = getDomainConfig?.(domain);
         if (cfg?.defaultGenes && typeof cfg.defaultGenes === 'object') {
           genes = { ...cfg.defaultGenes };
         }
-      } catch {
-        /* fallback: leave genes empty */
-      }
+      } catch { /* fall through to synthesized defaults below */ }
+    }
+    // Fallback: synthesize a meaningful default genome from the name prompt so
+    // AnatomyMode + grow always have something to chew on.
+    if (Object.keys(genes).length === 0) {
+      const promptText = String(req.body.name || '').toLowerCase();
+      const rngLocal = rngFromHash(crypto.createHash('sha256').update(`${domain}:${promptText}`).digest('hex'));
+      // Generic gene palette — domain-agnostic but real
+      genes = {
+        intent:    { type: 'categorical', value: promptText.split(/\s+/).filter(Boolean).slice(0, 4).join('-') || 'genesis' },
+        archetype: { type: 'categorical', value: promptText.match(/\b(warrior|samurai|wizard|robot|priest|hunter|scholar|trader|child|elder|king|queen)\b/)?.[1] ?? 'unspecified' },
+        mood:      { type: 'categorical', value: promptText.match(/\b(fierce|gentle|melancholy|joyful|chaotic|serene|ominous|hopeful|cozy|cold)\b/)?.[1] ?? 'neutral' },
+        biome:     { type: 'categorical', value: promptText.match(/\b(desert|ocean|forest|tundra|city|jungle|mountain|cyberpunk|underwater|space)\b/)?.[1] ?? 'unspecified' },
+        density:   { type: 'scalar', value: Math.round(rngLocal.nextF64() * 10000) / 10000 },
+        scale:     { type: 'scalar', value: Math.round((0.5 + rngLocal.nextF64() * 1.5) * 10000) / 10000 },
+        hue:       { type: 'scalar', value: Math.round(rngLocal.nextF64() * 360 * 100) / 100 },
+        saturation:{ type: 'scalar', value: Math.round(rngLocal.nextF64() * 10000) / 10000 },
+        complexity:{ type: 'scalar', value: Math.round(rngLocal.nextF64() * 10000) / 10000 },
+        rhythm:    { type: 'scalar', value: Math.round((0.2 + rngLocal.nextF64() * 0.8) * 10000) / 10000 },
+        symmetry:  { type: 'scalar', value: Math.round(rngLocal.nextF64() * 10000) / 10000 },
+        palette:   { type: 'categorical', value: ['monochrome', 'analogous', 'complementary', 'triadic', 'split-complementary'][Math.floor(rngLocal.nextF64() * 5)] },
+      };
     }
     const seedHash = crypto.createHash('sha256').update(JSON.stringify({ domain, genes })).digest('hex');
     const rng = rngFromHash(seedHash);
