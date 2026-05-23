@@ -1313,3 +1313,150 @@
 [data-paradigm-shell="paradigm-os"] .p-artifact {
   /* CSS for .p-artifact (com) */
 }
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 13 — Anatomy mode (gene composition)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--p-space-2);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-empty-title {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-4);
+  font-weight: 200;
+  letter-spacing: 0.04em;
+  color: var(--p-ink-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-empty-sub {
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-header {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  padding: var(--p-space-4) var(--p-space-5);
+  border-bottom: 1px solid var(--p-line);
+  background: var(--p-deep);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-id {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-name {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-3);
+  color: var(--p-ink-0);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-hash,
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gen,
+[data-paradigm-shell="paradigm-os"] .p-anatomy-count {
+  color: var(--p-ink-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-loading,
+[data-paradigm-shell="paradigm-os"] .p-anatomy-error {
+  padding: var(--p-space-4) var(--p-space-5);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  font-style: italic;
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-error {
+  color: var(--p-domain-narrative, #fbbf24);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--p-space-4) var(--p-space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-5);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-category {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-cat-label {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-left: 2px;
+  font-weight: 500;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-genes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gene {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--p-space-2) var(--p-space-3);
+  background: var(--p-surface);
+  border: 1px solid var(--p-line);
+  border-left: 3px solid var(--p-prism-core);
+  border-radius: var(--p-radius-2);
+  transition: background var(--p-motion-fast);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gene:hover {
+  background: var(--p-surface-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gene-name {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-0);
+  letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gene-type {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  color: var(--p-ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+[data-paradigm-shell="paradigm-os"] .p-anatomy-gene-value {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-2);
+  margin-top: 2px;
+  word-break: break-all;
+  line-height: 1.45;
+}
