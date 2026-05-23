@@ -43,35 +43,46 @@ const MIME_TO_DOMAIN: Record<string, string> = {
   'model/gltf-binary': 'geometry3d',
   'model/obj': 'geometry3d',
   'text/plain': 'narrative',
-  'text/html': 'ui',
+  // Phase 1+2 new domains
+  'text/html': 'website',
+  'chemical/x-pdb': 'molecule',
+  'chemical/x-mdl-molfile': 'molecule',
+  'application/zip': 'app',
   'application/json': 'agent',
 };
 
 const DESCRIPTION_PATTERNS: { pattern: RegExp; domain: string }[] = [
+  // ... existing patterns ...
   { pattern: /character|person|warrior|mage|rogue|hero|villain|npc|avatar/i, domain: 'character' },
   { pattern: /sprite|pixel|2d character|icon|spritesheet/i, domain: 'sprite' },
   { pattern: /music|song|melody|beat|rhythm|orchestra|piano|guitar|symphony|track/i, domain: 'music' },
   { pattern: /image|art|painting|drawing|illustration|generative art/i, domain: 'visual2d' },
   { pattern: /3d|mesh|model|geometry|sculpture|object/i, domain: 'geometry3d' },
-  { pattern: /game|level|world|platformer|rpg|puzzle|shooter|fullgame/i, domain: 'fullgame' },
+  { pattern: /game|level|platformer|rpg|puzzle|shooter|fullgame/i, domain: 'fullgame' },
   { pattern: /animation|motion|keyframe|skeletal|character animation/i, domain: 'animation' },
   { pattern: /story|narrative|tale|plot|fiction|novel|script/i, domain: 'narrative' },
-  { pattern: /\bui\b|interface|button|layout|screen|hud|dashboard/i, domain: 'ui' },
+  { pattern: /\bui\b|interface|button|layout|screen|hud|dashboard(?!.*app)/i, domain: 'ui' },
   { pattern: /physics|simulation|force|gravity|collision|rigidbody/i, domain: 'physics' },
   { pattern: /sound|sfx|effect|noise|ambient|foley|explosion/i, domain: 'audio' },
-  { pattern: /ecosystem|biome|terrain|nature|forest|ocean|planet/i, domain: 'ecosystem' },
   { pattern: /particle|fire|smoke|magic|spark|explosion.*vfx|trail/i, domain: 'particle' },
   { pattern: /shader|glsl|material|texture|lighting|render|pbr/i, domain: 'shader' },
-  { pattern: /architecture|building|house|tower|city|structure/i, domain: 'architecture' },
+  { pattern: /architecture|building|house|tower|structure/i, domain: 'architecture' },
   { pattern: /vehicle|car|ship|plane|spaceship|boat|train|bike/i, domain: 'vehicle' },
   { pattern: /furniture|chair|table|bed|shelf|cabinet|desk/i, domain: 'furniture' },
   { pattern: /fashion|clothing|dress|shirt|jacket|outfit|garment/i, domain: 'fashion' },
-  { pattern: /robot|drone|mech|machine|automaton|ai|agent|assistant/i, domain: 'agent' },
   { pattern: /food|recipe|dish|meal|cooking|cuisine|ingredient/i, domain: 'food' },
-  { pattern: /choreography|dance|movement|performance|ballet/i, domain: 'choreography' },
   { pattern: /circuit|electronics|pcb|schematic|component|board/i, domain: 'circuit' },
   { pattern: /alife|life|creature|organism|cellular|automata/i, domain: 'alife' },
   { pattern: /typography|font|typeface|text|letter|glyph|type/i, domain: 'typography' },
+  // Phase 1+2 sovereign domains
+  { pattern: /website|landing.page|homepage|web.presence|site|portfolio.site|brand.site/i, domain: 'website' },
+  { pattern: /electromagnetic|electric.field|magnetic.field|fdtd|em.wave|maxwell|antenna|dipole/i, domain: 'field' },
+  { pattern: /quantum|wavefunction|schr.dinger|probability.density|superposition|tunneling|orbital/i, domain: 'quantum' },
+  { pattern: /molecule|molecular|chemistry|compound|smiles|atom|bond|protein|peptide|drug/i, domain: 'molecule' },
+  { pattern: /cosmology|universe|galaxy|n.body|orbital.mechanics|star.formation|dark.matter|black.hole/i, domain: 'cosmology' },
+  { pattern: /world.map|terrain.map|heightmap|biome|continent|tectonic|kingdom|topographic/i, domain: 'world' },
+  { pattern: /\bapp\b|application|react.app|web.app|mobile.app|dashboard.app|full.stack/i, domain: 'app' },
+  { pattern: /ecosystem|biome|terrain|nature|forest|ocean|planet/i, domain: 'ecosystem' },
 ];
 
 export function detectDomain(input: InverseInput): string {

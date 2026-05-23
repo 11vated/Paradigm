@@ -1,0 +1,26 @@
+{
+  "name": "@paradigm/sdk",
+  "version": "0.1.0",
+  "description": "Paradigm — Universal Digital Creation Substrate SDK",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup index.ts --format esm,cjs --dts --outDir dist",
+    "dev": "tsup index.ts --format esm,cjs --dts --watch --outDir dist"
+  },
+  "keywords": ["paradigm", "generative", "gspl", "seed", "creative", "ai", "deterministic"],
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0"
+  }
+}

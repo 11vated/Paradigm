@@ -56,6 +56,14 @@ const DOMAIN_GENES: Record<string, string[]> = {
   choreography:['style', 'tempo', 'complexity', 'duration', 'formation'],
   agent:       ['persona', 'temperature', 'reasoning_depth', 'exploration_rate', 'max_steps'],
   friend:      ['body', 'face', 'voice', 'persona', 'memory', 'bond'],
+  // Phase 1+2 sovereign domains
+  website:     ['aesthetic', 'purpose', 'sections', 'colorPalette', 'typography', 'hasAnimations'],
+  field:       ['sourceType', 'gridSize', 'boundary', 'frequency', 'amplitude', 'steps'],
+  quantum:     ['potentialType', 'gridN', 'dt', 'hbar', 'mass', 'steps'],
+  molecule:    ['scaffoldClass', 'atomCount', 'ringCount', 'hasAromatic', 'hasStereo', 'mw'],
+  cosmology:   ['scenario', 'bodyCount', 'steps', 'softening', 'thetaBH', 'dt'],
+  world:       ['worldType', 'plateCount', 'seaLevel', 'biomeCount', 'cityCount', 'rivers'],
+  app:         ['archetype', 'componentCount', 'routeCount', 'hasAuth', 'hasApi', 'theme'],
 };
 
 // ─── Gene Category Groups ────────────────────────────────────────────────────
@@ -81,6 +89,15 @@ const GENE_CATEGORIES: Record<string, string> = {
   foodWebComplexity: 'complexity', climateZones: 'zones', environment: 'zones',
   layout: 'structure', structure: 'structure', formation: 'structure',
   text: 'content', narrative: 'content', plot: 'content', ingredients: 'content',
+  // Phase 1+2 new domain genes
+  aesthetic: 'type', purpose: 'type', sections: 'scale', colorPalette: 'color', typography: 'type',
+  hasAnimations: 'behavior', sourceType: 'type', gridSize: 'scale', boundary: 'type',
+  frequency: 'speed', amplitude: 'power', potentialType: 'type', gridN: 'scale',
+  hbar: 'detail', scaffoldClass: 'type', atomCount: 'scale', ringCount: 'complexity',
+  mw: 'power', scenario: 'type', bodyCount: 'scale', softening: 'detail', thetaBH: 'detail',
+  worldType: 'type', plateCount: 'scale', seaLevel: 'power', biomeCount: 'complexity',
+  cityCount: 'scale', rivers: 'complexity', archetype: 'type', componentCount: 'scale',
+  routeCount: 'complexity', hasAuth: 'behavior', hasApi: 'behavior', theme: 'aesthetic',
 };
 
 function geneCategory(gene: string): string {
@@ -202,6 +219,63 @@ const HAND_CRAFTED: FunctorBridge[] = [
   { name: 'agent_to_narrative', sourceDomain: 'agent', targetDomain: 'narrative', coherence: 0.78 },
   { name: 'agent_to_fullgame', sourceDomain: 'agent', targetDomain: 'fullgame', coherence: 0.68 },
   { name: 'agent_to_agent', sourceDomain: 'agent', targetDomain: 'agent', coherence: 0.85 },
+  // ─── Sovereign Domain Bridges (Phase 1+2) ──────────────────────────────────
+  // world → visual2d: topographic map becomes generative art
+  { name: 'world→visual2d',    sourceDomain: 'world',     targetDomain: 'visual2d',    coherence: 0.82,
+    transform: (g) => ({ style: { value: 'organic' }, complexity: { value: g.biomeCount?.value ?? 6 },
+      palette: { value: 'terrain' }, layers: { value: Math.max(3, g.plateCount?.value ?? 5) } }) },
+  // world → music: terrain topology → melody + harmony contour
+  { name: 'world→music',       sourceDomain: 'world',     targetDomain: 'music',       coherence: 0.71,
+    transform: (g) => ({ tempo: { value: 80 + (g.seaLevel?.value ?? 0.5) * 60 },
+      key: { value: 'C' }, complexity: { value: g.biomeCount?.value ?? 4 } }) },
+  // world → narrative: world geography → story setting + factions
+  { name: 'world→narrative',   sourceDomain: 'world',     targetDomain: 'narrative',   coherence: 0.88,
+    transform: (g) => ({ tone: { value: 'epic' }, characters: { value: g.cityCount?.value ?? 6 },
+      acts: { value: 3 }, structure: { value: 'heros_journey' } }) },
+  // molecule → visual2d: molecular graph → generative art
+  { name: 'molecule→visual2d', sourceDomain: 'molecule',  targetDomain: 'visual2d',    coherence: 0.76,
+    transform: (g) => ({ style: { value: 'geometric' }, complexity: { value: g.atomCount?.value ?? 8 },
+      layers: { value: Math.max(3, Math.floor((g.ringCount?.value ?? 2) + 2)) } }) },
+  // molecule → music: molecular topology → harmonic structure
+  { name: 'molecule→music',    sourceDomain: 'molecule',  targetDomain: 'music',       coherence: 0.64,
+    transform: (g) => ({ tempo: { value: 100 }, key: { value: 'A' },
+      complexity: { value: g.ringCount?.value ?? 2 }, melody: { value: 'arpeggiated' } }) },
+  // quantum → visual2d: probability density → generative art
+  { name: 'quantum→visual2d',  sourceDomain: 'quantum',   targetDomain: 'visual2d',    coherence: 0.79,
+    transform: (g) => ({ style: { value: 'abstract' }, complexity: { value: 8 },
+      palette: { value: 'plasma' }, layers: { value: 5 } }) },
+  // quantum → music: wavefunction → soundscape
+  { name: 'quantum→music',     sourceDomain: 'quantum',   targetDomain: 'music',       coherence: 0.68,
+    transform: (g) => ({ tempo: { value: 60 }, key: { value: 'D' },
+      melody: { value: 'spectral' }, scale: { value: 'chromatic' } }) },
+  // field → shader: EM field → GPU shader
+  { name: 'field→shader',      sourceDomain: 'field',     targetDomain: 'shader',      coherence: 0.85,
+    transform: (g) => ({ shaderType: { value: 'field_viz' }, technique: { value: 'raymarching' },
+      iterations: { value: 64 } }) },
+  // field → visual2d: field snapshot → generative art
+  { name: 'field→visual2d',    sourceDomain: 'field',     targetDomain: 'visual2d',    coherence: 0.81,
+    transform: (g) => ({ style: { value: 'generative' }, complexity: { value: 7 },
+      palette: { value: 'inferno' }, layers: { value: 4 } }) },
+  // cosmology → visual2d: n-body positions → generative art
+  { name: 'cosmology→visual2d', sourceDomain: 'cosmology', targetDomain: 'visual2d',   coherence: 0.77,
+    transform: (g) => ({ style: { value: 'abstract' }, complexity: { value: 9 },
+      palette: { value: 'cosmic' }, layers: { value: 6 } }) },
+  // cosmology → music: orbital mechanics → ambient music
+  { name: 'cosmology→music',   sourceDomain: 'cosmology', targetDomain: 'music',       coherence: 0.72,
+    transform: (g) => ({ tempo: { value: 40 }, key: { value: 'E' },
+      scale: { value: 'pentatonic' }, melody: { value: 'ambient' } }) },
+  // website → ui: website aesthetic → UI component theme
+  { name: 'website→ui',        sourceDomain: 'website',   targetDomain: 'ui',          coherence: 0.93,
+    transform: (g) => ({ layout: { value: g.aesthetic?.value ?? 'minimal' },
+      theme: { value: g.aesthetic?.value ?? 'minimal' }, components: { value: 6 } }) },
+  // website → narrative: site purpose → story premise
+  { name: 'website→narrative', sourceDomain: 'website',   targetDomain: 'narrative',   coherence: 0.69,
+    transform: (g) => ({ tone: { value: 'professional' }, structure: { value: 'problem_solution' },
+      acts: { value: 3 }, characters: { value: 2 } }) },
+  // app → game: app archetype → game genre
+  { name: 'app→game',          sourceDomain: 'app',       targetDomain: 'game',        coherence: 0.74,
+    transform: (g) => ({ genre: { value: g.archetype?.value === 'dashboard' ? 'strategy' : 'rpg' },
+      difficulty: { value: 0.5 }, levelCount: { value: 5 } }) },
 ];
 
 // Auto-generate additional functors from similarity matrix (coherence ≥ 0.4)

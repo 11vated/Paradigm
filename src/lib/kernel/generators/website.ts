@@ -448,7 +448,7 @@ function generateBlogSection(params: WebsiteParams, rng: Xoshiro256StarStar): st
     const mins = rng.nextInt(3, 15);
     return `
       <article class="blog-card">
-        <div class="blog-date">${new Date(Date.now() - i * 7 * 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+        <div class="blog-date">${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][rng.nextInt(0,11)] + " " + rng.nextInt(1,28) + ", " + (2020 + rng.nextInt(0,5))}</div>
         <h3 class="blog-title"><a href="#">${title}</a></h3>
         <div class="blog-meta">${mins} min read</div>
       </article>`;
@@ -731,7 +731,7 @@ ${sections.join('\n')}
   <footer class="footer">
     <div class="footer-inner">
       <span class="footer-brand">${params.brandName}</span>
-      <p class="footer-copy">© ${new Date().getFullYear()} ${params.brandName}. All rights reserved.</p>
+      <p class="footer-copy">© ${2020 + (params.brandName.charCodeAt(0) % 6)} ${params.brandName}. All rights reserved.</p>
       <ul class="footer-links" role="list">
         <li><a href="#">Privacy</a></li>
         <li><a href="#">Terms</a></li>
