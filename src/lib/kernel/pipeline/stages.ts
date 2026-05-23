@@ -99,7 +99,9 @@ export function createPostProcessStage(config: DomainConfig): Stage<GeneratorOut
 
       const domainHints = quality === 'metadata-only'
         ? { render_hints: { mode: ctx.domain, description_only: true } }
-        : config.postProcess(output, ctx.seed);
+        : typeof config.postProcess === 'function'
+          ? config.postProcess(output, ctx.seed)
+          : { render_hints: { mode: ctx.domain, hasFile: true } };
       Object.assign(base, domainHints);
 
       if (!base.render_hints || Object.keys(base.render_hints).length === 0) {
@@ -116,7 +118,11 @@ export function createPostProcessStage(config: DomainConfig): Stage<GeneratorOut
 
 export const errorFallbackStage: Stage<any, Artifact> = {
   name: 'errorFallback',
-  async exec(_err: any, ctx: PipelineContext): Promise<Artifact> {
+  async exec(err: any, ctx: PipelineContext): Promise<Artifact> {
+    const message = err?.message ?? String(err);
+    const stack   = err?.stack?.slice(0, 400) ?? '';
+    // Always log to stderr so errors are never silent
+    console.error(`[pipeline:errorFallback] domain=${ctx.domain} error=${message}`);
     return {
       type: ctx.domain,
       name: ctx.seed.$name ?? 'Artifact',
@@ -124,7 +130,9 @@ export const errorFallbackStage: Stage<any, Artifact> = {
       seed_hash: ctx.seed.$hash ?? '',
       generation: ctx.seed.$lineage?.generation ?? 0,
       generation_quality: 'metadata-only',
-      error: ctx.seed.$domain === ctx.domain ? 'generation_failed' : 'domain_mismatch',
+      error: 'generation_failed',
+      error_detail: message,
+      error_stack: stack,
       render_hints: { mode: 'generic', error: true },
     };
   }

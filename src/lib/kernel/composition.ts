@@ -76,7 +76,7 @@ const GENE_CATEGORIES: Record<string, string> = {
   vehicleType: 'type', foodType: 'type', buildingType: 'type', furnitureType: 'type',
   clothingType: 'type', robotType: 'type', circuitType: 'type', motionType: 'type',
   emitterType: 'type', particleType: 'type', primitive: 'type', simulationType: 'type',
-  style: 'aesthetic', tone: 'aesthetic', theme: 'aesthetic', composition: 'aesthetic',
+  style: 'aesthetic', tone: 'aesthetic', composition: 'aesthetic',
   symmetry: 'aesthetic', palette: 'color', colors: 'color',
   strength: 'power', difficulty: 'power', gravity: 'power', intensity: 'power',
   agility: 'speed', speed: 'speed', fps: 'speed', tempo: 'speed', mobility: 'speed',
@@ -90,13 +90,12 @@ const GENE_CATEGORIES: Record<string, string> = {
   layout: 'structure', structure: 'structure', formation: 'structure',
   text: 'content', narrative: 'content', plot: 'content', ingredients: 'content',
   // Phase 1+2 new domain genes
-  aesthetic: 'type', purpose: 'type', sections: 'scale', colorPalette: 'color', typography: 'type',
   hasAnimations: 'behavior', sourceType: 'type', gridSize: 'scale', boundary: 'type',
   frequency: 'speed', amplitude: 'power', potentialType: 'type', gridN: 'scale',
   hbar: 'detail', scaffoldClass: 'type', atomCount: 'scale', ringCount: 'complexity',
   mw: 'power', scenario: 'type', bodyCount: 'scale', softening: 'detail', thetaBH: 'detail',
   worldType: 'type', plateCount: 'scale', seaLevel: 'power', biomeCount: 'complexity',
-  cityCount: 'scale', rivers: 'complexity', archetype: 'type', componentCount: 'scale',
+  cityCount: 'scale', rivers: 'complexity',
   routeCount: 'complexity', hasAuth: 'behavior', hasApi: 'behavior', theme: 'aesthetic',
 };
 

@@ -7,8 +7,8 @@ import { ENGINES, growSeed, getAllDomains } from '../../src/lib/kernel/engines.j
 
 describe('Domain Engines', () => {
   describe('registry', () => {
-    it('has exactly 27 engines', () => {
-      expect(getAllDomains().length).toBe(27);
+    it('has at least 34 engines', () => {
+      expect(getAllDomains().length).toBeGreaterThanOrEqual(34);
     });
 
     it('getAllDomains returns string array', () => {

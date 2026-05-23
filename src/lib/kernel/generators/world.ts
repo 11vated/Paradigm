@@ -62,6 +62,7 @@ export interface WorldData {
   plates: Plate[]; regions: Region[];
   rivers: River[]; cities: City[]; factions: Faction[];
   lore: { creation: string; conflict: string; hook: string };
+  regionCount: number; cityCount: number; riverCount: number;
 }
 
 export interface WorldArtifact {
@@ -210,10 +211,10 @@ function generateRivers(heightmap: number[][], W: number, H: number, seaLevel: n
     let cx = sx, cy = sy;
     for (let step = 0; step < 200; step++) {
       // Follow steepest descent
-      const neighbors: [number, number][] = [
+      const neighbors = ([
         [cx - 1, cy], [cx + 1, cy], [cx, cy - 1], [cx, cy + 1],
         [cx - 1, cy - 1], [cx + 1, cy - 1], [cx - 1, cy + 1], [cx + 1, cy + 1],
-      ].filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < W && ny < H);
+      ] as [number, number][]).filter(([nx, ny]) => nx >= 0 && ny >= 0 && nx < W && ny < H);
       let bestN: [number, number] | null = null, bestH = heightmap[cy][cx];
       for (const [nx, ny] of neighbors) {
         if (heightmap[ny][nx] < bestH) { bestH = heightmap[ny][nx]; bestN = [nx, ny]; }
@@ -555,24 +556,20 @@ export async function generateWorld(seed: Seed, outputPath: string): Promise<Wor
   const worldData: WorldData = {
     name: worldName, age, scale, width: W, height: H,
     plates, regions, rivers, cities, factions, lore,
+    regionCount: regions.length, cityCount: cities.length, riverCount: rivers.length,
   };
-  worldData['regionCount' as any] = regions.length;
-  worldData['cityCount' as any] = cities.length;
-  worldData['riverCount' as any] = rivers.length;
-  (worldData as any).regionCount = regions.length;
-  (worldData as any).cityCount = cities.length;
-  (worldData as any).riverCount = rivers.length;
 
   // Ensure output dir exists
-  await fs.promises.mkdir(outputPath, { recursive: true });
+  await fs.promises.mkdir(path.dirname(outputPath), { recursive: true });
 
   // SVG
   const svgContent = renderWorldSVG(heightmap, worldData as any, W, H, seaLevel);
-  const svgPath = path.join(outputPath, `world_${seed.$hash?.slice(0, 8) ?? 'default'}.svg`);
+  const base = outputPath.replace(/\.[^/.]+$/, '');
+  const svgPath = base + '.svg';
   await fs.promises.writeFile(svgPath, svgContent, 'utf8');
 
   // JSON
-  const jsonPath = path.join(outputPath, `world_${seed.$hash?.slice(0, 8) ?? 'default'}.json`);
+  const jsonPath = base + '.json';
   await fs.promises.writeFile(jsonPath, JSON.stringify({
     $domain: 'world', $name: worldName, $hash: seed.$hash,
     world: { name: worldName, age, scale, width: W, height: H,
@@ -584,7 +581,7 @@ export async function generateWorld(seed: Seed, outputPath: string): Promise<Wor
   }, null, 2), 'utf8');
 
   // HTML
-  const htmlPath = path.join(outputPath, `world_${seed.$hash?.slice(0, 8) ?? 'default'}.html`);
+  const htmlPath = base + '.html';
   await fs.promises.writeFile(htmlPath, renderWorldHTML(worldData as any, svgContent), 'utf8');
 
   return {

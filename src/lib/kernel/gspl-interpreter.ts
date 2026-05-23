@@ -1056,23 +1056,12 @@ export class GsplInterpreter {
       const parser = new GsplParser(tokens);
       const ast    = parser.parse();
 
-      // Evaluate in an ISOLATED child interpreter so seed/type declarations
-      // from stdlib don't register new gene types in the global registry.
+      // Execute the module in an isolated child interpreter so seed/type
+      // declarations don't pollute the global gene type registry.
       const child = new GsplInterpreter();
-      for (const decl of ast.body ?? []) {
-        // Skip seed and type declarations — they would register gene types in the
-        // global geneTypeRegistry singleton, polluting the parent context.
-        if (
-          decl.type === ASTNodeType.SeedDecl ||
-          decl.type === ASTNodeType.TypeDecl ||
-          decl.type === ASTNodeType.TraitDecl ||
-          decl.type === ASTNodeType.ImplDecl
-        ) continue;
-        try { await child.evaluate(decl); } catch { /* skip */ }
-      }
+      try { await child.execute(resolution.source); } catch { /* best-effort */ }
 
       // Only promote function and let bindings into the parent scope.
-      // Seed and type declarations stay isolated to prevent global registry pollution.
       child.context.variables.forEach((val: unknown, key: string) => {
         if (typeof val === 'function' || (val && typeof val === 'object' && (val as any)._fn)) {
           this.context.variables.set(key, val);

@@ -27,11 +27,26 @@ const genesMap = z.record(z.string(), geneEntry);
 
 // Domain list — kept in sync with kernel's 27 domains
 const VALID_DOMAINS = [
+  // Core generative domains
   'character', 'sprite', 'music', 'visual2d', 'geometry3d', 'fullgame',
   'animation', 'narrative', 'ui', 'physics', 'audio', 'ecosystem',
   'game', 'alife', 'shader', 'particle', 'procedural',
   'typography', 'architecture', 'vehicle', 'furniture', 'fashion',
   'robotics', 'circuit', 'food', 'choreography', 'agent',
+  // Phase 1+2 sovereign domains
+  'website', 'field', 'quantum', 'molecule', 'cosmology', 'world', 'app',
+  // Extended catalog domains
+  'aerospace', 'agtech', 'blockchain', 'chemical', 'city', 'climate',
+  'cloud', 'consciousness', 'cybersecurity', 'dance', 'devops',
+  'drones', 'drug', 'edtech', 'education', 'electronics', 'energy',
+  'finance', 'genomics', 'healthcare', 'logistics', 'manufacturing',
+  'marketing', 'materials', 'mining', 'nanotechnology', 'quantum-computing',
+  'real-estate', 'smart-city', 'social', 'synthetic-biology', 'water',
+  'wearables', 'wine', 'beer', 'coffee', 'acoustics', 'advertising',
+  'agriculture', 'ar', 'automotive', 'battery', 'biomedical', 'biotechnology',
+  'built-environment', 'space', 'hospitality', 'sports', 'cosmetics',
+  'textiles', 'art', 'photography', 'interior', 'landscape', 'military',
+  'maritime', 'rail', 'urban', 'rural', 'fashion-3d', 'character-v3',
 ] as const;
 
 const domainEnum = z.enum(VALID_DOMAINS);

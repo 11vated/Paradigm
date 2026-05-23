@@ -36,6 +36,12 @@ export class PipelineRunner {
       config: this.config,
     };
 
+    // Create the output directory BEFORE stages run so generators can write immediately
+    try {
+      const fs = await import('fs');
+      if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+    } catch { /* ignore in serverless/browser */ }
+
     const executedStages: string[] = [];
     let current: any = seed;
 

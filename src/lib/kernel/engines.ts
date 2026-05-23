@@ -28,6 +28,8 @@ const ALL_DOMAINS = [
   'audio', 'ecosystem', 'game', 'alife', 'shader', 'particle',
   'typography', 'architecture', 'vehicle', 'furniture', 'fashion',
   'robotics', 'circuit', 'food', 'choreography', 'agent',
+  // Phase 1+2 sovereign domains
+  'website', 'field', 'quantum', 'molecule', 'cosmology', 'world', 'app',
 ];
 
 async function growViaPipeline(seed: Seed): Promise<Artifact> {

@@ -102,17 +102,17 @@ function initBodies(params: CosmologyParams, rng: Xoshiro256StarStar): Body[] {
         const arm = rng.nextInt(0, 2);
         const t = rng.nextF64() * 3.0;
         const spread = 0.3 + rng.nextF64() * 0.4;
-        const theta = arm * (2 * Math.PI / 3) + t * 2 + rng.nextGaussian(0, spread * 0.3);
-        const r = 0.1 + t * spread * 0.8 + rng.nextGaussian(0, 0.15);
+        const theta = arm * (2 * Math.PI / 3) + t * 2 + rng.nextGaussian() * spread * 0.3 + 0;
+        const r = 0.1 + t * spread * 0.8 + rng.nextGaussian() * 0.15 + 0;
         const vcirc = Math.sqrt(params.G * 5.0 / (r + 0.3));
         const mass = 0.01 + rng.nextF64() * 0.05;
         const temp = rng.nextF64();
         const [cr, cg, cb] = temp > 0.7 ? [100, 150, 255] : temp > 0.4 ? [255, 255, 200] : [255, 180, 100];
         bodies.push({
-          id: i, x: r * Math.cos(theta), y: r * Math.sin(theta), z: rng.nextGaussian(0, 0.05),
-          vx: -vcirc * Math.sin(theta) + rng.nextGaussian(0, 0.02),
-          vy: vcirc * Math.cos(theta) + rng.nextGaussian(0, 0.02),
-          vz: rng.nextGaussian(0, 0.005),
+          id: i, x: r * Math.cos(theta), y: r * Math.sin(theta), z: rng.nextGaussian() * 0.05 + 0,
+          vx: -vcirc * Math.sin(theta) + rng.nextGaussian() * 0.02 + 0,
+          vy: vcirc * Math.cos(theta) + rng.nextGaussian() * 0.02 + 0,
+          vz: rng.nextGaussian() * 0.005 + 0,
           mass, radius: 0.005 + mass * 2,
           type: 'star', brightness: 0.3 + mass * 8,
           color: [cr + rng.nextInt(-20, 20), cg + rng.nextInt(-20, 20), cb + rng.nextInt(-20, 20)],
@@ -128,7 +128,7 @@ function initBodies(params: CosmologyParams, rng: Xoshiro256StarStar): Body[] {
           const vcirc = Math.sqrt(params.G * 3.0 / (r + 0.2)) * sign;
           const mass = 0.01 + rng.nextF64() * 0.03;
           bodies.push({
-            id: startId + i, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), z: rng.nextGaussian(0, 0.05),
+            id: startId + i, x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), z: rng.nextGaussian() * 0.05 + 0,
             vx: vxcm - vcirc * Math.sin(angle), vy: vcirc * Math.cos(angle), vz: 0,
             mass, radius: 0.005, type: 'star', brightness: 0.4 + mass * 5,
             color: startId === 0 ? [150, 180, 255] : [255, 180, 100],
@@ -149,10 +149,10 @@ function initBodies(params: CosmologyParams, rng: Xoshiro256StarStar): Body[] {
         const mass = 0.001 + rng.nextF64() * 0.01;
         const frac = Math.min(1, r / 3);
         bodies.push({
-          id: i, x: r * Math.cos(angle), y: r * Math.sin(angle), z: rng.nextGaussian(0, 0.03 + r * 0.02),
-          vx: -vcirc * Math.sin(angle) * (1 + rng.nextGaussian(0, 0.05)),
-          vy: vcirc * Math.cos(angle) * (1 + rng.nextGaussian(0, 0.05)),
-          vz: rng.nextGaussian(0, 0.01),
+          id: i, x: r * Math.cos(angle), y: r * Math.sin(angle), z: rng.nextGaussian() * 0.03 + r * 0.02 + 0,
+          vx: -vcirc * Math.sin(angle) * (1 + rng.nextGaussian() * 0.05 + 0),
+          vy: vcirc * Math.cos(angle) * (1 + rng.nextGaussian() * 0.05 + 0),
+          vz: rng.nextGaussian() * 0.01 + 0,
           mass, radius: 0.005,
           type: 'gas', brightness: 0.5 + rng.nextF64() * 0.5,
           color: [
@@ -171,10 +171,10 @@ function initBodies(params: CosmologyParams, rng: Xoshiro256StarStar): Body[] {
         const mass = 0.005 + rng.nextF64() * 0.05;
         const vcirc = Math.sqrt(params.G * 2.0 / (r + 0.5));
         bodies.push({
-          id: i, x: r * Math.cos(angle), y: r * Math.sin(angle), z: rng.nextGaussian(0, 0.1),
-          vx: -vcirc * Math.sin(angle) + rng.nextGaussian(0, 0.05),
-          vy: vcirc * Math.cos(angle) + rng.nextGaussian(0, 0.05),
-          vz: rng.nextGaussian(0, 0.01),
+          id: i, x: r * Math.cos(angle), y: r * Math.sin(angle), z: rng.nextGaussian() * 0.1 + 0,
+          vx: -vcirc * Math.sin(angle) + rng.nextGaussian() * 0.05 + 0,
+          vy: vcirc * Math.cos(angle) + rng.nextGaussian() * 0.05 + 0,
+          vz: rng.nextGaussian() * 0.01 + 0,
           mass, radius: 0.005 + mass * 3,
           type: 'star', brightness: 0.3 + mass * 6,
           color: [200 + rng.nextInt(0, 55), 200 + rng.nextInt(0, 55), 200 + rng.nextInt(0, 55)],

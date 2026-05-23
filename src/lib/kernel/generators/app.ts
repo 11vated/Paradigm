@@ -447,7 +447,7 @@ bun run build
 // ─── Main generator ───────────────────────────────────────────────────────────
 
 export async function generateApp(seed: Seed, outputPath: string): Promise<AppArtifact> {
-  const rng = rngFromHash(seed);
+  const rng = rngFromHash((seed as any).$hash ?? 'app-default');
   const params = extractParams(seed, rng);
   const seedHash = (seed as any).$hash ?? 'unknown';
 

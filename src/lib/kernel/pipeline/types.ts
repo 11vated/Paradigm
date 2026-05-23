@@ -56,9 +56,16 @@ export interface DomainConfig {
   domain: string;
   version: EngineVersion;
   generator: GeneratorFn;
-  postProcess: PostProcessFn;
+  postProcess?: PostProcessFn;
   geneReader?: GeneReader;
   outputExtension: string;
+  // Extended metadata fields (optional)
+  label?: string;
+  description?: string;
+  outputMimeTypes?: string[];
+  viewportType?: string;
+  tier?: number;
+  defaultGenes?: Record<string, { gene_type: string; value: unknown }>;
 }
 
 export interface PipelineReport {
