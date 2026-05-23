@@ -25,6 +25,10 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
   const setSeed = useActiveSeed((s: any) => s.setSeed);
   const [kernelTick, setKernelTick] = useState(0);
   const [creatingSeed, setCreatingSeed] = useState(false);
+  const [now, setNow] = useState(() => new Date());
+
+  // Engine count for atlas chip
+  const [engineCount, setEngineCount] = useState(0);
 
   // Tick the kernel-state counter on a 2s heartbeat. Visual only — the real
   // RNG advance is driven by grow operations, not by this counter.
@@ -112,10 +116,10 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
 
         <button
           className="p-topbar-action"
-          title="Composition Atlas — 40 domains, 259 bridges"
+          title={`Composition Atlas — ${engineCount} engines`}
           onClick={onCosmos}
         >
-          <span>40 domains</span>
+          <span>{engineCount} engines</span>
         </button>
       </div>
     </header>
