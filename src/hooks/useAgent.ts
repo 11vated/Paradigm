@@ -189,10 +189,22 @@ export function useAgent() {
                     break;
                   case 'done':
                     done = true;
+                    // Synthesize cards from the accumulated text.
+                    const synthCards = [...collectedCards];
+                    const gsplBlocks = Array.from(
+                      accumulatedText.matchAll(/```gspl\s*\n([\s\S]*?)```/g),
+                    ).map((m) => m[1].trim()).filter(Boolean);
+                    for (const block of gsplBlocks) {
+                      synthCards.push({
+                        id: newCardId(),
+                        kind: 'gspl-source' as CardKind,
+                        payload: { gspl: block },
+                      });
+                    }
                     finishTurn({
                       text: accumulatedText || 'Done.',
                       inferenceTier: tier as Turn['inferenceTier'],
-                      cards: collectedCards.length ? collectedCards : undefined,
+                      cards: synthCards.length ? synthCards : undefined,
                       fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
                     });
                     break;
