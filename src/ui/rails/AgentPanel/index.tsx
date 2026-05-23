@@ -21,21 +21,8 @@ import { Fiducial } from '@/ui/primitives/Fiducial';
 export const AgentPanel: React.FC = () => (
   <section
     aria-label="Paradigm Agent"
-    className="r-pane"
-    style={{
-      position: 'relative',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      borderRadius: 0,
-      background: 'rgba(11, 13, 18, 0.65)',
-      borderTop: 0,
-      borderRight: 0,
-      borderBottom: 0,
-      borderLeft: '1px solid var(--r-ink-4)',
-    }}
+    className="r-agent"
   >
-    <Fiducial corners={['tl', 'tr']} />
     <AgentHeader />
     <BranchesRibbon />
     <LensTabs />

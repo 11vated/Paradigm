@@ -1,373 +1,1112 @@
-/* ──────────────────────────────────────────────────────────────────────────
- * Paradigm — Reality OS HUD
- * Design tokens + substrate for the three-pane studio shell.
- * Scoped by [data-paradigm-shell="reality-os"] so legacy `/classic/*` UIs
- * are completely unaffected.
- * ──────────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════════
+ * PARADIGM — Reality OS Design System v2
+ * The generative substrate for digital creation.
+ *
+ * Scoped to [data-paradigm-shell="reality-os"] — legacy UIs unaffected.
+ * ══════════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
 [data-paradigm-shell="reality-os"] {
-  /* ─── Substrate (matte near-black, dimensional) ─────────────────────── */
-  --r-void:      #050508;
-  --r-void-2:    #0B0D12;
-  --r-void-3:    #10131A;
-  --r-pane:      rgba(13, 16, 23, 0.78);
-  --r-pane-edge: rgba(255, 255, 255, 0.04);
-  --r-pane-hi:   rgba(255, 255, 255, 0.08);
-  --r-grid:      rgba(255, 255, 255, 0.035);
-  --r-grid-hi:   rgba(255, 255, 255, 0.07);
 
-  /* ─── Ink (typography hierarchy) ────────────────────────────────────── */
-  --r-ink-0:  #F2F4F8;   /* primary */
-  --r-ink-1:  #C8CCD4;   /* secondary */
-  --r-ink-2:  #8A8F9A;   /* tertiary */
-  --r-ink-3:  #5A5F69;   /* quaternary, muted captions */
-  --r-ink-4:  #353841;   /* hairlines */
+  /* ── VOID (substrate depths) ─────────────────────────────────────────── */
+  --r-void:         #030306;   /* deepest substrate */
+  --r-void-2:       #07070D;   /* pane layer */
+  --r-void-3:       #0D0E17;   /* hover/raised */
+  --r-void-4:       #13141F;   /* selection bg */
+  --r-pane:         rgba(7, 7, 13, 0.85);
+  --r-pane-edge:    rgba(255, 255, 255, 0.045);
+  --r-pane-hi:      rgba(255, 255, 255, 0.07);
+  --r-grid:         rgba(255, 255, 255, 0.025);
+  --r-grid-hi:      rgba(255, 255, 255, 0.06);
 
-  /* ─── Default seed prism (deterministic accents, overridden per-seed) ─ */
-  --r-prism-core:        #00E5FF;     /* core resonance */
-  --r-prism-resonant:    #8A2BE2;     /* second harmonic */
-  --r-prism-grad-a:      #34D399;     /* lower gradient */
-  --r-prism-grad-b:      #FBBF24;     /* upper gradient */
-  --r-prism-warm:        #FB7185;     /* warm accent */
-  --r-prism-cool:        #38BDF8;     /* cool accent */
-  --r-prism-resonance-hz: 432;        /* seed-driven frequency, scaled */
+  /* ── INK (typographic hierarchy) ────────────────────────────────────── */
+  --r-ink-0:  #F0F1F5;   /* primary — titles, active labels */
+  --r-ink-1:  #B8BBc6;   /* secondary — body text */
+  --r-ink-2:  #787C8C;   /* tertiary — supporting text */
+  --r-ink-3:  #4A4D5C;   /* quaternary — muted labels */
+  --r-ink-4:  #27293A;   /* hairlines, borders */
+  --r-ink-5:  #17182A;   /* deep borders */
 
-  /* ─── Semantic ──────────────────────────────────────────────────────── */
-  --r-ok:    #34D399;
-  --r-warn:  #FBBF24;
-  --r-fail:  #F87171;
-  --r-mute:  #4B5260;
+  /* ── PRISM (generative color identity — overridden per-seed by JS) ─── */
+  --r-prism-core:        #7C3AED;   /* sovereign violet — the POSSIBLE */
+  --r-prism-resonant:    #4F46E5;   /* deep indigo — second harmonic */
+  --r-prism-sovereign:   #D97706;   /* amber gold — ownership */
+  --r-prism-grow:        #059669;   /* emerald — evolution/growth */
+  --r-prism-warm:        #E11D48;   /* rose — danger/entropy */
+  --r-prism-cool:        #0EA5E9;   /* sky — data/spectral */
+  --r-prism-dim:         rgba(124, 58, 237, 0.12);
+  --r-prism-glow:        rgba(124, 58, 237, 0.35);
+  --r-prism-resonance-hz: 432;
 
-  /* ─── Typography ────────────────────────────────────────────────────── */
-  --r-font-display: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --r-font-prose:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --r-font-num:     'JetBrains Mono', ui-monospace, monospace;
+  /* ── DOMAIN COLORS (one per genus) ──────────────────────────────────── */
+  --r-dom-character:  #A78BFA;
+  --r-dom-music:      #34D399;
+  --r-dom-visual2d:   #F59E0B;
+  --r-dom-world:      #10B981;
+  --r-dom-molecule:   #60A5FA;
+  --r-dom-quantum:    #818CF8;
+  --r-dom-field:      #06B6D4;
+  --r-dom-cosmology:  #7C3AED;
+  --r-dom-website:    #F97316;
+  --r-dom-app:        #EC4899;
+  --r-dom-game:       #EAB308;
+  --r-dom-narrative:  #A3E635;
+  --r-dom-sprite:     #FB923C;
+  --r-dom-agent:      #38BDF8;
+  --r-dom-default:    #6366F1;
 
-  /* ─── Spacing ───────────────────────────────────────────────────────── */
-  --r-px-1: 2px;
-  --r-px-2: 4px;
-  --r-px-3: 6px;
-  --r-px-4: 8px;
-  --r-px-5: 12px;
-  --r-px-6: 16px;
-  --r-px-7: 20px;
-  --r-px-8: 24px;
-  --r-px-9: 32px;
+  /* ── SEMANTIC ────────────────────────────────────────────────────────── */
+  --r-ok:     #10B981;
+  --r-warn:   #F59E0B;
+  --r-fail:   #EF4444;
+  --r-info:   #6366F1;
+  --r-mute:   #374151;
+
+  /* ── TYPOGRAPHY ──────────────────────────────────────────────────────── */
+  --r-font-display:  'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --r-font-prose:    'Space Grotesk', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --r-font-mono:     'Space Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --r-font-num:      'Space Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── SPACING ─────────────────────────────────────────────────────────── */
+  --r-px-1:  2px;
+  --r-px-2:  4px;
+  --r-px-3:  6px;
+  --r-px-4:  8px;
+  --r-px-5:  12px;
+  --r-px-6:  16px;
+  --r-px-7:  20px;
+  --r-px-8:  24px;
+  --r-px-9:  32px;
   --r-px-10: 48px;
 
-  /* ─── Geometry ──────────────────────────────────────────────────────── */
-  --r-radius-1: 2px;
-  --r-radius-2: 4px;
-  --r-radius-3: 8px;
-  --r-radius-4: 12px;
+  /* ── GEOMETRY ────────────────────────────────────────────────────────── */
+  --r-radius-1: 3px;
+  --r-radius-2: 6px;
+  --r-radius-3: 10px;
+  --r-radius-4: 16px;
+  --r-radius-pill: 999px;
 
-  /* ─── Motion ────────────────────────────────────────────────────────── */
+  /* ── MOTION ──────────────────────────────────────────────────────────── */
   --r-ease:   cubic-bezier(0.22, 1, 0.36, 1);
   --r-ease-2: cubic-bezier(0.65, 0, 0.35, 1);
-  --r-dur-1: 120ms;
-  --r-dur-2: 220ms;
-  --r-dur-3: 420ms;
-  --r-dur-4: 800ms;
+  --r-ease-3: cubic-bezier(0.34, 1.56, 0.64, 1); /* spring */
+  --r-dur-1: 80ms;
+  --r-dur-2: 180ms;
+  --r-dur-3: 340ms;
+  --r-dur-4: 700ms;
+  --r-dur-5: 1200ms;
 
-  /* ─── Layout (the three-pane studio) ────────────────────────────────── */
-  --r-topbar-h:   28px;
-  --r-bottom-h:   32px;
-  --r-rail-min:   220px;
-  --r-rail-max:   480px;
-  --r-agent-min:  340px;
-  --r-agent-max:  680px;
+  /* ── LAYOUT ──────────────────────────────────────────────────────────── */
+  --r-topbar-h:   48px;
+  --r-bottom-h:   36px;
+  --r-rail-min:   240px;
+  --r-rail-max:   400px;
+  --r-agent-min:  360px;
+  --r-agent-max:  640px;
 
-  /* ─── Z-stack ───────────────────────────────────────────────────────── */
+  /* ── Z-STACK ─────────────────────────────────────────────────────────── */
   --r-z-substrate: 0;
-  --r-z-grid:      1;
+  --r-z-field:     1;
+  --r-z-grid:      2;
   --r-z-pane:      10;
   --r-z-chrome:    20;
   --r-z-overlay:   100;
   --r-z-toast:     1000;
+
+  /* ── SHADOWS ─────────────────────────────────────────────────────────── */
+  --r-shadow-sm:  0 1px 3px rgba(0,0,0,0.6);
+  --r-shadow-md:  0 4px 16px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.5);
+  --r-shadow-glow: 0 0 24px var(--r-prism-glow), 0 0 4px rgba(124,58,237,0.5);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Shell root — the matte void + drifting noise field
- * ──────────────────────────────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════════════════════
+ * SHELL ROOT
+ * ══════════════════════════════════════════════════════════════════════════════ */
 [data-paradigm-shell="reality-os"] {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.022) 0%, transparent 60%),
-    radial-gradient(ellipse at 100% 100%, color-mix(in oklab, var(--r-prism-core) 6%, transparent) 0%, transparent 55%),
-    radial-gradient(ellipse at 0% 100%, color-mix(in oklab, var(--r-prism-resonant) 5%, transparent) 0%, transparent 55%),
-    var(--r-void);
+    radial-gradient(ellipse 80% 50% at 20% 10%,  rgba(124, 58, 237, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%,  rgba(79, 70, 229, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(3, 3, 12, 1) 0%, var(--r-void) 100%);
   color: var(--r-ink-0);
   font-family: var(--r-font-prose);
+  font-size: 14px;
+  line-height: 1.5;
   font-feature-settings: 'ss01', 'cv11', 'tnum';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Dimensional grid — a CSS-only first pass.
- * Hairlines that drift faintly. WGSL shader replaces this in Phase F.
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-grid {
-  display: none;
+/* ══════════════════════════════════════════════════════════════════════════════
+ * SUBSTRATE FIELD — the living background
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-substrate-field {
   position: fixed;
   inset: 0;
-  z-index: var(--r-z-grid);
+  z-index: var(--r-z-field);
   pointer-events: none;
-  background-image:
-    linear-gradient(to right,  var(--r-grid) 0, var(--r-grid) 1px, transparent 1px, transparent 100%),
-    linear-gradient(to bottom, var(--r-grid) 0, var(--r-grid) 1px, transparent 1px, transparent 100%);
-  background-size: 64px 64px, 64px 64px;
-  mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
-  -webkit-mask-image: radial-gradient(ellipse at center, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0) 100%);
-  animation: r-grid-drift 60s linear infinite;
+  overflow: hidden;
 }
 
-@keyframes r-grid-drift {
-  from { background-position: 0 0, 0 0; }
-  to   { background-position: 64px 64px, 64px 64px; }
-}
-
-/* fiducial corner brackets, used as "this surface is alive" markers */
-[data-paradigm-shell="reality-os"] .r-fiducial {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  pointer-events: none;
-  color: var(--r-ink-3);
-  opacity: 0.55;
-}
-[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="tl"] { top: 6px; left: 6px;  border-top: 1px solid currentColor; border-left: 1px solid currentColor; }
-[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="tr"] { top: 6px; right: 6px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
-[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="bl"] { bottom: 6px; left: 6px;  border-bottom: 1px solid currentColor; border-left: 1px solid currentColor; }
-[data-paradigm-shell="reality-os"] .r-fiducial[data-corner="br"] { bottom: 6px; right: 6px; border-bottom: 1px solid currentColor; border-right: 1px solid currentColor; }
-
-/* ──────────────────────────────────────────────────────────────────────────
- * Pane — translucent backdrop with chromatic edge.
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-pane {
-  position: relative;
-  background: var(--r-pane);
-  backdrop-filter: blur(20px) saturate(118%);
-  -webkit-backdrop-filter: blur(20px) saturate(118%);
-  border: 1px solid var(--r-pane-edge);
-  border-radius: var(--r-radius-2);
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.025) inset,
-    0 0 0 1px var(--r-pane-edge) inset,
-    0 30px 60px -30px rgba(0, 0, 0, 0.7);
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
- * Prism strip — the spectral signature of a seed.
- * Materializes as a thin animated gradient. Frequency comes from the seed.
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-prism {
-  position: relative;
-  height: 2px;
-  width: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--r-prism-grad-a) 0%,
-    var(--r-prism-core)   28%,
-    var(--r-prism-resonant) 52%,
-    var(--r-prism-warm)   74%,
-    var(--r-prism-grad-b) 100%
-  );
-  background-size: 220% 100%;
-  animation: r-prism-flow calc(60000ms / max(var(--r-prism-resonance-hz), 60)) linear infinite;
-  filter: saturate(120%);
-}
-
-[data-paradigm-shell="reality-os"] .r-prism::after {
+[data-paradigm-shell="reality-os"] .r-substrate-field::before {
   content: '';
   position: absolute;
-  inset: -1px 0;
-  background: inherit;
-  background-size: inherit;
-  filter: blur(6px);
-  opacity: 0.4;
-  pointer-events: none;
+  inset: -50%;
+  background:
+    radial-gradient(circle 600px at var(--fx, 30%) var(--fy, 20%), rgba(124,58,237,0.06) 0%, transparent 70%),
+    radial-gradient(circle 400px at var(--fx2, 70%) var(--fy2, 80%), rgba(79,70,229,0.04) 0%, transparent 70%);
+  animation: r-field-drift 20s ease-in-out infinite alternate;
 }
 
-@keyframes r-prism-flow {
-  from { background-position: 0% 50%; }
-  to   { background-position: 220% 50%; }
+[data-paradigm-shell="reality-os"] .r-substrate-field::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right,  var(--r-grid) 0, var(--r-grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--r-grid) 0, var(--r-grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(0,0,0,0.5) 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(0,0,0,0.5) 0%, transparent 100%);
+  animation: r-grid-pulse 8s ease-in-out infinite;
 }
 
-/* tall vertical prism */
-[data-paradigm-shell="reality-os"] .r-prism[data-orient="v"] {
-  height: 100%;
-  width: 2px;
-  background: linear-gradient(
-    180deg,
-    var(--r-prism-grad-a) 0%,
-    var(--r-prism-core)   28%,
-    var(--r-prism-resonant) 52%,
-    var(--r-prism-warm)   74%,
-    var(--r-prism-grad-b) 100%
-  );
-  background-size: 100% 220%;
-  animation-name: r-prism-flow-v;
+@keyframes r-field-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  33%  { transform: translate(-3%, 2%) scale(1.02); }
+  66%  { transform: translate(2%, -3%) scale(0.98); }
+  100% { transform: translate(-1%, 1%) scale(1.01); }
 }
 
-@keyframes r-prism-flow-v {
-  from { background-position: 50% 0%; }
-  to   { background-position: 50% 220%; }
+@keyframes r-grid-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 0.9; }
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Resonance pulse — emitted on every kernel op.
- * ──────────────────────────────────────────────────────────────────────── */
-@keyframes r-pulse {
-  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--r-prism-core) 50%, transparent); }
-  100% { box-shadow: 0 0 0 14px color-mix(in oklab, var(--r-prism-core) 0%,  transparent); }
-}
-
-[data-paradigm-shell="reality-os"] [data-pulse="on"] {
-  animation: r-pulse var(--r-dur-3) var(--r-ease) 1;
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
- * Hairlines + dividers
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-hr {
-  height: 1px;
-  background: var(--r-ink-4);
-  border: 0;
-  width: 100%;
-}
-[data-paradigm-shell="reality-os"] .r-vr {
-  width: 1px;
-  background: var(--r-ink-4);
-  height: 100%;
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
- * Buttons + chips
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-btn {
-  display: inline-flex;
+/* ══════════════════════════════════════════════════════════════════════════════
+ * TOPBAR
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-topbar {
+  height: var(--r-topbar-h);
+  display: flex;
   align-items: center;
-  gap: var(--r-px-3);
-  height: 26px;
-  padding: 0 var(--r-px-5);
+  gap: 0;
+  padding: 0 16px;
+  background: rgba(3, 3, 6, 0.92);
+  border-bottom: 1px solid var(--r-ink-4);
+  position: relative;
+  z-index: var(--r-z-chrome);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 20px;
+  border-right: 1px solid var(--r-ink-4);
+  height: 100%;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-mark {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-mark svg {
+  width: 100%;
+  height: 100%;
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-name {
   font-family: var(--r-font-display);
-  font-size: 11px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--r-ink-1);
-  background: transparent;
-  border: 1px solid var(--r-ink-4);
-  border-radius: var(--r-radius-1);
-  cursor: pointer;
-  transition: color var(--r-dur-1) var(--r-ease),
-              border-color var(--r-dur-1) var(--r-ease),
-              background var(--r-dur-1) var(--r-ease);
-}
-[data-paradigm-shell="reality-os"] .r-btn:hover {
   color: var(--r-ink-0);
-  border-color: color-mix(in oklab, var(--r-prism-core) 50%, var(--r-ink-4));
-  background: color-mix(in oklab, var(--r-prism-core) 6%, transparent);
-}
-[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"] {
-  color: var(--r-void);
-  background: var(--r-prism-core);
-  border-color: var(--r-prism-core);
-}
-[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"]:hover {
-  background: color-mix(in oklab, var(--r-prism-core) 80%, white);
 }
 
-[data-paradigm-shell="reality-os"] .r-chip {
-  display: inline-flex;
+[data-paradigm-shell="reality-os"] .r-topbar-breadcrumb {
+  display: flex;
   align-items: center;
-  gap: var(--r-px-2);
-  height: 20px;
-  padding: 0 var(--r-px-4);
-  font-family: var(--r-font-display);
-  font-size: 10px;
-  letter-spacing: 0.06em;
+  gap: 8px;
+  padding: 0 20px;
+  font-family: var(--r-font-mono);
+  font-size: 11px;
   color: var(--r-ink-2);
-  border: 1px solid var(--r-ink-4);
-  border-radius: var(--r-radius-1);
-  background: rgba(255, 255, 255, 0.015);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Inputs (composer)
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] .r-input {
+[data-paradigm-shell="reality-os"] .r-topbar-breadcrumb .r-sep {
+  color: var(--r-ink-4);
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-breadcrumb .r-active {
+  color: var(--r-ink-0);
+  font-weight: 700;
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-family: var(--r-font-mono);
+  font-size: 10px;
+  color: var(--r-ink-3);
+  letter-spacing: 0.08em;
+}
+
+[data-paradigm-shell="reality-os"] .r-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 16px;
+  border-left: 1px solid var(--r-ink-4);
+  height: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * LEFT RAIL
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-rail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(5, 5, 10, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+[data-paradigm-shell="reality-os"] .r-rail-section {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--r-ink-5);
+}
+
+[data-paradigm-shell="reality-os"] .r-rail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 8px;
+  cursor: pointer;
+  user-select: none;
+  min-height: 36px;
+}
+
+[data-paradigm-shell="reality-os"] .r-rail-section-label {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--r-ink-3);
+}
+
+[data-paradigm-shell="reality-os"] .r-rail-section-body {
+  padding: 0 10px 12px;
+}
+
+/* ── SEED CARD ──────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-seed-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-radius-2);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all var(--r-dur-2) var(--r-ease);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-card:hover {
+  background: rgba(124, 58, 237, 0.06);
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-card[data-active="true"] {
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.35);
+  box-shadow: inset 0 0 0 1px rgba(124,58,237,0.15);
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-glyph {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-radius-1);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--r-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  overflow: hidden;
+  position: relative;
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-name {
+  font-family: var(--r-font-display);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--r-ink-0);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-paradigm-shell="reality-os"] .r-seed-meta {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  color: var(--r-ink-3);
+  letter-spacing: 0.04em;
+}
+
+/* ── MODE LIST ───────────────────────────────────────────────────────────── */
+[data-paradigm-shell="reality-os"] .r-mode-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-btn {
   width: 100%;
-  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: var(--r-radius-2);
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+  text-align: left;
+  position: relative;
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-btn:hover {
+  background: rgba(255,255,255,0.03);
+  border-color: var(--r-ink-4);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-btn[data-active="true"] {
+  background: rgba(124, 58, 237, 0.10);
+  border-color: rgba(124, 58, 237, 0.30);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-btn[data-active="true"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: var(--r-prism-core);
+  box-shadow: 0 0 8px var(--r-prism-core);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-num {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  color: var(--r-ink-4);
+  width: 14px;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-label {
+  flex: 1;
+  font-family: var(--r-font-display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--r-ink-1);
+  transition: color var(--r-dur-2) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-btn[data-active="true"] .r-mode-label {
+  color: var(--r-ink-0);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-hint {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  color: var(--r-ink-4);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * AMBIENT STRIP (bottom bar)
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-ambient {
+  height: var(--r-bottom-h);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  background: rgba(3, 3, 6, 0.95);
+  border-top: 1px solid var(--r-ink-5);
+  position: relative;
+  z-index: var(--r-z-chrome);
+  font-family: var(--r-font-mono);
+  font-size: 10px;
+  color: var(--r-ink-3);
+  letter-spacing: 0.06em;
+}
+
+[data-paradigm-shell="reality-os"] .r-ambient-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-paradigm-shell="reality-os"] .r-ambient-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--r-ok);
+  animation: r-pulse 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-ambient-prism {
+  flex: 1;
+  min-width: 0;
+  max-width: 200px;
+  height: 2px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+@keyframes r-pulse {
+  0%, 100% { opacity: 1;   box-shadow: 0 0 0 0 transparent; }
+  50%       { opacity: 0.7; box-shadow: 0 0 6px var(--r-ok); }
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * AGENT PANEL
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-agent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(4, 4, 9, 0.90);
+  border-left: 1px solid var(--r-ink-5);
+  backdrop-filter: blur(20px);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  height: 48px;
+  border-bottom: 1px solid var(--r-ink-5);
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-mark {
+  width: 8px;
+  height: 8px;
+  background: var(--r-prism-sovereign);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(217, 119, 6, 0.5);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-title {
+  font-family: var(--r-font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--r-ink-1);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--r-ink-5);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-tabs::-webkit-scrollbar { display: none; }
+
+[data-paradigm-shell="reality-os"] .r-agent-tab {
+  padding: 9px 14px;
+  font-family: var(--r-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--r-ink-3);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-tab:hover {
+  color: var(--r-ink-1);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-tab[data-active="true"] {
+  color: var(--r-ink-0);
+  border-bottom-color: var(--r-prism-core);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--r-ink-4) transparent;
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-messages::-webkit-scrollbar { width: 3px; }
+[data-paradigm-shell="reality-os"] .r-agent-messages::-webkit-scrollbar-track { background: transparent; }
+[data-paradigm-shell="reality-os"] .r-agent-messages::-webkit-scrollbar-thumb { background: var(--r-ink-4); border-radius: 2px; }
+
+[data-paradigm-shell="reality-os"] .r-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 100%;
+}
+
+[data-paradigm-shell="reality-os"] .r-msg-role {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--r-ink-3);
+}
+
+[data-paradigm-shell="reality-os"] .r-msg[data-role="agent"] .r-msg-role {
+  color: var(--r-prism-sovereign);
+}
+
+[data-paradigm-shell="reality-os"] .r-msg-body {
+  font-family: var(--r-font-prose);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--r-ink-1);
+}
+
+[data-paradigm-shell="reality-os"] .r-msg[data-role="agent"] .r-msg-body {
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.12);
+  border-radius: var(--r-radius-2);
+  padding: 12px 14px;
+}
+
+[data-paradigm-shell="reality-os"] .r-msg-code {
+  font-family: var(--r-font-mono);
+  font-size: 11px;
+  background: var(--r-void-2);
+  border: 1px solid var(--r-ink-5);
+  border-radius: var(--r-radius-2);
+  padding: 10px 12px;
+  color: var(--r-ink-0);
+  overflow-x: auto;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+/* GSPL syntax highlighting in agent messages */
+[data-paradigm-shell="reality-os"] .r-gspl-kw   { color: #A78BFA; }
+[data-paradigm-shell="reality-os"] .r-gspl-type  { color: #34D399; }
+[data-paradigm-shell="reality-os"] .r-gspl-num   { color: #F59E0B; }
+[data-paradigm-shell="reality-os"] .r-gspl-str   { color: #86EFAC; }
+[data-paradigm-shell="reality-os"] .r-gspl-cmt   { color: #4A5568; font-style: italic; }
+[data-paradigm-shell="reality-os"] .r-gspl-fn    { color: #60A5FA; }
+[data-paradigm-shell="reality-os"] .r-gspl-field { color: #F97316; }
+
+[data-paradigm-shell="reality-os"] .r-agent-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--r-ink-5);
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-input {
+  flex: 1;
+  background: var(--r-void-2);
   border: 1px solid var(--r-ink-4);
+  border-radius: var(--r-radius-2);
   color: var(--r-ink-0);
   font-family: var(--r-font-prose);
   font-size: 13px;
+  padding: 10px 14px;
   line-height: 1.5;
-  padding: var(--r-px-5);
-  border-radius: var(--r-radius-2);
   resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  transition: border-color var(--r-dur-2) var(--r-ease);
   outline: none;
-  transition: border-color var(--r-dur-1) var(--r-ease);
-}
-[data-paradigm-shell="reality-os"] .r-input:focus {
-  border-color: color-mix(in oklab, var(--r-prism-core) 60%, var(--r-ink-4));
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Scrollbar
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-track { background: transparent; }
-[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-thumb {
-  background: var(--r-ink-4);
-  border-radius: var(--r-radius-1);
-}
-[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-thumb:hover {
-  background: var(--r-ink-3);
+[data-paradigm-shell="reality-os"] .r-agent-input:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Selection
- * ──────────────────────────────────────────────────────────────────────── */
-[data-paradigm-shell="reality-os"] ::selection {
-  background: color-mix(in oklab, var(--r-prism-core) 32%, transparent);
+[data-paradigm-shell="reality-os"] .r-agent-input::placeholder {
+  color: var(--r-ink-3);
+}
+
+[data-paradigm-shell="reality-os"] .r-agent-cmds {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-cmd-chip {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: var(--r-radius-pill);
+  border: 1px solid var(--r-ink-4);
+  background: rgba(124, 58, 237, 0.06);
+  color: var(--r-prism-core);
+  cursor: pointer;
+  transition: all var(--r-dur-1) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-cmd-chip:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * CENTER STAGE
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-stage {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(124,58,237,0.04) 0%, transparent 60%),
+    transparent;
+}
+
+[data-paradigm-shell="reality-os"] .r-stage-topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  height: 40px;
+  border-bottom: 1px solid var(--r-ink-5);
+  flex-shrink: 0;
+  z-index: 5;
+  background: rgba(3, 3, 6, 0.6);
+  backdrop-filter: blur(8px);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-tabs {
+  display: flex;
+  gap: 0;
+  height: 100%;
+  align-items: stretch;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  font-family: var(--r-font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--r-ink-3);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+  white-space: nowrap;
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-tab:hover {
+  color: var(--r-ink-1);
+  background: rgba(255,255,255,0.02);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-tab[data-active="true"] {
+  color: var(--r-ink-0);
+  border-bottom-color: var(--r-prism-core);
+  background: rgba(124, 58, 237, 0.05);
+}
+
+[data-paradigm-shell="reality-os"] .r-mode-tab-num {
+  color: var(--r-ink-4);
+  font-size: 9px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * EMPTY STATE — the substrate before creation
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  padding: 48px;
+  position: relative;
+}
+
+[data-paradigm-shell="reality-os"] .r-empty-glyph {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+[data-paradigm-shell="reality-os"] .r-empty-glyph svg {
+  width: 100%;
+  height: 100%;
+  animation: r-glyph-breathe 4s ease-in-out infinite;
+}
+
+@keyframes r-glyph-breathe {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(1.05); }
+}
+
+[data-paradigm-shell="reality-os"] .r-empty-title {
+  font-family: var(--r-font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--r-ink-0);
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+[data-paradigm-shell="reality-os"] .r-empty-sub {
+  font-family: var(--r-font-prose);
+  font-size: 14px;
+  color: var(--r-ink-2);
+  text-align: center;
+  max-width: 400px;
+  line-height: 1.7;
+}
+
+[data-paradigm-shell="reality-os"] .r-prompt-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  width: 100%;
+  max-width: 560px;
+}
+
+[data-paradigm-shell="reality-os"] .r-prompt-card {
+  padding: 14px 16px;
+  background: rgba(124, 58, 237, 0.05);
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  border-radius: var(--r-radius-3);
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+  text-align: left;
+}
+
+[data-paradigm-shell="reality-os"] .r-prompt-card:hover {
+  background: rgba(124, 58, 237, 0.12);
+  border-color: rgba(124, 58, 237, 0.35);
+  transform: translateY(-1px);
+  box-shadow: var(--r-shadow-md);
+}
+
+[data-paradigm-shell="reality-os"] .r-prompt-domain {
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--r-prism-core);
+  margin-bottom: 4px;
+}
+
+[data-paradigm-shell="reality-os"] .r-prompt-text {
+  font-family: var(--r-font-prose);
+  font-size: 13px;
+  color: var(--r-ink-1);
+  line-height: 1.4;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * PRIMITIVE COMPONENTS
+ * ══════════════════════════════════════════════════════════════════════════════ */
+
+/* Buttons */
+[data-paradigm-shell="reality-os"] .r-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 32px;
+  border-radius: var(--r-radius-2);
+  border: 1px solid var(--r-ink-4);
+  background: transparent;
+  color: var(--r-ink-1);
+  font-family: var(--r-font-display);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+[data-paradigm-shell="reality-os"] .r-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--r-ink-2);
   color: var(--r-ink-0);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Reduced motion
- * ──────────────────────────────────────────────────────────────────────── */
-/* ──────────────────────────────────────────────────────────────────────────
- * Agent cursor blink
- * ──────────────────────────────────────────────────────────────────────── */
-@keyframes r-cursor {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0; }
+[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"] {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.40);
+  color: var(--r-prism-core);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Marketplace pulse scroll
- * ──────────────────────────────────────────────────────────────────────── */
-@keyframes r-pulse-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-33.33%); }
+[data-paradigm-shell="reality-os"] .r-btn[data-tone="primary"]:hover {
+  background: rgba(124, 58, 237, 0.25);
+  border-color: rgba(124, 58, 237, 0.65);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.2);
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
- * Friend avatar pulse
- * ──────────────────────────────────────────────────────────────────────── */
-@keyframes friend-pulse {
-  0%, 100% { opacity: 0.55; transform: scale(1); }
-  50%      { opacity: 1.00; transform: scale(1.015); }
+[data-paradigm-shell="reality-os"] .r-btn[data-tone="sovereign"] {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: rgba(217, 119, 6, 0.35);
+  color: var(--r-prism-sovereign);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  [data-paradigm-shell="reality-os"] .r-grid,
-  [data-paradigm-shell="reality-os"] .r-prism,
-  [data-paradigm-shell="reality-os"] .r-prism::after {
-    animation: none !important;
-  }
+/* Chips */
+[data-paradigm-shell="reality-os"] .r-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--r-radius-pill);
+  border: 1px solid var(--r-ink-4);
+  background: transparent;
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--r-ink-2);
+  cursor: default;
+}
+
+/* Inputs */
+[data-paradigm-shell="reality-os"] .r-input {
+  background: rgba(7, 7, 13, 0.8);
+  border: 1px solid var(--r-ink-4);
+  border-radius: var(--r-radius-2);
+  color: var(--r-ink-0);
+  font-family: var(--r-font-prose);
+  font-size: 13px;
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color var(--r-dur-2) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-input:focus {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.08);
+}
+
+[data-paradigm-shell="reality-os"] .r-input::placeholder {
+  color: var(--r-ink-3);
+}
+
+/* Scrollbars */
+[data-paradigm-shell="reality-os"] * {
+  scrollbar-width: thin;
+  scrollbar-color: var(--r-ink-4) transparent;
+}
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar { width: 3px; height: 3px; }
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-track { background: transparent; }
+[data-paradigm-shell="reality-os"] *::-webkit-scrollbar-thumb { background: var(--r-ink-4); border-radius: 2px; }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * CRUCIBLE HUD — seed artifact overlay
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: rgba(3, 3, 6, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--r-ink-4);
+  border-radius: var(--r-radius-3);
+  z-index: 10;
+  transition: all var(--r-dur-3) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-hud[data-visible="false"] {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * LINEAGE MODE — seed genealogy graph
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-lineage-node {
+  cursor: pointer;
+  transition: all var(--r-dur-2) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-lineage-node:hover circle {
+  filter: brightness(1.4);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * SOVEREIGNTY BADGE
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-sovereignty-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--r-radius-pill);
+  font-family: var(--r-font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+[data-paradigm-shell="reality-os"] .r-sovereignty-badge[data-state="verified"] {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--r-ok);
+}
+
+[data-paradigm-shell="reality-os"] .r-sovereignty-badge[data-state="minted"] {
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: var(--r-prism-sovereign);
+}
+
+[data-paradigm-shell="reality-os"] .r-sovereignty-badge[data-state="unsigned"] {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--r-ink-4);
+  color: var(--r-ink-3);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * DOMAIN COSMOS OVERLAY
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-cosmos-domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--r-radius-pill);
+  font-family: var(--r-font-display);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--r-ink-4);
+  background: rgba(124, 58, 237, 0.05);
+  color: var(--r-ink-1);
+  transition: all var(--r-dur-2) var(--r-ease);
+}
+
+[data-paradigm-shell="reality-os"] .r-cosmos-domain-pill:hover {
+  background: rgba(124, 58, 237, 0.15);
+  border-color: rgba(124, 58, 237, 0.4);
+  color: var(--r-ink-0);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * GSPL CODEX — language display
+ * ══════════════════════════════════════════════════════════════════════════════ */
+[data-paradigm-shell="reality-os"] .r-gspl-editor {
+  font-family: var(--r-font-mono);
+  font-size: 13px;
+  line-height: 1.8;
+  background: transparent;
+  color: var(--r-ink-1);
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+ * ANIMATIONS
+ * ══════════════════════════════════════════════════════════════════════════════ */
+@keyframes r-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes r-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes r-scale-in {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+[data-paradigm-shell="reality-os"] .r-animate-fade-up {
+  animation: r-fade-up var(--r-dur-3) var(--r-ease) both;
+}
+
+[data-paradigm-shell="reality-os"] .r-animate-scale-in {
+  animation: r-scale-in var(--r-dur-3) var(--r-ease) both;
 }
