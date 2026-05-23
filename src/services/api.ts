@@ -39,7 +39,7 @@ export async function getSeed(id: string) {
   return response;
 }
 
-export async function createSeed(data: { phrase?: string; domain?: string; prompt?: string }) {
+export async function createSeed(data: { phrase?: string; domain?: string; prompt?: string; name?: string }) {
   const response = await apiRequest('/api/seeds', {
     method: 'POST',
     body: JSON.stringify(data),

@@ -5,10 +5,11 @@
  *
  * Per `06_Frontend_Redesign_And_Completion_Spec.md` §IV.1.
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
+import { createSeed } from '@/services/api';
 
 export interface TopBarProps {
   onCosmos?: () => void;
@@ -21,7 +22,9 @@ function shortHash(h: string | undefined): string {
 
 export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
   const { seed } = useActiveSeed();
+  const setSeed = useActiveSeed((s: any) => s.setSeed);
   const [kernelTick, setKernelTick] = useState(0);
+  const [creatingSeed, setCreatingSeed] = useState(false);
 
   // Tick the kernel-state counter on a 2s heartbeat. Visual only — the real
   // RNG advance is driven by grow operations, not by this counter.
@@ -69,11 +72,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
             )}
           </div>
         ) : (
-          <div className="p-active-seed-strip" data-empty="true">
+          <button
+            type="button"
+            className="p-active-seed-strip"
+            data-empty="true"
+          >
             <span>// no seed</span>
             <span className="p-kbd">N</span>
             <span>new</span>
-          </div>
+          </button>
         )}
       </div>
 

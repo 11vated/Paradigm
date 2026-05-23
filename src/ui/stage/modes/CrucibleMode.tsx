@@ -10,9 +10,11 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useGrowArtifact } from '@/hooks/useGrowArtifact';
 import { getGenesisSuggestions } from '@/lib/ui/genesisSuggestions';
+import { inferDomain } from '@/lib/ui/inferDomain';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import PreviewViewport from '@/components/studio/PreviewViewport';
 import { EmptyState } from '../EmptyState';
+import { createSeed } from '@/services/api';
 
 const shortHash = (h: string) => (h.length <= 12 ? h : `${h.slice(0, 6)}…${h.slice(-4)}`);
 
@@ -48,13 +50,32 @@ export const CrucibleMode: React.FC = () => {
   }, []);
 
   if (!seed) {
+    const onPickPrompt = async (text: string) => {
+      // Mirror to agent composer for reference
+      window.dispatchEvent(new CustomEvent('paradigm:compose-prompt', { detail: { text } }));
+      // Infer domain, create seed, set as active. useGrowArtifact will auto-fetch the artifact.
+      const domain = inferDomain(text);
+      try {
+        const created = await createSeed({ name: text, domain });
+        if (created && created.id) {
+          useActiveSeed.getState().setSeed({
+            id: created.id,
+            name: created.name ?? text,
+            domain: created.domain ?? created.$domain ?? domain,
+            hash: created.hash ?? created.$hash ?? '',
+            generation: 0,
+          });
+        }
+      } catch (e) {
+        // Surface failure as a banner via grow-success-error event
+        window.dispatchEvent(new CustomEvent('paradigm:create-failed', { detail: { text, error: String(e) } }));
+      }
+    };
     return (
       <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <EmptyState
           suggestions={suggestions}
-          onPick={(text) => {
-            window.dispatchEvent(new CustomEvent('paradigm:compose-prompt', { detail: { text } }));
-          }}
+          onPick={onPickPrompt}
         />
       </div>
     );
