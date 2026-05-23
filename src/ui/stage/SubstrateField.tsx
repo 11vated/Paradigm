@@ -108,12 +108,12 @@ export const SubstrateField: React.FC = () => {
 
       // Trailing fade — paint a translucent black over the previous frame
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(3, 3, 6, 0.06)';
+      ctx.fillStyle = "rgba(3, 3, 6, 0.025)";
       ctx.fillRect(0, 0, W, H);
 
       ctx.globalCompositeOperation = 'lighter';
       ctx.lineCap = 'round';
-      ctx.lineWidth = 0.6;
+      ctx.lineWidth = 0.9;
 
       for (const p of particles) {
         // Flow direction from noise field + rotation bias + symmetry axis
@@ -135,7 +135,7 @@ export const SubstrateField: React.FC = () => {
 
         // Particle alpha: low — barely-there substrate
         const a = 0.10 + Math.min(0.20, (1 - Math.abs(0.5 - (p.life / PARTICLE_LIFE))));
-        ctx.strokeStyle = `rgba(${R},${G},${B},${(a * 0.18).toFixed(3)})`;
+        ctx.strokeStyle = `rgba(${R},${G},${B},${(a * 0.85).toFixed(3)})`;
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(nx, ny);
