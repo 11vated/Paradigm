@@ -19,11 +19,16 @@ export default defineConfig(({mode}) => {
         'node:crypto': path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
         fs: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         'node:fs': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        url: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'node:url': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         os: path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
         'node:os': path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
+        './gspl-module-resolver': path.resolve(__dirname, './src/lib/kernel/gspl-module-resolver-stub.ts'),
       },
     },
     server: {
+      host: true,
+      allowedHosts: true,
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modify — file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
@@ -98,6 +103,7 @@ export default defineConfig(({mode}) => {
       } : undefined,
     optimizeDeps: {
       include: [],
+      exclude: ['gspl-module-resolver'],
     },
   };
 });

@@ -1,0 +1,1145 @@
+/* ════════════════════════════════════════════════════════════════════════════
+ * PARADIGM OS — the substrate, made visible
+ * ────────────────────────────────────────────────────────────────────────────
+ *  Replaces reality-os.css. Anchored on Document 06 (Frontend Redesign Spec).
+ *  Four principles: reveal-don't-decorate · every-seed-has-a-glyph ·
+ *  GSPL-always-present · agent-mind-transparent.
+ *
+ *  Scoping: every rule is scoped to [data-paradigm-shell="paradigm-os"] so
+ *  this file may coexist with legacy reality-os.css during migration.
+ *  The Root component sets `data-paradigm-shell="paradigm-os"`.
+ * ════════════════════════════════════════════════════════════════════════════
+ */
+
+/* ─── Fonts ──────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * Layer 0 — Design tokens (the only place colors / sizes are defined)
+ * ──────────────────────────────────────────────────────────────────────── */
+:root {
+  /* ── Substrate canvas ──────────────────────────────────────────────── */
+  --p-void:           #04030a;
+  --p-deep:           #0a0814;
+  --p-mid:            #14111f;
+  --p-elev:           #1a162a;
+  --p-ink-4:          #1d1929;   /* hairline borders */
+  --p-ink-3:          #4a4458;   /* dividers + disabled */
+  --p-ink-2:          #918aa3;   /* secondary text */
+  --p-ink-1:          #d8d2e8;   /* primary text */
+  --p-ink-0:          #f0ebff;   /* bright text, focused */
+
+  /* ── Prism (functional accents) ────────────────────────────────────── */
+  --p-prism-violet:   #7c3aed;   /* PRIMARY — GSPL, kernel, active */
+  --p-prism-violet-2: #a78bfa;   /* secondary violet */
+  --p-prism-amber:    #d4a017;   /* sovereignty */
+  --p-prism-emerald:  #16c47e;   /* evolution, growth, fitness */
+  --p-prism-rose:     #e11d48;   /* danger, error */
+  --p-prism-cyan:     #06b6d4;   /* determinism boundary, kernel ticks */
+
+  /* ── Surfaces (composed) ───────────────────────────────────────────── */
+  --p-surf-1:         color-mix(in oklab, var(--p-deep), white 1%);
+  --p-surf-2:         color-mix(in oklab, var(--p-mid),  white 2%);
+  --p-surf-3:         color-mix(in oklab, var(--p-elev), white 4%);
+
+  --p-glow-violet:    color-mix(in oklab, var(--p-prism-violet) 28%, transparent);
+  --p-glow-amber:     color-mix(in oklab, var(--p-prism-amber)  24%, transparent);
+  --p-glow-emerald:   color-mix(in oklab, var(--p-prism-emerald) 24%, transparent);
+
+  /* ── Type ramp ─────────────────────────────────────────────────────── */
+  --p-text-0:         9px;     /* axis labels, ticks only */
+  --p-text-1:         11px;    /* metadata, timestamps */
+  --p-text-2:         13px;    /* body, gene values */
+  --p-text-3:         15px;    /* panel content */
+  --p-text-4:         18px;    /* section headings */
+  --p-text-5:         22px;    /* mode + panel titles */
+  --p-text-6:         28px;    /* first-screen titles */
+  --p-text-7:         40px;    /* empty-state magic */
+  --p-text-8:         64px;    /* wordmark on first paint */
+
+  /* ── Spacing ───────────────────────────────────────────────────────── */
+  --p-space-1:        4px;
+  --p-space-2:        8px;
+  --p-space-3:        12px;
+  --p-space-4:        16px;
+  --p-space-5:        24px;
+  --p-space-6:        32px;
+  --p-space-7:        48px;
+  --p-space-8:        64px;
+
+  /* ── Type families ─────────────────────────────────────────────────── */
+  --p-font-display:   'Inter Tight', 'Söhne', system-ui, -apple-system, sans-serif;
+  --p-font-body:      'Inter', 'Söhne', system-ui, -apple-system, sans-serif;
+  --p-font-mono:      'JetBrains Mono', 'Berkeley Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* ── Geometry ──────────────────────────────────────────────────────── */
+  --p-radius-1:       4px;
+  --p-radius-2:       6px;
+  --p-radius-3:       8px;
+  --p-radius-4:       12px;
+  --p-radius-full:    9999px;
+
+  --p-border:         1px solid var(--p-ink-4);
+  --p-border-strong:  1px solid color-mix(in oklab, var(--p-ink-3) 60%, var(--p-ink-4));
+
+  /* ── Shell dimensions ──────────────────────────────────────────────── */
+  --p-topbar-h:       48px;
+  --p-ambient-h:      40px;
+  --p-leftrail-w:     280px;
+  --p-leftrail-w-c:   56px;     /* collapsed */
+  --p-agent-w:        400px;
+  --p-mode-strip-h:   36px;
+
+  /* ── Motion ────────────────────────────────────────────────────────── */
+  --p-ease:           cubic-bezier(0.32, 0.72, 0.34, 1);
+  --p-ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+  --p-pulse-period:   2s;
+  --p-breathe-period: 4s;
+
+  /* ── Domain palette — 40 deterministic hues ───────────────────────── */
+  /*  Generated so neighboring domains visually distinct, clustered by family. */
+  /*  Visual family (cool side) */
+  --p-domain-visual2d:    hsl(192, 76%, 56%);
+  --p-domain-sprite:      hsl(124, 56%, 52%);
+  --p-domain-typography:  hsl( 48, 64%, 60%);
+  --p-domain-shader:      hsl(296, 80%, 62%);
+  --p-domain-particle:    hsl(216, 72%, 60%);
+  --p-domain-procedural:  hsl(168, 62%, 54%);
+  --p-domain-architecture:hsl( 22, 56%, 56%);
+  --p-domain-fashion:     hsl(332, 62%, 60%);
+  --p-domain-vehicle:     hsl(202, 58%, 54%);
+  --p-domain-circuit:     hsl( 96, 56%, 52%);
+  /*  Kinetic + life */
+  --p-domain-music:       hsl(312, 64%, 58%);
+  --p-domain-audio:       hsl(284, 56%, 58%);
+  --p-domain-animation:   hsl(264, 64%, 62%);
+  --p-domain-choreography:hsl(348, 60%, 60%);
+  --p-domain-physics:     hsl( 12, 72%, 58%);
+  --p-domain-alife:       hsl( 90, 60%, 52%);
+  --p-domain-ecosystem:   hsl(146, 60%, 50%);
+  --p-domain-agent:       hsl(248, 70%, 64%);
+  --p-domain-robotics:    hsl(206, 56%, 56%);
+  /*  Narrative + structural */
+  --p-domain-character:   hsl(284, 72%, 56%);
+  --p-domain-narrative:   hsl( 36, 76%, 56%);
+  --p-domain-game:        hsl(348, 76%, 60%);
+  --p-domain-fullgame:    hsl(  4, 70%, 60%);
+  --p-domain-ui:          hsl(220, 60%, 60%);
+  --p-domain-food:        hsl( 28, 68%, 56%);
+  /*  Scientific */
+  --p-domain-molecule:    hsl(168, 64%, 50%);
+  --p-domain-quantum:     hsl(264, 84%, 64%);
+  --p-domain-field:       hsl( 28, 92%, 58%);
+  --p-domain-cosmology:   hsl(232, 78%, 62%);
+  --p-domain-geometry3d:  hsl(186, 60%, 56%);
+  /*  Digital products */
+  --p-domain-website:     hsl(208, 72%, 58%);
+  --p-domain-app:         hsl(176, 68%, 50%);
+  /*  World + spaces */
+  --p-domain-world:       hsl(146, 56%, 52%);
+  /*  Generic / fallback domain hue */
+  --p-domain-default:     hsl(258, 60%, 58%);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 1 — Shell scaffold (just base styles — Root.tsx owns layout)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] {
+  --p-active-seed-color: var(--p-domain-default);
+
+  height: 100vh;
+  width: 100vw;
+  background: var(--p-void);
+  color: var(--p-ink-1);
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-2);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  position: relative;
+}
+
+[data-paradigm-shell="paradigm-os"] *,
+[data-paradigm-shell="paradigm-os"] *::before,
+[data-paradigm-shell="paradigm-os"] *::after {
+  box-sizing: border-box;
+}
+
+[data-paradigm-shell="paradigm-os"] ::selection {
+  background: color-mix(in oklab, var(--p-prism-violet) 38%, transparent);
+  color: var(--p-ink-0);
+}
+
+/* Scrollbars — quiet, present only on hover */
+[data-paradigm-shell="paradigm-os"] *::-webkit-scrollbar { width: 8px; height: 8px; }
+[data-paradigm-shell="paradigm-os"] *::-webkit-scrollbar-track { background: transparent; }
+[data-paradigm-shell="paradigm-os"] *::-webkit-scrollbar-thumb {
+  background: var(--p-ink-4);
+  border-radius: var(--p-radius-full);
+}
+[data-paradigm-shell="paradigm-os"] *:hover::-webkit-scrollbar-thumb { background: var(--p-ink-3); }
+
+/* TopBar wrapper — flex shell, but the .p-topbar element handles its own internals */
+[data-paradigm-shell="paradigm-os"] .p-topbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--p-space-4);
+  padding: 0 var(--p-space-4);
+  height: var(--p-topbar-h);
+  flex-shrink: 0;
+  background: linear-gradient(180deg,
+              color-mix(in oklab, var(--p-deep) 92%, transparent),
+              color-mix(in oklab, var(--p-deep) 70%, transparent));
+  backdrop-filter: blur(12px);
+  border-bottom: var(--p-border);
+  position: relative;
+  z-index: 10;
+}
+
+/* LeftRail and Agent rails — column flex, fill their wrapper */
+[data-paradigm-shell="paradigm-os"] .p-leftrail,
+[data-paradigm-shell="paradigm-os"] .p-agent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail {
+  background: linear-gradient(180deg, var(--p-deep), var(--p-void));
+  border-right: var(--p-border);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent {
+  background: linear-gradient(180deg, var(--p-deep), var(--p-void));
+  border-left: var(--p-border);
+}
+
+/* Center stage — fill, vertical stack of mode-strip + mode-panel */
+[data-paradigm-shell="paradigm-os"] .p-center {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  background: transparent;
+  position: relative;
+  z-index: 5;
+}
+
+/* Ambient — fixed height row at the bottom */
+[data-paradigm-shell="paradigm-os"] .p-ambient {
+  display: flex;
+  align-items: center;
+  height: var(--p-ambient-h);
+  flex-shrink: 0;
+  background: var(--p-void);
+  border-top: var(--p-border);
+  padding: 0 var(--p-space-4);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  letter-spacing: 0.04em;
+  gap: var(--p-space-5);
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  z-index: 10;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 2 — Substrate field (canvas behind everything)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-substrate-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 3 — Top bar (48px)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-mark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  animation: p-kernel-pulse var(--p-pulse-period) ease-in-out infinite;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-wordmark {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-4);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--p-ink-0);
+  text-transform: uppercase;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-wordmark em {
+  font-style: normal;
+  color: var(--p-prism-violet);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  padding: var(--p-space-2) var(--p-space-3);
+  background: var(--p-surf-1);
+  border: var(--p-border);
+  border-radius: var(--p-radius-2);
+  max-width: 520px;
+  min-width: 0;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-strip[data-empty="true"] {
+  background: transparent;
+  border-style: dashed;
+  color: var(--p-ink-3);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-glyph {
+  flex-shrink: 0;
+  border-radius: var(--p-radius-1);
+  overflow: hidden;
+  background: var(--p-surf-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-name {
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-3);
+  font-weight: 500;
+  color: var(--p-ink-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-domain-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-1);
+  padding: 3px var(--p-space-2);
+  border-radius: var(--p-radius-full);
+  background: color-mix(in oklab, var(--p-active-seed-color) 18%, transparent);
+  color: var(--p-active-seed-color);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  border: 1px solid color-mix(in oklab, var(--p-active-seed-color) 30%, transparent);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-hash-tail {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  letter-spacing: 0.05em;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-action {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  padding: var(--p-space-2) var(--p-space-3);
+  background: transparent;
+  border: var(--p-border);
+  border-radius: var(--p-radius-2);
+  color: var(--p-ink-2);
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-2);
+  cursor: pointer;
+  transition: all 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-topbar-action:hover {
+  background: var(--p-surf-1);
+  color: var(--p-ink-1);
+  border-color: var(--p-ink-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-kbd {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  padding: 1px 4px;
+  background: var(--p-surf-2);
+  border: 1px solid var(--p-ink-4);
+  border-radius: var(--p-radius-1);
+  color: var(--p-ink-2);
+  letter-spacing: 0.04em;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-kernel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  padding: var(--p-space-2) var(--p-space-3);
+  background: color-mix(in oklab, var(--p-prism-cyan) 8%, var(--p-surf-1));
+  border: 1px solid color-mix(in oklab, var(--p-prism-cyan) 28%, var(--p-ink-4));
+  border-radius: var(--p-radius-2);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-prism-cyan);
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-kernel-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--p-prism-cyan);
+  border-radius: var(--p-radius-full);
+  box-shadow: 0 0 8px var(--p-prism-cyan);
+  animation: p-kernel-pulse var(--p-pulse-period) ease-in-out infinite;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-sov-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  padding: var(--p-space-2) var(--p-space-3);
+  background: var(--p-surf-1);
+  border: var(--p-border);
+  border-radius: var(--p-radius-2);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-2);
+  cursor: pointer;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-sov-badge[data-state="signed"] {
+  background: color-mix(in oklab, var(--p-prism-amber) 10%, var(--p-surf-1));
+  border-color: color-mix(in oklab, var(--p-prism-amber) 32%, var(--p-ink-4));
+  color: var(--p-prism-amber);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-sov-badge[data-state="anchored"] {
+  background: color-mix(in oklab, var(--p-prism-amber) 14%, var(--p-surf-1));
+  border-color: color-mix(in oklab, var(--p-prism-amber) 50%, var(--p-ink-4));
+  color: var(--p-prism-amber);
+  box-shadow: 0 0 12px color-mix(in oklab, var(--p-prism-amber) 22%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 4 — Left rail (280 expanded / 56 collapsed)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--p-space-3) var(--p-space-4);
+  border-bottom: var(--p-border);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-collapse {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  color: var(--p-ink-3);
+  cursor: pointer;
+  border-radius: var(--p-radius-1);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-collapse:hover {
+  background: var(--p-surf-1);
+  color: var(--p-ink-1);
+}
+
+/* — ACTIVE SEED pin section — */
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+  padding: var(--p-space-4);
+  border-bottom: var(--p-border);
+  background: linear-gradient(180deg,
+              color-mix(in oklab, var(--p-active-seed-color) 6%, transparent),
+              transparent);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin[data-empty="true"] {
+  background: transparent;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-section-label {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--p-ink-3);
+  text-transform: uppercase;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin-body {
+  display: flex;
+  gap: var(--p-space-3);
+  align-items: flex-start;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-glyph-frame {
+  flex-shrink: 0;
+  background: var(--p-surf-2);
+  border: 1px solid color-mix(in oklab, var(--p-active-seed-color) 30%, var(--p-ink-4));
+  border-radius: var(--p-radius-2);
+  padding: 4px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 12px color-mix(in oklab, var(--p-active-seed-color) 22%, transparent);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-glyph-frame[data-breathing="true"] {
+  animation: p-glyph-breathe var(--p-breathe-period) ease-in-out infinite;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-1);
+  min-width: 0;
+  flex: 1;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin-name {
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-3);
+  font-weight: 600;
+  color: var(--p-ink-0);
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-active-seed-pin-row {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  flex-wrap: wrap;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-contract-score {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  letter-spacing: 0.04em;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-contract-score[data-q="high"]   { color: var(--p-prism-emerald); }
+[data-paradigm-shell="paradigm-os"] .p-contract-score[data-q="medium"] { color: var(--p-prism-amber); }
+[data-paradigm-shell="paradigm-os"] .p-contract-score[data-q="low"]    { color: var(--p-prism-rose); }
+
+[data-paradigm-shell="paradigm-os"] .p-action-chips {
+  display: flex;
+  gap: var(--p-space-1);
+  flex-wrap: wrap;
+  padding-top: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-chip {
+  padding: 4px 10px;
+  background: var(--p-surf-1);
+  border: var(--p-border);
+  border-radius: var(--p-radius-1);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  font-weight: 500;
+  color: var(--p-ink-2);
+  cursor: pointer;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  transition: all 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-chip:hover {
+  background: color-mix(in oklab, var(--p-prism-violet) 12%, var(--p-surf-1));
+  border-color: color-mix(in oklab, var(--p-prism-violet) 40%, var(--p-ink-4));
+  color: var(--p-ink-0);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-chip[data-active="true"] {
+  background: color-mix(in oklab, var(--p-prism-violet) 22%, var(--p-surf-1));
+  border-color: var(--p-prism-violet);
+  color: var(--p-prism-violet-2);
+}
+
+/* — LIBRARY section — */
+[data-paradigm-shell="paradigm-os"] .p-leftrail-section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-bottom: var(--p-border);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-section[data-pane="library"] {
+  flex: 1;
+  min-height: 200px;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--p-space-3) var(--p-space-4);
+  cursor: pointer;
+  user-select: none;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-section-header:hover { background: var(--p-surf-1); }
+
+[data-paradigm-shell="paradigm-os"] .p-library-tabs {
+  display: flex;
+  gap: var(--p-space-1);
+  padding: 0 var(--p-space-4) var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-tab {
+  padding: 4px var(--p-space-2);
+  background: transparent;
+  border: none;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid transparent;
+  transition: all 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-tab:hover { color: var(--p-ink-1); }
+
+[data-paradigm-shell="paradigm-os"] .p-tab[data-active="true"] {
+  color: var(--p-prism-violet-2);
+  border-bottom-color: var(--p-prism-violet);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-library-search {
+  padding: 0 var(--p-space-4) var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-search-input {
+  width: 100%;
+  padding: var(--p-space-2) var(--p-space-3);
+  background: var(--p-surf-1);
+  border: var(--p-border);
+  border-radius: var(--p-radius-2);
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-2);
+  color: var(--p-ink-1);
+  outline: none;
+  transition: border-color 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-search-input:focus {
+  border-color: var(--p-prism-violet);
+  box-shadow: 0 0 0 1px var(--p-glow-violet);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-search-input::placeholder { color: var(--p-ink-3); }
+
+[data-paradigm-shell="paradigm-os"] .p-library-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 var(--p-space-2) var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  padding: var(--p-space-2) var(--p-space-2);
+  border-radius: var(--p-radius-2);
+  cursor: pointer;
+  transition: background 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card:hover { background: var(--p-surf-1); }
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card[data-active="true"] {
+  background: color-mix(in oklab, var(--p-prism-violet) 12%, var(--p-surf-1));
+}
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card-name {
+  font-size: var(--p-text-2);
+  font-weight: 500;
+  color: var(--p-ink-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-seed-card-sub {
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+  color: var(--p-ink-3);
+}
+
+/* — PRESENCE bottom-anchored — */
+[data-paradigm-shell="paradigm-os"] .p-presence {
+  flex-shrink: 0;
+  padding: var(--p-space-3) var(--p-space-4);
+  border-top: var(--p-border);
+  background: var(--p-void);
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-1);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-presence-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-presence-key {
+  color: var(--p-ink-3);
+  letter-spacing: 0.1em;
+}
+
+/* Collapsed left rail — icon column */
+[data-paradigm-shell="paradigm-os"][data-leftrail-collapsed="true"] .p-leftrail-expanded { display: none; }
+[data-paradigm-shell="paradigm-os"][data-leftrail-collapsed="false"] .p-leftrail-collapsed { display: none; }
+
+[data-paradigm-shell="paradigm-os"] .p-leftrail-collapsed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--p-space-2);
+  padding: var(--p-space-3) 0;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-icon-button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--p-radius-2);
+  background: transparent;
+  border: none;
+  color: var(--p-ink-3);
+  cursor: pointer;
+  transition: all 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-icon-button:hover {
+  background: var(--p-surf-1);
+  color: var(--p-ink-1);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-icon-button[data-active="true"] {
+  color: var(--p-prism-violet);
+  background: var(--p-surf-1);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 5 — Center stage + mode strip
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-mode-strip {
+  height: var(--p-mode-strip-h);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 var(--p-space-3);
+  border-bottom: var(--p-border);
+  background: color-mix(in oklab, var(--p-deep) 72%, transparent);
+  backdrop-filter: blur(8px);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-mode-strip::-webkit-scrollbar { display: none; }
+
+[data-paradigm-shell="paradigm-os"] .p-mode-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-2);
+  padding: 0 var(--p-space-3);
+  height: 100%;
+  background: transparent;
+  border: none;
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-2);
+  font-weight: 500;
+  color: var(--p-ink-2);
+  cursor: pointer;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  border-bottom: 2px solid transparent;
+  transition: all 140ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-mode-tab:hover {
+  color: var(--p-ink-0);
+  background: var(--p-surf-1);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-mode-tab[data-active="true"] {
+  color: var(--p-prism-violet-2);
+  border-bottom-color: var(--p-prism-violet);
+  background: color-mix(in oklab, var(--p-prism-violet) 8%, transparent);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-mode-tab-glyph {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-mode-tab[data-active="true"] .p-mode-tab-glyph { opacity: 1; }
+
+[data-paradigm-shell="paradigm-os"] .p-mode-panel {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  position: relative;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 6 — Agent right rail
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-agent-header {
+  height: 72px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--p-space-3);
+  padding: 0 var(--p-space-4);
+  border-bottom: var(--p-border);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-glyph {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--p-radius-full);
+  background:
+    radial-gradient(circle at 30% 30%,
+                    var(--p-prism-violet) 0%,
+                    var(--p-prism-violet-2) 38%,
+                    transparent 70%),
+    radial-gradient(circle at 70% 70%,
+                    var(--p-prism-cyan) 0%,
+                    transparent 50%);
+  box-shadow: 0 0 12px var(--p-glow-violet);
+  flex-shrink: 0;
+  animation: p-glyph-breathe var(--p-breathe-period) ease-in-out infinite;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-title {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-3);
+  font-weight: 600;
+  color: var(--p-ink-0);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-sub {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-tabs {
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: stretch;
+  border-bottom: var(--p-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-tabs::-webkit-scrollbar { display: none; }
+
+[data-paradigm-shell="paradigm-os"] .p-agent-tab {
+  flex: 1;
+  min-width: 60px;
+  padding: 0 var(--p-space-3);
+  background: transparent;
+  border: none;
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  font-weight: 500;
+  color: var(--p-ink-3);
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 120ms var(--p-ease);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-tab:hover { color: var(--p-ink-1); }
+[data-paradigm-shell="paradigm-os"] .p-agent-tab[data-active="true"] {
+  color: var(--p-prism-violet-2);
+  border-bottom-color: var(--p-prism-violet);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--p-space-4);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-agent-composer {
+  flex-shrink: 0;
+  border-top: var(--p-border);
+  background: var(--p-deep);
+  padding: var(--p-space-3) var(--p-space-4);
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 7 — Ambient strip (40px)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-ambient-seg {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-ambient-key {
+  color: var(--p-ink-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-ambient-val {
+  color: var(--p-ink-1);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-ambient-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--p-ink-4);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-ambient-seg[data-state="ok"] .p-ambient-val { color: var(--p-prism-emerald); }
+[data-paradigm-shell="paradigm-os"] .p-ambient-seg[data-state="warn"] .p-ambient-val { color: var(--p-prism-amber); }
+[data-paradigm-shell="paradigm-os"] .p-ambient-seg[data-state="err"] .p-ambient-val { color: var(--p-prism-rose); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 8 — Animations
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes p-kernel-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.72; transform: scale(0.96); }
+}
+
+@keyframes p-glyph-breathe {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.015); }
+}
+
+@keyframes p-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes p-cell-light {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes p-shimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+[data-paradigm-shell="paradigm-os"] .p-fade-up { animation: p-fade-up 320ms var(--p-ease-out) both; }
+
+/* Reduced motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  [data-paradigm-shell="paradigm-os"] *,
+  [data-paradigm-shell="paradigm-os"] *::before,
+  [data-paradigm-shell="paradigm-os"] *::after {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 9 — Empty state + mode panels (canonical interior templates)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] .p-empty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: var(--p-space-7);
+  text-align: center;
+  position: relative;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-empty-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--p-space-5);
+  max-width: 720px;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-empty-glyph {
+  width: 120px;
+  height: 120px;
+  animation: p-glyph-breathe var(--p-breathe-period) ease-in-out infinite;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-empty-title {
+  font-family: var(--p-font-display);
+  font-size: var(--p-text-7);
+  font-weight: 600;
+  color: var(--p-ink-0);
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-empty-sub {
+  font-size: var(--p-text-3);
+  color: var(--p-ink-2);
+  line-height: 1.5;
+  max-width: 580px;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-empty-prompts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--p-space-3);
+  width: 100%;
+  max-width: 720px;
+  margin-top: var(--p-space-3);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-prompt-card {
+  text-align: left;
+  padding: var(--p-space-4);
+  background: var(--p-surf-1);
+  border: var(--p-border);
+  border-radius: var(--p-radius-3);
+  font-family: var(--p-font-body);
+  font-size: var(--p-text-2);
+  color: var(--p-ink-1);
+  cursor: pointer;
+  transition: all 160ms var(--p-ease);
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-prompt-card:hover {
+  background: color-mix(in oklab, var(--p-prism-violet) 8%, var(--p-surf-1));
+  border-color: color-mix(in oklab, var(--p-prism-violet) 40%, var(--p-ink-4));
+  transform: translateY(-1px);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-prompt-card-domain {
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-prompt-card-text {
+  font-size: var(--p-text-3);
+  color: var(--p-ink-0);
+  line-height: 1.3;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+ * Layer 10 — Backward-compat aliases (so old components still render
+ * something sensible while migration is in progress)
+ * ════════════════════════════════════════════════════════════════════════════ */
+
+[data-paradigm-shell="paradigm-os"] {
+  --r-void:               var(--p-void);
+  --r-deep:               var(--p-deep);
+  --r-mid:                var(--p-mid);
+  --r-ink-4:              var(--p-ink-4);
+  --r-ink-3:              var(--p-ink-3);
+  --r-ink-2:              var(--p-ink-2);
+  --r-ink-1:              var(--p-ink-1);
+  --r-ink-0:              var(--p-ink-0);
+  --r-prism-core:         var(--p-prism-violet);
+  --r-prism-resonant:     var(--p-prism-violet-2);
+  --r-prism-grad-a:       var(--p-prism-cyan);
+  --r-prism-grad-b:       var(--p-prism-violet);
+  --r-prism-warm:         var(--p-prism-amber);
+  --r-prism-cool:         var(--p-prism-cyan);
+  --r-text-1:             var(--p-text-1);
+  --r-text-2:             var(--p-text-2);
+  --r-text-3:             var(--p-text-3);
+  --r-text-4:             var(--p-text-4);
+  --r-text-5:             var(--p-text-5);
+  --r-px-2:               var(--p-space-1);
+  --r-px-3:               var(--p-space-2);
+  --r-px-4:               var(--p-space-3);
+  --r-px-5:               var(--p-space-4);
+  --r-px-6:               var(--p-space-5);
+  --r-px-7:               var(--p-space-6);
+}
+
+/* ──────────────────────────────────────────────────────────────────────── */
+/* End paradigm-os.css                                                     */
+/* ──────────────────────────────────────────────────────────────────────── */

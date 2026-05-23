@@ -1,120 +1,95 @@
 /**
  * EmptyState — the substrate before creation.
- * First thing users see. Must communicate: "this is a new kind of thing."
+ *
+ * First thing users see. Must communicate, in 30 seconds:
+ *  1. This is where you make digital things from typed seeds.
+ *  2. Every thing has a unique visual identity.
+ *  3. The substrate is alive.
+ *
+ * Per `06_Frontend_Redesign_And_Completion_Spec.md` §V.1 (Crucible empty state)
+ * and §IX (identity acceptance criteria).
  */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 
 interface EmptyStateProps {
   suggestions: string[];
   onPick: (text: string) => void;
 }
 
-const GENESIS_PROMPTS = [
-  { domain: 'world',     text: 'A ancient archipelago world with six warring factions' },
-  { domain: 'music',     text: 'A generative jazz composition in D minor, 143 BPM' },
-  { domain: 'visual2d',  text: 'A luminous geometric mandala in deep violet and gold' },
-  { domain: 'molecule',  text: 'Caffeine: C8H10N4O2, optimized geometry' },
-  { domain: 'quantum',   text: 'A double-well potential wavefunction, delocalized state' },
+interface Prompt {
+  domain: string;
+  text: string;
+}
+
+const GENESIS_PROMPTS: Prompt[] = [
+  { domain: 'character', text: 'A melancholy ocean character at twilight' },
+  { domain: 'world',     text: 'A volcanic archipelago with six warring factions' },
+  { domain: 'music',     text: 'Generative jazz composition in D minor, 143 BPM' },
+  { domain: 'visual2d',  text: 'Luminous geometric mandala in deep violet and gold' },
+  { domain: 'molecule',  text: 'Caffeine (C8H10N4O2) at optimized geometry' },
+  { domain: 'quantum',   text: 'Double-well potential wavefunction, delocalized state' },
   { domain: 'website',   text: 'A brutalist portfolio site for a digital sculptor' },
-  { domain: 'game',      text: 'A roguelike dungeon with procedural karma mechanics' },
-  { domain: 'cosmology', text: 'A spiral galaxy collision, 200 bodies, Barnes-Hut' },
+  { domain: 'cosmology', text: 'Spiral galaxy collision, 200 bodies, Barnes-Hut' },
 ];
 
-// Animated diamond glyph — the Paradigm mark in its latent state
-const LatentMark: React.FC = () => (
-  <svg width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="mark-grd" cx="50%" cy="50%" r="50%">
-        <stop offset="0%"   stopColor="#7C3AED" stopOpacity="0.9"/>
-        <stop offset="100%" stopColor="#4F46E5" stopOpacity="0.3"/>
-      </radialGradient>
-    </defs>
-    {/* Outer ring */}
-    <path
-      d="M36 4L68 36L36 68L4 36Z"
-      stroke="#7C3AED"
-      strokeWidth="1"
-      fill="none"
-      strokeDasharray="4 4"
-      style={{ animation: 'r-spin-slow 20s linear infinite' }}
-    />
-    {/* Mid diamond */}
-    <path d="M36 16L56 36L36 56L16 36Z" stroke="#7C3AED" strokeWidth="1" fill="none" opacity="0.5"/>
-    {/* Core */}
-    <path d="M36 24L48 36L36 48L24 36Z" fill="url(#mark-grd)"/>
-    {/* Center void */}
-    <circle cx="36" cy="36" r="5" fill="#030306"/>
-    {/* Crosshairs */}
-    <line x1="36" y1="2" x2="36" y2="70" stroke="#7C3AED" strokeWidth="0.5" opacity="0.15"/>
-    <line x1="2" y1="36" x2="70" y2="36" stroke="#7C3AED" strokeWidth="0.5" opacity="0.15"/>
-  </svg>
-);
-
 export const EmptyState: React.FC<EmptyStateProps> = ({ suggestions, onPick }) => {
-  const [tick, setTick] = useState(0);
-
-  // Cycle the hint text
-  useEffect(() => {
-    const id = setInterval(() => setTick(t => t + 1), 3000);
-    return () => clearInterval(id);
-  }, []);
-
-  const prompts = suggestions.length > 0
-    ? suggestions.map(t => ({ domain: 'seed', text: t }))
-    : GENESIS_PROMPTS;
+  const prompts: Prompt[] =
+    suggestions.length > 0
+      ? suggestions.map((t) => ({ domain: 'seed', text: t }))
+      : GENESIS_PROMPTS;
 
   return (
-    <div
-      className="r-empty"
-      style={{
-        position: 'absolute', inset: 0,
-        background:
-          'radial-gradient(ellipse 70% 50% at 50% 40%, rgba(124,58,237,0.07) 0%, transparent 70%)',
-      }}
-    >
-      {/* Mark */}
-      <div className="r-empty-glyph r-animate-scale-in">
-        <style>{`
-          @keyframes r-spin-slow { to { transform: rotate(360deg); transform-origin: center; } }
-        `}</style>
-        <LatentMark />
-      </div>
+    <div className="p-empty">
+      <div className="p-empty-inner p-fade-up">
+        {/* Mark — the latent glyph of the substrate */}
+        <SeedGlyph
+          hash="paradigm:genesis"
+          domain="character"
+          size={120}
+          breathing
+          className="p-empty-glyph"
+        />
 
-      {/* Title */}
-      <div style={{ textAlign: 'center', display: 'grid', gap: 10 }} className="r-animate-fade-up">
-        <h1 className="r-empty-title">
-          The generative substrate<br/>awaits your first seed.
+        <h1 className="p-empty-title">
+          The substrate awaits<br />your first seed.
         </h1>
-        <p className="r-empty-sub">
+
+        <p className="p-empty-sub">
           Speak a creation into existence. Describe a world, a molecule, a website,
           a piece of music — anything digital. GSPL grows it deterministically from
           a single sovereign seed.
         </p>
-      </div>
 
-      {/* Prompt grid */}
-      <div className="r-prompt-grid r-animate-fade-up" style={{ animationDelay: '100ms' }}>
-        {prompts.slice(0, 8).map((p, i) => (
-          <button
-            key={i}
-            className="r-prompt-card"
-            onClick={() => onPick(p.text)}
-            style={{ animationDelay: `${i * 40}ms` }}
-          >
-            <div className="r-prompt-domain">{p.domain}</div>
-            <div className="r-prompt-text">{p.text}</div>
-          </button>
-        ))}
-      </div>
+        <div className="p-empty-prompts">
+          {prompts.slice(0, 8).map((p, i) => (
+            <button
+              key={i}
+              className="p-prompt-card"
+              onClick={() => onPick(p.text)}
+              type="button"
+            >
+              <span className="p-prompt-card-domain">{p.domain}</span>
+              <span className="p-prompt-card-text">{p.text}</span>
+            </button>
+          ))}
+        </div>
 
-      {/* Hint */}
-      <div style={{
-        fontFamily: 'var(--r-font-mono)', fontSize: 10,
-        color: 'var(--r-ink-4)', letterSpacing: '0.1em',
-        textAlign: 'center',
-      }}>
-        keys 1–{Math.min(9, prompts.length + 1)} switch modes · /grow · /mutate · /breed · /compose
+        <div
+          style={{
+            fontFamily: 'var(--p-font-mono)',
+            fontSize: 'var(--p-text-1)',
+            color: 'var(--p-ink-3)',
+            letterSpacing: '0.08em',
+            textAlign: 'center',
+            marginTop: 'var(--p-space-3)',
+          }}
+        >
+          keys 1–{Math.min(9, prompts.length + 1)} switch modes · /grow · /mutate · /breed · /compose
+        </div>
       </div>
     </div>
   );
 };
+
+export default EmptyState;

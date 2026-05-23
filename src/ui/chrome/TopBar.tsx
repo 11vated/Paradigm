@@ -1,101 +1,118 @@
-import React from 'react';
+/**
+ * TopBar — 48px identity strip.
+ *
+ *   [WORDMARK]    [ACTIVE SEED STRIP]    [search] [kernel] [sovereignty] [domains]
+ *
+ * Per `06_Frontend_Redesign_And_Completion_Spec.md` §IV.1.
+ */
+import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
-import { useMode, MODE_LABEL } from '@/stores/modeStore';
-import { KernelGauge } from './KernelGauge';
+import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
+import { domainColor } from '@/hooks/useDomainColor';
 
-interface TopBarProps { onCosmos?: () => void; }
+export interface TopBarProps {
+  onCosmos?: () => void;
+}
 
-const ParadigmMark: React.FC = () => (
-  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-    {/* Outer diamond */}
-    <path d="M11 1L21 11L11 21L1 11Z" stroke="currentColor" strokeWidth="1" fill="none" opacity="0.3"/>
-    {/* Inner diamond — filled */}
-    <path d="M11 5L17 11L11 17L5 11Z" fill="currentColor" opacity="0.9"/>
-    {/* Core dot */}
-    <circle cx="11" cy="11" r="2" fill="var(--r-void)" />
-  </svg>
-);
-
-const DOMAIN_COLORS: Record<string, string> = {
-  character: '#A78BFA', music: '#34D399', visual2d: '#F59E0B', world: '#10B981',
-  molecule: '#60A5FA', quantum: '#818CF8', field: '#06B6D4', cosmology: '#7C3AED',
-  website: '#F97316', app: '#EC4899', game: '#EAB308', narrative: '#A3E635',
-  sprite: '#FB923C', agent: '#38BDF8',
-};
+function shortHash(h: string | undefined): string {
+  if (!h) return '';
+  return h.length > 12 ? `${h.slice(0, 4)}…${h.slice(-4)}` : h;
+}
 
 export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
-  const seed  = useActiveSeed((s) => s.seed);
-  const { mode } = useMode();
-  const domainColor = seed?.domain ? (DOMAIN_COLORS[seed.domain] ?? '#6366F1') : null;
+  const { seed } = useActiveSeed();
+  const [kernelTick, setKernelTick] = useState(0);
+
+  // Tick the kernel-state counter on a 2s heartbeat. Visual only — the real
+  // RNG advance is driven by grow operations, not by this counter.
+  useEffect(() => {
+    const id = setInterval(() => setKernelTick((t) => t + 1), 2000);
+    return () => clearInterval(id);
+  }, []);
+
+  const sovState =
+    seed?.signature === 'verified' || seed?.signature === 'signed'
+      ? seed?.anchor === 'minted'
+        ? 'anchored'
+        : 'signed'
+      : 'unsigned';
+
+  const domainHue = domainColor(seed?.domain);
 
   return (
-    <header role="banner" className="r-topbar">
-      {/* ── Wordmark ─────────────────────────────────────────────────────── */}
-      <div className="r-topbar-wordmark" style={{ color: 'var(--r-prism-core)' }}>
-        <div className="r-topbar-mark">
-          <ParadigmMark />
-        </div>
-        <span className="r-topbar-name">Paradigm</span>
-      </div>
-
-      {/* ── Breadcrumb ───────────────────────────────────────────────────── */}
-      <div className="r-topbar-breadcrumb">
-        <span className="r-sep">/</span>
-        <span className="r-active" style={{ color: 'var(--r-ink-0)' }}>
-          {MODE_LABEL[mode]}
+    <header
+      className="p-topbar"
+      style={{ ['--p-active-seed-color' as never]: domainHue }}
+    >
+      {/* Left: wordmark */}
+      <a className="p-topbar-brand" href="#" aria-label="Paradigm home">
+        <span className="p-topbar-mark">
+          <SeedGlyph hash="paradigm:wordmark" domain="character" size={28} />
         </span>
-        {seed && (
-          <>
-            <span className="r-sep">/</span>
-            <span
-              style={{
-                color: domainColor ?? 'var(--r-ink-2)',
-                fontWeight: 700,
-                letterSpacing: '0.06em',
-                fontSize: 10,
-              }}
-            >
-              {seed.domain}
+        <span className="p-topbar-wordmark">
+          PARA<em>DIGM</em>
+        </span>
+      </a>
+
+      {/* Center: active seed strip */}
+      <div className="p-topbar-center">
+        {seed ? (
+          <div className="p-active-seed-strip" title={`Active seed · ${seed.hash}`}>
+            <span className="p-active-seed-glyph">
+              <SeedGlyph hash={seed.hash} domain={seed.domain} size={20} />
             </span>
-            <span className="r-sep">·</span>
-            <span style={{ color: 'var(--r-ink-3)', fontSize: 10 }}>
-              {seed.name?.length > 28 ? seed.name.slice(0, 28) + '…' : seed.name}
-            </span>
-          </>
+            <span className="p-active-seed-name">{seed.name}</span>
+            <span className="p-domain-pill">{seed.domain}</span>
+            <span className="p-hash-tail">{shortHash(seed.hash)}</span>
+            {typeof seed.generation === 'number' && (
+              <span className="p-hash-tail">· gen {seed.generation}</span>
+            )}
+          </div>
+        ) : (
+          <div className="p-active-seed-strip" data-empty="true">
+            <span>// no seed</span>
+            <span className="p-kbd">N</span>
+            <span>new</span>
+          </div>
         )}
       </div>
 
-      {/* ── Center — kernel status ───────────────────────────────────────── */}
-      <div className="r-topbar-center">
-        <KernelGauge />
-      </div>
-
-      {/* ── Actions ──────────────────────────────────────────────────────── */}
-      <div className="r-topbar-actions">
-        <button
-          type="button"
-          className="r-btn"
-          data-tone="primary"
-          onClick={onCosmos}
-          title="Domain Cosmos (⌘ Space)"
-          style={{ height: 28, padding: '0 12px', fontSize: 11 }}
-        >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-            <path d="M5 0L6.18 3.82L10 5L6.18 6.18L5 10L3.82 6.18L0 5L3.82 3.82Z"/>
-          </svg>
-          Cosmos
+      {/* Right: search + kernel + sovereignty + domain count */}
+      <div className="p-topbar-right">
+        <button className="p-topbar-action" aria-label="Open command palette">
+          <span>search</span>
+          <span className="p-kbd">⌘K</span>
         </button>
-        <div
-          className="r-chip"
-          style={{
-            background: 'rgba(16,185,129,0.08)',
-            borderColor: 'rgba(16,185,129,0.2)',
-            color: 'var(--r-ok)',
-          }}
+
+        <button
+          className="p-kernel-badge"
+          title="Click for kernel inspector"
+          aria-label={`Kernel state, tick ${kernelTick}`}
         >
-          ● deterministic
-        </div>
+          <span className="p-kernel-dot" />
+          <span>xoshiro256** · t{kernelTick.toString(36)}</span>
+        </button>
+
+        <button
+          className="p-sov-badge"
+          data-state={sovState}
+          title={`Sovereignty: ${sovState}`}
+        >
+          {sovState === 'anchored' && '⛓ '}
+          {sovState === 'signed' && '✓ '}
+          {sovState}
+        </button>
+
+        <button
+          className="p-topbar-action"
+          title="Composition Atlas — 40 domains, 259 bridges"
+          onClick={onCosmos}
+        >
+          <span>40 domains</span>
+        </button>
       </div>
     </header>
   );
 };
+
+export default TopBar;

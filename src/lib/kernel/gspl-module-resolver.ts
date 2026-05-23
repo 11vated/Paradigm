@@ -13,25 +13,20 @@
  * Import syntax (GSPL):
  *   import "std/geometry"
  *   import "std/music"
- *   import "biology"
- *   import "chemistry"
- *   import "./my-module"
- *   import "/absolute/path/to/module.gspl"
  */
-
-import * as fs   from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 
-// ESM-safe __dirname polyfill
-const __dirname = (() => {
+// ESM-safe __dirname — works in Node/Bun; graceful fallback in browser
+const _getDirname = (): string => {
   try {
-    return path.dirname(fileURLToPath(import.meta.url));
-  } catch {
-    // CommonJS / Bun context where __dirname is already defined globally
-    return typeof __dirname !== 'undefined' ? __dirname : process.cwd();
-  }
-})();
+    if (typeof process !== 'undefined' && process.cwd) {
+      return path.join(process.cwd(), 'src/lib/kernel');
+    }
+  } catch { /* browser */ }
+  return '';
+};
+const __dirname = _getDirname();
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

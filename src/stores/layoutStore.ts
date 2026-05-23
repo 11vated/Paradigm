@@ -21,8 +21,8 @@ interface LayoutShape {
 const DEFAULTS: LayoutShape = {
   leftPct: 18,
   agentPct: 28,
-  /** Magic-first: left rail collapsed until user expands (cmd+\). */
-  focusMode: 'calm',
+  /** Default to full chrome — power users can collapse via ⌘\\. */
+  focusMode: 'normal',
   reducedMotion: false,
 };
 

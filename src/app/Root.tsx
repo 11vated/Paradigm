@@ -2,7 +2,7 @@
  * Root — Reality OS three-pane studio (magic-first).
  */
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
-import '@/styles/reality-os.css';
+import '@/styles/paradigm-os.css';
 
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useSeedTheme, themeToCssVars } from '@/hooks/useSeedTheme';
@@ -90,7 +90,7 @@ export const Root: React.FC = () => {
 
   return (
     <div
-      data-paradigm-shell="reality-os"
+      data-paradigm-shell="paradigm-os"
       style={{
         ...cssVars,
         position: 'fixed',

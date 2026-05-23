@@ -1,410 +1,373 @@
-import React, { useState, useEffect, useCallback } from 'react';
+/**
+ * LeftRail — 280px expanded · 56px collapsed.
+ *
+ *  Sections (top → bottom):
+ *    [ACTIVE SEED]   pinned, 5 quick-action chips
+ *    [LIBRARY]       mine | curated | lineage tabs + search + scroll list
+ *    [THREADS]       agent threads (collapsible)
+ *    [PRESENCE]      sovereignty key + connection state + tick counter
+ *
+ * Per `06_Frontend_Redesign_And_Completion_Spec.md` §IV.2.
+ */
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import { useActiveSeed, type ActiveSeed } from '@/stores/activeSeed';
 import { useAgentThreads } from '@/stores/agentThreads';
-import { useMode, MODES, MODE_LABEL, MODE_HINT, type Mode } from '@/stores/modeStore';
-import { useActiveSeed } from '@/stores/activeSeed';
-import { kernelSeedToActive } from '@/lib/ui/seedBridge';
-import { listSeeds } from '@/services/api';
+import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
+import { domainColor } from '@/hooks/useDomainColor';
 
-/* ── Domain color registry ──────────────────────────────────────────────── */
-const DOMAIN_COLORS: Record<string, string> = {
-  character: '#A78BFA', music: '#34D399', visual2d: '#F59E0B',
-  world: '#10B981', molecule: '#60A5FA', quantum: '#818CF8',
-  field: '#06B6D4', cosmology: '#7C3AED', website: '#F97316',
-  app: '#EC4899', game: '#EAB308', narrative: '#A3E635',
-  sprite: '#FB923C', agent: '#38BDF8', physics: '#F472B6',
-  geometry3d: '#C084FC', audio: '#4ADE80', alife: '#FB923C',
-};
+type LibraryTab = 'mine' | 'curated' | 'lineage';
 
-const domainColor = (d?: string) => d ? (DOMAIN_COLORS[d] ?? '#6366F1') : '#6366F1';
-
-/* ── Hash → seed glyph (deterministic 2-char) ───────────────────────────── */
-const GLYPH_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
-function hashGlyph(hash: string): string {
-  if (!hash || hash.length < 4) return '??';
-  const a = parseInt(hash.slice(0, 2), 16) % GLYPH_CHARS.length;
-  const b = parseInt(hash.slice(2, 4), 16) % GLYPH_CHARS.length;
-  return GLYPH_CHARS[a] + GLYPH_CHARS[b];
+interface LibrarySeed {
+  id: string;
+  name: string;
+  domain: string;
+  hash: string;
+  age?: string;
 }
 
-/* ── Seed Glyph Card ─────────────────────────────────────────────────────── */
-const SeedGlyphIcon: React.FC<{ hash: string; domain?: string; size?: number }> = ({
-  hash, domain, size = 32,
-}) => {
-  const color = domainColor(domain);
-  const glyph = hashGlyph(hash);
-  const hx = parseInt(hash.slice(0, 8), 16) || 0;
-  const angle = (hx % 360);
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: 4,
-        background: `linear-gradient(${angle}deg, ${color}22, ${color}44)`,
-        border: `1px solid ${color}55`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-        fontFamily: 'var(--r-font-mono)',
-        fontWeight: 700,
-        fontSize: size * 0.34,
-        color,
-        letterSpacing: '0.02em',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* subtle diagonal stripe */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: `repeating-linear-gradient(${angle + 45}deg, transparent 0, transparent 4px, ${color}08 4px, ${color}08 5px)`,
-      }}/>
-      <span style={{ position: 'relative', zIndex: 1 }}>{glyph}</span>
-    </div>
-  );
-};
+const SECTION_LIBRARY = 'LIBRARY';
+const SECTION_THREADS = 'THREADS';
 
-/* ── Collapsible Section ─────────────────────────────────────────────────── */
-const Section: React.FC<{
-  label: string;
-  children: React.ReactNode;
-  action?: React.ReactNode;
-  defaultOpen?: boolean;
-}> = ({ label, children, action, defaultOpen = true }) => {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <section className="r-rail-section">
-      <div
-        className="r-rail-section-header"
-        onClick={() => setOpen(o => !o)}
-        style={{ gap: 8 }}
-      >
-        <span className="r-rail-section-label">{label}</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginLeft: 'auto' }}>
-          {action && <div onClick={e => e.stopPropagation()}>{action}</div>}
-          <span style={{ fontFamily: 'var(--r-font-mono)', fontSize: 9, color: 'var(--r-ink-4)', userSelect: 'none' }}>
-            {open ? '−' : '+'}
-          </span>
-        </div>
-      </div>
-      {open && (
-        <div className="r-rail-section-body">
-          {children}
-        </div>
-      )}
-    </section>
-  );
-};
+function qualityBucket(score?: number): 'high' | 'medium' | 'low' | undefined {
+  if (typeof score !== 'number') return undefined;
+  if (score >= 0.85) return 'high';
+  if (score >= 0.6)  return 'medium';
+  return 'low';
+}
 
-/* ── Mode icon glyphs ────────────────────────────────────────────────────── */
-const MODE_GLYPHS: Record<string, string> = {
-  crucible:    '◈', atelier:    '⬡', anatomy:  '⬟',
-  resonance:   '≋', lineage:    '⊕', codex:    '⊞',
-  topology:    '⧉', evolution:  '⟳', substrate:'⊛', sovereignty: '◆',
-};
+function shortHash(h: string | undefined): string {
+  if (!h) return '';
+  return h.length > 12 ? `${h.slice(0, 6)}…${h.slice(-4)}` : h;
+}
 
-interface LeftRailProps { onCosmos?: () => void; }
+export const LeftRail: React.FC<{
+  collapsed?: boolean;
+  onToggleCollapse?: () => void;
+  onCosmos?: () => void;
+}> = ({ collapsed = false, onToggleCollapse, onCosmos: _onCosmos }) => {
+  const { seed, setSeed } = useActiveSeed();
+  const { threads, currentThreadId, newThread } = useAgentThreads();
 
-export const LeftRail: React.FC<LeftRailProps> = ({ onCosmos }) => {
-  const { threads, currentThreadId, setCurrent, newThread } = useAgentThreads();
-  const { mode, setMode } = useMode();
-  const seed    = useActiveSeed(s => s.seed);
-  const setSeed = useActiveSeed(s => s.setSeed);
-  const [library, setLibrary]   = useState<Array<Record<string, unknown>>>([]);
-  const [libSearch, setLibSearch] = useState('');
+  const [libTab, setLibTab] = useState<LibraryTab>('curated');
+  const [librarySearch, setLibrarySearch] = useState('');
+  const [librarySeeds, setLibrarySeeds] = useState<LibrarySeed[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(false);
+  const [threadsOpen, setThreadsOpen] = useState(true);
 
+  // Load library seeds for the active tab.
   useEffect(() => {
-    listSeeds()
-      .then(list => setLibrary(Array.isArray(list) ? list : []))
-      .catch(() => setLibrary([]));
-  }, [seed?.id]);
+    let cancelled = false;
+    setLibraryLoading(true);
+    const url =
+      libTab === 'curated'
+        ? '/api/seeds?source=curated&limit=200'
+        : libTab === 'mine'
+        ? '/api/seeds?source=mine&limit=200'
+        : `/api/seeds/${seed?.id ?? ''}/lineage`;
+    if (libTab === 'lineage' && !seed?.id) {
+      setLibrarySeeds([]);
+      setLibraryLoading(false);
+      return;
+    }
+    fetch(url, { headers: { accept: 'application/json' } })
+      .then((r) => (r.ok ? r.json() : { seeds: [] }))
+      .then((j) => {
+        if (cancelled) return;
+        const seeds: LibrarySeed[] = (j.seeds ?? j ?? []).map((s: any) => ({
+          id:     s.id ?? s.hash ?? s.$hash ?? '',
+          name:   s.name ?? s.id ?? 'untitled',
+          domain: s.domain ?? s.$domain ?? 'default',
+          hash:   s.hash ?? s.$hash ?? '',
+          age:    s.age,
+        }));
+        setLibrarySeeds(seeds);
+      })
+      .catch(() => {
+        if (!cancelled) setLibrarySeeds([]);
+      })
+      .finally(() => {
+        if (!cancelled) setLibraryLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [libTab, seed?.id]);
 
-  const filteredLib = library.filter(s => {
-    const q = libSearch.trim().toLowerCase();
-    if (!q) return true;
-    const name   = String((s as any).name   ?? '');
-    const domain = String((s as any).domain ?? '');
-    const hash   = String((s as any).hash ?? (s as any).$hash ?? '');
-    return name.toLowerCase().includes(q) || domain.includes(q) || hash.includes(q);
-  });
+  const filtered = useMemo(() => {
+    const q = librarySearch.trim().toLowerCase();
+    if (!q) return librarySeeds;
+    return librarySeeds.filter(
+      (s) =>
+        s.name.toLowerCase().includes(q) ||
+        s.domain.toLowerCase().includes(q) ||
+        s.hash.toLowerCase().includes(q),
+    );
+  }, [librarySeeds, librarySearch]);
 
+  const loadSeed = useCallback(
+    (s: LibrarySeed) => {
+      setSeed({
+        id: s.id,
+        name: s.name,
+        domain: s.domain,
+        hash: s.hash,
+      } as ActiveSeed);
+    },
+    [setSeed],
+  );
+
+  const activeHue = domainColor(seed?.domain);
+
+  /* ─── Collapsed render ─────────────────────────────────────────── */
+  if (collapsed) {
+    return (
+      <aside className="p-leftrail" data-collapsed="true">
+        <div className="p-leftrail-collapsed">
+          <button
+            className="p-icon-button"
+            onClick={onToggleCollapse}
+            title="Expand rail"
+            aria-label="Expand left rail"
+          >
+            ▸
+          </button>
+          {seed && (
+            <button
+              className="p-icon-button"
+              data-active="true"
+              title={`Active: ${seed.name}`}
+              style={{ color: activeHue }}
+            >
+              <SeedGlyph
+                hash={seed.hash}
+                domain={seed.domain}
+                size={20}
+              />
+            </button>
+          )}
+          <button className="p-icon-button" title="Library">⌬</button>
+          <button className="p-icon-button" title="Threads">≡</button>
+          <button className="p-icon-button" title="Presence">◉</button>
+        </div>
+      </aside>
+    );
+  }
+
+  /* ─── Expanded render ──────────────────────────────────────────── */
   return (
-    <aside className="r-rail">
-
-      {/* ── Active Seed Hero ─────────────────────────────────────────────── */}
-      {seed ? (
-        <div style={{
-          padding: '14px 14px 12px',
-          borderBottom: '1px solid var(--r-ink-5)',
-          background: `linear-gradient(135deg, ${domainColor(seed.domain)}0A 0%, transparent 60%)`,
-          flexShrink: 0,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <SeedGlyphIcon hash={seed.hash} domain={seed.domain} size={40} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{
-                fontFamily: 'var(--r-font-display)',
-                fontWeight: 600, fontSize: 13,
-                color: 'var(--r-ink-0)',
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                marginBottom: 3,
-              }}>
-                {seed.name}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{
-                  fontFamily: 'var(--r-font-mono)', fontSize: 9, fontWeight: 700,
-                  letterSpacing: '0.12em', textTransform: 'uppercase',
-                  color: domainColor(seed.domain),
-                }}>
-                  {seed.domain}
-                </span>
-                <span style={{ color: 'var(--r-ink-4)', fontSize: 9 }}>·</span>
-                <span style={{ fontFamily: 'var(--r-font-mono)', fontSize: 9, color: 'var(--r-ink-3)' }}>
-                  gen {seed.generation ?? 0}
-                </span>
-                {seed.signature === 'verified' && (
-                  <span style={{
-                    fontFamily: 'var(--r-font-mono)', fontSize: 8, color: 'var(--r-ok)',
-                    background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)',
-                    borderRadius: 99, padding: '0 5px',
-                  }}>✓ signed</span>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Hash strip */}
-          <div style={{
-            marginTop: 10,
-            fontFamily: 'var(--r-font-mono)', fontSize: 8,
-            color: 'var(--r-ink-4)', letterSpacing: '0.08em',
-            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-          }}>
-            {seed.hash.slice(0, 32)}…
-          </div>
+    <aside
+      className="p-leftrail"
+      style={{ ['--p-active-seed-color' as never]: activeHue }}
+    >
+      <div className="p-leftrail-expanded" style={{ display: 'contents' }}>
+        {/* ── Header (only collapse button) ── */}
+        <div className="p-leftrail-header">
+          <span className="p-section-label">studio</span>
+          <button
+            className="p-leftrail-collapse"
+            onClick={onToggleCollapse}
+            title="Collapse rail"
+            aria-label="Collapse left rail"
+          >
+            ◂
+          </button>
         </div>
-      ) : (
-        <div style={{
-          padding: '14px',
-          borderBottom: '1px solid var(--r-ink-5)',
-          flexShrink: 0,
-        }}>
-          <div style={{
-            fontFamily: 'var(--r-font-mono)', fontSize: 10,
-            color: 'var(--r-ink-3)', textAlign: 'center',
-            padding: '12px 0',
-          }}>
-            no seed active<br/>
-            <span style={{ fontSize: 8, color: 'var(--r-ink-4)', marginTop: 4, display: 'block' }}>
-              speak to the agent to begin
-            </span>
-          </div>
-        </div>
-      )}
 
-      {/* ── Scrollable body ─────────────────────────────────────────────── */}
-      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
-
-        {/* MODES */}
-        <Section label="Modes">
-          <ul className="r-mode-list">
-            {MODES.map((m: Mode, i) => {
-              const active = m === mode;
-              return (
-                <li key={m}>
-                  <button
-                    className="r-mode-btn"
-                    data-active={active}
-                    onClick={() => setMode(m)}
-                  >
-                    <span className="r-mode-num">{i + 1}</span>
-                    <span style={{
-                      fontSize: 14, color: active ? 'var(--r-prism-core)' : 'var(--r-ink-3)',
-                      lineHeight: 1, flexShrink: 0,
-                    }}>
-                      {MODE_GLYPHS[m] ?? '○'}
-                    </span>
-                    <span className="r-mode-label">{MODE_LABEL[m]}</span>
-                    <span className="r-mode-hint">{MODE_HINT[m]}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </Section>
-
-        {/* LIBRARY */}
-        <Section
-          label="Library"
-          action={
-            <span style={{
-              fontFamily: 'var(--r-font-mono)', fontSize: 9,
-              color: 'var(--r-ink-3)',
-            }}>
-              {filteredLib.length}
-            </span>
-          }
+        {/* ── ACTIVE SEED pin ── */}
+        <div
+          className="p-active-seed-pin"
+          data-empty={!seed}
         >
-          <input
-            className="r-input"
-            placeholder="search seeds…"
-            value={libSearch}
-            onChange={e => setLibSearch(e.target.value)}
-            style={{ width: '100%', marginBottom: 8, fontSize: 12, padding: '7px 10px' }}
-          />
-          <div style={{ display: 'grid', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
-            {filteredLib.slice(0, 16).map(s => {
-              const id     = String((s as any).id ?? (s as any).$hash ?? '');
-              const hash   = String((s as any).hash ?? (s as any).$hash ?? id);
-              const name   = String((s as any).name ?? id.slice(0, 8));
-              const domain = String((s as any).domain ?? '?');
-              const active = seed?.id === id;
-              const activeSeed = kernelSeedToActive(s);
-              return (
+          <div className="p-active-seed-pin-header">
+            <span className="p-section-label">active seed</span>
+          </div>
+
+          {seed ? (
+            <>
+              <div className="p-active-seed-pin-body">
+                <div className="p-glyph-frame" data-breathing="true">
+                  <SeedGlyph hash={seed.hash} domain={seed.domain} size={56} />
+                </div>
+                <div className="p-active-seed-pin-meta">
+                  <div className="p-active-seed-pin-name">{seed.name}</div>
+                  <div className="p-active-seed-pin-row">
+                    <span className="p-domain-pill">{seed.domain}</span>
+                    {typeof seed.contractScore === 'number' && (
+                      <span
+                        className="p-contract-score"
+                        data-q={qualityBucket(seed.contractScore)}
+                        title="Contract conformance score"
+                      >
+                        {seed.contractScore.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-active-seed-pin-row">
+                    <span className="p-hash-tail">{shortHash(seed.hash)}</span>
+                    {typeof seed.generation === 'number' && (
+                      <span className="p-hash-tail">gen {seed.generation}</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="p-action-chips">
+                <button className="p-chip" title="Grow this seed">grow</button>
+                <button className="p-chip" title="Mutate this seed">mutate</button>
+                <button className="p-chip" title="Breed with another seed">breed</button>
+                <button className="p-chip" title="Evolve">evolve</button>
+                <button className="p-chip" title="Compose">compose</button>
+              </div>
+            </>
+          ) : (
+            <div style={{ color: 'var(--p-ink-3)', fontSize: 'var(--p-text-2)' }}>
+              No active seed. Press <span className="p-kbd">N</span> for new, or pick one below.
+            </div>
+          )}
+        </div>
+
+        {/* ── LIBRARY ── */}
+        <div className="p-leftrail-section" data-pane="library">
+          <div
+            className="p-leftrail-section-header"
+            onClick={() => undefined}
+          >
+            <span className="p-section-label">{SECTION_LIBRARY}</span>
+            <span className="p-hash-tail">{filtered.length}</span>
+          </div>
+          <div className="p-library-tabs">
+            <button
+              className="p-tab"
+              data-active={libTab === 'mine'}
+              onClick={() => setLibTab('mine')}
+            >
+              mine
+            </button>
+            <button
+              className="p-tab"
+              data-active={libTab === 'curated'}
+              onClick={() => setLibTab('curated')}
+            >
+              curated
+            </button>
+            <button
+              className="p-tab"
+              data-active={libTab === 'lineage'}
+              onClick={() => setLibTab('lineage')}
+              disabled={!seed}
+            >
+              lineage
+            </button>
+          </div>
+          <div className="p-library-search">
+            <input
+              className="p-search-input"
+              type="text"
+              placeholder="Search seeds…"
+              value={librarySearch}
+              onChange={(e) => setLibrarySearch(e.target.value)}
+            />
+          </div>
+          <div className="p-library-list">
+            {libraryLoading ? (
+              <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
+                Loading…
+              </div>
+            ) : filtered.length === 0 ? (
+              <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
+                {libTab === 'mine' ? 'No seeds yet. Grow one.' : 'No matches.'}
+              </div>
+            ) : (
+              filtered.slice(0, 200).map((s) => (
                 <button
-                  key={id}
-                  type="button"
-                  className="r-seed-card"
-                  data-active={active}
-                  onClick={() => activeSeed && setSeed(activeSeed)}
-                  style={{ width: '100%', textAlign: 'left', padding: '7px 8px' }}
+                  key={s.id}
+                  className="p-seed-card"
+                  data-active={s.id === seed?.id}
+                  onClick={() => loadSeed(s)}
+                  title={s.hash}
                 >
-                  <SeedGlyphIcon hash={hash} domain={domain} size={28} />
-                  <div className="r-seed-info">
-                    <div className="r-seed-name" style={{ fontSize: 12 }}>{name}</div>
-                    <div className="r-seed-meta">
-                      <span style={{ color: domainColor(domain) }}>{domain}</span>
-                      {' · '}
-                      <span>{hash.slice(0, 6)}</span>
-                    </div>
+                  <SeedGlyph hash={s.hash} domain={s.domain} size={28} />
+                  <div className="p-seed-card-meta">
+                    <span className="p-seed-card-name">{s.name}</span>
+                    <span className="p-seed-card-sub">
+                      <span
+                        className="p-domain-pill"
+                        style={{
+                          ['--p-active-seed-color' as never]: domainColor(s.domain),
+                          padding: '1px 6px',
+                          fontSize: 'var(--p-text-0)',
+                        }}
+                      >
+                        {s.domain}
+                      </span>
+                      <span>{shortHash(s.hash)}</span>
+                    </span>
                   </div>
                 </button>
-              );
-            })}
-            {filteredLib.length === 0 && (
-              <div style={{ fontSize: 11, color: 'var(--r-ink-3)', padding: '8px 0' }}>
-                no seeds yet
-              </div>
+              ))
             )}
           </div>
-        </Section>
+        </div>
 
-        {/* THREADS */}
-        <Section
-          label="Threads"
-          action={
+        {/* ── THREADS ── */}
+        <div className="p-leftrail-section" data-pane="threads">
+          <div
+            className="p-leftrail-section-header"
+            onClick={() => setThreadsOpen((v) => !v)}
+          >
+            <span className="p-section-label">
+              {threadsOpen ? '▾' : '▸'} {SECTION_THREADS}
+            </span>
             <button
-              className="r-btn"
-              style={{ height: 20, padding: '0 8px', fontSize: 10 }}
-              onClick={() => newThread()}
+              className="p-chip"
+              style={{ height: 22, padding: '0 8px' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                newThread();
+              }}
+              title="New thread"
             >
               + new
             </button>
-          }
-          defaultOpen={false}
-        >
-          <div style={{ display: 'grid', gap: 4 }}>
-            {threads.map(t => {
-              const active = t.id === currentThreadId;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => setCurrent(t.id)}
-                  style={{
-                    width: '100%', textAlign: 'left',
-                    display: 'flex', alignItems: 'center', gap: 8,
-                    padding: '8px 10px',
-                    background: active ? 'rgba(124,58,237,0.08)' : 'transparent',
-                    border: `1px solid ${active ? 'rgba(124,58,237,0.25)' : 'transparent'}`,
-                    borderRadius: 'var(--r-radius-2)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <span style={{
-                    width: 4, height: 4, borderRadius: 99,
-                    background: active ? 'var(--r-prism-core)' : 'var(--r-ink-3)',
-                    flexShrink: 0,
-                  }}/>
-                  <span style={{
-                    flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    fontFamily: 'var(--r-font-display)', fontSize: 12,
-                    color: active ? 'var(--r-ink-0)' : 'var(--r-ink-2)',
-                  }}>
-                    {t.title}
-                  </span>
-                  <span style={{ fontFamily: 'var(--r-font-mono)', fontSize: 9, color: 'var(--r-ink-4)' }}>
-                    {t.turns.length}
-                  </span>
-                </button>
-              );
-            })}
           </div>
-        </Section>
+          {threadsOpen && (
+            <div style={{ maxHeight: 180, overflowY: 'auto', padding: '0 8px 12px' }}>
+              {threads.length === 0 ? (
+                <div style={{ padding: '8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
+                  No threads yet.
+                </div>
+              ) : (
+                threads.map((t) => (
+                  <button
+                    key={t.id}
+                    className="p-seed-card"
+                    data-active={t.id === currentThreadId}
+                    onClick={() => undefined}
+                    title={t.title ?? t.id}
+                  >
+                    <span style={{ fontSize: 'var(--p-text-2)', color: 'var(--p-ink-1)' }}>
+                      {t.title ?? `Thread ${t.id.slice(0, 6)}`}
+                    </span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+        </div>
 
-        {/* SOVEREIGNTY */}
-        <Section label="Sovereignty" defaultOpen={false}>
-          <div style={{ display: 'grid', gap: 6 }}>
-            {[
-              { key: 'signature', val: seed?.signature ?? 'unsigned' },
-              { key: 'anchor',    val: seed?.anchor    ?? 'none'     },
-              { key: 'contract',  val: typeof seed?.contractScore === 'number' ? seed.contractScore.toFixed(3) : '—' },
-            ].map(row => (
-              <div key={row.key} style={{
-                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                padding: '5px 8px',
-                background: 'var(--r-void-2)',
-                borderRadius: 'var(--r-radius-1)',
-                border: '1px solid var(--r-ink-5)',
-              }}>
-                <span style={{ fontFamily: 'var(--r-font-mono)', fontSize: 10, color: 'var(--r-ink-3)' }}>
-                  {row.key}
-                </span>
-                <span style={{
-                  fontFamily: 'var(--r-font-mono)', fontSize: 10,
-                  color: (row.val === 'verified' || row.val === 'minted') ? 'var(--r-ok)'
-                       : row.val === 'unsigned' || row.val === 'none' ? 'var(--r-ink-3)'
-                       : 'var(--r-ink-1)',
-                  fontWeight: 700,
-                }}>
-                  {row.val}
-                </span>
-              </div>
-            ))}
+        {/* ── PRESENCE bottom ── */}
+        <div className="p-presence">
+          <div className="p-presence-row">
+            <span className="p-presence-key">key</span>
+            <span style={{ color: 'var(--p-ink-1)' }}>guest · unsigned</span>
           </div>
-        </Section>
-
-        {/* COSMOS */}
-        <Section label="Cosmos — 34 Engines" defaultOpen={false}>
-          <button
-            type="button"
-            className="r-btn"
-            data-tone="primary"
-            onClick={onCosmos}
-            style={{ width: '100%', height: 36, fontSize: 12 }}
-          >
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-              <path d="M5 0L6.18 3.82L10 5L6.18 6.18L5 10L3.82 6.18L0 5L3.82 3.82Z"/>
-            </svg>
-            Explore all domains
-          </button>
-        </Section>
-      </div>
-
-      {/* ── Footer ───────────────────────────────────────────────────────── */}
-      <div style={{
-        padding: '10px 14px',
-        borderTop: '1px solid var(--r-ink-5)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        flexShrink: 0,
-      }}>
-        <div style={{ width: 6, height: 6, background: 'var(--r-ok)', borderRadius: 99, animation: 'r-pulse 3s ease-in-out infinite' }}/>
-        <span style={{ fontFamily: 'var(--r-font-mono)', fontSize: 9, color: 'var(--r-ink-4)', letterSpacing: '0.1em' }}>
-          XOSHIRO256** · DETERMINISTIC
-        </span>
+          <div className="p-presence-row">
+            <span className="p-presence-key">peer</span>
+            <span style={{ color: 'var(--p-ink-3)' }}>offline</span>
+          </div>
+        </div>
       </div>
     </aside>
   );
 };
+
+export default LeftRail;

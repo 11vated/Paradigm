@@ -50,31 +50,30 @@ export const CenterStage: React.FC = () => {
   }, [setMode]);
 
   return (
-    <main aria-label="Living artifact" className="r-stage">
+    <main aria-label="Living artifact" className="p-center">
       {/* Substrate field (animated background) */}
-      <div className="r-substrate-field" aria-hidden />
+      <div className="p-substrate-field" aria-hidden />
 
-      {/* Mode tabs */}
-      <div className="r-stage-topbar">
-        <div className="r-mode-tabs">
-          {MODES.map((m: Mode, i) => (
-            <button
-              key={m}
-              className="r-mode-tab"
-              data-active={m === mode}
-              onClick={() => setMode(m)}
-              title={`${MODE_LABEL[m]} (${i + 1})`}
-            >
-              <span className="r-mode-tab-num">{i + 1}</span>
-              <span style={{ fontSize: 11 }}>{MODE_GLYPHS[m] ?? '○'}</span>
-              {MODE_LABEL[m]}
-            </button>
-          ))}
-        </div>
+      {/* Mode strip */}
+      <div className="p-mode-strip">
+        {MODES.map((m: Mode, i) => (
+          <button
+            key={m}
+            className="p-mode-tab"
+            data-active={m === mode}
+            onClick={() => setMode(m)}
+            title={`${MODE_LABEL[m]} (${i + 1})`}
+          >
+            <span className="p-mode-tab-glyph" aria-hidden>
+              {MODE_GLYPHS[m] ?? '○'}
+            </span>
+            {MODE_LABEL[m]}
+          </button>
+        ))}
       </div>
 
       {/* Mode content */}
-      <div style={{ flex: 1, minHeight: 0, position: 'relative', overflow: 'hidden' }}>
+      <div className="p-mode-panel">
         <ModeRouter mode={mode} />
       </div>
     </main>

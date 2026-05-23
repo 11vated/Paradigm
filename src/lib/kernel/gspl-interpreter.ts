@@ -12,7 +12,6 @@ import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { GeneticAlgorithm } from '../evolution/ga';
 import { kernelNow, kernelNowIso } from './clock';
-import { GsplModuleResolver } from './gspl-module-resolver';
 
 type Seed = {
   $gst?: string;
@@ -37,7 +36,19 @@ export interface GSPLContext {
 
 export class GsplInterpreter {
   private context: GSPLContext;
-  private _resolver: GsplModuleResolver = new GsplModuleResolver();
+  private _resolver: any | null = null;
+
+  private async getResolver(): Promise<any> {
+    if (!this._resolver) {
+      try {
+        const { GsplModuleResolver } = await import('./gspl-module-resolver');
+        this._resolver = new GsplModuleResolver();
+      } catch {
+        this._resolver = { resolve: () => null };
+      }
+    }
+    return this._resolver;
+  }
 
   constructor(seedHash?: string) {
     this.context = {
@@ -1050,7 +1061,8 @@ export class GsplInterpreter {
     const modulePath = node.path as string;
 
     try {
-      const resolution = this._resolver.resolve(modulePath);
+      const resolver = await this.getResolver();
+      const resolution = resolver.resolve(modulePath);
       const lexer  = new GsplLexer(resolution.source);
       const tokens = lexer.tokenize();
       const parser = new GsplParser(tokens);
