@@ -2322,3 +2322,107 @@
   color: var(--p-ink-2);
   font-size: var(--p-text-0);
 }
+
+/* ============================================================================
+ * Layer 22 — SubstrateMode (7-Dimensional Projection)
+ * ========================================================================== */
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, rgba(124,71,239,0.04) 0%, transparent 100%);
+  padding: var(--p-space-4) var(--p-space-5);
+  gap: var(--p-space-3);
+  overflow: auto;
+  font-family: var(--p-font-mono);
+}
+
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--p-space-3);
+  padding-bottom: var(--p-space-2);
+  border-bottom: 1px solid var(--p-border);
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-title {
+  font-size: var(--p-text-3);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--p-ink-0);
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-sub {
+  font-size: var(--p-text-1);
+  color: var(--p-ink-3);
+  letter-spacing: 0.04em;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lanes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--p-space-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane {
+  background: var(--p-surface-1);
+  border: 1px solid var(--p-border);
+  border-radius: 6px;
+  padding: var(--p-space-3);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--p-space-2);
+  transition: border-color 160ms ease;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane:hover {
+  border-color: var(--p-prism-violet);
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="spatial"]    { color: #6FA8FF; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="temporal"]   { color: #F0A040; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="spectral"]   { color: #FF6FAA; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="modal"]      { color: #B488FF; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="possible"]   { color: #44E6C8; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="semantic"]   { color: #C4E84C; }
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane[data-dim="structural"] { color: #FFCC44; }
+
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-lane-head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--p-space-3);
+  font-size: var(--p-text-1);
+  letter-spacing: 0.04em;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-glyph {
+  font-size: var(--p-text-3);
+  width: 24px;
+  text-align: center;
+  color: inherit;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-name {
+  font-size: var(--p-text-2);
+  font-weight: 600;
+  text-transform: lowercase;
+  color: inherit;
+  letter-spacing: 0.06em;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-desc {
+  color: var(--p-ink-3);
+  font-size: var(--p-text-0);
+  flex: 1;
+  letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-occ {
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--p-text-1);
+  font-weight: 600;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-vis {
+  height: 56px;
+  width: 100%;
+  display: block;
+}
+[data-paradigm-shell="paradigm-os"] .p-substrate-7d-vis svg {
+  display: block;
+  color: inherit;
+  filter: drop-shadow(0 0 6px currentColor);
+}
