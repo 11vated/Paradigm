@@ -1,114 +1,78 @@
-/**
- * AtelierMode — Crucible + floating tool panels (studio components).
- */
-import React, { useState } from 'react';
-import { useActiveSeed } from '@/stores/activeSeed';
-import { kernelSeedToActive } from '@/lib/ui/seedBridge';
-import { CrucibleMode } from './CrucibleMode';
-import GeneEditor from '@/components/studio/GeneEditor';
-import GSPLEditor from '@/components/studio/GSPLEditor';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useActiveSeed } from "@/stores/activeSeed";
+import { CrucibleMode } from "./CrucibleMode";
+import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
 
-type PanelId = 'genes' | 'gspl';
-
-const PANELS: { id: PanelId; label: string }[] = [
-  { id: 'genes', label: 'Genes' },
-  { id: 'gspl', label: 'GSPL' },
-];
+interface GeneVal { type?: string; value?: unknown; }
+interface SeedBody { id: string; genes?: Record<string, GeneVal>; }
 
 export const AtelierMode: React.FC = () => {
-  const [open, setOpen] = useState<Set<PanelId>>(new Set(['genes']));
   const seed = useActiveSeed((s) => s.seed);
-  const setSeed = useActiveSeed((s) => s.setSeed);
+  const [body, setBody] = useState<SeedBody | null>(null);
+  const [edits, setEdits] = useState<Record<string, GeneVal>>({});
+  const [pending, setPending] = useState(false);
+  const [open, setOpen] = useState(true);
 
-  const toggle = (id: PanelId) => {
-    setOpen((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
+  useEffect(() => {
+    if (!seed?.id) { setBody(null); setEdits({}); return; }
+    let cancelled = false;
+    fetch(`/api/seeds/${seed.id}`).then(r => r.json()).then(b => { if (!cancelled) { setBody(b); setEdits({}); } }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [seed?.id]);
 
-  const studioSeed = seed?.raw ?? seed;
+  const genes = useMemo(() => {
+    const out: Array<[string, GeneVal]> = [];
+    if (body?.genes) for (const [k, v] of Object.entries(body.genes)) out.push([k, { ...(v as GeneVal), ...(edits[k] ?? {}) }]);
+    return out;
+  }, [body, edits]);
+
+  const setGene = useCallback((name: string, value: unknown) => {
+    setEdits(prev => ({ ...prev, [name]: { ...(prev[name] ?? {}), value } }));
+    setPending(true);
+  }, []);
+
+  const commit = useCallback(async () => {
+    if (!seed?.id || Object.keys(edits).length === 0) return;
+    try {
+      await fetch(`/api/seeds/${seed.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ genes: edits }) });
+      window.dispatchEvent(new CustomEvent("paradigm:grow-success"));
+      setEdits({}); setPending(false);
+      const r = await fetch(`/api/seeds/${seed.id}`); const b = await r.json(); setBody(b);
+    } catch {}
+  }, [seed?.id, edits]);
+
+  if (!seed) return <CrucibleMode />;
 
   return (
-    <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+    <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
       <CrucibleMode />
-
-      <div
-        style={{
-          position: 'absolute',
-          top: 48,
-          left: 12,
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 4,
-          zIndex: 20,
-        }}
-      >
-        {PANELS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            className="r-chip"
-            onClick={() => toggle(p.id)}
-            style={{
-              cursor: 'pointer',
-              borderColor: open.has(p.id) ? 'var(--r-prism-core)' : 'var(--r-ink-4)',
-              fontSize: 9,
-            }}
-          >
-            {open.has(p.id) ? '▾' : '▸'} {p.label}
-          </button>
-        ))}
-        <span className="r-chip" style={{ fontSize: 8, color: 'var(--r-ink-3)' }}>
-          b breed · c compose · e evolve — ask agent
-        </span>
+      <div className={`p-atelier-panel ${open ? "" : "p-atelier-panel--closed"}`}>
+        <header className="p-atelier-head">
+          <SeedGlyph hash={seed.hash} domain={seed.domain} size={24} />
+          <div className="p-atelier-title">genome · {genes.length}</div>
+          <button type="button" className="p-atelier-toggle" onClick={() => setOpen(o => !o)} title={open ? "collapse" : "expand"}>{open ? "▸" : "◂"}</button>
+        </header>
+        {open && (<>
+          <div className="p-atelier-genes">
+            {genes.length === 0 ? (<div className="p-atelier-empty">no editable genes</div>) : genes.map(([name, g]) => (
+              <GeneRow key={name} name={name} gene={g} onChange={(v) => setGene(name, v)} />
+            ))}
+          </div>
+          {pending && (<div className="p-atelier-actions"><button type="button" className="p-atelier-commit" onClick={commit}>commit {Object.keys(edits).length} → regrow</button></div>)}
+        </>)}
       </div>
-
-      {open.has('genes') && studioSeed && (
-        <div
-          className="r-pane"
-          style={{
-            position: 'absolute',
-            right: 12,
-            top: 80,
-            width: 280,
-            maxHeight: '45%',
-            overflow: 'auto',
-            zIndex: 15,
-          }}
-        >
-          <GeneEditor
-            seed={studioSeed}
-            onSeedUpdated={(s: Record<string, unknown>) => {
-              const active = kernelSeedToActive(s);
-              if (active) setSeed(active);
-            }}
-          />
-        </div>
-      )}
-      {open.has('gspl') && (
-        <div
-          className="r-pane"
-          style={{
-            position: 'absolute',
-            left: 12,
-            bottom: 48,
-            width: 360,
-            height: 220,
-            overflow: 'hidden',
-            zIndex: 15,
-          }}
-        >
-          <GSPLEditor
-            onSeedFromGSPL={(s: Record<string, unknown>) => {
-              const active = kernelSeedToActive(s);
-              if (active) setSeed(active);
-            }}
-          />
-        </div>
-      )}
     </div>
   );
+};
+
+const GeneRow: React.FC<{ name: string; gene: GeneVal; onChange: (v: unknown) => void; }> = ({ name, gene, onChange }) => {
+  const t = gene.type ?? "unknown";
+  const v = gene.value;
+  if (t === "scalar" && typeof v === "number") {
+    return (<div className="p-atelier-row"><label className="p-atelier-label">{name}<span className="p-atelier-type">scalar</span></label><input type="range" min="-2" max="2" step="0.01" value={v} onChange={(e) => onChange(parseFloat(e.target.value))} className="p-atelier-range" /><span className="p-atelier-val">{v.toFixed(3)}</span></div>);
+  }
+  if (t === "categorical" && typeof v === "string") {
+    return (<div className="p-atelier-row"><label className="p-atelier-label">{name}<span className="p-atelier-type">categorical</span></label><input type="text" value={v} onChange={(e) => onChange(e.target.value)} className="p-atelier-text" /></div>);
+  }
+  return (<div className="p-atelier-row"><label className="p-atelier-label">{name}<span className="p-atelier-type">{t}</span></label><span className="p-atelier-val">{typeof v === "object" ? JSON.stringify(v).slice(0, 32) : String(v)}</span></div>);
 };

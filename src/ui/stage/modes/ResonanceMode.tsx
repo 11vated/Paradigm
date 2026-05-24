@@ -1,63 +1,69 @@
-/**
- * ResonanceMode — frequency field + cross-domain bridges.
- */
-import React, { useMemo } from 'react';
-import { useActiveSeed } from '@/stores/activeSeed';
-import { useSeedTheme } from '@/hooks/useSeedTheme';
-import PreviewViewport from '@/components/studio/PreviewViewport';
-import { useGrowArtifact } from '@/hooks/useGrowArtifact';
+import React, { useMemo } from "react";
+import { useActiveSeed } from "@/stores/activeSeed";
+import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
+import { rngFromHash } from "@/lib/kernel/rng";
+
+const DIMENSIONS = [
+  { key: "spatial",    glyph: "▣", label: "SPATIAL",    desc: "physical 3D space" },
+  { key: "temporal",   glyph: "≡", label: "TEMPORAL",   desc: "time, rhythm, duration" },
+  { key: "spectral",   glyph: "≋", label: "SPECTRAL",   desc: "frequency · light · sound" },
+  { key: "modal",      glyph: "◆", label: "MODAL",      desc: "emotional · adjective" },
+  { key: "possible",   glyph: "⌬", label: "POSSIBLE",   desc: "counterfactual · latent" },
+  { key: "semantic",   glyph: "⌘", label: "SEMANTIC",   desc: "meaning · embedding" },
+  { key: "structural", glyph: "⊞", label: "STRUCTURAL", desc: "relational topology" },
+];
 
 export const ResonanceMode: React.FC = () => {
   const seed = useActiveSeed((s) => s.seed);
-  const theme = useSeedTheme(seed?.hash);
-  const { artifact, loading } = useGrowArtifact();
 
-  const waves = useMemo(() => {
-    if (!seed?.hash) return [];
-    const hz = theme.resonanceHz;
-    return Array.from({ length: 12 }, (_, i) => ({
-      phase: (i / 12) * Math.PI * 2,
-      amp: 0.3 + 0.7 * Math.abs(Math.sin((hz + i * 37) * 0.01)),
+  const dims = useMemo(() => {
+    const rng = rngFromHash(seed?.hash ?? "deadbeef");
+    return DIMENSIONS.map((d) => ({
+      ...d,
+      occupation: 0.18 + rng.nextF64() * 0.82,
+      frequency: 32 + rng.nextF64() * 1024,
+      bars: Array.from({ length: 48 }, () => rng.nextF64()),
     }));
-  }, [seed?.hash, theme.resonanceHz]);
+  }, [seed?.hash]);
+
+  if (!seed) return (
+    <div className="p-resonance-empty">
+      <div className="p-resonance-empty-title">7-dimensional spectrum awaits a seed</div>
+      <div className="p-resonance-empty-sub">spatial · temporal · spectral · modal · possible · semantic · structural</div>
+    </div>
+  );
 
   return (
-    <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', inset: 0, opacity: 0.35 }}>
-        {seed ? <PreviewViewport artifact={artifact} seed={seed} loading={loading} /> : null}
-      </div>
-
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          padding: 24,
-          background: `linear-gradient(to top, color-mix(in oklab, ${theme.resonant} 25%, transparent), transparent 60%)`,
-          pointerEvents: 'none',
-        }}
-      >
-        <div style={{ width: '100%', maxWidth: 480, height: 80, display: 'flex', alignItems: 'flex-end', gap: 4 }}>
-          {waves.map((w, i) => (
-            <div
-              key={i}
-              style={{
-                flex: 1,
-                height: `${w.amp * 100}%`,
-                background: `linear-gradient(to top, ${theme.core}, ${theme.resonant})`,
-                opacity: 0.6,
-                borderRadius: '2px 2px 0 0',
-              }}
-            />
-          ))}
+    <div className="p-resonance">
+      <header className="p-resonance-head">
+        <SeedGlyph hash={seed.hash} domain={seed.domain} size={32} />
+        <div className="p-resonance-id">
+          <div className="p-resonance-name">{seed.name}</div>
+          <div className="p-resonance-meta">{seed.domain} · 7 dimensions</div>
         </div>
-        <p style={{ marginTop: 12, fontFamily: 'var(--r-font-num)', fontSize: 10, color: 'var(--r-ink-1)' }}>
-          {theme.resonanceNote} · {theme.resonanceHz}Hz · standing-wave field
-        </p>
+      </header>
+      <div className="p-resonance-grid">
+        {dims.map((d) => (
+          <div key={d.key} className="p-dim-band">
+            <div className="p-dim-head">
+              <span className="p-dim-glyph" aria-hidden>{d.glyph}</span>
+              <span className="p-dim-label">{d.label}</span>
+              <span className="p-dim-desc">{d.desc}</span>
+              <span className="p-dim-occ" style={{ "--occ": d.occupation } as React.CSSProperties}>{(d.occupation * 100).toFixed(0)}%</span>
+            </div>
+            <div className="p-dim-signal">
+              {d.bars.map((h, i) => (
+                <div key={i} className="p-dim-bar" style={{ height: `${(h * d.occupation * 100).toFixed(1)}%` }} />
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
+      <footer className="p-resonance-foot">
+        <span>fundamental {(dims[0].frequency).toFixed(0)} Hz</span>
+        <span>·</span>
+        <span>occupation Σ {(dims.reduce((s, d) => s + d.occupation, 0)).toFixed(2)} / 7.00</span>
+      </footer>
     </div>
   );
 };

@@ -2004,3 +2004,197 @@
 [data-paradigm-shell="paradigm-os"] .p-evo-detail-meta {
   font-family: var(--p-font-mono); font-size: 11px; color: var(--p-ink-4);
 }
+
+/* ============================================================================
+ * Layer 19 — Atelier (floating gene editor)
+ * ========================================================================== */
+[data-paradigm-shell="paradigm-os"] .p-atelier-panel {
+  position: absolute; right: 16px; top: 80px;
+  width: 320px; max-height: calc(100vh - 220px);
+  background: color-mix(in oklab, var(--p-deep) 95%, transparent);
+  border: 1px solid color-mix(in oklab, var(--p-prism-core) 24%, var(--p-edge));
+  border-radius: var(--p-radius-md);
+  box-shadow: 0 8px 32px color-mix(in oklab, var(--p-void) 60%, transparent),
+              0 0 0 1px color-mix(in oklab, var(--p-prism-core) 8%, transparent) inset;
+  display: flex; flex-direction: column;
+  z-index: 20;
+  backdrop-filter: blur(14px);
+  overflow: hidden;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-panel--closed {
+  width: 56px;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--p-edge);
+  background: color-mix(in oklab, var(--p-prism-core) 6%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-title {
+  flex: 1;
+  font-family: var(--p-font-mono); font-size: 12px; font-weight: 500;
+  color: var(--p-ink-1); letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-toggle {
+  background: transparent; border: 1px solid var(--p-edge);
+  color: var(--p-ink-2); cursor: pointer;
+  width: 24px; height: 24px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--p-font-mono); font-size: 11px;
+  transition: var(--p-trans-fast);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-toggle:hover {
+  border-color: var(--p-prism-core); color: var(--p-prism-core);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-genes {
+  flex: 1; overflow-y: auto; padding: 8px 14px;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-empty {
+  padding: 24px 0; text-align: center;
+  font-family: var(--p-font-mono); font-size: 11px; color: var(--p-ink-3);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px dashed color-mix(in oklab, var(--p-edge) 60%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-row:last-child { border-bottom: none; }
+[data-paradigm-shell="paradigm-os"] .p-atelier-label {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+  font-family: var(--p-font-mono); font-size: 11px; color: var(--p-ink-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-type {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: color-mix(in oklab, var(--p-prism-core) 70%, var(--p-ink-3));
+  margin-top: 2px;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-range {
+  flex: 1.4; max-width: 120px; min-width: 80px;
+  accent-color: var(--p-prism-core);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-text {
+  flex: 1.4; max-width: 140px;
+  background: var(--p-void); border: 1px solid var(--p-edge);
+  color: var(--p-ink-1); padding: 4px 8px; border-radius: 4px;
+  font-family: var(--p-font-mono); font-size: 11px;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-val {
+  font-family: var(--p-font-mono); font-size: 10px;
+  color: var(--p-ink-2); min-width: 48px; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-actions {
+  padding: 12px 14px;
+  border-top: 1px solid var(--p-edge);
+  background: color-mix(in oklab, var(--p-prism-core) 8%, transparent);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-commit {
+  width: 100%; padding: 8px 12px;
+  background: var(--p-prism-core); color: var(--p-void);
+  border: none; border-radius: 4px; cursor: pointer;
+  font-family: var(--p-font-mono); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  transition: var(--p-trans-fast);
+}
+[data-paradigm-shell="paradigm-os"] .p-atelier-commit:hover {
+  filter: brightness(1.15);
+}
+
+/* ============================================================================
+ * Layer 20 — Resonance (7-dimensional spectrum)
+ * ========================================================================== */
+[data-paradigm-shell="paradigm-os"] .p-resonance {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 20px 28px; gap: 16px; overflow: hidden;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--p-void) 92%, var(--p-prism-core) 8%), var(--p-void));
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-head {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--p-edge);
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-id {
+  display: flex; flex-direction: column; gap: 2px;
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-name {
+  font-family: var(--p-font-mono); font-size: 14px; font-weight: 500;
+  color: var(--p-ink-1); letter-spacing: 0.01em;
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-meta {
+  font-family: var(--p-font-mono); font-size: 10px;
+  color: var(--p-ink-3); text-transform: uppercase; letter-spacing: 0.08em;
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-grid {
+  flex: 1; display: flex; flex-direction: column; gap: 4px;
+  overflow-y: auto;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-band {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 12px 16px;
+  background: color-mix(in oklab, var(--p-deep) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--p-prism-core) 14%, var(--p-edge));
+  border-radius: var(--p-radius-sm);
+  transition: var(--p-trans-fast);
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-band:hover {
+  border-color: color-mix(in oklab, var(--p-prism-core) 40%, var(--p-edge));
+  background: color-mix(in oklab, var(--p-prism-core) 6%, var(--p-deep));
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-head {
+  display: flex; align-items: center; gap: 10px;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-glyph {
+  font-family: var(--p-font-mono); font-size: 16px;
+  color: var(--p-prism-core);
+  width: 24px; text-align: center;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-label {
+  font-family: var(--p-font-mono); font-size: 12px; font-weight: 600;
+  color: var(--p-ink-1); letter-spacing: 0.06em;
+  min-width: 100px;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-desc {
+  flex: 1;
+  font-family: var(--p-font-mono); font-size: 11px;
+  color: var(--p-ink-3); letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-occ {
+  font-family: var(--p-font-mono); font-size: 11px;
+  color: color-mix(in oklab, var(--p-prism-core) calc(40% + var(--occ, 0.5) * 60%), var(--p-ink-2));
+  font-variant-numeric: tabular-nums;
+  min-width: 40px; text-align: right;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-signal {
+  display: flex; align-items: flex-end; gap: 2px;
+  height: 48px;
+  padding: 0 2px;
+}
+[data-paradigm-shell="paradigm-os"] .p-dim-bar {
+  flex: 1;
+  background: linear-gradient(to top,
+    color-mix(in oklab, var(--p-prism-core) 80%, transparent) 0%,
+    color-mix(in oklab, var(--p-prism-core) 30%, transparent) 100%);
+  border-radius: 1px;
+  min-height: 1px;
+  transition: height 0.4s var(--p-ease);
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-foot {
+  display: flex; gap: 12px; padding: 8px 0;
+  font-family: var(--p-font-mono); font-size: 10px;
+  color: var(--p-ink-3); letter-spacing: 0.04em;
+  border-top: 1px solid var(--p-edge);
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-empty-title {
+  font-family: var(--p-font-mono); font-size: 16px;
+  color: var(--p-ink-2); letter-spacing: 0.02em;
+}
+[data-paradigm-shell="paradigm-os"] .p-resonance-empty-sub {
+  font-family: var(--p-font-mono); font-size: 11px;
+  color: var(--p-ink-3); letter-spacing: 0.06em;
+}
