@@ -1,3 +1,5 @@
+import { useOpsLog } from '@/stores/opsLog';
+
 /**
  * API Service - Frontend to Backend communication
  * Minimal implementation that works with minimal server
@@ -7,21 +9,30 @@ const API_BASE = (typeof window !== 'undefined' && (window as any).VITE_API_URL)
 
 // Helper: make API request
 async function apiRequest(endpoint: string, options: RequestInit = {}) {
+  const method = ((options.method as string) || 'GET').toUpperCase();
   const url = `${API_BASE}${endpoint}`;
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
-
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Request failed' }));
-    throw new Error(error.error || `HTTP ${response.status}`);
+  const opId = useOpsLog.getState().start(method, endpoint);
+  const t0 = Date.now();
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+    if (!response.ok) {
+      const errBody = await response.json().catch(() => ({ error: 'Request failed' }));
+      useOpsLog.getState().finish(opId, { ms: Date.now() - t0, status: 'error', statusCode: response.status, error: (errBody as any).error });
+      throw new Error((errBody as any).error || ('HTTP ' + response.status));
+    }
+    const json = await response.json();
+    useOpsLog.getState().finish(opId, { ms: Date.now() - t0, status: 'ok', statusCode: response.status });
+    return json;
+  } catch (e: any) {
+    useOpsLog.getState().finish(opId, { ms: Date.now() - t0, status: 'error', error: String((e && e.message) || e) });
+    throw e;
   }
-
-  return response.json();
 }
 
 // ─── Seeds API ───────────────────────────────────────────────

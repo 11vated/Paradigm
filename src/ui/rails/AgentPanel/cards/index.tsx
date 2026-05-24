@@ -28,7 +28,7 @@ export const SurfacedCardView: React.FC<{ card: SurfacedCard }> = ({ card }) => 
 
   switch (card.kind) {
     case 'plan':
-      return <PlanCard payload={card.payload as Record<string, unknown>} onGrow={growFromPlan} />;
+      return <PlanCard payload={card.payload as any} />;
     case 'gspl-source':
       return <GsplSourceCard payload={card.payload as any} />;
     case 'tool-calls':

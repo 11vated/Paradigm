@@ -2198,3 +2198,127 @@
   font-family: var(--p-font-mono); font-size: 11px;
   color: var(--p-ink-3); letter-spacing: 0.06em;
 }
+
+/* ============================================================================
+ * Layer 21 — Plan / Tools / Memory cards
+ * ========================================================================== */
+[data-paradigm-shell="paradigm-os"] .p-plan-card {
+  display: flex; flex-direction: column; gap: var(--p-space-2);
+  padding: var(--p-space-2);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-target {
+  display: flex; align-items: center; gap: var(--p-space-1);
+  padding-bottom: var(--p-space-2);
+  border-bottom: 1px solid var(--p-line-1);
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-label {
+  color: var(--p-ink-3); text-transform: uppercase; letter-spacing: 0.08em;
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-value {
+  color: var(--p-ink-1); font-weight: 500;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stages {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 4px;
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage {
+  display: grid; grid-template-columns: 22px 10px auto 1fr; align-items: center; gap: var(--p-space-1);
+  padding: 6px var(--p-space-1);
+  border-radius: 4px;
+  transition: background var(--p-trans-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage:hover {
+  background: var(--p-surface-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage-idx {
+  color: var(--p-ink-3); font-size: var(--p-text-0);
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage-name {
+  color: var(--p-ink-1); text-transform: lowercase;
+}
+[data-paradigm-shell="paradigm-os"] .p-plan-stage-note {
+  color: var(--p-ink-3); font-size: var(--p-text-0);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-tools-card {
+  padding: var(--p-space-2);
+  font-family: var(--p-font-mono);
+  font-size: var(--p-text-0);
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-empty {
+  color: var(--p-ink-3); padding: var(--p-space-3); text-align: center;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 2px;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-row {
+  display: grid; grid-template-columns: 12px 56px auto 1fr; align-items: center; gap: var(--p-space-1);
+  padding: 4px var(--p-space-1);
+  border-radius: 3px;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-row:hover {
+  background: var(--p-surface-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-method {
+  color: var(--p-prism-cyan); font-weight: 500;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-path {
+  color: var(--p-ink-1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-paradigm-shell="paradigm-os"] .p-tools-meta {
+  color: var(--p-ink-3); text-align: right;
+}
+
+[data-paradigm-shell="paradigm-os"] .p-memory-card {
+  padding: var(--p-space-2);
+  font-family: var(--p-font-mono);
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: var(--p-space-2);
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell {
+  padding: var(--p-space-2);
+  background: var(--p-surface-2);
+  border: 1px solid var(--p-line-1);
+  border-radius: 4px;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell-head {
+  display: flex; align-items: center; gap: var(--p-space-1);
+  margin-bottom: 4px;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell-label {
+  color: var(--p-ink-2); font-size: var(--p-text-0);
+  letter-spacing: 0.08em;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell-value {
+  color: var(--p-ink-1); font-size: var(--p-text-3);
+  font-weight: 600;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-cell-hint {
+  color: var(--p-ink-3); font-size: var(--p-text-0);
+  margin-top: 2px;
+}
+[data-paradigm-shell="paradigm-os"] .p-memory-note {
+  margin-top: var(--p-space-2);
+  padding: var(--p-space-2);
+  background: var(--p-surface-1);
+  border-radius: 4px;
+  color: var(--p-ink-2);
+  font-size: var(--p-text-0);
+}

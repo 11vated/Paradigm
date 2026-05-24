@@ -1,32 +1,36 @@
 import React from 'react';
 import { CardShell } from './CardShell';
 
-interface MemoryCardProps {
-  payload: { key?: string; value?: any; source?: string; timestamp?: string };
-}
+interface Props { payload: { working?: number; episodic?: number; semantic?: number; world?: number; note?: string } }
 
-export const MemoryCard: React.FC<MemoryCardProps> = ({ payload }) => (
-  <CardShell label="Memory" tone="cool" aside={
-    payload.timestamp ? <span style={{ fontFamily: 'var(--r-font-num)', fontSize: 10, color: 'var(--r-ink-3)' }}>{payload.timestamp}</span> : undefined
-  }>
-    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '4px 12px', fontFamily: 'var(--r-font-display)', fontSize: 11 }}>
-      {payload.key && (
-        <>
-          <span style={{ color: 'var(--r-ink-3)' }}>key</span>
-          <span style={{ color: 'var(--r-ink-1)', fontFamily: 'var(--r-font-num)' }}>{payload.key}</span>
-        </>
-      )}
-      {payload.source && (
-        <>
-          <span style={{ color: 'var(--r-ink-3)' }}>source</span>
-          <span style={{ color: 'var(--r-ink-1)' }}>{payload.source}</span>
-        </>
-      )}
-    </div>
-    {payload.value !== undefined && (
-      <pre style={{ margin: '8px 0 0', fontSize: 10, color: 'var(--r-ink-2)', background: 'rgba(255,255,255,0.014)', padding: 6, borderRadius: 'var(--r-radius-1)', maxHeight: 120, overflow: 'auto', whiteSpace: 'pre' }}>
-        {typeof payload.value === 'string' ? payload.value : JSON.stringify(payload.value, null, 2)}
-      </pre>
-    )}
-  </CardShell>
-);
+const LAYERS: { key: 'working' | 'episodic' | 'semantic' | 'world'; label: string; hint: string; hue: string }[] = [
+  { key: 'working',  label: 'WORKING',  hint: 'L1 · ephemeral', hue: 'var(--p-prism-amber)' },
+  { key: 'episodic', label: 'EPISODIC', hint: 'L2 · session',    hue: 'var(--p-prism-emerald)' },
+  { key: 'semantic', label: 'SEMANTIC', hint: 'L3 · canonical',  hue: 'var(--p-prism-violet)' },
+  { key: 'world',    label: 'WORLD',    hint: 'L4 · long-term',  hue: 'var(--p-prism-cyan)' },
+];
+
+export const MemoryCard: React.FC<Props> = ({ payload }) => {
+  return (
+    <CardShell label="Memory Retrievals">
+      <div className="p-memory-card">
+        <div className="p-memory-grid">
+          {LAYERS.map((l) => {
+            const v = (payload?.[l.key] ?? 0) as number;
+            return (
+              <div key={l.key} className="p-memory-cell">
+                <div className="p-memory-cell-head">
+                  <span className="p-memory-cell-dot" style={{ background: l.hue }} />
+                  <span className="p-memory-cell-label">{l.label}</span>
+                </div>
+                <div className="p-memory-cell-value">{v}</div>
+                <div className="p-memory-cell-hint">{l.hint}</div>
+              </div>
+            );
+          })}
+        </div>
+        {payload?.note && <div className="p-memory-note">{payload.note}</div>}
+      </div>
+    </CardShell>
+  );
+};
