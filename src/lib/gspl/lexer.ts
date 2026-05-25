@@ -44,6 +44,7 @@ export const TokenType = {
   DOMAIN: KernelTokenType.DOMAIN,
   IN: KernelTokenType.IN,
   SIGNED: KernelTokenType.SIGNED,
+  ENGINE: KernelTokenType.ENGINE,
   
   // Operators
   PLUS: KernelTokenType.PLUS,

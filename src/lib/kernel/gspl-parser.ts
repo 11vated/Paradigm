@@ -56,6 +56,7 @@ export enum ASTNodeType {
 
   // Types
   TYPE_REF = 'TYPE_REF',
+  ENGINE_BLOCK = 'ENGINE_BLOCK',
   TYPE_PARAM = 'TYPE_PARAM' // Seed<domain>
 }
 
@@ -97,6 +98,7 @@ export class GsplParser {
       case 'DOMAIN': return this.parseDomainDecl();
       case 'IMPORT': return this.parseImportDecl();
       case 'EXPORT': return this.parseExportDecl();
+      case 'ENGINE': return this.parseEngineBlock();
       case 'IF': return this.parseIfStmt();
       case 'FOR': return this.parseForStmt();
       case 'WHILE': return this.parseWhileStmt();
@@ -915,6 +917,39 @@ export class GsplParser {
     };
   }
 
+
+  /**
+   * engine <id> { kind: <expr>, seed: <expr>, ... }
+   *
+   * Compiles to an ENGINE_BLOCK AST node that the interpreter dispatches
+   * against the 9-engine registry (`src/lib/engines/`). The `id` identifier
+   * is the engine slug (form, motion, sound, world, mind, play, story,
+   * matter, field). Keys inside the block are passed verbatim to the
+   * engine's generate() request.
+   *
+   * Added by paradigm-infinite/ws-23. Doctrine: 12_PARADIGM_INFINITE_COMPLETION_DOCTRINE.md
+   * Part V (GSPL v∞ language extensions).
+   */
+  private parseEngineBlock(): ASTNode {
+    const engineToken = this.advance(); // engine
+    const id = this.expect('IDENTIFIER').value;
+    this.expect('LBRACE');
+    const entries: { key: string; value: ASTNode }[] = [];
+    while (!this.check('RBRACE') && !this.isAtEnd()) {
+      const keyTok = this.expect('IDENTIFIER');
+      this.expect('COLON');
+      const value = this.parseExpression();
+      entries.push({ key: keyTok.value, value });
+      if (!this.match('COMMA')) break;
+    }
+    this.expect('RBRACE');
+    return {
+      type: ASTNodeType.ENGINE_BLOCK,
+      engineId: id,
+      entries,
+      loc: { line: engineToken.line, column: engineToken.column }
+    };
+  }
   // Utility methods
   private match(...types: string[]): boolean {
     for (const type of types) {
