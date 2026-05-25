@@ -64,6 +64,7 @@ export async function generateGameV3(
 }
 
 function extractGameParams(seed: Seed, rng: Xoshiro256StarStar): GameParams {
+  const genreOverride = ((seed.genes as any)?.genre?.value ?? (seed.genes as any)?.genre) as string | undefined;
   const types = ['turn-based', 'real-time', 'hybrid'] as const;
   const genres = ['strategy', 'rpg', 'puzzle', 'card', 'board'] as const;
   const complexities = ['light', 'medium', 'heavy'] as const;
@@ -71,7 +72,7 @@ function extractGameParams(seed: Seed, rng: Xoshiro256StarStar): GameParams {
   return {
     type: types[Math.floor(rng.nextF64() * types.length)],
     players: 1 + Math.floor(rng.nextF64() * 7),
-    genre: genres[Math.floor(rng.nextF64() * genres.length)],
+    genre: (genreOverride && (genres as readonly string[]).includes(genreOverride)) ? (genreOverride as GameParams['genre']) : genres[Math.floor(rng.nextF64() * genres.length)],
     complexity: complexities[Math.floor(rng.nextF64() * complexities.length)],
     duration: 15 + Math.floor(rng.nextF64() * 105)
   };
