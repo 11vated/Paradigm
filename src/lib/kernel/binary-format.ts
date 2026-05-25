@@ -89,7 +89,7 @@ export interface GseedPackage {
 }
 
 const MAGIC = new TextEncoder().encode('GSEE');
-const CURRENT_VERSION = { major: 1, minor: 1 };
+export const CURRENT_VERSION = { major: 1, minor: 1 };
 
 interface ZlibModule {
   deflateSync(data: Uint8Array): Uint8Array;
@@ -112,7 +112,7 @@ function getNodeZlib(): ZlibModule | null {
   }
 }
 
-function canCompressSections(): boolean {
+export function canCompressSections(): boolean {
   return getNodeZlib() !== null;
 }
 

@@ -1,16 +1,16 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GitBranch, ArrowRight, Loader2 } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { useSeedStore } from '@/stores/seedStore';
 import { composeSeed, getCompositionGraph, getCompositionPath } from '@/services/api';
 
-export default function CompositionPanel({ seed, onComposed }) {
+const CompositionPanel = React.memo(function CompositionPanel({ seed, onComposed }: { seed: any; onComposed?: any }) {
   const [targetDomain, setTargetDomain] = useState('sprite');
   const [loading, setLoading] = useState(false);
-  const [graph, setGraph] = useState(null);
-  const [path, setPath] = useState(null);
+  const [graph, setGraph] = useState<any>(null);
+  const [path, setPath] = useState<any>(null);
 
   useEffect(() => {
     getCompositionGraph().then(r => setGraph(r)).catch(() => {});
@@ -35,7 +35,7 @@ export default function CompositionPanel({ seed, onComposed }) {
     } catch (e) { console.error(e); }
   };
 
-  const availableTargets = graph?.edges?.filter(e => e.source === seed?.$domain).map(e => e.target) || [];
+  const availableTargets = graph?.edges?.filter((e: any) => e.source === seed?.$domain).map((e: any) => e.target) || [];
 
   return (
     <div className="p-3 space-y-4" data-testid="composition-panel">
@@ -77,7 +77,7 @@ export default function CompositionPanel({ seed, onComposed }) {
               <div className="font-mono text-[8px] text-accent uppercase mb-1">Composition Path</div>
               {path.path ? (
                 <div className="flex items-center gap-1 flex-wrap">
-                  {path.path.map((step, i) => (
+                  {path.path.map((step: any, i: any) => (
                     <span key={i} className="font-mono text-[9px]">
                       {i > 0 && <span className="text-neutral-700 mx-1">→</span>}
                       <span className="text-neutral-400">{step[0]}</span>
@@ -110,7 +110,7 @@ export default function CompositionPanel({ seed, onComposed }) {
             <div className="pt-2 border-t border-neutral-900">
               <div className="font-mono text-[8px] text-neutral-700 uppercase mb-1">Functor Graph ({graph.edges?.length} bridges)</div>
               <div className="space-y-0.5 max-h-[120px] overflow-y-auto">
-                {graph.edges?.map((e, i) => (
+                {graph.edges?.map((e: any, i: any) => (
                   <div key={i} className="flex items-center gap-1 font-mono text-[8px]">
                     <span className="text-neutral-500">{e.source}</span>
                     <span className="text-neutral-700">→</span>
@@ -125,4 +125,6 @@ export default function CompositionPanel({ seed, onComposed }) {
       )}
     </div>
   );
-}
+})
+
+export default CompositionPanel;

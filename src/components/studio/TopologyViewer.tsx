@@ -1,13 +1,10 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { DOMAIN_COLORS } from '@/lib/constants';
 
-function LatticePoints({ seed, artifact }) {
-  const pointsRef = useRef();
+function LatticePoints({ seed, artifact }: { seed: any; artifact: any }) {
+  const pointsRef = useRef<any>(null);
   
   // Re-calculate positions and colors whenever the field updates
   const { positions, colors } = useMemo(() => {
@@ -64,7 +61,7 @@ function LatticePoints({ seed, artifact }) {
     };
   }, [artifact]);
 
-  useFrame((state) => {
+  useFrame((state: any) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
@@ -75,15 +72,15 @@ function LatticePoints({ seed, artifact }) {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" array={positions} count={positions.length / 3} itemSize={3} />
-        <bufferAttribute attach="attributes-color" array={colors} count={colors.length / 3} itemSize={3} />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} array={positions} count={positions.length / 3} itemSize={3} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} array={colors} count={colors.length / 3} itemSize={3} />
       </bufferGeometry>
       <pointsMaterial size={0.06} vertexColors transparent opacity={0.8} />
     </points>
   );
 }
 
-export default function TopologyViewer({ seed, artifact }) {
+export default function TopologyViewer({ seed, artifact }: { seed: any; artifact: any }) {
   if (!artifact) return null;
 
   return (

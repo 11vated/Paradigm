@@ -1,18 +1,18 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Loader2, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function EvolvePanel({ seed, onEvolved }) {
+const EvolvePanel = React.memo(function EvolvePanel({ seed, onEvolved }: { seed: any; onEvolved?: any }) {
   const [algorithm, setAlgorithm] = useState('map_elites');
   const [popSize, setPopSize] = useState(12);
   const [generations, setGenerations] = useState(5);
   const [loading, setLoading] = useState(false);
-  const evolveCurrentSeed = useSeedStore((s) => s.evolveCurrentSeed);
+  const evolveCurrentSeed = useSeedStore((s: any) => s.evolveCurrentSeed);
 
   const handleEvolve = async () => {
     if (!seed || loading) return;
@@ -77,4 +77,6 @@ export default function EvolvePanel({ seed, onEvolved }) {
       )}
     </div>
   );
-}
+})
+
+export default EvolvePanel;

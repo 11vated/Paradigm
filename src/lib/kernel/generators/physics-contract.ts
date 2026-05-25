@@ -16,7 +16,7 @@ interface PhysicsInverted { kind: string; bytes: number; }
 async function synth(seed: PhysicsSeed): Promise<PhysicsArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'physics-q-'));
   try {
-    const r = await withKernelClock(0, () => generatePhysics(seed as any, path.join(dir, "physics.json")));
+    const r = await withKernelClock(0, () => generatePhysics(seed as any, dir));
     const config = await fs.readFile(r.jsonPath, 'utf8');
     return { config, size: 0 /* configSize removed */ };
   } finally {

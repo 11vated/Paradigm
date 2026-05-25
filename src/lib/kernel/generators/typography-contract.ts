@@ -10,10 +10,10 @@ import { registerContract, type QualityContract } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface TypographySeed { $domain: 'typography'; $name?: string; genes: any }
-interface TypographyArtifact { filePath: string; meta: any }
+interface TypographyArtifact { filePath: string; meta: { glyphCount?: number } }
 
 function hashArtifact(a: TypographyArtifact): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath).digest('hex');
 }
 
 export const TypographyQualityContract: QualityContract<TypographySeed, TypographyArtifact, any> = {
@@ -26,11 +26,16 @@ export const TypographyQualityContract: QualityContract<TypographySeed, Typograp
   ],
   synthesize: async (seed) => {
     const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'typography-'));
-    const out = path.join(dir, 'a.svg');
-    const r: any = await withKernelClock(0, () => generateTypography(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fs.readFile(filePath, 'utf-8').catch(async () => (await fs.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: { ...r, filePath: undefined } };
+    try {
+      const r: any = await withKernelClock(0, () => generateTypography(seed as any, dir));
+      const primaryPath = r.svgPath ?? r.htmlPath;
+      const data = primaryPath
+        ? await fs.readFile(primaryPath, 'utf-8').catch(async () => (await fs.readFile(primaryPath)).toString('base64'))
+        : '';
+      return { filePath: data, meta: { ...r, filePath: undefined } };
+    } finally {
+      await fs.rm(dir, { recursive: true, force: true });
+    }
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

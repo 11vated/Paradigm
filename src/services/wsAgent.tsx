@@ -1,6 +1,3 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 /**
  * WebSocket client for the GSPL Agent streaming interface.
  * Falls back to HTTP POST /api/agent/query when WebSocket is unavailable.
@@ -17,6 +14,16 @@ function getWsUrl() {
 }
 
 export class AgentWebSocket {
+  ws: any;
+  connected: boolean;
+  pending: any[];
+  onMessage: any;
+  onConnect: any;
+  onDisconnect: any;
+  reconnectTimer: any;
+  reconnectAttempts: number;
+  maxReconnectAttempts: number;
+
   constructor() {
     this.ws = null;
     this.connected = false;
@@ -51,7 +58,7 @@ export class AgentWebSocket {
       }
     };
 
-    this.ws.onmessage = (event) => {
+    this.ws.onmessage = (event: any) => {
       try {
         const data = JSON.parse(event.data);
         if (this.onMessage) this.onMessage(data);
@@ -86,7 +93,7 @@ export class AgentWebSocket {
     };
   }
 
-  send(query) {
+  send(query: any) {
     return new Promise((resolve) => {
       if (!this.ws || this.ws.readyState !== WebSocket.OPEN) {
         // Queue for when connected, or fail immediately if not connecting
@@ -117,7 +124,7 @@ export class AgentWebSocket {
 }
 
 // Singleton
-let instance = null;
+let instance: any = null;
 
 export function getAgentWs() {
   if (!instance) {

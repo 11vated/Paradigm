@@ -26,6 +26,12 @@ async function initNodeCanvas(): Promise<void> {
     const mod = await import('node:module');
     const req = mod.createRequire(import.meta.url);
     _nodeCanvasModule = req('canvas');
+    return;
+  } catch { /* fall through */ }
+
+  // Path 3: ESM dynamic import (works when require-based approaches fail).
+  try {
+    _nodeCanvasModule = await import('canvas');
   } catch {
     _nodeCanvasModule = null;
   }

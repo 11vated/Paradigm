@@ -6,11 +6,11 @@ export interface Seed {
   $name?: string;
   $domain?: string;
   $hash?: string;
-  $lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number };
+  $lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number; fitness?: number };
   $fitness?: { overall?: number };
   metadata?: { name?: string; domain?: string; owner?: string; tags?: string[] };
   genes?: Record<string, { type?: string; value?: any; schema?: any }>;
-  lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number };
+  lineage?: { generation?: number; parents?: string[]; operators?: string[]; timestamp?: number; fitness?: number };
   signature?: string;
   [key: string]: any;
 }

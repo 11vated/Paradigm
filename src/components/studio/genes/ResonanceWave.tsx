@@ -1,16 +1,13 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 import { useRef, useEffect, useCallback } from 'react';
 
 /**
  * ResonanceWave — Canvas-based oscilloscope for resonance/temporal genes.
  * Renders a live waveform derived from gene values at 60fps.
  */
-export default function ResonanceWave({ value = {}, color = '#00E5FF', height = 48 }) {
-  const canvasRef = useRef(null);
-  const frameRef = useRef(0);
-  const timeRef = useRef(0);
+export default function ResonanceWave({ value = {}, color = '#00E5FF', height = 48 }: { value?: any; color?: any; height?: any }) {
+  const canvasRef = useRef<any>(null);
+  const frameRef = useRef<any>(0);
+  const timeRef = useRef<any>(0);
 
   // Extract waveform parameters from gene value
   const frequency = typeof value === 'object' ? (value.frequency || value.fundamental || 432) : (typeof value === 'number' ? value : 432);

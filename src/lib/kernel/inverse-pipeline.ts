@@ -74,6 +74,9 @@ const DESCRIPTION_PATTERNS: { pattern: RegExp; domain: string }[] = [
   { pattern: /circuit|electronics|pcb|schematic|component|board/i, domain: 'circuit' },
   { pattern: /alife|life|creature|organism|cellular|automata/i, domain: 'alife' },
   { pattern: /typography|font|typeface|text|letter|glyph|type/i, domain: 'typography' },
+  { pattern: /robot|drone|mech|autonomous|ai\sagent|chatbot|assistant/i, domain: 'agent' },
+  { pattern: /robotics|android|cyborg/i, domain: 'robotics' },
+  { pattern: /dance|ballet|choreography|performance|movement/i, domain: 'choreography' },
   // Phase 1+2 sovereign domains
   { pattern: /website|landing.page|homepage|web.presence|site|portfolio.site|brand.site/i, domain: 'website' },
   { pattern: /electromagnetic|electric.field|magnetic.field|fdtd|em.wave|maxwell|antenna|dipole/i, domain: 'field' },

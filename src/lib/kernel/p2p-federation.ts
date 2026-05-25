@@ -11,7 +11,7 @@
 
 import crypto from 'crypto';
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
-import { type Seed } from '../kernel/seed-class';
+import { type Seed } from '../kernel/types';
 import { FederationManager, type PeerInfo, type FederationMessage } from './federation';
 import { kernelNow, kernelNowIso } from './clock';
 
@@ -96,10 +96,10 @@ export class P2PFederationProtocol {
       seedData: seed,
       originNode: this.config.nodeId,
       timestamp: kernelNow(),
-      signature: this.signRecord(seed.hash || '', seed.metadata.domain || 'unknown'),
-      fitness: seed.lineage.fitness || 0,
-      domain: seed.metadata.domain || 'unknown',
-      generation: seed.lineage.generation || 0,
+      signature: this.signRecord(seed.hash || '', seed.metadata?.domain || 'unknown'),
+      fitness: seed.lineage?.fitness || 0,
+      domain: seed.metadata?.domain || 'unknown',
+      generation: seed.lineage?.generation || 0,
     };
 
     this.localArchive.cells.set(record.seedHash, record);

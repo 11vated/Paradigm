@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -6,13 +6,13 @@ import { motion, AnimatePresence } from 'framer-motion';
  * CategoricalCarousel — Pill-based selector for categorical genes.
  * Selected option glows cyan, others are dim. Shockwave on selection.
  */
-export default function CategoricalCarousel({ value, options = [], onChange, color = '#00E5FF' }) {
+export default function CategoricalCarousel({ value, options = [], onChange, color = '#00E5FF' }: { value: any; options?: any; onChange: any; color?: any }) {
   const choices = options.length > 0 ? options : [value || 'unknown'];
 
   return (
     <div className="flex flex-wrap gap-1.5">
       <AnimatePresence mode="popLayout">
-        {choices.map((opt) => {
+        {choices.map((opt: any) => {
           const isActive = opt === value;
           return (
             <motion.button

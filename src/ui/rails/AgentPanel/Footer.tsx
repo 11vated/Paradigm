@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { kernelNow, kernelNowIso } from '@/lib/kernel/clock';
 
-export const AgentFooter: React.FC = () => {
+export const AgentFooter = React.memo(() => {
   const { threads, currentThreadId } = useAgentThreads();
   const thread = threads.find((t) => t.id === currentThreadId) ?? null;
   const turns = thread?.turns ?? [];
@@ -61,4 +61,4 @@ export const AgentFooter: React.FC = () => {
       />
     </footer>
   );
-};
+});

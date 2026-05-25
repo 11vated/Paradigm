@@ -15,7 +15,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
-import { createCanvas } from './canvas-utils';
+import { createCanvas, ensureNodeCanvas } from './canvas-utils';
 
 interface SpriteParams {
   resolution: number;        // 64-512px
@@ -66,6 +66,7 @@ export async function generateSpriteV3(
   paletteSize: number;
   atlas: string;
 }> {
+  await ensureNodeCanvas();
   const rng = new Xoshiro256StarStar(seed.$hash || 'sprite-default-seed');
   const params = extractSpriteParams(seed, rng);
   

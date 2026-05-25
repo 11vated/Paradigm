@@ -1,15 +1,15 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Heart } from 'lucide-react';
 import { toast } from 'sonner';
 
-export default function BreedPanel({ gallery, onBred }) {
+const BreedPanel = React.memo(function BreedPanel({ gallery, onBred }: { gallery: any; onBred: any }) {
   const [parentA, setParentA] = useState('');
   const [parentB, setParentB] = useState('');
   const [loading, setLoading] = useState(false);
-  const breedSeedsInStore = useSeedStore((s) => s.breedSeeds);
+  const breedSeedsInStore = useSeedStore((s: any) => s.breedSeeds);
 
   const handleBreed = async () => {
     if (!parentA || !parentB || parentA === parentB || loading) return;
@@ -79,4 +79,6 @@ export default function BreedPanel({ gallery, onBred }) {
       )}
     </div>
   );
-}
+})
+
+export default BreedPanel;

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import React, { useRef, useEffect, useState } from 'react';
 
@@ -182,8 +181,8 @@ export const PhotorealisticRendererDemo: React.FC<PhotorealisticRendererDemoProp
         const scale = obj.scale;
 
         // Simple perspective projection with depth
-        const projectedVertices = [];
-        const depth = [];
+        const projectedVertices: any[] = [];
+        const depth: any[] = [];
         for (let i = 0; i < vertices.length; i += 3) {
           const x = vertices[i] + obj.position[0];
           const y = vertices[i + 1] + obj.position[1];

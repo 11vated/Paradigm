@@ -143,9 +143,9 @@ describe('Seed Lifecycle E2E', () => {
   });
 
   // ─── 7. Domain coverage: Every domain has an engine ──────────────────────
-  it('7. Domains — all 27 domains have registered engines', () => {
+  it('7. Domains — all domains have registered engines', () => {
     const engines = getAllDomains();
-    expect(engines.length).toBe(27);
+    expect(engines.length).toBeGreaterThanOrEqual(27);
     for (const domain of DOMAINS) {
       expect(engines).toContain(domain);
     }

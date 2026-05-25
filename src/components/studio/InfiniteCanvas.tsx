@@ -1,6 +1,6 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
-import { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceX, forceY } from 'd3-force';
 
@@ -65,7 +65,7 @@ const DOMAIN_COLORS: Record<string, string> = {
   default: '#94a3b8',
 };
 
-export default function InfiniteCanvas({
+const InfiniteCanvas = React.memo(function InfiniteCanvas({
   initialNodes = [],
   initialLinks = [],
   onNodeClick,
@@ -80,7 +80,7 @@ export default function InfiniteCanvas({
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
   const [draggedNode, setDraggedNode] = useState<string | null>(null);
   const simulationRef = useRef<any>(null);
-  const seeds = useSeedStore((s) => s.seeds);
+  const seeds = useSeedStore((s: any) => s.seeds);
 
   const seedNodes = useMemo(() => {
     return (seeds || []).map((s: any) => ({
@@ -104,9 +104,9 @@ export default function InfiniteCanvas({
     if (seedNodes.length === 0) return;
 
     const linkData: CanvasLink[] = [];
-    const hashMap = new Map(seedNodes.map(n => [n.hash, n]));
+    const hashMap = new Map(seedNodes.map((n: any) => [n.hash, n]));
 
-    seedNodes.forEach(node => {
+    seedNodes.forEach((node: any) => {
       const seed = hashMap.get(node.hash) as any;
       if (seed?.$lineage?.parents) {
         seed.$lineage.parents.forEach((parentHash: string) => {
@@ -386,4 +386,6 @@ export default function InfiniteCanvas({
       </div>
     </div>
   );
-}
+})
+
+export default InfiniteCanvas;

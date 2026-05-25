@@ -4,7 +4,7 @@
  * Each test: grow a seed → check output file exists + key metrics
  */
 
-import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
+import { describe, it as test, expect, beforeAll, afterAll } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

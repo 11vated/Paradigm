@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 /**
  * Virtualized Gallery Grid — handles 10k+ seeds at 60fps
@@ -7,15 +7,15 @@
  * Only renders visible items + small buffer.
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 const ROW_HEIGHT = 180;
 const COL_GAP = 12;
 const ROW_GAP = 12;
 const BUFFER_ROWS = 3;
 
-export function VirtualGalleryGrid({ seeds, onSelect, onGrow, onEvolve, columns = 4 }) {
-  const containerRef = useRef(null);
+export const VirtualGalleryGrid = React.memo(function VirtualGalleryGrid({ seeds, onSelect, onGrow, onEvolve, columns = 4 }: { seeds: any; onSelect: any; onGrow: any; onEvolve: any; columns?: any }) {
+  const containerRef = useRef<any>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(600);
   const [containerWidth, setContainerWidth] = useState(800);
@@ -102,9 +102,9 @@ export function VirtualGalleryGrid({ seeds, onSelect, onGrow, onEvolve, columns 
       </div>
     </div>
   );
-}
+})
 
-function SeedCard({ seed, onClick, onGrow, onEvolve }) {
+function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any; onGrow: any; onEvolve: any }) {
   const fitness = seed.$fitness?.overall || 0;
   const domain = seed.$domain || 'unknown';
   const name = seed.$name || 'Unnamed';
@@ -117,7 +117,7 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }) {
     audio: '#c0392b', shader: '#16a085', particle: '#d35400',
   };
 
-  const color = domainColors[domain] || '#7f8c8d';
+  const color = (domainColors as Record<string, string>)[domain] || '#7f8c8d';
 
   return (
     <div

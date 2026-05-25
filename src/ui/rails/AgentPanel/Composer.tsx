@@ -15,7 +15,7 @@ interface ComposerProps {
   voiceSupported?: boolean;
 }
 
-export const Composer: React.FC<ComposerProps> = ({ voiceSupported = true }) => {
+export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) => {
   const { send } = useAgent();
   const { currentThreadId, forkFrom } = useAgentThreads();
   const seed = useActiveSeed((s) => s.seed);
@@ -271,4 +271,4 @@ export const Composer: React.FC<ComposerProps> = ({ voiceSupported = true }) => 
       </div>
     </div>
   );
-};
+});

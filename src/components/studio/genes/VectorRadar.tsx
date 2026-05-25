@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
  * VectorRadar — SVG radar chart for vector genes.
  * Displays 3+ axes with interactive points and color preview.
  */
-export default function VectorRadar({ value = [0.5, 0.5, 0.5], onChange, labels }) {
+export default function VectorRadar({ value = [0.5, 0.5, 0.5], onChange, labels }: { value?: any; onChange: any; labels?: any }) {
   const values = Array.isArray(value) ? value.map(v => Math.max(0, Math.min(1, typeof v === 'number' ? v : 0.5))) : [0.5, 0.5, 0.5];
   const n = values.length;
   const size = 120;
@@ -42,7 +42,7 @@ export default function VectorRadar({ value = [0.5, 0.5, 0.5], onChange, labels 
     ? `rgb(${Math.round(values[0] * 255)}, ${Math.round(values[1] * 255)}, ${Math.round(values[2] * 255)})`
     : null;
 
-  const handleAxisClick = (i, e) => {
+  const handleAxisClick = (i: any, e: any) => {
     const svg = e.currentTarget.closest('svg');
     if (!svg) return;
     const rect = svg.getBoundingClientRect();

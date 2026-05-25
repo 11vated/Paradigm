@@ -1,7 +1,3 @@
-// @ts-nocheck — Phase 0: latent prop-type mismatches surfaced when neighbor
-// components were re-typed. Pending props normalization in the Typing Sprint
-// (see Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md).
-
 /**
  * SeedChat Integration — Connected to Backend API
  * Uses seedStore to call real backend generators
@@ -26,7 +22,7 @@ interface Message {
 
 type LoadingStep = 'idle' | 'seed' | 'gspl' | 'grow' | 'complete' | 'error';
 
-export function SeedChatIntegrated({ onArtifactGenerated }: { onArtifactGenerated?: (artifact: any) => void }) {
+export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArtifactGenerated }: { onArtifactGenerated?: (artifact: any) => void }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '0',
@@ -41,7 +37,7 @@ export function SeedChatIntegrated({ onArtifactGenerated }: { onArtifactGenerate
   const [apiKey, setApiKey] = useState('');
 
   // Use the store which calls backend API
-  const { generateNewSeed, growCurrentSeed, currentSeed, artifact } = useSeedStore();
+  const { generateNewSeed, growCurrentSeed, currentSeed, artifact } = useSeedStore() as any;
 
   const sendMessage = async () => {
     if (!input.trim() || loadingStep !== 'idle') return;
@@ -235,7 +231,7 @@ export function SeedChatIntegrated({ onArtifactGenerated }: { onArtifactGenerate
       </div>
     </div>
   );
-}
+})
 
 const styles = {
   container: { display: 'flex', flexDirection: 'column' as const, height: '600px', backgroundColor: '#1a1a1a', color: '#fff' },

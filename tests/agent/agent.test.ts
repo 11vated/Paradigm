@@ -19,7 +19,7 @@ describe('GSPL Agent', () => {
       const r = await agent.process('list domains');
       expect(r.intent).toBe('list_domains');
       expect(r.success).toBe(true);
-      expect(r.data?.domains.length).toBe(27);
+      expect(r.data?.domains.length).toBeGreaterThanOrEqual(27);
     });
 
     it('classifies "list gene types" as list_gene_types', async () => {

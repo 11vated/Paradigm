@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useEffect, useRef } from 'react';
 import { Dna } from 'lucide-react';
@@ -25,7 +24,7 @@ export function MusicPreview({ artifact }: ViewportProps) {
     <div className="flex flex-col items-center gap-4" data-testid="preview-music">
       <div className="w-56 h-28 bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-neutral-800 flex items-center justify-center">
         <div className="flex items-end gap-1 h-20">
-          {(melody.length > 0 ? melody.slice(0, 12) : [60, 64, 67, 72, 69, 64, 67, 60]).map((note, i) => (
+          {(melody.length > 0 ? melody.slice(0, 12) : [60, 64, 67, 72, 69, 64, 67, 60]).map((note: any, i: any) => (
             <div key={i} className="w-3 bg-primary/60 rounded-t-sm"
               style={{ height: `${Math.max(10, ((note - 48) / 40) * 100)}%` }} />
           ))}

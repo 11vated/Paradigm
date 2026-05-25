@@ -55,6 +55,23 @@ jobs:
       - name: Check deterministic source purity
         run: npm run determinism:check
 
+  quality:
+    name: Quality Contracts & Golden Hashes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Verify golden hashes
+        run: npm run golden:verify
+      - name: Run quality contracts
+        run: npm run quality:contract
+
   kernel-tests:
     name: Kernel & Engine Tests
     runs-on: ubuntu-latest

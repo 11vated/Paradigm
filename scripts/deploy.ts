@@ -7,7 +7,7 @@
  *   npx hardhat run scripts/deploy.ts --network mumbai
  */
 
-import { ethers, upgrades } from 'hardhat';
+import { ethers } from 'hardhat';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -50,97 +50,73 @@ async function main() {
   // 1. Deploy PARA Token (ERC-20)
   // ═══════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  [1/3] Deploying PARA Token (ERC-20)...');
+  console.log('  [1/5] Deploying PARA Token (ERC-20)...');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
   const ParaToken = await ethers.getContractFactory('ParaToken');
   
-  // Initial supply: 1 billion PARA tokens (18 decimals)
-  const initialSupply = ethers.parseEther('1000000000');
-  
-  const paraToken = await ParaToken.deploy(
-    'Paradigm',           // name
-    'PARA',              // symbol
-    deployer.address,    // initial holder (treasury)
-    initialSupply        // initial supply
-  );
+  const paraToken = await ParaToken.deploy();
   
   await paraToken.waitForDeployment();
   const paraTokenAddress = await paraToken.getAddress();
   
   console.log(`✅ PARA Token deployed at: ${paraTokenAddress}`);
+  console.log(`   Note: Token mints 1B PARA to pre-configured wallets in constructor\n`);
   
   deploymentConfig.contracts.ParaToken = {
     address: paraTokenAddress,
-    constructorArgs: ['Paradigm', 'PARA', deployer.address, initialSupply.toString()],
+    constructorArgs: [],
     transactionHash: paraToken.deploymentTransaction()?.hash || '',
   };
-
-  // Grant minter role to deployer for vesting
-  const MINTER_ROLE = await paraToken.MINTER_ROLE();
-  await paraToken.grantRole(MINTER_ROLE, deployer.address);
-  console.log(`✅ Granted MINTER role to deployer\n`);
 
   // ═══════════════════════════════════════════════════════════════
   // 2. Deploy SeedNFT (ERC-721)
   // ═══════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  [2/3] Deploying SeedNFT (ERC-721)...');
+  console.log('  [2/5] Deploying SeedNFT (ERC-721)...');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
   const SeedNFT = await ethers.getContractFactory('SeedNFT');
   
-  const seedNFT = await upgrades.deployProxy(SeedNFT, [
+  const seedNFT = await SeedNFT.deploy(
     'Paradigm Seed NFT',
     'P-SEED',
-    paraTokenAddress, // PARAToken address for royalty payments
-    ethers.parseEther('0.01'), // 1% royalty on secondary sales
-    deployer.address, // royalty recipient
-  ], { initializer: 'initialize' });
+    'https://api.paradigm.art/seeds/',
+    deployer.address,
+    250
+  );
   
   await seedNFT.waitForDeployment();
   const seedNFTAddress = await seedNFT.getAddress();
   
-  console.log(`✅ SeedNFT (proxy) deployed at: ${seedNFTAddress}`);
+  console.log(`✅ SeedNFT deployed at: ${seedNFTAddress}`);
   
   deploymentConfig.contracts.SeedNFT = {
     address: seedNFTAddress,
-    constructorArgs: ['Paradigm Seed NFT', 'P-SEED', paraTokenAddress, '10000000000000000', deployer.address],
+    constructorArgs: ['Paradigm Seed NFT', 'P-SEED', 'https://api.paradigm.art/seeds/', deployer.address, 250],
     transactionHash: seedNFT.deploymentTransaction()?.hash || '',
   };
-
-  // Grant minter role to deployer
-  const MINTER_ROLE_NFT = await seedNFT.MINTER_ROLE();
-  await seedNFT.grantRole(MINTER_ROLE_NFT, deployer.address);
-  console.log(`✅ Granted MINTER role to deployer\n`);
 
   // ═══════════════════════════════════════════════════════════════
   // 3. Deploy Paradigm Marketplace
   // ═══════════════════════════════════════════════════════════════
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  [3/3] Deploying Paradigm Marketplace...');
+  console.log('  [3/5] Deploying Paradigm Marketplace...');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
   const Marketplace = await ethers.getContractFactory('ParadigmMarketplace');
   
-  // Platform fee: 2.5% (250 basis points)
-  const platformFee = 250;
-  
-  const marketplace = await Marketplace.deploy(
-    seedNFTAddress,
-    paraTokenAddress,
-    platformFee,
-    deployer.address // fee recipient
-  );
+  const marketplace = await Marketplace.deploy();
   
   await marketplace.waitForDeployment();
   const marketplaceAddress = await marketplace.getAddress();
   
   console.log(`✅ Paradigm Marketplace deployed at: ${marketplaceAddress}`);
+  console.log(`   Note: Marketplace includes built-in ERC-721 "Paradigm Seed" (GPAR)\n`);
   
   deploymentConfig.contracts.ParadigmMarketplace = {
     address: marketplaceAddress,
-    constructorArgs: [seedNFTAddress, paraTokenAddress, platformFee, deployer.address],
+    constructorArgs: [],
     transactionHash: marketplace.deploymentTransaction()?.hash || '',
   };
 

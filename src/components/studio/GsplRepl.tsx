@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 /**
  * GSPL REPL (Read-Eval-Print Loop) with Live Preview
@@ -52,7 +52,7 @@ interface ExecutionResult {
   executionTime: number;
 }
 
-export function GsplRepl() {
+export const GsplRepl = React.memo(function GsplRepl() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [result, setResult] = useState<ExecutionResult | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
@@ -271,13 +271,13 @@ export function GsplRepl() {
           )}
         </div>
         <div className="flex items-center gap-2">
-          {result?.diagnostics.length === 0 && (
+          {result && result.diagnostics && result.diagnostics.length === 0 && (
             <span className="flex items-center gap-1 text-green-400">
               <CheckCircle className="w-3 h-3" />
               No errors
             </span>
           )}
-          {result?.diagnostics.length > 0 && (
+          {result && result.diagnostics && result.diagnostics.length > 0 && (
             <span className="flex items-center gap-1 text-red-400">
               <AlertCircle className="w-3 h-3" />
               {result.diagnostics.length} error(s)
@@ -287,7 +287,7 @@ export function GsplRepl() {
       </div>
     </div>
   );
-}
+})
 
 // Output Panel
 function OutputPanel({ result }: { result: ExecutionResult | null }) {

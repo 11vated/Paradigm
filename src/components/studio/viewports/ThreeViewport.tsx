@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useRef, useState, useEffect, useMemo } from 'react';
 import { useReducedMotion } from 'framer-motion';
@@ -31,10 +30,10 @@ function EmergentMesh({ meshData, color }: { meshData: MeshData | null; color: s
       }
       geo.computeBoundingBox();
       const center = new THREE.Vector3();
-      geo.boundingBox.getCenter(center);
+      geo.boundingBox!.getCenter(center);
       geo.translate(-center.x, -center.y, -center.z);
       const size = new THREE.Vector3();
-      geo.boundingBox.getSize(size);
+      geo.boundingBox!.getSize(size);
       const maxDim = Math.max(size.x, size.y, size.z);
       if (maxDim > 0) {
         geo.scale(2.0 / maxDim, 2.0 / maxDim, 2.0 / maxDim);
@@ -200,10 +199,10 @@ export default function ThreeViewport({ artifact }: ViewportProps) {
         const geo = objToBufferGeometry(objData);
         geo.computeBoundingBox();
         const center = new THREE.Vector3();
-        geo.boundingBox.getCenter(center);
+        geo.boundingBox!.getCenter(center);
         geo.translate(-center.x, -center.y, -center.z);
         const size = new THREE.Vector3();
-        geo.boundingBox.getSize(size);
+        geo.boundingBox!.getSize(size);
         const maxDim = Math.max(size.x, size.y, size.z);
         if (maxDim > 0) geo.scale(2.0 / maxDim, 2.0 / maxDim, 2.0 / maxDim);
         geometryRef.current = geo;

@@ -1,9 +1,10 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 // Removed unused Dna import
+import React from 'react';
 import { DOMAIN_COLORS } from '@/lib/constants';
 
-export default function GalleryGrid({ seeds, onSelect, selectedId }) {
+const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedId }: { seeds: any; onSelect: any; selectedId: any }) {
   if (!Array.isArray(seeds) || seeds.length === 0) {
     return (
       <div className="flex items-center justify-center h-48 p-4" data-testid="gallery-empty">
@@ -55,4 +56,6 @@ export default function GalleryGrid({ seeds, onSelect, selectedId }) {
       })}
     </div>
   );
-}
+})
+
+export default GalleryGrid;

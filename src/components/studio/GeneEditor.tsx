@@ -1,7 +1,4 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -14,12 +11,12 @@ const BIOME_CHOICES = ['temperate', 'tropical', 'arctic', 'desert', 'volcanic', 
 const STYLE_CHOICES = ['abstract', 'realistic', 'impressionist', 'cubist', 'surreal', 'minimalist', 'baroque'];
 const SYMMETRY_CHOICES = ['bilateral', 'radial', 'none', 'rotational'];
 
-function getCategoricalChoices(geneName) {
-  const map = { archetype: ARCHETYPE_CHOICES, scale: SCALE_CHOICES, key: KEY_CHOICES, biome: BIOME_CHOICES, style: STYLE_CHOICES, symmetry: SYMMETRY_CHOICES };
+function getCategoricalChoices(geneName: any) {
+  const map: Record<string, string[]> = { archetype: ARCHETYPE_CHOICES, scale: SCALE_CHOICES, key: KEY_CHOICES, biome: BIOME_CHOICES, style: STYLE_CHOICES, symmetry: SYMMETRY_CHOICES };
   return map[geneName] || ['option_a', 'option_b', 'option_c'];
 }
 
-function ScalarWidget({ value, onChange }) {
+function ScalarWidget({ value, onChange }: { value: any; onChange: any }) {
   const numVal = typeof value === 'number' ? value : 0.5;
   return (
     <div className="flex items-center gap-3 w-full">
@@ -29,7 +26,7 @@ function ScalarWidget({ value, onChange }) {
   );
 }
 
-function CategoricalWidget({ value, geneName, onChange }) {
+function CategoricalWidget({ value, geneName, onChange }: { value: any; geneName: any; onChange: any }) {
   const choices = getCategoricalChoices(geneName);
   return (
     <Select value={value} onValueChange={onChange}>
@@ -37,13 +34,13 @@ function CategoricalWidget({ value, geneName, onChange }) {
         <SelectValue />
       </SelectTrigger>
       <SelectContent className="bg-[#050505] border-[#1a1a1a]">
-        {choices.map(c => <SelectItem key={c} value={c} className="text-[10px] font-mono border-b border-[#111] last:border-0 hover:bg-[#1a1a1a] focus:bg-[#1a1a1a] focus:text-white cursor-pointer transition-colors text-[#ccc]">{c}</SelectItem>)}
+        {choices.map((c: any) => <SelectItem key={c} value={c} className="text-[10px] font-mono border-b border-[#111] last:border-0 hover:bg-[#1a1a1a] focus:bg-[#1a1a1a] focus:text-white cursor-pointer transition-colors text-[#ccc]">{c}</SelectItem>)}
       </SelectContent>
     </Select>
   );
 }
 
-function VectorWidget({ value, onChange }) {
+function VectorWidget({ value, onChange }: { value: any; onChange: any }) {
   if (!Array.isArray(value)) return <span className="font-mono text-[10px] text-[#555]">—</span>;
   return (
     <div className="flex justify-between gap-2">
@@ -62,7 +59,7 @@ function VectorWidget({ value, onChange }) {
   );
 }
 
-function GenericWidget({ value, onChange }) {
+function GenericWidget({ value, onChange }: { value: any; onChange: any }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState('');
 
@@ -120,9 +117,9 @@ function GenericWidget({ value, onChange }) {
   );
 }
 
-export default function GeneEditor({ seed, onSeedUpdated }) {
-  const [updating, setUpdating] = useState(null);
-  const updateGeneInStore = useSeedStore((s) => s.updateGene);
+const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { seed: any; onSeedUpdated: any }) {
+  const [updating, setUpdating] = useState<any>(null);
+  const updateGeneInStore = useSeedStore((s: any) => s.updateGene);
 
   if (!seed) {
     return (
@@ -137,7 +134,7 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
   const genes = seed.genes || {};
   const geneEntries = Object.entries(genes);
 
-  const handleUpdate = async (name, type, value) => {
+  const handleUpdate = async (name: any, type: any, value: any) => {
     setUpdating(name);
     try {
       const updated = await updateGeneInStore(name, type, value);
@@ -152,7 +149,7 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
         <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">Gene Map</span>
         <span className="font-mono text-[9px] text-[#444]">{geneEntries.length} locus points</span>
       </div>
-      {geneEntries.map(([name, gene]) => {
+      {geneEntries.map(([name, gene]: [any, any]) => {
         const gtype = gene.type;
         const color = TYPE_COLORS[gtype] || '#525252';
         return (
@@ -165,10 +162,10 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
                 {updating === name && <span className="text-[8px] text-primary animate-pulse ml-auto">SYNTHESIZING...</span>}
               </div>
               <div className="pl-3 w-full">
-                {gtype === 'scalar' && <ScalarWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {gtype === 'categorical' && <CategoricalWidget value={gene.value} geneName={name} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {gtype === 'vector' && <VectorWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
-                {!['scalar', 'categorical', 'vector'].includes(gtype) && <GenericWidget value={gene.value} onChange={(v) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'scalar' && <ScalarWidget value={gene.value} onChange={(v: any) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'categorical' && <CategoricalWidget value={gene.value} geneName={name} onChange={(v: any) => handleUpdate(name, gtype, v)} />}
+                {gtype === 'vector' && <VectorWidget value={gene.value} onChange={(v: any) => handleUpdate(name, gtype, v)} />}
+                {!['scalar', 'categorical', 'vector'].includes(gtype) && <GenericWidget value={gene.value} onChange={(v: any) => handleUpdate(name, gtype, v)} />}
               </div>
             </div>
           </div>
@@ -176,4 +173,6 @@ export default function GeneEditor({ seed, onSeedUpdated }) {
       })}
     </div>
   );
-}
+})
+
+export default GeneEditor;

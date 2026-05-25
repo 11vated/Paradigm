@@ -10,10 +10,10 @@ import { registerContract, type QualityContract } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'ecosystem'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A { filePath: string; meta: { speciesCount?: number; biomeCount?: number } }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath).digest('hex');
 }
 
 export const EcosystemQualityContract: QualityContract<S, A, any> = {
@@ -26,11 +26,16 @@ export const EcosystemQualityContract: QualityContract<S, A, any> = {
   ],
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'ecosystem-'));
-    const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateEcosystem(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    try {
+      const r: any = await withKernelClock(0, () => generateEcosystem(seed as any, dir));
+      const primaryPath = r.jsonPath ?? r.htmlPath;
+      const data = primaryPath
+        ? await fsp.readFile(primaryPath, 'utf-8').catch(async () => (await fsp.readFile(primaryPath)).toString('base64'))
+        : '';
+      return { filePath: data, meta: { ...r } };
+    } finally {
+      await fsp.rm(dir, { recursive: true, force: true });
+    }
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

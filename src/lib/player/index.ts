@@ -16,15 +16,26 @@
  *   C2PA_MANIFEST → provenance claim
  *   ROYALTY   → royalty config
  *   SIGNATURE → ECDSA P-256 over header+sections
+ *
+ * IMPORTANT DESIGN NOTE:
+ * The .gseed format does NOT store the public key (unlike Friend sovereignty
+ * which stores it in `sovereignty.author`). Full cryptographic verification
+ * requires the public key to be provided separately. When no public key is
+ * available, the player falls back to checking signature presence as a proxy.
  */
 
-import crypto from 'crypto';
-import { Xoshiro256StarStar, rngFromHash } from '../kernel/rng';
 import { growSeed } from '../kernel/engines';
 import type { GseedPackage } from '../kernel/binary-format';
 import { decodeGseed, verifyGseedSignature } from '../kernel/binary-format';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
+
+export interface PlayerOptions {
+  /** Optional public key (PEM format) for full cryptographic signature verification.
+   *  If not provided, verification falls back to checking signature presence.
+   */
+  publicKeyPem?: string;
+}
 
 export interface PlayerResult {
   domain:    string;
@@ -62,6 +73,12 @@ export interface ProvenanceClaim {
 // ─── Player ────────────────────────────────────────────────────────────────────
 
 export class ParadigmPlayer {
+  private options: PlayerOptions;
+
+  constructor(options: PlayerOptions = {}) {
+    this.options = options;
+  }
+
   /**
    * Load and play a .gseed buffer.
    * Returns the re-grown artifact + sovereignty verification.
@@ -104,16 +121,22 @@ export class ParadigmPlayer {
   // ─── Private ───────────────────────────────────────────────────────────────
 
   private parseGseed(buffer: Uint8Array | Buffer): GseedPackage {
-    // Validate magic "GSEE"
     const magic = String.fromCharCode(buffer[0], buffer[1], buffer[2], buffer[3]);
     if (magic !== 'GSEE') throw new Error(`Invalid .gseed magic: expected 'GSEE', got '${magic}'`);
-    // Dynamic import to avoid circular on browser
-    const { decodeGseedPackage } = require('../kernel/binary-format');
-    return decodeGseedPackage(Buffer.from(buffer));
+    return decodeGseed(Buffer.from(buffer));
   }
 
   private async verifySignature(pkg: GseedPackage, raw: Uint8Array | Buffer): Promise<boolean> {
     if (!pkg.signature) return false;
+
+    if (this.options.publicKeyPem) {
+      try {
+        return verifyGseedSignature(pkg, this.options.publicKeyPem);
+      } catch {
+        return false;
+      }
+    }
+
     try {
       if (typeof window !== 'undefined' && window.crypto?.subtle) {
         return this.verifyBrowser(pkg, raw);
@@ -123,8 +146,6 @@ export class ParadigmPlayer {
   }
 
   private async verifyBrowser(pkg: GseedPackage, _raw: Uint8Array | Buffer): Promise<boolean> {
-    // Signature is a raw Uint8Array; verification requires the public key which is stored separately.
-    // Without a stored public key in the binary format, we trust the signature presence as a proxy.
     return !!(pkg.signature && pkg.signature.length > 0);
   }
 
@@ -142,7 +163,6 @@ export class ParadigmPlayer {
   }
 
   private async render(seed: Record<string, unknown>, pkg: GseedPackage | null): Promise<PlayerArtifact> {
-    // If pkg has embedded outputs, use them (fastest — no re-grow)
     if (pkg?.outputs?.length) {
       const primary = pkg.outputs[0];
       const extras: Record<string, string> = {};
@@ -156,7 +176,6 @@ export class ParadigmPlayer {
         meta: { domain: (pkg.metadata as any)?.domain, hash: (pkg.metadata as any)?.hash, source: 'embedded' },
       };
     }
-    // Otherwise re-grow deterministically
     const grown = await growSeed(seed as any);
     return {
       mimeType: this.domainToMime(seed.$domain as string),

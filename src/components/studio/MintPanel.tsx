@@ -1,21 +1,18 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 import { useState, useEffect } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Loader2, Hexagon, ExternalLink, Image, Copy, Check } from 'lucide-react';
 
-export default function MintPanel({ seed }) {
+export default function MintPanel({ seed }: { seed: any }) {
   const [ownerAddress, setOwnerAddress] = useState('');
   const [minting, setMinting] = useState(false);
-  const [mintResult, setMintResult] = useState(null);
-  const [nftInfo, setNftInfo] = useState(null);
+  const [mintResult, setMintResult] = useState<any>(null);
+  const [nftInfo, setNftInfo] = useState<any>(null);
   const [loadingInfo, setLoadingInfo] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<any>(null);
   const [copied, setCopied] = useState(false);
-  const mintSeedInStore = useSeedStore((s) => s.mintSeed);
-  const getNftInfoInStore = useSeedStore((s) => s.getNftInfo);
-  const getSeedPortraitUrl = useSeedStore((s) => s.getSeedPortraitUrl);
+  const mintSeedInStore = useSeedStore((s: any) => s.mintSeed);
+  const getNftInfoInStore = useSeedStore((s: any) => s.getNftInfo);
+  const getSeedPortraitUrl = useSeedStore((s: any) => s.getSeedPortraitUrl);
 
   useEffect(() => {
     let isMounted = true;
@@ -57,13 +54,13 @@ export default function MintPanel({ seed }) {
       // Dry-run (no private key) — returns metadata and prepared data
       const result = await mintSeedInStore(ownerAddress || '0x0000000000000000000000000000000000000000');
       setMintResult(result);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response?.data?.detail || err.message || 'Mint failed');
     }
     setMinting(false);
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text: any) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -103,7 +100,7 @@ export default function MintPanel({ seed }) {
           src={portraitUrl}
           alt={`${seed.$name} gene portrait`}
           className="w-full aspect-square object-contain bg-neutral-950"
-          onError={(e) => { e.target.style.display = 'none'; }}
+          onError={(e: any) => { e.target.style.display = 'none'; }}
         />
       </div>
 

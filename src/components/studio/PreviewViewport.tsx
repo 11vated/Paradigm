@@ -1,6 +1,3 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 import { useState, useEffect } from 'react';
 import { GerminatingSpinner } from '@/components/shell/GerminatingSpinner';
 import { Primordium } from '@/components/shell/Primordium';
@@ -8,11 +5,11 @@ import { GSeedHyperobject } from './GSeedHyperobject';
 import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';
 import {
   ThreeViewport, SvgViewport, AudioViewport, GameViewport,
-  CodeViewport, SimViewport, AnimViewport, ArtifactInfo, DomainIcon,
+  CodeViewport, SimViewport, AnimViewport, TwoDViewport, ArtifactInfo, DomainIcon,
   getViewportType, AVAILABLE_VIEWS,
 } from './viewports';
 
-export default function PreviewViewport({ artifact, loading, seed, promptText = '' }) {
+export default function PreviewViewport({ artifact, loading, seed, promptText = '' }: { artifact: any; loading: any; seed: any; promptText?: any }) {
   const defaultView = artifact ? getViewportType(artifact.domain) : '3d';
   const [view, setView] = useState(defaultView);
   const domainColor = DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
@@ -51,7 +48,7 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
           </div>
 
           <div className="absolute top-2 left-2 z-20 pointer-events-none flex items-center gap-2">
-            <DomainIcon domain={artifact.domain} className="w-4 h-4" style={{ color: domainColor }} />
+            <DomainIcon domain={artifact.domain} className="w-4 h-4" />
             <div>
               <div className="font-mono text-[9px] text-neutral-600 uppercase">{artifact.domain} ENGINE</div>
               <div className="font-mono text-[8px] text-neutral-800">{artifact.seed_hash?.slice(0, 24)}</div>
@@ -87,6 +84,8 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
             <div className="absolute inset-0" data-testid="viewport-sim-container"><SimViewport artifact={artifact} /></div>
           ) : view === 'anim' ? (
             <div className="absolute inset-0" data-testid="viewport-anim-container"><AnimViewport artifact={artifact} /></div>
+          ) : view === '2d' ? (
+            <div className="absolute inset-0" data-testid="viewport-2d-container"><TwoDViewport artifact={artifact} seed={seed} /></div>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-[#000000]">
               <ArtifactInfo artifact={artifact} />

@@ -15,7 +15,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
-import { createCanvas } from './canvas-utils';
+import { createCanvas, ensureNodeCanvas } from './canvas-utils';
 
 interface Visual2DParams {
   style: 'abstract' | 'fractal' | 'geometric' | 'organic';
@@ -39,6 +39,7 @@ export async function generateVisual2DV3(
   layers: number;
   ssim: number;
 }> {
+  await ensureNodeCanvas();
   const rng = new Xoshiro256StarStar(seed.$hash || 'visual2d-default-seed');
   const params = extractVisual2DParams(seed, rng);
   

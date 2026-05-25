@@ -13,7 +13,7 @@ interface S { $domain: 'fashion'; $name?: string; genes: any }
 interface A { filePath: string; meta: any }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath).digest('hex');
 }
 
 export const FashionQualityContract: QualityContract<S, A, any> = {
@@ -26,11 +26,16 @@ export const FashionQualityContract: QualityContract<S, A, any> = {
   ],
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'fashion-'));
-    const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateFashion(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    try {
+      const r: any = await withKernelClock(0, () => generateFashion(seed as any, dir));
+      const primaryPath = r.jsonPath ?? r.patternPath ?? r.gltfPath;
+      const data = primaryPath
+        ? await fsp.readFile(primaryPath, 'utf-8').catch(async () => (await fsp.readFile(primaryPath)).toString('base64'))
+        : '';
+      return { filePath: data, meta: { ...r } };
+    } finally {
+      await fsp.rm(dir, { recursive: true, force: true });
+    }
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

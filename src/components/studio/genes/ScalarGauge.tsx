@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
@@ -8,11 +8,11 @@ import { motion } from 'framer-motion';
  * Shows a horizontal bar with glowing fill, ghost trail of previous value,
  * and a numeric readout in JetBrains Mono.
  */
-export default function ScalarGauge({ value = 0.5, onChange, label, color = '#00E5FF' }) {
+export default function ScalarGauge({ value = 0.5, onChange, label, color = '#00E5FF' }: { value?: any; onChange: any; label?: any; color?: any }) {
   const [dragging, setDragging] = useState(false);
   const [prevValue, setPrevValue] = useState(value);
   const [showGhost, setShowGhost] = useState(false);
-  const trackRef = useRef(null);
+  const trackRef = useRef<any>(null);
 
   useEffect(() => {
     if (Math.abs(value - prevValue) > 0.01) {
@@ -25,20 +25,20 @@ export default function ScalarGauge({ value = 0.5, onChange, label, color = '#00
     }
   }, [value]);
 
-  const handlePointerDown = (e) => {
+  const handlePointerDown = (e: any) => {
     setDragging(true);
     updateFromPointer(e);
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const handlePointerMove = (e) => {
+  const handlePointerMove = (e: any) => {
     if (!dragging) return;
     updateFromPointer(e);
   };
 
   const handlePointerUp = () => setDragging(false);
 
-  const updateFromPointer = (e) => {
+  const updateFromPointer = (e: any) => {
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
     const x = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));

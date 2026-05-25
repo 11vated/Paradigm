@@ -18,7 +18,7 @@ import { AnimationSystem, type AnimationClip, type IKChain } from './animation.j
 import { PostProcessingPipeline, type PostProcessingConfig } from './postprocessing.js';
 import { OptimizationSystem, type LODMesh } from './optimization.js';
 import { ProductionExportPipeline, type ExportAsset, type ExportOptions } from './export-pipeline.js';
-import { type Seed } from '../kernel/seed-class.js';
+import { type Seed } from '../kernel/types.js';
 
 export interface PhotorealisticRendererConfig {
   pathTracer: PathTracerConfig;

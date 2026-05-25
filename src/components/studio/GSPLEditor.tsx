@@ -1,7 +1,4 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Code2, Play, AlertCircle } from 'lucide-react';
 import { useSeedStore } from '@/stores/seedStore';
 
@@ -21,13 +18,13 @@ let sprite_form = compose(hero, to: "sprite")
 let theme = compose(hero, to: "music")
 `;
 
-export default function GSPLEditor({ onSeedFromGSPL }) {
+const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFromGSPL?: any }) {
   const [code, setCode] = useState(DEFAULT_CODE);
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
-  const parseGSPLInStore = useSeedStore((s) => s.parseGSPL);
-  const executeGSPLInStore = useSeedStore((s) => s.executeGSPL);
+  const parseGSPLInStore = useSeedStore((s: any) => s.parseGSPL);
+  const executeGSPLInStore = useSeedStore((s: any) => s.executeGSPL);
 
   const handleParse = async () => {
     setLoading(true);
@@ -76,7 +73,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
         <div className="border-t border-[#1a1a1a] p-3 max-h-[200px] overflow-y-auto bg-[#0a0a0a]">
           {result.errors?.length > 0 && (
             <div className="space-y-1.5 mb-3">
-              {result.errors.map((e, i) => (
+              {result.errors.map((e: any, i: any) => (
                 <div key={i} className="flex items-start gap-2 text-red-500 font-mono text-[9px]">
                   <AlertCircle className="w-3 h-3 shrink-0 mt-0.5" />{e}
                 </div>
@@ -85,7 +82,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
           )}
           {result.warnings?.length > 0 && (
             <div className="space-y-1 mb-2">
-              {result.warnings.map((w, i) => (
+              {result.warnings.map((w: any, i: any) => (
                 <div key={i} className="font-mono text-[9px] text-[#ffb800]">{w}</div>
               ))}
             </div>
@@ -102,7 +99,7 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
               <span className="font-mono text-[8px] text-[#444] uppercase tracking-widest">Type Env</span>
               {Object.entries(result.types).slice(0, 8).map(([k, v]) => (
                 <div key={k} className="font-mono text-[9px] text-[#666]">
-                  <span className="text-primary tracking-widest">{k}</span>: {v}
+                  <span className="text-primary tracking-widest">{k}</span>: {v as any}
                 </div>
               ))}
             </div>
@@ -111,4 +108,6 @@ export default function GSPLEditor({ onSeedFromGSPL }) {
       )}
     </div>
   );
-}
+})
+
+export default GSPLEditor;

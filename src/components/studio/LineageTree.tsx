@@ -1,9 +1,9 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { GitBranch } from 'lucide-react';
 import { OP_COLORS } from '@/lib/constants';
 
-export default function LineageTree({ seed, gallery, onSelect }) {
+export default function LineageTree({ seed, gallery, onSelect }: { seed: any; gallery: any; onSelect: any }) {
   if (!seed) {
     return (
       <div className="flex items-center justify-center h-48 p-4" data-testid="lineage-empty">
@@ -15,8 +15,8 @@ export default function LineageTree({ seed, gallery, onSelect }) {
   }
 
   const parentHashes = seed.$lineage?.parents || [];
-  const parents = gallery.filter(s => parentHashes.includes(s.$hash));
-  const children = gallery.filter(s =>
+  const parents = gallery.filter((s: any) => parentHashes.includes(s.$hash));
+  const children = gallery.filter((s: any) =>
     s.$lineage?.parents?.includes(seed.$hash) && s.id !== seed.id
   );
 
@@ -31,7 +31,7 @@ export default function LineageTree({ seed, gallery, onSelect }) {
       {parents.length > 0 && (
         <div className="space-y-1">
           <span className="font-mono text-[8px] text-neutral-700 uppercase tracking-wider">Parents</span>
-          {parents.map(p => (
+          {parents.map((p: any) => (
             <button
               key={p.id}
               data-testid={`lineage-parent-${p.id}`}
@@ -62,7 +62,7 @@ export default function LineageTree({ seed, gallery, onSelect }) {
       {children.length > 0 && (
         <div className="space-y-1">
           <span className="font-mono text-[8px] text-neutral-700 uppercase tracking-wider">Children ({children.length})</span>
-          {children.slice(0, 10).map(c => (
+          {children.slice(0, 10).map((c: any) => (
             <button
               key={c.id}
               data-testid={`lineage-child-${c.id}`}

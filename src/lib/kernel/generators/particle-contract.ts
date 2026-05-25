@@ -10,10 +10,10 @@ import { registerContract, type QualityContract } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface ParticleSeed { $domain: 'particle'; $name?: string; genes: any }
-interface ParticleArtifact { filePath: string; meta: any }
+interface ParticleArtifact { filePath: string; meta: { particleCount?: number; emitterCount?: number } }
 
 function hashArtifact(a: ParticleArtifact): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath).digest('hex');
 }
 
 export const ParticleQualityContract: QualityContract<ParticleSeed, ParticleArtifact, any> = {
@@ -26,11 +26,16 @@ export const ParticleQualityContract: QualityContract<ParticleSeed, ParticleArti
   ],
   synthesize: async (seed) => {
     const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'particle-'));
-    const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateParticle(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fs.readFile(filePath, 'utf-8').catch(async () => (await fs.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: { ...r, filePath: undefined } };
+    try {
+      const r: any = await withKernelClock(0, () => generateParticle(seed as any, dir));
+      const primaryPath = r.jsonPath ?? r.htmlPath;
+      const data = primaryPath
+        ? await fs.readFile(primaryPath, 'utf-8').catch(async () => (await fs.readFile(primaryPath)).toString('base64'))
+        : '';
+      return { filePath: data, meta: { ...r, filePath: undefined } };
+    } finally {
+      await fs.rm(dir, { recursive: true, force: true });
+    }
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

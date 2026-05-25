@@ -23,7 +23,7 @@ const TIER_LABEL: Record<string, string> = {
   deep:     '◆',
 };
 
-export const Conversation: React.FC = () => {
+export const Conversation = React.memo(() => {
   const { threads, currentThreadId, lens } = useAgentThreads();
   const thread = threads.find((t) => t.id === currentThreadId) ?? null;
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -147,4 +147,4 @@ export const Conversation: React.FC = () => {
       ))}
     </div>
   );
-};
+});

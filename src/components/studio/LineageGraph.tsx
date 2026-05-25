@@ -1,16 +1,16 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useRef, useEffect, useState, useMemo, memo } from 'react';
 import { DOMAIN_COLORS, OP_COLORS } from '@/lib/constants';
 
-function simpleForceLayout(nodes, edges, width, height) {
-  const positions = nodes.map((_, i) => ({
+function simpleForceLayout(nodes: any, edges: any, width: any, height: any) {
+  const positions = nodes.map((_: any, i: any) => ({
     x: width / 2 + (Math.cos(i * 2.399) * Math.min(width, height) * 0.35),
     y: height / 2 + (Math.sin(i * 2.399) * Math.min(height, width) * 0.3),
     vx: 0, vy: 0,
   }));
-  const nodeMap = {};
-  nodes.forEach((n, i) => { nodeMap[n.id] = i; });
+  const nodeMap: Record<string, any> = {};
+  nodes.forEach((n: any, i: any) => { nodeMap[n.id] = i; });
   // Phase 5.5: Reduced from 80 to 20 iterations with early-stop
   const maxIterations = 20;
   let prevEnergy = Infinity;
@@ -61,9 +61,9 @@ function simpleForceLayout(nodes, edges, width, height) {
   return positions;
 }
 
-function LineageGraph({ seeds, currentSeed, onSelect }) {
+function LineageGraph({ seeds, currentSeed, onSelect }: { seeds: any; currentSeed: any; onSelect: any }) {
   const [dimensions, setDimensions] = useState({ w: 600, h: 400 });
-  const containerRef = useRef(null);
+  const containerRef = useRef<any>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -80,9 +80,9 @@ function LineageGraph({ seeds, currentSeed, onSelect }) {
     );
   }
 
-  const hashMap = {};
-  seeds.forEach(s => { hashMap[s.$hash] = s; });
-  const nodes = seeds.map(s => ({
+  const hashMap: Record<string, any> = {};
+  seeds.forEach((s: any) => { hashMap[s.$hash] = s; });
+  const nodes = seeds.map((s: any) => ({
     id: s.id || s.$hash,
     hash: s.$hash,
     name: s.$name,
@@ -92,17 +92,17 @@ function LineageGraph({ seeds, currentSeed, onSelect }) {
     fitness: s.$fitness?.overall || 0,
     isCurrent: currentSeed && s.id === currentSeed.id,
   }));
-  const edges = [];
-  const idMap = {};
-  seeds.forEach(s => { idMap[s.$hash] = s.id || s.$hash; });
-  seeds.forEach(s => {
-    (s.$lineage?.parents || []).forEach(ph => {
+  const edges: any[] = [];
+  const idMap: Record<string, any> = {};
+  seeds.forEach((s: any) => { idMap[s.$hash] = s.id || s.$hash; });
+  seeds.forEach((s: any) => {
+    (s.$lineage?.parents || []).forEach((ph: any) => {
       if (idMap[ph]) edges.push({ source: idMap[ph], target: s.id || s.$hash });
     });
   });
   const positions = simpleForceLayout(nodes, edges, dimensions.w, dimensions.h);
-  const posMap = {};
-  nodes.forEach((n, i) => { posMap[n.id] = positions[i]; });
+  const posMap: Record<string, any> = {};
+  nodes.forEach((n: any, i: any) => { posMap[n.id] = positions[i]; });
 
   return (
     <div ref={containerRef} className="w-full h-full relative" data-testid="lineage-graph">
@@ -141,7 +141,7 @@ function LineageGraph({ seeds, currentSeed, onSelect }) {
 }
 
 // Memoize the component to prevent unnecessary re-renders
-export default memo(LineageGraph, (prevProps, nextProps) => {
+export default memo(LineageGraph, (prevProps: any, nextProps: any) => {
   // Only re-render if seeds array reference changes or currentSeed changes
   return prevProps.seeds === nextProps.seeds && prevProps.currentSeed === nextProps.currentSeed;
 });

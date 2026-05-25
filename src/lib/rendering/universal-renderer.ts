@@ -10,7 +10,7 @@
 
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
 import { PathTracer, type PathTracerConfig } from './path-tracer';
-import { type Seed } from '../kernel/seed-class';
+import { type Seed } from '../kernel/types';
 
 export interface RenderConfig {
   width: number;
@@ -147,7 +147,7 @@ export class UniversalRenderer {
     const startTime = performance.now();
 
     const scene = this.buildSceneFromSeed(seed, cfg);
-    const pixels = await this.renderScene(scene, cfg, seed.hash);
+    const pixels = await this.renderScene(scene, cfg, seed.hash || seed.$hash || '');
 
     return {
       pixels,
@@ -155,7 +155,7 @@ export class UniversalRenderer {
       height: cfg.height,
       sampleCount: cfg.samplesPerPixel,
       renderTimeMs: performance.now() - startTime,
-      domain: seed.metadata.domain || 'unknown',
+      domain: seed.metadata?.domain || seed.$domain || 'unknown',
     };
   }
 
@@ -245,10 +245,10 @@ export class UniversalRenderer {
   }
 
   private buildSceneFromSeed(seed: Seed, cfg: RenderConfig): DomainScene {
-    const rng = rngFromHash(`${seed.hash}:render-scene`);
-    const domain = seed.metadata.domain || 'unknown';
+    const rng = rngFromHash(`${seed.hash || seed.$hash || 'seed'}:render-scene`);
+    const domain = seed.metadata?.domain || seed.$domain || 'unknown';
     const genes = seed.genes || {};
-    const fitness = seed.lineage.fitness || 0.5;
+    const fitness = seed.lineage?.fitness ?? seed.$fitness?.overall ?? 0.5;
 
     const objects: DomainObject[] = [];
     const lights: Light[] = [];

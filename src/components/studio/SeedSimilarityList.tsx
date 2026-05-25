@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useState, useEffect, useMemo } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
@@ -24,7 +24,7 @@ export default function SeedSimilarityList({
   const [similar, setSimilar] = useState<SimilarSeed[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const seeds = useSeedStore((s) => s.seeds);
+  const seeds = useSeedStore((s: any) => s.seeds);
 
   const currentSeed = useMemo(() => {
     return seedId ? seeds?.find((s: any) => s.id === seedId || s.$hash === seedId) : null;

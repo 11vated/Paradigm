@@ -1,32 +1,29 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Library, Download, Loader2, Sparkles } from 'lucide-react';
 import { useSeedStore } from '@/stores/seedStore';
 import { getSimilarSeeds } from '@/services/api';
 import { DOMAIN_COLORS } from '@/lib/constants';
 
-export default function SeedLibrary({ onImport, activeSeed }) {
-  const [library, setLibrary] = useState(null);
+const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { onImport: any; activeSeed: any }) {
+  const [library, setLibrary] = useState<any>(null);
   const [selectedDomain, setSelectedDomain] = useState('all');
-  const [importing, setImporting] = useState(null);
-  const [similarSeeds, setSimilarSeeds] = useState([]);
+  const [importing, setImporting] = useState<any>(null);
+  const [similarSeeds, setSimilarSeeds] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSimilar, setShowSimilar] = useState(false);
-  const importFromLibraryInStore = useSeedStore((s) => s.importFromLibrary);
+  const importFromLibraryInStore = useSeedStore((s: any) => s.importFromLibrary);
 
   useEffect(() => {
     const { getLibrary } = require('@/services/api');
-    getLibrary().then(r => setLibrary(r)).catch(() => {});
+    getLibrary().then((r: any) => setLibrary(r)).catch(() => {});
   }, []);
 
-  const handleImport = async (seed) => {
+  const handleImport = async (seed: any) => {
     setImporting(seed.$name);
     try {
       const res = await importFromLibraryInStore(seed.$hash);
       if (res && onImport) onImport(res);
-    } catch (e) { console.error(e); }
+    } catch (e: any) { console.error(e); }
     setImporting(null);
   };
 
@@ -37,7 +34,7 @@ export default function SeedLibrary({ onImport, activeSeed }) {
     try {
       const results = await getSimilarSeeds(activeSeed.id, 10);
       setSimilarSeeds(results);
-    } catch (e) {
+    } catch (e: any) {
       console.error("Failed to find similar seeds:", e);
     }
     setIsSearching(false);
@@ -51,8 +48,8 @@ export default function SeedLibrary({ onImport, activeSeed }) {
     );
   }
 
-  const seedsToDisplay = showSimilar ? similarSeeds : (selectedDomain === 'all' ? library.seeds : library.seeds.filter(s => s.$domain === selectedDomain));
-  const domains = [...new Set(library.seeds.map(s => s.$domain))].sort();
+  const seedsToDisplay = showSimilar ? similarSeeds : (selectedDomain === 'all' ? library.seeds : library.seeds.filter((s: any) => s.$domain === selectedDomain));
+  const domains = [...new Set(library.seeds.map((s: any) => s.$domain))].sort();
 
   return (
     <div className="p-3 space-y-3" data-testid="seed-library">
@@ -68,11 +65,11 @@ export default function SeedLibrary({ onImport, activeSeed }) {
           data-testid="library-filter-all">
           All
         </button>
-        {domains.map(d => (
-          <button key={d} onClick={() => { setSelectedDomain(d); setShowSimilar(false); }}
+        {domains.map((d: any) => (
+          <button key={d as any} onClick={() => { setSelectedDomain(d as any); setShowSimilar(false); }}
             className={`px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider border transition-colors ${!showSimilar && selectedDomain === d ? 'border-primary text-primary' : 'border-neutral-800 text-neutral-600 hover:border-neutral-700'}`}
             data-testid={`library-filter-${d}`}>
-            {d}
+            {d as any}
           </button>
         ))}
         
@@ -96,7 +93,7 @@ export default function SeedLibrary({ onImport, activeSeed }) {
             {showSimilar ? "No similar seeds found. Try generating an embedding for the active seed." : "No seeds found in this domain."}
           </div>
         ) : (
-          seedsToDisplay.map((seed, i) => {
+          seedsToDisplay.map((seed: any, i: any) => {
             const color = DOMAIN_COLORS[seed.$domain] || '#525252';
             return (
               <div key={i} className="flex items-center gap-2 p-2 bg-black/20 hover:bg-black/40 transition-colors group" data-testid={`library-seed-${i}`}>
@@ -125,4 +122,6 @@ export default function SeedLibrary({ onImport, activeSeed }) {
       </div>
     </div>
   );
-}
+})
+
+export default SeedLibrary;

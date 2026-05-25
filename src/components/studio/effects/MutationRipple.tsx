@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  * MutationRipple — Chromatic aberration overlay triggered on mutation.
  * Absolutely positioned over the viewport, fades out over 600ms.
  */
-export default function MutationRipple({ active, color = '#FF0055' }) {
+export default function MutationRipple({ active, color = '#FF0055' }: { active: any; color?: any }) {
   return (
     <AnimatePresence>
       {active && (

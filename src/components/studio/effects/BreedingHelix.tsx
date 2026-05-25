@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo } from 'react';
@@ -7,7 +7,7 @@ import { useMemo } from 'react';
  * BreedingHelix — Animated SVG double-helix for seed breeding.
  * Two sine waves intertwine with connecting rungs, then burst into offspring.
  */
-export default function BreedingHelix({ active, onComplete }) {
+export default function BreedingHelix({ active, onComplete }: { active: any; onComplete: any }) {
   const width = 200;
   const height = 120;
   const steps = 24;

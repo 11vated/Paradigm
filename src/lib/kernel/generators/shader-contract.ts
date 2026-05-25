@@ -10,10 +10,10 @@ import { registerContract, type QualityContract } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface ShaderSeed { $domain: 'shader'; $name?: string; genes: any }
-interface ShaderArtifact { filePath: string; meta: any }
+interface ShaderArtifact { filePath: string; meta: { effectCount?: number } }
 
 function hashArtifact(a: ShaderArtifact): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath).digest('hex');
 }
 
 export const ShaderQualityContract: QualityContract<ShaderSeed, ShaderArtifact, any> = {
@@ -26,11 +26,16 @@ export const ShaderQualityContract: QualityContract<ShaderSeed, ShaderArtifact, 
   ],
   synthesize: async (seed) => {
     const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'shader-'));
-    const out = path.join(dir, 'a.glsl');
-    const r: any = await withKernelClock(0, () => generateShader(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fs.readFile(filePath, 'utf-8').catch(async () => (await fs.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: { ...r, filePath: undefined } };
+    try {
+      const r: any = await withKernelClock(0, () => generateShader(seed as any, dir));
+      const primaryPath = r.glslPath ?? r.wgslPath ?? r.hlslPath;
+      const data = primaryPath
+        ? await fs.readFile(primaryPath, 'utf-8').catch(async () => (await fs.readFile(primaryPath)).toString('base64'))
+        : '';
+      return { filePath: data, meta: { ...r, filePath: undefined } };
+    } finally {
+      await fs.rm(dir, { recursive: true, force: true });
+    }
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

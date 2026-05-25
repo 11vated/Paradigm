@@ -192,25 +192,273 @@ async function exportChoreographyJSON(data: any, outputPath: string, seed: Seed)
   return filePath;
 }
 
+interface BVHJoint {
+  name: string;
+  offset: [number, number, number];
+  channels: string[];
+  children: BVHJoint[];
+}
+
+function buildBVHHierarchy(): BVHJoint {
+  return {
+    name: 'Hips',
+    offset: [0, 0, 0],
+    channels: ['Xposition', 'Yposition', 'Zposition', 'Zrotation', 'Xrotation', 'Yrotation'],
+    children: [
+      {
+        name: 'Spine',
+        offset: [0, 0.3, 0],
+        channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+        children: [
+          {
+            name: 'Neck',
+            offset: [0, 0.4, 0],
+            channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+            children: [
+              {
+                name: 'Head',
+                offset: [0, 0.2, 0],
+                channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+                children: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'LeftShoulder',
+        offset: [0.15, 0.25, 0],
+        channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+        children: [
+          {
+            name: 'LeftElbow',
+            offset: [0.2, 0, 0],
+            channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+            children: [
+              {
+                name: 'LeftWrist',
+                offset: [0.15, 0, 0],
+                channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+                children: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'RightShoulder',
+        offset: [-0.15, 0.25, 0],
+        channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+        children: [
+          {
+            name: 'RightElbow',
+            offset: [-0.2, 0, 0],
+            channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+            children: [
+              {
+                name: 'RightWrist',
+                offset: [-0.15, 0, 0],
+                channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+                children: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'LeftHip',
+        offset: [0.1, -0.1, 0],
+        channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+        children: [
+          {
+            name: 'LeftKnee',
+            offset: [0, -0.3, 0],
+            channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+            children: [
+              {
+                name: 'LeftAnkle',
+                offset: [0, -0.3, 0],
+                channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+                children: []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'RightHip',
+        offset: [-0.1, -0.1, 0],
+        channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+        children: [
+          {
+            name: 'RightKnee',
+            offset: [0, -0.3, 0],
+            channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+            children: [
+              {
+                name: 'RightAnkle',
+                offset: [0, -0.3, 0],
+                channels: ['Zrotation', 'Xrotation', 'Yrotation'],
+                children: []
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+function flattenJointChannels(joint: BVHJoint): string[] {
+  const channels: string[] = [...joint.channels];
+  for (const child of joint.children) {
+    channels.push(...flattenJointChannels(child));
+  }
+  return channels;
+}
+
+function formatBVHJoint(joint: BVHJoint, indent: string): string {
+  let result = '';
+  const isEnd = joint.children.length === 0 && joint.name.includes('End');
+  
+  if (isEnd) {
+    result += `${indent}End Site\n`;
+    result += `${indent}{\n`;
+    result += `${indent}  OFFSET ${joint.offset.map(n => n.toFixed(4)).join(' ')}\n`;
+    result += `${indent}}\n`;
+  } else {
+    result += `${indent}${joint.name === 'Hips' ? 'ROOT' : 'JOINT'} ${joint.name}\n`;
+    result += `${indent}{\n`;
+    result += `${indent}  OFFSET ${joint.offset.map(n => n.toFixed(4)).join(' ')}\n`;
+    result += `${indent}  CHANNELS ${joint.channels.length} ${joint.channels.join(' ')}\n`;
+    
+    for (const child of joint.children) {
+      result += formatBVHJoint(child, indent + '  ');
+    }
+    
+    result += `${indent}}\n`;
+  }
+  
+  return result;
+}
+
+function radToDeg(rad: number): number {
+  return rad * (180 / Math.PI);
+}
+
+function generateMotionFrames(sequences: Sequence[], channelCount: number): number[][] {
+  const frames: number[][] = [];
+  const frameRate = 30;
+  
+  for (const seq of sequences) {
+    for (const motion of seq.motions) {
+      const frameCount = Math.max(1, Math.floor(motion.duration * frameRate));
+      
+      for (let f = 0; f < frameCount; f++) {
+        const frame: number[] = [];
+        
+        const hipJoint = motion.joints['hip'];
+        const kneeJoint = motion.joints['knee'];
+        const ankleJoint = motion.joints['ankle'];
+        const spineJoint = motion.joints['spine'];
+        const shoulderJoint = motion.joints['shoulder'];
+        const elbowJoint = motion.joints['elbow'];
+        const wristJoint = motion.joints['wrist'];
+        const neckJoint = motion.joints['neck'];
+        const headJoint = motion.joints['head'];
+        
+        const t = f / frameCount;
+        const lerp = (a: number, b: number) => a + (b - a) * t;
+        
+        frame.push(hipJoint ? hipJoint.position[0] : 0);
+        frame.push(hipJoint ? hipJoint.position[1] : 1.0);
+        frame.push(hipJoint ? hipJoint.position[2] : 0);
+        frame.push(hipJoint ? radToDeg(hipJoint.rotation[2]) : 0);
+        frame.push(hipJoint ? radToDeg(hipJoint.rotation[0]) : 0);
+        frame.push(hipJoint ? radToDeg(hipJoint.rotation[1]) : 0);
+        
+        frame.push(spineJoint ? radToDeg(spineJoint.rotation[2]) : 0);
+        frame.push(spineJoint ? radToDeg(spineJoint.rotation[0]) : 0);
+        frame.push(spineJoint ? radToDeg(spineJoint.rotation[1]) : 0);
+        
+        frame.push(neckJoint ? radToDeg(neckJoint.rotation[2]) : 0);
+        frame.push(neckJoint ? radToDeg(neckJoint.rotation[0]) : 0);
+        frame.push(neckJoint ? radToDeg(neckJoint.rotation[1]) : 0);
+        
+        frame.push(headJoint ? radToDeg(headJoint.rotation[2]) : 0);
+        frame.push(headJoint ? radToDeg(headJoint.rotation[0]) : 0);
+        frame.push(headJoint ? radToDeg(headJoint.rotation[1]) : 0);
+        
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[2]) : 0);
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[0]) : 0);
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[1]) : 0);
+        
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[2]) : 0);
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[0]) : 0);
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[1]) : 0);
+        
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[2]) : 0);
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[0]) : 0);
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[1]) : 0);
+        
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[2]) * 0.8 : 0);
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[0]) * 0.8 : 0);
+        frame.push(shoulderJoint ? radToDeg(shoulderJoint.rotation[1]) * 0.8 : 0);
+        
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[2]) * 0.8 : 0);
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[0]) * 0.8 : 0);
+        frame.push(elbowJoint ? radToDeg(elbowJoint.rotation[1]) * 0.8 : 0);
+        
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[2]) * 0.8 : 0);
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[0]) * 0.8 : 0);
+        frame.push(wristJoint ? radToDeg(wristJoint.rotation[1]) * 0.8 : 0);
+        
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[2]) : 0);
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[0]) : 0);
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[1]) : 0);
+        
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[2]) : 0);
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[0]) : 0);
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[1]) : 0);
+        
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[2]) * 0.9 : 0);
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[0]) * 0.9 : 0);
+        frame.push(kneeJoint ? radToDeg(kneeJoint.rotation[1]) * 0.9 : 0);
+        
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[2]) * 0.9 : 0);
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[0]) * 0.9 : 0);
+        frame.push(ankleJoint ? radToDeg(ankleJoint.rotation[1]) * 0.9 : 0);
+        
+        while (frame.length < channelCount) {
+          frame.push(0);
+        }
+        
+        frames.push(frame);
+      }
+    }
+  }
+  
+  return frames;
+}
+
 async function exportBVH(sequences: Sequence[], outputPath: string, seed: Seed): Promise<string> {
   const filename = `choreography_${seed.$hash || 'unknown'}.bvh`;
   const filePath = path.join(outputPath, filename);
   
-  const bvh = `HIERARCHY
-ROOT Hips
-{
-  OFFSET 0.0 0.0 0.0
-  CHANNELS 6 Xposition Yposition Zposition Zrotation Xrotation Yrotation
-  SITE Head
-  {
-    OFFSET 0.0 1.5 0.0
-    CHANNELS 0
+  const hierarchy = buildBVHHierarchy();
+  const allChannels = flattenJointChannels(hierarchy);
+  const frames = generateMotionFrames(sequences, allChannels.length);
+  const frameTime = 1 / 30;
+  
+  let bvh = 'HIERARCHY\n';
+  bvh += formatBVHJoint(hierarchy, '');
+  bvh += 'MOTION\n';
+  bvh += `Frames: ${frames.length}\n`;
+  bvh += `Frame Time: ${frameTime.toFixed(6)}\n`;
+  
+  for (const frame of frames) {
+    bvh += frame.map(v => v.toFixed(6)).join(' ') + '\n';
   }
-}
-MOTION
-Frames: ${Math.floor(sequences.reduce((sum, s) => sum + s.motions.length, 0) * 30)}
-Frame Time: 0.033333
-`;
   
   if (typeof fs !== 'undefined') fs.writeFileSync(filePath, bvh);
   return filePath;

@@ -1,7 +1,3 @@
-// @ts-nocheck — Phase 0: latent prop-type mismatches surfaced when neighbor
-// components were re-typed. Pending props normalization in the Typing Sprint
-// (see Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md).
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { type Seed, type Artifact as ArtifactType } from '@/lib/kernel/types';
 import { useSeedStore } from '@/stores/seedStore';
@@ -23,7 +19,7 @@ import SeedLibrary from '@/components/studio/SeedLibrary';
 import CompositionPanel from '@/components/studio/CompositionPanel';
 import BreedPanel from '@/components/studio/BreedPanel';
 import EvolvePanel from '@/components/studio/EvolvePanel';
-import ExportPanel from '@/components/studio/ExportPanel';
+import { ExportPanel } from '@/components/studio/ExportPanel';
 import MintPanel from '@/components/studio/MintPanel';
 import AgentPanel from '@/components/studio/AgentPanel';
 import SeedSimilarityList from '@/components/studio/SeedSimilarityList';
@@ -207,7 +203,7 @@ export function StudioPage() {
             {selectedSeed ? (
               <>
                 <LineageGraph seeds={currentArtifact ? [currentArtifact.seed] : []} currentSeed={currentArtifact?.seed} onSelect={handleSelectSeed} />
-                <LineageTree seed={selectedSeed} />
+                <LineageTree seed={selectedSeed} gallery={seeds} onSelect={handleSelectSeed} />
               </>
             ) : (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--p-text-3)', fontSize: 13 }}>
@@ -531,8 +527,8 @@ export function StudioPage() {
                       </div>
                     </div>
                   )}
-                  {activeBottom === 'breed' && <BreedPanel seed={selectedSeed} />}
-                  {activeBottom === 'export' && <ExportPanel seed={selectedSeed} />}
+                  {activeBottom === 'breed' && <BreedPanel gallery={seeds} onBred={handleSelectSeed} />}
+                  {activeBottom === 'export' && <ExportPanel seed={selectedSeed} domain={selectedSeed?.$domain ?? 'unknown'} />}
                   {activeBottom === 'mint' && <MintPanel seed={selectedSeed} />}
                   {activeBottom === 'agent' && (
                     <div style={{ display: 'flex', gap: 8, padding: 8 }}>

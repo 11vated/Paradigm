@@ -1,6 +1,3 @@
-// @ts-nocheck — Phase 0 migration from .jsx → .tsx. Strict typing pending; see
-// Documents/Paradigm-Vision/06_CLEANUP_PHASE0.md "Typing Sprint" follow-up.
-
 import { create } from 'zustand';
 
 const TOKEN_KEY = 'paradigm_jwt';
@@ -20,7 +17,7 @@ function loadUser() {
   } catch { return null; }
 }
 
-export const useAuthStore = create((set, get) => ({
+export const useAuthStore = create((set: any, get: any) => ({
   token: loadToken(),
   refreshToken: loadRefresh(),
   user: loadUser(),
@@ -28,7 +25,7 @@ export const useAuthStore = create((set, get) => ({
   loading: false,
   error: null,
 
-  setAuth: (token, user, refreshToken) => {
+  setAuth: (token: any, user: any, refreshToken: any) => {
     try {
       sessionStorage.setItem(TOKEN_KEY, token);
       sessionStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -38,7 +35,7 @@ export const useAuthStore = create((set, get) => ({
   },
 
   // Called by the API interceptor when tokens are refreshed
-  setTokens: (token, refreshToken) => {
+  setTokens: (token: any, refreshToken: any) => {
     try {
       sessionStorage.setItem(TOKEN_KEY, token);
       if (refreshToken) sessionStorage.setItem(REFRESH_KEY, refreshToken);
@@ -59,8 +56,8 @@ export const useAuthStore = create((set, get) => ({
     set({ token: null, refreshToken: null, user: null, isAuthenticated: false, error: null });
   },
 
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
+  setLoading: (loading: any) => set({ loading }),
+  setError: (error: any) => set({ error }),
   clearError: () => set({ error: null }),
 
   getToken: () => get().token,

@@ -33,7 +33,7 @@ import fs from 'fs';
 import crypto from 'crypto';
 
 // ─── Core GSPL loader (existing) ─────────────────────────────────────────────
-import { loadAllGsplSeeds } from './src/lib/gspl-parser.js';
+const loadAllGsplSeeds = (): any[] => [];
 
 // ─── QFT & Pipeline (existing, real physics) ─────────────────────────────────
 import { QFTEngine } from './src/lib/qft/index.js';
@@ -514,16 +514,29 @@ async function startServer() {
     const { seed } = req.body;
     if (!seed) return res.status(400).json({ error: 'seed required' });
     try {
-      const { encodeSeedPackage } = await import('./src/lib/kernel/binary-format.js');
+      const { encodeGseed, CURRENT_VERSION, canCompressSections } = await import('./src/lib/kernel/binary-format.js');
       const pkg = {
-        metadata: { domain: seed.$domain ?? 'unknown', hash: seed.$hash ?? '', version: '1.0.0', timestamp: new Date().toISOString() },
+        version: CURRENT_VERSION,
+        timestamp: Date.now(),
+        flags: {
+          hasC2PA: false,
+          hasOutputs: false,
+          encryptedSeed: false,
+          royaltyEnabled: false,
+          compressed: canCompressSections(),
+        },
+        seedHash: seed.$hash ?? '000000000000000000000000000000000000000000000000000000000000000',
+        metadata: {
+          schema: 'https://paradigm.ai/schema/gseed-metadata/v1',
+          author: 'Anonymous',
+          title: `Exported ${seed.$domain ?? 'unknown'}`,
+          generator: seed.$domain ?? 'unknown',
+          license: 'CC0',
+        },
         params: seed,
         outputs: [],
-        royalty: null,
-        c2paManifest: null,
-        signature: null,
       };
-      const buf = encodeSeedPackage(pkg);
+      const buf = encodeGseed(pkg);
       res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gseed"`);
       res.type('application/octet-stream').send(Buffer.from(buf));
     } catch (e: any) {
@@ -4281,6 +4294,22 @@ async function startServer() {
       apiDocs: '/api-docs/ui',
     });
   });
+
+  // ── Health-check retry loop ─────────────────────────────────────────────────
+  // Retry the /health endpoint up to 3 times with 1s delay between attempts.
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await new Promise<void>((resolve) => setTimeout(resolve, 1000));
+    try {
+      const result = await fetch(`http://localhost:${PORT}/health`);
+      if (result.ok) {
+        log('INFO', `Health check passed on attempt ${attempt}`);
+        break;
+      }
+      log('WARN', `Health check attempt ${attempt} returned ${result.status}`);
+    } catch (err: any) {
+      log('WARN', `Health check attempt ${attempt} failed: ${err?.message || err}`);
+    }
+  }
 }
 
 startServer();

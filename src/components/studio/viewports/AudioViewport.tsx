@@ -1,4 +1,3 @@
-// @ts-nocheck
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useRef, useState, useMemo } from 'react';
 import { Play, Square } from 'lucide-react';
@@ -29,7 +28,7 @@ export default function AudioViewport({ artifact }: ViewportProps) {
           style={{ display: 'none' }} />
       )}
       <div className="flex items-end gap-1 h-28">
-        {waveform.map((note, i) => (
+        {waveform.map((note: any, i: any) => (
           <div key={i} className="w-2 bg-primary/60 rounded-t-sm"
             style={{
               height: `${Math.max(8, ((note - 48) / 40) * 100)}%`,

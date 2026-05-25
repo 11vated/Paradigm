@@ -5,11 +5,11 @@ import React from 'react';
 import { useMode, MODES, MODE_LABEL, MODE_NUM, type Mode } from '@/stores/modeStore';
 
 const RING: Mode[] = [
-  'crucible', 'atelier', 'anatomy', 'codex',
-  'topology', 'lineage', 'resonance',
+  'crucible', 'atelier', 'anatomy', 'resonance',
+  'lineage', 'codex', 'topology',
 ];
 
-export const ModeCompass: React.FC = () => {
+export const ModeCompass = React.memo(() => {
   const { mode, setMode } = useMode();
 
   return (
@@ -71,4 +71,4 @@ export const ModeCompass: React.FC = () => {
       </div>
     </div>
   );
-};
+});
