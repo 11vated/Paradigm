@@ -23,6 +23,7 @@ import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
+import { registerSeedSovereigntyRoutes } from './src/server/routes/seed-sovereignty.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -1879,45 +1880,11 @@ async function startServer() {
   // SOVEREIGNTY (existing ECDSA signing)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  app.post('/api/keys/generate', (_req, res) => {
-    try {
-      const keys = SovereigntyLayer.generateKeys();
-      res.json(keys);
-    } catch (e: any) {
-      res.status(500).json({ detail: e.message || 'Key generation failed' });
-    }
-  });
-
-  app.post('/api/seeds/:id/sign', optionalAuth, validateBody(SignSeedSchema), (req: any, res: any) => {
-    try {
-      const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
-      if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
-
-      const seed = seeds[seedIndex];
-      const sovereignty = SovereigntyLayer.signSeed(seed, req.body.private_key);
-      seeds[seedIndex] = { ...seed, $sovereignty: sovereignty };
-      saveSeeds();
-
-      const verified = SovereigntyLayer.verifySeed(seeds[seedIndex], sovereignty.public_key);
-      log('INFO', 'Seed signed', { id: seed.id });
-      audit('seed.sign', 'seed', seed.id, {}, req);
-      res.json({ sovereignty, verified });
-    } catch (e: any) {
-      log('ERROR', 'Signing error', { error: e.message });
-      res.status(500).json({ detail: e.message || 'Signing failed' });
-    }
-  });
-
-  app.post('/api/seeds/:id/verify', validateBody(VerifySeedSchema), (req: any, res: any) => {
-    try {
-      const seed = seeds.find((s: any) => s.id === req.params.id);
-      if (!seed) return res.status(404).json({ detail: 'Seed not found' });
-
-      const verified = SovereigntyLayer.verifySeed(seed, req.body.public_key);
-      res.json({ verified });
-    } catch (e: any) {
-      res.status(500).json({ detail: e.message || 'Verification failed' });
-    }
+  // ── Seed sovereignty endpoints (modularized in WS25) ──
+  registerSeedSovereigntyRoutes(app, {
+    seeds, saveSeeds, optionalAuth, validateBody,
+    schemas: { signSeed: SignSeedSchema, verifySeed: VerifySeedSchema },
+    SovereigntyLayer, log, audit,
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
