@@ -45,6 +45,7 @@ export enum TokenType {
   SIGNED = 'SIGNED',
   FROM = 'FROM',
   AS = 'AS',
+  ENGINE = 'ENGINE',
 
   // Operators
   PLUS = 'PLUS',
@@ -145,7 +146,8 @@ const KEYWORDS: Record<string, TokenType> = {
   'domain': TokenType.DOMAIN,
   'signed': TokenType.SIGNED,
   'from': TokenType.FROM,
-  'as': TokenType.AS
+  'as': TokenType.AS,
+  'engine': TokenType.ENGINE
 };
 
 export class GsplLexer {
