@@ -20,6 +20,7 @@ import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
 import { registerCompositionRoutes } from './src/server/routes/composition.js';
 import { registerLibraryRoutes } from './src/server/routes/library.js';
+import { registerSeedEmbedRoutes } from './src/server/routes/seed-embed.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
@@ -1927,52 +1928,7 @@ async function startServer() {
   // Embeds via the self-hosted SBERT sidecar when SBERT_URL is set, then
   // persists the vector to pgvector. If either dep is unavailable we fall
   // back to the legacy Gemini path so dev/test envs keep working.
-  app.post('/api/seeds/:id/embed', optionalAuth, validateBody(EmbedSeedSchema), async (req: any, res: any) => {
-    try {
-      const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
-      if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
-
-      const seed = seeds[seedIndex];
-      const sbertUrl = process.env.SBERT_URL;
-      const databaseUrl = process.env.DATABASE_URL;
-
-      let embedding: number[];
-      let source: 'sbert' | 'gemini' = 'gemini';
-      if (sbertUrl) {
-        // Self-hosted path (D-5): deterministic render + SBERT + optional pgvector upsert.
-        const { embedSeed } = await import('./src/lib/intelligence/embedding-client.js');
-        embedding = await embedSeed(seed);
-        source = 'sbert';
-
-        if (databaseUrl) {
-          try {
-            const { upsertEmbedding } = await import('./src/lib/intelligence/pgvector.js');
-            await upsertEmbedding({
-              seed_hash: seed.$hash,
-              seed_id: seed.id,
-              domain: seed.$domain,
-              name: seed.$name ?? null,
-              embedding,
-            });
-          } catch (e: any) {
-            // Non-fatal: we still return the vector so the client can use it
-            // in-process. Similarity search will just fall back to gene distance.
-            log('WARN', 'pgvector upsert failed; vector returned without persistence', { error: e.message });
-          }
-        }
-      } else {
-        embedding = await IntelligenceLayer.generateEmbedding(seed);
-      }
-
-      seeds[seedIndex] = { ...seed, $embedding: embedding };
-      saveSeeds();
-
-      res.json({ success: true, dimensions: embedding.length, source });
-    } catch (e: any) {
-      log('WARN', 'Embedding generation failed', { error: e.message });
-      res.status(500).json({ detail: e.message || 'Embedding generation failed' });
-    }
-  });
+  registerSeedEmbedRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, schemas: { embedSeed: EmbedSeedSchema }, IntelligenceLayer, log });
 
   app.get('/api/seeds/:id/similar', async (req: any, res: any) => {
     try {
