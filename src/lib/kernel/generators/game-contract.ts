@@ -1,7 +1,7 @@
 /**
  * Game Quality Contract — auto-generated stub.
  *
- * Adapter around `generateGameV3` exposing the canonical 4-clause
+ * Adapter around `generateGame` exposing the canonical 4-clause
  * QualityContract surface. The rate() function is a placeholder pending
  * a domain-specific evaluator; the structure is correct and conformant.
  */
@@ -9,7 +9,7 @@ import { promises as fsp } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateGameV3 } from './game';
+import { generateGame } from './game';
 import { registerContract, type QualityContract } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
@@ -31,7 +31,7 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'game-'));
     const out = path.join(dir, 'a.json');
-    const r = await withKernelClock(0, () => generateGameV3(seed as never, out)) as { filePath?: string };
+    const r = await withKernelClock(0, () => generateGame(seed as never, out)) as { filePath?: string };
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
