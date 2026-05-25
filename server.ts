@@ -20,6 +20,7 @@ import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
 import { registerCompositionRoutes } from './src/server/routes/composition.js';
 import { registerLibraryRoutes } from './src/server/routes/library.js';
+import { registerRealityRoutes } from './src/server/routes/reality.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
@@ -2315,6 +2316,7 @@ async function startServer() {
   // ═══════════════════════════════════════════════════════════════════════════
 
   registerLibraryRoutes(app, { seeds, saveSeeds, validateBody, optionalAuth, LibraryImportSchema });
+  registerRealityRoutes(app, { optionalAuth, log });
   // ═══════════════════════════════════════════════════════════════════════════
   // ON-CHAIN SOVEREIGNTY (ERC-721 NFT minting on Sepolia)
   // ═══════════════════════════════════════════════════════════════════════════
