@@ -1,13 +1,22 @@
 /**
- * Character Generator V2 — World-Class Parametric Humanoid
+ * Character Generator — OBJ output path (Node.js-compatible fallback).
+ *
+ * Companion to the canonical GLTF path in `./character.ts`.
+ * Use when GLTF/THREE.js full pipeline is unavailable or when callers
+ * want a lightweight, browser-API-free output (e.g. server-side batch).
+ *
  * Features:
  * - Parametric body modeling (height, proportions, muscle/fat)
- * - Procedural face generation (features, expression)
+ * - Procedural face generation
  * - Muscle simulation system (12 muscle groups)
  * - Quality tiers: low (2K) → photorealistic (50K+ vertices)
  * - PBR material generation from genes
- * - OBJ export with MTL (Node.js compatible, no browser APIs)
+ * - OBJ + MTL export (no browser APIs)
  * - Deterministic: same seed = identical mesh
+ *
+ * Renamed 2026-05-25 from `character-v2.ts` (the "V2" was misleading —
+ * this is the OBJ path, not a version sibling of `character.ts`).
+ * Doctrine: Documents/Paradigm-Analysis/12_PARADIGM_INFINITE_COMPLETION_DOCTRINE.md
  */
 
 import * as THREE from 'three';
@@ -422,7 +431,7 @@ function generateMaterials(params: CharacterParams): THREE.Material[] {
 /**
  * Main export function — generates world-class character
  */
-export async function generateCharacterV2(seed: Seed, outputPath: string): Promise<{
+export async function generateCharacterOBJ(seed: Seed, outputPath: string): Promise<{
   filePath: string;
   vertices: number;
   faces: number;

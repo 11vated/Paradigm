@@ -173,13 +173,13 @@ export function createSeedTools(llm: SeedLLM): AIAgentTool[] {
         } as Seed;
 
         const output = await growSeed(seed);
-        const gseed = createGseed(seed, 'character-v2', output, {
+        const gseed = createGseed(seed, 'character', output, {
           author: (params.author as string) || 'Anonymous',
           title: (params.title as string) || 'Generated Artifact',
         });
 
         // Add C2PA manifest
-        const manifest = buildC2PAManifest(seed, 'character-v2');
+        const manifest = buildC2PAManifest(seed, 'character');
         gseed.c2paManifest = new TextEncoder().encode(JSON.stringify(manifest));
         gseed.flags.hasC2PA = true;
 

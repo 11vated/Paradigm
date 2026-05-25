@@ -84,11 +84,11 @@ export function SeedChat({ onArtifactGenerated }: SeedChatProps) {
           mesh: output?.mesh || 'mock mesh data',
           format: 'obj' as const,
         };
-        const gseed = createGseed(seed, 'character-v2', mockOutput, {
+        const gseed = createGseed(seed, 'character', mockOutput, {
           author: 'Studio User',
           title: input.slice(0, 50),
         });
-        const manifest = buildC2PAManifest(seed, 'character-v2');
+        const manifest = buildC2PAManifest(seed, 'character');
         gseed.c2paManifest = new TextEncoder().encode(JSON.stringify(manifest));
         gseed.flags.hasC2PA = true;
         const encoded = encodeGseed(gseed);

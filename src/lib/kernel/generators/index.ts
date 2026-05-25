@@ -9,8 +9,8 @@ export { generateMarket } from './market';
 export { generateDomainGenerator as generateMetaDomain } from './meta-domain';
 
 // V2 World-Class Generators (new)
-export { generateCharacterV3 as generateCharacter } from './character';
-export { generateCharacterV2 } from './character-v2'; // OBJ fallback
+export { generateCharacter as generateCharacter } from './character';
+export { generateCharacterOBJ } from './character-obj'; // OBJ fallback
 export { generateMusicV2 as generateMusic } from './music-v2';
 export { generateSpriteV2 as generateSprite } from './sprite-v2';
 export { generateVisual2DV2 as generateVisual2D } from './visual2d-v2';

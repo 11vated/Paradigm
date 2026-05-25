@@ -123,7 +123,7 @@ import { generateSpaceTourism } from './generators/space-tourism.js';
 // ═══════════════════════════════════════════════════════════════════════════
 // NEW: 27 Domain Generators (Phase 2 — V3 Generators)
 // ═══════════════════════════════════════════════════════════════════════════
-import { generateCharacterV3 } from './generators/character';
+import { generateCharacter } from './generators/character';
 import { generateSpriteV3 } from './generators/sprite';
 import { generateMusicV3 } from './generators/music';
 import { generateVisual2DV3 } from './generators/visual2d';
@@ -259,7 +259,7 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   'space-tourism': generateSpaceTourism,
   
   // 27 New V3 Domains
-  character: generateCharacterV3,
+  character: generateCharacter,
   sprite: generateSpriteV3,
   music: generateMusicV3,
   visual2d: generateVisual2DV3,
