@@ -1,5 +1,3 @@
-// @ts-nocheck
-// TODO(typing-sprint): Vendored shadcn UI primitive — not imported by the Reality OS shell. Strict-mode types deferred per AGENTS.md until the Typing Sprint converts shadcn defaults to fully typed shapes.
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
 import { cva } from "class-variance-authority";
