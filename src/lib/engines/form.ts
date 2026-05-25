@@ -22,7 +22,7 @@ import type { Seed } from '../kernel/engines';
 import { generateCharacterV3 } from '../kernel/generators/character';
 import { generateSpriteV3 } from '../kernel/generators/sprite';
 import { generateTypographyV3 } from '../kernel/generators/typography';
-import type { EngineCapability } from './types';
+import type { EngineCapability, Engine } from './types';
 
 /** Form kinds currently wired to the engine. */
 export type FormKind = 'character' | 'sprite' | 'typography';
@@ -116,9 +116,16 @@ export async function generateForm(req: FormRequest): Promise<FormArtifact> {
 }
 
 /** Engine handle for the dispatcher. */
-export const engine = Object.freeze({
+export const engine: Engine = Object.freeze({
   capability,
-  generate: generateForm,
+  generate: generateForm as unknown as (req: unknown) => Promise<unknown>,
+  validate(output: unknown) {
+    const o = output as { primaryPath?: string } | null;
+    if (!o || typeof o.primaryPath !== 'string' || o.primaryPath.length === 0) {
+      return { ok: false as const, reason: 'form artifact missing primaryPath' };
+    }
+    return { ok: true as const };
+  },
 });
 
 export type FormEngine = typeof engine;

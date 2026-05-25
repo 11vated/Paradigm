@@ -89,4 +89,11 @@ function ensureDir(p: string): void {
 export const engine: Engine = Object.freeze({
   capability,
   generate: generateMotion as unknown as (req: unknown) => Promise<unknown>,
+  validate(output: unknown) {
+    const o = output as { primaryPath?: string } | null;
+    if (!o || typeof o.primaryPath !== 'string' || o.primaryPath.length === 0) {
+      return { ok: false as const, reason: 'motion artifact missing primaryPath' };
+    }
+    return { ok: true as const };
+  },
 });
