@@ -1,12 +1,12 @@
 /**
- * Character Quality Contract — wraps generateCharacterV3.
+ * Character Quality Contract — wraps generateCharacter.
  * The character generator produces GLTF; artifact = GLTF text.
  */
 import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateCharacterV3 } from './character';
+import { generateCharacter } from './character';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 
@@ -18,7 +18,7 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-ch-'));
   try {
     const out = path.join(dir, 'character.gltf');
-    const r = await generateCharacterV3(seed as any, out);
+    const r = await generateCharacter(seed as any, out);
     const gltf = await fs.readFile(r.filePath, 'utf8');
     return {
       gltf,

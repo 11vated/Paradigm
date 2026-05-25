@@ -10,7 +10,7 @@
  */
 
 import type { Seed } from '../engines';
-import type { CharacterParams } from './character-v2';
+import type { CharacterParams } from './character-obj';
 import type { MusicParams, Note } from './music-v2';
 import type { SpriteParams } from './sprite-v2';
 import { rngFromHash } from '../rng';
@@ -134,8 +134,8 @@ export class WebGPUGeneratorSystem {
     }
 
     // CPU fallback
-    const { generateCharacterV2 } = await import('./character-v2');
-    const result = await generateCharacterV2(seed, outputPath);
+    const { generateCharacterOBJ } = await import('./character-obj');
+    const result = await generateCharacterOBJ(seed, outputPath);
     return { ...result, gpuUsed: false };
   }
 
@@ -150,7 +150,7 @@ export class WebGPUGeneratorSystem {
   }> {
     if (!this.device) throw new Error('GPU not initialized');
 
-    const { extractParams } = await import('./character-v2');
+    const { extractParams } = await import('./character-obj');
     const rng = rngFromHash(seed.$hash || '');
     const params: CharacterParams = extractParams({} as Seed, rng);
 
@@ -190,8 +190,8 @@ export class WebGPUGeneratorSystem {
 
     // Read back vertices (simplified — would use staging buffer)
     // For now, return CPU result as placeholder
-    const { generateCharacterV2 } = await import('./character-v2');
-    const result = await generateCharacterV2(seed, outputPath);
+    const { generateCharacterOBJ } = await import('./character-obj');
+    const result = await generateCharacterOBJ(seed, outputPath);
 
     // Cleanup
     uniformBuffer.destroy();

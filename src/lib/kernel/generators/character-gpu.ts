@@ -1,10 +1,16 @@
 /**
- * WebGPU Compute Shaders for Character V2 Generator
- * Enables GPU-acelerated parametric body modeling
- * 10,000+ vertices updated in parallel
+ * Character Generator — WebGPU compute shaders (companion file).
+ *
+ * WGSL kernels for GPU-accelerated parametric body modeling.
+ * Pairs with `./character-obj.ts` (Node-side dispatch) and the canonical
+ * `./character.ts` GLTF path. 10,000+ vertices updated in parallel.
+ *
+ * Not a version sibling — the `-gpu` suffix names the runtime accelerator,
+ * not a generation number. Per
+ * Documents/Paradigm-Analysis/12_PARADIGM_INFINITE_COMPLETION_DOCTRINE.md.
  */
 
-import type { CharacterParams } from './character-v2';
+import type { CharacterParams } from './character-obj';
 
 /**
  * WGSL Compute Shader for character vertex generation

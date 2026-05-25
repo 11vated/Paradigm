@@ -1,5 +1,5 @@
 /**
- * Character Generator V3 — World-Class GLTF 2.0 Output
+ * Character Generator (canonical) — World-Class GLTF 2.0 Output
  * Features:
  * - Full GLTF 2.0 export with PBR materials (metallic-roughness)
  * - Procedural body mesh with parametric proportions (SMPL-like)
@@ -10,6 +10,13 @@
  * - Procedural animations (13: idle, walk, run, jump, attack, cast, death, sit, crouch, climb, swim, dance)
  * - LOD chain (4 levels: 50K → 20K → 8K → 2K tris)
  * - Deterministic: same seed = identical GLTF binary
+ *
+ * Companion files (NOT version siblings):
+ *   ./character-obj.ts  — OBJ output path (Node-side, browser-API-free)
+ *   ./character-gpu.ts  — WebGPU compute shaders for parametric body
+ *
+ * Renamed 2026-05-25: `generateCharacterV3` → `generateCharacter`.
+ * Doctrine: Documents/Paradigm-Analysis/12_PARADIGM_INFINITE_COMPLETION_DOCTRINE.md
  */
 
 import * as THREE from 'three';
@@ -79,7 +86,7 @@ const TEXTURE_RESOLUTION: Record<string, number> = {
 /**
  * Main export function — produces GLTF 2.0 binary
  */
-export async function generateCharacterV3(
+export async function generateCharacter(
   seed: Seed, 
   outputPath: string
 ): Promise<{ 
@@ -620,4 +627,3 @@ function generateMuscleGroups(props: BodyProportions, rng: Xoshiro256StarStar): 
 }
 
 // ── Canonical aliases (added by phase-0.5 consolidation) ──
-export { generateCharacterV3 as generateCharacter };
