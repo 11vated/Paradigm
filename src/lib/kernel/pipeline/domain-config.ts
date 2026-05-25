@@ -8,7 +8,7 @@ import { generateMusicV2 as generateMusic } from '../generators/music-v2';
 import { generateVisual2DV2 as generateVisual2D } from '../generators/visual2d-v2';
 import { generateNarrative } from '../generators/narrative';
 import { generateUI } from '../generators/ui';
-import { generateGameV2 as generateGame } from '../generators/game-v2';
+import { generateGame } from '../generators/game';
 import { generateGeometry3D } from '../generators/geometry3d';
 import { generateAnimation } from '../generators/animation';
 import { generateAnimationEnhanced } from '../generators/animation-enhanced';

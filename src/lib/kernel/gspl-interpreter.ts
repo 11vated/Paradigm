@@ -662,7 +662,7 @@ export class GsplInterpreter {
         'music': 'music-v2',
         'sprite': 'sprite-v2',
         'visual2d': 'visual2d-v2',
-        'game': 'game-v2',
+        'game': 'game',
         'geometry3d': 'geometry3d',
         'audio': 'audio',
         'narrative': 'narrative',
