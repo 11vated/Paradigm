@@ -37,6 +37,12 @@ export interface GSPLContext {
 export class GsplInterpreter {
   private context: GSPLContext;
   private _resolver: any | null = null;
+  private _engineResolver: any | null = null;
+
+  /** WS24: wire the 9-engine substrate (or any compatible dispatcher) into GSPL execution. */
+  setEngineResolver(resolver: { dispatch: (engineId: string, request: Record<string, any>) => any }): void {
+    this._engineResolver = resolver;
+  }
 
   private async getResolver(): Promise<any> {
     if (!this._resolver) {
@@ -241,6 +247,21 @@ export class GsplInterpreter {
 
       case ASTNodeType.IMPL_DECL:
         return this.evaluateImplDecl(node);
+
+
+      // Engine block (paradigm-infinite/ws-24): dispatch to the 9-engine substrate
+      case ASTNodeType.ENGINE_BLOCK: {
+        const engineId = (node as any).engineId as string;
+        const entries = ((node as any).entries ?? []) as { key: string; value: ASTNode }[];
+        const request: Record<string, any> = {};
+        for (const { key, value } of entries) {
+          request[key] = await this.evaluateNode(value);
+        }
+        if (this._engineResolver && typeof this._engineResolver.dispatch === 'function') {
+          return this._engineResolver.dispatch(engineId, request);
+        }
+        return { __engineDispatch: true, engine: engineId, request, status: 'no-resolver-wired' };
+      }
 
       default:
         throw new Error(`Unimplemented AST node: ${node.type} at line ${node.loc?.line}`);
