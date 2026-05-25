@@ -20,6 +20,7 @@ import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
 import { registerCompositionRoutes } from './src/server/routes/composition.js';
 import { registerLibraryRoutes } from './src/server/routes/library.js';
+import { registerExportRoutes } from './src/server/routes/exports.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
@@ -393,95 +394,8 @@ async function startServer() {
     res.type('json').send(JSON.stringify(exportData, null, 2));
   });
 
-  // ── Per-format export endpoints (used by ExportPanel) ──────────────────────
-
-  app.post('/api/seeds/export/json', optionalAuth, (req: any, res: any) => {
-    const { seed } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.json"`);
-    res.type('json').send(JSON.stringify(seed, null, 2));
-  });
-
-  app.post('/api/seeds/export/svg', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const svgPath = artifact?.svgPath as string | undefined;
-    if (svgPath && require('fs').existsSync(svgPath)) {
-      const svg = require('fs').readFileSync(svgPath, 'utf-8');
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.svg"`);
-      return res.type('image/svg+xml').send(svg);
-    }
-    // Fallback: generate inline SVG from seed hash
-    const h = (seed.$hash || 'aabbccdd').slice(0, 6);
-    const fallback = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#${h}"/><text x="128" y="135" text-anchor="middle" fill="white" font-size="14" font-family="monospace">${h}</text></svg>`;
-    res.setHeader('Content-Disposition', `attachment; filename="seed-${h}.svg"`);
-    res.type('image/svg+xml').send(fallback);
-  });
-
-  app.post('/api/seeds/export/html', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const htmlPath = artifact?.htmlPath as string | undefined;
-    if (htmlPath && require('fs').existsSync(htmlPath)) {
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.html"`);
-      return res.type('text/html').send(require('fs').readFileSync(htmlPath, 'utf-8'));
-    }
-    const fallback = `<!DOCTYPE html><html><head><title>Paradigm Seed ${seed.$hash?.slice(0,8)}</title></head><body><pre>${JSON.stringify(seed,null,2)}</pre></body></html>`;
-    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.html"`);
-    res.type('text/html').send(fallback);
-  });
-
-  app.post('/api/seeds/export/wav', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const wavPath = artifact?.wavPath as string | undefined;
-    if (wavPath && require('fs').existsSync(wavPath)) {
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.wav"`);
-      return res.type('audio/wav').send(require('fs').readFileSync(wavPath));
-    }
-    return res.status(404).json({ error: 'WAV artifact not yet generated. Grow this seed first.' });
-  });
-
-  app.post('/api/seeds/export/markdown', optionalAuth, (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const story = artifact?.story ?? artifact?.narrative ?? JSON.stringify(seed, null, 2);
-    res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.md"`);
-    res.type('text/markdown').send(story);
-  });
-
-  app.post('/api/seeds/export/gltf', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const gltfPath = artifact?.gltfPath ?? artifact?.outputPath as string | undefined;
-    if (gltfPath && require('fs').existsSync(gltfPath)) {
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gltf"`);
-      return res.type('model/gltf+json').send(require('fs').readFileSync(gltfPath, 'utf-8'));
-    }
-    return res.status(404).json({ error: 'GLTF artifact not yet generated. Grow this seed first.' });
-  });
-
-  app.post('/api/seeds/export/pdb', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const pdbPath = artifact?.pdbPath as string | undefined;
-    if (pdbPath && require('fs').existsSync(pdbPath)) {
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.pdb"`);
-      return res.type('chemical/x-pdb').send(require('fs').readFileSync(pdbPath, 'utf-8'));
-    }
-    return res.status(404).json({ error: 'PDB artifact not yet generated. Grow this seed first.' });
-  });
-
-  app.post('/api/seeds/export/glsl', optionalAuth, async (req: any, res: any) => {
-    const { seed, artifact } = req.body;
-    if (!seed) return res.status(400).json({ error: 'seed required' });
-    const glslPath = artifact?.glslPath ?? artifact?.fragPath as string | undefined;
-    if (glslPath && require('fs').existsSync(glslPath)) {
-      res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.glsl"`);
-      return res.type('text/plain').send(require('fs').readFileSync(glslPath, 'utf-8'));
-    }
-    return res.status(404).json({ error: 'GLSL artifact not yet generated. Grow this seed first.' });
-  });
+  // Per-format export routes — see src/server/routes/exports.ts
+  registerExportRoutes(app, { optionalAuth });
 
   // ── Sovereignty endpoints ────────────────────────────────────────────────────
 
