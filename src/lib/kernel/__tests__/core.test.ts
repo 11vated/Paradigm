@@ -4,17 +4,21 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Seed } from '../../src/lib/kernel/seed-class';
-import { Xoshiro256StarStar, rngFromHash } from '../../src/lib/kernel/rng';
-import { GeneticAlgorithm } from '../../src/lib/evolution/ga';
-import { GeneSystem } from '../../src/lib/kernel/gene_system';
+import { UniversalSeed } from '../../../seeds/universal-seed';
+import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { GeneticAlgorithm } from '../../evolution/ga';
+import { GeneSystem } from '../gene_system';
+
+function makeMeta(name: string, domain = 'character'): any {
+  return { name, domain, id: `core-test-${name}`, version: '1.0.0', created: 0, updated: 0, tags: [] };
+}
 
 describe('Seed Class', () => {
-  let seed: Seed;
+  let seed: UniversalSeed;
   let rng: Xoshiro256StarStar;
 
   beforeEach(() => {
-    seed = new Seed('character', 'TestCharacter');
+    seed = new UniversalSeed({ metadata: makeMeta('TestCharacter') });
     rng = rngFromHash('test-seed-123');
   });
 
@@ -24,44 +28,44 @@ describe('Seed Class', () => {
   });
 
   it('should compute deterministic content hash', () => {
-    const seed1 = new Seed('character', 'Test');
-    seed1.setGene('scalar', 0.5, { min: 0, max: 1 });
-    
-    const hash1 = seed1.hash;
-    const hash2 = seed1.hash;
-    
-    expect(hash1).toBe(hash2);
+    const seed1 = new UniversalSeed({ metadata: makeMeta('Test') });
+    seed1.setGene('scalar', 0.5);
+    const h1 = seed1.hash;
+    expect(h1).toBe(seed1.hash);
   });
 
   it('should add and retrieve genes', () => {
-    const modified = seed.setGene('scalar', 0.75, { min: 0, max: 1 });
-    expect(modified.getGeneValue('scalar')).toBe(0.75);
+    seed.setGene('scalar', 0.75);
+    expect(seed.getGeneValue('scalar')).toBe(0.75);
   });
 
   it('should mutate and return new Seed', () => {
-    const original = seed.setGene('scalar', 0.5, { min: 0, max: 1 });
-    const mutated = original.mutate(rng, 0.1);
+    const original = new UniversalSeed({ metadata: makeMeta('Original') });
+    original.setGene('scalar', 0.5);
+    const mutated = original.clone().mutate(rng, 0.1) as UniversalSeed;
     
     expect(mutated).not.toBe(original);
     expect(mutated.id).not.toBe(original.id);
   });
 
   it('should breed two seeds via crossover', () => {
-    const parent1 = seed.setGene('scalar', 0.3, { min: 0, max: 1 });
-    const parent2 = seed.setGene('scalar', 0.7, { min: 0, max: 1 });
+    const parent1 = new UniversalSeed({ metadata: makeMeta('P1') });
+    parent1.setGene('scalar', 0.3);
+    const parent2 = new UniversalSeed({ metadata: makeMeta('P2') });
+    parent2.setGene('scalar', 0.7);
     
-    const child = parent1.cross(parent2, rng);
+    const child = parent1.cross(parent2, rng) as UniversalSeed;
     
-    expect(child.getGeneValue('scalar')).toBeGreaterThanOrEqual(0.3);
-    expect(child.getGeneValue('scalar')).toBeLessThanOrEqual(0.7);
+    expect(Number(child.getGeneValue('scalar'))).toBeGreaterThanOrEqual(0.3);
+    expect(Number(child.getGeneValue('scalar'))).toBeLessThanOrEqual(0.7);
   });
 
   it('should calculate genetic distance', () => {
-    const s1 = new Seed('character');
-    s1.setGene('scalar', 0.2, { min: 0, max: 1 });
+    const s1 = new UniversalSeed({ metadata: makeMeta('S1') });
+    s1.setGene('scalar', 0.2);
     
-    const s2 = new Seed('character');
-    s2.setGene('scalar', 0.8, { min: 0, max: 1 });
+    const s2 = new UniversalSeed({ metadata: makeMeta('S2') });
+    s2.setGene('scalar', 0.8);
     
     const distance = s1.distance(s2);
     expect(distance).toBeGreaterThan(0);
@@ -69,32 +73,35 @@ describe('Seed Class', () => {
   });
 
   it('should serialize and deserialize', () => {
-    const modified = seed.setGene('scalar', 0.42, { min: 0, max: 1 });
-    const json = modified.toJSON();
-    const restored = Seed.fromJSON(json);
+    seed.setGene('scalar', 0.42);
+    const json = seed.toJSON() as string;
+    const restored = UniversalSeed.fromJSON(json);
     
     expect(restored.getGeneValue('scalar')).toBe(0.42);
-    expect(restored.metadata.name).toBe(modified.metadata.name);
+    expect(restored.metadata.name).toBe(seed.metadata.name);
   });
 
   it('should track lineage through mutations', () => {
-    const original = seed.setGene('scalar', 0.5, { min: 0, max: 1 });
-    const mutated = original.mutate(rng, 0.1);
+    const original = new UniversalSeed({ metadata: makeMeta('LineageOrig') });
+    original.setGene('scalar', 0.5);
+    const mutated = original.clone().mutate(rng, 0.1) as UniversalSeed;
     
-    expect(mutated.lineage.parents).toContain(original.id);
-    expect(mutated.lineage.operators).toContain('mutate');
-    expect(mutated.lineage.generation).toBeGreaterThan(original.lineage.generation);
+    expect(mutated.derivation?.parents).toContain(original.id);
+    expect(mutated.derivation?.operators).toContain('mutate');
+    expect((mutated.derivation?.generation ?? 0)).toBeGreaterThan(original.derivation?.generation ?? -1);
   });
 
   it('should track lineage through breeding', () => {
-    const p1 = new Seed('character').setGene('scalar', 0.3, { min: 0, max: 1 });
-    const p2 = new Seed('character').setGene('scalar', 0.7, { min: 0, max: 1 });
+    const p1 = new UniversalSeed({ metadata: makeMeta('BreedP1') });
+    p1.setGene('scalar', 0.3);
+    const p2 = new UniversalSeed({ metadata: makeMeta('BreedP2') });
+    p2.setGene('scalar', 0.7);
     
-    const child = p1.cross(p2, rng);
+    const child = p1.cross(p2, rng) as UniversalSeed;
     
-    expect(child.lineage.parents).toContain(p1.id);
-    expect(child.lineage.parents).toContain(p2.id);
-    expect(child.lineage.operators).toContain('breed');
+    expect(child.derivation?.parents).toContain(p1.id);
+    expect(child.derivation?.parents).toContain(p2.id);
+    expect(child.derivation?.operators).toContain('breed');
   });
 });
 
@@ -194,13 +201,14 @@ describe('Genetic Algorithm', () => {
     const seeds = Array(10)
       .fill(null)
       .map((_, i) => {
-        const s = new Seed('character', `Seed_${i}`);
-        return s.setGene('scalar', Math.random(), { min: 0, max: 1 });
+        const s = new UniversalSeed({ metadata: makeMeta(`Seed_${i}`) });
+        s.setGene('scalar', Math.random());
+        return s;
       });
 
-    const fitnessFn = async (seed: Seed) => {
+    const fitnessFn = async (seed: UniversalSeed) => {
       const val = seed.getGeneValue('scalar') as number;
-      return Math.abs(val - 0.5);  // Fitness: closeness to 0.5
+      return Math.abs(val - 0.5);
     };
 
     const config = {
@@ -223,12 +231,12 @@ describe('Genetic Algorithm', () => {
     const seeds = Array(20)
       .fill(null)
       .map(() => {
-        const s = new Seed('character');
-        return s.setGene('scalar', Math.random(), { min: 0, max: 1 });
+        const s = new UniversalSeed({ metadata: makeMeta('Pop') });
+        s.setGene('scalar', Math.random());
+        return s;
       });
 
-    // Fitness: maximize value (closer to 1.0 is better)
-    const fitnessFn = async (seed: Seed) => {
+    const fitnessFn = async (seed: UniversalSeed) => {
       const val = seed.getGeneValue('scalar') as number;
       return val;
     };
@@ -244,7 +252,6 @@ describe('Genetic Algorithm', () => {
 
     const result = await ga.evolve(seeds, fitnessFn, config);
 
-    // Best fitness should be close to 1.0
     expect(result.fitness).toBeGreaterThan(0.7);
   });
 
@@ -252,12 +259,13 @@ describe('Genetic Algorithm', () => {
     const seeds = Array(10)
       .fill(null)
       .map(() => {
-        const s = new Seed('character');
-        return s.setGene('scalar', Math.random(), { min: 0, max: 1 });
+        const s = new UniversalSeed({ metadata: makeMeta('Div') });
+        s.setGene('scalar', Math.random());
+        return s;
       });
 
-    const fitnessFn = async (seed: Seed) => {
-      return Math.random();  // Random fitness
+    const fitnessFn = async (seed: UniversalSeed) => {
+      return Math.random();
     };
 
     const config = {
@@ -271,7 +279,6 @@ describe('Genetic Algorithm', () => {
 
     const result = await ga.evolve(seeds, fitnessFn, config);
 
-    // Population should have diversity
     const distances = [];
     for (let i = 0; i < result.population.length; i++) {
       for (let j = i + 1; j < Math.min(i + 3, result.population.length); j++) {
@@ -280,7 +287,7 @@ describe('Genetic Algorithm', () => {
     }
 
     const avgDiversity = distances.reduce((a, b) => a + b, 0) / distances.length;
-    expect(avgDiversity).toBeGreaterThan(0.01);  // Some diversity preserved
+    expect(avgDiversity).toBeGreaterThan(0.01);
   });
 });
 
@@ -289,11 +296,13 @@ describe('Determinism', () => {
     const rng1 = rngFromHash('determinism-test');
     const rng2 = rngFromHash('determinism-test');
 
-    const s1 = new Seed('character');
-    const s2 = new Seed('character');
+    const s1 = new UniversalSeed({ metadata: makeMeta('Det1') });
+    s1.setGene('scalar', 0.5);
+    const s2 = new UniversalSeed({ metadata: makeMeta('Det2') });
+    s2.setGene('scalar', 0.5);
 
-    const m1 = s1.setGene('scalar', 0.5, { min: 0, max: 1 }).mutate(rng1, 0.1);
-    const m2 = s2.setGene('scalar', 0.5, { min: 0, max: 1 }).mutate(rng2, 0.1);
+    const m1 = s1.clone().mutate(rng1, 0.1) as UniversalSeed;
+    const m2 = s2.clone().mutate(rng2, 0.1) as UniversalSeed;
 
     expect(m1.getGeneValue('scalar')).toBe(m2.getGeneValue('scalar'));
   });

@@ -20,7 +20,8 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
   const out = path.join(dir, 'music');
   try {
     const r: any = await generateMusicV2(seed as any, out);
-    const wavBuffer = await fs.readFile(r.filePath || r.wavPath || r.path);
+    const wavPath = r.filePath || (r.wavPath) || path.join(dir, 'music.wav');
+    const wavBuffer = await fs.readFile(wavPath);
     return {
       wavBuffer,
       meta: {

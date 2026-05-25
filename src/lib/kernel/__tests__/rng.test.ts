@@ -12,7 +12,8 @@ import {
   Xoshiro256StarStar,
   rngFromHash,
   Xoshiro256StarStar_factory
-} from '../../src/lib/kernel/rng';
+} from '../rng';
+import { UniversalSeed } from '../../../seeds/universal-seed';
 
 describe('RNG Determinism', () => {
   describe('Core Determinism', () => {
@@ -214,10 +215,9 @@ describe('RNG Determinism', () => {
 
   describe('Integration with Seed System', () => {
     it('should produce identical mutations with same RNG', () => {
-      const { Seed } = require('../../src/lib/kernel/seed-class');
-      
-      const seed1 = new Seed('character', 'Test');
-      seed1.setGene('scalar', 0.5, { min: 0, max: 1 });
+      const meta = (name: string) => ({ name, domain: 'character', id: `seed-${name}`, version: '1.0.0', created: 0, updated: 0, tags: [] });
+      const seed1 = new UniversalSeed({ metadata: meta('Test') });
+      seed1.setGene('scalar', 0.5);
 
       const rng1 = rngFromHash('mutation-seed-xyz');
       const rng2 = rngFromHash('mutation-seed-xyz');
@@ -228,17 +228,16 @@ describe('RNG Determinism', () => {
       // Should produce identical mutations
       const gene1 = mutated1.getGeneValue('scalar');
       const gene2 = mutated2.getGeneValue('scalar');
-      expect(gene1).toBeCloseTo(gene2, 5);
+      expect(gene1).toBeCloseTo(gene2 as number, 5);
     });
 
     it('should produce different crossovers with different RNG', () => {
-      const { Seed } = require('../../src/lib/kernel/seed-class');
-      
-      const parent1 = new Seed('character', 'P1');
-      parent1.setGene('scalar', 0.2, { min: 0, max: 1 });
+      const meta = (name: string) => ({ name, domain: 'character', id: `seed-${name}`, version: '1.0.0', created: 0, updated: 0, tags: [] });
+      const parent1 = new UniversalSeed({ metadata: meta('P1') });
+      parent1.setGene('scalar', 0.2);
 
-      const parent2 = new Seed('character', 'P2');
-      parent2.setGene('scalar', 0.8, { min: 0, max: 1 });
+      const parent2 = new UniversalSeed({ metadata: meta('P2') });
+      parent2.setGene('scalar', 0.8);
 
       const rng1 = rngFromHash('cross-AAA');
       const rng2 = rngFromHash('cross-BBB');

@@ -16,7 +16,7 @@ import { Xoshiro256StarStar, rngFromHash } from '../rng';
 
 // Audio configuration
 const SAMPLE_RATE = 44100;
-const BIT_DEPTH = 24;
+const BIT_DEPTH = 16;
 const CHANNELS = 2;
 
 // Music theory
@@ -75,7 +75,8 @@ const GENRE_SETTINGS: Record<string, any> = {
   'jazz': { preferKey: 'B minor', timeSigs: ['4/4', '3/4', '5/4'], tempoRange: [80, 180], instruments: ['piano', 'saxophone', 'double_bass', 'drums'] },
   'electronic': { preferKey: 'A minor', timeSigs: ['4/4'], tempoRange: [120, 160], instruments: ['synth', 'bass', 'drums', 'pad'] },
   'pop': { preferKey: 'C major', timeSigs: ['4/4'], tempoRange: [100, 140], instruments: ['piano', 'guitar', 'bass', 'drums'] },
-  'soundtrack': { preferKey: 'E minor', timeSigs: ['4/4', '3/4'], tempoRange: [60, 120], instruments: ['orchestra', 'piano', 'strings', 'brass'] }
+  'soundtrack': { preferKey: 'E minor', timeSigs: ['4/4', '3/4'], tempoRange: [60, 120], instruments: ['orchestra', 'piano', 'strings', 'brass'] },
+  'ambient': { preferKey: 'C major', timeSigs: ['4/4'], tempoRange: [60, 90], instruments: ['pad', 'synth', 'piano', 'bass'] }
 };
 
 /**
@@ -221,6 +222,29 @@ export function generateMelody(chords: Chord[], params: MusicParams, rng: Xoshir
 }
 
 /**
+ * Generate harmony track (chord voicings)
+ */
+export function generateHarmony(chords: Chord[], params: MusicParams, rng: Xoshiro256StarStar): Note[] {
+  const notes: Note[] = [];
+  const harmonyInstrument = params.instrumentation.find(i => ['pad','piano','strings','synth','organ'].includes(i)) || 'piano';
+
+  for (const chord of chords) {
+    for (const midiNote of chord.notes) {
+      notes.push({
+        pitch: midiNote - 12,
+        startSample: chord.startSample,
+        durationSamples: chord.durationSamples,
+        velocity: Math.floor(40 + rng.nextF64() * 40),
+        track: 'harmony',
+        instrument: harmonyInstrument
+      });
+    }
+  }
+
+  return notes;
+}
+
+/**
  * Generate bass line
  */
 export function generateBass(chords: Chord[], params: MusicParams, rng: Xoshiro256StarStar): Note[] {
@@ -323,70 +347,134 @@ export function generateDrums(params: MusicParams, rng: Xoshiro256StarStar): Not
  */
 function synthesizeAudio(notes: Note[], params: MusicParams, rng: { nextF64: () => number }): Buffer {
   const totalSamples = Math.floor(params.duration * SAMPLE_RATE);
-  const buffer = Buffer.alloc(totalSamples * CHANNELS * (BIT_DEPTH / 8), 0);
+  const bytesPerSample = BIT_DEPTH / 8;
+  const buffer = Buffer.alloc(totalSamples * CHANNELS * bytesPerSample, 0);
+
+  // Fork RNG for synthesis to decouple from composition
+  const synthRng = { nextF64: () => { rng.nextF64(); return rng.nextF64(); } };
 
   // Process each note
   for (const note of notes) {
     const startSample = Math.floor(note.startSample);
     const endSample = Math.min(totalSamples, startSample + note.durationSamples);
+    const durationSec = note.durationSamples / SAMPLE_RATE;
+    const freq = 440 * Math.pow(2, (note.pitch - 69) / 12);
+
+    // ADSR envelope parameters
+    const attack = Math.min(0.02, durationSec * 0.15);
+    const decay = Math.min(0.05, durationSec * 0.1);
+    const sustainLevel = note.instrument === 'kick' ? 0.2 :
+                         note.instrument === 'hi-hat' ? 0.05 : 0.6;
+    const release = Math.min(0.08, durationSec * 0.25);
+
+    // Noise buffer for instruments that need it
+    const noiseBuf = (note.instrument === 'hi-hat' || note.instrument === 'snare')
+      ? new Float32Array(endSample - startSample) : null;
+    if (noiseBuf) {
+      for (let i = 0; i < noiseBuf.length; i++) {
+        noiseBuf[i] = synthRng.nextF64() * 2 - 1;
+      }
+    }
 
     for (let s = startSample; s < endSample; s++) {
-      const t = (s - startSample) / SAMPLE_RATE; // Time in seconds
-      const freq = 440 * Math.pow(2, (note.pitch - 69) / 12); // MIDI to frequency
+      const t = (s - startSample) / SAMPLE_RATE;
 
-      // Envelope (ADSR)
-      const duration = note.durationSamples / SAMPLE_RATE;
-      let envelope = 1.0;
-      if (t < duration * 0.1) {
-        envelope = t / (duration * 0.1); // Attack
-      } else if (t > duration * 0.7) {
-        envelope = 1 - ((t - duration * 0.7) / (duration * 0.3)); // Release
+      // ADSR envelope
+      let envelope: number;
+      if (t < attack) {
+        envelope = t / attack;
+      } else if (t < attack + decay) {
+        envelope = 1.0 - (1.0 - sustainLevel) * ((t - attack) / decay);
+      } else if (t < durationSec - release) {
+        envelope = sustainLevel;
+      } else {
+        envelope = sustainLevel * (1.0 - (t - (durationSec - release)) / release);
       }
 
-      // Waveform based on instrument
+      // Waveform
       let sample = 0;
-      if (note.instrument === 'piano' || note.instrument === 'kick') {
-        // Sine wave with harmonics
-        sample = Math.sin(2 * Math.PI * freq * t) * 0.6 +
-                 Math.sin(2 * Math.PI * freq * 2 * t) * 0.3 +
-                 Math.sin(2 * Math.PI * freq * 3 * t) * 0.1;
-      } else if (note.instrument === 'synth' || note.instrument === 'pad') {
-        // Sawtooth
-        sample = 2 * (t * freq - Math.floor(t * freq + 0.5));
-      } else if (note.instrument === 'bass') {
-        // Triangle
-        sample = 2 * Math.abs(2 * (t * freq - Math.floor(t * freq + 0.5))) - 1;
-      } else if (note.instrument === 'hi-hat' || note.instrument === 'snare') {
-        // Noise
-        sample = (rng.nextF64() * 2 - 1) * 0.3;
-      } else {
-        // Default: sine
-        sample = Math.sin(2 * Math.PI * freq * t);
+      const phase = t * freq % 1.0;
+      const twoPiFreqT = 2 * Math.PI * freq * t;
+
+      switch (note.instrument) {
+        case 'piano':
+        case 'kick':
+          sample = Math.sin(twoPiFreqT) * 0.6 +
+                   Math.sin(twoPiFreqT * 2) * 0.25 +
+                   Math.sin(twoPiFreqT * 3) * 0.1 +
+                   Math.sin(twoPiFreqT * 4) * 0.05;
+          if (note.instrument === 'kick') {
+            // Kick: pitch drop for thump
+            const kickEnv = Math.exp(-t * 30);
+            sample = (Math.sin(twoPiFreqT * (1 - t * 5)) * 0.8 + Math.sin(twoPiFreqT * 2) * 0.2) * kickEnv;
+          }
+          break;
+        case 'synth':
+        case 'pad':
+          sample = 2.0 * (phase - 0.5);
+          if (note.instrument === 'pad') {
+            sample += Math.sin(twoPiFreqT * 1.005) * 0.3;
+          }
+          break;
+        case 'bass':
+          sample = 2.0 * Math.abs(2.0 * phase - 1.0) - 1.0;
+          sample += Math.sin(twoPiFreqT) * 0.15;
+          break;
+        case 'hi-hat':
+          if (noiseBuf) {
+            const hihatEnv = Math.exp(-t * 80);
+            sample = noiseBuf[s - startSample] * hihatEnv * 0.4;
+          }
+          break;
+        case 'snare':
+          if (noiseBuf) {
+            const snareEnv = Math.exp(-t * 40);
+            sample = (Math.sin(twoPiFreqT * 0.5) * 0.5 + noiseBuf[s - startSample] * 0.5) * snareEnv;
+          }
+          break;
+        case 'violin':
+        case 'cello':
+        case 'strings':
+          sample = Math.sin(twoPiFreqT) * 0.4 +
+                   Math.sin(twoPiFreqT * 2) * 0.3 +
+                   Math.sin(twoPiFreqT * 3) * 0.2 +
+                   Math.sin(twoPiFreqT * 5) * 0.05;
+          break;
+        case 'saxophone':
+          sample = Math.sin(twoPiFreqT) * 0.35 +
+                   Math.sin(twoPiFreqT * 2) * 0.25 +
+                   Math.sin(twoPiFreqT * 4) * 0.15 +
+                   Math.sin(twoPiFreqT * 6) * 0.05;
+          break;
+        case 'flute':
+          sample = Math.sin(twoPiFreqT) * 0.5 +
+                   Math.sin(twoPiFreqT * 3) * 0.1;
+          break;
+        default:
+          sample = Math.sin(twoPiFreqT);
       }
 
       // Apply envelope and velocity
       sample *= envelope * (note.velocity / 127);
 
-      // Write to buffer (interleaved stereo)
-      const bufferIndex = (s * CHANNELS * (BIT_DEPTH / 8));
-      const sample24 = Math.floor(sample * 8388607); // 24-bit
+      // Clamp
+      sample = Math.max(-1, Math.min(1, sample));
 
-      // Left channel
-      buffer.writeIntLE(sample24, bufferIndex, 3);
-      // Right channel (slightly different for stereo width)
-      const rightSample = sample * (note.track === 'melody' ? 0.9 : 1.0);
-      const sample24Right = Math.floor(rightSample * 8388607);
-      buffer.writeIntLE(sample24Right, bufferIndex + 3, 3);
+      // Write 16-bit interleaved stereo
+      const bufferIndex = s * CHANNELS * bytesPerSample;
+      const leftSample = Math.floor(sample * 32767);
+      buffer.writeInt16LE(Math.max(-32768, Math.min(32767, leftSample)), bufferIndex);
+      const rightSample = Math.floor((sample * (note.track === 'melody' ? 0.85 : 1.0)) * 32767);
+      buffer.writeInt16LE(Math.max(-32768, Math.min(32767, rightSample)), bufferIndex + 2);
     }
   }
 
-  // Apply master effects based on quality
+  // Master effects
   if (params.quality === 'photorealistic' || params.quality === 'high') {
-    // Simple compression (soft clipping)
-    for (let i = 0; i < buffer.length; i += 3) {
-      const sample = buffer.readIntLE(i, 3) / 8388607;
-      const compressed = Math.tanh(sample * 2) / 2; // Soft clipping
-      buffer.writeIntLE(Math.floor(compressed * 8388607), i, 3);
+    for (let i = 0; i < buffer.length; i += 2) {
+      const s = buffer.readInt16LE(i) / 32767;
+      const compressed = Math.tanh(s * 1.5);
+      buffer.writeInt16LE(Math.floor(compressed * 32767), i);
     }
   }
 
@@ -467,6 +555,7 @@ function writeVariableLength(value: number): number[] {
 export async function generateMusicV2(seed: Seed, outputPath: string): Promise<{
   filePath: string;
   scorePath: string;
+  metaPath: string;
   genre: string;
   duration: number;
   trackCount: number;
@@ -479,11 +568,12 @@ export async function generateMusicV2(seed: Seed, outputPath: string): Promise<{
 
   // Generate all tracks
   const melodyNotes = generateMelody(chords, params, rng);
+  const harmonyNotes = generateHarmony(chords, params, rng);
   const bassNotes = generateBass(chords, params, rng);
   const drumNotes = params.instrumentation.includes('drums') ? generateDrums(params, rng) : [];
 
   // Combine all notes
-  const allNotes = [...melodyNotes, ...bassNotes, ...drumNotes];
+  const allNotes = [...melodyNotes, ...harmonyNotes, ...bassNotes, ...drumNotes];
 
   // Synthesize audio
   const audioBuffer = synthesizeAudio(allNotes, params, rng);
@@ -498,16 +588,16 @@ export async function generateMusicV2(seed: Seed, outputPath: string): Promise<{
   }
 
   // Write WAV file
-  const wavPath = outputPath.replace(/\.json$/, '.wav');
+  const wavPath = outputPath + '.wav';
   const wavBuffer = createWAV(audioBuffer, params.duration);
   fs.writeFileSync(wavPath, wavBuffer);
 
   // Write MIDI file
-  const midiPath = outputPath.replace(/\.json$/, '.mid');
+  const midiPath = outputPath + '.mid';
   fs.writeFileSync(midiPath, midiBuffer);
 
   // Write metadata
-  const metaPath = outputPath.replace(/\.json$/, '_music.json');
+  const metaPath = outputPath + '.json';
   const metadata = {
     music: {
       genre: params.genre,
@@ -535,8 +625,9 @@ export async function generateMusicV2(seed: Seed, outputPath: string): Promise<{
   fs.writeFileSync(metaPath, JSON.stringify(metadata, null, 2));
 
   return {
-    filePath: metaPath,
+    filePath: wavPath,
     scorePath: midiPath,
+    metaPath,
     genre: params.genre,
     duration: params.duration,
     trackCount: params.instrumentation.length + (drumNotes.length > 0 ? 1 : 0)
@@ -560,13 +651,13 @@ function createWAV(audioBuffer: Buffer, duration: number): Buffer {
 
   // fmt chunk
   wavBuffer.write('fmt ', 12);
-  wavBuffer.writeUInt32LE(16, 16); // Chunk size
-  wavBuffer.writeUInt16LE(1, 20);  // PCM format
+  wavBuffer.writeUInt32LE(16, 16);
+  wavBuffer.writeUInt16LE(1, 20);
   wavBuffer.writeUInt16LE(CHANNELS, 22);
   wavBuffer.writeUInt32LE(SAMPLE_RATE, 24);
-  wavBuffer.writeUInt32LE(SAMPLE_RATE * CHANNELS * (BIT_DEPTH / 8), 28); // Byte rate
-  wavBuffer.writeUInt16LE(CHANNELS * (BIT_DEPTH / 8), 32); // Block align
-  wavBuffer.writeUInt16LE(BIT_DEPTH, 34); // Bits per sample
+  wavBuffer.writeUInt32LE(SAMPLE_RATE * CHANNELS * (BIT_DEPTH / 8), 28);
+  wavBuffer.writeUInt16LE(CHANNELS * (BIT_DEPTH / 8), 32);
+  wavBuffer.writeUInt16LE(BIT_DEPTH, 34);
 
   // data chunk
   wavBuffer.write('data', 36);

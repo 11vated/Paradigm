@@ -97,11 +97,14 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar): GameParams {
 
 /**
  * Generate deterministic levels from seed
+ * Ensures all platforms are reachable via a chain of platforms
  */
 function generateLevels(params: GameParams, rng: Xoshiro256StarStar): Level[] {
   const levels: Level[] = [];
   const canvasWidth = 800;
   const canvasHeight = 600;
+  const maxJumpHeight = 120;
+  const maxJumpWidth = 200;
   
   for (let i = 0; i < params.levelCount; i++) {
     const platforms = [];
@@ -111,30 +114,39 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): Level[] {
     // Ground platform
     platforms.push({ x: 0, y: canvasHeight - 50, width: canvasWidth, height: 50 });
     
-    // Generate additional platforms
-    for (let j = 0; j < 5 + i; j++) {
+    // Generate reachable platform chain
+    let prevX = 100;
+    let prevY = canvasHeight - 120;
+    let prevW = 100;
+    const platformCount = 5 + i;
+    for (let j = 0; j < platformCount; j++) {
+      const x = prevX + prevW / 2 + rng.nextF64() * maxJumpWidth;
+      const y = Math.max(50, prevY + (rng.nextF64() - 0.5) * maxJumpHeight * 0.8);
+      const w = 60 + rng.nextF64() * 80;
       platforms.push({
-        x: rng.nextF64() * (canvasWidth - 100),
-        y: canvasHeight - 100 - j * 80,
-        width: 60 + rng.nextF64() * 100,
-        height: 20
+        x, y, width: w, height: 20
       });
+      prevX = x;
+      prevY = y;
+      prevW = w;
     }
     
-    // Generate obstacles
+    // Generate obstacles on platforms
     for (let j = 0; j < Math.floor(params.obstacleCount * (i + 1) / params.levelCount); j++) {
+      const targetPlat = platforms[1 + Math.floor(rng.nextF64() * (platforms.length - 1))];
       obstacles.push({
-        x: rng.nextF64() * (canvasWidth - 30),
-        y: canvasHeight - 80,
+        x: targetPlat.x + rng.nextF64() * (targetPlat.width - 30),
+        y: targetPlat.y - 30,
         type: ['spike', 'enemy', 'pit'][Math.floor(rng.nextF64() * 3)]
       });
     }
     
-    // Generate power-ups
+    // Generate power-ups above platforms
     for (let j = 0; j < Math.floor(params.powerUpCount * (i + 1) / params.levelCount); j++) {
+      const targetPlat = platforms[1 + Math.floor(rng.nextF64() * (platforms.length - 1))];
       powerUps.push({
-        x: rng.nextF64() * (canvasWidth - 20),
-        y: canvasHeight - 150,
+        x: targetPlat.x + rng.nextF64() * (targetPlat.width - 20),
+        y: targetPlat.y - 40,
         type: ['speed', 'invincible', 'extra_life'][Math.floor(rng.nextF64() * 3)]
       });
     }
@@ -144,7 +156,7 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): Level[] {
       platforms,
       obstacles,
       powerUps,
-      finishX: canvasWidth - 50
+      finishX: (platforms[platforms.length - 1]?.x ?? canvasWidth - 100) + 100
     });
   }
   
@@ -242,6 +254,8 @@ function generatePlayableGame(params: GameParams, levels: Level[]): string {
       lives: 3, 
       running: false, 
       paused: false,
+      speedBoost: false,
+      invincible: false,
       player: { x: 50, y: 500, width: 30, height: 40, velocityY: 0, velocityX: 0, onGround: false },
       camera: { x: 0, y: 0 },
       keys: {}
@@ -273,6 +287,7 @@ function generatePlayableGame(params: GameParams, levels: Level[]): string {
       cancelAnimationFrame(gameLoop);
       gameState = { 
         score: 0, level: 0, lives: 3, running: false, paused: false,
+        speedBoost: false, invincible: false,
         player: { x: 50, y: 500, width: 30, height: 40, velocityY: 0, velocityX: 0, onGround: false },
         camera: { x: 0, y: 0 },
         keys: {}
@@ -288,7 +303,7 @@ function generatePlayableGame(params: GameParams, levels: Level[]): string {
       const p = gameState.player;
       const gravity = 0.5;
       const jumpForce = -12;
-      const speed = ${params.playerSpeed};
+      const speed = ${params.playerSpeed} * (gameState.speedBoost ? 2 : 1);
       
       // Apply gravity
       p.velocityY += gravity;
@@ -317,37 +332,69 @@ function generatePlayableGame(params: GameParams, levels: Level[]): string {
         p.onGround = false;
       }
       
-      // Platform collisions
+      // Platform collisions (full AABB with side/bottom detection)
       currentLevel.platforms.forEach(plat => {
         if (p.x < plat.x + plat.width &&
             p.x + p.width > plat.x &&
             p.y < plat.y + plat.height &&
             p.y + p.height > plat.y) {
-          if (p.velocityY > 0 && p.y + p.height - p.velocityY <= plat.y) {
+          const overlapTop = (p.y + p.height) - plat.y;
+          const overlapBottom = (plat.y + plat.height) - p.y;
+          const overlapLeft = (p.x + p.width) - plat.x;
+          const overlapRight = (plat.x + plat.width) - p.x;
+          const minOverlap = Math.min(overlapTop, overlapBottom, overlapLeft, overlapRight);
+          
+          if (minOverlap === overlapTop && p.velocityY >= 0) {
             p.y = plat.y - p.height;
             p.velocityY = 0;
             p.onGround = true;
+          } else if (minOverlap === overlapBottom && p.velocityY <= 0) {
+            p.y = plat.y + plat.height;
+            p.velocityY = 0;
+          } else if (minOverlap === overlapLeft && p.velocityX >= 0) {
+            p.x = plat.x - p.width;
+            p.velocityX = 0;
+          } else if (minOverlap === overlapRight && p.velocityX <= 0) {
+            p.x = plat.x + plat.width;
+            p.velocityX = 0;
           }
         }
       });
       
-      // Obstacle collisions
+      // Obstacle collisions (proper AABB)
       currentLevel.obstacles.forEach(obs => {
-        if (Math.abs(p.x - obs.x) < 20 && Math.abs(p.y - obs.y) < 30) {
-          gameState.lives--;
-          p.x = 50;
-          p.y = 500;
-          if (gameState.lives <= 0) {
-            alert('Game Over! Score: ' + gameState.score);
-            resetGame();
-            return;
+        if (p.x + p.width > obs.x &&
+            p.x < obs.x + 20 &&
+            p.y + p.height > obs.y &&
+            p.y < obs.y + 20) {
+          if (!gameState.invincible) {
+            gameState.lives--;
+            p.x = 50;
+            p.y = 500;
+            if (gameState.lives <= 0) {
+              alert('Game Over! Score: ' + gameState.score);
+              resetGame();
+              return;
+            }
           }
         }
       });
       
-      // Power-up collection
+      // Power-up collection (proper AABB)
       currentLevel.powerUps = currentLevel.powerUps.filter(pup => {
-        if (Math.abs(p.x - pup.x) < 20 && Math.abs(p.y - pup.y) < 20) {
+        if (p.x + p.width > pup.x - 10 &&
+            p.x < pup.x + 10 &&
+            p.y + p.height > pup.y - 10 &&
+            p.y < pup.y + 10) {
+          if (pup.type === 'extra_life') {
+            gameState.lives++;
+          } else if (pup.type === 'speed') {
+            gameState.speedBoost = true;
+            setTimeout(() => { gameState.speedBoost = false; }, 5000);
+          } else if (pup.type === 'invincible') {
+            gameState.invincible = true;
+            setTimeout(() => { gameState.invincible = false; }, 3000);
+          }
           gameState.score += 100;
           return false;
         }

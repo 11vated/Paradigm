@@ -1290,25 +1290,25 @@
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-ambient-drift",
-      "artifactHash": "ba9b73876951384234196963681b75493449d0f6d987accaaf4aa48d8a2a3f61"
+      "artifactHash": "225003e55b5e84cbf9663e365be21f8e4bb2be47a09d5e29414ca707cf04e923"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-classical-sonata-fragment",
-      "artifactHash": "f6b81e3e3580020e72e6748eeeb6e5f8276f2e7d6984f8b7d01f2f5c77f80129"
+      "artifactHash": "37b3a86c1efe50acc5053584de9707b34bd59908a094559eb79c09a5b857de40"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-electronic-pulse",
-      "artifactHash": "3ee82279e7a3d968f05e6aae1279db8cb8c0e40b4998e8a2b122ccb87e270115"
+      "artifactHash": "156d58ae07b7a627fdfa3e8cce8124bdaa0c984e87803343dbe2f498591a6b50"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-jazz-walking-bass",
-      "artifactHash": "69f5cb749a6c67c446055d8c734d5c3c9c4ea44f8d0ceac43d87ac0c1d678e6d"
+      "artifactHash": "18c459834bdd75ba89ecc10d438cfe730e102dc530b2d4e361aba428774fc456"
     },
     {
       "contract": "nanobot",
