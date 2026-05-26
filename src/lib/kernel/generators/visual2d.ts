@@ -57,8 +57,8 @@ export async function generateVisual2DV3(
   // Export SVG (vector version)
   const svgPath = await exportSVG(canvas, outputPath, seed);
   
-  // Calculate SSIM (quality metric)
-  const ssim = calculateSSIM(canvas, rng);
+  // Calculate structural quality metric
+  const ssim = computeImageQuality(canvas);
   
   return {
     pngPath,
@@ -143,9 +143,10 @@ function renderFractalLayer(
   const maxIterations = 50 + Math.floor(params.complexity * 150);
   const palette = params.palette;
   
-  // Render fractal (simplified escape-time algorithm)
-  for (let px = 0; px < Math.min(params.resolution, 512); px++) {
-    for (let py = 0; py < Math.min(params.resolution, 512); py++) {
+  // Render fractal (adaptive sampling for high resolution)
+  const sampleStep = params.resolution > 1024 ? 2 : 1;
+  for (let px = 0; px < params.resolution; px += sampleStep) {
+    for (let py = 0; py < params.resolution; py += sampleStep) {
       const x0 = (px / params.resolution - 0.5) * 4;
       const y0 = (py / params.resolution - 0.5) * 4;
       
@@ -178,7 +179,7 @@ function renderFractalLayer(
         const hueIdx = Math.floor((iteration / maxIterations) * palette.length);
         const hue = palette[hueIdx % palette.length];
         ctx.fillStyle = `hsl(${hue * 360}, 80%, ${40 + iteration % 40}%)`;
-        ctx.fillRect(px, py, 1, 1);
+        ctx.fillRect(px, py, sampleStep, sampleStep);
       }
     }
   }
@@ -339,17 +340,39 @@ function getBlendMode(layerIndex: number, totalLayers: number): GlobalCompositeO
 }
 
 /**
- * Generate random color palette
+ * Generate structured color palette using color schemes
  */
 function generateColorPalette(rng: Xoshiro256StarStar): number[] {
-  const paletteSize = 3 + Math.floor(rng.nextF64() * 5);
-  const palette: number[] = [];
-  
-  for (let i = 0; i < paletteSize; i++) {
-    palette.push(rng.nextF64());
+  const schemes = ['monochromatic', 'complementary', 'analogous', 'triadic', 'split-complementary'] as const;
+  const scheme = schemes[Math.floor(rng.nextF64() * schemes.length)];
+  const baseHue = rng.nextF64();
+  let hues: number[];
+
+  switch (scheme) {
+    case 'complementary':
+      hues = [baseHue, (baseHue + 0.5) % 1];
+      break;
+    case 'analogous':
+      hues = [baseHue, (baseHue + 0.08) % 1, (baseHue + 0.16) % 1];
+      break;
+    case 'triadic':
+      hues = [baseHue, (baseHue + 1/3) % 1, (baseHue + 2/3) % 1];
+      break;
+    case 'split-complementary':
+      hues = [baseHue, (baseHue + 0.46) % 1, (baseHue + 0.54) % 1];
+      break;
+    default: // monochromatic
+      hues = [baseHue, baseHue, baseHue];
   }
-  
-  return palette;
+
+  // Add saturation/value variations to each hue
+  const palette: number[] = [];
+  for (const h of hues) {
+    palette.push(h);
+    palette.push(h + 0.02);
+    palette.push(h - 0.02);
+  }
+  return palette.slice(0, 3 + Math.floor(rng.nextF64() * 5));
 }
 
 /**
@@ -412,20 +435,74 @@ function applyColorGrading(canvas: HTMLCanvasElement, palette: number[], rng: Xo
 }
 
 /**
- * Apply composition rules
+ * Apply composition vignette + edge darkening
  */
 function applyComposition(canvas: HTMLCanvasElement, composition: string) {
-  // Composition adjustments would go here
-  // For now, this is a placeholder
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+  const maxDist = Math.sqrt(cx * cx + cy * cy);
+
+  if (composition === 'centered') {
+    // Darken edges (vignette)
+    const grad = ctx.createRadialGradient(cx, cy, maxDist * 0.3, cx, cy, maxDist);
+    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.3)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  } else if (composition === 'rule-of-thirds') {
+    // Draw subtle third lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    for (let t = 1; t < 3; t++) {
+      ctx.beginPath(); ctx.moveTo(w * t / 3, 0); ctx.lineTo(w * t / 3, h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, h * t / 3); ctx.lineTo(w, h * t / 3); ctx.stroke();
+    }
+  }
 }
 
 /**
- * Calculate SSIM (Structural Similarity Index)
+ * Compute structural image quality from canvas pixel statistics.
+ * Uses luminance variance, edge gradient energy, and dynamic range
+ * as a proxy for SSIM (no reference image needed for generative art).
  */
-function calculateSSIM(canvas: HTMLCanvasElement, rng: Xoshiro256StarStar): number {
-  // Simplified SSIM calculation
-  // Real implementation would compare against reference
-  return 0.85 + rng.nextF64() * 0.1; // 0.85-0.95 range
+function computeImageQuality(canvas: HTMLCanvasElement): number {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return 0.85;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const d = imageData.data;
+  const len = d.length >> 2;
+  if (len === 0) return 0.85;
+
+  // Sample every Nth pixel for performance
+  const step = Math.max(1, Math.floor(len / 25000));
+  let lumSum = 0, lumSumSq = 0, edgeEnergy = 0, nonFlat = 0, count = 0;
+  for (let i = 0; i < len; i += step) {
+    const off = i << 2;
+    const r = d[off], g = d[off + 1], b = d[off + 2];
+    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+    lumSum += lum; lumSumSq += lum * lum;
+    count++;
+    // Local contrast: difference from 8-neighbor average (approximated)
+    if (i > 0 && i < len - 1) {
+      const prevLum = 0.299 * d[off - 4] + 0.587 * d[off - 3] + 0.114 * d[off - 2];
+      const nextLum = 0.299 * d[off + 4] + 0.587 * d[off + 5] + 0.114 * d[off + 6];
+      edgeEnergy += Math.abs(lum - prevLum) + Math.abs(lum - nextLum);
+      if (Math.abs(lum - prevLum) > 10 || Math.abs(lum - nextLum) > 10) nonFlat++;
+    }
+  }
+
+  const meanLum = lumSum / count;
+  const variance = lumSumSq / count - meanLum * meanLum;
+  const edgeScore = Math.min(1, edgeEnergy / (count * 128));
+  const freqNonFlat = Math.min(1, nonFlat / (count * 0.15));
+
+  // Combine: good contrast, non-flat regions, edge energy = higher quality
+  const contrastScore = Math.min(1, variance / 4000);
+  return Math.max(0, Math.min(1,
+    contrastScore * 0.4 + edgeScore * 0.3 + freqNonFlat * 0.3
+  ));
 }
 
 /**
@@ -445,38 +522,48 @@ async function exportPNG(canvas: HTMLCanvasElement, outputPath: string, seed: Se
 }
 
 /**
- * Export as SVG
+ * Export as SVG — style-aware vector representation
  */
 async function exportSVG(canvas: HTMLCanvasElement, outputPath: string, seed: Seed): Promise<string> {
   const filename = `visual2d_${seed.$hash || 'unknown'}.svg`;
   const filePath = path.join(outputPath, filename);
   
-  // Extract pixel data from canvas and generate geometric SVG elements
   const ctx = canvas.getContext('2d')!;
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const data = imageData.data;
   const w = canvas.width;
   const h = canvas.height;
   
-  // Sample pixels at regular intervals and create SVG circles
-  const step = Math.max(2, Math.floor(Math.min(w, h) / 24));
-  const circles: string[] = [];
-  for (let y = 0; y < h; y += step) {
-    for (let x = 0; x < w; x += step) {
-      const idx = (y * w + x) * 4;
-      const r = data[idx];
-      const g = data[idx + 1];
-      const b = data[idx + 2];
-      const a = data[idx + 3] / 255;
-      if (a > 0.1) {
-        circles.push(`<circle cx="${x}" cy="${y}" r="${step / 2}" fill="rgba(${r},${g},${b},${a})"/>`);
+  // Sample pixels to create a stylized vector representation
+  const step = Math.max(4, Math.floor(Math.min(w, h) / 64));
+  const rects: string[] = [];
+  // Aggregate neighboring similar-colored pixels into larger rects
+  const visited = new Uint8Array(Math.ceil(w / step) * Math.ceil(h / step));
+  const cols = Math.ceil(w / step);
+  for (let gy = 0; gy < h; gy += step) {
+    for (let gx = 0; gx < w; gx += step) {
+      const gi = (gy / step) * cols + (gx / step);
+      if (visited[gi]) continue;
+      const idx = (Math.floor(gy) * w + Math.floor(gx)) * 4;
+      const r = data[idx], g = data[idx + 1], b = data[idx + 2], a = data[idx + 3] / 255;
+      if (a <= 0.05) { visited[gi] = 1; continue; }
+      // Expand horizontally
+      let gw = 1;
+      while (gx + (gw + 1) * step < w) {
+        const ni = (gy / step) * cols + ((gx + gw * step) / step);
+        if (visited[ni]) break;
+        const nIdx = (Math.floor(gy) * w + Math.floor(gx + gw * step)) * 4;
+        const same = Math.abs(data[nIdx] - r) < 30 && Math.abs(data[nIdx + 1] - g) < 30 && Math.abs(data[nIdx + 2] - b) < 30;
+        if (!same) break;
+        visited[ni] = 1; gw++;
       }
+      rects.push(`<rect x="${gx}" y="${gy}" width="${gw * step}" height="${step}" fill="rgba(${r},${g},${b},${a})"/>`);
     }
   }
   
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
     <rect width="100%" height="100%" fill="#0a0a0a"/>
-    ${circles.join('\n    ')}
+    ${rects.join('\n    ')}
   </svg>`;
   
   if (typeof fs !== 'undefined') {

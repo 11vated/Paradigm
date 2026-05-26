@@ -13,13 +13,11 @@ interface WSInverted { sections: number; byteSize: number; palette: string[]; ht
 async function synthesize(seed: WSSeed): Promise<WSArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-ws-'));
   try {
-    const r = await generateWebsite(seed as any, dir) as any;
-    const [html, css, js] = await Promise.all([
-      fs.readFile(r.htmlPath, 'utf8').catch(() => ''),
-      fs.readFile(r.cssPath,  'utf8').catch(() => ''),
-      fs.readFile(r.jsPath,   'utf8').catch(() => ''),
-    ]);
-    return { html, css, js, sections: r.sections ?? 0, colorPalette: r.colorPalette ?? [], byteSize: html.length + css.length + js.length };
+    const r = await generateWebsite(seed as any, path.join(dir, 'website.html')) as any;
+    const html = r.indexHtml ?? await fs.readFile(r.filePath, 'utf8').catch(() => '');
+    const css = r.styleCss ?? '';
+    const js = r.appJs ?? '';
+    return { html, css, js, sections: r.sectionCount ?? 0, colorPalette: r.colorPalette ?? [], byteSize: html.length + css.length + js.length };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 
@@ -50,7 +48,7 @@ const CURATED = [
   { id: 'website-brutalist-agency',  name: 'Agency',    intent: 'Brutalist agency site', tags: ['brutalist','agency'],
     seed: { $hash: 'ws-agency',    genes: { aesthetic: { value: 'brutalist' }, purpose: { value: 'agency' } } } as WSSeed },
   { id: 'website-glassmorphic-saas', name: 'SaaS',      intent: 'Glassmorphic SaaS landing', tags: ['glass','saas'],
-    seed: { $hash: 'ws-saas',      genes: { aesthetic: { value: 'glassmorphic' }, purpose: { value: 'saas' } } } as WSSeed },
+    seed: { $hash: 'ws-saas',      genes: { aesthetic: { value: 'glassmorphic' }, purpose: { value: 'landing' } } } as WSSeed },
 ];
 
 export const WebsiteQualityContract: QualityContract<WSSeed, WSArtifact, WSInverted> = {

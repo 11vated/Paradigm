@@ -69,25 +69,22 @@ function generateAudioSamples(params: AudioParams, rng: Xoshiro256StarStar): Flo
   for (let i = 0; i < sampleCount; i++) {
     const t = i / params.sampleRate;
     let sample = 0;
+    let sampleR = 0;
     
     // Base waveform
-    switch (params.timbre) {
-      case 'sine':
-        sample = Math.sin(2 * Math.PI * params.pitch * t);
-        break;
-      case 'square':
-        sample = Math.sign(Math.sin(2 * Math.PI * params.pitch * t));
-        break;
-      case 'sawtooth':
-        sample = 2 * ((t * params.pitch) % 1) - 1;
-        break;
-      case 'triangle':
-        sample = 2 * Math.abs(2 * ((t * params.pitch) % 1) - 1) - 1;
-        break;
-      case 'noise':
-        sample = rng.nextF64() * 2 - 1;
-        break;
-    }
+    const wave = (pitch: number, t: number): number => {
+      switch (params.timbre) {
+        case 'sine': return Math.sin(2 * Math.PI * pitch * t);
+        case 'square': return Math.sign(Math.sin(2 * Math.PI * pitch * t));
+        case 'sawtooth': return 2 * ((t * pitch) % 1) - 1;
+        case 'triangle': return 2 * Math.abs(2 * ((t * pitch) % 1) - 1) - 1;
+        case 'noise': return rng.nextF64() * 2 - 1;
+        default: return 0;
+      }
+    };
+    
+    sample = wave(params.pitch, t);
+    sampleR = params.channels === 2 ? wave(params.pitch * (0.97 + rng.nextF64() * 0.06), t) : 0;
     
     // Apply envelope (ADSR)
     const attack = 0.01;
@@ -97,18 +94,18 @@ function generateAudioSamples(params: AudioParams, rng: Xoshiro256StarStar): Flo
     const envelope = getADSR(t, params.duration, attack, decay, sustain, release);
     
     sample *= envelope;
+    sampleR *= envelope;
     
     // Add harmonics for richness
     sample += 0.3 * Math.sin(2 * Math.PI * params.pitch * 2 * t) * envelope;
     sample += 0.1 * Math.sin(2 * Math.PI * params.pitch * 3 * t) * envelope;
-    
-    // Stereo spread
     if (params.channels === 2) {
-      const pan = rng.nextF64();
-      sample *= (0.5 + pan * 0.5);
+      sampleR += 0.3 * Math.sin(2 * Math.PI * params.pitch * 2 * t * 1.03) * envelope;
+      sampleR += 0.1 * Math.sin(2 * Math.PI * params.pitch * 3 * t * 1.02) * envelope;
     }
     
-    samples[i] = sample * 0.5; // Prevent clipping
+    const vol = params.channels === 2 ? 0.35 : 0.5;
+    samples[i] = Math.max(-1, Math.min(1, sample * vol));
   }
   
   return samples;
@@ -149,8 +146,10 @@ async function exportWAV(samples: Float32Array, params: AudioParams, outputPath:
   const audioData = Buffer.alloc(dataSize);
   for (let i = 0; i < samples.length; i++) {
     const sample = Math.max(-1, Math.min(1, samples[i]));
-    const intSample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
-    audioData.writeInt16LE(intSample, i * 2);
+    const intSample = sample < 0 ? Math.round(sample * 0x8000) : Math.round(sample * 0x7FFF);
+    const off = i * numChannels * 2;
+    audioData.writeInt16LE(intSample, off);
+    if (numChannels === 2) audioData.writeInt16LE(intSample, off + 2);
   }
   
   const wavBuffer = Buffer.concat([header, audioData]);

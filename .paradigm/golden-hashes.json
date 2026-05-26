@@ -96,19 +96,19 @@
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-bright",
-      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
     },
     {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-default",
-      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
     },
     {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-quiet",
-      "artifactHash": "4f7fc489c1482b0cf098228376777a34b5c4048349053a32cfabda851613c4f2"
+      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
     },
     {
       "contract": "ar",
@@ -168,19 +168,19 @@
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-melody-c-major",
-      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+      "artifactHash": "ee6ee8be76d8076d669b37432ac2b072c926ca1ea30a30d2ea108118ba41b5a2"
     },
     {
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-percussive",
-      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+      "artifactHash": "ee6ee8be76d8076d669b37432ac2b072c926ca1ea30a30d2ea108118ba41b5a2"
     },
     {
       "contract": "audio",
       "contractVersion": "1.0.0",
       "curatedId": "audio-warm-pad",
-      "artifactHash": "2fa66441697dd40256e29740a521f93e552baee3daaec24cab9adb655def716a"
+      "artifactHash": "ee6ee8be76d8076d669b37432ac2b072c926ca1ea30a30d2ea108118ba41b5a2"
     },
     {
       "contract": "automotive",
@@ -307,6 +307,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "blockchain-quiet",
       "artifactHash": "79dcfbfb969821cb4732ef5a3ce9ddd266284f5e2958700dddc2992d09f6201f"
+    },
+    {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-mage",
+      "artifactHash": "ef827a71e16fef0ca0b259b3f610e831c4d42e03ae48497ab545643ab9e56f6e"
+    },
+    {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-rogue",
+      "artifactHash": "0cfb3d32e4593fd619e66e38064eecdf9e79f07b5ebe7d099c97f3d282349206"
+    },
+    {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-warrior",
+      "artifactHash": "2f679ebdb8a5a67d66a06e94d0eeb2a59b8afc862d3f8d26382c916933f37515"
     },
     {
       "contract": "chemical",
@@ -469,6 +487,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "cosmetics-quiet",
       "artifactHash": "41238c8e91f8f1f460278fde5429d4bf9386ba23680e123a5e80f9a1ee138a26"
+    },
+    {
+      "contract": "cosmology",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmology-collision",
+      "artifactHash": "08be02e782a3c321e0174758ae10fb9cc05f8a70b001daae69fe096f7e8d6a30"
+    },
+    {
+      "contract": "cosmology",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmology-galaxy-default",
+      "artifactHash": "a50df7a39951700e351897470cc4cdc16a54d6935ebf4c1790df79c34a8fb6cf"
+    },
+    {
+      "contract": "cosmology",
+      "contractVersion": "1.0.0",
+      "curatedId": "cosmology-solar-system",
+      "artifactHash": "8dc5b11a7106fd4181a8766a644253683a4fa6e291c1e04bc9a3ffee59d7d2ca"
     },
     {
       "contract": "cybersecurity",
@@ -723,6 +759,24 @@
       "artifactHash": "5f94d29793760cbd1186c3f3f0528e0f4aa5388e9c0dfe55c2635f934db5771a"
     },
     {
+      "contract": "field",
+      "contractVersion": "1.0.0",
+      "curatedId": "field-dipole",
+      "artifactHash": "279a3638d38dcaa08de781825785c5e961a885a5a3f50f256bc34908fb7ec7d4"
+    },
+    {
+      "contract": "field",
+      "contractVersion": "1.0.0",
+      "curatedId": "field-gaussian",
+      "artifactHash": "65d562fd85f500972024569430b641a2a8d770f062b780009ca5a4b108708e87"
+    },
+    {
+      "contract": "field",
+      "contractVersion": "1.0.0",
+      "curatedId": "field-plane-wave",
+      "artifactHash": "04d78f24f74f6df5f1295f4dab1d4fee874f7395fbf3d5439cc6fb31afb7b9dc"
+    },
+    {
       "contract": "film",
       "contractVersion": "1.0.0",
       "curatedId": "film-bright",
@@ -859,6 +913,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "curated.friend.vesper",
       "artifactHash": "dcd75bb153815fcf4556d570d3edd9372b11fec746e69e5ebd1e65b63f0e3e79"
+    },
+    {
+      "contract": "fullgame",
+      "contractVersion": "1.0.0",
+      "curatedId": "fullgame-default",
+      "artifactHash": "560802e76a18cbba5225f27ab0ff55d530877103f0c18cbb6e8b5e2807683e59"
+    },
+    {
+      "contract": "fullgame",
+      "contractVersion": "1.0.0",
+      "curatedId": "fullgame-variant-a",
+      "artifactHash": "560802e76a18cbba5225f27ab0ff55d530877103f0c18cbb6e8b5e2807683e59"
+    },
+    {
+      "contract": "fullgame",
+      "contractVersion": "1.0.0",
+      "curatedId": "fullgame-variant-b",
+      "artifactHash": "560802e76a18cbba5225f27ab0ff55d530877103f0c18cbb6e8b5e2807683e59"
     },
     {
       "contract": "furniture",
@@ -1287,28 +1359,46 @@
       "artifactHash": "123db80b75cd844376e51092bc525db55cc21c2b77eb2c2d94a98681f0124199"
     },
     {
+      "contract": "molecule",
+      "contractVersion": "1.0.0",
+      "curatedId": "molecule-acyclic-default",
+      "artifactHash": "d580c52e53b756fb04e231181cde236c648bcdf1df8bbd0f68d53dfcfb4d29b3"
+    },
+    {
+      "contract": "molecule",
+      "contractVersion": "1.0.0",
+      "curatedId": "molecule-aromatic-default",
+      "artifactHash": "bbacf06dedf2bae750f6e048a9c39b51083713792d63a352ddc80c05669bcb0b"
+    },
+    {
+      "contract": "molecule",
+      "contractVersion": "1.0.0",
+      "curatedId": "molecule-peptide-default",
+      "artifactHash": "48f80d03bc9e3f296178f79b3dff461e317fa38f1581ff2938d984f7caab6eca"
+    },
+    {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-ambient-drift",
-      "artifactHash": "225003e55b5e84cbf9663e365be21f8e4bb2be47a09d5e29414ca707cf04e923"
+      "artifactHash": "2d4ce646378f91d02c381193eda13006d6d1d321b215cd90e533d4af05ec7bb5"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-classical-sonata-fragment",
-      "artifactHash": "37b3a86c1efe50acc5053584de9707b34bd59908a094559eb79c09a5b857de40"
+      "artifactHash": "99ef8cda816df8b886c908425e26f009d9014beb8beb75d9f4f6e8c358f5f0e8"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-electronic-pulse",
-      "artifactHash": "156d58ae07b7a627fdfa3e8cce8124bdaa0c984e87803343dbe2f498591a6b50"
+      "artifactHash": "e19c31633d401aea9656c23027f8488128244a33f9c49c59e1b0e2e10a05e1f8"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-jazz-walking-bass",
-      "artifactHash": "18c459834bdd75ba89ecc10d438cfe730e102dc530b2d4e361aba428774fc456"
+      "artifactHash": "33f1361472b34ad585412a6b2dafe85b67097fa015539f53c9239acb5458ea78"
     },
     {
       "contract": "nanobot",
@@ -1549,6 +1639,24 @@
       "contractVersion": "1.0.0",
       "curatedId": "publishing-quiet",
       "artifactHash": "89388da67244ff6d5b52a169d4b07b93ca1e178c56df1881a7590f65c6abc0a8"
+    },
+    {
+      "contract": "quantum",
+      "contractVersion": "1.0.0",
+      "curatedId": "quantum-double-well",
+      "artifactHash": "6ee035dabd83f292918a74ee36c9ce9691769b353333cbd7e616eb23b9fdfe89"
+    },
+    {
+      "contract": "quantum",
+      "contractVersion": "1.0.0",
+      "curatedId": "quantum-harmonic",
+      "artifactHash": "2fbf7cdd4eccf7d228ba124e72706c21bcb0283dd427d23baa55e3d104f939c8"
+    },
+    {
+      "contract": "quantum",
+      "contractVersion": "1.0.0",
+      "curatedId": "quantum-tunneling",
+      "artifactHash": "f73c0da8dcaf87b97a5c6c0739bb75d9b8453c2f7e35fcc3fff4b61ef54cb616"
     },
     {
       "contract": "reactor",
@@ -1806,25 +1914,25 @@
       "contract": "sprite",
       "contractVersion": "3.0.0",
       "curatedId": "sprite-coin-spin",
-      "artifactHash": "aec95509dcf416d8719ca2f1daaed8601c272bd4bb3941f9b847edef8c2976e9"
+      "artifactHash": "f391f83f9a6241138dbfc413c1600bdc92b78af6e93f1510ff5cc8298ba42d23"
     },
     {
       "contract": "sprite",
       "contractVersion": "3.0.0",
       "curatedId": "sprite-hero-walk",
-      "artifactHash": "4fb1163daaf768bbe00f5152c9f17827f3227f56794b31dab05114b5b5831d94"
+      "artifactHash": "bf837aaf3338110ebe9510be9720d044f1885f6032a276933d470b05085c8288"
     },
     {
       "contract": "sprite",
       "contractVersion": "3.0.0",
       "curatedId": "sprite-spell-fx",
-      "artifactHash": "f024de446f5a0124c86f78ea4ba95b431aa495ea2f195bcf8b6652b8dc8ba66b"
+      "artifactHash": "f44f702abbbb162026fb5ff5938da296f2d7d8bb06bb4e6a3a1951655caa4d6f"
     },
     {
       "contract": "sprite",
       "contractVersion": "3.0.0",
       "curatedId": "sprite-tile-set",
-      "artifactHash": "7b3609fe7df733cac2c123251dc08c0589d3f42e2bc0d9e6e1825cd9a752b650"
+      "artifactHash": "efd8aa560b024f749305d7be61a87fa42fbd3766ed6f93c92c11bf687f3dfcd5"
     },
     {
       "contract": "synthetic-biology",
@@ -2028,19 +2136,19 @@
       "contract": "visual2d",
       "contractVersion": "3.0.0",
       "curatedId": "v2-architectural",
-      "artifactHash": "d353cbdaf2f605e114ceb9cb6e1180aefd81b96e3738c48d7c508f11eb658b77"
+      "artifactHash": "8e7f5df0da9e1bbfaa027a9f7d6d29e5d5fc328927cae66121deb12153c69106"
     },
     {
       "contract": "visual2d",
       "contractVersion": "3.0.0",
       "curatedId": "v2-glyph",
-      "artifactHash": "df4b26d87bcdc0700b01ba62b24a1a773a434eed43b1326c1fbe624e8c607064"
+      "artifactHash": "911ab2ca26e7f6dbc9e95f39dcacf2a741a31f30f0b5892e20bb82744c2c5bd6"
     },
     {
       "contract": "visual2d",
       "contractVersion": "3.0.0",
       "curatedId": "v2-organic",
-      "artifactHash": "7fe001f6348aadc1d2f6717fcb665d704b6df001331cea21f259d8ab65bb0f9e"
+      "artifactHash": "04cb72bfcd6cb90fe0fceb76b4e1051af96c639886901c13f5116f0abccc411a"
     },
     {
       "contract": "vr",
@@ -2079,6 +2187,24 @@
       "artifactHash": "a4e4915c7b775715ca944178afb028928176b28620632ca1dd541994460d2445"
     },
     {
+      "contract": "website",
+      "contractVersion": "1.0.0",
+      "curatedId": "website-brutalist-agency",
+      "artifactHash": "48a6787a2a0e022e3f807660e82dc1abec4f04edf21c2cefb39694a7e19da1cf"
+    },
+    {
+      "contract": "website",
+      "contractVersion": "1.0.0",
+      "curatedId": "website-glassmorphic-saas",
+      "artifactHash": "f1fe328ec4e0a6d79a7771c7a938f19cf5c021755a1a64aa8c6e2bb09a74dad1"
+    },
+    {
+      "contract": "website",
+      "contractVersion": "1.0.0",
+      "curatedId": "website-minimal-portfolio",
+      "artifactHash": "e06f6ac66f9dffcc1a34b602f475e6e65b66d52e19e4de86bf3a9174e02774b1"
+    },
+    {
       "contract": "wine",
       "contractVersion": "1.0.0",
       "curatedId": "wine-bright",
@@ -2099,32 +2225,20 @@
     {
       "contract": "world",
       "contractVersion": "1.0.0",
-      "curatedId": "curated.world.iron-marsh",
-      "artifactHash": "0115d8273a423d38f884ea5326049d267d68f8af44926807bd5cfc0844cc4211"
+      "curatedId": "world-archipelago",
+      "artifactHash": "86fcb3b2998a7bad9c7798976dd78d269d9f107695fdbb269d53953d3bcc81b7"
     },
     {
       "contract": "world",
       "contractVersion": "1.0.0",
-      "curatedId": "curated.world.lyrelm",
-      "artifactHash": "4614aab22e3b5ebe07d3c7c58dde654a92e364b05ba48dbb6ad9f36ab762de81"
+      "curatedId": "world-continental",
+      "artifactHash": "d6b985ab2ff9ae6970820cf0efa8d1bb48b70389c2d41be5d9d080f23145996e"
     },
     {
       "contract": "world",
       "contractVersion": "1.0.0",
-      "curatedId": "curated.world.sun-quay",
-      "artifactHash": "a8461a49a9c4ddca0a4ab4765aec5137fe5e5e6ef58df5da0d0762e2751e1e08"
-    },
-    {
-      "contract": "world",
-      "contractVersion": "1.0.0",
-      "curatedId": "curated.world.thrice-fallen",
-      "artifactHash": "6ec3cc48cf503159b8d4452fd6d6a3b8a7d2b6d3ca5e030c0c2e8520ff31bac9"
-    },
-    {
-      "contract": "world",
-      "contractVersion": "1.0.0",
-      "curatedId": "curated.world.vellichor",
-      "artifactHash": "f4d0bfe2f48fac294353a7004f8c2336fc87988346b2e36f830f5da18f4dff89"
+      "curatedId": "world-pangaea",
+      "artifactHash": "bb8b80712be052cdfec10af760c4cbbc7932506b8299ad063c4bc2641f4c4323"
     }
   ]
 }

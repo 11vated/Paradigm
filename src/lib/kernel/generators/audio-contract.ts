@@ -41,7 +41,7 @@ export const AudioQualityContract: QualityContract<AudioSeed, AudioArtifact, Aud
       return { score: 0.2, axes: { isWav: 1, decodable: 0 }, notes: ['WAV header OK but PCM not decodable'] };
     }
     const axes: Record<string, number> = { isWav: 1, decodable: 1, ...audioQualityAxes(stats) };
-    const score = (axes.dynamicRangeOk * 0.25 + axes.nonSilent * 0.25 + axes.spectralBalance * 0.20 + axes.notDcOffset * 0.15 + axes.notClipping * 0.15);
+    const score = (axes.dynamicRange * 0.25 + axes.notSilent * 0.25 + axes.spectralLife * 0.20 + axes.stereoOrMono * 0.15 + axes.notClipped * 0.15);
     return {
       score: Math.round(score * 100) / 100,
       axes,

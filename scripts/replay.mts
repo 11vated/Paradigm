@@ -38,33 +38,7 @@ import {
   getContract,
   runConformance,
 } from '../src/lib/kernel/quality-contract';
-
-// Self-register all contracts (side-effect imports).
-import '../src/lib/friend/contract';
-import '../src/lib/world/contract';
-import '../src/lib/kernel/generators/audio-contract';
-import '../src/lib/kernel/generators/dance-contract';
-import '../src/lib/kernel/generators/physics-contract';
-import '../src/lib/kernel/generators/typography-contract';
-import '../src/lib/kernel/generators/particle-contract';
-import '../src/lib/kernel/generators/shader-contract';
-import '../src/lib/kernel/generators/optics-contract';
-import '../src/lib/kernel/generators/animation-contract';
-import '../src/lib/kernel/generators/ecosystem-contract';
-import '../src/lib/kernel/generators/edtech-contract';
-import '../src/lib/kernel/generators/education-contract';
-import '../src/lib/kernel/generators/fashion-contract';
-import '../src/lib/kernel/generators/architecture-contract';
-import '../src/lib/kernel/generators/cybersecurity-contract';
-import '../src/lib/kernel/generators/finance-contract';
-import '../src/lib/kernel/generators/healthcare-contract';
-import '../src/lib/game/contract';
-import '../src/lib/kernel/generators/sprite-contract';
-import '../src/lib/kernel/generators/music-contract';
-import '../src/lib/kernel/generators/narrative-contract';
-import '../src/lib/kernel/generators/visual2d-contract';
-import '../src/lib/kernel/generators/geometry3d-contract';
-import '../src/lib/kernel/generators/character-contract';
+import { loadContracts, type ContractTier } from './contract-tiers.mts';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -88,6 +62,10 @@ Flags:
   --out <dir>         Write artifact bytes (extension per subject) to dir
   --json              Emit JSON output instead of human-readable
   --quiet             Suppress info output (only print hash on success)
+  --tier <name>       Contract tier for proof commands: flagship (default), extended, all
+  --contracts <list>  Comma-separated explicit contract domains
+  --shard <i/n>       Deterministic slice for golden verification, e.g. 1/4
+  --merge             For golden writes, update selected entries in-place
 
 The replay runs under the kernel clock frozen at epoch 0, so observability
 fields (timestamps) are reproducible. Two replays of the same seed produce
@@ -105,10 +83,33 @@ interface Args {
   json: boolean;
   out?: string;
   quiet: boolean;
+  tier: ContractTier;
+  contracts?: string[];
+  shard?: { index: number; total: number };
+  merge: boolean;
 }
 
 function parseArgs(argv: string[]): Args {
-  const args: Args = { cmd: argv[0] ?? 'help', json: false, quiet: false };
+  const args: Args = { cmd: argv[0] ?? 'help', json: false, quiet: false, tier: 'flagship', merge: false };
+  const parseGlobalFlag = (a: string, i: number): number => {
+    if (a === '--json') args.json = true;
+    else if (a === '--quiet') args.quiet = true;
+    else if (a === '--merge') args.merge = true;
+    else if (a === '--tier') args.tier = (argv[++i] as ContractTier) ?? 'flagship';
+    else if (a === '--contracts') {
+      args.contracts = (argv[++i] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+    } else if (a === '--shard') {
+      const raw = argv[++i] ?? '';
+      const [indexRaw, totalRaw] = raw.split('/');
+      const index = Number(indexRaw);
+      const total = Number(totalRaw);
+      if (!Number.isInteger(index) || !Number.isInteger(total) || index < 1 || total < 1 || index > total) {
+        throw new Error(`Invalid --shard '${raw}'. Expected i/n with 1 <= i <= n.`);
+      }
+      args.shard = { index, total };
+    }
+    return i;
+  };
   if (args.cmd === 'replay') {
     args.subject = argv[1];
     let i = 2;
@@ -118,10 +119,16 @@ function parseArgs(argv: string[]): Args {
       else if (a === '--verify') args.verify = argv[++i];
       else if (a === '--curated') args.curated = argv[++i];
       else if (a === '--seed-file') args.seedFile = argv[++i];
-      else if (a === '--json') args.json = true;
       else if (a === '--out') args.out = argv[++i];
-      else if (a === '--quiet') args.quiet = true;
+      else if (a === '--json' || a === '--quiet' || a === '--merge' || a === '--tier' || a === '--contracts' || a === '--shard') i = parseGlobalFlag(a, i);
       else if (!args.seed && !a.startsWith('--')) args.seed = a;
+      i++;
+    }
+  } else {
+    let i = 1;
+    while (i < argv.length) {
+      const a = argv[i];
+      if (a === '--json' || a === '--quiet' || a === '--merge' || a === '--tier' || a === '--contracts' || a === '--shard') i = parseGlobalFlag(a, i);
       i++;
     }
   }
@@ -199,6 +206,7 @@ async function replayFriend(args: Args): Promise<number> {
 // ─── generic (uses QualityContract for any registered subject) ─────────────
 
 async function replayViaContract(args: Args): Promise<number> {
+  await loadContracts({ tier: args.tier, contracts: [args.subject!] });
   const contract = getContract(args.subject!);
   if (!contract) {
     console.error(`❌ No QualityContract registered for: ${args.subject}`);
@@ -239,7 +247,8 @@ async function replayViaContract(args: Args): Promise<number> {
   }
 
   const artifact = await withKernelClock(0, () => contract.synthesize(seed));
-  const hash = await contract.hashArtifact(artifact);
+  const hashArtifact = contract.hashArtifact ?? ((x: unknown) => crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex'));
+  const hash = await hashArtifact(artifact);
 
   if (args.json) {
     console.log(JSON.stringify({ subject: args.subject, seedLabel, hash }, null, 2));
@@ -309,7 +318,11 @@ async function verifyAll(args: Args): Promise<number> {
 // ─── leaderboard ───────────────────────────────────────────────────────────
 
 async function leaderboard(args: Args): Promise<number> {
-  const contracts = listContracts();
+  const loaded = await loadContracts({ tier: args.tier, contracts: args.contracts, includeCore: args.tier === 'all' });
+  const loadedDomains = new Set(loaded);
+  const contracts = loadedDomains.has('extended-barrel')
+    ? listContracts()
+    : listContracts().filter((c) => loadedDomains.has(c.domain));
   const results: Array<{ domain: string; version: string; score: number; passed: number; total: number }> = [];
 
   for (const c of contracts) {
@@ -347,7 +360,11 @@ async function leaderboard(args: Args): Promise<number> {
 // ─── subjects ──────────────────────────────────────────────────────────────
 
 async function subjects(args: Args): Promise<number> {
-  const contracts = listContracts();
+  const loaded = await loadContracts({ tier: args.tier, contracts: args.contracts, includeCore: args.tier === 'all' });
+  const loadedDomains = new Set(loaded);
+  const contracts = loadedDomains.has('extended-barrel')
+    ? listContracts()
+    : listContracts().filter((c) => loadedDomains.has(c.domain));
   if (args.json) {
     console.log(JSON.stringify(contracts.map(c => ({ domain: c.domain, version: c.version })), null, 2));
   } else {
@@ -384,8 +401,29 @@ interface GoldenFile {
   entries: GoldenEntry[];
 }
 
+function goldenEntryKey(e: GoldenEntry): string {
+  return `${e.contract}@${e.contractVersion}/${e.curatedId}`;
+}
+
+function goldenContractKey(e: GoldenEntry): string {
+  return `${e.contract}@${e.contractVersion}`;
+}
+
+function sortGoldenEntries(entries: GoldenEntry[]): GoldenEntry[] {
+  return [...entries].sort((a, b) =>
+    a.contract === b.contract ? a.curatedId.localeCompare(b.curatedId) : a.contract.localeCompare(b.contract)
+  );
+}
+
 async function collectGoldenEntries(args: Args): Promise<GoldenEntry[]> {
-  const contracts = listContracts();
+  const loaded = await loadContracts({ tier: args.tier, contracts: args.contracts, includeCore: args.tier === 'all' });
+  const loadedDomains = new Set(loaded);
+  const loadedContracts = loadedDomains.has('extended-barrel')
+    ? listContracts()
+    : listContracts().filter((c) => loadedDomains.has(c.domain));
+  const contracts = args.shard
+    ? loadedContracts.filter((_, i) => i % args.shard!.total === args.shard!.index - 1)
+    : loadedContracts;
   const out: GoldenEntry[] = [];
   for (const c of contracts) {
     let curated: any[];
@@ -405,24 +443,48 @@ async function collectGoldenEntries(args: Args): Promise<GoldenEntry[]> {
       }
     }
   }
-  return out.sort((a, b) =>
-    a.contract === b.contract ? a.curatedId.localeCompare(b.curatedId) : a.contract.localeCompare(b.contract)
-  );
+  return sortGoldenEntries(out);
 }
 
 async function golden(args: Args): Promise<number> {
   log(args.quiet, '\n🔒 Paradigm Golden Hash Snapshot\n');
   const entries = await collectGoldenEntries(args);
+  const goldenPath = path.resolve(GOLDEN_PATH);
+  let finalEntries = entries;
+  let preserved = 0;
+
+  if (args.merge) {
+    try {
+      const existing = JSON.parse(await fs.readFile(goldenPath, 'utf8')) as GoldenFile;
+      if (existing.version !== GOLDEN_VERSION) {
+        throw new Error(`version ${existing.version} != ${GOLDEN_VERSION}`);
+      }
+      const selectedContracts = new Set(entries.map(goldenContractKey));
+      const untouched = existing.entries.filter((e) => {
+        const contractSelected = selectedContracts.has(goldenContractKey(e));
+        return !contractSelected;
+      });
+      preserved = untouched.length;
+      const merged = new Map<string, GoldenEntry>();
+      for (const e of untouched) merged.set(goldenEntryKey(e), e);
+      for (const e of entries) merged.set(goldenEntryKey(e), e);
+      finalEntries = sortGoldenEntries([...merged.values()]);
+    } catch (e) {
+      log(args.quiet, `[merge] existing snapshot unavailable or incompatible: ${(e as Error).message}`);
+      finalEntries = entries;
+    }
+  }
+
   const file: GoldenFile = {
     version: GOLDEN_VERSION,
     generated: '1970-01-01T00:00:00.000Z', // frozen — file content is deterministic
-    entries,
+    entries: finalEntries,
   };
-  const goldenPath = path.resolve(GOLDEN_PATH);
   await fs.mkdir(path.dirname(goldenPath), { recursive: true });
   await fs.writeFile(goldenPath, JSON.stringify(file, null, 2) + '\n', 'utf8');
-  log(args.quiet, `✓ Wrote ${entries.length} golden hashes → ${GOLDEN_PATH}`);
-  if (args.quiet) console.log(`${entries.length} entries`);
+  const mergeNote = args.merge ? ` (${entries.length} refreshed, ${Math.max(0, preserved)} preserved)` : '';
+  log(args.quiet, `✓ Wrote ${finalEntries.length} golden hashes → ${GOLDEN_PATH}${mergeNote}`);
+  if (args.quiet) console.log(`${finalEntries.length} entries`);
   return 0;
 }
 
@@ -441,9 +503,18 @@ async function verifyGolden(args: Args): Promise<number> {
     return 3;
   }
   const live = await collectGoldenEntries(args);
-  const byKey = (e: GoldenEntry) => `${e.contract}@${e.contractVersion}/${e.curatedId}`;
-  const goldenMap = new Map(snapshot.entries.map((e) => [byKey(e), e.artifactHash]));
-  const liveMap = new Map(live.map((e) => [byKey(e), e.artifactHash]));
+  const loadedDomains = new Set(args.contracts ?? []);
+  if (loadedDomains.size === 0) {
+    for (const e of live) loadedDomains.add(e.contract);
+  }
+  const selectedContracts = listContracts()
+    .filter((c) => loadedDomains.has(c.domain))
+    .map((c) => `${c.domain}@${c.version}`);
+  const selected = new Set(selectedContracts);
+  const goldenMap = new Map(snapshot.entries
+    .filter((e) => selected.has(`${e.contract}@${e.contractVersion}`))
+    .map((e) => [goldenEntryKey(e), e.artifactHash]));
+  const liveMap = new Map(live.map((e) => [goldenEntryKey(e), e.artifactHash]));
 
   const drift: { key: string; expected: string; got: string }[] = [];
   const missing: string[] = [];
@@ -507,97 +578,3 @@ main().catch((err) => {
   console.error('❌ Replay failed:', err);
   process.exit(99);
 });
-import '../src/lib/kernel/generators/advertising-contract';
-import '../src/lib/kernel/generators/automotive-contract';
-import '../src/lib/kernel/generators/blockchain-contract';
-import '../src/lib/kernel/generators/art-contract';
-import '../src/lib/kernel/generators/legal-contract';
-import '../src/lib/kernel/generators/agriculture-contract';
-import '../src/lib/kernel/generators/aerospace-contract';
-import '../src/lib/kernel/generators/beer-contract';
-import '../src/lib/kernel/generators/biotechnology-contract';
-import '../src/lib/kernel/generators/chemical-contract';
-import '../src/lib/kernel/generators/marine-contract';
-import '../src/lib/kernel/generators/contracts'; // side-effect: loads all 124 quality contracts
-import '../src/lib/kernel/generators/sports-contract';
-import '../src/lib/kernel/generators/transportation-contract';
-import '../src/lib/kernel/generators/wine-contract';
-import '../src/lib/kernel/generators/acoustics-contract';
-import '../src/lib/kernel/generators/circuit-contract';
-import '../src/lib/kernel/generators/city-contract';
-import '../src/lib/kernel/generators/climate-contract';
-import '../src/lib/kernel/generators/cloud-contract';
-import '../src/lib/kernel/generators/devops-contract';
-import '../src/lib/kernel/generators/energy-contract';
-import '../src/lib/kernel/generators/film-contract';
-import '../src/lib/kernel/generators/fitness-contract';
-import '../src/lib/kernel/generators/food-contract';
-import '../src/lib/kernel/generators/robotics-contract';
-import '../src/lib/kernel/generators/coffee-contract';
-import '../src/lib/kernel/generators/cosmetics-contract';
-import '../src/lib/kernel/generators/electronics-contract';
-import '../src/lib/kernel/generators/gardening-contract';
-import '../src/lib/kernel/generators/gaming-contract';
-import '../src/lib/kernel/generators/theater-contract';
-import '../src/lib/kernel/generators/photography-contract';
-import '../src/lib/kernel/generators/furniture-contract';
-import '../src/lib/kernel/generators/genomics-contract';
-import '../src/lib/kernel/generators/hospitality-contract';
-import '../src/lib/kernel/generators/insurance-contract';
-import '../src/lib/kernel/generators/journalism-contract';
-import '../src/lib/kernel/generators/landscaping-contract';
-import '../src/lib/kernel/generators/lighting-contract';
-import '../src/lib/kernel/generators/literature-contract';
-import '../src/lib/kernel/generators/logistics-contract';
-import '../src/lib/kernel/generators/marketing-contract';
-import '../src/lib/kernel/generators/material-contract';
-import '../src/lib/kernel/generators/media-contract';
-import '../src/lib/kernel/generators/metaverse-contract';
-import '../src/lib/kernel/generators/nanotechnology-contract';
-import '../src/lib/kernel/generators/neuroscience-contract';
-import '../src/lib/kernel/generators/procedural-contract';
-import '../src/lib/kernel/generators/protein-contract';
-import '../src/lib/kernel/generators/publishing-contract';
-import '../src/lib/kernel/generators/reactor-contract';
-import '../src/lib/kernel/generators/semiconductors-contract';
-import '../src/lib/kernel/generators/sensors-contract';
-import '../src/lib/kernel/generators/textiles-contract';
-import '../src/lib/kernel/generators/tourism-contract';
-import '../src/lib/kernel/generators/universe-contract';
-import '../src/lib/kernel/generators/security-contract';
-import '../src/lib/kernel/generators/alife-contract';
-import '../src/lib/kernel/generators/biomedical-contract';
-import '../src/lib/kernel/generators/drones-contract';
-import '../src/lib/kernel/generators/drug-contract';
-import '../src/lib/kernel/generators/jewelry-contract';
-import '../src/lib/kernel/generators/market-contract';
-import '../src/lib/kernel/generators/nanobot-contract';
-import '../src/lib/kernel/generators/spirits-contract';
-import '../src/lib/kernel/generators/tea-contract';
-import '../src/lib/kernel/generators/ui-contract';
-import '../src/lib/kernel/generators/vehicle-contract';
-import '../src/lib/kernel/generators/vr-contract';
-import '../src/lib/kernel/generators/wearables-contract';
-import '../src/lib/kernel/generators/ar-contract';
-import '../src/lib/kernel/generators/av-contract';
-import '../src/lib/kernel/generators/battery-contract';
-import '../src/lib/kernel/generators/event-planning-contract';
-import '../src/lib/kernel/generators/real-estate-contract';
-import '../src/lib/kernel/generators/smart-home-contract';
-import '../src/lib/kernel/generators/choreography-contract';
-import '../src/lib/kernel/generators/drone-delivery-contract';
-import '../src/lib/kernel/generators/food-delivery-contract';
-import '../src/lib/kernel/generators/interior-design-contract';
-import '../src/lib/kernel/generators/pet-care-contract';
-import '../src/lib/kernel/generators/renewable-energy-contract';
-import '../src/lib/kernel/generators/smart-grid-contract';
-import '../src/lib/kernel/generators/space-tourism-contract';
-import '../src/lib/kernel/generators/synthetic-biology-contract';
-import '../src/lib/kernel/generators/personalized-medicine-contract';
-import '../src/lib/kernel/generators/agtech-contract';
-import '../src/lib/kernel/generators/consciousness-contract';
-import '../src/lib/kernel/generators/quantum-circuit-contract';
-import '../src/lib/kernel/generators/quantum-computing-contract';
-import '../src/lib/kernel/generators/robotics-industrial-contract';
-import '../src/lib/kernel/generators/genome-contract';
-import '../src/lib/kernel/generators/ml-contract';

@@ -16,8 +16,8 @@ async function synthesize(seed: WdSeed): Promise<WdArtifact> {
     const r = await generateWorld(seed as any, dir) as any;
     const svg = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
     const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).world ?? {};
-    return { svg, biomeCount: meta.biomeCount ?? 0, cityCount: meta.cityCount ?? 0,
-      riverCount: meta.riverCount ?? 0, plateCount: meta.plateCount ?? 0, byteSize: svg.length };
+    return { svg, biomeCount: meta.regions ?? r.regionCount ?? 0, cityCount: meta.cities ?? r.cityCount ?? 0,
+      riverCount: meta.rivers ?? r.riverCount ?? 0, plateCount: meta.plates ?? 0, byteSize: svg.length };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

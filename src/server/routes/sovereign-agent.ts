@@ -142,4 +142,36 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
       ],
     });
   });
+
+  // ─── Alias endpoint for /api/agents/advanced-generate (semantic-driven path) ────
+  // Maps the GSPL agent's interface (description, domain) to Sovereign Agent's (utterance).
+  app.post('/api/agents/advanced-generate', async (req: Request, res: Response) => {
+    const t0 = kernelNow();
+    try {
+      const body = (req.body ?? {}) as { description?: string; domain?: string; feedbackLoop?: boolean };
+      if (!body.description || typeof body.description !== 'string') {
+        res.status(400).json({ error: 'description (string) is required' });
+        return;
+      }
+      // Prepend domain hint if provided, to guide intent resolution
+      const utterance = body.domain ? `[${body.domain}] ${body.description}` : body.description;
+      const report = await agent.run(utterance, {
+        feedbackLoop: body.feedbackLoop ? { enabled: true, maxIterations: 3 } : undefined,
+        annotateReality: true,
+      });
+      res.json({
+        ok: true,
+        elapsedMs: kernelNow() - t0,
+        seed: report.seed,
+        validated: report.validated,
+        oracle: report.validated?.oracle,
+        reality: report.reality,
+        iterations: report.iterations,
+        timings: report.timings,
+        method: 'sovereign-agent',
+      });
+    } catch (err: any) {
+      res.status(500).json({ ok: false, error: err?.message ?? String(err) });
+    }
+  });
 }

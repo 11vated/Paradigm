@@ -43,6 +43,7 @@ export interface WebsiteOutput {
   appJs: string;
   sectionCount: number;
   lineCount: number;
+  colorPalette: string[];
 }
 
 const PURPOSES: WebsitePurpose[] = ['portfolio', 'landing', 'blog', 'docs', 'ecommerce', 'tool', 'agency', 'startup'];
@@ -789,6 +790,7 @@ export async function generateWebsite(
     appJs: js,
     sectionCount: params.sections.length,
     lineCount,
+    colorPalette: Object.values(params.palette),
     format: 'html',
   };
 }

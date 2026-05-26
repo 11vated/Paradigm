@@ -7,7 +7,7 @@
  * - Deterministic: same input = same provenance
  */
 
-import { createHash, createSign, createVerify, generateKeyPairSync } from 'crypto';
+import { createHash, createHmac, createSign, createVerify, generateKeyPairSync } from 'crypto';
 import { Xoshiro256StarStar } from './rng';
 import { kernelNow, kernelNowIso } from './clock';
 
@@ -33,6 +33,10 @@ export function generateKeyPair(seed?: string): { privateKey: string; publicKey:
  * Sign data with ECDSA P-256
  */
 export function signData(data: string, privateKeyPem: string): string {
+  if (!privateKeyPem.includes('BEGIN')) {
+    // Non-PEM key — use HMAC (deterministic, works without ECDSA key pair)
+    return createHmac('sha256', privateKeyPem).update(data).digest('hex');
+  }
   const sign = createSign('SHA256');
   sign.update(data);
   sign.end();
@@ -43,6 +47,11 @@ export function signData(data: string, privateKeyPem: string): string {
  * Verify ECDSA P-256 signature
  */
 export function verifySignature(data: string, signature: string, publicKeyPem: string): boolean {
+  if (!publicKeyPem.includes('BEGIN')) {
+    // Non-PEM key — verify HMAC
+    const expected = createHmac('sha256', publicKeyPem).update(data).digest('hex');
+    return expected === signature;
+  }
   const verify = createVerify('SHA256');
   verify.update(data);
   verify.end();
@@ -78,16 +87,18 @@ export function createProvenance(
     parentSeeds?: string[];
     operation?: 'create' | 'mutate' | 'crossover' | 'breed' | 'evolve';
     parameters?: Record<string, any>;
+    timestamp?: number;
   } = {}
 ): SeedProvenance {
   const parentSeeds = options.parentSeeds || [];
   const operation = options.operation || 'create';
   const parameters = options.parameters || {};
+  const ts = options.timestamp ?? kernelNow();
   
   const mutation: MutationRecord = {
     operation,
     parameters,
-    timestamp: kernelNow(),
+    timestamp: ts,
   };
   
   const provenance: SeedProvenance = {
@@ -95,7 +106,7 @@ export function createProvenance(
     root_seed_hash: seedHash,
     parent_seeds: parentSeeds,
     mutation_history: [mutation],
-    creation_timestamp: kernelNow(),
+    creation_timestamp: ts,
     creator_public_key: '', // Set after key generation
     signature: '',
     metadata: {}

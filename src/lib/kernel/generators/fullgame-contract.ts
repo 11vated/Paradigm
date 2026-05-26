@@ -30,9 +30,8 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
   ],
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'fullgame-'));
-    const out = path.join(dir, 'a.json');
-    const r = await withKernelClock(0, () => generateFullGameV3(seed as never, out)) as { filePath?: string };
-    const filePath = r.filePath ?? out;
+    const r = await withKernelClock(0, () => generateFullGameV3(seed as never, dir)) as { filePath?: string; htmlPath?: string };
+    const filePath = r.htmlPath ?? r.filePath ?? path.join(dir, 'fullgame_unknown.html');
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
   },

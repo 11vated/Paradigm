@@ -72,11 +72,33 @@ export async function generateSeed(prompt: string, domain: string = 'character')
   return response.seed || response;
 }
 
-export async function growSeed(id: string) {
-  const response = await apiRequest(`/api/seeds/${id}/grow`, {
+export async function growSeed(id: string, params: Record<string, any> = {}) {
+  const data = await apiRequest(`/api/seeds/${id}/grow`, {
     method: 'POST',
+    body: JSON.stringify(params),
   });
-  return response.artifact || response;
+  const artifact = data.artifact || data;
+  return {
+    id: artifact.id || `artifact-${id}`,
+    name: artifact.name || 'Artifact',
+    domain: artifact.domain || artifact.type || 'unknown',
+    type: artifact.type || artifact.domain || 'unknown',
+    seed_hash: artifact.seed_hash,
+    generation: artifact.generation || 1,
+    visual: artifact.visual || {},
+    stats: artifact.stats || {},
+    artifact: artifact.artifact || {},
+    filePath: artifact.artifact?.filePath || artifact.filePath,
+    objPath: artifact.artifact?.objPath || artifact.objPath,
+    gltfPath: artifact.artifact?.gltfPath || artifact.gltfPath,
+    pngPath: artifact.artifact?.pngPath || artifact.pngPath,
+    wavPath: artifact.artifact?.wavPath || artifact.wavPath,
+    emergent_assets: artifact.emergent_assets || {
+      mesh: artifact.visual?.mesh || null,
+      textures: artifact.visual?.textures || {}
+    },
+    render_hints: artifact.render_hints || {}
+  };
 }
 
 export async function mutateSeed(id: string, genes?: Record<string, any>) {
@@ -224,4 +246,74 @@ export async function getSimilarSeeds(seedId: string, limit: number = 10) {
     method: 'GET',
   });
   return response;
+}
+
+// ─── Library API (ported from orphaned api.tsx) ────────────
+export async function getLibrary() {
+  const response = await apiRequest('/api/library', { method: 'GET' });
+  return response;
+}
+
+export async function importFromLibrary(seedHash: string) {
+  const response = await apiRequest('/api/library/import', {
+    method: 'POST',
+    body: JSON.stringify({ seed_hash: seedHash }),
+  });
+  return response;
+}
+
+// ─── Intelligence API (ported from orphaned api.tsx) ───────
+export async function generateEmbedding(id: string) {
+  const response = await apiRequest(`/api/seeds/${id}/embed`, {
+    method: 'POST',
+  });
+  return response;
+}
+
+// ─── Info API (ported from orphaned api.tsx) ──────────────
+export async function getDomains() {
+  const response = await apiRequest('/api/domains', { method: 'GET' });
+  return response;
+}
+
+export async function getGeneTypes() {
+  const response = await apiRequest('/api/gene-types', { method: 'GET' });
+  return response;
+}
+
+export async function getStats() {
+  const response = await apiRequest('/api/stats', { method: 'GET' });
+  return response;
+}
+
+export async function getEngines() {
+  const response = await apiRequest('/api/engines', { method: 'GET' });
+  return response;
+}
+
+// ─── DAO API ─────────────────────────────────────────────────
+export async function getDAOState() {
+  return apiRequest('/api/v1/dao');
+}
+
+export async function getDAOProposals(status?: string) {
+  const qs = status ? `?status=${status}` : '';
+  return apiRequest(`/api/v1/dao/proposals${qs}`);
+}
+
+export async function proposeDAO(data: {
+  title: string; description?: string; type: string; payload: any; stake?: number;
+}) {
+  return apiRequest('/api/v1/dao/propose', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function voteDAO(proposalId: string, support: boolean, votingPower?: number) {
+  return apiRequest(`/api/v1/dao/vote/${proposalId}`, {
+    method: 'POST',
+    body: JSON.stringify({ support, votingPower }),
+  });
+}
+
+export async function executeDAO(proposalId: string) {
+  return apiRequest(`/api/v1/dao/execute/${proposalId}`, { method: 'POST' });
 }

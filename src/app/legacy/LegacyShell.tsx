@@ -18,6 +18,7 @@ import ChatPage from '@/pages/ChatPage';
 import ReplPage from '@/pages/ReplPage';
 import EvolvePage from '@/pages/EvolvePage';
 import HomePage from '@/pages/HomePage';
+import DaoPage from '@/pages/DaoPage';
 import { WorldSeedPage } from '@/pages/WorldSeedPage';
 import { PhotorealisticRendererDemo } from '@/components/rendering/PhotorealisticRendererDemo';
 import { GeneticBackdrop } from '@/components/shell/GeneticBackdrop';
@@ -38,6 +39,7 @@ export const LegacyShell: React.FC = () => (
       <Route path="lineage/:id" element={<LineagePage />} />
       <Route path="repl" element={<ReplPage />} />
       <Route path="evolve" element={<EvolvePage />} />
+      <Route path="dao" element={<DaoPage />} />
       <Route path="worldseed" element={<WorldSeedPage />} />
       <Route
         path="rendering-demo"

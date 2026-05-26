@@ -118,13 +118,9 @@ export async function generateCharacterV3(
   // Add blend shapes (facial expressions)
   const withBlendShapes = addBlendShapes(skinnedMesh, params, rng);
   
-  // Create PBR material with textures
+  // PBR material (no texture maps to avoid Node.js GLTFExporter encoding issues)
   const material = new THREE.MeshStandardMaterial({
-    map: textures.albedo,
-    normalMap: textures.normal,
-    roughnessMap: textures.roughness,
-    metalnessMap: textures.metallic,
-    aoMap: textures.ao,
+    color: new THREE.Color(params.skinTone[0], params.skinTone[1], params.skinTone[2]),
     roughness: 0.7,
     metalness: 0.1,
   });
@@ -132,9 +128,6 @@ export async function generateCharacterV3(
   const mesh = new THREE.SkinnedMesh(withBlendShapes, material);
   mesh.castShadow = true;
   mesh.receiveShadow = true;
-
-  // Add skeleton helper (debug)
-  const skeletonHelper = new THREE.SkeletonHelper(mesh);
   
   // Generate animations
   const animations = generateAnimations(skeleton, params, rng);
@@ -149,25 +142,24 @@ export async function generateCharacterV3(
   dirLight.position.set(5, 10, 7);
   scene.add(dirLight);
 
-  // Create provenance record
-  const privateKey = rng.nextF64().toString(16).padStart(64, '0');
-  const provenance = createProvenance(seed.$hash || 'unknown', privateKey, {
+  // Create provenance record (deterministic HMAC + timestamp from seed hash)
+  const provenance = createProvenance(seed.$hash || 'unknown', seed.$hash || 'unknown', {
     operation: 'create',
-    parameters: { type: 'character', quality: params.quality }
+    parameters: { type: 'character', quality: params.quality },
+    timestamp: seed.$hash ? parseInt(seed.$hash.slice(0, 8), 16) : 0,
   });
   
-  // Export to GLTF 2.0 binary
+  // Export to GLTF 2.0 (non-binary JSON so we can embed provenance)
   let gltfBuffer = await exportGLTF(scene, { 
-    binary: true,
-    embedImages: true,
+    binary: false,
+    embedImages: false,
     trs: false
   });
   
-  // Embed provenance in GLTF JSON (for non-binary) or metadata
-  // For GLB binary, we can't easily modify after export
-  // In production, modify gltfJson before export
+  // Embed provenance in GLTF JSON
   const gltfJson = JSON.parse(gltfBuffer.toString('utf8'));
-  gltfJson.assets.seedProvenance = provenance;
+  gltfJson.asset = gltfJson.asset || { version: '2.0', generator: 'Paradigm Character Generator V3' };
+  gltfJson.asset.seedProvenance = provenance;
   gltfBuffer = Buffer.from(JSON.stringify(gltfJson));
 
   // Ensure output directory exists
@@ -508,32 +500,7 @@ async function generateTextureSet(
   resolution: number,
   rng: Xoshiro256StarStar
 ): Promise<Record<string, THREE.Texture>> {
-  // In production: use canvas or offscreen canvas to generate textures
-  // For now, create placeholder textures
-  const textures: Record<string, THREE.Texture> = {};
-
-  // Albedo (base color) map
-  const albedoCanvas = document?.createElement('canvas') || { width: resolution, height: resolution };
-  const albedoCtx = 'getContext' in albedoCanvas ? albedoCanvas.getContext('2d') : null;
-  if (albedoCtx) {
-    albedoCtx.fillStyle = `rgb(${params.skinTone[0]*255}, ${params.skinTone[1]*255}, ${params.skinTone[2]*255})`;
-    albedoCtx.fillRect(0, 0, resolution, resolution);
-  }
-  textures.albedo = new THREE.CanvasTexture(albedoCanvas as HTMLCanvasElement);
-
-  // Normal map (placeholder)
-  textures.normal = new THREE.Texture();
-
-  // Roughness map
-  textures.roughness = new THREE.Texture();
-
-  // Metallic map
-  textures.metallic = new THREE.Texture();
-
-  // Ambient occlusion
-  textures.ao = new THREE.Texture();
-
-  return textures;
+  return {}; // Textures deferred — material uses flat color for cross-env compatibility
 }
 
 /**

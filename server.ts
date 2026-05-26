@@ -4092,8 +4092,9 @@ async function startServer() {
       const buffer = Buffer.isBuffer(raw) ? new Uint8Array(raw) : new Uint8Array(Buffer.from(JSON.stringify(raw)));
       const pkg = decodeGseed(buffer);
 
-      // Reconstruct a minimal seed from the package
+      // Reconstruct full seed from the package (params + metadata)
       const seed: any = {
+        ...(pkg.params || {}),  // Restore all seed parameters (genes)
         id: pkg.seedHash,
         $hash: pkg.seedHash,
         $name: pkg.metadata?.title || 'Imported Seed',
@@ -4103,8 +4104,8 @@ async function startServer() {
 
       seeds.push(seed);
       saveSeeds();
-      log('INFO', 'Seed imported from .gseed', { name: seed.$name });
-      res.json({ success: true, seed: { id: seed.id, name: seed.$name, domain: seed.$domain } });
+      log('INFO', 'Seed imported from .gseed', { name: seed.$name, domain: seed.$domain, hash: seed.$hash });
+      res.json({ success: true, seed: { id: seed.id, name: seed.$name, domain: seed.$domain, hash: seed.$hash } });
     } catch (err: any) {
       res.status(400).json({ error: 'Invalid .gseed file', message: err.message });
     }

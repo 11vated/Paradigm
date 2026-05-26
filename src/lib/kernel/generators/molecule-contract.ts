@@ -18,8 +18,8 @@ async function synthesize(seed: MSeed): Promise<MArtifact> {
       fs.readFile(r.svgPath, 'utf8').catch(() => ''),
       fs.readFile(r.pdbPath, 'utf8').catch(() => ''),
     ]);
-    const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).molecule ?? {};
-    return { svg, pdb, smiles: meta.smiles ?? '', formula: meta.formula ?? '', mw: meta.molecularWeight ?? 0,
+    const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
+    return { svg, pdb, smiles: meta.smiles ?? '', formula: meta.formula ?? '', mw: meta.mw ?? 0,
       atomCount: meta.atomCount ?? 0, bondCount: meta.bondCount ?? 0 };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
@@ -46,11 +46,11 @@ function hashArtifact(a: MArtifact): string {
 
 const CURATED = [
   { id: 'molecule-aromatic-default', name: 'Aromatic',    intent: 'Benzene-family aromatic ring',    tags: ['chemistry','aromatic'],
-    seed: { $hash: 'mol-arom', genes: { scaffoldClass: { value: 'aromatic' } } } as MSeed },
+    seed: { $hash: 'mol-arom', genes: { moleculeClass: { value: 'aromatic' } } } as MSeed },
   { id: 'molecule-peptide-default',  name: 'Peptide',     intent: 'Short peptide chain',             tags: ['chemistry','peptide'],
-    seed: { $hash: 'mol-pep',  genes: { scaffoldClass: { value: 'peptide'  } } } as MSeed },
+    seed: { $hash: 'mol-pep',  genes: { moleculeClass: { value: 'peptide'  } } } as MSeed },
   { id: 'molecule-acyclic-default',  name: 'Acyclic',     intent: 'Acyclic organic molecule',        tags: ['chemistry','organic'],
-    seed: { $hash: 'mol-acyc', genes: { scaffoldClass: { value: 'acyclic'  } } } as MSeed },
+    seed: { $hash: 'mol-acyc', genes: { moleculeClass: { value: 'organic'  } } } as MSeed },
 ];
 
 export const MoleculeQualityContract: QualityContract<MSeed, MArtifact, MInverted> = {

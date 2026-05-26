@@ -14,13 +14,11 @@ async function synthesize(seed: QSeed): Promise<QArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-qm-'));
   try {
     const r = await generateQuantum(seed as any, dir) as any;
-    const [dens, phase] = await Promise.all([
-      fs.readFile(r.densitySvgPath, 'utf8').catch(() => ''),
-      fs.readFile(r.phaseSvgPath,   'utf8').catch(() => ''),
-    ]);
-    const meta = JSON.parse(await fs.readFile(r.metaPath, 'utf8').catch(() => '{}')).quantum ?? {};
+    const dens = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
+    const phase = dens;
+    const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
     return { densitySvg: dens, phaseSvg: phase, expectation: meta.expectation ?? {},
-      potentialType: r.potentialType ?? '', normError: meta.normalizationError ?? 1 };
+      potentialType: meta.potential ?? '', normError: Math.abs(1 - (meta.normalization ?? 0)) };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 
@@ -47,11 +45,11 @@ function hashArtifact(a: QArtifact): string {
 
 const CURATED = [
   { id: 'quantum-harmonic',    name: 'Harmonic',     intent: 'Quantum harmonic oscillator',      tags: ['qm','harmonic'],
-    seed: { $hash: 'qm-harm',   genes: { potentialType: { value: 'harmonic' } } } as QSeed },
+    seed: { $hash: 'qm-harm',   genes: { potential: { value: 'harmonic' } } } as QSeed },
   { id: 'quantum-double-well', name: 'Double Well',  intent: 'Double-well tunneling',            tags: ['qm','tunneling'],
-    seed: { $hash: 'qm-dwell',  genes: { potentialType: { value: 'double_well' } } } as QSeed },
+    seed: { $hash: 'qm-dwell',  genes: { potential: { value: 'double_well' } } } as QSeed },
   { id: 'quantum-tunneling',   name: 'Tunneling',    intent: 'Barrier tunneling visualization',  tags: ['qm','barrier'],
-    seed: { $hash: 'qm-tunnel', genes: { potentialType: { value: 'tunneling_barrier' } } } as QSeed },
+    seed: { $hash: 'qm-tunnel', genes: { potential: { value: 'tunneling' } } } as QSeed },
 ];
 
 export const QuantumQualityContract: QualityContract<QSeed, QArtifact, QInverted> = {

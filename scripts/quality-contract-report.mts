@@ -4,34 +4,29 @@
  * Loads every contract that self-registers, runs conformance against
  * each, prints the leaderboard, exits non-zero if any contract fails.
  */
-import '../src/lib/friend/contract';
-import '../src/lib/world/contract';
-import '../src/lib/game/contract';
-import '../src/lib/kernel/generators/sprite-contract';
-import '../src/lib/kernel/generators/music-contract';
-import '../src/lib/kernel/generators/narrative-contract';
-import '../src/lib/kernel/generators/visual2d-contract';
-import '../src/lib/kernel/generators/geometry3d-contract';
-import '../src/lib/kernel/generators/character-contract';
-import '../src/lib/kernel/generators/audio-contract';
-import '../src/lib/kernel/generators/dance-contract';
-import '../src/lib/kernel/generators/physics-contract';
-import '../src/lib/kernel/generators/typography-contract';
-import '../src/lib/kernel/generators/particle-contract';
-import '../src/lib/kernel/generators/shader-contract';
-import '../src/lib/kernel/generators/optics-contract';
-import '../src/lib/kernel/generators/animation-contract';
-import '../src/lib/kernel/generators/ecosystem-contract';
-import '../src/lib/kernel/generators/edtech-contract';
-import '../src/lib/kernel/generators/education-contract';
-import '../src/lib/kernel/generators/fashion-contract';
-import '../src/lib/kernel/generators/architecture-contract';
-import '../src/lib/kernel/generators/cybersecurity-contract';
-import '../src/lib/kernel/generators/finance-contract';
-import '../src/lib/kernel/generators/healthcare-contract';
-import { runAllConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
+import { loadContracts, type ContractTier } from './contract-tiers.mts';
+import { listContracts, runConformance, formatLeaderboard } from '../src/lib/kernel/quality-contract';
 
-const results = await runAllConformance();
+function parseArgs(argv: string[]): { tier: ContractTier; contracts?: string[] } {
+  const out: { tier: ContractTier; contracts?: string[] } = { tier: 'flagship' };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === '--tier') out.tier = (argv[++i] as ContractTier) ?? 'flagship';
+    if (a === '--contracts') out.contracts = (argv[++i] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  }
+  return out;
+}
+
+const args = parseArgs(process.argv.slice(2));
+const loaded = await loadContracts({ tier: args.tier, contracts: args.contracts, includeCore: args.tier === 'all' });
+const loadedDomains = new Set(loaded);
+const results = [];
+const contracts = loadedDomains.has('extended-barrel')
+  ? listContracts()
+  : listContracts().filter((c) => loadedDomains.has(c.domain));
+for (const contract of contracts) {
+  results.push(await runConformance(contract));
+}
 console.log('\n' + formatLeaderboard(results) + '\n');
 const failing = results.filter((r) => !r.passed);
 if (failing.length > 0) {

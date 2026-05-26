@@ -10,15 +10,56 @@ import { generateCharacterV3 } from './character';
 import { registerContract } from '../quality-contract';
 import type { QualityContract, QualityReport } from '../quality-contract';
 
+// Minimal FileReader polyfill for Node.js (Three.js GLTFExporter requires it).
+// Uses Blob.arrayBuffer() which is available in Node.js 18+.
+if (typeof globalThis.FileReader === 'undefined') {
+  (globalThis as any).FileReader = class FileReaderNode {
+    result: any = null;
+    onloadend: ((ev: any) => void) | null = null;
+    readAsArrayBuffer(blob: Blob): void {
+      blob.arrayBuffer().then(buf => {
+        this.result = buf;
+        this.onloadend?.({ target: this } as any);
+      });
+    }
+    readAsDataURL(blob: Blob): void {
+      blob.arrayBuffer().then(buf => {
+        const bytes = new Uint8Array(buf);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+        this.result = `data:application/octet-stream;base64,${btoa(binary)}`;
+        this.onloadend?.({ target: this } as any);
+      });
+    }
+    addEventListener(event: string, handler: (...args: any[]) => void): void {
+      if (event === 'loadend') this.onloadend = handler as any;
+    }
+  };
+}
+
 interface ChSeed { $hash: string; genes?: Record<string, any>; }
 interface ChInverted { vertices: number; faces: number; animations: number; textures: number; gltfChars: number; }
 interface ChArtifact { gltf: string; meta: { filePath: string; vertices: number; faces: number; animations: number; textures: string[] } }
+
+async function withGltfExporterNoiseSuppressed<T>(fn: () => Promise<T>): Promise<T> {
+  const originalWarn = console.warn;
+  console.warn = (...args: unknown[]) => {
+    const first = String(args[0] ?? '');
+    if (first.startsWith('THREE.GLTFExporter:')) return;
+    originalWarn(...args);
+  };
+  try {
+    return await fn();
+  } finally {
+    console.warn = originalWarn;
+  }
+}
 
 async function synthesize(seed: ChSeed): Promise<ChArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-ch-'));
   try {
     const out = path.join(dir, 'character.gltf');
-    const r = await generateCharacterV3(seed as any, out);
+    const r = await withGltfExporterNoiseSuppressed(() => generateCharacterV3(seed as any, out));
     const gltf = await fs.readFile(r.filePath, 'utf8');
     return {
       gltf,
@@ -74,12 +115,5 @@ export const CharacterQualityContract: QualityContract<ChSeed, ChArtifact, ChInv
   hashArtifact,
 };
 
-// Gate registration on FileReader (Three.js GLTFExporter dep). Node has neither
-// FileReader nor document by default; the underlying v3/v4 generator was
-// written for browser execution. Skip registration outside the browser.
-if (typeof globalThis.FileReader !== 'undefined' && typeof globalThis.document !== 'undefined') {
-  registerContract(CharacterQualityContract as any);
-} else {
-  console.warn('[contract] character: skipping registration — requires browser (FileReader/document missing)');
-}
+registerContract(CharacterQualityContract as any);
 
