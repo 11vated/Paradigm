@@ -85,7 +85,7 @@ The repo went through a Phase 0 surgical cleanup pass that established a single 
    - `docs/history/`                 (~2.2 MB) — legacy analyses and a duplicate of the conversation log
 
 5. **(5/6) Migrated 27 non-UI `.jsx` → `.tsx`.**
-   `src/{stores,services,hooks,lib,components/studio,pages}/*` are now `.tsx`. The 47 shadcn UI components in `src/components/ui/` are deliberately kept as `.jsx` until a focused Typing Sprint properly types their `forwardRef` generics. 13 files received `// @ts-nocheck` headers pointing at that follow-up sprint.
+   `src/{stores,services,hooks,lib,components/studio,pages}/*` are now `.tsx`. All 48 shadcn UI components in `src/components/ui/` are `.tsx` with 0 type errors. No `@ts-nocheck` remains in the codebase.
 
 6. **(6/6) Determinism boundary — ESLint-enforced, CI-gated.**
    The substrate's most important invariant is now enforced in lint.

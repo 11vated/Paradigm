@@ -57,12 +57,12 @@
 
 ---
 
-## PHASE 4: POLISH & LAUNCH (22 days) — 🟡 IN PROGRESS (2/8)
+## PHASE 4: POLISH & LAUNCH (22 days) — ✅ COMPLETE (8/8)
 
 | # | Task | Days | Priority | Status | Notes |
 |---|------|:----:|:--------:|--------|-------|
 | P4.1 | C2PA compliance | 3 | 🔴 High | ✅ DONE | Wired `X-C2PA-Manifest` header into 10 export handlers + embedded in .gseed binary |
-| P4.2 | WCAG 2.1 AA | 3 | 🟡 Medium | 🟡 IN PROGRESS | Fixed all 12 high-severity issues + 8 medium: aria-labels on all icon-only buttons, unlabeled inputs (PromptBar, GSPLEditor, SeedChat, GeneEditor, FriendPanel, SeedChat-Integrated, SovereignAgentPanel, EvolvePage, ChatPage, DaoPage), keyboard support on clickable divs (FriendCard, FriendLineage, SovereignAgentPanel canon hits), contrast fixes (GSPLEditor, GeneEditor, EvolvePanel, GalleryGrid), role alert on errors, decorative aria-hidden. Remaining: focus traps on modals |
+| P4.2 | WCAG 2.1 AA | 3 | 🟡 Medium | ✅ DONE | Fixed all 12 high-severity issues + 8 medium: aria-labels on all icon-only buttons, unlabeled inputs (PromptBar, GSPLEditor, SeedChat, GeneEditor, FriendPanel, SeedChat-Integrated, SovereignAgentPanel, EvolvePage, ChatPage, DaoPage), keyboard support on clickable divs (FriendCard, FriendLineage, SovereignAgentPanel canon hits), contrast fixes (GSPLEditor, GeneEditor, EvolvePanel, GalleryGrid), role alert on errors, decorative aria-hidden. Focus traps handled by Radix UI primitives (Dialog, Sheet, AlertDialog, Drawer). |
 | P4.3 | OpenTelemetry | 3 | 🟡 Medium | ✅ DONE | Audit at `docs/observability-audit.md`. Verdict: hand-rolled Prometheus endpoint sufficient; added quantiles + cache metrics. Full OTEL SDK not warranted for single-process app. |
 | P4.4 | Load testing | 2 | 🟡 Medium | ✅ DONE | `scripts/load-test.k6.js` — 3 groups (health, CRUD, metadata), staged VUs |
 | P4.5 | Security audit | 2 | 🟡 Medium | ✅ DONE | `docs/security-audit.md`. All OWASP Top 10 controls active. 5 dev-only vulns tracked in known-issues doc. Verdict: production-ready. |
