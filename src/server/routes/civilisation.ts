@@ -12,7 +12,8 @@
  *     → { ok, sampleHash }
  */
 import type { Express, Request, Response } from 'express';
-import { composeCivilisation } from '../../lib/civilisation/orchestrator';
+import { composeCivilisation } from '../../lib/civilisation/orchestrator.js';
+import { breedCivilisations } from '../../lib/civilisation/breeding.js';
 import { ALL_STRATA } from '../../lib/civilisation/types';
 
 const STRATA_DESCRIPTIONS: Record<string, string> = {
@@ -73,6 +74,30 @@ export function registerCivilisationRoutes(app: Express): void {
       const bundle = composeCivilisation(intent, opts);
       const elapsed = Date.now() - t0;
       res.json({ bundle, composedInMs: elapsed });
+    } catch (err) {
+      res.status(500).json({ error: err instanceof Error ? err.message : String(err) });
+    }
+  });
+
+  app.post('/api/civilisation/breed', (req: Request, res: Response) => {
+    try {
+      const body = req.body as Record<string, unknown>;
+      const parentA = body.parentA as any;
+      const parentB = body.parentB as any;
+      if (!parentA?.hash || !parentB?.hash) {
+        res.status(400).json({ error: 'parentA and parentB must be full CivilisationBundle objects with .hash' });
+        return;
+      }
+      const opts: any = {
+        name: typeof body.name === 'string' && body.name.trim() ? body.name : undefined,
+        strata: Array.isArray(body.strata) ? body.strata : undefined,
+        formWidth: typeof body.formWidth === 'number' ? Math.min(512, body.formWidth) : 320,
+        formHeight: typeof body.formHeight === 'number' ? Math.min(384, body.formHeight) : 224,
+      };
+      const t0 = Date.now();
+      const bundle = breedCivilisations(parentA, parentB, opts);
+      const elapsed = Date.now() - t0;
+      res.json({ bundle, composedInMs: elapsed, parentHashes: [parentA.hash, parentB.hash] });
     } catch (err) {
       res.status(500).json({ error: err instanceof Error ? err.message : String(err) });
     }

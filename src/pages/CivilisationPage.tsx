@@ -110,13 +110,89 @@ function WorldCanvas({ artifact }: { artifact: StratumArtifact }) {
   return <canvas ref={ref} style={{ width: '100%', height: 'auto', imageRendering: 'pixelated', borderRadius: 6 }} />;
 }
 
-function MotionSummary({ artifact }: { artifact: StratumArtifact }) {
+function MotionPlayback({ artifact }: { artifact: StratumArtifact }) {
+  const ref = React.useRef<HTMLCanvasElement>(null);
+  const [paused, setPaused] = React.useState(false);
   const meta = artifact.metadata as { fps?: number; duration?: number; keyframes?: number; boneLengthsPass?: boolean };
+  React.useEffect(() => {
+    if (!artifact.bytesB64 || !ref.current) return;
+    const text = new TextDecoder().decode(b64ToBytes(artifact.bytesB64));
+    let parsed: any = {};
+    try { parsed = JSON.parse(text); } catch { return; }
+    const keys: Array<{ time: number; positions: Record<string, [number,number,number]> }> = parsed.keys ?? [];
+    if (keys.length < 2) return;
+    const duration = parsed.duration ?? 4;
+    const W = 280, H = 200;
+    const c = ref.current;
+    c.width = W; c.height = H;
+    const ctx = c.getContext('2d')!;
+    // Bones to draw
+    const BONES = [
+      ['pelvis','spine'],['spine','chest'],['chest','neck'],['neck','head'],
+      ['chest','shoulderL'],['shoulderL','elbowL'],['elbowL','handL'],
+      ['chest','shoulderR'],['shoulderR','elbowR'],['elbowR','handR'],
+      ['pelvis','hipL'],['hipL','kneeL'],['kneeL','footL'],
+      ['pelvis','hipR'],['hipR','kneeR'],['kneeR','footR'],
+    ];
+    let raf = 0; const t0 = performance.now();
+    const animate = (now: number) => {
+      const elapsed = paused ? 0 : (now - t0) / 1000;
+      const t = (elapsed % duration);
+      // Find surrounding keyframes
+      let k = 0;
+      while (k < keys.length - 1 && keys[k+1].time <= t) k++;
+      const k0 = keys[k];
+      const k1 = keys[Math.min(k + 1, keys.length - 1)];
+      const span = (k1.time - k0.time) || 1;
+      const a = Math.min(1, Math.max(0, (t - k0.time) / span));
+      ctx.fillStyle = '#0e0e15';
+      ctx.fillRect(0, 0, W, H);
+      // Subtle grid floor line
+      ctx.strokeStyle = '#222';
+      ctx.beginPath();
+      ctx.moveTo(0, H * 0.88);
+      ctx.lineTo(W, H * 0.88);
+      ctx.stroke();
+      // Project joints
+      const scale = 75;
+      const ox = W / 2, oy = H * 0.88;
+      const pos: Record<string, {x:number;y:number}> = {};
+      for (const id of Object.keys(k0.positions)) {
+        const p0 = k0.positions[id], p1 = k1.positions[id] ?? p0;
+        const x = (p0[0] * (1-a) + p1[0] * a) * scale + ox;
+        const y = oy - (p0[1] * (1-a) + p1[1] * a) * scale;
+        pos[id] = { x, y };
+      }
+      // Bones
+      ctx.lineCap = 'round';
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#90b8e8';
+      for (const [a2, b2] of BONES) {
+        const pa = pos[a2], pb = pos[b2];
+        if (!pa || !pb) continue;
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y);
+        ctx.lineTo(pb.x, pb.y);
+        ctx.stroke();
+      }
+      // Joints
+      ctx.fillStyle = '#e8e8ff';
+      for (const id of Object.keys(pos)) {
+        ctx.beginPath();
+        ctx.arc(pos[id].x, pos[id].y, id === 'head' ? 10 : 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, [artifact.bytesB64, paused]);
   return (
-    <div style={{ fontSize: 13, lineHeight: 1.8 }}>
-      <div>🦴 <b>{meta.keyframes ?? 0}</b> keyframes @ <b>{meta.fps ?? 0}fps</b> · <b>{(meta.duration ?? 0).toFixed(1)}s</b></div>
-      <div>{meta.boneLengthsPass ? '✓ bone-length constraints satisfied' : '✗ constraint violations'}</div>
-      <div style={{ opacity: 0.55, fontSize: 11, marginTop: 4 }}>HUMANOID_SKELETON · 17 joints · procedural walk cycle</div>
+    <div>
+      <canvas ref={ref} style={{ width: '100%', maxWidth: 280, height: 'auto', display: 'block', borderRadius: 8, background: '#0e0e15' }} />
+      <div style={{ fontSize: 11, opacity: 0.7, marginTop: 6 }}>
+        🦴 <b>{meta.keyframes ?? 0}</b> keyframes @ <b>{meta.fps ?? 0}fps</b> · <b>{(meta.duration ?? 0).toFixed(1)}s</b> · {meta.boneLengthsPass ? '✓ constraints satisfied' : '✗ violations'}
+      </div>
     </div>
   );
 }
@@ -201,7 +277,7 @@ function StratumCard({ sid, artifact }: { sid: string; artifact: StratumArtifact
   if (artifact.mime.startsWith('audio/wav')) body = <AudioPlayer artifact={artifact} />;
   else if (artifact.mime.startsWith('image/x-raw-rgba8')) body = <FormCanvas artifact={artifact} />;
   else if (artifact.mime.startsWith('application/x-raw-world5')) body = <WorldCanvas artifact={artifact} />;
-  else if (sid === 'motion') body = <MotionSummary artifact={artifact} />;
+  else if (sid === 'motion') body = <MotionPlayback artifact={artifact} />;
   else if (sid === 'mind') body = <MindSummary artifact={artifact} />;
   else if (sid === 'time') body = <TimeSummary artifact={artifact} />;
   else if (sid === 'field') body = <FieldSummary artifact={artifact} />;
