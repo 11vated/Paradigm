@@ -15,6 +15,7 @@ export const v3Scale = (a: V3, k: number): V3 => [a[0]*k, a[1]*k, a[2]*k];
 export const v3Dot = (a: V3, b: V3): number => a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
 export const v3Len = (a: V3): number => Math.sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
 export const v3Norm = (a: V3): V3 => { const l = v3Len(a) || 1; return [a[0]/l, a[1]/l, a[2]/l]; };
+export const v3Cross = (a: V3, b: V3): V3 => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
 export const v3Abs = (a: V3): V3 => [Math.abs(a[0]), Math.abs(a[1]), Math.abs(a[2])];
 export const v3Max = (a: V3, b: V3): V3 => [Math.max(a[0],b[0]), Math.max(a[1],b[1]), Math.max(a[2],b[2])];
 
@@ -70,3 +71,17 @@ export function sceneNormal(scene: SdfSceneFn, p: V3, eps = 0.001): V3 {
   const dz = scene([p[0], p[1], p[2]+eps]).d - scene([p[0], p[1], p[2]-eps]).d;
   return v3Norm([dx, dy, dz]);
 }
+export const sdUnion = (a: SdfFn, b: SdfFn): SdfFn => p => Math.min(a(p), b(p));
+export const sdSmoothUnionRaw = (a: SdfFn, b: SdfFn, k: number): SdfFn => p => {
+  const da = a(p), db = b(p);
+  const h = Math.max(k - Math.abs(da - db), 0) / k;
+  return Math.min(da, db) - h * h * k * 0.25;
+};
+export const sdTranslate = (offset: V3, f: SdfFn): SdfFn => p => f([p[0]-offset[0], p[1]-offset[1], p[2]-offset[2]]);
+
+export const sdSmoothUnion = (a: SdfSceneFn, b: SdfSceneFn, k: number): SdfSceneFn => p => {
+  const ha = a(p), hb = b(p);
+  const h = Math.max(k - Math.abs(ha.d - hb.d), 0) / k;
+  const blend = Math.min(ha.d, hb.d) - h*h*k*0.25;
+  return { d: blend, matId: ha.d < hb.d ? ha.matId : hb.matId };
+};

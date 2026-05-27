@@ -17,6 +17,7 @@ import type {
 } from './types';
 import {
   renderSound, renderForm, renderStory, renderCulture, renderEconomy, renderRitual,
+  renderMotion, renderWorld, renderMind, renderTime, renderField,
 } from './renderers';
 
 const ORCHESTRATOR_VERSION = '1.0.0';
@@ -55,6 +56,8 @@ function summarizeConformance(strata: Record<StratumId, StratumArtifact | undefi
 export interface ComposeOpts {
   formWidth?: number;
   formHeight?: number;
+  worldWidth?: number;
+  worldHeight?: number;
   strata?: StratumId[];
 }
 
@@ -62,7 +65,7 @@ export function composeCivilisation(intent: CivilisationIntent, opts: ComposeOpt
   const intentJson = canonicalizeIntent(intent);
   const intentHash = createHash('sha256').update(intentJson).digest('hex');
   const rng = rngFromHash(intentHash);
-  const requested = opts.strata ?? intent.strataRequested ?? ['sound', 'form', 'story', 'culture', 'economy', 'ritual'];
+  const requested = opts.strata ?? intent.strataRequested ?? ['sound', 'form', 'story', 'culture', 'economy', 'ritual', 'motion', 'world', 'mind', 'time', 'field'];
 
   const strata: Partial<Record<StratumId, StratumArtifact>> = {};
   if (requested.includes('sound'))   strata.sound   = renderSound(intent, rngFromHash(intentHash + ':sound'));
@@ -71,6 +74,11 @@ export function composeCivilisation(intent: CivilisationIntent, opts: ComposeOpt
   if (requested.includes('culture')) strata.culture = renderCulture(intent, rngFromHash(intentHash + ':culture'));
   if (requested.includes('economy')) strata.economy = renderEconomy(intent, rngFromHash(intentHash + ':economy'));
   if (requested.includes('ritual'))  strata.ritual  = renderRitual(intent, rngFromHash(intentHash + ':ritual'));
+  if (requested.includes('motion'))  strata.motion  = renderMotion(intent, rngFromHash(intentHash + ':motion'));
+  if (requested.includes('world'))   strata.world   = renderWorld(intent, rngFromHash(intentHash + ':world'),  { width: opts.worldWidth ?? 192, height: opts.worldHeight ?? 192 });
+  if (requested.includes('mind'))    strata.mind    = renderMind(intent, rngFromHash(intentHash + ':mind'));
+  if (requested.includes('time'))    strata.time    = renderTime(intent, rngFromHash(intentHash + ':time'));
+  if (requested.includes('field'))   strata.field   = renderField(intent, rngFromHash(intentHash + ':field'));
 
   const conformance = summarizeConformance(strata as any);
 

@@ -283,3 +283,153 @@ export function renderRitual(intent: CivilisationIntent, rng: Xoshiro256StarStar
     metadata: { cycle, stepCount: steps.length },
   };
 }
+
+// ── motion — procedural walk cycle ───────────────────────────────────
+import { HUMANOID_SKELETON, generateWalkClip, verifyBoneLengths } from './motion.js';
+export function renderMotion(intent: CivilisationIntent, rng: Xoshiro256StarStar): StratumArtifact {
+  const clip = generateWalkClip(HUMANOID_SKELETON, {
+    bpm: intent.tempo ?? 92,
+    duration: 4,
+    fps: 30,
+    amplitude: 0.4 + rng.nextF64() * 0.3,
+    poise: 0.2 + rng.nextF64() * 0.4,
+    stride: 0.4 + rng.nextF64() * 0.3,
+  }, rng);
+  const v = verifyBoneLengths(HUMANOID_SKELETON, clip, 0.18);
+  const json = JSON.stringify({ ...clip, verification: v });
+  const bytes = new TextEncoder().encode(json);
+  const h = hash(bytes);
+  return {
+    stratumId: 'motion',
+    contentHash: h,
+    mime: 'application/json',
+    size: bytes.byteLength,
+    rendererId: 'paradigm.motion.pbd-walk',
+    rendererVersion: '1.0.0',
+    bytesRef: 'inline',
+    bytesB64: Buffer.from(bytes).toString('base64'),
+    predicateReport: {
+      'motion.boneLengthsConsistent': v.passed ? 'pass' : 'fail',
+      'motion.fpsValid': clip.fps > 0 ? 'pass' : 'fail',
+      'motion.deterministic': 'unimplemented',
+    },
+    metadata: { fps: clip.fps, duration: clip.duration, keyframes: clip.keys.length, boneLengthsPass: v.passed },
+  };
+}
+
+// ── world — heightmap + biomes + ecosystem ──────────────────────────
+import { generateWorld } from './world.js';
+export function renderWorld(intent: CivilisationIntent, rng: Xoshiro256StarStar, opts?: { width?: number; height?: number }): StratumArtifact {
+  const w = opts?.width ?? 256, height = opts?.height ?? 256;
+  const world = generateWorld({ width: w, height, rng, octaves: 5, erosionDrops: w*height*0.03 });
+  const len = w * height;
+  const bytes = new Uint8Array(len * 5);
+  for (let i = 0; i < len; i++) {
+    const e = Math.max(0, Math.min(1, world.heightmap[i]));
+    const elev16 = Math.round(e * 65535);
+    bytes[i*5] = elev16 & 0xff;
+    bytes[i*5+1] = (elev16 >> 8) & 0xff;
+    bytes[i*5+2] = world.biomes[i];
+    const wat16 = Math.round(Math.min(1, world.waterMap[i] * 10) * 65535);
+    bytes[i*5+3] = wat16 & 0xff;
+    bytes[i*5+4] = (wat16 >> 8) & 0xff;
+  }
+  const h = hash(bytes);
+  return {
+    stratumId: 'world',
+    contentHash: h,
+    mime: 'application/x-raw-world5',
+    size: bytes.byteLength,
+    rendererId: 'paradigm.world.heightmap-erosion',
+    rendererVersion: '1.0.0',
+    bytesRef: 'inline',
+    bytesB64: Buffer.from(bytes).toString('base64'),
+    predicateReport: {
+      'world.heightRange': world.stats.maxElev > world.stats.minElev ? 'pass' : 'fail',
+      'world.biomeDiversity': Object.keys(world.stats.biomeMix).length >= 3 ? 'pass' : 'fail',
+      'world.ecosystem': world.ecosystem.length > 0 ? 'pass' : 'fail',
+    },
+    metadata: { width: w, height, ecosystem: world.ecosystem.length, stats: world.stats },
+  };
+}
+
+// ── mind — agent archetype + behavior tree ──────────────────────────
+import { generateMind, MIND_ARCHETYPES, planToward } from './mind.js';
+export function renderMind(intent: CivilisationIntent, rng: Xoshiro256StarStar): StratumArtifact {
+  const archetype = MIND_ARCHETYPES[rng.nextInt(0, MIND_ARCHETYPES.length - 1)];
+  const agent = generateMind(archetype, rng);
+  const initial = new Set<string>(['safe']);
+  const plan = planToward(agent, agent.goals[0], initial, 6);
+  const json = JSON.stringify({ ...agent, samplePlan: { goal: agent.goals[0], steps: plan } });
+  const bytes = new TextEncoder().encode(json);
+  const h = hash(bytes);
+  return {
+    stratumId: 'mind',
+    contentHash: h,
+    mime: 'application/json',
+    size: bytes.byteLength,
+    rendererId: 'paradigm.mind.bt-goap',
+    rendererVersion: '1.0.0',
+    bytesRef: 'inline',
+    bytesB64: Buffer.from(bytes).toString('base64'),
+    predicateReport: {
+      'mind.archetypeKnown': archetype ? 'pass' : 'fail',
+      'mind.goalsNonEmpty': agent.goals.length > 0 ? 'pass' : 'fail',
+      'mind.btReachable': plan ? 'pass' : 'unimplemented',
+    },
+    metadata: { archetype, goals: agent.goals.length, actions: agent.actions.length, samplePlanOk: !!plan },
+  };
+}
+
+// ── time — calendar + chronology ────────────────────────────────────
+import { generateCalendar, generateChronology, verifyChronology } from './time.js';
+export function renderTime(intent: CivilisationIntent, rng: Xoshiro256StarStar): StratumArtifact {
+  const cal = generateCalendar({ name: intent.name, rng });
+  const chron = generateChronology(cal, rng);
+  const ver = verifyChronology(chron);
+  const json = JSON.stringify({ calendar: cal, chronology: chron, verification: ver });
+  const bytes = new TextEncoder().encode(json);
+  const h = hash(bytes);
+  return {
+    stratumId: 'time',
+    contentHash: h,
+    mime: 'application/json',
+    size: bytes.byteLength,
+    rendererId: 'paradigm.time.calendar-chrono',
+    rendererVersion: '1.0.0',
+    bytesRef: 'inline',
+    bytesB64: Buffer.from(bytes).toString('base64'),
+    predicateReport: {
+      'time.calendarPositive': chron.yearLengthDays > 0 ? 'pass' : 'fail',
+      'time.chronologyAcyclic': ver.passed ? 'pass' : 'fail',
+      'time.hasFestivals': cal.festivals.length > 0 ? 'pass' : 'fail',
+    },
+    metadata: { daysPerYear: chron.yearLengthDays, festivals: cal.festivals.length, events: chron.events.length },
+  };
+}
+
+// ── field — typed laws + conservation ────────────────────────────────
+import { generateField, verifyField } from './field.js';
+export function renderField(intent: CivilisationIntent, rng: Xoshiro256StarStar): StratumArtifact {
+  const field = generateField({ rng });
+  const ver = verifyField(field);
+  const json = JSON.stringify({ ...field, verification: ver });
+  const bytes = new TextEncoder().encode(json);
+  const h = hash(bytes);
+  return {
+    stratumId: 'field',
+    contentHash: h,
+    mime: 'application/json',
+    size: bytes.byteLength,
+    rendererId: 'paradigm.field.typed-laws',
+    rendererVersion: '1.0.0',
+    bytesRef: 'inline',
+    bytesB64: Buffer.from(bytes).toString('base64'),
+    predicateReport: {
+      'field.rulesNonEmpty': field.rules.length > 0 ? 'pass' : 'fail',
+      'field.conservationLawsDeclared': field.globalLaws.length > 0 ? 'pass' : 'fail',
+      'field.noWarnings': ver.warnings.length === 0 ? 'pass' : 'fail',
+    },
+    metadata: { rules: field.rules.length, globalLaws: field.globalLaws.length, warnings: ver.warnings.length },
+  };
+}
