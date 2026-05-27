@@ -26,6 +26,7 @@ import { registerEvolveRoutes } from './src/server/routes/evolve.js';
 import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
 import { registerCommonsRoutes } from './src/server/routes/commons.js';
 import { registerRoyaltyRoutes } from './src/server/routes/royalty.js';
+import { registerLicenseRoutes } from './src/server/routes/license.js';
 import { registerFederationRoutes } from './src/server/routes/federation.js';
 import { createInMemoryPeerStore } from './src/lib/intelligence/federation/peer-store.js';
 initServerPolyfills();
@@ -422,6 +423,7 @@ async function startServer() {
   registerSubstrateHealthRoutes(app);
   registerCommonsRoutes(app);
   registerRoyaltyRoutes(app);
+  registerLicenseRoutes(app);
 
   // Federation v1 — Doctrine v2 Part VIII.16. Off in production by default;
   // enable explicitly with PARADIGM_FEDERATION_ENABLED=1.

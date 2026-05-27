@@ -69,13 +69,14 @@ export interface LineageRoyaltyResult {
 
 const DEFAULT_PLATFORM = '0x0000000000000000000000000000000000000000';
 
-/** Pure canonical JSON (recursively sorted keys). */
+/** Pure canonical JSON (recursively sorted keys; undefined keys dropped to match JSON.stringify). */
 function canonicalize(obj: unknown): string {
   if (obj === null || obj === undefined) return JSON.stringify(obj ?? null);
   if (typeof obj !== 'object') return JSON.stringify(obj);
   if (Array.isArray(obj)) return '[' + obj.map(canonicalize).join(',') + ']';
-  const keys = Object.keys(obj as Record<string, unknown>).sort();
-  return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalize((obj as Record<string, unknown>)[k])).join(',') + '}';
+  const record = obj as Record<string, unknown>;
+  const keys = Object.keys(record).filter((k) => record[k] !== undefined).sort();
+  return '{' + keys.map((k) => JSON.stringify(k) + ':' + canonicalize(record[k])).join(',') + '}';
 }
 
 /**
