@@ -38,5 +38,9 @@ export const InsuranceQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['culture'] as const,
+  engineOwner: 'insurance engine custodian',
 };
-registerContract(InsuranceQualityContract as any);
+registerContract(InsuranceQualityContract);

@@ -53,3 +53,4 @@ playwright-report/
 
 artifacts/
 cache/
+data/artifacts/music/*.wav

@@ -3,13 +3,16 @@
   "domain": "audio",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-audio-018"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
   "provenance": "generated",
   "id": "agent-audio-020",
-  "description": "A {soundType} audio with {attack} attack",
+  "description": "A musical audio with 0.48 attack",
   "genes": {
     "soundType": {
       "value": "musical",

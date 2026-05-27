@@ -51,5 +51,9 @@ const CURATED = [
 
 export const FieldQualityContract: QualityContract<FSeed, FArtifact, FInverted> = {
   domain: 'field', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field'] as const,
+  engineOwner: 'field engine custodian',
 };
-registerContract(FieldQualityContract as any);
+registerContract(FieldQualityContract);

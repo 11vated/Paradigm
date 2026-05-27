@@ -9,7 +9,7 @@
   "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
   "provenance": "generated",
   "id": "agent-architecture-020",
-  "description": "A pixel building with {windows} windows",
+  "description": "A pixel building with stained_glass windows",
   "genes": {
     "style": {
       "value": "brutalist",

@@ -53,5 +53,9 @@ const CURATED = [
 
 export const WorldQualityContract: QualityContract<WdSeed, WdArtifact, WdInverted> = {
   domain: 'world', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world'] as const,
+  engineOwner: 'world engine custodian',
 };
-registerContract(WorldQualityContract as any);
+registerContract(WorldQualityContract);

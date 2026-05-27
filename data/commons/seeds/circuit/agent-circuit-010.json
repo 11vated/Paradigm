@@ -9,7 +9,7 @@
   "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
   "provenance": "generated",
   "id": "agent-circuit-010",
-  "description": "A {componentCount}-component {circuitType} circuit",
+  "description": "A 10-component sensor circuit",
   "genes": {
     "circuitType": {
       "value": "sensor",

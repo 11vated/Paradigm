@@ -3,13 +3,16 @@
   "domain": "vehicle",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-vehicle-030"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
   "provenance": "generated",
   "id": "agent-vehicle-033",
-  "description": "A {vehicleType} using {propulsion} propulsion",
+  "description": "A train using solar propulsion",
   "genes": {
     "vehicleType": {
       "value": "train",

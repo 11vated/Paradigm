@@ -44,6 +44,10 @@ export const DanceQualityContract: QualityContract<DanceSeed, DanceArtifact, Dan
       seed: { $name: 'Concrete', genes: { style: 'hip-hop', tempo: 140, complexity: 0.8 } } },
   ],
   hashArtifact: fingerprint,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['motion', 'culture'] as const,
+  engineOwner: 'dance engine custodian',
 };
 
-registerContract(DanceQualityContract as any);
+registerContract(DanceQualityContract);

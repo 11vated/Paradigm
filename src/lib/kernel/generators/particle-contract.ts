@@ -43,5 +43,9 @@ export const ParticleQualityContract: QualityContract<ParticleSeed, ParticleArti
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'field'] as const,
+  engineOwner: 'particle engine custodian',
 };
-registerContract(ParticleQualityContract as any);
+registerContract(ParticleQualityContract);

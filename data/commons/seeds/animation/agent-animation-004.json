@@ -3,13 +3,17 @@
   "domain": "animation",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-animation-002",
+      "agent-animation-001"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
   "provenance": "generated",
   "id": "agent-animation-004",
-  "description": "A {frames}-frame animation at {fps}fps",
+  "description": "A 46-frame animation at 54fps",
   "genes": {
     "frames": {
       "value": 46,

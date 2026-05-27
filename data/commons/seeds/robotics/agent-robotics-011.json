@@ -3,13 +3,16 @@
   "domain": "robotics",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-robotics-010"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
   "provenance": "generated",
   "id": "agent-robotics-011",
-  "description": "A {sensors} equipped {robotType} with {payload}kg payload",
+  "description": "A infrared equipped hexapod with 132.80kg payload",
   "genes": {
     "robotType": {
       "value": "hexapod",

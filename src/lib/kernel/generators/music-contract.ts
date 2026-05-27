@@ -92,6 +92,10 @@ export const MusicQualityContract: QualityContract<MusicSeed, MusicArtifact, Mus
   rate,
   curated: () => CURATED,
   hashArtifact: hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['sound', 'time'] as const,
+  engineOwner: 'music engine custodian',
 };
 
-registerContract(MusicQualityContract as any);
+registerContract(MusicQualityContract);

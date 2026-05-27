@@ -3,13 +3,17 @@
   "domain": "agent",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-agent-001",
+      "agent-agent-003"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-004",
-  "description": "A {persona} agent with {temperature} temperature",
+  "description": "A critic agent with 0.85 temperature",
   "genes": {
     "persona": {
       "value": "critic",

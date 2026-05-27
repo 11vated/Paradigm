@@ -38,5 +38,9 @@ export const AgricultureQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world'] as const,
+  engineOwner: 'agriculture engine custodian',
 };
-registerContract(AgricultureQualityContract as any);
+registerContract(AgricultureQualityContract);

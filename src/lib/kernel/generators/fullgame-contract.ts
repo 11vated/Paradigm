@@ -41,5 +41,9 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'sound', 'mind', 'story', 'world', 'culture', 'time'] as const,
+  engineOwner: 'fullgame engine custodian',
 };
-registerContract(FullgameQualityContract as never);
+registerContract(FullgameQualityContract);

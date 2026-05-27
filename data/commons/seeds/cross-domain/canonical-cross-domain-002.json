@@ -115,7 +115,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-cross-domain-001"
+    ]
   },
   "hash": "canonical-cross-domain-v2",
   "description": "Canonical Pixel Artist cross-domain — a hand-curated seed for the cross-domain domain",

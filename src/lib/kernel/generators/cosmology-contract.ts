@@ -52,5 +52,9 @@ const CURATED = [
 
 export const CosmologyQualityContract: QualityContract<CoSeed, CoArtifact, CoInverted> = {
   domain: 'cosmology', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'field'] as const,
+  engineOwner: 'cosmology engine custodian',
 };
-registerContract(CosmologyQualityContract as any);
+registerContract(CosmologyQualityContract);

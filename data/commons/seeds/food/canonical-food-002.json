@@ -26,7 +26,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-food-032"
+    ]
   },
   "hash": "d66b8a53a90f51e7fbec3cd8bebdba02c9bc8664cb0892b8a735c9d48b7972b0",
   "description": "Canonical Tuscan Harvest — a hand-curated seed for the food domain",

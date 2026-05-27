@@ -9,7 +9,7 @@
   "hash": "ee080ff60374d1f6f5b7808d2f5be3ddf4d2924afca0062b65a17e324dd02a1d",
   "provenance": "generated",
   "id": "agent-ui-030",
-  "description": "A {theme} {layout} interface",
+  "description": "A nature grid interface",
   "genes": {
     "theme": {
       "value": "nature",

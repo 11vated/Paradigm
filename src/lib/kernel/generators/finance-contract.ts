@@ -38,5 +38,9 @@ export const FinanceQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['culture', 'mind'] as const,
+  engineOwner: 'finance engine custodian',
 };
-registerContract(FinanceQualityContract as any);
+registerContract(FinanceQualityContract);

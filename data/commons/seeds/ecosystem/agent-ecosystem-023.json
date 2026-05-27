@@ -3,13 +3,16 @@
   "domain": "ecosystem",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-ecosystem-019"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
   "provenance": "generated",
   "id": "agent-ecosystem-023",
-  "description": "A 78x{size} {interaction} simulation",
+  "description": "A 78x128 mutualistic simulation",
   "genes": {
     "species": {
       "value": 13,

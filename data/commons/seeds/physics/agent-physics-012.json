@@ -3,13 +3,16 @@
   "domain": "physics",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-physics-009"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "6d9b37b90656fc35d4a5623a1f2136656c6b027d4a09093a89850314a1126b09",
   "provenance": "generated",
   "id": "agent-physics-012",
-  "description": "A physics system with {gravity} gravity",
+  "description": "A physics system with 0.20 gravity",
   "genes": {
     "gravity": {
       "value": 0.2,

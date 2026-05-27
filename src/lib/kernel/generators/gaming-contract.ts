@@ -38,5 +38,9 @@ export const GamingQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'sound', 'mind', 'story', 'world'] as const,
+  engineOwner: 'gaming engine custodian',
 };
-registerContract(GamingQualityContract as any);
+registerContract(GamingQualityContract);

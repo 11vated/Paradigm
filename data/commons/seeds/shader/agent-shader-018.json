@@ -3,13 +3,16 @@
   "domain": "shader",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-shader-014"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
   "provenance": "generated",
   "id": "agent-shader-018",
-  "description": "A {iterations}-step {noise} shader effect",
+  "description": "A 20-step cellular shader effect",
   "genes": {
     "technique": {
       "value": "sdf",

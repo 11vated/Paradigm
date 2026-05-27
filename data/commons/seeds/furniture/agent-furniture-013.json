@@ -3,13 +3,16 @@
   "domain": "furniture",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-furniture-012"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
   "provenance": "generated",
   "id": "agent-furniture-013",
-  "description": "A {dimensions} {furnitureType} with {ergonomics} ergonomic score",
+  "description": "A 0.9,0.38,0.94 sofa with 0.77 ergonomic score",
   "genes": {
     "furnitureType": {
       "value": "sofa",

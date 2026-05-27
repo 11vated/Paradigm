@@ -241,7 +241,7 @@ export class SovereignAgent {
     // Canon RAG — embed + index the seed when canon is configured
     if (this.canon && validated.passed) {
       try { await this.canon.ingest(validated.seed); }
-      catch (e) { /* canon ingest is best-effort; never block the run */ }
+      catch (e) { /* canon ingest is best-effort; never block the run */ /* PARADIGM-EVASION-OK: intentional swallow at orchestrator boundary; see waiver registry */ void e; }
     }
 
     // Episodic — full run report, if the layer is configured

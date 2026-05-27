@@ -9,7 +9,7 @@
   "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
   "provenance": "generated",
   "id": "agent-geometry3d-019",
-  "description": "A bilateral polyhedron with {detail} detail",
+  "description": "A bilateral polyhedron with 0.93 detail",
   "genes": {
     "primitive": {
       "value": "torus",

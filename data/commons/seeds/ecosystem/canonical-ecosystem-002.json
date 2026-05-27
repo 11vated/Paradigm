@@ -24,7 +24,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-ecosystem-034"
+    ]
   },
   "hash": "4828991baa3a62b84a659206ff8d8e29afae4faf3eab11fb81e78543387a9478",
   "description": "Canonical Coral Canopy — a hand-curated seed for the ecosystem domain",

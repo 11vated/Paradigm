@@ -3,13 +3,16 @@
   "domain": "particle",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-particle-007"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
   "provenance": "generated",
   "id": "agent-particle-008",
-  "description": "A {rate} particles/sec {emitter} with {lifetime}s lifetime",
+  "description": "A 436 particles/sec point with 2.80s lifetime",
   "genes": {
     "emitter": {
       "value": "point",

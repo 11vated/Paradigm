@@ -59,5 +59,9 @@ const CURATED = [
 
 export const AppQualityContract: QualityContract<AppSeed, AppArtifact, AppInverted> = {
   domain: 'app', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'app engine custodian',
 };
-registerContract(AppQualityContract as any);
+registerContract(AppQualityContract);

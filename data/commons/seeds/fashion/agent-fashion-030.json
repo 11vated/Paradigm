@@ -3,13 +3,16 @@
   "domain": "fashion",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-fashion-029"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "6101e875eb2b08800180e4fcb4e19c245f5218fe824acea8d144e12fa0a11e65",
   "provenance": "generated",
   "id": "agent-fashion-030",
-  "description": "A watercolor {fabric} {clothingType}",
+  "description": "A watercolor silk jacket",
   "genes": {
     "clothingType": {
       "value": "jacket",

@@ -38,5 +38,9 @@ export const PhotographyQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'culture'] as const,
+  engineOwner: 'photography engine custodian',
 };
-registerContract(PhotographyQualityContract as any);
+registerContract(PhotographyQualityContract);

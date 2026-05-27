@@ -38,5 +38,9 @@ export const CloudQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field'] as const,
+  engineOwner: 'cloud engine custodian',
 };
-registerContract(CloudQualityContract as any);
+registerContract(CloudQualityContract);

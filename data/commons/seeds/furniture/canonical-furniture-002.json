@@ -24,7 +24,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-furniture-001"
+    ]
   },
   "hash": "8a8003ca84e0227169bd4f4e044ea7dc2a1b4018a371155b7ea5dfcddc0ecd2a",
   "description": "Canonical Glass Horizon Table — a hand-curated seed for the furniture domain",

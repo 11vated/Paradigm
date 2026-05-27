@@ -3,7 +3,11 @@
   "domain": "circuit",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-circuit-032",
+      "agent-circuit-034"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-circuit-neural-v1",

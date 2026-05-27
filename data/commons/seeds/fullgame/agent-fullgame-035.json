@@ -3,13 +3,17 @@
   "domain": "fullgame",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-fullgame-032",
+      "agent-fullgame-030"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
   "provenance": "generated",
   "id": "agent-fullgame-035",
-  "description": "A {theme} experimental featuring {mechanic} mechanics",
+  "description": "A fantasy experimental featuring combat mechanics",
   "genes": {
     "genre": {
       "value": "platformer",

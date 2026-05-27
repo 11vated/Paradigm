@@ -9,7 +9,7 @@
   "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
   "provenance": "generated",
   "id": "agent-alife-012",
-  "description": "A {generations} generation {gridSize} grid ecosystem",
+  "description": "A 302 generation 64 grid ecosystem",
   "genes": {
     "species": {
       "value": 2,

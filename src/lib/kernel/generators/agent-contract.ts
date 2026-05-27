@@ -42,5 +42,9 @@ export const AgentQualityContract: QualityContract<S, A, Record<string, unknown>
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['mind'] as const,
+  engineOwner: 'agent engine custodian',
 };
-registerContract(AgentQualityContract as never);
+registerContract(AgentQualityContract);

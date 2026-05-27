@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-scene-001"
+    ]
   },
   "hash": "canonical-scene-v2",
   "description": "Canonical Mountain Solitude — a hand-curated seed for the scene domain",

@@ -24,7 +24,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-algorithm-001"
+    ]
   },
   "hash": "canonical-algorithm-v2",
   "description": "Canonical Infinite Caverns — a hand-curated seed for the algorithm domain",

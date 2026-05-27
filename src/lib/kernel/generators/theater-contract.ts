@@ -38,5 +38,9 @@ export const TheaterQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story', 'motion', 'sound'] as const,
+  engineOwner: 'theater engine custodian',
 };
-registerContract(TheaterQualityContract as any);
+registerContract(TheaterQualityContract);

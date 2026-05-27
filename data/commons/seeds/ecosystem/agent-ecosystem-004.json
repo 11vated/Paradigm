@@ -9,7 +9,7 @@
   "hash": "5455cc9651cc4aa4ec5380806549e2051d3f496a7da33dd8d0a680e170a4ef85",
   "provenance": "generated",
   "id": "agent-ecosystem-004",
-  "description": "A {trophic}-trophic level {climate} biome",
+  "description": "A 4-trophic level temperate biome",
   "genes": {
     "species": {
       "value": 36,

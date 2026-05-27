@@ -9,7 +9,7 @@
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-023",
-  "description": "A {reasoning} reasoning agent using {tools} tools",
+  "description": "A 0.94 reasoning agent using code tools",
   "genes": {
     "persona": {
       "value": "inventor",

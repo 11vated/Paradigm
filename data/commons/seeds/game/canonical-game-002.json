@@ -24,7 +24,11 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-game-034",
+      "agent-game-033"
+    ]
   },
   "hash": "1f54c5d4aecef56c0696f1c1195d2d1f00dc2eaa594d5d34c6e3dca90790c688",
   "description": "Canonical Quantum Puzzle — a hand-curated seed for the game domain",

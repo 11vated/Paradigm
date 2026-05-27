@@ -3,13 +3,16 @@
   "domain": "narrative",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-narrative-032"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "24cd953299d304d6747641eb4789c535b631104520c393b7b949701f40b2fc74",
   "provenance": "generated",
   "id": "agent-narrative-034",
-  "description": "A {structure} narrative in the light genre",
+  "description": "A epistolary narrative in the light genre",
   "genes": {
     "genre": {
       "value": "horror",

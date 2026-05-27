@@ -38,5 +38,9 @@ export const JournalismQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story', 'culture'] as const,
+  engineOwner: 'journalism engine custodian',
 };
-registerContract(JournalismQualityContract as any);
+registerContract(JournalismQualityContract);

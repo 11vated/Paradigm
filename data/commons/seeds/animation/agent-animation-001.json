@@ -9,7 +9,7 @@
   "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
   "provenance": "generated",
   "id": "agent-animation-001",
-  "description": "A {easing} animated {amplitude} motion sequence",
+  "description": "A ease_in animated 0.33 motion sequence",
   "genes": {
     "frames": {
       "value": 38,

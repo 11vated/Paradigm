@@ -72,6 +72,10 @@ export const SpriteQualityContract: QualityContract<SpriteSeed, SpriteArtifact, 
   rate,
   curated: () => CURATED,
   hashArtifact: hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'sprite engine custodian',
 };
 
 // Gate registration on FUNCTIONAL canvas — the dep may be in node_modules but
@@ -82,5 +86,5 @@ try {
   c.createCanvas(1, 1).getContext('2d');
   _canvasFunctional = true;
 } catch { _canvasFunctional = false; }
-if (_canvasFunctional) registerContract(SpriteQualityContract as any);
+if (_canvasFunctional) registerContract(SpriteQualityContract);
 else console.warn('[contract] sprite: skipping registration — `canvas` native binary not built');

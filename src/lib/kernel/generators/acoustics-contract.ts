@@ -58,5 +58,9 @@ export const AcousticsQualityContract: QualityContract<S, A, any> = {
     return { score: Math.round(score * 100) / 100, axes, notes, conformsTo: '1.0.0' };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['sound', 'field'] as const,
+  engineOwner: 'acoustics engine custodian',
 };
-registerContract(AcousticsQualityContract as any);
+registerContract(AcousticsQualityContract);

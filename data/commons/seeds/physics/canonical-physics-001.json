@@ -3,7 +3,10 @@
   "domain": "physics",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-physics-031"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-physics-gravity-v1",

@@ -43,5 +43,9 @@ export const ShaderQualityContract: QualityContract<ShaderSeed, ShaderArtifact, 
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'form'] as const,
+  engineOwner: 'shader engine custodian',
 };
-registerContract(ShaderQualityContract as any);
+registerContract(ShaderQualityContract);

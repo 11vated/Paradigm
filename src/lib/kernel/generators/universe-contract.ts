@@ -38,5 +38,9 @@ export const UniverseQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'form'] as const,
+  engineOwner: 'universe engine custodian',
 };
-registerContract(UniverseQualityContract as any);
+registerContract(UniverseQualityContract);

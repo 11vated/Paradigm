@@ -42,5 +42,9 @@ export const Gen6gQualityContract: QualityContract<S, A, Record<string, unknown>
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field'] as const,
+  engineOwner: '6g engine custodian',
 };
-registerContract(Gen6gQualityContract as never);
+registerContract(Gen6gQualityContract);

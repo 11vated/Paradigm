@@ -23,6 +23,17 @@ import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
+import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
+import { registerCommonsRoutes } from './src/server/routes/commons.js';
+import { registerRoyaltyRoutes } from './src/server/routes/royalty.js';
+import { registerLicenseRoutes } from './src/server/routes/license.js';
+import { registerSeedCostRoutes } from './src/server/routes/seed-cost.js';
+import { registerGenesisRoutes } from './src/server/routes/genesis.js';
+import { registerDividendRoutes } from './src/server/routes/dividend.js';
+import { registerAtlasRoutes } from './src/server/routes/atlas.js';
+import { registerCivilisationRoutes } from './src/server/routes/civilisation.js';
+import { registerFederationRoutes } from './src/server/routes/federation.js';
+import { createInMemoryPeerStore } from './src/lib/intelligence/federation/peer-store.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -414,6 +425,27 @@ async function startServer() {
   registerSeedsSovereigntyRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, SignSeedSchema, VerifySeedSchema, MintSeedSchema, crypto: crypto as any, SovereigntyLayer, OnChainSovereignty, canonicalizeSeed, seedDigestBytes32, createSovereignGene, isSovereignGene, getGeneProvenance, licenseSovereignGene, checkGenePermission, authorizeSeedMutation, LocalHmacSigner, LocalDryRunAnchor, LocalFilePin, mintSeedSovereignty, buildC2PAManifest, encodeGseed, log, audit });
 
   registerEvolveRoutes(app, { optionalAuth, evolutionJobs });
+  registerSubstrateHealthRoutes(app);
+  registerCommonsRoutes(app);
+  registerRoyaltyRoutes(app);
+  registerLicenseRoutes(app);
+  registerSeedCostRoutes(app);
+  registerGenesisRoutes(app);
+  registerAtlasRoutes(app);
+  registerCivilisationRoutes(app);
+
+  // Federation v1 — Doctrine v2 Part VIII.16. Off in production by default;
+  // enable explicitly with PARADIGM_FEDERATION_ENABLED=1.
+  if (process.env.PARADIGM_FEDERATION_ENABLED === '1' || process.env.NODE_ENV !== 'production') {
+    const federationStore = createInMemoryPeerStore();
+    registerFederationRoutes(app, {
+      store: federationStore,
+      peerId: process.env.PARADIGM_PEER_ID ?? 'self.paradigm',
+      publicKey: process.env.PARADIGM_PEER_PUBLIC_KEY ?? '',
+      mirrorToken: process.env.PARADIGM_FEDERATION_MIRROR_TOKEN ?? undefined,
+    });
+    console.log('[federation] v1 routes registered (peer=' + (process.env.PARADIGM_PEER_ID ?? 'self.paradigm') + ')');
+  }
 
   registerQftPipelineRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, QftSimulateSchema, PipelineExecuteSchema, QFTEngine, ParadigmPipeline, crypto: crypto as any, log });
 

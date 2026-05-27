@@ -38,5 +38,9 @@ export const PersonalizedMedicineQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['mind'] as const,
+  engineOwner: 'personalized-medicine engine custodian',
 };
-registerContract(PersonalizedMedicineQualityContract as any);
+registerContract(PersonalizedMedicineQualityContract);

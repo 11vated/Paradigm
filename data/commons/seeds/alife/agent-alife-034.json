@@ -3,13 +3,17 @@
   "domain": "alife",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-alife-032",
+      "agent-alife-029"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
   "provenance": "generated",
   "id": "agent-alife-034",
-  "description": "A {rules} alife simulation with {species} species",
+  "description": "A conway alife simulation with 6 species",
   "genes": {
     "species": {
       "value": 6,

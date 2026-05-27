@@ -3,7 +3,10 @@
   "domain": "choreography",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-choreography-031"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-choreography-fluid-v1",

@@ -3,7 +3,10 @@
   "domain": "ecosystem",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-ecosystem-031"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-ecosystem-forest-v1",

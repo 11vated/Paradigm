@@ -38,5 +38,9 @@ export const CoffeeQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['culture'] as const,
+  engineOwner: 'coffee engine custodian',
 };
-registerContract(CoffeeQualityContract as any);
+registerContract(CoffeeQualityContract);

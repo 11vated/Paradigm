@@ -34,7 +34,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-narrative-033"
+    ]
   },
   "hash": "259c359c646b2e8f5a5438eaf164c83dcc3f26867b746966dab9b5fca4e08ee2",
   "description": "Canonical The Sapphire Key — a hand-curated seed for the narrative domain",

@@ -43,5 +43,9 @@ export const EcosystemQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'form'] as const,
+  engineOwner: 'ecosystem engine custodian',
 };
-registerContract(EcosystemQualityContract as any);
+registerContract(EcosystemQualityContract);

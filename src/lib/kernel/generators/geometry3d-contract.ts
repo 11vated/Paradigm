@@ -76,13 +76,17 @@ export const Geometry3DQualityContract: QualityContract<G3Seed, G3Artifact, G3In
   rate,
   curated: () => CURATED,
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'geometry3d engine custodian',
 };
 
 // Gate registration on FileReader (Three.js GLTFExporter dep). Node has neither
 // FileReader nor document by default; the underlying v3/v4 generator was
 // written for browser execution. Skip registration outside the browser.
 if (typeof globalThis.FileReader !== 'undefined' && typeof globalThis.document !== 'undefined') {
-  registerContract(Geometry3DQualityContract as any);
+  registerContract(Geometry3DQualityContract);
 } else {
   console.warn('[contract] geometry3d: skipping registration — requires browser (FileReader/document missing)');
 }

@@ -38,5 +38,9 @@ export const ClimateQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'field', 'time'] as const,
+  engineOwner: 'climate engine custodian',
 };
-registerContract(ClimateQualityContract as any);
+registerContract(ClimateQualityContract);

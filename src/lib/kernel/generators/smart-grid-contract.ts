@@ -38,5 +38,9 @@ export const SmartGridQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'mind'] as const,
+  engineOwner: 'smart-grid engine custodian',
 };
-registerContract(SmartGridQualityContract as any);
+registerContract(SmartGridQualityContract);

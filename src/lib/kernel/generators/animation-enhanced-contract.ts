@@ -42,5 +42,9 @@ export const AnimationEnhancedQualityContract: QualityContract<S, A, Record<stri
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'time'] as const,
+  engineOwner: 'animation-enhanced engine custodian',
 };
-registerContract(AnimationEnhancedQualityContract as never);
+registerContract(AnimationEnhancedQualityContract);

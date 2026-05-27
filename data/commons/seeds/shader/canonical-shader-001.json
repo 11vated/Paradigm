@@ -3,7 +3,11 @@
   "domain": "shader",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-shader-031",
+      "agent-shader-032"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-shader-fractal-v1",
@@ -21,9 +25,9 @@
     },
     "palette": {
       "value": [
-        0.0,
+        0,
         0.9,
-        1.0
+        1
       ],
       "type": "vector"
     },

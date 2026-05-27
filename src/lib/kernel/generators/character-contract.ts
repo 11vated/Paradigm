@@ -113,7 +113,12 @@ export const CharacterQualityContract: QualityContract<ChSeed, ChArtifact, ChInv
   rate,
   curated: () => CURATED,
   hashArtifact,
+  // Doctrine v2 Part VI.10 — a character is a composition over Form, Motion,
+  // Mind, and Sound strata. This declaration is consumed by the Substrate
+  // Health Dashboard's coverage index.
+  strata: ['form', 'motion', 'mind', 'sound'] as const,
+  engineOwner: 'Form engine custodian (primary); Motion / Mind / Sound collaborators',
 };
 
-registerContract(CharacterQualityContract as any);
+registerContract(CharacterQualityContract);
 

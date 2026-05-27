@@ -38,5 +38,9 @@ export const FilmQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story', 'motion', 'sound'] as const,
+  engineOwner: 'film engine custodian',
 };
-registerContract(FilmQualityContract as any);
+registerContract(FilmQualityContract);

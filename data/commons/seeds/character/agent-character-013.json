@@ -3,7 +3,10 @@
   "domain": "character",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-character-009"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "1df625ef925b04812e2144c50977972c89217b639b10bac762b5bb7dd7a11829",

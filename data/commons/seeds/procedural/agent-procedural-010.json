@@ -9,7 +9,7 @@
   "hash": "387727c344b5388a80de5306a77b15687b0c6bf10c2bda6db06ac3f8c71fea7b",
   "provenance": "generated",
   "id": "agent-procedural-010",
-  "description": "A procedurally generated {biome} landscape",
+  "description": "A procedurally generated tundra landscape",
   "genes": {
     "biome": {
       "value": "tundra",

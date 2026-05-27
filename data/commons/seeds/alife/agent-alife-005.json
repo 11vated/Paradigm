@@ -9,7 +9,7 @@
   "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
   "provenance": "generated",
   "id": "agent-alife-005",
-  "description": "A {rules} alife simulation with {species} species",
+  "description": "A wireworld alife simulation with 8 species",
   "genes": {
     "species": {
       "value": 8,

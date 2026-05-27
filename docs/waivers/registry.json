@@ -1,0 +1,45 @@
+{
+  "_doc": "Doctrine v2 Part XXIII.2 — Waiver Registry. Append-only. Reviewed monthly. Expired waivers fail CI on the next run.",
+  "_schema": {
+    "rule": "string — lint rule id: determinism | canonical-rename | no-evasion",
+    "path": "string — repo-relative file path",
+    "line": "number | undefined — 1-indexed; omit for whole-file waiver (use FILE in inline marker)",
+    "justification": "string — one-sentence reason",
+    "sunset": "string — ISO-8601 date; CI fails the next run after this date if waiver still present",
+    "owner": "string — custodian responsible for closing the waiver"
+  },
+  "waivers": [
+    {
+      "rule": "no-evasion",
+      "path": "src/lib/intelligence/memory/embeddings.ts",
+      "line": 68,
+      "justification": "Dynamic ESM import of @xenova/transformers lacks shipped types; @ts-ignore is the targeted local mitigation until the upstream package ships types or the import is moved behind a typed shim.",
+      "sunset": "2026-08-25",
+      "owner": "Agent Custodian"
+    },
+    {
+      "rule": "no-evasion",
+      "path": "src/lib/intelligence/agent/orchestrator.ts",
+      "line": 244,
+      "justification": "Canon RAG ingest is intentionally best-effort at the orchestrator boundary; swallowing here protects the synchronous user-facing path. Replace with structured warn-log in Phase 9 (Agent stack hardening).",
+      "sunset": "2026-08-25",
+      "owner": "Agent Custodian"
+    },
+    {
+      "rule": "no-evasion",
+      "path": "src/lib/intelligence/llm/openai.ts",
+      "line": 116,
+      "justification": "Catch block is the documented fallback recovery path for the LLM variant generator. Replace with structured logger and typed error in Phase 9.",
+      "sunset": "2026-08-25",
+      "owner": "Agent Custodian"
+    },
+    {
+      "rule": "no-evasion",
+      "path": "src/lib/intelligence/pgvector.ts",
+      "line": 84,
+      "justification": "eslint-disable for console.error is required because the pool-level error handler runs before the structured logger is initialized; bootstrapping path. Replace with deferred logger in Phase 9.",
+      "sunset": "2026-08-25",
+      "owner": "Agent Custodian"
+    }
+  ]
+}

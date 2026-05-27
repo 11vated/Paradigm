@@ -3,6 +3,7 @@
  * Paradigm CLI — Universal Seed Command Line Interface
  *
  * Usage:
+ *   paradigm make "<intent>" [--out dir] [--no-validate] [--dry-run] [--json]
  *   paradigm grow <domain> [--genes key=val...] [--out dir]
  *   paradigm mutate <seed-file> [--budget 0.1]
  *   paradigm breed <seed-a> <seed-b> [--out file]
@@ -31,6 +32,8 @@ import { GsplLexer }        from '../src/lib/kernel/gspl-lexer';
 import { GsplParser }        from '../src/lib/kernel/gspl-parser';
 import { GsplInterpreter }   from '../src/lib/kernel/gspl-interpreter';
 import { GsplModuleResolver } from '../src/lib/kernel/gspl-module-resolver';
+import { makeCli } from './commands/make';
+import { benchCli } from './commands/bench';
 
 const VERSION = '0.1.0';
 const BOLD = '\x1b[1m'; const DIM = '\x1b[2m'; const RESET = '\x1b[0m';
@@ -49,6 +52,7 @@ ${BOLD}USAGE${RESET}
   paradigm <command> [options]
 
 ${BOLD}COMMANDS${RESET}
+  ${CYAN}make${RESET}     "<intent>" [--out dir] [--no-validate] [--dry-run] [--json]  Create a seed
   ${CYAN}grow${RESET}     <domain> [--genes k=v ...] [--out dir]     Grow a seed into a real artifact
   ${CYAN}mutate${RESET}   <seed.json> [--budget 0.1]                  Mutate a seed
   ${CYAN}breed${RESET}    <seed-a.json> <seed-b.json>                 Breed two seeds
@@ -74,6 +78,10 @@ ${BOLD}DOMAINS${RESET}
   circuit, agent, ui, architecture, vehicle, furniture, fashion, +100 more
 
 ${BOLD}EXAMPLES${RESET}
+  ${DIM}# Make from intent (deterministic — no LLM required, MockSeedLLM + heuristic parser)${RESET}
+  paradigm make "a melancholy bard with a lute"
+  paradigm make "fast cyberpunk vehicle" --out ./out --json
+
   ${DIM}# Grow a website${RESET}
   paradigm grow website --genes aesthetic=cyberpunk purpose=portfolio --out ./out
 
@@ -226,6 +234,21 @@ async function cmdPlay(args: string[]) {
   }
 }
 
+async function cmdMake(args: string[]) {
+  try {
+    const { manifest, summary } = await makeCli(args);
+    const wantJson = args.includes('--json');
+    if (wantJson) {
+      console.log(JSON.stringify(manifest, null, 2));
+    } else {
+      log('success', summary);
+    }
+  } catch (e: any) {
+    log('error', e.message);
+    process.exit(1);
+  }
+}
+
 // ─── Entry ────────────────────────────────────────────────────────────────────
 
 const argv = process.argv.slice(2);
@@ -235,6 +258,8 @@ if (argv[0] === '--version' || argv[0] === '-v') { console.log(`Paradigm CLI v${
 const [command, ...rest] = argv;
 
 switch (command) {
+  case 'make':    await cmdMake(rest);    break;
+  case 'bench':   { const r = await benchCli(rest); process.exit(r.exitCode); }
   case 'grow':    await cmdGrow(rest);    break;
   case 'gspl':    await cmdGspl(rest);    break;
   case 'domains': await cmdDomains();     break;

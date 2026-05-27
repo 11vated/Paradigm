@@ -42,5 +42,9 @@ export const Gen3dPrintingQualityContract: QualityContract<S, A, Record<string, 
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: '3d-printing engine custodian',
 };
-registerContract(Gen3dPrintingQualityContract as never);
+registerContract(Gen3dPrintingQualityContract);

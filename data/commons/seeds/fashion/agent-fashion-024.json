@@ -9,7 +9,7 @@
   "hash": "6101e875eb2b08800180e4fcb4e19c245f5218fe824acea8d144e12fa0a11e65",
   "provenance": "generated",
   "id": "agent-fashion-024",
-  "description": "A {fabric} sketch garment for {season}",
+  "description": "A leather sketch garment for summer",
   "genes": {
     "clothingType": {
       "value": "skirt",

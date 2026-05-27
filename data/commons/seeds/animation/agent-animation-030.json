@@ -3,13 +3,16 @@
   "domain": "animation",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-animation-028"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "085b49cb013872e1e7393a8fcdccc64251bec293ec1cdc33fbecbbf502281fb6",
   "provenance": "generated",
   "id": "agent-animation-030",
-  "description": "A {easing} animated {amplitude} motion sequence",
+  "description": "A bounce animated 0.84 motion sequence",
   "genes": {
     "frames": {
       "value": 22,
