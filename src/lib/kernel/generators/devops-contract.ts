@@ -38,5 +38,9 @@ export const DevopsQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['mind'] as const,
+  engineOwner: 'devops engine custodian',
 };
-registerContract(DevopsQualityContract as any);
+registerContract(DevopsQualityContract);

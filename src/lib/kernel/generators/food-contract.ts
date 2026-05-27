@@ -38,5 +38,9 @@ export const FoodQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'culture'] as const,
+  engineOwner: 'food engine custodian',
 };
-registerContract(FoodQualityContract as any);
+registerContract(FoodQualityContract);

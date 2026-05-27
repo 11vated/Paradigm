@@ -38,5 +38,9 @@ export const AlifeQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'mind'] as const,
+  engineOwner: 'alife engine custodian',
 };
-registerContract(AlifeQualityContract as any);
+registerContract(AlifeQualityContract);

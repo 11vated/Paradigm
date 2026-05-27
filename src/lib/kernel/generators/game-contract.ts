@@ -60,5 +60,9 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
   invert: (a) => ({ size: a.html.length, levels: a.levelCount }),
   rate,
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'sound', 'mind', 'story', 'world'] as const,
+  engineOwner: 'game engine custodian',
 };
-registerContract(GameQualityContract as never);
+registerContract(GameQualityContract);

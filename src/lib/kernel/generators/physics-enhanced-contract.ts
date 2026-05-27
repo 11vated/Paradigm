@@ -42,5 +42,9 @@ export const PhysicsEnhancedQualityContract: QualityContract<S, A, Record<string
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'motion'] as const,
+  engineOwner: 'physics-enhanced engine custodian',
 };
-registerContract(PhysicsEnhancedQualityContract as never);
+registerContract(PhysicsEnhancedQualityContract);

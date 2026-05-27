@@ -84,6 +84,10 @@ export const NarrativeQualityContract: QualityContract<NarrativeSeed, NarrativeA
   rate,
   curated: () => CURATED,
   hashArtifact: hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story'] as const,
+  engineOwner: 'narrative engine custodian',
 };
 
-registerContract(NarrativeQualityContract as any);
+registerContract(NarrativeQualityContract);

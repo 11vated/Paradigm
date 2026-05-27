@@ -38,5 +38,9 @@ export const OpticsQualityContract: QualityContract<OpticsSeed, OpticsArtifact, 
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'form'] as const,
+  engineOwner: 'optics engine custodian',
 };
-registerContract(OpticsQualityContract as any);
+registerContract(OpticsQualityContract);

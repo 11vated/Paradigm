@@ -38,5 +38,9 @@ export const CircuitQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'field'] as const,
+  engineOwner: 'circuit engine custodian',
 };
-registerContract(CircuitQualityContract as any);
+registerContract(CircuitQualityContract);

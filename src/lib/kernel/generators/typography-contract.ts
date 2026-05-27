@@ -43,5 +43,9 @@ export const TypographyQualityContract: QualityContract<TypographySeed, Typograp
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'culture'] as const,
+  engineOwner: 'typography engine custodian',
 };
-registerContract(TypographyQualityContract as any);
+registerContract(TypographyQualityContract);

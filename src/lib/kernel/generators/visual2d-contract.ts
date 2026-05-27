@@ -68,6 +68,10 @@ export const Visual2DQualityContract: QualityContract<V2Seed, V2Artifact, V2Inve
   rate,
   curated: () => CURATED,
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'visual2d engine custodian',
 };
 
-registerContract(Visual2DQualityContract as any);
+registerContract(Visual2DQualityContract);

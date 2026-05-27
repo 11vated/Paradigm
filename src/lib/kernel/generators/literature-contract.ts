@@ -38,5 +38,9 @@ export const LiteratureQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story', 'culture'] as const,
+  engineOwner: 'literature engine custodian',
 };
-registerContract(LiteratureQualityContract as any);
+registerContract(LiteratureQualityContract);

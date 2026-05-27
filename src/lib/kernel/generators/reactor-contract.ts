@@ -38,5 +38,9 @@ export const ReactorQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field'] as const,
+  engineOwner: 'reactor engine custodian',
 };
-registerContract(ReactorQualityContract as any);
+registerContract(ReactorQualityContract);

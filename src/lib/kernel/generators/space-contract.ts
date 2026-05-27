@@ -38,5 +38,9 @@ export const SpaceQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'form'] as const,
+  engineOwner: 'space engine custodian',
 };
-registerContract(SpaceQualityContract as any);
+registerContract(SpaceQualityContract);

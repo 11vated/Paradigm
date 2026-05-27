@@ -49,6 +49,10 @@ export const PhysicsQualityContract: QualityContract<PhysicsSeed, PhysicsArtifac
       seed: { $name: 'Soft', genes: { type: 'softbody', elasticity: 0.7, damping: 0.3 } } },
   ],
   hashArtifact: fingerprint,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'motion'] as const,
+  engineOwner: 'physics engine custodian',
 };
 
-registerContract(PhysicsQualityContract as any);
+registerContract(PhysicsQualityContract);

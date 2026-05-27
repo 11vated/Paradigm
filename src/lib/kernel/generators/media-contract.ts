@@ -38,5 +38,9 @@ export const MediaQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['story', 'culture'] as const,
+  engineOwner: 'media engine custodian',
 };
-registerContract(MediaQualityContract as any);
+registerContract(MediaQualityContract);

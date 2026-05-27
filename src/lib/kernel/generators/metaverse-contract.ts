@@ -38,5 +38,9 @@ export const MetaverseQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'form'] as const,
+  engineOwner: 'metaverse engine custodian',
 };
-registerContract(MetaverseQualityContract as any);
+registerContract(MetaverseQualityContract);

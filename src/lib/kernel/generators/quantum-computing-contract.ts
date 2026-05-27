@@ -38,5 +38,9 @@ export const QuantumComputingQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field', 'mind'] as const,
+  engineOwner: 'quantum-computing engine custodian',
 };
-registerContract(QuantumComputingQualityContract as any);
+registerContract(QuantumComputingQualityContract);

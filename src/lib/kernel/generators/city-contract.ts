@@ -38,5 +38,9 @@ export const CityQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['world', 'form', 'culture'] as const,
+  engineOwner: 'city engine custodian',
 };
-registerContract(CityQualityContract as any);
+registerContract(CityQualityContract);

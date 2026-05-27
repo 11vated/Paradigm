@@ -53,5 +53,9 @@ const CURATED = [
 
 export const WebsiteQualityContract: QualityContract<WSSeed, WSArtifact, WSInverted> = {
   domain: 'website', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'website engine custodian',
 };
-registerContract(WebsiteQualityContract as any);
+registerContract(WebsiteQualityContract);

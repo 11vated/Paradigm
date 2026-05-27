@@ -54,5 +54,9 @@ const CURATED = [
 
 export const QuantumQualityContract: QualityContract<QSeed, QArtifact, QInverted> = {
   domain: 'quantum', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['field'] as const,
+  engineOwner: 'quantum engine custodian',
 };
-registerContract(QuantumQualityContract as any);
+registerContract(QuantumQualityContract);

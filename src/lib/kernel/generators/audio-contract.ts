@@ -57,6 +57,10 @@ export const AudioQualityContract: QualityContract<AudioSeed, AudioArtifact, Aud
       seed: { $name: 'Percussive', genes: { tempo: 180, key: 'E', scale: 'minor', timbre: { warmth: 0.3, brightness: 0.8, attack: 0.05, decay: 0.1 } } } },
   ],
   hashArtifact: fingerprint,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['sound'] as const,
+  engineOwner: 'audio engine custodian',
 };
 
-registerContract(AudioQualityContract as any);
+registerContract(AudioQualityContract);

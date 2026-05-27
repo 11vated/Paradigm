@@ -38,5 +38,9 @@ export const AVQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'motion', 'mind'] as const,
+  engineOwner: 'av engine custodian',
 };
-registerContract(AVQualityContract as any);
+registerContract(AVQualityContract);

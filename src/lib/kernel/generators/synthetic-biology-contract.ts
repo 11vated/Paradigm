@@ -38,5 +38,9 @@ export const SyntheticBiologyQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'synthetic-biology engine custodian',
 };
-registerContract(SyntheticBiologyQualityContract as any);
+registerContract(SyntheticBiologyQualityContract);

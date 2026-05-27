@@ -38,5 +38,9 @@ export const EdtechQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['mind', 'culture'] as const,
+  engineOwner: 'edtech engine custodian',
 };
-registerContract(EdtechQualityContract as any);
+registerContract(EdtechQualityContract);

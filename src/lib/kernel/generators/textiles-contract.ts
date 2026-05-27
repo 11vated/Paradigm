@@ -38,5 +38,9 @@ export const TextilesQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form'] as const,
+  engineOwner: 'textiles engine custodian',
 };
-registerContract(TextilesQualityContract as any);
+registerContract(TextilesQualityContract);

@@ -55,5 +55,9 @@ const CURATED = [
 
 export const MoleculeQualityContract: QualityContract<MSeed, MArtifact, MInverted> = {
   domain: 'molecule', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+
+  // Doctrine v2 Part VI.10 — declared strata for the Substrate Conformance Index.
+  strata: ['form', 'field'] as const,
+  engineOwner: 'molecule engine custodian',
 };
-registerContract(MoleculeQualityContract as any);
+registerContract(MoleculeQualityContract);
