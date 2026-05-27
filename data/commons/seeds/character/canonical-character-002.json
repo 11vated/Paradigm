@@ -41,7 +41,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-character-034"
+    ]
   },
   "hash": "a13679b6d6df696ff0cd68801901452420c909a5f06b21dc2826004e4d545b43",
   "description": "Canonical Whisper Mage — a hand-curated seed for the character domain",

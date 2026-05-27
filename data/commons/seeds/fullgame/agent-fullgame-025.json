@@ -3,13 +3,16 @@
   "domain": "fullgame",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-fullgame-020"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
   "provenance": "generated",
   "id": "agent-fullgame-025",
-  "description": "A {theme} cinematic featuring {mechanic} mechanics",
+  "description": "A horror cinematic featuring exploration mechanics",
   "genes": {
     "genre": {
       "value": "adventure",

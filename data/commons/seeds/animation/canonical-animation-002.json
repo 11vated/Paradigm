@@ -32,7 +32,11 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-animation-032",
+      "agent-animation-033"
+    ]
   },
   "hash": "2b9d744c832c51f2ff450f5e7e2541790033eddccdf80c3a81d292c98d6fda0d",
   "description": "Canonical Sakura Drift — a hand-curated seed for the animation domain",

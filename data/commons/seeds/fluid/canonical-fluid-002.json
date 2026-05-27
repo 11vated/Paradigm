@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-fluid-001"
+    ]
   },
   "hash": "canonical-fluid-v2",
   "description": "Canonical Fluid Vortex — a hand-curated seed for the fluid domain",

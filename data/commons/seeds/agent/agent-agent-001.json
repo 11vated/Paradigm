@@ -9,7 +9,7 @@
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-001",
-  "description": "A {memory}-slot memory {persona} assistant",
+  "description": "A 6-slot memory inventor assistant",
   "genes": {
     "persona": {
       "value": "inventor",

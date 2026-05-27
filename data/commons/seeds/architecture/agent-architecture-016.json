@@ -3,13 +3,17 @@
   "domain": "architecture",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-architecture-015",
+      "agent-architecture-013"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
   "provenance": "generated",
   "id": "agent-architecture-016",
-  "description": "A isometric building with {windows} windows",
+  "description": "A isometric building with arched windows",
   "genes": {
     "style": {
       "value": "gothic",

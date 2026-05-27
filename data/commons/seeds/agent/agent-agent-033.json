@@ -9,7 +9,7 @@
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-033",
-  "description": "A {persona} agent with {temperature} temperature",
+  "description": "A diplomat agent with 0.28 temperature",
   "genes": {
     "persona": {
       "value": "diplomat",

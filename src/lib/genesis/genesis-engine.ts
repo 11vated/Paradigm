@@ -72,6 +72,8 @@ export interface GenesisPackage {
   readonly grade: GenesisGrade;
   readonly permalink: string;        // /genesis/<short-hash>
   readonly forkUrl: string;          // /genesis/<short-hash>/fork
+  readonly apiUrl: string;           // /api/genesis/<short-hash>
+  readonly forkApiUrl: string;       // /api/genesis/<short-hash>/fork
 }
 
 export interface GenesisGrade {
@@ -240,6 +242,8 @@ export async function packageGenesis(seed: GenesisSeed, lineage: ReadonlyArray<L
     grade: gradeOf(seed),
     permalink: permalinkOf(seed),
     forkUrl: `${permalinkOf(seed)}/fork`,
+    apiUrl: `/api${permalinkOf(seed)}`,
+    forkApiUrl: `/api${permalinkOf(seed)}/fork`,
   };
 }
 

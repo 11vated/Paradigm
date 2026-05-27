@@ -3,7 +3,11 @@
   "domain": "visual2d",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-visual2d-032",
+      "agent-visual2d-033"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-visual2d-abstract-v1",

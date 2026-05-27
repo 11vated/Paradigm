@@ -28,7 +28,11 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-sprite-032",
+      "agent-sprite-033"
+    ]
   },
   "hash": "f6bd043662ec90d6f559ee39ec7de0db4ce8294a8afa69e4c1e8c7b3dcc70031",
   "description": "Canonical Serpent Wyrm — a hand-curated seed for the sprite domain",

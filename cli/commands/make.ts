@@ -64,7 +64,7 @@ export interface MakeManifest {
   /** Always 0 — kernel clock was frozen for the entire run. */
   createdAt: 0;
   /** Output directory (absolute path). */
-  outDir: string;
+  // outDir: string; // non-canonical side field
 }
 
 /**
@@ -126,7 +126,6 @@ export async function runMake(opts: MakeOptions): Promise<MakeManifest> {
       timings: report.timings,
       cliVersion: CLI_VERSION,
       createdAt: 0,
-      outDir,
     };
 
     if (!opts.dryRun) {
@@ -135,6 +134,13 @@ export async function runMake(opts: MakeOptions): Promise<MakeManifest> {
       writeFileSync(join(outDir, 'seed.json'), stableJsonStringify(seed) + '\n');
       writeFileSync(join(outDir, 'artifact.json'), artifactJson + '\n');
       writeFileSync(join(outDir, 'manifest.json'), stableJsonStringify(manifest) + '\n');
+      const metadata = {
+        schema: 'https://paradigm.ai/schema/maker-metadata/v1',
+        outDir,
+        cliVersion: CLI_VERSION,
+        runtimeNode: process.version,
+      };
+      writeFileSync(join(outDir, 'metadata.json'), stableJsonStringify(metadata) + '\n');
     }
 
     return manifest;
@@ -221,6 +227,9 @@ export async function makeCli(args: string[]): Promise<CliResult> {
 
   const manifest = await runMake({ intent, out, noValidate, dryRun, json });
 
-  const summary = `make: ${manifest.domain.padEnd(12)}  seed=${manifest.seedHash.slice(0, 12)}…  artifact=${manifest.artifactHash.slice(0, 12)}…  → ${manifest.outDir}`;
+  const intentHash = sha256(manifest.intent);
+  const outDir = resolve(out ?? join('dist', 'make', intentHash.slice(0, 16)));
+
+  const summary = `make: ${manifest.domain.padEnd(12)}  seed=${manifest.seedHash.slice(0, 12)}…  artifact=${manifest.artifactHash.slice(0, 12)}…  → ${out ?? 'dist/make/' + manifest.intentHash.slice(0, 16)}`;
   return { manifest, summary };
 }

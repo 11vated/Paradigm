@@ -3,13 +3,16 @@
   "domain": "particle",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-particle-024"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
   "provenance": "generated",
   "id": "agent-particle-027",
-  "description": "A {particleType} {emitter} particle system",
+  "description": "A debris sphere particle system",
   "genes": {
     "emitter": {
       "value": "sphere",

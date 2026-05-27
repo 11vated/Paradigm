@@ -3,13 +3,16 @@
   "domain": "ui",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-ui-016"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "ee080ff60374d1f6f5b7808d2f5be3ddf4d2924afca0062b65a17e324dd02a1d",
   "provenance": "generated",
   "id": "agent-ui-018",
-  "description": "A {theme} themed dashboard layout",
+  "description": "A dark themed dashboard layout",
   "genes": {
     "theme": {
       "value": "dark",

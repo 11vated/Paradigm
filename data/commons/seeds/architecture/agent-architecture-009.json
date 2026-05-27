@@ -3,13 +3,17 @@
   "domain": "architecture",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-architecture-004",
+      "agent-architecture-006"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "0f6caba2eb9b931da963b070e7b709cfc178e16412146b7aa62dbafdab70788d",
   "provenance": "generated",
   "id": "agent-architecture-009",
-  "description": "A {height}m watercolor {roof} roof structure",
+  "description": "A 123.90m watercolor flat roof structure",
   "genes": {
     "style": {
       "value": "futuristic",

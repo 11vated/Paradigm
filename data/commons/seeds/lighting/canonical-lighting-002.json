@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-lighting-001"
+    ]
   },
   "hash": "canonical-lighting-v2",
   "description": "Canonical Watercolor Bloom — a hand-curated seed for the lighting domain",

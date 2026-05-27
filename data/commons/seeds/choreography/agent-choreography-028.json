@@ -3,13 +3,17 @@
   "domain": "choreography",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-choreography-025",
+      "agent-choreography-027"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "764ed17f3caebc293d0056d127ad744def90340d5feecd9a6cc97660e828fb62",
   "provenance": "generated",
   "id": "agent-choreography-028",
-  "description": "A {formation} flat at 0.83 complexity",
+  "description": "A duet flat at 0.83 complexity",
   "genes": {
     "style": {
       "value": "ballet",

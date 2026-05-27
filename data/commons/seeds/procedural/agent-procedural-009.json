@@ -3,13 +3,16 @@
   "domain": "procedural",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-procedural-005"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "387727c344b5388a80de5306a77b15687b0c6bf10c2bda6db06ac3f8c71fea7b",
   "provenance": "generated",
   "id": "agent-procedural-009",
-  "description": "A {octaves}-octave {biome} heightmap",
+  "description": "A 2-octave temperate heightmap",
   "genes": {
     "biome": {
       "value": "temperate",

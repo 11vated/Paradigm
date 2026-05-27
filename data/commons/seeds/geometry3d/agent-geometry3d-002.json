@@ -3,13 +3,16 @@
   "domain": "geometry3d",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-geometry3d-001"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "77d040f70812118e299d46d2d22e805be25b5c46737c21021cd286c4338d2fbf",
   "provenance": "generated",
   "id": "agent-geometry3d-002",
-  "description": "A blues scaled {primitive} mesh model",
+  "description": "A blues scaled octahedron mesh model",
   "genes": {
     "primitive": {
       "value": "octahedron",

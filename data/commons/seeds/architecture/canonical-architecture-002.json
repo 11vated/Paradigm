@@ -29,7 +29,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-architecture-035"
+    ]
   },
   "hash": "fd57d3ab689b24a38496b6f6be6bfeaf015c458a1e2dbf13727690df6e9966be",
   "description": "Canonical Biophilic Pavilion — a hand-curated seed for the architecture domain",

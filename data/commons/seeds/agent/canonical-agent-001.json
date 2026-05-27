@@ -3,7 +3,11 @@
   "domain": "agent",
   "lineage": {
     "operation": "genesis",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-agent-033",
+      "agent-agent-035"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "canonical-agent-architect-v1",

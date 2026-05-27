@@ -9,7 +9,7 @@
   "hash": "72155f14a558ef66fc4862ab52d1567f7da5f4fc0b2c9ef6e45e0073be990c07",
   "provenance": "generated",
   "id": "agent-particle-001",
-  "description": "A {velocity} velocity {particleType} burst",
+  "description": "A 4.10 velocity star burst",
   "genes": {
     "emitter": {
       "value": "ring",

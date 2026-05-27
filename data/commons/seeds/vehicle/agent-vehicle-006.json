@@ -3,13 +3,17 @@
   "domain": "vehicle",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-vehicle-004",
+      "agent-vehicle-002"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
   "provenance": "generated",
   "id": "agent-vehicle-006",
-  "description": "A {propulsion} {vehicleType} with {speed} top speed",
+  "description": "A electric drone with 59.30 top speed",
   "genes": {
     "vehicleType": {
       "value": "drone",

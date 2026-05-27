@@ -120,4 +120,43 @@ export function registerFederationRoutes(app: Express, opts: FederationRouteOpts
       tags: obj.tags,
     });
   });
+
+  app.post('/api/federation/publish', (req: Request, res: Response) => {
+    const body = req.body as Record<string, unknown>;
+    if (!body || typeof body !== 'object' || typeof body.body !== 'object' || body.body === null) {
+      res.status(400).json({ error: 'body field is required and must be an object' });
+      return;
+    }
+    const requestedVisibility = (typeof body.visibility === 'string' ? body.visibility : 'fully-public') as
+      | 'fully-public'
+      | 'mirror-allowed'
+      | 'private';
+    if (!['fully-public', 'mirror-allowed', 'private'].includes(requestedVisibility)) {
+      res.status(400).json({ error: 'visibility must be fully-public | mirror-allowed | private' });
+      return;
+    }
+    if (requestedVisibility !== 'fully-public' && trustLevel(req, opts) !== 'mirror') {
+      res.status(403).json({ error: 'mirror auth required to publish non-public objects' });
+      return;
+    }
+    const parents = Array.isArray(body.parents) ? body.parents.filter((p): p is string => typeof p === 'string') : undefined;
+    const tags = Array.isArray(body.tags) ? body.tags.filter((t): t is string => typeof t === 'string') : undefined;
+    try {
+      const obj = opts.store.put({
+        body: body.body,
+        visibility: requestedVisibility,
+        parents,
+        tags,
+      });
+      res.status(201).json({
+        contentHash: obj.contentHash,
+        visibility: obj.visibility,
+        parents: obj.parents,
+        tags: obj.tags,
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      res.status(500).json({ error: msg });
+    }
+  });
 }

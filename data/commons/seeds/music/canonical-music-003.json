@@ -49,7 +49,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-music-001"
+    ]
   },
   "hash": "7c0870bdac13fe893b2736b6ee03ccd7a3468ca45bdfb3471ec1cbf8c2c245ca",
   "description": "Canonical Digital Sunrise — a hand-curated seed for the music domain",

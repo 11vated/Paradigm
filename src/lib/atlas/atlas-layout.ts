@@ -43,6 +43,7 @@ export interface AtlasPosition {
   readonly domain: string;
   readonly sectorAngle: number;  // radians, center of the domain's sector
   readonly hue: number;     // 0..360, deterministic from domain
+  readonly name?: string;
 }
 
 export interface AtlasEdge {
@@ -154,6 +155,7 @@ export function computeAtlasLayout(nodes: ReadonlyArray<AtlasNode>): AtlasView {
         domain: dom,
         sectorAngle: sectorCenter,
         hue,
+        name: n.name,
       });
       idIndex.set(n.seedId, positions.length - 1);
     }

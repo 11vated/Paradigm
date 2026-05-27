@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-physics-033"
+    ]
   },
   "hash": "8e0fd0de41355f6c860d12e05065e5683411b4de7ef17d268bf4c0e0724e9184",
   "description": "Canonical Fluid Vortex — a hand-curated seed for the physics domain",

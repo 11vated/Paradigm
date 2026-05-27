@@ -9,7 +9,7 @@
   "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
   "provenance": "generated",
   "id": "agent-shader-034",
-  "description": "A {iterations}-step {noise} shader effect",
+  "description": "A 123-step simplex shader effect",
   "genes": {
     "technique": {
       "value": "voronoi",

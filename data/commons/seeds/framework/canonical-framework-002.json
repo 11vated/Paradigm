@@ -115,7 +115,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-framework-001"
+    ]
   },
   "hash": "canonical-framework-v2",
   "description": "Canonical Pixel Artist framework — a hand-curated seed for the framework domain",

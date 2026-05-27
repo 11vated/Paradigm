@@ -83,7 +83,7 @@ describe('Paradigm end-to-end economic loop (Phases 13 + 16 + 17 integrated)', (
     expect(manifest.artifactHash).toMatch(/^[0-9a-f]{64}$/);
 
     // Read back the on-disk seed produced by the maker.
-    const seedFromDisk = JSON.parse(readFileSync(join(manifest.outDir, 'seed.json'), 'utf-8')) as Record<string, unknown>;
+    const seedFromDisk = JSON.parse(readFileSync(join(outDir, 'seed.json'), 'utf-8')) as Record<string, unknown>;
 
     // Wrap the seed for federation: attach author identity + sovereignty signature
     // to the INNER body (which is what gets signed and verified).

@@ -3,13 +3,17 @@
   "domain": "circuit",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-circuit-025",
+      "agent-circuit-021"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "5596ee66d07331198eacc52b97e5aaec0cac32b0d817571b41ff58c5bfbb1924",
   "provenance": "generated",
   "id": "agent-circuit-026",
-  "description": "A {frequency}Hz {circuitType} with {power}W power",
+  "description": "A 809236.60Hz modulator with 91.35W power",
   "genes": {
     "circuitType": {
       "value": "modulator",

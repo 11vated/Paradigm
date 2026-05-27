@@ -3,13 +3,16 @@
   "domain": "typography",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-typography-010"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
   "provenance": "generated",
   "id": "agent-typography-012",
-  "description": "A {width} {contrast} contrast font",
+  "description": "A ultra_condensed 0.40 contrast font",
   "genes": {
     "weight": {
       "value": 900,

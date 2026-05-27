@@ -3,13 +3,17 @@
   "domain": "alife",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-alife-012",
+      "agent-alife-009"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "6e939d78a010bae84b93fdf57f109f5c847d295a34e83f2c847028d0ba1ad5ec",
   "provenance": "generated",
   "id": "agent-alife-014",
-  "description": "A {generations} generation {gridSize} grid ecosystem",
+  "description": "A 636 generation 32 grid ecosystem",
   "genes": {
     "species": {
       "value": 6,

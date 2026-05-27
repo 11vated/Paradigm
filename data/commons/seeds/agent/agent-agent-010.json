@@ -9,7 +9,7 @@
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-010",
-  "description": "A {persona} agent with {temperature} temperature",
+  "description": "A artist agent with 0.92 temperature",
   "genes": {
     "persona": {
       "value": "artist",

@@ -24,7 +24,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-procedural-034"
+    ]
   },
   "hash": "2760b2b3d75ff88410990030040fb5365b4faaf61f92835eacfb33e9cf3c01ac",
   "description": "Canonical Infinite Caverns — a hand-curated seed for the procedural domain",

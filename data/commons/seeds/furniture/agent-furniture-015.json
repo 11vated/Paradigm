@@ -9,7 +9,7 @@
   "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
   "provenance": "generated",
   "id": "agent-furniture-015",
-  "description": "A {dimensions} {furnitureType} with {ergonomics} ergonomic score",
+  "description": "A 1.95,1.65,0.64 desk with 0.73 ergonomic score",
   "genes": {
     "furnitureType": {
       "value": "desk",

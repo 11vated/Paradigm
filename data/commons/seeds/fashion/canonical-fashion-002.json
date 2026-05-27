@@ -32,7 +32,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-fashion-033"
+    ]
   },
   "hash": "4e9321d57a3d96c740b72752a7f4d318901ad205be2df543a56b01d53939fb0b",
   "description": "Canonical Neon Nomad — a hand-curated seed for the fashion domain",

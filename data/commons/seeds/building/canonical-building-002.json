@@ -29,7 +29,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-building-001"
+    ]
   },
   "hash": "canonical-building-v2",
   "description": "Canonical Biophilic Pavilion — a hand-curated seed for the building domain",

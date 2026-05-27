@@ -9,7 +9,7 @@
   "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
   "provenance": "generated",
   "id": "agent-food-021",
-  "description": "A {prepTime}min prep {foodType} dish",
+  "description": "A 40min prep pizza dish",
   "genes": {
     "foodType": {
       "value": "pizza",

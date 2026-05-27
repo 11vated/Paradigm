@@ -3,13 +3,16 @@
   "domain": "agent",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-agent-011"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "48302224872cfeec08df0072742512b214e2a5e9f4303d8affa3be6b553a667c",
   "provenance": "generated",
   "id": "agent-agent-014",
-  "description": "A {reasoning} reasoning agent using {tools} tools",
+  "description": "A 0.28 reasoning agent using optimize tools",
   "genes": {
     "persona": {
       "value": "diplomat",

@@ -3,13 +3,17 @@
   "domain": "furniture",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-furniture-004",
+      "agent-furniture-001"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "46efe62067167b22c8406a12739e2790e540c01a82b50234e395b26b29118622",
   "provenance": "generated",
   "id": "agent-furniture-006",
-  "description": "A watercolor {material} {furnitureType}",
+  "description": "A watercolor steel stool",
   "genes": {
     "furnitureType": {
       "value": "stool",

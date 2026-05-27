@@ -24,7 +24,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-vehicle-035"
+    ]
   },
   "hash": "e3e7d72010e515a5522defb99c7417ea2d5bc6006facd9f33e03459d47d4b43f",
   "description": "Canonical Stellar Cruiser — a hand-curated seed for the vehicle domain",

@@ -29,7 +29,11 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-robotics-001",
+      "agent-robotics-035"
+    ]
   },
   "hash": "6d9515e34889ac051df96397987176ab48cb55877332f530e684caf4feed5647",
   "description": "Canonical Industrial Arm MK4 — a hand-curated seed for the robotics domain",

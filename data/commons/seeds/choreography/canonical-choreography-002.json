@@ -24,7 +24,11 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-choreography-001",
+      "agent-choreography-032"
+    ]
   },
   "hash": "b1b0884bd9369af457de309683d7c749e3818961c3d78b567d22429cab25ead1",
   "description": "Canonical Urban Pulse — a hand-curated seed for the choreography domain",

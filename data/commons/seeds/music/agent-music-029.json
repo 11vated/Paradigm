@@ -3,7 +3,10 @@
   "domain": "music",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-music-027"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "0c2e24ee47181aa7464f4d1a21853631915161addbe157497469e33cbf13793e",

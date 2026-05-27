@@ -3,13 +3,16 @@
   "domain": "typography",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-typography-030"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "519cf5fce18363ca07e969da1155c1ccc7be79aef888819e904ecf2b54ea4734",
   "provenance": "generated",
   "id": "agent-typography-035",
-  "description": "A {weight} weight {serif} serif typeface",
+  "description": "A 300 weight slab serif typeface",
   "genes": {
     "weight": {
       "value": 300,

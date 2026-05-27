@@ -40,7 +40,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-creature-001"
+    ]
   },
   "hash": "canonical-creature-v2",
   "description": "Canonical Whisper Mage — a hand-curated seed for the creature domain",

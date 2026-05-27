@@ -9,7 +9,7 @@
   "hash": "2254195482e6e9f31d6dc0b8ac99bd152572037b2fe143d2e4df72d00b156e35",
   "provenance": "generated",
   "id": "agent-audio-013",
-  "description": "A {waveform} tone at {frequency} Hz",
+  "description": "A sine tone at 220 Hz",
   "genes": {
     "soundType": {
       "value": "musical",

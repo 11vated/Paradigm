@@ -3,13 +3,16 @@
   "domain": "fullgame",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-fullgame-025"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "4a73af8fb7ad53c445d17ce8b412419287c8e5582662231a45845df98198b238",
   "provenance": "generated",
   "id": "agent-fullgame-027",
-  "description": "An action-packed experimental set in {theme} world",
+  "description": "An action-packed experimental set in fantasy world",
   "genes": {
     "genre": {
       "value": "action",

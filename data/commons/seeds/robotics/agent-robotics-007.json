@@ -3,13 +3,17 @@
   "domain": "robotics",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-robotics-005",
+      "agent-robotics-002"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "22974a425f3971f8c66ff686c3c1749512385995675d0d98d7553f10eae25078",
   "provenance": "generated",
   "id": "agent-robotics-007",
-  "description": "A {robotType} with {dof} DOF",
+  "description": "A humanoid with 30 DOF",
   "genes": {
     "robotType": {
       "value": "humanoid",

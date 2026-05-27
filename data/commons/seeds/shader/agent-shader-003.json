@@ -9,7 +9,7 @@
   "hash": "9b9278265bd4ba4a1e35b99e782fc6feff48e8beb54593477b250fa2438bd416",
   "provenance": "generated",
   "id": "agent-shader-003",
-  "description": "A {technique} shader with {iterations} iterations",
+  "description": "A conformal shader with 102 iterations",
   "genes": {
     "technique": {
       "value": "conformal",

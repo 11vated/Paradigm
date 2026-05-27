@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-style-001"
+    ]
   },
   "hash": "canonical-style-v2",
   "description": "Canonical Mountain Solitude — a hand-curated seed for the style domain",

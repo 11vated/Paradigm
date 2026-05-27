@@ -9,7 +9,7 @@
   "hash": "f2369b28d645070ce85f4d92cdbdfbc70faa6ba5d60c220381eb8af5cd97c568",
   "provenance": "generated",
   "id": "agent-food-012",
-  "description": "A {cuisine} {foodType} with {spice} spice level",
+  "description": "A french pie with 0.84 spice level",
   "genes": {
     "foodType": {
       "value": "pie",

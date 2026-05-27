@@ -41,7 +41,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "canonical-character-001"
+    ]
   },
   "hash": "ef985784391fddf2902875d168ee9c0392cd54164108dc2a57169a50c396753d",
   "description": "Canonical Shadow Rogue — a hand-curated seed for the character domain",

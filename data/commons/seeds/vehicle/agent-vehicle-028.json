@@ -9,7 +9,7 @@
   "hash": "fb3f327a7ec3eb1389797e618ecb8e15dc5da972d98b9cb4d22a8cbea3c553d2",
   "provenance": "generated",
   "id": "agent-vehicle-028",
-  "description": "A {mass}kg {vehicleType} with {range}km range",
+  "description": "A 8318.50kg car with 811.10km range",
   "genes": {
     "vehicleType": {
       "value": "car",

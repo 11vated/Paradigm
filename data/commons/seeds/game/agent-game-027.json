@@ -3,13 +3,16 @@
   "domain": "game",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-game-025"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "9bdbd9db9317626159c80ee5dc2486367395da8b70382198b05700ccb93fa082",
   "provenance": "generated",
   "id": "agent-game-027",
-  "description": "A epic with {hasPowerups} powerups",
+  "description": "A epic with true powerups",
   "genes": {
     "genre": {
       "value": "rpg",

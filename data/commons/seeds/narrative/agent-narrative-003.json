@@ -3,13 +3,16 @@
   "domain": "narrative",
   "lineage": {
     "operation": "agent_generated",
-    "generation": 1
+    "generation": 1,
+    "parents": [
+      "agent-narrative-001"
+    ]
   },
   "schema": "https://paradigm.ai/schema/canonical-seed/v1",
   "hash": "24cd953299d304d6747641eb4789c535b631104520c393b7b949701f40b2fc74",
   "provenance": "generated",
   "id": "agent-narrative-003",
-  "description": "A {structure} narrative in the folk genre",
+  "description": "A linear narrative in the folk genre",
   "genes": {
     "genre": {
       "value": "romance",

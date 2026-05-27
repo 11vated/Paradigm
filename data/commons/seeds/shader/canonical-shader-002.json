@@ -28,7 +28,10 @@
   },
   "lineage": {
     "operation": "curated",
-    "generation": 0
+    "generation": 0,
+    "parents": [
+      "agent-shader-035"
+    ]
   },
   "hash": "66066bb9139103b69c108a7917dadbcc23f1214e459573311ac1dd20a3d4b26b",
   "description": "Canonical Watercolor Bloom — a hand-curated seed for the shader domain",
