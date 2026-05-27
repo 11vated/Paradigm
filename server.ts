@@ -24,6 +24,8 @@ import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
 import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
+import { registerFederationRoutes } from './src/server/routes/federation.js';
+import { createInMemoryPeerStore } from './src/lib/intelligence/federation/peer-store.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -416,6 +418,19 @@ async function startServer() {
 
   registerEvolveRoutes(app, { optionalAuth, evolutionJobs });
   registerSubstrateHealthRoutes(app);
+
+  // Federation v1 — Doctrine v2 Part VIII.16. Off in production by default;
+  // enable explicitly with PARADIGM_FEDERATION_ENABLED=1.
+  if (process.env.PARADIGM_FEDERATION_ENABLED === '1' || process.env.NODE_ENV !== 'production') {
+    const federationStore = createInMemoryPeerStore();
+    registerFederationRoutes(app, {
+      store: federationStore,
+      peerId: process.env.PARADIGM_PEER_ID ?? 'self.paradigm',
+      publicKey: process.env.PARADIGM_PEER_PUBLIC_KEY ?? '',
+      mirrorToken: process.env.PARADIGM_FEDERATION_MIRROR_TOKEN ?? undefined,
+    });
+    console.log('[federation] v1 routes registered (peer=' + (process.env.PARADIGM_PEER_ID ?? 'self.paradigm') + ')');
+  }
 
   registerQftPipelineRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, QftSimulateSchema, PipelineExecuteSchema, QFTEngine, ParadigmPipeline, crypto: crypto as any, log });
 
