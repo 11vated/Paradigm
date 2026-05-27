@@ -15,6 +15,10 @@
 
 import { marchingCubes } from './marching_cubes.js';
 
+function clamp01(n: number): number {
+  return Math.max(0, Math.min(1, Number.isFinite(n) ? n : 0));
+}
+
 interface MeshData {
   vertices: number[];
   indices: number[];
@@ -116,29 +120,67 @@ function generateCylinder(radius: number, height: number, segments: number = 16)
 // ─── Domain-Specific Generators ──────────────────────────────────────────────
 
 function generateCharacterMesh(artifact: any): MeshData {
-  const bodyW = artifact.visual?.body_width || 0.5;
-  const bodyH = artifact.visual?.body_height || 0.8;
+  const strength = clamp01(artifact.strength ?? 0.5);
+  const agility = clamp01(artifact.agility ?? 0.5);
+  const intelligence = clamp01(artifact.intelligence ?? 0.5);
+  const palette = Array.isArray(artifact.palette) ? artifact.palette : [0.6, 0.5, 0.45];
+
+  // Proportions
   const sizeFactor = artifact.visual?.size_factor || 1;
+  const heightUnit = 1.7 * sizeFactor;
+  const shoulderWidth = (0.34 + 0.1 * strength) * sizeFactor;
+  const torsoH = 0.34 * heightUnit;
+  const headR = 0.10 * heightUnit;
+  const legH = 0.45 * heightUnit * (0.95 + 0.05 * agility);
+  const legR = 0.06 * heightUnit;
+  const armL = 0.38 * heightUnit;
+  const armR = 0.05 * heightUnit;
 
-  // Torso
-  const torso = generateBox(bodyW * sizeFactor, bodyH * sizeFactor * 0.5, bodyW * 0.6 * sizeFactor);
+  // Center of torso at y = legH + torsoH/2 (above origin's "ground")
+  const torsoCY = legH + torsoH / 2;
+
+  const torso = generateBox(shoulderWidth, torsoH, shoulderWidth * 0.55);
+  // Skin tone bias: brighter for higher intelligence
+  const skinR = clamp01(palette[0] + intelligence * 0.1);
+  const skinG = clamp01(palette[1] + intelligence * 0.1);
+  const skinB = clamp01(palette[2] + intelligence * 0.1);
+  const torsoColored = applyColor(torso, skinR, skinG, skinB);
+  for (let i = 1; i < torsoColored.vertices.length; i += 3) torsoColored.vertices[i] += torsoCY;
+
   // Head
-  const head = generateSphere(bodyW * 0.35 * sizeFactor, 8);
-  // Offset head upward
-  for (let i = 1; i < head.vertices.length; i += 3) {
-    head.vertices[i] += bodyH * sizeFactor * 0.45;
-  }
-  // Legs (two cylinders)
-  const legL = generateCylinder(bodyW * 0.12 * sizeFactor, bodyH * sizeFactor * 0.5, 6);
-  const legR = generateCylinder(bodyW * 0.12 * sizeFactor, bodyH * sizeFactor * 0.5, 6);
-  for (let i = 0; i < legL.vertices.length; i += 3) {
-    legL.vertices[i] -= bodyW * 0.2 * sizeFactor;
-    legL.vertices[i + 1] -= bodyH * sizeFactor * 0.5;
-    legR.vertices[i] += bodyW * 0.2 * sizeFactor;
-    legR.vertices[i + 1] -= bodyH * sizeFactor * 0.5;
-  }
+  const head = generateSphere(headR, 12);
+  const headColored = applyColor(head, clamp01(skinR * 1.08), clamp01(skinG * 1.05), clamp01(skinB * 1.05));
+  for (let i = 1; i < headColored.vertices.length; i += 3) headColored.vertices[i] += torsoCY + torsoH / 2 + headR;
 
-  return combineMeshes([torso, head, legL, legR]);
+  // Legs — two cylinders, planted at ground
+  const legColor = [clamp01(palette[0] * 0.5), clamp01(palette[1] * 0.5), clamp01(palette[2] * 0.5)];
+  const mkLeg = (xOffset: number) => {
+    const leg = generateCylinder(legR, legH, 12);
+    const colored = applyColor(leg, legColor[0], legColor[1], legColor[2]);
+    for (let i = 0; i < colored.vertices.length; i += 3) {
+      colored.vertices[i] += xOffset;
+      colored.vertices[i + 1] += legH / 2;
+    }
+    return colored;
+  };
+  const legLM = mkLeg(-shoulderWidth * 0.22);
+  const legRM = mkLeg(shoulderWidth * 0.22);
+
+  // Arms — two cylinders, hanging from shoulders, rotated slightly outward
+  const armColor = [clamp01(palette[0] * 0.85), clamp01(palette[1] * 0.85), clamp01(palette[2] * 0.85)];
+  const mkArm = (xOffset: number) => {
+    const arm = generateCylinder(armR, armL, 10);
+    const colored = applyColor(arm, armColor[0], armColor[1], armColor[2]);
+    for (let i = 0; i < colored.vertices.length; i += 3) {
+      colored.vertices[i] += xOffset;
+      colored.vertices[i + 1] += torsoCY + torsoH / 2 - armL / 2;
+    }
+    return colored;
+  };
+  const armLM = mkArm(-shoulderWidth / 2 - armR);
+  const armRM = mkArm(shoulderWidth / 2 + armR);
+
+  return combineMeshes([torsoColored, headColored, legLM, legRM, armLM, armRM]);
 }
 
 function generateArchitectureMesh(artifact: any): MeshData {

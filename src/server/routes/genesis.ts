@@ -13,9 +13,9 @@ import type { Express, Request, Response } from 'express';
 import {
   genesisFromToken,
   packageGenesis,
-  permalinkOf,
   genesisSelfCheck,
   newSessionToken,
+  permalinkOf,
   type GenesisPackage,
   type GenesisSeed,
 } from '../../lib/genesis/genesis-engine.js';
