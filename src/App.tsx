@@ -12,6 +12,7 @@ import SubstratePage from '@/pages/SubstratePage';
 import ExplorePage from '@/pages/ExplorePage';
 import GenesisPage from '@/pages/GenesisPage';
 import AtlasPage from '@/pages/AtlasPage';
+import CivilisationPage from '@/pages/CivilisationPage';
 
 function App() {
   return (
@@ -22,7 +23,8 @@ function App() {
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/genesis" element={<GenesisPage />} />
         <Route path="/genesis/:shortHash" element={<GenesisPage />} />
-        <Route path="atlas" element={<AtlasPage />} />
+        <Route path="/atlas" element={<AtlasPage />} />
+        <Route path="/civilisation" element={<CivilisationPage />} />
         <Route path="/*" element={<Root />} />
       </Routes>
     </BrowserRouter>

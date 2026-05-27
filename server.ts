@@ -31,6 +31,7 @@ import { registerSeedCostRoutes } from './src/server/routes/seed-cost.js';
 import { registerGenesisRoutes } from './src/server/routes/genesis.js';
 import { registerDividendRoutes } from './src/server/routes/dividend.js';
 import { registerAtlasRoutes } from './src/server/routes/atlas.js';
+import { registerCivilisationRoutes } from './src/server/routes/civilisation.js';
 import { registerFederationRoutes } from './src/server/routes/federation.js';
 import { createInMemoryPeerStore } from './src/lib/intelligence/federation/peer-store.js';
 initServerPolyfills();
@@ -430,8 +431,8 @@ async function startServer() {
   registerLicenseRoutes(app);
   registerSeedCostRoutes(app);
   registerGenesisRoutes(app);
-  registerDividendRoutes(app);
   registerAtlasRoutes(app);
+  registerCivilisationRoutes(app);
 
   // Federation v1 — Doctrine v2 Part VIII.16. Off in production by default;
   // enable explicitly with PARADIGM_FEDERATION_ENABLED=1.
