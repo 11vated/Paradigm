@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "fx",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-fx-particle-v1",
+  "provenance": "genesis",
+  "id": "canonical-fx-001",
+  "description": "Canonical Genesis Particle System - foundational seed for the fx domain",
+  "genes": {
+    "effectType": {
+      "value": "particle",
+      "type": "categorical"
+    },
+    "intensity": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 2.5,
+      "type": "scalar"
+    },
+    "count": {
+      "value": 500,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.9
+  },
+  "name": "Genesis Particle System",
+  "tags": [
+    "canonical",
+    "fx",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00Z",
+  "author": "human"
+}

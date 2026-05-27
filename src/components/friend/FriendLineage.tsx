@@ -75,8 +75,11 @@ export const FriendLineage: React.FC<FriendLineageProps> = ({ rootId, onNavigate
           <section>
             <div className="text-neutral-500 mb-1">Self</div>
             <div
+              role="button"
+              tabIndex={0}
               className="flex items-center gap-1 py-0.5 px-1 rounded bg-neutral-900 border border-accent/30 cursor-pointer"
               onClick={() => data.self.id && onNavigate?.(data.self.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); data.self.id && onNavigate?.(data.self.id); } }}
             >
               <span className="text-blue-400">◆</span>
               <span className="truncate flex-1">{data.self.name}</span>
@@ -146,10 +149,13 @@ const NodeRow: React.FC<NodeRowProps> = ({ node, byId, depth, onClick }) => {
   return (
     <div>
       <div
-        className="flex items-center gap-1 py-0.5 px-1 rounded cursor-pointer hover:bg-neutral-900"
-        style={{ paddingLeft: `${depth * 12 + 4}px` }}
-        onClick={() => node.id && onClick?.(node.id)}
-      >
+          role="button"
+          tabIndex={0}
+          className="flex items-center gap-1 py-0.5 px-1 rounded cursor-pointer hover:bg-neutral-900"
+          style={{ paddingLeft: `${depth * 12 + 4}px` }}
+          onClick={() => node.id && onClick?.(node.id)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); node.id && onClick?.(node.id); } }}
+        >
         <span className={opColor}>{opGlyph}</span>
         <span className="truncate flex-1">{node.name}</span>
         <span className="text-neutral-700 text-[9px]">gen {node.generation}</span>
@@ -175,8 +181,11 @@ const AncestorChain: React.FC<{ ancestors: LineageNode[]; onClick?: (id: string)
       return (
         <div
           key={a.id}
+          role="button"
+          tabIndex={0}
           className="flex items-center gap-1 py-0.5 px-1 rounded cursor-pointer hover:bg-neutral-900 opacity-70"
           onClick={() => a.id && onClick?.(a.id)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.id && onClick?.(a.id); } }}
         >
           <span className={opColor}>{opGlyph}</span>
           <span className="truncate flex-1">{a.name}</span>

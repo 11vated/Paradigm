@@ -28,6 +28,7 @@ import LineageTree from '@/components/studio/LineageTree';
 import TopologyViewer from '@/components/studio/TopologyViewer';
 import PromptBar from '@/components/studio/PromptBar';
 import { EvolutionTheater } from '@/components/studio/EvolutionUI';
+import { MapElitesPanel } from '@/components/studio/MapElitesPanel';
 import { SeedGlyph } from '@/components/shell/SeedGlyph';
 import { GlassPanel } from '@/components/shell/GlassPanel';
 import { HelixDivider } from '@/components/shell/HelixDivider';
@@ -74,6 +75,7 @@ export function StudioPage() {
   const [showHelp, setShowHelp] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [promptText, setPromptText] = useState('');
+  const [evolveView, setEvolveView] = useState<'ga' | 'map-elites'>('ga');
 
   const gallery = useSeedStore((s: any) => s.gallery);
   const fetchSeeds = useSeedStore((s: any) => s.fetchSeeds);
@@ -329,6 +331,7 @@ export function StudioPage() {
               <TooltipTrigger asChild>
                 <button
                   onClick={() => setActivePanel(tab.id)}
+                  aria-label={tab.label}
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     width: 36, height: 36, padding: 0, border: 'none', borderRadius: 8,
@@ -338,7 +341,7 @@ export function StudioPage() {
                     transition: 'all var(--p-dur-fast) var(--p-ease-organic)',
                   }}
                 >
-                  <tab.Icon size={16} />
+                  <tab.Icon size={16} aria-hidden="true" />
                   {isActive && (
                     <span
                       style={{
@@ -501,6 +504,7 @@ export function StudioPage() {
                   </span>
                   <button
                     onClick={() => setActiveBottom(null)}
+                    aria-label="Close panel"
                     style={{
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       width: 24, height: 24, padding: 0, border: 'none', borderRadius: 4,
@@ -516,15 +520,47 @@ export function StudioPage() {
                 <div style={{ height: 'calc(100% - 37px)', overflow: 'auto' }}>
                   {activeBottom === 'compose' && <CompositionPanel seed={selectedSeed} />}
                   {activeBottom === 'evolve' && (
-                    <div style={{ display: 'flex', gap: 8, padding: 8 }}>
-                      <div style={{ flex: 1 }}><EvolvePanel seed={selectedSeed} /></div>
-                      <div style={{ flex: 1 }}>
-                        <EvolutionTheater
-                          config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
-                          onEvolve={() => {}}
-                          onSeedSelect={handleSelectSeed}
-                        />
+                    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+                      <div style={{ display: 'flex', gap: 4, padding: '6px 12px', borderBottom: '1px solid var(--p-glass-border)' }}>
+                        <button
+                          onClick={() => setEvolveView('ga')}
+                          style={{
+                            padding: '4px 12px', border: 'none', borderRadius: 6, cursor: 'pointer',
+                            background: evolveView === 'ga' ? 'rgba(0, 229, 255, 0.08)' : 'transparent',
+                            color: evolveView === 'ga' ? 'var(--p-cyan)' : 'var(--p-text-3)',
+                            fontSize: 11, fontFamily: 'var(--p-font-mono)',
+                          }}
+                        >GA</button>
+                        <button
+                          onClick={() => setEvolveView('map-elites')}
+                          style={{
+                            padding: '4px 12px', border: 'none', borderRadius: 6, cursor: 'pointer',
+                            background: evolveView === 'map-elites' ? 'rgba(0, 229, 255, 0.08)' : 'transparent',
+                            color: evolveView === 'map-elites' ? 'var(--p-cyan)' : 'var(--p-text-3)',
+                            fontSize: 11, fontFamily: 'var(--p-font-mono)',
+                          }}
+                        >MAP-Elites</button>
                       </div>
+                      {evolveView === 'ga' ? (
+                        <div style={{ display: 'flex', gap: 8, padding: 8, flex: 1, overflow: 'auto' }}>
+                          <div style={{ flex: 1 }}><EvolvePanel seed={selectedSeed} /></div>
+                          <div style={{ flex: 1 }}>
+                            <EvolutionTheater
+                              config={{ algorithm: 'MAP_ELITES', generations: 100, populationSize: 50, mutationRate: 0.15, elitism: 2 }}
+                              onEvolve={() => {}}
+                              onSeedSelect={handleSelectSeed}
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ flex: 1, overflow: 'hidden' }}>
+                          <MapElitesPanel
+                            domain={selectedSeed?.$domain ?? 'character'}
+                            seed={selectedSeed}
+                            onSelectSeed={handleSelectSeed}
+                          />
+                        </div>
+                      )}
                     </div>
                   )}
                   {activeBottom === 'breed' && <BreedPanel gallery={seeds} onBred={handleSelectSeed} />}
@@ -589,6 +625,7 @@ export function StudioPage() {
                 </h3>
                 <button
                   onClick={() => setShowHelp(false)}
+                  aria-label="Close shortcuts"
                   style={{
                     background: 'none', border: 'none', cursor: 'pointer',
                     color: 'var(--p-text-3)', padding: 4,

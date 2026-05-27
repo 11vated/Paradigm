@@ -43,6 +43,10 @@ export class ExemplarMemory {
     return scored.slice(0, topK).map(s => s.entry);
   }
 
+  list(): ExemplarEntry[] {
+    return [...this.exemplars];
+  }
+
   findByDomain(domain: string): ExemplarEntry[] {
     return this.exemplars.filter(e => e.domain === domain);
   }

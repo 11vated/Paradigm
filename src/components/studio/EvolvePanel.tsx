@@ -27,7 +27,7 @@ const EvolvePanel = React.memo(function EvolvePanel({ seed, onEvolved }: { seed:
   return (
     <div className="flex flex-col gap-5 p-1" data-testid="evolve-panel">
       {!seed ? (
-        <p className="font-mono text-[10px] text-[#555] p-3 border border-[#1a1a1a] rounded-sm bg-[#050505] text-center">
+        <p className="font-mono text-[10px] text-[#999] p-3 border border-[#1a1a1a] rounded-sm bg-[#050505] text-center">
           No seed selected for evolution.
         </p>
       ) : (

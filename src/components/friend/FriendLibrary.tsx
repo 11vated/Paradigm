@@ -69,7 +69,7 @@ export const FriendLibrary: React.FC<FriendLibraryProps> = ({
             onClick={() => setSortBy('name')}
             className={`px-1.5 py-0.5 rounded ${sortBy === 'name' ? 'bg-neutral-800 text-white' : 'text-neutral-500 hover:text-white'}`}
           >name</button>
-          <button onClick={refresh} className="px-1.5 py-0.5 text-neutral-500 hover:text-white">↻</button>
+          <button onClick={refresh} aria-label="Refresh friends" className="px-1.5 py-0.5 text-neutral-500 hover:text-white">↻</button>
         </div>
       </div>
 
@@ -161,6 +161,9 @@ const FriendCard: React.FC<CardProps> = ({
       onDragLeave={() => setDropTarget(false)}
       onDrop={handleDrop}
       onClick={onSelect}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(); } }}
+      role="button"
+      tabIndex={0}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className={[
@@ -189,6 +192,7 @@ const FriendCard: React.FC<CardProps> = ({
       {hover && (
         <button
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
+          aria-label={`Delete ${friend.name}`}
           className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-neutral-800 text-neutral-400 hover:bg-red-900 hover:text-red-100 text-[9px] font-mono flex items-center justify-center"
           title="delete"
         >×</button>

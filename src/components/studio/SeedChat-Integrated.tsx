@@ -153,6 +153,7 @@ export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArt
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           style={styles.apiInput}
+          aria-label="API key"
         />
       </div>
 
@@ -210,6 +211,7 @@ export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArt
           style={styles.input}
           rows={2}
           disabled={loadingStep !== 'idle'}
+          aria-label="Generation prompt"
         />
         <button
           onClick={sendMessage}

@@ -35,9 +35,9 @@ const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedI
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
-                <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">{seed.$domain}</span>
+                <span className="font-mono text-[9px] text-[#999] uppercase tracking-widest">{seed.$domain}</span>
               </div>
-              <span className="font-mono text-[9px] text-[#444]">G{seed.$lineage?.generation || 0}</span>
+              <span className="font-mono text-[9px] text-[#888]">G{seed.$lineage?.generation || 0}</span>
             </div>
             
             <div className="font-mono text-[11px] text-[#d4d4d4] truncate mb-3 w-full">
@@ -45,7 +45,7 @@ const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedI
             </div>
             
             <div className="flex items-center gap-2 w-full">
-              <span className="font-mono text-[8px] text-[#555]">FIT</span>
+              <span className="font-mono text-[8px] text-[#888]">FIT</span>
               <div className="flex-1 h-[2px] bg-[#222] rounded-full overflow-hidden">
                 <div className="h-full bg-primary" style={{ width: `${fitness * 100}%` }} />
               </div>

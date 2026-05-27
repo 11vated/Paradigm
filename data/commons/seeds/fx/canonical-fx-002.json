@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "fx",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-fx-distortion-v1",
+  "provenance": "genesis",
+  "id": "canonical-fx-002",
+  "description": "Canonical Genesis Distortion Effect - warp and transform seed for the fx domain",
+  "genes": {
+    "effectType": {
+      "value": "distortion",
+      "type": "categorical"
+    },
+    "intensity": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "duration": {
+      "value": 1.8,
+      "type": "scalar"
+    },
+    "warpFactor": {
+      "value": 0.3,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.88
+  },
+  "name": "Genesis Distortion",
+  "tags": [
+    "canonical",
+    "fx",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00Z",
+  "author": "human"
+}

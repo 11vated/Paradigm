@@ -104,15 +104,15 @@ export default function DaoPage() {
         {showForm && (
           <div className="border border-neutral-800 rounded p-3 space-y-2 bg-neutral-900/50">
             <input placeholder="Title" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600" />
+              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600" aria-label="Proposal title" />
             <input placeholder="Description" value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600" />
+              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600" aria-label="Proposal description" />
             <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}
               className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white">
               {['governance', 'treasury', 'gene_type', 'domain', 'royalty_curve', 'substrate'].map(t => <option key={t} value={t}>{t}</option>)}
             </select>
             <textarea placeholder='Payload JSON' value={form.payload} onChange={e => setForm(f => ({ ...f, payload: e.target.value }))}
-              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600 h-16" />
+              className="w-full bg-neutral-800 border border-neutral-700 rounded px-2 py-1 text-xs font-mono text-white placeholder-neutral-600 h-16" aria-label="Proposal payload" />
             <div className="flex gap-2">
               <button onClick={handlePropose}
                 className="px-3 py-1 text-xs font-mono bg-accent/20 text-accent border border-accent/30 rounded hover:bg-accent/30">Submit</button>

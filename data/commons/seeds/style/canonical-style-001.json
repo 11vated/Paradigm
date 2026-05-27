@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "style",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-style-v1",
+  "provenance": "genesis",
+  "id": "canonical-style-001",
+  "description": "Canonical Genesis Abstract Composition — a foundational seed for the style domain",
+  "genes": {
+    "style": {
+      "value": "abstract",
+      "type": "categorical"
+    },
+    "composition": {
+      "value": "golden_ratio",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.95,
+        0.45,
+        0.12
+      ],
+      "type": "vector"
+    },
+    "complexity": {
+      "value": 0.72,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Abstract Composition",
+  "tags": [
+    "canonical",
+    "style",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

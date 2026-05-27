@@ -1,0 +1,133 @@
+{
+  "tags": [
+    "canonical",
+    "framework",
+    "genesis"
+  ],
+  "genes": {
+    "tool_permissions": {
+      "value": {
+        "web_browse": false,
+        "file_write": true,
+        "fork_agent": false,
+        "delegate": false
+      },
+      "type": "struct"
+    },
+    "persona": {
+      "value": "artist",
+      "type": "categorical"
+    },
+    "verbosity": {
+      "value": 0.3,
+      "type": "scalar"
+    },
+    "exploration_rate": {
+      "value": 0.8,
+      "type": "scalar"
+    },
+    "temperature": {
+      "value": 0.7,
+      "type": "scalar"
+    },
+    "confidence_threshold": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "domain_focus": {
+      "value": [
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0,
+        0,
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "type": "vector"
+    },
+    "max_reasoning_steps": {
+      "value": 0.3,
+      "type": "scalar"
+    },
+    "reasoning_depth": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "name": {
+      "value": "Pixel",
+      "type": "categorical"
+    },
+    "creativity_bias": {
+      "value": 0.9,
+      "type": "scalar"
+    },
+    "context_window": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "autonomy": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "gene_expertise": {
+      "value": [
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.3,
+        0,
+        0,
+        0.1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "type": "vector"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "canonical-framework-v2",
+  "description": "Canonical Pixel Artist framework — a hand-curated seed for the framework domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Pixel Artist Framework",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "framework",
+  "provenance": "genesis",
+  "id": "canonical-framework-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

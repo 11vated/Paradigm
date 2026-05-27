@@ -1,4 +1,4 @@
-# Paradigm Absolute
+# Paradigm Absolute v1.0.0
 
 Paradigm Absolute is a deterministic synthetic evolution operating system.
 
@@ -58,28 +58,33 @@ npm run test               # all suites pass
 
 ---
 
-## Current State
+## Current State — v1.0.0 Release
 
-Verified locally on May 18, 2026:
+Verified May 26, 2026. All 4 phases complete (34/34 tasks).
 
 | Area | Status |
 |---|---:|
-| TypeScript | 0 errors |
+| TypeScript | **0 errors** |
 | Production build | passing, no warnings |
-| Test suite | 995 passing tests across 59 files |
-| Source surface | ~554 source files under `src` |
-| Source size | ~286k source lines under `src` |
-| TypeScript generators | 196 generator files |
-| Canonical domains | 27 |
-| Industrial/domain generators | 100+ |
+| Test suite | **1497 passing tests** across 108 files |
+| Source surface | ~523 source files under `src` |
+| Source size | ~95k source lines (after Phase 0 cleanup: -288K dead lines) |
+| Domain engines | 27 canonical |
+| Cross-domain functors | 252 |
+| C2PA provenance | Wired into all 10 export handlers |
+| WCAG 2.1 AA | ~30 accessibility fixes across 14 files |
+| Quality contracts | 7/7 Tier-1 generators green |
+| Golden hashes | 30/30 deterministic |
 | Runtime stack | TypeScript, React 19, Express, Three.js, WebGPU, Solidity |
 
-Validation commands:
+Validation:
 
 ```bash
-npm run typecheck
-npm run build
-npm run test
+npm run typecheck          # 0 errors
+npm run determinism:check  # 0 hard violations
+npm run quality:contract   # 7/7 contracts green
+npm run golden:verify      # 30/30 hashes match
+npm test                   # 1497/1497 pass
 ```
 
 ## What We Have
@@ -233,19 +238,40 @@ npx playwright test tests/visual/regressions.spec.ts
 - For browser-facing code, avoid static imports of Node-only modules such as `fs`, `crypto`, `zlib`, or stream-based writers.
 - Use the existing generator and pipeline patterns before adding new abstractions.
 
-## Recent Stabilization
+## Phase 4 — Polish & Launch (May 2026)
 
-The current stabilization pass completed the TypeScript and build gates and fixed the remaining full-suite issue:
+Phase 4 delivered production-readiness across 8 workstreams:
 
-- Resolved generator type mismatches caused by `unknown` gene values at the pipeline boundary
-- Added literal-union guards in selected generators
-- Fixed CMA-ES covariance matrix typing
-- Fixed Geometry3D V4 parameter typing and RNG call typo
-- Fixed Music V4 chord progression shape handling
-- Made `.gseed` compression browser-safe while preserving Node compression behavior
-- Removed build warnings from conflicting dynamic/static imports
-- Replaced fragile stream-based WAV writing in simple audio generators with deterministic synchronous WAV encoding
-- Verified `npm run typecheck`, `npm run build`, and `npm run test`
+- **C2PA compliance** — `X-C2PA-Manifest` header on all 10 file export routes + embedded in `.gseed` binary
+- **WCAG 2.1 AA** — ~30 accessibility fixes: aria-labels, keyboard navigation, contrast, role alerts, decorative icon handling
+- **Observability** — Enhanced `/api/metrics` with latency quantiles (p50/p95/p99) and cache metrics. Full OTEL audit at `docs/observability-audit.md`
+- **Load testing** — `scripts/load-test.k6.js` with staged VU ramp for health, CRUD, and metadata endpoints
+- **Security audit** — All OWASP Top 10 controls verified. Dev-only vulns tracked in `docs/security-known-issues.md`
+- **DAO Phase 3** — 5 governance contracts compile, 5 API endpoints wired, dual-mode provider (off-chain + on-chain Governor)
+- **Documentation** — `CHANGELOG.md`, security audit, observability audit, known issues
+- **Release v1.0.0** — Package version bumped, all 1497 tests passing, 0 tsc errors
+
+## Repository Map
+
+```text
+src/lib/kernel/             Core kernel, RNG, GSPL, engine routing, provenance
+src/lib/kernel/generators/  Domain generators and artifact emitters
+src/lib/evolution/          Evolution and quality-diversity algorithms
+src/lib/friend/             Sovereign companion (6-gene, ECDSA, breeding)
+src/lib/world/              Era/biome/conflict seed + quest composition
+src/lib/game/               Quest→scene graph with 5-axis oracle
+src/lib/sovereignty/        Canonicalization, signatures, ownership checks
+src/lib/asset_pipeline/     Asset synthesis and export utilities
+src/server/routes/          21 modular route files
+src/components/studio/      React Studio components and viewports
+src/pages/                  App pages
+server.ts                   Express backend (~790 lines)
+contracts/                  Solidity contracts (ParaToken, SeedNFT, Governor, etc.)
+tests/                      108 test files (1497 tests)
+data/                       Seeds, commons libraries, artifacts
+docs/                       CHANGELOG, audit reports, language reference
+scripts/                    CI helpers, smoke test, load test, golden hash tools
+```
 
 ## Smart Contracts
 

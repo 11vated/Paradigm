@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "lighting",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-lighting-v1",
+  "provenance": "genesis",
+  "id": "canonical-lighting-001",
+  "description": "Canonical Genesis Fractal lighting — a foundational seed for the lighting domain",
+  "genes": {
+    "shaderType": {
+      "value": "fragment",
+      "type": "categorical"
+    },
+    "technique": {
+      "value": "raymarching",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0,
+        0.9,
+        1
+      ],
+      "type": "vector"
+    },
+    "complexity": {
+      "value": 0.8,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.92
+  },
+  "name": "Genesis Fractal Lighting",
+  "tags": [
+    "canonical",
+    "lighting",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

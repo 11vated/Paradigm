@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "domain": "algorithm",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-algorithm-v1",
+  "provenance": "genesis",
+  "id": "canonical-algorithm-001",
+  "description": "Canonical Genesis Mountain Range — a foundational seed for the algorithm domain",
+  "genes": {
+    "biome": {
+      "value": "alpine",
+      "type": "categorical"
+    },
+    "scale": {
+      "value": 0.8,
+      "type": "scalar"
+    },
+    "octaves": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "persistence": {
+      "value": 0.55,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.93
+  },
+  "name": "Genesis Mountain Range",
+  "tags": [
+    "canonical",
+    "algorithm",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

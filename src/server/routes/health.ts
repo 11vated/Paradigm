@@ -40,6 +40,14 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
     const uptimeSec = Math.floor((Date.now() - startTime) / 1000);
     const memUsage = process.memoryUsage();
 
+    // Latency quantiles
+    const sorted = [...metrics.httpRequestDurationMs].sort((a, b) => a - b);
+    function quantile(p: number): number {
+      if (sorted.length === 0) return 0;
+      const idx = Math.floor(p * sorted.length);
+      return sorted[Math.min(idx, sorted.length - 1)];
+    }
+
     // Process metrics
     lines.push('# HELP process_uptime_seconds Server uptime in seconds');
     lines.push('# TYPE process_uptime_seconds gauge');
@@ -50,6 +58,22 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
     lines.push('# HELP process_heap_used_bytes Heap used');
     lines.push('# TYPE process_heap_used_bytes gauge');
     lines.push(`process_heap_used_bytes ${memUsage.heapUsed}`);
+
+    // Cache metrics
+    const cs = cache.stats();
+    const cacheTotal = cs.hits + cs.misses;
+    lines.push('# HELP cache_hits_total Cache hits');
+    lines.push('# TYPE cache_hits_total counter');
+    lines.push(`cache_hits_total ${cs.hits}`);
+    lines.push('# HELP cache_misses_total Cache misses');
+    lines.push('# TYPE cache_misses_total counter');
+    lines.push(`cache_misses_total ${cs.misses}`);
+    lines.push('# HELP cache_hit_ratio Cache hit ratio (0-1)');
+    lines.push('# TYPE cache_hit_ratio gauge');
+    lines.push(`cache_hit_ratio ${cacheTotal > 0 ? (cs.hits / cacheTotal).toFixed(4) : 0}`);
+    lines.push('# HELP cache_size Current cache entry count');
+    lines.push('# TYPE cache_size gauge');
+    lines.push(`cache_size ${cs.size}`);
 
     // HTTP request totals
     lines.push('# HELP http_requests_total Total HTTP requests');
@@ -72,6 +96,11 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
     const totalDuration = metrics.httpRequestDurationMs.reduce((a, b) => a + b, 0);
     lines.push(`http_request_duration_ms_count ${totalRequests}`);
     lines.push(`http_request_duration_ms_sum ${totalDuration}`);
+    lines.push('# HELP http_request_duration_quantiles HTTP request duration quantiles');
+    lines.push('# TYPE http_request_duration_quantiles gauge');
+    lines.push(`http_request_duration_quantiles{quantile="0.5"} ${quantile(0.5)}`);
+    lines.push(`http_request_duration_quantiles{quantile="0.95"} ${quantile(0.95)}`);
+    lines.push(`http_request_duration_quantiles{quantile="0.99"} ${quantile(0.99)}`);
 
     // Domain metrics
     lines.push('# HELP paradigm_seeds_total Total seeds in store');

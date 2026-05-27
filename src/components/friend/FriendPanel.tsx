@@ -145,6 +145,7 @@ export const FriendPanel: React.FC = () => {
                 onChange={(e) => setSeedString(e.target.value)}
                 className="flex-1 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="seed string — anything; same string → same friend"
+                aria-label="Seed string"
               />
               <Btn onClick={handleGenerate} disabled={busy} icon={<Wand2 className="w-3 h-3" />} busy={busy}>
                 Generate
@@ -157,17 +158,20 @@ export const FriendPanel: React.FC = () => {
                 value={parentA} onChange={(e) => setParentA(e.target.value)}
                 className="flex-1 min-w-0 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="parent A — seed string OR 16-hex id"
+                aria-label="Parent A"
               />
               <span className="text-neutral-700">×</span>
               <input
                 value={parentB} onChange={(e) => setParentB(e.target.value)}
                 className="flex-1 min-w-0 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="parent B"
+                aria-label="Parent B"
               />
               <input
                 value={breedSalt} onChange={(e) => setBreedSalt(e.target.value)}
                 className="w-20 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="salt"
+                aria-label="Breed salt"
               />
               <Btn onClick={handleBreed} disabled={busy} icon={<Heart className="w-3 h-3" />} busy={busy}>
                 Breed
@@ -181,18 +185,21 @@ export const FriendPanel: React.FC = () => {
                 onChange={(e) => setSeedString(e.target.value)}
                 className="flex-1 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="parent — pick from library or type a seed string"
+                aria-label="Mutate parent"
               />
               <span className="text-[10px] font-mono text-neutral-500">σ</span>
               <input
                 type="range" min={0} max={1} step={0.01}
                 value={magnitude} onChange={(e) => setMagnitude(Number(e.target.value))}
                 className="w-32"
+                aria-label="Mutation magnitude"
               />
               <span className="text-[10px] font-mono text-accent w-10 text-right">{magnitude.toFixed(2)}</span>
               <input
                 value={mutateSalt} onChange={(e) => setMutateSalt(e.target.value)}
                 className="w-20 bg-neutral-900 border border-neutral-800 rounded px-2 py-1 text-[11px] font-mono"
                 placeholder="salt"
+                aria-label="Mutation salt"
               />
               <Btn onClick={handleMutate} disabled={busy} icon={<Shuffle className="w-3 h-3" />} busy={busy}>
                 Mutate

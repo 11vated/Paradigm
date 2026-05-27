@@ -28,7 +28,7 @@ export default function EvolvePage() {
         <h1 className="text-2xl font-bold">Evolve</h1>
         <p className="text-neutral-400 text-sm">Describe a game. Director picks targets; MAP-Elites searches.</p>
         <div className="flex gap-2">
-          <input className="flex-1 bg-neutral-900 border border-neutral-800 rounded px-3 py-2 text-sm" value={brief} onChange={e => setBrief(e.target.value)} placeholder="describe your game" />
+          <input className="flex-1 bg-neutral-900 border border-neutral-800 rounded px-3 py-2 text-sm" value={brief} onChange={e => setBrief(e.target.value)} placeholder="describe your game" aria-label="Game description" />
           <button onClick={go} disabled={running || !brief} className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm disabled:opacity-40">{running ? 'Searching…' : 'Search'}</button>
         </div>
         {err && <div className="text-red-400 text-sm">{err}</div>}

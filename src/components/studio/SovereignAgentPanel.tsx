@@ -74,8 +74,9 @@ export function SovereignAgentPanel(): React.ReactElement {
       </header>
 
       <section className="space-y-2">
-        <label className="text-xs text-zinc-400">Utterance</label>
+        <label htmlFor="agent-utterance" className="text-xs text-zinc-400">Utterance</label>
         <textarea
+          id="agent-utterance"
           value={utterance}
           onChange={(e) => setUtterance(e.target.value)}
           rows={2}
@@ -214,6 +215,7 @@ export function SovereignAgentPanel(): React.ReactElement {
             onKeyDown={(e) => { if (e.key === 'Enter') onSearch(); }}
             placeholder="characters like Aria, ocean vibes, baroque…"
             className="flex-1 bg-zinc-900 border border-zinc-800 rounded px-3 py-1.5 text-sm"
+            aria-label="Canon search"
           />
           <button onClick={onSearch} disabled={searching || !searchQ.trim()}
             className="text-xs bg-zinc-700 hover:bg-zinc-600 disabled:opacity-50 text-white px-3 py-1.5 rounded">
@@ -223,8 +225,10 @@ export function SovereignAgentPanel(): React.ReactElement {
         {hits.length > 0 && (
           <ul className="text-xs space-y-1 max-h-48 overflow-y-auto">
             {hits.map((h) => (
-              <li key={h.hash} className="border border-zinc-800 rounded px-2 py-1.5 flex items-center gap-2 hover:bg-zinc-900/80 cursor-pointer"
+              <li key={h.hash} role="button" tabIndex={0}
+                  className="border border-zinc-800 rounded px-2 py-1.5 flex items-center gap-2 hover:bg-zinc-900/80 cursor-pointer"
                   onClick={() => setUtterance(`evolve ${h.text.slice(0, 80)}`)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setUtterance(`evolve ${h.text.slice(0, 80)}`); } }}
                   title="Click to use as next utterance">
                 <span className="text-purple-400 font-mono w-12 shrink-0">{h.similarity.toFixed(2)}</span>
                 <span className="text-zinc-300 truncate flex-1">{h.text}</span>

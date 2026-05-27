@@ -183,6 +183,7 @@ export function SeedChat({ onArtifactGenerated }: SeedChatProps) {
           style={styles.input}
           rows={2}
           disabled={isLoading}
+          aria-label="Generation prompt"
         />
         <button
           onClick={sendMessage}

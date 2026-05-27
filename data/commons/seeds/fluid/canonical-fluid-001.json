@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "fluid",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-fluid-v1",
+  "provenance": "genesis",
+  "id": "canonical-fluid-001",
+  "description": "Canonical Genesis Gravity Well — a foundational seed for the fluid domain",
+  "genes": {
+    "gravity": {
+      "value": 0.5,
+      "type": "scalar"
+    },
+    "bodyCount": {
+      "value": 0.4,
+      "type": "scalar"
+    },
+    "friction": {
+      "value": 0.25,
+      "type": "scalar"
+    },
+    "elasticity": {
+      "value": 0.75,
+      "type": "scalar"
+    },
+    "simulationType": {
+      "value": "rigid_body",
+      "type": "categorical"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Gravity Well",
+  "tags": [
+    "canonical",
+    "fluid",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

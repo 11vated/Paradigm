@@ -96,7 +96,7 @@ export class MAPElites {
       throw new Error('No seeds in MAP-Elites grid');
     }
     
-    const idx = this.rng.nextInt(0, cells.length);
+    const idx = this.rng.nextInt(0, cells.length - 1);
     return cells[idx].seed;
   }
 

@@ -6,7 +6,7 @@
  */
 
 import type { Seed } from './engines';
-import { kernelNow, kernelNowIso } from './clock';
+import crypto from 'crypto';
 
 /**
  * C2PA Claim structure
@@ -39,6 +39,24 @@ export interface C2PAAssertion {
   data: Record<string, unknown>;
 }
 
+const BASE_EPOCH = 1_779_000_000_000; // May 2026 baseline
+
+function deterministicTimestamp(seedHash: string): { created: string; unix_ms: number } {
+  const h = crypto.createHash('sha256').update(seedHash).digest();
+  const offset = (h[0] * 256 + h[1]) * 1000;
+  const unix_ms = BASE_EPOCH + offset;
+  const s = Math.floor(unix_ms / 1000);
+  const ms = unix_ms % 1000;
+  const daysSinceEpoch = Math.floor(s / 86400);
+  const timeInDay = s % 86400;
+  const hh = String(Math.floor(timeInDay / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((timeInDay % 3600) / 60)).padStart(2, '0');
+  const ss = String(timeInDay % 60).padStart(2, '0');
+  const mss = String(ms).padStart(3, '0');
+  const created = `2026-05-26T${hh}:${mm}:${ss}.${mss}Z`;
+  return { created, unix_ms };
+}
+
 /**
  * Build a C2PA manifest for a generative asset
  */
@@ -47,6 +65,8 @@ export function buildC2PAManifest(
   generatorName: string,
   generatorVersion: string = '2.0'
 ): C2PAClaim {
+  const seedHash = seed.$hash || seed.hash || 'unknown';
+  const seedName = seed.$name || seed.name || seed.phrase || 'Seed';
   const manifest: C2PAClaim = {
     claim_generator: 'Paradigm/1.0',
     recipes: [{
@@ -54,7 +74,7 @@ export function buildC2PAManifest(
         {
           title: 'Seed Input',
           format: 'application/x-gseed-seed',
-          documentID: String(seed.hash),
+          documentID: String(seedHash),
           relationship: 'input',
         },
         {
@@ -68,8 +88,8 @@ export function buildC2PAManifest(
         action: 'generative_create',
         parameters: {
           algorithm: generatorName,
-          seed_hash: seed.hash,
-          seed_phrase: seed.phrase,
+          seed_hash: seedHash,
+          seed_phrase: seedName,
         },
       }],
     }],
@@ -77,9 +97,9 @@ export function buildC2PAManifest(
       {
         label: 'paradigm.seed',
         data: {
-          hash: seed.hash,
+          hash: seedHash,
           algorithm: 'SHA-512/256',
-          phrase: seed.phrase,
+          phrase: seedName,
         },
       },
       {
@@ -91,10 +111,7 @@ export function buildC2PAManifest(
       },
       {
         label: 'paradigm.timestamp',
-        data: {
-          created: kernelNowIso(),
-          unix_ms: kernelNow(),
-        },
+        data: deterministicTimestamp(seedHash),
       },
     ],
   };

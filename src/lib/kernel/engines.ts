@@ -10,6 +10,7 @@ import { createPipeline, getDomainConfig } from './pipeline';
 import { createWebGPUGeneratorSystem, type WebGPUGeneratorSystem } from './generators/webgpu-system';
 import { getGenerationQuality, type GenerationQuality } from './generation-quality';
 import { dispatch as dispatchSeed, DOMAIN_MAP } from './engine-dispatcher';
+import { buildC2PAManifest } from './c2pa-manifest';
 
 let gpuSystem: WebGPUGeneratorSystem | null = null;
 
@@ -104,7 +105,7 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
     const engineHints = (generatorOutput && typeof generatorOutput === 'object' && 'render_hints' in generatorOutput)
       ? (generatorOutput as any).render_hints ?? {}
       : {};
-    return {
+    const artifact: Artifact = {
       ...generatorOutput,
       type: domain,
       name: seed.$name ?? 'Artifact',
@@ -118,12 +119,18 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
         hasFile: !!generatorOutput,
       },
     };
+    artifact.c2pa_manifest = buildC2PAManifest(seed, domain);
+    return artifact;
   } catch {
     try {
       const artifact = await growViaPipeline(seed);
-      return { ...artifact, generation_quality: 'reduced' as GenerationQuality };
+      const result = { ...artifact, generation_quality: 'reduced' as GenerationQuality };
+      (result as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      return result;
     } catch {
-      return growGeneric(seed);
+      const artifact = growGeneric(seed);
+      (artifact as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      return artifact;
     }
   }
 }

@@ -57,7 +57,7 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
         </button>
         <button data-testid="gspl-execute-btn" onClick={handleExecute} disabled={loading}
           className="px-3 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 hover:border-primary/40 font-mono font-bold text-[9px] uppercase tracking-widest transition-colors flex items-center gap-1.5 rounded-sm">
-          <Play className="w-2.5 h-2.5" /> RUN
+          <Play className="w-2.5 h-2.5" aria-hidden="true" /> RUN
         </button>
       </div>
       <textarea
@@ -68,6 +68,7 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
         className="flex-1 bg-[#080808] p-4 text-[11px] font-mono text-[#ddd] resize-none outline-none leading-relaxed min-h-[200px]"
         spellCheck={false}
         placeholder="// Write GSPL code..."
+        aria-label="GSPL code editor"
       />
       {result && (
         <div className="border-t border-[#1a1a1a] p-3 max-h-[200px] overflow-y-auto bg-[#0a0a0a]">
@@ -88,17 +89,17 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
             </div>
           )}
           {result.stats && (
-            <div className="flex gap-4 font-mono text-[9px] text-[#555] uppercase tracking-widest mb-2">
-              <span>Tokens: <strong className="text-[#888]">{result.stats.tokens}</strong></span>
-              <span>Decls: <strong className="text-[#888]">{result.stats.declarations}</strong></span>
+            <div className="flex gap-4 font-mono text-[9px] text-[#999] uppercase tracking-widest mb-2">
+              <span>Tokens: <strong className="text-[#bbb]">{result.stats.tokens}</strong></span>
+              <span>Decls: <strong className="text-[#bbb]">{result.stats.declarations}</strong></span>
               {result.stats.seeds_created != null && <span className="text-secondary">Seeds: {result.stats.seeds_created}</span>}
             </div>
           )}
           {result.types && Object.keys(result.types).length > 0 && (
             <div className="mt-2 space-y-1 border-t border-[#222] pt-2">
-              <span className="font-mono text-[8px] text-[#444] uppercase tracking-widest">Type Env</span>
+              <span className="font-mono text-[8px] text-[#777] uppercase tracking-widest">Type Env</span>
               {Object.entries(result.types).slice(0, 8).map(([k, v]) => (
-                <div key={k} className="font-mono text-[9px] text-[#666]">
+                <div key={k} className="font-mono text-[9px] text-[#999]">
                   <span className="text-primary tracking-widest">{k}</span>: {v as any}
                 </div>
               ))}

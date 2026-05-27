@@ -115,6 +115,7 @@ export default function ChatPage() {
               onChange={e => setDraft(e.target.value)}
               onKeyDown={onKey}
               disabled={!friend}
+              aria-label="Chat message"
             />
             <button
               onClick={send}

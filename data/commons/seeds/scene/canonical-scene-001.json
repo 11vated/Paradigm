@@ -1,0 +1,46 @@
+{
+  "version": "1.0.0",
+  "domain": "scene",
+  "lineage": {
+    "operation": "genesis",
+    "generation": 0
+  },
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "hash": "canonical-scene-v1",
+  "provenance": "genesis",
+  "id": "canonical-scene-001",
+  "description": "Canonical Genesis Abstract Composition — a foundational seed for the scene domain",
+  "genes": {
+    "style": {
+      "value": "abstract",
+      "type": "categorical"
+    },
+    "composition": {
+      "value": "golden_ratio",
+      "type": "categorical"
+    },
+    "palette": {
+      "value": [
+        0.95,
+        0.45,
+        0.12
+      ],
+      "type": "vector"
+    },
+    "complexity": {
+      "value": 0.72,
+      "type": "scalar"
+    }
+  },
+  "fitness": {
+    "overall": 0.91
+  },
+  "name": "Genesis Abstract Composition",
+  "tags": [
+    "canonical",
+    "scene",
+    "genesis"
+  ],
+  "created": "2026-05-16T00:00:00.000Z",
+  "author": "human"
+}

@@ -102,11 +102,11 @@ const LEVEL_MAP: Record<LogLevel, 'debug' | 'info' | 'warn' | 'error' | 'fatal'>
  * consumers parsing JSON lines don't care about the swap.
  */
 export function log(
-  level: LogLevel,
+  level: string,
   message: string,
   data?: Record<string, unknown>,
 ): void {
-  const pinoLevel = LEVEL_MAP[level] ?? 'info';
+  const pinoLevel = LEVEL_MAP[level as LogLevel] ?? 'info';
   if (data !== undefined) {
     pinoLogger[pinoLevel](data, message);
   } else {

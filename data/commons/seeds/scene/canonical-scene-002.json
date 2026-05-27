@@ -1,0 +1,46 @@
+{
+  "tags": [
+    "canonical",
+    "scene",
+    "genesis"
+  ],
+  "genes": {
+    "palette": {
+      "value": [
+        0.35,
+        0.55,
+        0.75
+      ],
+      "type": "vector"
+    },
+    "style": {
+      "value": "landscape",
+      "type": "categorical"
+    },
+    "composition": {
+      "value": "rule_of_thirds",
+      "type": "categorical"
+    },
+    "complexity": {
+      "value": 0.65,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "canonical-scene-v2",
+  "description": "Canonical Mountain Solitude — a hand-curated seed for the scene domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Mountain Solitude",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "scene",
+  "provenance": "genesis",
+  "id": "canonical-scene-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

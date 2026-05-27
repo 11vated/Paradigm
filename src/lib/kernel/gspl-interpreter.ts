@@ -11,6 +11,7 @@ import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNode, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { GeneticAlgorithm } from '../evolution/ga';
+import { MAPElites } from '../evolution/map-elites';
 import { kernelNow, kernelNowIso } from './clock';
 
 type Seed = {
@@ -766,8 +767,71 @@ export class GsplInterpreter {
   }
   
   private callMapElites(args: any[]): any {
-    // In production: import { mapElites } from '../evolution/map-elites';
-    return { map: 'pending', bins: args[2] || [10, 10] };
+    const [population, gridBinsOrConfig, generations] = args;
+
+    if (!Array.isArray(population) || population.length === 0) {
+      throw new Error('map_elites: population must be a non-empty array of Seeds');
+    }
+
+    const gridBins = Array.isArray(gridBinsOrConfig) ? gridBinsOrConfig : [10, 10];
+    const genCount = typeof generations === 'number' ? generations : 100;
+
+    const config = {
+      gridDimensions: gridBins,
+      gridSize: gridBins,
+      mutationRate: 0.15,
+      crossoverRate: 0.7,
+      elitismCount: 1,
+    };
+
+    // Default feature extractor: pulls numeric values from genes
+    const defaultFeatureExtractor = (seed: any): number[] => {
+      const vals: number[] = [];
+      if (seed.genes) {
+        for (const gene of Object.values(seed.genes) as any[]) {
+          if (typeof gene.value === 'number') vals.push(gene.value);
+          else if (Array.isArray(gene.value)) {
+            for (const v of gene.value) {
+              if (typeof v === 'number') { vals.push(v); break; }
+            }
+          }
+        }
+      }
+      while (vals.length < 2) vals.push(0.5);
+      return vals.slice(0, gridBins.length);
+    };
+
+    const me = new MAPElites(defaultFeatureExtractor, config, this.context.rng.hash ?? 'map-elites');
+
+    const fitnessFn = (seed: any): number => {
+      let fitness = 0;
+      if (seed.genes) {
+        for (const gene of Object.values(seed.genes) as any[]) {
+          if (typeof gene.value === 'number') fitness += gene.value;
+          else if (typeof gene.value === 'object' && gene.value !== null) {
+            for (const v of Object.values(gene.value)) {
+              if (typeof v === 'number') fitness += v * 0.1;
+            }
+          }
+        }
+      }
+      return fitness;
+    };
+
+    const result = me.run(population, fitnessFn, genCount);
+
+    return {
+      elite: result.elite,
+      bestFitness: result.bestFitness,
+      gridCoverage: result.gridCoverage,
+      generations: genCount,
+      gridSnapshot: result.population
+        ? Array.from((result.population as Map<string, any>).entries()).map(([key, cell]) => ({
+            key,
+            fitness: cell.fitness,
+          }))
+        : [],
+    };
   }
   
   private callCMAES(args: any[]): any {

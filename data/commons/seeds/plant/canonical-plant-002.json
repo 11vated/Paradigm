@@ -1,0 +1,42 @@
+{
+  "tags": [
+    "canonical",
+    "plant",
+    "genesis"
+  ],
+  "genes": {
+    "biodiversity": {
+      "value": 0.9,
+      "type": "scalar"
+    },
+    "speciesCount": {
+      "value": 0.85,
+      "type": "scalar"
+    },
+    "environment": {
+      "value": "coral_reef",
+      "type": "categorical"
+    },
+    "stability": {
+      "value": 0.65,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "canonical-plant-v2",
+  "description": "Canonical Coral Canopy — a hand-curated seed for the plant domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Coral Canopy",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "plant",
+  "provenance": "genesis",
+  "id": "canonical-plant-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

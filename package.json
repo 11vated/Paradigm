@@ -1,7 +1,7 @@
 {
   "name": "paradigm-absolute",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
@@ -75,7 +75,7 @@
     "@react-three/fiber": "^9.5.0",
     "@tailwindcss/vite": "^4.1.14",
     "@xenova/transformers": "^2.17.2",
-    "axios": "^1.15.0",
+    "axios": "^1.16.1",
     "canvas": "^3.2.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

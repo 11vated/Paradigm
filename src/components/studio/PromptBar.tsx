@@ -32,13 +32,14 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
 
   return (
     <form onSubmit={handleSubmit} className="flex items-center gap-3" data-testid="prompt-bar-container">
-      <Sparkles size={14} style={{ color: 'var(--p-cyan)', opacity: 0.6, flexShrink: 0 }} />
+      <Sparkles size={14} aria-hidden="true" style={{ color: 'var(--p-cyan)', opacity: 0.6, flexShrink: 0 }} />
       <input
         data-testid="prompt-input"
         type="text"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         placeholder="Describe your creation... (e.g., 'a menacing iron warrior')"
+        aria-label="Prompt"
         disabled={loading}
         style={{
           flex: 1, background: 'transparent', border: 'none', outline: 'none',
@@ -46,9 +47,9 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
         }}
         className="placeholder:text-[#555]"
       />
-      {loading && <Loader2 size={14} style={{ color: 'var(--p-cyan)', animation: 'spin 1s linear infinite' }} />}
+      {loading && <Loader2 size={14} aria-hidden="true" style={{ color: 'var(--p-cyan)', animation: 'spin 1s linear infinite' }} />}
       {error && (
-        <span style={{ 
+        <span role="alert" style={{ 
           color: 'var(--p-rose)', fontSize: 11, fontFamily: 'var(--p-font-mono)',
           maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
         }}>

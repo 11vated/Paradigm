@@ -1,0 +1,46 @@
+{
+  "tags": [
+    "canonical",
+    "fluid",
+    "genesis"
+  ],
+  "genes": {
+    "simulationType": {
+      "value": "fluid",
+      "type": "categorical"
+    },
+    "gravity": {
+      "value": 0.3,
+      "type": "scalar"
+    },
+    "friction": {
+      "value": 0.15,
+      "type": "scalar"
+    },
+    "bodyCount": {
+      "value": 0.8,
+      "type": "scalar"
+    },
+    "elasticity": {
+      "value": 0.5,
+      "type": "scalar"
+    }
+  },
+  "lineage": {
+    "operation": "curated",
+    "generation": 0
+  },
+  "hash": "canonical-fluid-v2",
+  "description": "Canonical Fluid Vortex — a hand-curated seed for the fluid domain",
+  "author": "human",
+  "version": "1.0.0",
+  "created": "2026-05-16T00:00:00.000Z",
+  "name": "Fluid Vortex",
+  "schema": "https://paradigm.ai/schema/canonical-seed/v1",
+  "domain": "fluid",
+  "provenance": "genesis",
+  "id": "canonical-fluid-002",
+  "fitness": {
+    "overall": 0.9
+  }
+}

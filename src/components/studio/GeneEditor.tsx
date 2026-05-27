@@ -21,7 +21,7 @@ function ScalarWidget({ value, onChange }: { value: any; onChange: any }) {
   return (
     <div className="flex items-center gap-3 w-full">
       <Slider data-testid="gene-editor-slider" value={[numVal * 100]} onValueChange={([v]) => onChange(v / 100)} max={100} step={1} className="flex-1" />
-      <span className="font-mono text-[9px] text-[#666] w-10 text-right tabular-nums">{numVal.toFixed(2)}</span>
+      <span className="font-mono text-[9px] text-[#999] w-10 text-right tabular-nums">{numVal.toFixed(2)}</span>
     </div>
   );
 }
@@ -41,7 +41,7 @@ function CategoricalWidget({ value, geneName, onChange }: { value: any; geneName
 }
 
 function VectorWidget({ value, onChange }: { value: any; onChange: any }) {
-  if (!Array.isArray(value)) return <span className="font-mono text-[10px] text-[#555]">—</span>;
+  if (!Array.isArray(value)) return <span className="font-mono text-[10px] text-[#888]">—</span>;
   return (
     <div className="flex justify-between gap-2">
       {value.map((v, i) => (
@@ -53,6 +53,7 @@ function VectorWidget({ value, onChange }: { value: any; onChange: any }) {
           onChange={(e) => { const nv = [...value]; nv[i] = parseFloat(e.target.value) || 0; onChange(nv); }}
           className="flex-1 min-w-0 bg-[#050505] border border-[#1a1a1a] focus:border-primary/50 text-[10px] font-mono text-center py-1 text-[#ccc] rounded-sm transition-colors outline-none"
           data-testid={`gene-vector-input-${i}`}
+          aria-label={`Vector value ${i + 1}`}
         />
       ))}
     </div>
@@ -73,6 +74,7 @@ function GenericWidget({ value, onChange }: { value: any; onChange: any }) {
           onChange={(e) => setEditValue(e.target.value)}
           className="w-full h-24 bg-[#050505] border border-[#1a1a1a] focus:border-primary/50 text-[10px] font-mono text-[#ccc] p-2 resize-none rounded-sm outline-none transition-colors"
           data-testid="gene-generic-textarea"
+          aria-label="Gene value editor"
         />
         <div className="flex gap-2 justify-end">
           <button

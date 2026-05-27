@@ -148,6 +148,11 @@ export const ComposeSeedSchema = z.object({
 // GROW (body is optional / empty is valid)
 // ═══════════════════════════════════════════════════════════════════════════
 
+export const BodyGrowSeedSchema = z.object({
+  seed: z.record(z.string(), z.any()).optional(),
+  domain: domainEnum.optional(),
+});
+
 export const GrowSeedSchema = z.object({}).passthrough();
 
 // ═══════════════════════════════════════════════════════════════════════════

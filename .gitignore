@@ -21,6 +21,7 @@ data/migrations.json
 data/migration-report.json
 data/composition-recipes.json
 data/genesis-seeds.json
+data/memory/
 
 # Archived content
 .archive/

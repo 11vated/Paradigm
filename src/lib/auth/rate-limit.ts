@@ -36,7 +36,7 @@ export function createRateLimiter(config: RateLimitConfig = {}) {
   const { windowMs = RATE_WINDOW_MS, limit = DEFAULT_LIMIT, keyPrefix = 'ratelimit:' } = config;
 
   return async function rateLimiter(req: Request, res: Response, next: NextFunction) {
-    const key = req.ip || req.headers['x-forwarded-for'] as string || 'unknown';
+    const key = req.ip || 'unknown';
     const now = Date.now();
     
     let client: RedisClientType | null = null;
