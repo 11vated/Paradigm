@@ -23,6 +23,7 @@ import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
+import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -414,6 +415,7 @@ async function startServer() {
   registerSeedsSovereigntyRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, SignSeedSchema, VerifySeedSchema, MintSeedSchema, crypto: crypto as any, SovereigntyLayer, OnChainSovereignty, canonicalizeSeed, seedDigestBytes32, createSovereignGene, isSovereignGene, getGeneProvenance, licenseSovereignGene, checkGenePermission, authorizeSeedMutation, LocalHmacSigner, LocalDryRunAnchor, LocalFilePin, mintSeedSovereignty, buildC2PAManifest, encodeGseed, log, audit });
 
   registerEvolveRoutes(app, { optionalAuth, evolutionJobs });
+  registerSubstrateHealthRoutes(app);
 
   registerQftPipelineRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, QftSimulateSchema, PipelineExecuteSchema, QFTEngine, ParadigmPipeline, crypto: crypto as any, log });
 

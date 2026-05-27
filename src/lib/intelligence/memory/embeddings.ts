@@ -65,7 +65,7 @@ export class LocalEmbedder implements Embedder {
   }
 
   private async load(): Promise<void> {
-    // @ts-ignore
+    // @ts-ignore PARADIGM-EVASION-OK: dynamic ESM import of @xenova/transformers lacks shipped types; see waiver registry
     const x = (await import('@xenova/transformers')) as XenovaModule;
     if (this.cacheDir) x.env.cacheDir = this.cacheDir;
     if (this.offlineOnly) x.env.allowLocalModels = true;
