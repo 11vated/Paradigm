@@ -33,6 +33,7 @@ import { GsplParser }        from '../src/lib/kernel/gspl-parser';
 import { GsplInterpreter }   from '../src/lib/kernel/gspl-interpreter';
 import { GsplModuleResolver } from '../src/lib/kernel/gspl-module-resolver';
 import { makeCli } from './commands/make';
+import { benchCli } from './commands/bench';
 
 const VERSION = '0.1.0';
 const BOLD = '\x1b[1m'; const DIM = '\x1b[2m'; const RESET = '\x1b[0m';
@@ -258,6 +259,7 @@ const [command, ...rest] = argv;
 
 switch (command) {
   case 'make':    await cmdMake(rest);    break;
+  case 'bench':   { const r = await benchCli(rest); process.exit(r.exitCode); }
   case 'grow':    await cmdGrow(rest);    break;
   case 'gspl':    await cmdGspl(rest);    break;
   case 'domains': await cmdDomains();     break;
