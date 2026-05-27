@@ -70,6 +70,124 @@ function AudioPlayer({ artifact }: { artifact: StratumArtifact }) {
 }
 
 
+function WorldCanvas({ artifact }: { artifact: StratumArtifact }) {
+  const ref = React.useRef<HTMLCanvasElement>(null);
+  React.useEffect(() => {
+    if (!artifact.bytesB64 || !ref.current) return;
+    const bytes = b64ToBytes(artifact.bytesB64);
+    const meta = artifact.metadata as { width?: number; height?: number };
+    const w = meta.width ?? 256;
+    const h = meta.height ?? 256;
+    if (bytes.length < w * h * 5) return;
+    const c = ref.current;
+    c.width = w; c.height = h;
+    const ctx = c.getContext('2d')!;
+    const img = ctx.createImageData(w, h);
+    // Whittaker palette: ocean, beach, desert, grassland, forest, jungle, tundra, snow
+    const PAL: Array<[number,number,number]> = [
+      [20, 60, 120], [240, 220, 170], [220, 200, 120], [110, 170, 80],
+      [40, 110, 50], [25, 80, 40], [180, 190, 200], [240, 240, 250],
+    ];
+    for (let i = 0; i < w * h; i++) {
+      const biome = bytes[i*5 + 2];
+      const elev = (bytes[i*5] | (bytes[i*5+1] << 8)) / 65535;
+      const water = (bytes[i*5+3] | (bytes[i*5+4] << 8)) / 65535;
+      const base = PAL[biome] ?? PAL[3];
+      const shade = 0.6 + elev * 0.5;
+      img.data[i*4]   = Math.min(255, base[0] * shade);
+      img.data[i*4+1] = Math.min(255, base[1] * shade);
+      img.data[i*4+2] = Math.min(255, base[2] * shade);
+      // overlay water as blue
+      if (water > 0.05) {
+        img.data[i*4]   = Math.round(img.data[i*4] * 0.4 + 10);
+        img.data[i*4+1] = Math.round(img.data[i*4+1] * 0.4 + 30);
+        img.data[i*4+2] = Math.round(img.data[i*4+2] * 0.4 + 120);
+      }
+      img.data[i*4+3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+  }, [artifact.bytesB64]);
+  return <canvas ref={ref} style={{ width: '100%', height: 'auto', imageRendering: 'pixelated', borderRadius: 6 }} />;
+}
+
+function MotionSummary({ artifact }: { artifact: StratumArtifact }) {
+  const meta = artifact.metadata as { fps?: number; duration?: number; keyframes?: number; boneLengthsPass?: boolean };
+  return (
+    <div style={{ fontSize: 13, lineHeight: 1.8 }}>
+      <div>🦴 <b>{meta.keyframes ?? 0}</b> keyframes @ <b>{meta.fps ?? 0}fps</b> · <b>{(meta.duration ?? 0).toFixed(1)}s</b></div>
+      <div>{meta.boneLengthsPass ? '✓ bone-length constraints satisfied' : '✗ constraint violations'}</div>
+      <div style={{ opacity: 0.55, fontSize: 11, marginTop: 4 }}>HUMANOID_SKELETON · 17 joints · procedural walk cycle</div>
+    </div>
+  );
+}
+
+function MindSummary({ artifact }: { artifact: StratumArtifact }) {
+  const meta = artifact.metadata as { archetype?: string; goals?: number; actions?: number; samplePlanOk?: boolean };
+  const text = artifact.bytesB64 ? new TextDecoder().decode(b64ToBytes(artifact.bytesB64)) : '';
+  let parsed: any = {};
+  try { parsed = JSON.parse(text); } catch { /* ignore */ }
+  const p = parsed.personality ?? {};
+  const plan = parsed.samplePlan?.steps ?? [];
+  return (
+    <div style={{ fontSize: 13, lineHeight: 1.7 }}>
+      <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 6 }}>{meta.archetype}</div>
+      <div style={{ marginBottom: 6, opacity: 0.7 }}>{meta.goals} goals · {meta.actions} actions</div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 4, fontSize: 12, marginBottom: 8 }}>
+        {(['logic','intuition','aggression','empathy','curiosity'] as const).map(k => (
+          <div key={k}>{k}: <b style={{ color: '#a0d0ff' }}>{(p[k] ?? 0).toFixed(2)}</b></div>
+        ))}
+      </div>
+      {plan.length > 0 && <div style={{ fontSize: 11, opacity: 0.65 }}>plan: {plan.join(' → ')}</div>}
+    </div>
+  );
+}
+
+function TimeSummary({ artifact }: { artifact: StratumArtifact }) {
+  const meta = artifact.metadata as { daysPerYear?: number; festivals?: number; events?: number };
+  const text = artifact.bytesB64 ? new TextDecoder().decode(b64ToBytes(artifact.bytesB64)) : '';
+  let parsed: any = {};
+  try { parsed = JSON.parse(text); } catch { /* ignore */ }
+  const cal = parsed.calendar ?? {};
+  return (
+    <div style={{ fontSize: 13, lineHeight: 1.7 }}>
+      <div>📅 <b>{cal.daysPerWeek}</b>-day weeks × <b>{cal.weeksPerMonth}</b> weeks/mo × <b>{cal.monthsPerYear}</b> mo = <b>{meta.daysPerYear} days/year</b></div>
+      <div>{cal.hoursPerDay}h days · {meta.festivals} festivals · {meta.events} scheduled events</div>
+      {Array.isArray(cal.monthNames) && (
+        <div style={{ marginTop: 8, fontSize: 11, opacity: 0.7 }}>
+          months: {cal.monthNames.slice(0, 6).join(', ')}{cal.monthNames.length > 6 ? '…' : ''}
+        </div>
+      )}
+      {Array.isArray(cal.festivals) && cal.festivals.slice(0, 2).map((f: any, i: number) => (
+        <div key={i} style={{ fontSize: 11, opacity: 0.7 }}>· {f.name} (day {f.dayOfYear}, {f.durationDays}d, {f.significance})</div>
+      ))}
+    </div>
+  );
+}
+
+function FieldSummary({ artifact }: { artifact: StratumArtifact }) {
+  const meta = artifact.metadata as { rules?: number; globalLaws?: number; warnings?: number };
+  const text = artifact.bytesB64 ? new TextDecoder().decode(b64ToBytes(artifact.bytesB64)) : '';
+  let parsed: any = {};
+  try { parsed = JSON.parse(text); } catch { /* ignore */ }
+  const laws = Array.isArray(parsed.globalLaws) ? parsed.globalLaws : [];
+  const rules = Array.isArray(parsed.rules) ? parsed.rules.slice(0, 4) : [];
+  return (
+    <div style={{ fontSize: 13, lineHeight: 1.6 }}>
+      <div>⚖ <b>{meta.rules}</b> rules · <b>{meta.globalLaws}</b> conservation laws</div>
+      {laws.length > 0 && (
+        <div style={{ marginTop: 6, fontSize: 11, opacity: 0.75 }}>
+          conserves: {laws.map((l: any) => l.name).join(', ')}
+        </div>
+      )}
+      {rules.map((r: any, i: number) => (
+        <div key={i} style={{ marginTop: 4, fontSize: 11, opacity: 0.8 }}>
+          <span style={{ color: '#a0d0ff' }}>{r.kind}</span> · {r.predicate}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function StratumCard({ sid, artifact }: { sid: string; artifact: StratumArtifact | undefined }) {
   if (!artifact) {
     return (
@@ -82,6 +200,11 @@ function StratumCard({ sid, artifact }: { sid: string; artifact: StratumArtifact
   let body: React.ReactNode = null;
   if (artifact.mime.startsWith('audio/wav')) body = <AudioPlayer artifact={artifact} />;
   else if (artifact.mime.startsWith('image/x-raw-rgba8')) body = <FormCanvas artifact={artifact} />;
+  else if (artifact.mime.startsWith('application/x-raw-world5')) body = <WorldCanvas artifact={artifact} />;
+  else if (sid === 'motion') body = <MotionSummary artifact={artifact} />;
+  else if (sid === 'mind') body = <MindSummary artifact={artifact} />;
+  else if (sid === 'time') body = <TimeSummary artifact={artifact} />;
+  else if (sid === 'field') body = <FieldSummary artifact={artifact} />;
   else if (artifact.mime.startsWith('text/plain')) {
     const text = artifact.bytesB64 ? new TextDecoder().decode(b64ToBytes(artifact.bytesB64)) : '';
     body = <div style={{ fontSize: 14, lineHeight: 1.6, fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>{text}</div>;
