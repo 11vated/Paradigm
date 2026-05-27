@@ -28,9 +28,17 @@
  *   GET  /api/substrate/health/strata  → per-stratum contract registry
  */
 import type { Express, Request, Response } from 'express';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join, relative, basename } from 'node:path';
-import { STRATUM_CONTRACTS, STRATA } from '../../lib/contracts/index.js';
+import { readdirSync, readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import {
+  STRATA,
+  STRATUM_CONTRACTS,
+  type StratumId,
+} from '../../lib/contracts/index.js';
+import {
+  listStrataDeclarations,
+  computeStratumCoverage,
+} from '../../lib/kernel/quality-contract.js';
 import { kernelNowIso } from '../../lib/kernel/clock.js';
 
 interface CachedSnapshot {
@@ -60,6 +68,34 @@ export interface SubstrateHealthSnapshot {
 
 let cache: CachedSnapshot | null = null;
 const CACHE_TTL_MS = 30_000;
+
+// ─── Health report ring buffer (Doctrine v2 Part XV.3) ──────────────────────
+
+interface HealthReport {
+  source: string;
+  runId: string | null;
+  metrics: Record<string, number>;
+  receivedAt: string;
+}
+
+const REPORT_RING_CAPACITY = 50;
+const reportRing: HealthReport[] = [];
+
+function pushReport(r: HealthReport): void {
+  reportRing.push(r);
+  while (reportRing.length > REPORT_RING_CAPACITY) {
+    reportRing.shift();
+  }
+}
+
+function isValidMetrics(v: unknown): v is Record<string, number> {
+  if (v === null || typeof v !== 'object') return false;
+  for (const k of Object.keys(v as Record<string, unknown>)) {
+    const n = (v as Record<string, unknown>)[k];
+    if (typeof n !== 'number' || !Number.isFinite(n)) return false;
+  }
+  return true;
+}
 
 function walk(dir: string, out: string[]): void {
   let entries: Array<{ name: string; isDirectory: () => boolean; isFile: () => boolean }>;
@@ -208,6 +244,44 @@ export function registerSubstrateHealthRoutes(app: Express, opts: { cwd?: string
           predicates: c.predicates.map((p) => ({ id: p.id, description: p.description })),
         };
       }),
+      declarations: listStrataDeclarations(),
+      coverageIndex: computeStratumCoverage(),
+    });
+  });
+
+  // CI annotation surface (Doctrine v2 Part XV.3, Phase 1).
+  app.post('/api/substrate/health/report', (req: Request, res: Response) => {
+    const body = req.body as Record<string, unknown> | undefined;
+    if (!body || typeof body !== 'object') {
+      res.status(400).json({ error: 'body must be a JSON object' });
+      return;
+    }
+    const source = typeof body.source === 'string' ? body.source : null;
+    const runId = typeof body.runId === 'string' ? body.runId : null;
+    const metrics = body.metrics;
+    if (!source) {
+      res.status(400).json({ error: 'source is required (string)' });
+      return;
+    }
+    if (!isValidMetrics(metrics)) {
+      res.status(400).json({ error: 'metrics must be a flat Record<string, finite number>' });
+      return;
+    }
+    const report: HealthReport = {
+      source,
+      runId,
+      metrics: { ...metrics },
+      receivedAt: new Date().toISOString(),
+    };
+    pushReport(report);
+    res.status(202).json({ accepted: true, receivedAt: report.receivedAt });
+  });
+
+  app.get('/api/substrate/health/reports', (_req: Request, res: Response) => {
+    res.json({
+      capacity: REPORT_RING_CAPACITY,
+      count: reportRing.length,
+      reports: [...reportRing].reverse(), // newest first
     });
   });
 }

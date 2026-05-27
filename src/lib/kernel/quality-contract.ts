@@ -29,6 +29,37 @@
 import { createHash } from 'crypto';
 import { kernelNow, kernelNowIso } from './clock';
 
+// ─── Stratum Manifest (Doctrine v2 Part VI.10) ──────────────────────────────
+
+/**
+ * Doctrine v2 Part VI declares nine canonical substrate strata. A
+ * QualityContract may optionally declare which strata it claims to
+ * satisfy via `strata` and/or `manifest()`. The Substrate Health
+ * Dashboard (Part XV.3) aggregates these declarations into the
+ * Stratum Contract Conformance Index.
+ */
+export type StratumId =
+  | 'form'
+  | 'motion'
+  | 'sound'
+  | 'mind'
+  | 'story'
+  | 'world'
+  | 'field'
+  | 'culture'
+  | 'time';
+
+export interface StratumManifest {
+  /** Strata this contract claims to satisfy (a subset of StratumId). */
+  readonly strata: ReadonlyArray<StratumId>;
+  /** Human-readable engine owner per Doctrine Part XVIII.1. */
+  readonly engineOwner?: string;
+  /** Optional doctrine reference (e.g. "VI.1") for traceability. */
+  readonly doctrineRef?: string;
+  /** Optional free-form notes. */
+  readonly notes?: string;
+}
+
 // ─── Contract interface ──────────────────────────────────────────────────────
 
 /**
@@ -63,6 +94,27 @@ export interface QualityContract<TSeed, TArtifact, TGenes> {
    * JSON-canonicalize + SHA-256.
    */
   hashArtifact?(artifact: TArtifact): string;
+
+  /**
+   * Doctrine v2 Part VI.10 — declare which substrate strata this
+   * contract claims to satisfy. Engines without a declaration are
+   * counted as `strata: []` (zero-stratum coverage) by the conformance
+   * index.
+   */
+  readonly strata?: ReadonlyArray<StratumId>;
+
+  /**
+   * Doctrine v2 Part XVIII.1 — human-readable owner of this contract
+   * (e.g. "Form engine custodian", "ZO ELITE"). Used by the dashboard.
+   */
+  readonly engineOwner?: string;
+
+  /**
+   * Doctrine v2 Part VI.10 — optional structured manifest returning a
+   * StratumManifest. If both `strata` and `manifest()` are present, the
+   * dashboard uses `manifest().strata` as authoritative.
+   */
+  manifest?(): StratumManifest;
 }
 
 export interface QualityReport {
@@ -368,4 +420,83 @@ function firstFailure(r: ConformanceResult): string {
     if (!cl.passed) return `${name}: ${cl.detail}`;
   }
   return '';
+}
+
+// ─── Stratum Manifest aggregation (Doctrine v2 Part VI.10) ───────────────────
+
+/**
+ * Resolve a contract's stratum manifest, with `manifest()` taking
+ * precedence over the static `strata` field. Returns an empty
+ * declaration if the contract has neither.
+ */
+export function resolveManifest(c: QualityContract<unknown, unknown, unknown>): StratumManifest {
+  if (typeof c.manifest === 'function') {
+    return c.manifest();
+  }
+  if (c.strata) {
+    return { strata: c.strata, engineOwner: c.engineOwner };
+  }
+  return { strata: [] };
+}
+
+/**
+ * Per-domain stratum declaration view, as exposed by
+ * `GET /api/substrate/strata` and consumed by the Substrate Health
+ * Dashboard.
+ */
+export interface DomainStratumDeclaration {
+  domain: string;
+  version: string;
+  strata: ReadonlyArray<StratumId>;
+  engineOwner: string | null;
+  hasManifest: boolean;
+}
+
+/**
+ * Snapshot every registered contract's stratum declaration. Pure: no
+ * generator execution. Cheap; safe for the dashboard's 30s cache.
+ */
+export function listStrataDeclarations(): DomainStratumDeclaration[] {
+  const out: DomainStratumDeclaration[] = [];
+  for (const c of listContracts()) {
+    const m = resolveManifest(c);
+    out.push({
+      domain: c.domain,
+      version: c.version,
+      strata: m.strata,
+      engineOwner: m.engineOwner ?? c.engineOwner ?? null,
+      hasManifest: typeof c.manifest === 'function',
+    });
+  }
+  out.sort((a, b) => a.domain.localeCompare(b.domain));
+  return out;
+}
+
+/**
+ * Stratum Contract Conformance Index (Doctrine VI.10) — for each
+ * stratum, the count of contracts that claim to satisfy it. This is the
+ * *declaration* index; the *actual* conformance percentage is computed
+ * by `runAllConformance` and joined to this view by the dashboard.
+ */
+export type StratumCoverageIndex = Record<StratumId, {
+  contracts: string[];
+  count: number;
+}>;
+
+export function computeStratumCoverage(): StratumCoverageIndex {
+  const empty = (): { contracts: string[]; count: number } => ({ contracts: [], count: 0 });
+  const idx: StratumCoverageIndex = {
+    form: empty(), motion: empty(), sound: empty(), mind: empty(),
+    story: empty(), world: empty(), field: empty(), culture: empty(), time: empty(),
+  };
+  for (const d of listStrataDeclarations()) {
+    for (const s of d.strata) {
+      idx[s].contracts.push(d.domain);
+      idx[s].count += 1;
+    }
+  }
+  for (const s of Object.keys(idx) as StratumId[]) {
+    idx[s].contracts.sort();
+  }
+  return idx;
 }

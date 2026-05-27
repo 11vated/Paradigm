@@ -18,6 +18,7 @@
     "lint:no-evasion": "bun run scripts/lint-no-evasion.ts",
     "lint:doctrine": "npm run lint:determinism:script && npm run lint:canonical-rename && npm run lint:no-evasion",
     "preflight": "npm run typecheck && npm run lint:doctrine && npm run determinism:check && npm run test",
+    "preflight:report": "bun run scripts/preflight-report.ts",
     "typecheck": "tsc --noEmit",
     "determinism:check": "node scripts/check-determinism-boundary.mjs",
     "contract:report": "tsx scripts/quality-contract-report.mts",
