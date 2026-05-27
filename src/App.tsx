@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Root from '@/app/Root';
 import { LegacyShell } from '@/app/legacy/LegacyShell';
 import SubstratePage from '@/pages/SubstratePage';
+import ExplorePage from '@/pages/ExplorePage';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/classic/*" element={<LegacyShell />} />
         <Route path="/substrate" element={<SubstratePage />} />
+        <Route path="/explore" element={<ExplorePage />} />
         <Route path="/*" element={<Root />} />
       </Routes>
     </BrowserRouter>
