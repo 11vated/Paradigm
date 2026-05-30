@@ -8,7 +8,7 @@ export type Expr =
   | { kind: 'call'; callee: string; args: Expr[] };
 
 export type Statement =
-  | { kind: 'seed_decl'; name: Expr; domain: Expr; genes: { name: string; value: Expr }[] }
+  | { kind: 'seed_decl'; name: Expr; domain: Expr; strata?: string[]; genes: { name: string; value: Expr }[] }
   | { kind: 'let_binding'; name: string; value: Expr }
   | { kind: 'fn_decl'; name: string; params: string[]; body: Statement[] }
   | { kind: 'if_stmt'; condition: Expr; then: Statement[]; else_branch: Statement[] }
@@ -63,13 +63,15 @@ function splitTopLevel(source: string): string[] {
 }
 
 function parseStatement(source: string): Statement | null {
-  const seedEditor = source.match(/^seed\s+"([^"]+)"\s+in\s+([\w.-]+)\s*\{([\s\S]*)\}$/);
+  const seedEditor = source.match(/^seed\s+"([^"]+)"\s+in\s+([\w.-]+)\s*(?:strata:\s*([^\{]+))?\s*\{([\s\S]*)\}$/);
   if (seedEditor) {
-    return { kind: 'seed_decl', name: literal(seedEditor[1]), domain: literal(seedEditor[2]), genes: parseGenes(seedEditor[3]) };
+    const strata = seedEditor[3] ? seedEditor[3].trim().split('+').map(s => s.trim()) : [];
+    return { kind: 'seed_decl', name: literal(seedEditor[1]), domain: literal(seedEditor[2]), strata, genes: parseGenes(seedEditor[4]) };
   }
-  const seedLibrary = source.match(/^seed\s+([\w.]+)\s*\{([\s\S]*)\}$/);
+  const seedLibrary = source.match(/^seed\s+([\w.]+)\s*(?:strata:\s*([^\{]+))?\s*\{([\s\S]*)\}$/);
   if (seedLibrary) {
-    return { kind: 'seed_decl', name: ident(seedLibrary[1]), domain: ident(seedLibrary[1]), genes: parseGenes(seedLibrary[2]) };
+    const strata = seedLibrary[2] ? seedLibrary[2].trim().split('+').map(s => s.trim()) : [];
+    return { kind: 'seed_decl', name: ident(seedLibrary[1]), domain: ident(seedLibrary[1]), strata, genes: parseGenes(seedLibrary[3]) };
   }
   const fn = source.match(/^fn\s+(\w+)\(([^)]*)\)\s*\{([\s\S]*)\}$/);
   if (fn) {

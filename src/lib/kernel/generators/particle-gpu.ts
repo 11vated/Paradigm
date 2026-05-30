@@ -1,5 +1,10 @@
 /**
- * Particle Generator — produces GPU-ready particle systems
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Particle GPU sibling. 
+ * CANONICAL PRIMARY lives in particle.ts + particle-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Particle Generator — produces GPU-ready particle systems (legacy)
  * Enhanced with WebGL/WebGPU compute shaders
  */
 

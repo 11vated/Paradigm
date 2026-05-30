@@ -1,6 +1,10 @@
 /**
- * WebGPU Compute Shaders for Character V2 Generator
- * Enables GPU-acelerated parametric body modeling
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * GPU sibling. Primary is character.ts + character-contract.ts.
+ * Removal after golden regeneration.
+ *
+ * WebGPU Compute Shaders for Character V2 Generator (legacy)
+ * Enables GPU-accelerated parametric body modeling
  * 10,000+ vertices updated in parallel
  */
 

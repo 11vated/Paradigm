@@ -1,7 +1,16 @@
 /**
- * Shader Generator V3 — GLSL/WGSL Shader Programs
+ * Shader Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for shader program generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + shader-contract.ts.
+ *
+ * Siblings (shader-enhanced.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Vertex, fragment, compute shaders
  * Export: GLSL, WGSL, HLSL
+ *
+ * PHASE 2 NOTE: Canonical primary. Target shader.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

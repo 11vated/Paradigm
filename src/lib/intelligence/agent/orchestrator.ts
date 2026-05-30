@@ -18,6 +18,7 @@
  */
 
 import type { SeedLLM } from '../llm/base';
+import { calculateStratumConformance } from '../../kernel/quality/predicates.js';  // Phase 1/2 live conformance wiring (full autonomy)
 import type { Seed } from '../../kernel/engines';
 import type { MemoryOrchestrator } from '../memory/types';
 import { kernelNow } from '../../kernel/clock';
@@ -32,6 +33,7 @@ import { gatherLiveContext, type LiveContext, type LiveContextOptions } from './
 import { archive as archiveStage6 } from './stages/stage-6-archive';
 import type { CanonMemory } from '../memory/canon';
 import { signatureFor, dominantDimension, signatureMagnitude, type DimensionalSignature } from '../reality/dimensions';
+import { captureReproducibleRun, type ReproducibilityCapture } from '../reproducibility';
 // resonance scoring is exposed as a separate API for comparing seed pairs
 import type {
   ConstructionPlan,
@@ -61,6 +63,9 @@ export interface RunOptions {
   ephemeral?: boolean;
   feedbackLoop?: Omit<FeedbackLoopOptions, 'oracle' | 'critique' | 'lookupSeed' | 'planLlm' | 'planLlmTag'> & { enabled?: boolean };
   annotateReality?: boolean;
+
+  /** Doctrine v2 — capture reproducibility tuple (intent + memoryHash + seedCorpusHash) */
+  captureReproducible?: boolean;
 }
 
 export interface AgentRunReport {
@@ -73,6 +78,9 @@ export interface AgentRunReport {
   reality?: { signature: DimensionalSignature; dominant: string; magnitude: number };
   iterations?: number;
   liveContext?: LiveContext;
+
+  /** Doctrine v2 reproducibility capture (only present when captureReproducible: true) */
+  reproducibility?: ReproducibilityCapture;
 }
 
 export class SovereignAgent {
@@ -199,15 +207,41 @@ export class SovereignAgent {
     }
 
     timings.total = kernelNow() - t0;
+
+    // Doctrine v2 reproducibility capture (optional, opt-in)
+    let reproducibility: ReproducibilityCapture | undefined;
+    if (opts.captureReproducible && this.memory) {
+      try {
+        reproducibility = await captureReproducibleRun(
+          { intent, resolved, plan, seed: assembled.seed, validated, timings, reality: reality as any },
+          this.memory,
+          this.version,
+        );
+      } catch {
+        // Capture is best-effort; never break a run because of it
+      }
+    }
+
+    // Phase 1/2 full autonomy: attach live Doctrine v2 Stratum Conformance to every agent run
+    let stratumConformance: any = undefined;
+    try {
+      const artifacts = [assembled.seed, validated?.seed].filter(Boolean);
+      if (artifacts.length > 0) {
+        stratumConformance = calculateStratumConformance(artifacts);
+      }
+    } catch {}
+
     return {
       intent,
       resolved,
       plan,
       seed: assembled.seed,
       ...(validated ? { validated } : {}),
+      ...(reproducibility ? { reproducibility } : {}),
       ...(reality ? { reality } : {}),
       ...(iterations !== undefined ? { iterations } : {}),
       ...(liveContext ? { liveContext } : {}),
+      ...(stratumConformance ? { stratumConformance } : {}),
       timings,
     };
   }

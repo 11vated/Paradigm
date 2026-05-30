@@ -19,7 +19,7 @@ import type {
 import { generateFriend, hashArtifact } from './generator';
 import { friendPayloadHash } from './sovereignty';
 import { createFriendSeed } from './genesis';
-import type { QualityContract, QualityReport, CuratedSeed } from '../kernel/quality-contract';
+import type { QualityContract, QualityReport, CuratedSeed, Stratum } from '../kernel/quality-contract';
 import { registerContract } from '../kernel/quality-contract';
 
 // ─── Inverted shape — partial reconstruction of the gene state ───────────────
@@ -37,6 +37,8 @@ export interface FriendInvertedGenes {
 export const FriendQualityContract: QualityContract<FriendSeedData, FriendArtifact, FriendInvertedGenes> = {
   domain: 'friend',
   version: '1.0.0',
+  strata: ['Form', 'Mind', 'Sound', 'Story'] as const,
+  engineOwner: 'Friend Engine',
 
   synthesize(seed) {
     return generateFriend(seed);
@@ -165,6 +167,16 @@ export const FriendQualityContract: QualityContract<FriendSeedData, FriendArtifa
 
   hashArtifact(artifact) {
     return hashArtifact(artifact);
+  },
+
+  manifest() {
+    return {
+      domain: 'friend',
+      version: '1.0.0',
+      strata: ['Form', 'Mind', 'Sound', 'Story'] as const,
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
   },
 };
 

@@ -122,14 +122,30 @@ export class GsplParser {
       name = this.expect('IDENTIFIER').value;
       seedName = this.expect('STRING').value;
     }
-    this.expect('IN');
+    // Support both `in domain` and `: domain` (colon form used in examples/strata_demo.gspl and many canon files)
+    if (this.check('IN')) {
+      this.advance();
+    } else if (this.check('COLON')) {
+      this.advance();
+    } else {
+      // bare form or error — let expect surface a clear message
+    }
     const domain = this.expect('IDENTIFIER').value;
 
     this.expect('LBRACE'); // {
 
     const genes: ASTNode[] = [];
+    let strata: string[] | undefined;
     while (!this.check('RBRACE')) {
       if (this.check('RBRACE')) break;
+      // Special strata clause: strata: Form + Motion + ... ;
+      if (this.check('IDENTIFIER') && this.peek()?.value === 'strata') {
+        this.advance(); // 'strata'
+        this.expect('COLON');
+        strata = this.parseStrataList();
+        if (this.check('SEMICOLON')) this.advance();
+        continue;
+      }
       genes.push(this.parseGeneDecl());
     }
 
@@ -141,15 +157,66 @@ export class GsplParser {
       seedName,
       domain,
       genes,
+      strata,
       loc: { line: seedToken.line, column: seedToken.column }
     };
   }
 
+  private parseStrataList(): string[] {
+    const list: string[] = [];
+    // First stratum
+    list.push(this.expect('IDENTIFIER').value);
+    while (this.check('PLUS')) {
+      this.advance(); // +
+      list.push(this.expect('IDENTIFIER').value);
+    }
+    return list;
+  }
+
   private parseGeneDecl(): ASTNode {
-    const nameToken = this.advance(); // gene name
+    // Tolerate optional leading `gene` keyword (seen in some canon library .gspl files)
+    if (this.check('GENE')) {
+      this.advance();
+    }
+    const nameToken = this.advance(); // gene name or bare identifier
     const name = nameToken.value;
 
-    this.expect('COLON'); // :
+    let geneType: any = null;
+    let constraints: any = null;
+
+    // Optional type annotation: `gene foo: scalar` or `foo: scalar in [...]`
+    // Tolerant mode (Phase 0): if the token after `:` does not look like a type start (IDENTIFIER or SEED),
+    // treat the `:` as introducing the *value* directly (common syntax in tests + canon .gspl files: `strength: 0.9`).
+    // This makes type optional / inferred while preserving the rich typed form for future use.
+    if (this.check('COLON')) {
+      this.advance(); // :
+      const next = this.peek();
+      const looksLikeType = next && (next.type === 'IDENTIFIER' || next.type === 'SEED');
+      if (looksLikeType) {
+        geneType = this.parseType();
+
+        // Optional constraint: `in [0.0, 1.0]` or `in ["a", "b"]`
+        if (this.check('IN')) {
+          this.advance(); // in
+          this.expect('LBRACKET');
+          const items: any[] = [];
+          if (!this.check('RBRACKET')) {
+            do {
+              const item = this.parseExpression();
+              items.push(item);
+            } while (this.match('COMMA'));
+          }
+          this.expect('RBRACKET');
+          constraints = { kind: 'in', values: items };
+        }
+      }
+      // else: the `:` was value-introducing (e.g. `strength: 0.9`). Fall through to value parse below.
+    }
+
+    // Value via = or : (for bare `name = expr` or after type or after tolerant `name : value`)
+    if (this.check('ASSIGN') || this.check('COLON')) {
+      this.advance();
+    }
 
     const value = this.parseExpression();
 
@@ -165,6 +232,8 @@ export class GsplParser {
     return {
       type: ASTNodeType.GENE_ACCESS,
       geneName: name,
+      geneType,
+      constraints,
       value,
       loc: { line: nameToken.line, column: nameToken.column }
     };
@@ -708,11 +777,16 @@ export class GsplParser {
     if (this.match('COMMA')) {
       engine = this.expect('IDENTIFIER').value;
     }
+    let withSeed = undefined;
+    if (this.match('WITH')) {
+      withSeed = this.parseExpression();
+    }
 
     return {
       type: ASTNodeType.GROW_OP,
       seed,
       engine,
+      with: withSeed,
       loc: { line: token.line, column: token.column }
     };
   }
@@ -882,18 +956,49 @@ export class GsplParser {
 
   private parseImportDecl(): ASTNode {
     const importToken = this.advance(); // import
-    this.expect('LBRACE'); // {
-    const imports: string[] = [];
-    do {
-      imports.push(this.expect('IDENTIFIER').value);
-    } while (this.match('COMMA'));
-    this.expect('RBRACE');
-    this.expect('FROM'); // from
-    const path = this.expect('STRING').value;
+
+    // Support both:
+    //   import { foo, bar } from "path";
+    //   import "std/core";          // simple form used in many examples
+    //   import std.core;            // or dotted
+    if (this.check('STRING')) {
+      const path = this.advance().value;
+      return {
+        type: ASTNodeType.IMPORT_DECL,
+        imports: [],
+        path,
+        loc: { line: importToken.line, column: importToken.column }
+      };
+    }
+
+    if (this.check('LBRACE')) {
+      this.advance(); // {
+      const imports: string[] = [];
+      do {
+        imports.push(this.expect('IDENTIFIER').value);
+      } while (this.match('COMMA'));
+      this.expect('RBRACE');
+      this.expect('FROM');
+      const path = this.expect('STRING').value;
+      return {
+        type: ASTNodeType.IMPORT_DECL,
+        imports,
+        path,
+        loc: { line: importToken.line, column: importToken.column }
+      };
+    }
+
+    // Dotted form: import std.core or import Foo.Bar
+    const parts: string[] = [];
+    parts.push(this.expect('IDENTIFIER').value);
+    while (this.match('DOT')) {
+      parts.push(this.expect('IDENTIFIER').value);
+    }
+    const path = parts.join('.');
 
     return {
       type: ASTNodeType.IMPORT_DECL,
-      imports,
+      imports: [],
       path,
       loc: { line: importToken.line, column: importToken.column }
     };

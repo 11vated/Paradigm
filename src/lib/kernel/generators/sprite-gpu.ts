@@ -1,5 +1,8 @@
 /**
- * WebGPU Compute Shaders for Sprite V2 Generator
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * GPU sibling. Canonical is sprite.ts + sprite-contract.ts.
+ *
+ * WebGPU Compute Shaders for Sprite V2 Generator (legacy)
  * Pixel-level operations in parallel (10,000+ pixels updated simultaneously)
  * Enables real-time pixel art generation and animation
  */

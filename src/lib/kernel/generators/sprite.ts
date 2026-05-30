@@ -1,5 +1,12 @@
 /**
- * Sprite Generator V3 — World-Class Animated Sprite Sheets
+ * Sprite Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * This is the PRIMARY / canonical implementation for sprite generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file.
+ *
+ * Siblings (sprite-v2.ts, sprite-gpu.ts, sprite-animated.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features:
  * - Canvas2D pixel art generation with deterministic seeding
  * - Color palette reduction (4-256 indexed colors)
@@ -8,6 +15,8 @@
  * - Export: PNG + JSON (Aseprite-compatible)
  * - ΔE<3.0 color accuracy
  * - Deterministic: same seed = identical sprite sheet
+ *
+ * PHASE 2 NOTE: Canonical primary. Do not add new features to siblings.
  */
 
 import * as THREE from 'three';

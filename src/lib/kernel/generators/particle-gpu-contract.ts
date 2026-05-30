@@ -1,5 +1,8 @@
 /**
- * ParticleGpu Quality Contract — auto-generated stub.
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Particle GPU contract sibling. Use primary particle.
+ *
+ * ParticleGpu Quality Contract — auto-generated stub (legacy).
  *
  * Adapter around `generateParticleGPU` exposing the canonical 4-clause
  * QualityContract surface. The rate() function is a placeholder pending

@@ -23,6 +23,10 @@ import { registerLibraryRoutes } from './src/server/routes/library.js';
 import { registerGsplRoutes } from './src/server/routes/gspl.js';
 import { registerAuthRoutes } from './src/server/routes/auth.js';
 import { registerEvolveRoutes } from './src/server/routes/evolve.js';
+import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
+import { registerStaticRoutes } from './src/server/routes/static.js';
+import { registerFinalRoutes } from './src/server/routes/final.js';
+import { sendWsFrame, sendJson, parseWsFrame, registerWebsocketUpgrade } from './src/server/routes/websocket.js';
 initServerPolyfills();
 
 import express from 'express';
@@ -425,226 +429,25 @@ async function startServer() {
 
   registerDaoRoutes(app, { optionalAuth, seeds, trainingCanon, daoProvider, log });
 
-
-  // ARTIFACTS — serve grown outputs publicly so the browser can render them
-  // ═════════════════════════════════════════════════════════════════════════
-  const artifactsDir = path.join(process.cwd(), 'data', 'artifacts');
-  app.use('/artifacts', express.static(artifactsDir, {
-    maxAge: '1y',
-    immutable: true,
-    setHeaders: (res, filePath) => {
-      if (filePath.endsWith('.svg'))  res.setHeader('Content-Type', 'image/svg+xml; charset=utf-8');
-      if (filePath.endsWith('.html')) res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      if (filePath.endsWith('.wav'))  res.setHeader('Content-Type', 'audio/wav');
-      if (filePath.endsWith('.mid'))  res.setHeader('Content-Type', 'audio/midi');
-      if (filePath.endsWith('.pdb'))  res.setHeader('Content-Type', 'chemical/x-pdb');
-      if (filePath.endsWith('.gltf')) res.setHeader('Content-Type', 'model/gltf+json');
-      if (filePath.endsWith('.json')) res.setHeader('Content-Type', 'application/json');
-    },
-  }));
-  app.use('/data/artifacts', express.static(artifactsDir));
-
-  // CATCH-ALL & VITE
+  // CATCH-ALL & VITE (encapsulated in extracted module)
   // ═══════════════════════════════════════════════════════════════════════════
+  // Doctrine v2 Substrate Health + Strata + Static + Final routes (Phase 1 modular split)
+  registerSubstrateHealthRoutes(app);
+  registerStaticRoutes(app);
+  await registerFinalRoutes(app, process.env.NODE_ENV === 'production');
 
-  app.use('/api/*', (req: any, res: any) => {
-    log('WARN', `Unimplemented API: ${req.method} ${req.originalUrl}`);
-    res.status(501).json({ detail: 'Not implemented' });
-  });
-
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true, allowedHosts: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    app.get('*all', (_req: any, res: any) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
-  // ── HTTP Server + WebSocket Upgrade ───────────────────────────────────────
+  // ── HTTP Server + WebSocket Upgrade (extracted) ───────────────────────────
   const httpServer = http.createServer(app);
 
-  // ─── WebSocket Agent Endpoint (/ws/agent) ─────────────────────────────────
-  // Implements RFC 6455 WebSocket handshake + framing without external deps.
-  // Protocol: client sends JSON { query: string }, server streams JSON lines:
-  //   { type: 'thinking', message: '...' }
-  //   { type: 'result', ...agentResult }
-  //   { type: 'error', message: '...' }
-   httpServer.on('upgrade', async (req: http.IncomingMessage, socket: any, head: Buffer) => {
-     const urlParsed = new URL(req.url || '', `http://localhost:${PORT}`);
-     if (urlParsed.pathname !== '/ws/agent') {
-       socket.destroy();
-       return;
-     }
-
-     // ── WebSocket JWT Authentication ──────────────────────────────
-     // Token can be passed via: ?token=<jwt> query param or Authorization header
-     const wsToken = urlParsed.searchParams.get('token')
-       || (req.headers['authorization']?.startsWith('Bearer ') ? req.headers['authorization'].slice(7) : null);
-
-     // Import verifyToken's underlying JWT check (verifyJWT is in auth module)
-     // For WebSocket we use the token directly via the auth module's verifyToken logic
-     if (!wsToken) {
-       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-       socket.destroy();
-       log('WARN', 'WebSocket connection rejected: no token');
-       return;
-     }
-
-     const wsUser = await verifyTokenRaw(wsToken);
-     if (!wsUser) {
-       socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
-       socket.destroy();
-       log('WARN', 'WebSocket connection rejected: invalid or expired token');
-       return;
-     }
-     log('INFO', 'WebSocket authenticated', { username: (wsUser as any).username });
-
-    // RFC 6455 handshake
-    const key = req.headers['sec-websocket-key'];
-    if (!key) { socket.destroy(); return; }
-    const keyStr = Array.isArray(key) ? key[0] : key;
-
-    const MAGIC = '258EAFA5-E914-47DA-95CA-5AB9AC45E8B0';
-    const accept = crypto.createHash('sha1').update(keyStr + MAGIC).digest('base64');
-
-    socket.write(
-      'HTTP/1.1 101 Switching Protocols\r\n' +
-      'Upgrade: websocket\r\n' +
-      'Connection: Upgrade\r\n' +
-      `Sec-WebSocket-Accept: ${accept}\r\n` +
-      '\r\n'
-    );
-
-    metrics.wsConnections++;
-    metrics.wsActiveConnections++;
-    log('INFO', 'WebSocket agent connection established');
-
-    // ── Minimal WebSocket frame helpers ──────────────────────────────────
-    function sendWsFrame(data: string) {
-      const payload = Buffer.from(data, 'utf8');
-      const len = payload.length;
-      let header: Buffer;
-      if (len < 126) {
-        header = Buffer.alloc(2);
-        header[0] = 0x81; // FIN + text
-        header[1] = len;
-      } else if (len < 65536) {
-        header = Buffer.alloc(4);
-        header[0] = 0x81;
-        header[1] = 126;
-        header.writeUInt16BE(len, 2);
-      } else {
-        header = Buffer.alloc(10);
-        header[0] = 0x81;
-        header[1] = 127;
-        header.writeBigUInt64BE(BigInt(len), 2);
-      }
-      try { socket.write(Buffer.concat([header, payload])); } catch {}
-    }
-
-    function sendJson(obj: any) { sendWsFrame(JSON.stringify(obj)); }
-
-    function parseWsFrame(buf: Buffer): { opcode: number; payload: Buffer; consumed: number } | null {
-      if (buf.length < 2) return null;
-      const opcode = buf[0] & 0x0f;
-      const masked = (buf[1] & 0x80) !== 0;
-      let payloadLen = buf[1] & 0x7f;
-      let offset = 2;
-      if (payloadLen === 126) {
-        if (buf.length < 4) return null;
-        payloadLen = buf.readUInt16BE(2);
-        offset = 4;
-      } else if (payloadLen === 127) {
-        if (buf.length < 10) return null;
-        payloadLen = Number(buf.readBigUInt64BE(2));
-        offset = 10;
-      }
-      const maskLen = masked ? 4 : 0;
-      const totalLen = offset + maskLen + payloadLen;
-      if (buf.length < totalLen) return null;
-      const mask = masked ? buf.subarray(offset, offset + maskLen) : null;
-      const payload = buf.subarray(offset + maskLen, totalLen);
-      if (mask) {
-        for (let i = 0; i < payload.length; i++) {
-          payload[i] ^= mask[i % 4];
-        }
-      }
-      return { opcode, payload, consumed: totalLen };
-    }
-
-    let buffer = Buffer.alloc(0);
-
-    socket.on('data', async (chunk: Buffer) => {
-      buffer = Buffer.concat([buffer, chunk]);
-
-      while (true) {
-        const frame = parseWsFrame(buffer);
-        if (!frame) break;
-        buffer = buffer.subarray(frame.consumed);
-
-        if (frame.opcode === 0x08) {
-          // Close frame
-          const closeFrame = Buffer.alloc(2);
-          closeFrame[0] = 0x88;
-          closeFrame[1] = 0;
-          try { socket.write(closeFrame); } catch {}
-          socket.end();
-          return;
-        }
-        if (frame.opcode === 0x09) {
-          // Ping → Pong
-          const pong = Buffer.alloc(2 + frame.payload.length);
-          pong[0] = 0x8A;
-          pong[1] = frame.payload.length;
-          frame.payload.copy(pong, 2);
-          try { socket.write(pong); } catch {}
-          continue;
-        }
-        if (frame.opcode !== 0x01) continue; // Only text frames
-
-        const text = frame.payload.toString('utf8');
-        let query: string;
-        try {
-          const msg = JSON.parse(text);
-          query = msg.query || msg.message || text;
-        } catch {
-          query = text;
-        }
-
-        // Process via agent (async for LLM enhancement when available)
-        sendJson({ type: 'thinking', message: `Processing: "${query.substring(0, 80)}"...` });
-
-        try {
-          const result = await gsplAgent.processAsync(query, { seeds });
-          sendJson({ type: 'result', ...result });
-
-          // If the agent created new seeds, add them to the server store
-          if (result.data?.seed) {
-            seeds.push(result.data.seed);
-            saveSeeds();
-          }
-          if (result.data?.seeds) {
-            seeds.push(...result.data.seeds);
-            saveSeeds();
-          }
-          if (result.data?.population) {
-            seeds.push(...result.data.population);
-            saveSeeds();
-          }
-        } catch (err: any) {
-          sendJson({ type: 'error', message: err.message || 'Agent processing failed' });
-        }
-      }
-    });
-
-    socket.on('error', () => { /* swallow */ });
-    socket.on('close', () => { metrics.wsActiveConnections--; log('INFO', 'WebSocket agent connection closed'); });
+  // Phase 1 autonomy extraction: all WS upgrade/auth/framing/agent streaming now in registerWebsocketUpgrade
+  registerWebsocketUpgrade(httpServer, {
+    PORT,
+    verifyTokenRaw,
+    log,
+    metrics,
+    gsplAgent,
+    seeds,
+    saveSeeds,
   });
 
 

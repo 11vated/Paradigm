@@ -1,5 +1,10 @@
 /**
- * Architecture Generator — produces GLTF buildings
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * 3D architecture sibling. 
+ * CANONICAL PRIMARY lives in architecture.ts + architecture-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Architecture Generator — produces GLTF buildings (legacy)
  * Enhanced with procedural architecture and PBR materials
  */
 

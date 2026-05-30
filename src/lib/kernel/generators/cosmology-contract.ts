@@ -4,7 +4,7 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateCosmology } from './cosmology';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface CoSeed { $hash: string; genes?: Record<string, any>; }
 interface CoArtifact { svg: string; bodyCount: number; scenario: string; finalEnergy: number; conserved: boolean; steps: number; }
@@ -51,6 +51,12 @@ const CURATED = [
 ];
 
 export const CosmologyQualityContract: QualityContract<CoSeed, CoArtifact, CoInverted> = {
-  domain: 'cosmology', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  domain: 'cosmology', version: '1.0.0', 
+  strata: ['World', 'Field', 'Time'] as const,
+  engineOwner: 'Cosmology Engine',
+  synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  manifest() {
+    return { World: 'N-body trajectories', Field: 'Gravity + softening rules', Time: 'Leapfrog integration timeline' };
+  },
 };
-registerContract(CosmologyQualityContract as any);
+registerContract(CosmologyQualityContract);

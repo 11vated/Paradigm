@@ -6,7 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateCloud } from './cloud';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'cloud'; $name?: string; genes: any }
@@ -27,7 +27,7 @@ export const CloudQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'cloud-'));
     const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateCloud(seed as any, out));
+    const r = await withKernelClock(0, () => generateCloud(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
@@ -38,5 +38,15 @@ export const CloudQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+  strata: ['Field', 'World', 'Mind'] as const,
+  engineOwner: 'Cloud Computing Engine',
+  manifest() {
+    return {
+      domain: 'cloud',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(CloudQualityContract as any);
+registerContract(CloudQualityContract);

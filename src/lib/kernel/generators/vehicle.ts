@@ -1,7 +1,21 @@
 /**
- * Vehicle Generator V3 — Vehicle Design with Physics
+ * Vehicle Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for vehicle design generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + vehicle-contract.ts.
+ *
+ * Siblings (vehicle-3d.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Cars, boats, aircraft, physics properties
  * Export: JSON specs, GLTF 3D model, interactive HTML
+ *
+ * PHASE 2 NOTE: Canonical primary. Target vehicle.ts exclusively for new work.
+ *
+ * GOLDEN CORPUS STABILITY TODO (high priority):
+ * Vehicle golden hashes are still drifting between runs even after synthesize fix.
+ * Root cause investigation + hardening required before vehicle can be marked PINNED.
+ * See golden/vehicle-golden-hashes.json and scripts/capture-golden-vehicles.ts.
  */
 
 import * as fs from 'fs';

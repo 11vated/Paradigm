@@ -1,5 +1,10 @@
 /**
- * Procedural Generator — produces GLTF terrain
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Procedural 3D sibling. 
+ * CANONICAL PRIMARY lives in procedural.ts + procedural-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Procedural Generator — produces GLTF terrain (legacy)
  * Creates 3D terrain meshes with heightmaps
  */
 

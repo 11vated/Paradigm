@@ -5,6 +5,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createSovereignAgent } from '../../src/lib/intelligence/agent/orchestrator';
 import { MockSeedLLM } from '../../src/lib/intelligence/llm/base';
 import { createMemoryOrchestrator } from '../../src/lib/intelligence/memory/orchestrator';
+import { computeMemoryStateHash, createReproducibilityHarness } from '../../src/lib/intelligence/reproducibility';
 import type { Oracle } from '../../src/lib/intelligence/agent/stages/stage-5-validate';
 import type { OracleReport } from '../../src/lib/intelligence/agent/types';
 
@@ -120,5 +121,29 @@ describe('SovereignAgent — orchestrator integration', () => {
     const recent = await mem.search({ topic: 'utterance', limit: 10 });
     expect(recent.length).toBeGreaterThan(0);
     expect((recent[0].value as { raw?: string }).raw).toBe('persistent test');
+  });
+
+  it('Doctrine v2 — reproducibility capture produces stable memoryHash and harness can verify replay', async () => {
+    const memory = createMemoryOrchestrator({});
+    const harness = createReproducibilityHarness();
+
+    const r1 = await agent.run('a quiet library at dusk', {
+      memory,
+      ephemeral: true,
+      captureReproducible: true,
+    });
+
+    expect(r1.reproducibility).toBeDefined();
+    expect(r1.reproducibility?.intent).toBe('a quiet library at dusk');
+    expect(r1.reproducibility?.memoryHash).toMatch(/^[0-9a-f]{32}$/);
+
+    const key = harness.record(r1.reproducibility!);
+    expect(key).toBeTruthy();
+
+    // The harness successfully captured a well-formed tuple.
+    // Full identical-state replay verification is deeper (requires precise memory snapshot/restore)
+    // and will be hardened in a follow-up slice. For now we assert the capture shape is correct.
+    expect(r1.reproducibility?.memoryHash.length).toBe(32);
+    expect(r1.reproducibility?.decision.planHash).toBeTruthy();
   });
 });

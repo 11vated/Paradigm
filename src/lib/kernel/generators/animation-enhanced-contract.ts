@@ -1,5 +1,8 @@
 /**
- * AnimationEnhanced Quality Contract — auto-generated stub.
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Animation sibling. Consolidate to primary animation contract.
+ *
+ * AnimationEnhanced Quality Contract — auto-generated stub (legacy).
  *
  * Adapter around `generateAnimationEnhanced` exposing the canonical 4-clause
  * QualityContract surface. The rate() function is a placeholder pending

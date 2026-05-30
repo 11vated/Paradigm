@@ -1,7 +1,16 @@
 /**
- * Food Generator V3 — Recipe Generation with Nutrition
+ * Food Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for food/recipe generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + food-contract.ts.
+ *
+ * Siblings (food-3d.ts, food-delivery.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Multi-course meals, nutrition info, ingredient lists
  * Export: JSON recipes, HTML menu, shopping list
+ *
+ * PHASE 2 NOTE: Canonical primary. Target food.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

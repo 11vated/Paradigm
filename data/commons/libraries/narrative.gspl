@@ -1,0 +1,42 @@
+// Paradigm Canonical Narrative Schema (GSPL)
+// Authoritative gene definition for the narrative domain.
+// Same seed + same RNG = bit-identical story forever.
+// Enables rich character-influenced storytelling, emotional depth, and cross-domain composition (character ↔ narrative via kernel functors).
+
+seed Narrative in narrative {
+  // Core structure (constrained)
+  gene genre: categorical in ["fantasy", "scifi", "mystery", "romance", "thriller", "horror"];
+  gene length: categorical in ["short", "medium", "long", "novel"];
+  gene pov: categorical in ["first", "second", "third"];
+  gene tone: categorical in ["dark", "light", "neutral"];
+
+  // Flagship elevation — emotional and structural depth (directly drives prose quality)
+  gene emotionalIntensity: scalar in [0.1, 0.98];
+  gene plotComplexity: scalar in [0.15, 0.95];
+  gene characterDepth: scalar in [0.2, 0.92];
+  gene pacing: scalar in [0.3, 0.9];               // slow/deliberate → fast/propulsive
+  gene emotionalArc: categorical in ["rise-fall", "fall-rise", "tragedy", "triumph", "ambiguous", "cathartic"];
+
+  // Cross-domain personality bridge (populated automatically when composed with Character seeds via kernel composition)
+  gene heroDominance: scalar in [0.1, 0.95];
+  gene heroOpenness: scalar in [0.1, 0.95];
+  gene morphExpressiveness: scalar in [0.0, 1.0];  // derived from character morph_smile/laugh energy
+}
+
+// Example usage in GSPL:
+// let tale = grow Narrative from {
+//   genre: "fantasy",
+//   tone: "light",
+//   emotionalIntensity: 0.82,
+//   plotComplexity: 0.71,
+//   characterDepth: 0.88,
+//   emotionalArc: "triumph",
+//   heroDominance: 0.65,
+//   ...
+// }
+//
+// This seed can be composed with Character (morph energy → emotional beats + dialogue flavor),
+// Music (tempo/resonance → pacing & mood), or Fullgame (plot → quests) via kernel functors.
+//
+// The generator produces richer prose, deterministic pacing curves (std/ease),
+// and an optional interactive Story Player HTML when emotionalIntensity is high.

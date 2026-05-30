@@ -1,4 +1,9 @@
 /**
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Food delivery sibling. 
+ * CANONICAL PRIMARY lives in food.ts + food-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
  * Food Delivery Generator — produces food delivery systems
  * Ghost kitchens, delivery fleets, routing optimization
  * $0.3T market: Food Delivery

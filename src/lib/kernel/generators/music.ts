@@ -1,5 +1,8 @@
 /**
- * Music Generator V3 — Studio-Quality Compositions
+ * Music Generator V3 — Studio-Quality Compositions (CANONICAL - Phase 2 Doctrine v2)
+ * Primary and only supported implementation for the music domain.
+ * music-v2.ts, music-enhanced.ts, music-gpu.ts are deprecated siblings.
+ *
  * Features:
  * - WebAudio API synthesis (44.1kHz, 24-bit)
  * - Multi-track composition (melody, harmony, bass, drums)
@@ -7,6 +10,11 @@
  * - Export: WAV (44.1kHz), MIDI, MusicXML, stems
  * - ±1 cent tuning accuracy
  * - Deterministic: same seed = identical audio
+ *
+ * PHASE 2 CONSOLIDATION (Doctrine v2 GO autonomy):
+ * This is the canonical primary (music-contract now points exclusively here).
+ * All music-v2 / enhanced / gpu siblings deprecated + waived.
+ * Next micro-waves: golden regeneration for music family + engines enforcement.
  */
 
 import * as fs from 'fs';

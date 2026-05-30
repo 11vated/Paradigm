@@ -1,7 +1,16 @@
 /**
- * Animation Generator V3 — 3D/2D Animated Sequences
+ * Animation Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for animation generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + animation-contract.ts.
+ *
+ * Siblings (animation-enhanced.ts + animation-enhanced-contract.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Keyframe animation, skeletal animation, morph targets
  * Export: FBX, GLTF with animations, MP4 video
+ *
+ * PHASE 2 NOTE: Canonical primary. Target animation.ts exclusively for new work.
  */
 
 import * as THREE from 'three';

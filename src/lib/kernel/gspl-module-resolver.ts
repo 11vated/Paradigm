@@ -218,6 +218,62 @@ fn triadic_b(h: scalar) -> scalar {
 }
 `,
 
+  'std/ease': `
+  // Paradigm Standard Library — Easing
+  // Deterministic animation curves for temporal/character/7D work.
+  // All use kernel math only.
+
+  fn ease_linear(t: scalar) -> scalar { t }
+
+  fn ease_cubic_in(t: scalar) -> scalar { t * t * t }
+
+  fn ease_cubic_out(t: scalar) -> scalar { let u = t - 1.0; u * u * u + 1.0 }
+
+  fn ease_cubic_inout(t: scalar) -> scalar {
+    if t < 0.5 { 4.0 * t * t * t } else {
+      let u = (t - 1.0) * 2.0; u * u * u / 2.0 + 1.0
+    }
+  }
+
+  fn ease_elastic_out(t: scalar) -> scalar {
+    if t == 0.0 { 0.0 } else if t == 1.0 { 1.0 } else {
+      let p = 0.3; let s = p / 4.0;
+      pow(2.0, -10.0 * t) * sin((t - s) * (2.0 * 3.14159265) / p) + 1.0
+    }
+  }
+`,
+
+  'std/expression': `
+  // Paradigm Standard Library — Expression
+  // Deterministic morph blending, pulse, and emotional timing helpers.
+  // Used by character rig, narrative beats, and 7D reactivity.
+
+  fn blend(a: scalar, b: scalar, t: scalar) -> scalar {
+    a * (1.0 - t) + b * t
+  }
+
+  fn pulse(phase: scalar, freq: scalar, intensity: scalar) -> scalar {
+    let t = (phase * freq) % 1.0;
+    let env = 1.0 - abs(t - 0.5) * 2.0;
+    intensity * env * env
+  }
+
+  fn laugh_burst(phase: scalar, energy: scalar) -> scalar {
+    // Quick smile + surprise double pulse (exact flagship timing shape)
+    let t = phase % 1.0;
+    let p1 = max(0.0, 1.0 - abs(t - 0.22) / 0.18);
+    let p2 = max(0.0, 1.0 - abs(t - 0.58) / 0.22);
+    energy * (p1 * p1 + p2 * 0.7)
+  }
+
+  fn talk_pulse(phase: scalar, energy: scalar) -> scalar {
+    // Surprise morph pulses for dialogue (talk)
+    let t = (phase * 2.8) % 1.0;
+    energy * max(0.0, sin(t * 3.14159 * 2.0) * 0.8 + 0.2)
+  }
+`,
+
+
   'std/music': `
 // Paradigm Standard Library — Music
 // Intervals, scales, chord voicings, rhythm patterns.

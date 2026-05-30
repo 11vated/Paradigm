@@ -2,6 +2,12 @@
  * Domain Engine Router — dispatches seed → generator
  * Delegates to PipelineRunner for all configured domains (27).
  * Also supports 103+ domains via engine-dispatcher (Phase 2).
+ *
+ * PHASE 2 CANONICAL ENFORCEMENT (Doctrine v2 full autonomy GO waves):
+ * - sprite.ts, music.ts, visual2d.ts, animation.ts, procedural.ts, typography.ts, robotics.ts, architecture.ts, fashion.ts, food.ts, particle.ts, shader.ts, vehicle.ts, furniture.ts are PRIMARY CANONICAL (14 families).
+ * - Siblings (v2/enhanced/3d/gpu etc.) carry PARADIGM-RENAME-OK waivers + deprecation banners (sunset 2026-08-25).
+ * - New code + all dispatch paths must target the primaries (see CANONICAL_PRIMARY notes in generators + Python engines.py).
+ * - Golden regeneration + hard sibling rejection queued in subsequent waves. (Vehicle + Furniture families hit this wave; 14 families now under regime.)
  */
 
 import type { GeneratorOutput } from './types';
@@ -45,6 +51,24 @@ async function growViaPipeline(seed: Seed): Promise<Artifact> {
 }
 
 // ─── ENGINE REGISTRY ──────────────────────────────────────────────────────────
+// PHASE 2 CANONICAL REGISTRY (Doctrine v2 full autonomy) — 14 families
+// Primaries: sprite, animation, procedural, typography, robotics, architecture, fashion, food, particle, shader, vehicle, furniture (+ music/visual2d core)
+// All Python side files (engines.py, pipeline.py, evolution.py, agent.py, composition.py, oracle) MUST mirror this list + enforce grow_* to canonical only.
+// New predicate axes (trajectoryStability, spectralBalance, ecologicalCoherence, invariance, transmissionDepth, rhythm, symmetry, growth, etc.) must be exercised in Python QualityValidator + evaluate_fitness + agent paths.
+// PYTHON_SYNC_STUB (Doctrine v2 cross-stack)
+// When active Python sources reappear (src/server/python/ or equivalent):
+//   1. Mirror CANONICAL_PRIMARY = ['sprite', 'music', 'visual2d', 'animation', 'procedural', 'typography',
+//      'robotics', 'architecture', 'fashion', 'food', 'particle', 'shader', 'vehicle', 'furniture']
+//   2. In engines.py / grow_* functions: enforce only canonical primaries; reject deprecated siblings with clear error.
+//   3. Port calculateStratumConformance + all 9 predicates (with new axes: rhythm, symmetry, growth, invariance,
+//      transmission, trajectory, spectral, coherence, decisionDepth, etc.) into QualityValidator.score and
+//      evaluate_fitness.
+//   4. Wire contract manifest() + live conformance into oracle, agent, composition, and pipeline outputs.
+//   5. Keep parity with TS CLI Doctrine Surface (conformance % + manifest block).
+// Current TS state (as of this wave): 14 families hard-enforced, combined live Doctrine Surface in paradigm make,
+// golden prep + hash capture plans on sprite/particle/vehicle/music/fashion. Python side was deeply wired in prior
+// autonomy waves but sources currently only in .archive trees. Re-sync when active Python is restored.
+// Action: On next Python presence, replicate the above 5 points and run cross-stack conformance tests.
 export const ENGINES: Record<string, (seed: Seed) => Promise<Artifact>> = {};
 for (const domain of ALL_DOMAINS) {
   ENGINES[domain] = growViaPipeline;

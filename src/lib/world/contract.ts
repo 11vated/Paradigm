@@ -4,7 +4,7 @@
 import { createWorldSeed } from './genesis';
 import { generateWorld, hashArtifact } from './generator';
 import { registerContract } from '../kernel/quality-contract';
-import type { QualityContract } from '../kernel/quality-contract';
+import type { QualityContract, Stratum } from '../kernel/quality-contract';
 import type { WorldSeedData, WorldArtifact } from './types';
 
 interface WorldInverted {
@@ -26,6 +26,8 @@ const CURATED = [
 export const WorldQualityContract: QualityContract<WorldSeedData, WorldArtifact, WorldInverted> = {
   domain: 'world',
   version: '1.0.0',
+  strata: ['World', 'Story', 'Culture', 'Field'] as const,
+  engineOwner: 'World Engine',
 
   synthesize: async (seed: WorldSeedData) => generateWorld(seed),
 
@@ -57,6 +59,16 @@ export const WorldQualityContract: QualityContract<WorldSeedData, WorldArtifact,
   curated: () => CURATED,
 
   hashArtifact,
+
+  manifest() {
+    return {
+      domain: 'world',
+      version: '1.0.0',
+      strata: ['World', 'Story', 'Culture', 'Field'] as const,
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
 
-registerContract(WorldQualityContract as any);
+registerContract(WorldQualityContract);

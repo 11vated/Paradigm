@@ -1,0 +1,11 @@
+// Paradigm Canonical Sprite Schema (GSPL)
+// For 2D animated pixel art / spritesheets.
+
+seed Sprite in sprite {
+  gene resolution: scalar in [16, 256];
+  gene frameCount: scalar in [4, 32];
+  gene paletteSize: scalar in [4, 32];
+  gene symmetry: categorical in ["none", "horizontal", "vertical", "both"];
+  gene animationSpeed: scalar in [4, 24]; // fps
+  gene style: categorical in ["pixel", "lowpoly", "outline", "dithered"];
+}

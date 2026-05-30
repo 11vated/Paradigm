@@ -1,5 +1,9 @@
 /**
- * Character Generator V2 — World-Class Parametric Humanoid
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Sibling. Canonical is character.ts + character-contract.ts (generateCharacterV3).
+ * Removal after golden regeneration.
+ *
+ * Character Generator V2 — World-Class Parametric Humanoid (legacy)
  * Features:
  * - Parametric body modeling (height, proportions, muscle/fat)
  * - Procedural face generation (features, expression)

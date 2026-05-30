@@ -1,5 +1,10 @@
 /**
- * Shader Generator — produces compiled GLSL shaders
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Shader enhanced sibling. 
+ * CANONICAL PRIMARY lives in shader.ts + shader-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Shader Generator — produces compiled GLSL shaders (legacy enhanced)
  * Enhanced with multiple techniques and quality tiers
  */
 

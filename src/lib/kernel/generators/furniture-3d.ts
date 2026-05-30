@@ -1,5 +1,10 @@
 /**
- * Furniture Generator — produces GLTF furniture
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * 3D furniture sibling. 
+ * CANONICAL PRIMARY lives in furniture.ts + furniture-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Furniture Generator — produces GLTF furniture (legacy)
  * Enhanced with detailed 3D models and PBR materials
  */
 

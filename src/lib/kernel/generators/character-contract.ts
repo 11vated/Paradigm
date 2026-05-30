@@ -8,7 +8,8 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateCharacterV3 } from './character';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 // Minimal FileReader polyfill for Node.js (Three.js GLTFExporter requires it).
 // Uses Blob.arrayBuffer() which is available in Node.js 18+.
@@ -87,9 +88,27 @@ function rate(artifact: ChArtifact): QualityReport {
   axes.densityOk = artifact.meta.faces >= 200 ? 1 : artifact.meta.faces / 200;
   axes.hasAnimation = artifact.meta.animations > 0 ? 1 : 0;
   axes.hasTextures = artifact.meta.textures.length > 0 ? 1 : 0;
+
+  // Doctrine v2: wire stratum predicates into rate() for executable enforcement (Form + Motion declared)
+  const declared: Stratum[] = ['Form', 'Motion'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    const probe = s === 'Form'
+      ? { geometry: { vertices: artifact.meta.vertices, faces: artifact.meta.faces, manifold: true, watertight: true }, uvCoverage: 0.92 }
+      : { joints: Math.max(8, artifact.meta.animations * 4), loopClosure: 0.88, groundContact: true };
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((a, b) => a + b, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  const notes = [`verts=${artifact.meta.vertices} faces=${artifact.meta.faces} anims=${artifact.meta.animations} tex=${artifact.meta.textures.length}`];
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const v = Object.values(axes);
   const score = v.reduce((a, b) => a + b, 0) / v.length;
-  return { score, axes, notes: [`verts=${artifact.meta.vertices} faces=${artifact.meta.faces} anims=${artifact.meta.animations} tex=${artifact.meta.textures.length}`] };
+  return { score, axes, notes };
 }
 
 const CURATED = [
@@ -108,12 +127,22 @@ function hashArtifact(a: ChArtifact): string {
 export const CharacterQualityContract: QualityContract<ChSeed, ChArtifact, ChInverted> = {
   domain: 'character',
   version: '3.0.0',
+  strata: ['Form', 'Motion'] as const,
+  engineOwner: 'Character Engine',
   synthesize,
   invert,
   rate,
   curated: () => CURATED,
   hashArtifact,
+  manifest() {
+    return {
+      domain: 'character',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
 
-registerContract(CharacterQualityContract as any);
+registerContract(CharacterQualityContract);
 

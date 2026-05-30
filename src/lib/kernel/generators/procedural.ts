@@ -1,7 +1,16 @@
 /**
- * Procedural Generator V3 — Terrain and World Generation
+ * Procedural Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for procedural/terrain generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + procedural-contract.ts.
+ *
+ * Siblings (procedural-3d.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Heightmaps, biomes, noise-based generation
  * Export: Heightmap PNG, JSON world data, interactive 3D
+ *
+ * PHASE 2 NOTE: Canonical primary. Target procedural.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

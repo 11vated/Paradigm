@@ -6,7 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateBiomedical } from './biomedical';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'biomedical'; $name?: string; genes: any }
@@ -27,7 +27,7 @@ export const BiomedicalQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'biomedical-'));
     const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateBiomedical(seed as any, out));
+    const r = await withKernelClock(0, () => generateBiomedical(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
@@ -38,5 +38,15 @@ export const BiomedicalQualityContract: QualityContract<S, A, any> = {
     return { score, axes: { hasOutput: score }, notes: [] };
   },
   hashArtifact,
+  strata: ['Form', 'Field', 'Mind'] as const,
+  engineOwner: 'Biomedical Engine',
+  manifest() {
+    return {
+      domain: 'biomedical',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(BiomedicalQualityContract as any);
+registerContract(BiomedicalQualityContract);

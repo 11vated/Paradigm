@@ -20,6 +20,7 @@ import type { Seed } from '../engines';
 import { rngFromHash } from '../rng';
 import { exportGLTF } from './gltf-exporter';
 import { createProvenance } from '../provenance';
+import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 const TEXTURE_RESOLUTION: Record<string, number> = { low: 512, medium: 1024, high: 2048, photorealistic: 4096 };
 const GRID_RESOLUTIONS: Record<string, number> = { low: 32, medium: 64, high: 96, photorealistic: 128 };
@@ -613,6 +614,7 @@ export interface Geometry3DV4Result {
   manifold: boolean;
   textureRes: number;
   gridResolution: number;
+  gsplSchema?: string;
 }
 
 export async function generateGeometry3DV4(seed: Seed, outputPath: string): Promise<Geometry3DV4Result> {
@@ -621,13 +623,41 @@ export async function generateGeometry3DV4(seed: Seed, outputPath: string): Prom
   const textureRes = TEXTURE_RESOLUTION[quality] || 1024;
   const gridRes = GRID_RESOLUTIONS[quality] || 64;
 
+  // === GSPL Canon Integration (geometry3d schema) ===
+  let gsplSchemaLoaded: string | undefined;
+  let geometryConstraints: any = null;
+  try {
+    const schemaContent = await import('fs/promises').then(fs => 
+      fs.readFile('data/commons/libraries/geometry3d.gspl', 'utf8').catch(() => null));
+    if (schemaContent) {
+      gsplSchemaLoaded = 'geometry3d.gspl';
+      geometryConstraints = parseGeometrySchemaConstraints(schemaContent);
+    }
+  } catch (e) {}
+
+  // NOTE (verify-sweep): Textured GLTF + LOD exports may require golden updates for new PBR outputs.
+
   const primitives = ['sphere', 'box', 'torus', 'capsule', 'cylinder', 'cone', 'compound'];
   const materials = ['metal', 'plastic', 'wood', 'stone', 'glass'];
 
-  const primitive = (seed.genes?.primitive?.value || primitives[Math.floor(rng.nextF64() * primitives.length)]) as string;
-  const material = (seed.genes?.material?.value || materials[Math.floor(rng.nextF64() * materials.length)]) as string;
-  const scale = (Array.isArray(seed.genes?.scale?.value) ? seed.genes?.scale?.value : [1, 1, 1]) as number[];
-  const params = (Array.isArray(seed.genes?.params?.value)
+  // Apply schema constraints if loaded (deeper GSPL usage)
+  const c = geometryConstraints || {};
+  const applyCategorical = (name: string, fallbackList: string[]) => {
+    const opts = c.categoricals?.[name];
+    const val = seed.genes?.[name]?.value as string;
+    if (opts && val && opts.includes(val)) return val;
+    if (opts) return opts[Math.floor(rng.nextF64() * opts.length)];
+    return seed.genes?.[name]?.value || fallbackList[Math.floor(rng.nextF64() * fallbackList.length)];
+  };
+
+  const primitive = applyCategorical('primitive', primitives);
+  const material = applyCategorical('material', materials);
+  let scale = (Array.isArray(seed.genes?.scale?.value) ? seed.genes?.scale?.value : [1, 1, 1]) as number[];
+  if (c.scalars?.scale) {
+    const r = c.scalars.scale;
+    scale = scale.map(s => Math.max(r.min, Math.min(r.max, s)));
+  }
+  let params = (Array.isArray(seed.genes?.params?.value)
     ? seed.genes?.params?.value
     : [0.5 + rng.nextF64(), 0.5 + rng.nextF64(), 0.5 + rng.nextF64()]) as number[];
 
@@ -751,8 +781,40 @@ export async function generateGeometry3DV4(seed: Seed, outputPath: string): Prom
     manifold,
     textureRes,
     gridResolution: gridRes,
+    gsplSchema: gsplSchemaLoaded,
   };
 }
 
 // ── Canonical aliases (added by phase-0.5 consolidation) ──
 export { generateGeometry3DV4 as generateGeometry3D };
+
+/**
+ * Lightweight parser for the geometry3d.gspl schema constraints.
+ * Extracts categorical options and scalar ranges so the generator can enforce them.
+ * This propagates the deeper GSPL usage pattern.
+ */
+function parseGeometrySchemaConstraints(schema: string): any {
+  const constraints: any = { scalars: {}, categoricals: {} };
+
+  const geneMatches = schema.matchAll(/gene\s+(\w+):\s*(scalar|categorical)\s*(?:in\s*(\[[^\]]+\]))?/g);
+
+  for (const match of geneMatches) {
+    const name = match[1];
+    const type = match[2];
+    const rangeStr = match[3];
+
+    if (type === 'scalar' && rangeStr) {
+      const nums = rangeStr.match(/[\d.]+/g);
+      if (nums && nums.length >= 2) {
+        constraints.scalars[name] = { min: parseFloat(nums[0]), max: parseFloat(nums[1]) };
+      }
+    } else if (type === 'categorical' && rangeStr) {
+      const items = rangeStr.match(/"([^"]+)"|'([^']+)'/g);
+      if (items) {
+        constraints.categoricals[name] = items.map(s => s.replace(/['"]/g, ''));
+      }
+    }
+  }
+
+  return constraints;
+}

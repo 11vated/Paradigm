@@ -1,0 +1,41 @@
+// Paradigm Canonical Character Schema (GSPL)
+// This is the authoritative gene definition for the character domain.
+// Same seed + same RNG = identical character forever.
+
+seed Character in character {
+  // Core proportions (all constrained)
+  gene proportions_height: scalar in [0.6, 2.4];
+  gene proportions_shoulderWidth: scalar in [0.25, 0.85];
+  gene proportions_torsoLength: scalar in [0.35, 1.1];
+  gene proportions_muscleMass: scalar in [0.1, 0.95];
+  gene proportions_fatDistribution: scalar in [0.05, 0.9];
+
+  // Face
+  gene face_eyeSpacing: scalar in [0.3, 0.75];
+  gene face_jawline: scalar in [0.2, 0.95];
+  gene face_browRidge: scalar in [0.1, 0.85];
+
+  // Appearance
+  gene skinTone: vector[3] in [0.15, 0.95];   // normalized RGB
+  gene hairColor: vector[3] in [0.0, 1.0];
+  gene eyeColor: vector[3] in [0.1, 0.95];
+
+  // Personality & Performance (used by composition + game systems)
+  gene archetype: categorical in ["warrior", "scholar", "rogue", "mystic", "guardian", "explorer"];
+  gene strength: scalar in [15, 98];
+  gene agility: scalar in [12, 95];
+  gene personality_dominance: scalar in [0.05, 0.98];
+  gene personality_openness: scalar in [0.1, 0.95];
+
+  // Optional equipment / style genes (for future functor expansion)
+  gene hasWeapon: boolean;
+  gene clothingStyle: categorical in ["minimal", "armored", "flowing", "rugged", "ceremonial"];
+}
+
+// Example usage in GSPL:
+// let hero = grow Character from {
+//   proportions_height: 1.82,
+//   archetype: "guardian",
+//   skinTone: [0.82, 0.65, 0.48],
+//   ...
+// }

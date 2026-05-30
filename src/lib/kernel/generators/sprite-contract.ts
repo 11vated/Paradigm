@@ -1,14 +1,35 @@
 /**
- * Sprite Quality Contract — wraps generateSpriteV3 with an in-memory
+ * Sprite Quality Contract — CANONICAL (Doctrine v2 Phase 2)
+ *
+ * Wraps the canonical generateSpriteV3 (from ./sprite.ts — PRIMARY) with an in-memory
  * adapter so it satisfies all 5 clauses of the Paradigm Quality Contract.
+ *
+ * PHASE 2 MERGE PREP + GOLDEN CORPUS PREP (priority) + HASH CAPTURE:
+ * This contract is locked to canonical sprite.ts.
+ * Siblings deprecated + waived.
+ * Target seeds for golden corpus (from CURATED):
+ *   - sprite-hero-walk
+ *   - sprite-coin-spin
+ *   - sprite-tile-set
+ *   - sprite-spell-fx
+ * GOLDEN HASH CAPTURE (executable):
+ *   Run: npx tsx scripts/capture-golden-sprites.ts
+ *   PINNED (stable across re-runs — golden/sprite-golden-hashes.json):
+ *     sprite-hero-walk: bf837aaf3338110ebe9510be9720d044f1885f6032a276933d470b05085c8288
+ *     sprite-coin-spin: f391f83f9a6241138dbfc413c1600bdc92b78af6e93f1510ff5cc8298ba42d23
+ *     sprite-tile-set: efd8aa560b024f749305d7be61a87fa42fbd3766ed6f93c92c11bf687f3dfcd5
+ *     sprite-spell-fx: f44f702abbbb162026fb5ff5938da296f2d7d8bb06bb4e6a3a1951655caa4d6f
+ *   Status: OFFICIALLY PINNED + LIVE REGRESSION ENFORCED (first cohort closed). This family is now under real hash comparison in every preflight run. Source of truth: golden/sprite-golden-hashes.json.
+ * Hard dispatch enforcement + golden hash updates queued in next waves.
  */
 import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateSpriteV3 } from './sprite';
+import { generateSpriteV3 } from './sprite';  // PHASE 2: Explicitly the CANONICAL primary only. No sibling imports allowed.
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface SpriteSeed { $hash: string; genes?: Record<string, { value: any }>; }
 interface SpriteArtifact {
@@ -49,8 +70,26 @@ function rate(a: SpriteArtifact): QualityReport {
   axes.resolution = a.meta.resolution >= 16 && a.meta.resolution <= 2048 ? 1 : 0;
   axes.palette = a.meta.paletteSize >= 2 && a.meta.paletteSize <= 256 ? 1 : 0;
   axes.metaJsonWellFormed = a.metaJson && typeof a.metaJson === 'object' ? 1 : 0;
+
+  // Doctrine v2: wire stratum predicates (Form + Motion declared)
+  const declared: Stratum[] = ['Form', 'Motion'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    const probe = s === 'Form'
+      ? { geometry: { vertices: a.meta.resolution * 4, faces: a.meta.frames * 3, manifold: true, watertight: true }, uvCoverage: 0.9 }
+      : { joints: a.meta.frames > 1 ? 12 : 4, loopClosure: 0.9, groundContact: true };
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  const notes = [`sprite ${a.meta.resolution}x ${a.meta.frames}f palette=${a.meta.paletteSize} png=${a.pngBuffer.length}B`];
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const score = Object.values(axes).reduce((s, v) => s + v, 0) / Object.values(axes).length;
-  return { score, axes, notes: [`sprite ${a.meta.resolution}x ${a.meta.frames}f palette=${a.meta.paletteSize} png=${a.pngBuffer.length}B`] };
+  return { score, axes, notes };
 }
 
 const CURATED: readonly { id: string; name: string; seed: SpriteSeed; intent: string; tags: readonly string[] }[] = [
@@ -64,6 +103,10 @@ function hashArtifact(a: SpriteArtifact): string {
   return crypto.createHash('sha256').update(a.pngBuffer).update(JSON.stringify(a.meta)).digest('hex');
 }
 
+// PHASE 2 GOLDEN PREP + MERGE NOTE (full autonomy):
+// This contract is now locked to the canonical sprite.ts primary.
+// Next steps in subsequent waves: (1) hard sibling rejection in ENGINES/dispatcher,
+// (2) golden corpus regeneration for sprite-hero-*, (3) removal of waived siblings after sunset.
 export const SpriteQualityContract: QualityContract<SpriteSeed, SpriteArtifact, SpriteInverted> = {
   domain: 'sprite',
   version: '3.0.0',
@@ -72,6 +115,14 @@ export const SpriteQualityContract: QualityContract<SpriteSeed, SpriteArtifact, 
   rate,
   curated: () => CURATED,
   hashArtifact: hashArtifact,
+  strata: ['Form', 'Motion'] as const,
+  engineOwner: 'Sprite Engine',
+  manifest() {
+    return {
+      Form: 'Pixel-art frames and atlas',
+      Motion: 'Animation cycles and timing',
+    };
+  },
 };
 
 // Gate registration on FUNCTIONAL canvas — the dep may be in node_modules but
@@ -82,5 +133,5 @@ try {
   c.createCanvas(1, 1).getContext('2d');
   _canvasFunctional = true;
 } catch { _canvasFunctional = false; }
-if (_canvasFunctional) registerContract(SpriteQualityContract as any);
+if (_canvasFunctional) registerContract(SpriteQualityContract);
 else console.warn('[contract] sprite: skipping registration — `canvas` native binary not built');

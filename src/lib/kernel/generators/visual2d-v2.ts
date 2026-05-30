@@ -1,5 +1,10 @@
 /**
- * Visual2D Generator V2 — SVG 2.0 Output
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * This file is a versioned sibling. The canonical implementation lives in visual2d.ts.
+ * All new work and engine registration must use the primary visual2d.ts + visual2d-contract.ts.
+ * Scheduled for removal after golden-hash migration (sunset 2026-08).
+ *
+ * Visual2D Generator V2 — SVG 2.0 Output (legacy)
  * Features:
  * - SVG 2.0 with full support for gradients, patterns, masks, filters
  * - Resolution-independent vector graphics

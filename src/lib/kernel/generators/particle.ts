@@ -1,7 +1,16 @@
 /**
- * Particle Generator V3 — Particle System Simulations
+ * Particle Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for particle system generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + particle-contract.ts.
+ *
+ * Siblings (particle-gpu.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Emitters, forces, collisions, rendering
  * Export: JSON config, interactive HTML, video
+ *
+ * PHASE 2 NOTE: Canonical primary. Target particle.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

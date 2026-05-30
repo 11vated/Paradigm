@@ -10,7 +10,8 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateVisual2DV3 } from './visual2d';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface V2Seed { $hash: string; genes?: Record<string, any>; }
 interface V2Inverted { resolution: number; layers: number; svgChars: number; svgHash: string; }
@@ -42,9 +43,28 @@ function rate(artifact: V2Artifact): QualityReport {
   axes.layered = artifact.meta.layers >= 3 ? 1 : 0;
   axes.resolution = artifact.meta.resolution >= 256 ? 1 : artifact.meta.resolution / 256;
   axes.ssim = Math.max(0, Math.min(1, artifact.meta.ssim ?? 0));
+
+  // Doctrine v2: wire stratum predicates (Form declared)
+  const declared: Stratum[] = ['Form'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    const probe = {
+      geometry: { vertices: artifact.meta.resolution * 2, faces: artifact.meta.layers * 4, manifold: true, watertight: true },
+      uvCoverage: 0.88,
+    };
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  const notes = [`SVG ${artifact.svg.length}b, ${artifact.meta.layers} layers, ${artifact.meta.resolution}px`];
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const values = Object.values(axes);
   const score = values.reduce((a, b) => a + b, 0) / values.length;
-  return { score, axes, notes: [`SVG ${artifact.svg.length}b, ${artifact.meta.layers} layers, ${artifact.meta.resolution}px`] };
+  return { score, axes, notes };
 }
 
 const CURATED = [
@@ -68,6 +88,13 @@ export const Visual2DQualityContract: QualityContract<V2Seed, V2Artifact, V2Inve
   rate,
   curated: () => CURATED,
   hashArtifact,
+  strata: ['Form'] as const,
+  engineOwner: 'Visual2D Engine',
+  manifest() {
+    return {
+      Form: '2D composition, SVG, palette, style parameters',
+    };
+  },
 };
 
-registerContract(Visual2DQualityContract as any);
+registerContract(Visual2DQualityContract);

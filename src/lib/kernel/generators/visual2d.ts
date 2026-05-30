@@ -1,9 +1,16 @@
 /**
- * Visual2D Generator V3 — 4K Generative Art
+ * Visual2D Generator V3 — 4K Generative Art (CANONICAL - Phase 2 Doctrine v2)
+ * Primary implementation. visual2d-v2.ts is deprecated.
+ * This + visual2d-contract.ts = single source of truth for the domain.
+ *
  * Features:
  * - Fractal, geometric, organic, abstract styles
  * - Layer system with blend modes
  * - Color grading with LUTs
+ *
+ * PHASE 2 CONSOLIDATION (Doctrine v2 GO autonomy):
+ * This is the canonical primary. visual2d-v2.ts deprecated + waived.
+ * Next: golden regeneration + full contract enforcement for visual2d family.
  * - Composition algorithms (rule-of-thirds, golden ratio)
  * - Export: 4K PNG, SVG, WebP, AVIF
  * - SSIM>0.85 perceptual quality

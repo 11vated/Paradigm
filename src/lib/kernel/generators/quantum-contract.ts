@@ -4,7 +4,7 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateQuantum } from './quantum';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface QSeed { $hash: string; genes?: Record<string, any>; }
 interface QArtifact { densitySvg: string; phaseSvg: string; expectation: any; potentialType: string; normError: number; }
@@ -53,6 +53,17 @@ const CURATED = [
 ];
 
 export const QuantumQualityContract: QualityContract<QSeed, QArtifact, QInverted> = {
-  domain: 'quantum', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  domain: 'quantum', version: '1.0.0',
+  strata: ['Field'] as const,
+  engineOwner: 'Quantum Engine',
+  synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  manifest() {
+    return {
+      domain: 'quantum',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(QuantumQualityContract as any);
+registerContract(QuantumQualityContract);

@@ -1,7 +1,11 @@
 /**
- * WebGPU Compute Shaders for Music V2 Generator
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * GPU sibling. Canonical is music.ts (CPU reference) + music-contract.ts.
+ * GPU path may be re-integrated later under unified engine.
+ *
+ * WebGPU Compute Shaders for Music V2 Generator (legacy)
  * Generates audio samples in parallel on GPU
- * Enbles real-time synthesis of 10,000+ samples
+ * Enables real-time synthesis of 10,000+ samples
  */
 
 const SAMPLE_RATE = 44100;

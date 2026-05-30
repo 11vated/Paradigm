@@ -1,16 +1,14 @@
 /**
- * GSPL Module - Canonical Bridge to Kernel
- * 
- * This module bridges server.ts imports to the kernel's wired GSPL implementation.
- * All built-in functions (breed, mutate, evolve) actually invoke the deterministic
- * kernel genetic operators through the xoshiro256** RNG.
- * 
- * Canonical location: src/lib/gspl/
- * 
- * Architecture:
- * - lexer.ts → GsplLexer.tokenize()
- * - parser.ts → GsplParser.parse()  
- * - interpreter.ts → GsplInterpreter (wired to kernel genetic operators)
+ * GSPL Module — DEPRECATED BRIDGE (gspl-2.2 unification in progress)
+ *
+ * @deprecated Use src/lib/kernel/gspl-* directly (GsplLexer, GsplParser, GsplInterpreter, executeGspl).
+ * This file only exists for temporary backward compatibility during the dual-runtime cleanup.
+ * All active code paths (especially /api/gspl/*) have been migrated to the kernel.
+ *
+ * Once GSPLEditor, SeedChat, and any remaining direct callers are updated,
+ * this directory (src/lib/gspl/) will be removed.
+ *
+ * Canonical implementation: src/lib/kernel/gspl-*
  */
 
 import { GsplLexer as KernelLexer, TokenType } from '../kernel/gspl-lexer.js';

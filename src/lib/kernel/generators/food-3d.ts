@@ -1,5 +1,10 @@
 /**
- * Food Generator — produces GLTF 3D food models
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Food 3D sibling. 
+ * CANONICAL PRIMARY lives in food.ts + food-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Food Generator — produces GLTF 3D food models (legacy)
  * Enhanced with detailed 3D food items and PBR materials
  */
 

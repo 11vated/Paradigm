@@ -6,7 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateDance } from './dance';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
 interface DanceSeed { $hash?: string; $name?: string; genes?: any; }
 interface DanceArtifact { choreo: string; style: string; size: number; }
@@ -15,7 +15,7 @@ interface DanceInverted { style: string; lines: number; bytes: number; }
 async function synth(seed: DanceSeed): Promise<DanceArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'dance-q-'));
   try {
-    const r = await generateDance(seed as any, path.join(dir, "dance.json"));
+    const r = await generateDance(seed, path.join(dir, "dance.json"));
     const choreo = await fs.readFile(r.choreoPath, 'utf8');
     return { choreo, style: r.style, size: choreo.length };
   } finally {
@@ -44,6 +44,16 @@ export const DanceQualityContract: QualityContract<DanceSeed, DanceArtifact, Dan
       seed: { $name: 'Concrete', genes: { style: 'hip-hop', tempo: 140, complexity: 0.8 } } },
   ],
   hashArtifact: fingerprint,
+  strata: ['Motion', 'Sound', 'Culture'] as const,
+  engineOwner: 'Dance Engine',
+  manifest() {
+    return {
+      domain: 'dance',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
 
-registerContract(DanceQualityContract as any);
+registerContract(DanceQualityContract);

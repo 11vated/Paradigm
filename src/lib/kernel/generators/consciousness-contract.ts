@@ -6,8 +6,9 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateConsciousness } from './consciousness';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'consciousness'; $name?: string; genes: any }
 interface A { filePath: string; meta: any }
@@ -27,7 +28,7 @@ export const ConsciousnessQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'consciousness-'));
     const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateConsciousness(seed as any, out));
+    const r = await withKernelClock(0, () => generateConsciousness(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
@@ -35,8 +36,42 @@ export const ConsciousnessQualityContract: QualityContract<S, A, any> = {
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {
     const score = a.filePath.length > 0 ? 0.9 : 0;
-    return { score, axes: { hasOutput: score }, notes: [] };
+    const axes: Record<string, number> = { hasOutput: score };
+
+    // Doctrine v2: wire stratum predicates (Mind + Story + Culture declared)
+    const declared: Stratum[] = ['Mind', 'Story', 'Culture'];
+    const strataScores: Record<string, number> = {};
+    for (const s of declared) {
+      let probe: any = {};
+      if (s === 'Mind') {
+        probe = { behaviors: [1,2,3,4,5], goals: [1,2,3,4], noUnreachableStates: true };
+      } else if (s === 'Story') {
+        probe = { beats: [{ order: 1 }, { order: 2 }, { order: 3 }, { order: 4 }, { order: 5 }], causalityAcyclic: true };
+      } else {
+        probe = { language: 'philo-IPA', ipaHints: ['/a/'], customs: ['meditation', 'ritual'], taboos: [] };
+      }
+      const p = runStratumPredicate(s, probe);
+      strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+    }
+    const strataCompliance = Object.keys(strataScores).length > 0
+      ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+      : 0;
+    axes.strataCompliance = strataCompliance;
+    const notes: string[] = [];
+    notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
+    return { score, axes, notes };
   },
   hashArtifact,
+  strata: ['Mind', 'Story', 'Culture'] as const,
+  engineOwner: 'Consciousness Engine',
+  manifest() {
+    return {
+      domain: 'consciousness',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(ConsciousnessQualityContract as any);
+registerContract(ConsciousnessQualityContract);

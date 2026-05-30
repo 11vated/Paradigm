@@ -2,6 +2,20 @@
 
 This document provides context for AI agents working with the Paradigm codebase.
 
+**CRITICAL (Doctrine v2):** For any build session after 2026-05, **read `Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md` FIRST**. It is the canonical governing document. This AGENTS.md is execution context and is subordinated to the 13_* series.
+
+---
+
+## Doctrine v2 Governance (New Canonical)
+
+- **READ FIRST:** `Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md`
+- **Phase Gates:** `Documents/Paradigm-Analysis/13b_Phase_Gates.md`
+- **Waiver Registry:** `docs/waivers/registry.json` (append-only, sunset-dated)
+- **If We Vanish Protocol:** `docs/if-we-vanish.md`
+- **Planning Reconciliation:** `planning/DOCTRINE_V2_MAPPING.md` (in progress)
+
+Prior canon (`05_*`, `07_*`, `12_*`) is superseded. Do not edit 13_* in place — create `14_*` successor only on annual review or breaking change.
+
 ---
 
 ## Project Overview
@@ -16,27 +30,26 @@ This document provides context for AI agents working with the Paradigm codebase.
 
 ---
 
-## Phase 1 Completion Status (2026-05-22) — ZO ELITE
+## Current Doctrine v2 Status (as of 2026-05 session)
 
-**5 new sovereign generators shipped (17/17 tests pass, 0 typecheck errors):**
+**Phase 0 — Doctrine Collapse: CLOSED**
 
-| Generator | Output | Physics | Determinism |
-|---|---|---|---|
-| `website.ts` | Full HTML/CSS/JS site (7 aesthetics × 8 purposes × 11 sections) | — | ✓ |
-| `field.ts` | FDTD EM field → SVG heatmap + vector arrows + JSON | Maxwell's equations (FDTD, PML/periodic/PEC boundary) | ✓ |
-| `quantum.ts` | Schrödinger |ψ|² probability density → SVG + JSON | Split-operator method, 8 potential types | ✓ |
-| `molecule.ts` | 8 molecular classes → SVG structure + PDB + JSON | MMFF-lite geometry, NIST/PubChem grounded | ✓ |
-| `cosmology.ts` | N-body leapfrog (8 scenarios) → SVG + JSON trajectories | Leapfrog integrator, softening, O(N²) forces | ✓ |
+- All 7 explicit exit gates from `13b_Phase_Gates.md` satisfied.
+- GSPL interpreter stabilized (24/24 tests green; seed creation + kernel ops `mutate`/`breed`/`grow`/`evolve` now reliable).
+- Lints (`lint-canonical-rename`, `lint-no-evasion`), waiver registry, `if-we-vanish.md`, Substrate Health surface (`/api/substrate/health`), and this planning reconciliation all landed.
+- See `planning/DOCTRINE_V2_MAPPING.md` for the bridge from v1.0.0 work to the 24-phase canon, plus the 5 highest-leverage Phase 1 slices.
 
-**New components:**
-- `DimensionalViewer.tsx` — 7D substrate renderer: SPATIAL / TEMPORAL / SPECTRAL / MODAL / **POSSIBLE** / SEMANTIC / STRUCTURAL
-- `SubstratePage.tsx` — The Reality Lens at `/substrate` — seed × artifact × all 7 dimensions × composition graph × sovereignty receipt × export
+**Active canonical documents (READ FIRST for any work):**
+- `Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md`
+- `Documents/Paradigm-Analysis/13b_Phase_Gates.md`
+- `Documents/Paradigm-Analysis/14_PARADIGM_INFINITE_EXECUTION_PLAN.md`
+- `planning/DOCTRINE_V2_MAPPING.md` (living reconciliation)
 
-**Domain-config, generators/index, server.ts, App.tsx** all updated. `/api/seeds/grow` (body-based) endpoint added.
-
-**Next agents:** Read `Documents/Paradigm-Analysis/05_PARADIGM_COMPLETION_SOVEREIGN_PLAN.md` for the full phased plan. Phase 2 = GSPL standard library + Studio viewport wiring + MAP-Elites live UI. Phase 3 = App generator + full GSPL module system.
+**Next for agents:** Phase 1 (Server/Type/Determinism Cleanup + QualityContract generics + 8 pre-flight gates as blocking CI). The old 4-phase / `05_*` planning is superseded.
 
 ---
+
+## Architecture Layers (still accurate)
 
 ## Architecture Layers
 

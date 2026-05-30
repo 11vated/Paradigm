@@ -1,7 +1,16 @@
 /**
- * Fashion Generator V3 — Garment Design with Drape Simulation
+ * Fashion Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for fashion/garment generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + fashion-contract.ts.
+ *
+ * Siblings (fashion-3d.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Clothing items, fabrics, patterns, sizing
  * Export: JSON specs, SVG patterns, GLTF 3D model
+ *
+ * PHASE 2 NOTE: Canonical primary. Target fashion.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

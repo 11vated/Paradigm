@@ -1,5 +1,8 @@
 /**
- * Physics Generator — produces simulation config with Web Worker support
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Physics sibling. Canonical physics implementation is primary.
+ *
+ * Physics Generator — produces simulation config with Web Worker support (legacy enhanced)
  * Enhanced with multiple physics engines and quality tiers
  */
 

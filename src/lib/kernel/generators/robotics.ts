@@ -1,7 +1,16 @@
 /**
- * Robotics Generator V3 — Robot Design with DOF and Behaviors
+ * Robotics Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for robotics/robot design generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + robotics-contract.ts.
+ *
+ * Siblings (robotics-3d.ts, robotics-industrial.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Kinematic chains, sensors, actuators, behavior trees
  * Export: JSON specs, URDF, GLTF 3D model
+ *
+ * PHASE 2 NOTE: Canonical primary. Target robotics.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

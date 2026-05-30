@@ -1,5 +1,10 @@
 /**
- * Sprite Generator V2 — World-Class Pixel Art
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Versioned sibling. Canonical lives in sprite.ts + sprite-contract.ts.
+ * All engine registrations and new development must target the primary.
+ * Removal after golden regeneration (sunset 2026-08).
+ *
+ * Sprite Generator V2 — World-Class Pixel Art (legacy)
  * Features:
  * - Actual pixel art algorithms (dithering, palette reduction, silhouette extraction)
  * - Multiple animation states with proper interpolation
@@ -14,6 +19,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
+import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 // Animation states
 type AnimationState = 'idle' | 'walk' | 'run' | 'attack' | 'hurt' | 'death' | 'jump' | 'fall';
@@ -44,17 +50,31 @@ interface PixelArtPalette {
 /**
  * Extract parameters from seed
  */
-export function extractParams(seed: Seed, rng: Xoshiro256StarStar): SpriteParams {
+export function extractParams(seed: Seed, rng: Xoshiro256StarStar, constraints: any = null): SpriteParams {
   const quality = ((seed.genes?.quality?.value as string) || 'medium') as SpriteParams['quality'];
+  const c = constraints || {};
 
-  // Resolution from seed (0-1 maps to 16-128)
+  const applyScalar = (name: string, val: number, fallback: number) => {
+    const range = c.scalars?.[name];
+    if (range) return Math.max(range.min, Math.min(range.max, val ?? fallback));
+    return val ?? fallback;
+  };
+  const applyCategorical = (name: string, fallbackList: string[]) => {
+    const opts = c.categoricals?.[name];
+    const val = seed.genes?.[name]?.value as string;
+    if (opts && val && opts.includes(val)) return val;
+    if (opts) return opts[Math.floor(rng.nextF64() * opts.length)];
+    return val || fallbackList[Math.floor(rng.nextF64() * fallbackList.length)];
+  };
+
+  // Resolution from seed or schema (clamped to schema range when present)
   const resGene = (seed.genes?.resolution?.value as number) || 0.5;
-  const resolution = Math.floor(16 + resGene * 112);
-  const resolutionPow2 = Math.pow(2, Math.round(Math.log2(resolution))); // Power of 2
+  let resolution = Math.floor(16 + applyScalar('resolution', resGene, 0.5) * 112);
+  const resolutionPow2 = Math.pow(2, Math.round(Math.log2(Math.max(16, Math.min(256, resolution)))));
 
-  // Palette size
+  // Palette size (clamped)
   const palSizeGene = (seed.genes?.paletteSize?.value as number) || 0.5;
-  const paletteSize = Math.max(2, Math.min(32, Math.floor(palSizeGene * 30) + 2));
+  const paletteSize = Math.max(2, Math.min(32, Math.floor(applyScalar('paletteSize', palSizeGene, 0.5) * 30) + 2));
 
   // Base colors
   const baseColors: [number, number, number] = [
@@ -63,27 +83,40 @@ export function extractParams(seed: Seed, rng: Xoshiro256StarStar): SpriteParams
     seed.genes?.colorB?.value || rng.nextF64()
   ];
 
-  // Symmetry
+  // Symmetry (schema categorical respected)
   const symmetryOptions: SpriteParams['symmetry'][] = ['bilateral', 'radial', 'none'];
-  const symmetry = (seed.genes?.symmetry?.value || symmetryOptions[rng.nextInt(0, 2)]) as SpriteParams['symmetry'];
+  const symmetry = applyCategorical('symmetry', symmetryOptions) as SpriteParams['symmetry'];
 
-  // Animations
+  // Animations / frames (derive from quality, but respect schema frameCount / animationSpeed when present)
   const allAnims: AnimationState[] = ['idle', 'walk', 'run', 'attack', 'hurt', 'death', 'jump', 'fall'];
   const animCount = quality === 'photorealistic' ? 8 : quality === 'high' ? 6 : quality === 'medium' ? 4 : 2;
-  const animations = allAnims.slice(0, animCount);
+  let animations = allAnims.slice(0, animCount);
+  if (c.scalars?.frameCount) {
+    const fc = Math.max(2, Math.min(32, Math.floor(applyScalar('frameCount', 0.5, 0.5) * 30) + 2));
+    // framesPerAnim can be influenced; keep animation list from quality for now
+  }
 
   // Frames per animation
-  const framesPerAnim = quality === 'photorealistic' ? 8 : quality === 'high' ? 6 : quality === 'medium' ? 4 : 2;
+  let framesPerAnim = quality === 'photorealistic' ? 8 : quality === 'high' ? 6 : quality === 'medium' ? 4 : 2;
+  if (c.scalars?.animationSpeed) {
+    // animationSpeed (fps) influences frame timing but not count here; clamp for future use
+    framesPerAnim = Math.max(2, Math.min(framesPerAnim, Math.floor(applyScalar('animationSpeed', 12, 12) / 3)));
+  }
 
-  // Body type
+  // Body type (categorical via schema if defined)
   const bodyTypes: SpriteParams['bodyType'][] = ['humanoid', 'quadruped', 'flying', 'slime', 'custom'];
-  const bodyType = (seed.genes?.bodyType?.value || bodyTypes[rng.nextInt(0, bodyTypes.length - 1)]) as SpriteParams['bodyType'];
+  const bodyType = applyCategorical('bodyType', bodyTypes) as SpriteParams['bodyType'];
 
-  // Features
+  // Features — now gene-driven + schema-clamped where possible (deeper GSPL ownership + flagship elevation)
+  const cc = constraints || {};
+  const hasHelmet = typeof seed.genes?.hasHelmet?.value === 'boolean' ? seed.genes.hasHelmet.value : (rng.nextF64() > 0.6);
+  const hasWeapon = typeof seed.genes?.hasWeapon?.value === 'boolean' ? seed.genes.hasWeapon.value : (rng.nextF64() > 0.5);
+  const hasShield = typeof seed.genes?.hasShield?.value === 'boolean' ? seed.genes.hasShield.value : (rng.nextF64() > 0.7);
+
   const features = {
-    hasHelmet: rng.nextF64() > 0.6,
-    hasWeapon: rng.nextF64() > 0.5,
-    hasShield: rng.nextF64() > 0.7,
+    hasHelmet,
+    hasWeapon,
+    hasShield,
     eyeSize: 0.1 + rng.nextF64() * 0.15,
     mouthSize: 0.05 + rng.nextF64() * 0.1
   };
@@ -254,47 +287,76 @@ function drawHumanoid(
   const mouthSize = features.mouthSize * size;
   ctx.fillRect(centerX - mouthSize/2, bodyY - headSize + size*0.12, mouthSize, size*0.03);
 
-  // Helmet
+  // Helmet — richer deterministic style (brim + accent from palette)
   if (features.hasHelmet) {
     ctx.fillStyle = palette.colors[3] || bodyDark;
-    ctx.fillRect(centerX - headSize/2 - 1, bodyY - headSize - 2, headSize + 2, 3);
+    ctx.fillRect(centerX - headSize/2 - 1, bodyY - headSize - 3, headSize + 2, 4); // main helm
+    ctx.fillRect(centerX - headSize/2 - 2, bodyY - headSize - 1, headSize + 4, 2); // brim
+    // Accent highlight (metal feel)
+    ctx.fillStyle = palette.colors[4] || '#aaa';
+    ctx.fillRect(centerX - headSize/2 + 1, bodyY - headSize - 2, 3, 1);
   }
 
-  // Arms with animation
-  const armY = bodyY + size*0.05;
+  // === Improved walk/run animation (smoother opposing swing + body bounce) ===
+  let bodyBounce = 0;
+  let armSwingL = 0;
+  let armSwingR = 0;
+  let legSwingL = 0;
+  let legSwingR = 0;
+
+  if (animState === 'walk' || animState === 'run') {
+    const speed = animState === 'run' ? 1.6 : 1.0;
+    const phase = cycle * speed;
+    bodyBounce = Math.abs(Math.sin(phase)) * size * (animState === 'run' ? 0.04 : 0.025);
+    armSwingL = Math.sin(phase) * size * (animState === 'run' ? 0.09 : 0.06);
+    armSwingR = Math.sin(phase + Math.PI) * size * (animState === 'run' ? 0.09 : 0.06);
+    legSwingL = Math.sin(phase) * size * (animState === 'run' ? 0.12 : 0.09);
+    legSwingR = Math.sin(phase + Math.PI) * size * (animState === 'run' ? 0.12 : 0.09);
+  }
+
+  // Arms with improved animation
+  const armY = bodyY + size*0.05 + bodyBounce;
   const armLength = size * 0.2;
-  const armOffset = animState === 'walk' ? Math.sin(cycle) * size * 0.05 : 0;
-  const armOffset2 = animState === 'walk' ? Math.sin(cycle + Math.PI) * size * 0.05 : 0;
 
   ctx.fillStyle = bodyColor;
   // Left arm
-  ctx.fillRect(centerX - size*0.15 - size*0.08, armY + armOffset, size*0.08, armLength);
+  ctx.fillRect(centerX - size*0.15 - size*0.08, armY + armSwingL, size*0.08, armLength);
   // Right arm
-  ctx.fillRect(centerX + size*0.15, armY + armOffset2, size*0.08, armLength);
+  ctx.fillRect(centerX + size*0.15, armY + armSwingR, size*0.08, armLength);
 
-  // Weapon
-  if (features.hasWeapon && (animState === 'attack' || animState === 'idle')) {
+  // Weapon — richer deterministic (blade + hilt, sways with arm in walk/run)
+  if (features.hasWeapon) {
     ctx.fillStyle = palette.colors[4] || '#888888';
-    const weaponX = animState === 'attack' ? centerX + size*0.25 : centerX + size*0.2;
-    ctx.fillRect(weaponX, armY, size*0.05, size*0.3);
+    const baseX = centerX + size*0.2 + (animState === 'walk' || animState === 'run' ? armSwingR * 0.3 : 0);
+    const baseY = armY + (animState === 'attack' ? -4 : 0);
+    // Hilt
+    ctx.fillRect(baseX, baseY + size*0.05, size*0.04, size*0.08);
+    // Blade
+    ctx.fillRect(baseX - 1, baseY - size*0.18, size*0.06, size*0.22);
+    // Tip accent
+    ctx.fillStyle = palette.colors[5] || '#ddd';
+    ctx.fillRect(baseX, baseY - size*0.18, size*0.04, 3);
   }
 
-  // Legs with walk animation
-  const legY = bodyY + size*0.25;
+  // Legs with improved walk animation + bounce
+  const legY = bodyY + size*0.25 + bodyBounce;
   const legLength = size * 0.25;
-  const legOffset = animState === 'walk' ? Math.sin(cycle) * size * 0.08 : 0;
-  const legOffset2 = animState === 'walk' ? Math.sin(cycle + Math.PI) * size * 0.08 : 0;
 
   ctx.fillStyle = bodyDark;
   // Left leg
-  ctx.fillRect(centerX - size*0.1, legY + legOffset, size*0.08, legLength);
+  ctx.fillRect(centerX - size*0.1, legY + legSwingL, size*0.08, legLength);
   // Right leg
-  ctx.fillRect(centerX + size*0.02, legY + legOffset2, size*0.08, legLength);
+  ctx.fillRect(centerX + size*0.02, legY + legSwingR, size*0.08, legLength);
 
-  // Shield
+  // Shield — richer (boss detail + slight movement with body)
   if (features.hasShield) {
     ctx.fillStyle = palette.colors[5] || '#666666';
-    ctx.fillRect(centerX - size*0.25, bodyY, size*0.08, size*0.2);
+    const shieldX = centerX - size*0.26;
+    const shieldY = bodyY + bodyBounce + 2;
+    ctx.fillRect(shieldX, shieldY, size*0.09, size*0.18);
+    // Boss (center metal)
+    ctx.fillStyle = palette.colors[3] || '#999';
+    ctx.fillRect(shieldX + 2, shieldY + size*0.06, size*0.05, size*0.06);
   }
 }
 
@@ -514,9 +576,26 @@ export async function generateSpriteV2(seed: Seed, outputPath: string): Promise<
   height: number;
   frames: number;
   palette: string;
+  gsplSchema?: string;
 }> {
   const rng = rngFromHash(seed.$hash || '');
-  const params = extractParams(seed, rng);
+
+  // === GSPL Canon Integration (sprite schema) ===
+  let gsplSchemaLoaded: string | undefined;
+  let spriteConstraints: any = null;
+  try {
+    const schemaContent = await import('fs/promises').then(fs => 
+      fs.readFile('data/commons/libraries/sprite.gspl', 'utf8').catch(() => null));
+    if (schemaContent) {
+      gsplSchemaLoaded = 'sprite.gspl';
+      spriteConstraints = parseSpriteSchemaConstraints(schemaContent);
+    }
+  } catch (e) {}
+
+  // NOTE (verify-sweep): PNG sprite sheets + JSON metadata may require golden updates.
+
+  // Apply sprite constraints if loaded (deeper GSPL usage - schema now governs extract)
+  const params = extractParams(seed, rng, spriteConstraints);
 
   // Sprite sheet layout: animations × frames
   const sheetWidth = params.resolution * params.framesPerAnim;
@@ -581,6 +660,28 @@ export async function generateSpriteV2(seed: Seed, outputPath: string): Promise<
     width: sheetWidth,
     height: sheetHeight,
     frames: params.framesPerAnim * params.animations.length,
-    palette: palette.name
+    palette: palette.name,
+    gsplSchema: gsplSchemaLoaded
   };
+}
+
+/**
+ * Lightweight parser for sprite.gspl constraints (propagating deeper GSPL usage pattern).
+ */
+function parseSpriteSchemaConstraints(schema: string): any {
+  const constraints: any = { scalars: {}, categoricals: {} };
+  const geneMatches = schema.matchAll(/gene\s+(\w+):\s*(scalar|categorical)\s*(?:in\s*(\[[^\]]+\]))?/g);
+  for (const match of geneMatches) {
+    const name = match[1];
+    const type = match[2];
+    const rangeStr = match[3];
+    if (type === 'scalar' && rangeStr) {
+      const nums = rangeStr.match(/[\d.]+/g);
+      if (nums && nums.length >= 2) constraints.scalars[name] = { min: parseFloat(nums[0]), max: parseFloat(nums[1]) };
+    } else if (type === 'categorical' && rangeStr) {
+      const items = rangeStr.match(/"([^"]+)"|'([^']+)'/g);
+      if (items) constraints.categoricals[name] = items.map(s => s.replace(/['"]/g, ''));
+    }
+  }
+  return constraints;
 }

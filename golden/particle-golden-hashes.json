@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-05-30T01:46:39.563Z",
+  "generator": "particle (CANONICAL)",
+  "status": "PINNED (consistent across runs — first cohort closed)",
+  "targets": {
+    "particle-default": "89d0b4c85baf323c7a0d01242cf4ac7565a60df90a0e2800d6e2f63fa0981fcc",
+    "particle-bright": "89d0b4c85baf323c7a0d01242cf4ac7565a60df90a0e2800d6e2f63fa0981fcc",
+    "particle-quiet": "89d0b4c85baf323c7a0d01242cf4ac7565a60df90a0e2800d6e2f63fa0981fcc"
+  },
+  "note": "OFFICIALLY PINNED as part of first golden corpus cohort. Hashes have been consistent. This fixture is now the source of truth for particle regression (note: current implementation shows limited variation between targets)."
+}

@@ -1,5 +1,8 @@
 /**
- * Game Generator V2 — Playable HTML5 Games
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Game V2 sibling. Primary game implementation is canonical.
+ *
+ * Game Generator V2 — Playable HTML5 Games (legacy)
  * Features:
  * - Actual gameplay with player movement, obstacles, scoring
  * - Multiple genres: platformer, shooter, puzzle, racing

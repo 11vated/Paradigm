@@ -1,5 +1,10 @@
 /**
- * Fashion Generator — produces GLTF clothing
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Fashion 3D sibling. 
+ * CANONICAL PRIMARY lives in fashion.ts + fashion-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Fashion Generator — produces GLTF clothing (legacy)
  * Enhanced with detailed 3D garments and PBR materials
  */
 

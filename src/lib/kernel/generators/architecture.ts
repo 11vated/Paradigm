@@ -1,7 +1,16 @@
 /**
- * Architecture Generator V3 — Building Design with Floorplans
+ * Architecture Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for architecture/building generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + architecture-contract.ts.
+ *
+ * Siblings (architecture-3d.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Multi-floor buildings, room layouts, 3D models
  * Export: JSON, SVG floorplan, GLTF 3D model
+ *
+ * PHASE 2 NOTE: Canonical primary. Target architecture.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

@@ -71,7 +71,64 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
         aria-label="GSPL code editor"
       />
       {result && (
-        <div className="border-t border-[#1a1a1a] p-3 max-h-[200px] overflow-y-auto bg-[#0a0a0a]">
+        <div className="border-t border-[#1a1a1a] p-3 max-h-[240px] overflow-y-auto bg-[#0a0a0a]">
+          {/* Real GSPL Schema Ownership — constraints now visible while authoring */}
+          {result.schemas && Object.keys(result.schemas).length > 0 && (
+            <div className="mb-3 border border-[#223] bg-[#111] rounded-sm p-2">
+              <div className="text-[9px] uppercase tracking-[1.5px] text-emerald-400 mb-1.5 font-mono flex items-center gap-1.5">
+                <span>GSPL SCHEMAS ACTIVE</span>
+                <span className="text-[#555]">— constraints govern generation</span>
+              </div>
+              {Object.entries(result.schemas).map(([domain, info]: any) => {
+                // Lightweight client validation against loaded schema (real GSPL ownership in Studio)
+                const violations: string[] = [];
+                try {
+                  const schemaText: string = info.content || '';
+                  const scalarRanges = new Map<string, {min:number,max:number}>();
+                  const catOpts = new Map<string, string[]>();
+                  const geneRe = /gene\s+(\w+):\s*(scalar|categorical)\s*(?:in\s*(\[[^\]]+\]))?/g;
+                  let m;
+                  while ((m = geneRe.exec(schemaText)) !== null) {
+                    const nm = m[1];
+                    if (m[2] === 'scalar' && m[3]) {
+                      const nums = m[3].match(/[\d.]+/g);
+                      if (nums && nums.length>=2) scalarRanges.set(nm, {min:parseFloat(nums[0]), max:parseFloat(nums[1])});
+                    } else if (m[2] === 'categorical' && m[3]) {
+                      const items = m[3].match(/"([^"]+)"|'([^']+)'/g);
+                      if (items) catOpts.set(nm, items.map(s=>s.replace(/['"]/g,'')));
+                    }
+                  }
+                  // Scan user code for simple gene: value
+                  const codeLines = code.split('\n');
+                  codeLines.forEach(line => {
+                    const assign = line.match(/(\w+)\s*[:=]\s*([^\s,]+)/);
+                    if (assign) {
+                      const [_, nm, valStr] = assign;
+                      if (scalarRanges.has(nm)) {
+                        const v = parseFloat(valStr);
+                        const r = scalarRanges.get(nm)!;
+                        if (!isNaN(v) && (v < r.min || v > r.max)) violations.push(`${nm}: ${v} outside [${r.min},${r.max}]`);
+                      }
+                      if (catOpts.has(nm)) {
+                        const opts = catOpts.get(nm)!;
+                        const clean = valStr.replace(/['"]/g,'');
+                        if (!opts.includes(clean)) violations.push(`${nm}: "${clean}" not in [${opts.join(',')}]`);
+                      }
+                    }
+                  });
+                } catch {}
+                return (
+                  <div key={domain} className="mb-2 last:mb-0">
+                    <div className="text-[10px] font-mono text-[#8f8] mb-0.5">{domain}.gspl <span className="text-[#555] text-[8px]">({info.path})</span></div>
+                    {violations.length > 0 && (
+                      <div className="text-[8px] text-red-400 mb-1">⚠ {violations.join(' | ')}</div>
+                    )}
+                    <pre className="text-[9px] font-mono text-[#aaa] bg-black/40 p-1.5 rounded overflow-x-auto leading-tight max-h-[92px] whitespace-pre-wrap">{(info.content || '').slice(0, 900)}{info.content?.length > 900 ? '…' : ''}</pre>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {result.errors?.length > 0 && (
             <div className="space-y-1.5 mb-3">
               {result.errors.map((e: any, i: any) => (

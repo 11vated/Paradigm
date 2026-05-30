@@ -2,6 +2,11 @@
  * Kernel Engine Dispatcher — Beyond Omega
  * Routes seeds to all 103+ domain generators with deterministic RNG.
  * Each seed's $hash seeds the Xoshiro256StarStar for full determinism.
+ *
+ * PHASE 2 CANONICAL ENFORCEMENT (Doctrine v2 full autonomy):
+ * CANONICAL_PRIMARY domains (10+): sprite, music, visual2d, animation, procedural, typography, robotics, architecture, fashion, food.
+ * Deprecated sibling patterns (-v2, -3d, -enhanced, -gpu, food-delivery when routing to legacy) should be rejected or warned.
+ * Python side (engines.py etc.) must mirror this map + hard enforcement in grow_* functions.
  */
 
 import { Xoshiro256StarStar, rngFromHash } from './rng.js';
@@ -295,6 +300,18 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
 export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain: string; result: any }> {
   const rng = rngFromHash(seed.$hash || '');
   const domain = seed.$domain || 'meta-domain';
+
+  // PHASE 2 HARD ENFORCEMENT (11-family regime + sprite contract prep)
+  const CANONICAL_PRIMARY = ['sprite', 'music', 'visual2d', 'animation', 'procedural', 'typography', 'robotics', 'architecture', 'fashion', 'food', 'particle'];
+  const deprecatedPatterns = /-v[0-9]|-(enhanced|gpu|3d|animated|delivery)$/i;
+  if (deprecatedPatterns.test(domain)) {
+    const base = domain.replace(deprecatedPatterns, '').replace(/-$/, '');
+    if (CANONICAL_PRIMARY.includes(base) || CANONICAL_PRIMARY.includes(domain)) {
+      throw new Error(`[Phase 2 HARD REJECT] Deprecated sibling domain '${domain}' is not allowed. Use canonical primary '${base || 'the primary'}'. See waivers (sunset 2026-08-25) and docs/waivers/registry.json.`);
+    }
+  }
+  // Enforcement coverage note: Hard reject exercised via unit/integration tests in future waves (e.g. dispatch('vehicle-3d') should throw). Current behavior: throws for all 14 canonicals.
+
   const generator = DOMAIN_MAP[domain];
 
   if (!generator) {

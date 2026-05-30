@@ -16,7 +16,7 @@ export { Xoshiro256StarStar, rngFromHash } from './lib/kernel/rng';
 export { growSeed, getAllDomains } from './lib/kernel/engines';
 export type { Seed, Artifact, GeneratorOutput } from './lib/kernel/types';
 
-// GSPL language (canonical: src/lib/gspl + src/lib/kernel/gspl-*)
+// GSPL language (canonical: src/lib/kernel/gspl-*  — legacy src/lib/gspl/ deprecated)
 export {
   GsplLexer,
   type Token,

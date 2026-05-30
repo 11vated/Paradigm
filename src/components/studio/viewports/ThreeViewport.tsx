@@ -3,7 +3,7 @@ import { useRef, useState, useEffect, useMemo } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, ContactShadows, Grid } from '@react-three/drei';
+import { OrbitControls, ContactShadows, Grid, Html } from '@react-three/drei';
 import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';
 import { loadOBJFromURL, parseOBJ, objToBufferGeometry } from '@/lib/kernel/generators/obj-loader';
 import type { ViewportProps, MeshData } from './types';
@@ -100,16 +100,31 @@ function FallbackMesh({ domain, color, artifact }: { domain: string; color: stri
   }
 
   if (domain === 'character' || domain === 'agent' || domain === 'fashion') {
+    // Enhanced flagship-style character rig preview with live LAUGH / TALK reactivity
+    // (uses the same emotional timing philosophy as the full CharacterRigDemo + character elevation)
+    const [expr, setExpr] = useState({ smile: 0.3, laugh: 0, talk: 0 });
+    const t = Date.now() / 1000;
+
+    const laughPulse = Math.max(0, 1 - Math.abs(((t * 1.8) % 1.6) - 0.7) * 2.2) * expr.laugh;
+    const talkPulse = Math.max(0, Math.sin(t * 4.2) * 0.5 + 0.5) * expr.talk * 0.9;
+    const smile = Math.min(0.95, expr.smile + laughPulse * 0.6 + talkPulse * 0.35);
+
+    const headScale = 1 + smile * 0.08 + laughPulse * 0.12;
+    const headBob = Math.sin(t * 3.1) * (laughPulse + talkPulse) * 0.08;
+
     return (
       <group ref={meshRef as any} position={[0, 1, 0]} scale={scale}>
-        <mesh position={[0, 0.65, 0]} castShadow receiveShadow>
+        {/* Head with expression reactivity */}
+        <mesh position={[0, 0.65 + headBob, 0]} castShadow receiveShadow scale={headScale}>
           <sphereGeometry args={[0.32, 24, 16]} />
           <meshStandardMaterial color={color} roughness={0.45} metalness={0.15} />
         </mesh>
+        {/* Torso */}
         <mesh position={[0, 0.1, 0]} castShadow receiveShadow>
           <capsuleGeometry args={[0.32, 0.75, 8, 16]} />
           <meshStandardMaterial color={color} roughness={0.55} metalness={0.2} />
         </mesh>
+        {/* Arms */}
         <mesh position={[-0.42, 0.12, 0]} rotation={[0, 0, 0.35]} castShadow receiveShadow>
           <capsuleGeometry args={[0.08, 0.55, 6, 10]} />
           <meshStandardMaterial color={color} roughness={0.5} metalness={0.2} />
@@ -118,6 +133,20 @@ function FallbackMesh({ domain, color, artifact }: { domain: string; color: stri
           <capsuleGeometry args={[0.08, 0.55, 6, 10]} />
           <meshStandardMaterial color={color} roughness={0.5} metalness={0.2} />
         </mesh>
+
+        {/* Live LAUGH / TALK controls (flagship rig energy in Studio viewport) */}
+        <Html position={[0, -1.8, 0]} style={{ pointerEvents: 'auto' }} occlude>
+          <div style={{ display: 'flex', gap: 6, fontFamily: 'monospace', fontSize: 9 }}>
+            <button
+              onClick={() => { setExpr({ smile: 0.35, laugh: 1.0, talk: 0 }); setTimeout(() => setExpr({ smile: 0.3, laugh: 0, talk: 0 }), 820); }}
+              style={{ padding: '1px 6px', background: '#111', border: '1px solid #10b98144', color: '#10b981', borderRadius: 2, cursor: 'pointer' }}
+            >LAUGH</button>
+            <button
+              onClick={() => { setExpr({ smile: 0.25, laugh: 0, talk: 1.0 }); setTimeout(() => setExpr({ smile: 0.3, laugh: 0, talk: 0 }), 650); }}
+              style={{ padding: '1px 6px', background: '#111', border: '1px solid #6366f144', color: '#6366f1', borderRadius: 2, cursor: 'pointer' }}
+            >TALK</button>
+          </div>
+        </Html>
       </group>
     );
   }

@@ -4,7 +4,7 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateField } from './field';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface FSeed { $hash: string; genes?: Record<string, any>; }
 interface FArtifact { svg: string; fieldData: any; sourceType: string; gridSize: number; maxE: number; maxH: number; }
@@ -52,4 +52,4 @@ const CURATED = [
 export const FieldQualityContract: QualityContract<FSeed, FArtifact, FInverted> = {
   domain: 'field', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
 };
-registerContract(FieldQualityContract as any);
+registerContract(FieldQualityContract);

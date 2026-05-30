@@ -1,0 +1,13 @@
+// Paradigm Canonical FullGame Schema (GSPL)
+// For self-contained playable HTML5 games.
+
+seed FullGame in fullgame {
+  gene genre: categorical in ["action", "rpg", "puzzle", "platformer", "shooter"];
+  gene difficulty: scalar in [0.1, 0.95];
+  gene levels: scalar in [1, 20];
+  gene tileResolution: scalar in [32, 256];
+  gene playerSpeed: scalar in [0.3, 1.2];
+  gene playerHealth: scalar in [50, 200];
+  gene enemyCount: scalar in [5, 80];
+  gene winCondition: categorical in ["defeat_all", "reach_exit", "collect_all", "survive_time"];
+}

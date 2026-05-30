@@ -10,8 +10,30 @@ same seed + same deterministic RNG + same code = reproducible artifact
 
 That guarantee is the center of the system. It turns generative media into something closer to software, biology, and version control: reproducible, inspectable, evolvable, and attributable.
 
+---
 
-## Substrate Pipeline (Phase 0-7, May 2026)
+## Doctrine v2 Governance (Canonical — Read First for Any Build Session)
+
+**Governing documents (as of 2026-05):**
+- **READ FIRST:** `Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md` — the single source of truth for what "finishing Paradigm" means (24-phase roadmap, 9-stratum substrate, spine invariants, risk register, what we will *not* build).
+- **Phase Gates:** `Documents/Paradigm-Analysis/13b_Phase_Gates.md` — explicit entry/exit criteria for every phase. No phase is complete until all gates are green.
+- **Execution Plan:** `Documents/Paradigm-Analysis/14_PARADIGM_INFINITE_EXECUTION_PLAN.md`
+- **Waiver Registry (append-only, sunset-dated):** `docs/waivers/registry.json`
+- **If We Vanish (anti-fragility / fork protocol):** `docs/if-we-vanish.md`
+- **Planning Reconciliation:** `planning/DOCTRINE_V2_MAPPING.md` (maps legacy 4-phase / PHASE0–4 work to the 24-phase canon)
+
+Prior canon (`05_*`, `07_*`, `12_*` series) is superseded. This README and all planning docs are subordinate to the 13_* doctrine.
+
+**Core Spine (never break):**
+1. Determinism — same seed + same RNG = bit-identical artifact forever
+2. Sovereignty — kernel runs 100% offline; forking is a first-class right
+3. Quality — every generator has a measurable contract; strata are executable predicates
+
+Enforced by: `npm run typecheck`, `npm run determinism:check`, `npm run lint:doctrine`, `npm run golden:verify`, `npm run preflight:report`, and the Substrate Health surface (`/api/substrate/health`).
+
+---
+
+## Substrate Pipeline (Phase 0-7, May 2026) — Historical v1.0.0 Foundation
 
 Paradigm now has a complete end-to-end substrate: seed → artifact → composition → playable game, deterministic at every step.
 

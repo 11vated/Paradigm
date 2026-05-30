@@ -1,5 +1,10 @@
 /**
- * Robotics Generator — produces GLTF robots
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * 3D robotics sibling. 
+ * CANONICAL PRIMARY lives in robotics.ts + robotics-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Robotics Generator — produces GLTF robots (legacy)
  * Enhanced with detailed 3D robot models and PBR materials
  */
 

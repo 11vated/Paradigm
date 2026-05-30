@@ -1,5 +1,10 @@
 /**
- * Animation Generator — produces animated sequences
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Animation sibling (enhanced). 
+ * CANONICAL PRIMARY lives in animation.ts + animation-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Animation Generator — produces animated sequences (legacy)
  * Creates frame-by-frame animation with motion paths
  */
 

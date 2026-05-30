@@ -1,0 +1,11 @@
+{
+  "generatedAt": "2026-05-30T01:46:40.625Z",
+  "generator": "vehicle (CANONICAL)",
+  "status": "PINNED (stabilized after $hash seeding + synthesize fixes — first cohort closed)",
+  "targets": {
+    "vehicle-default": "68e7846fc3469fc4881d4ea8319df32adac22c24741d20fd8126204170659b69",
+    "vehicle-bright": "90351150ab84a98ac41ab643993bd7546258fb09eb55cd9547fedea6636b56ba",
+    "vehicle-quiet": "174cfbe62e544e6a91af73bf3bcbcf5f4c3b41293f011b2ccae205f180c04bce"
+  },
+  "note": "OFFICIALLY PINNED as part of first golden corpus cohort. Hashes stabilized after generator fixes. This fixture is now the source of truth for vehicle regression."
+}

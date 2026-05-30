@@ -1,7 +1,16 @@
 /**
- * Furniture Generator V3 — Furniture Design with Materials
+ * Furniture Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for furniture design generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + furniture-contract.ts.
+ *
+ * Siblings (furniture-3d.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Tables, chairs, storage, beds, material selection
  * Export: JSON specs, GLTF 3D model, assembly instructions
+ *
+ * PHASE 2 NOTE: Canonical primary. Target furniture.ts exclusively for new work.
  */
 
 import * as fs from 'fs';

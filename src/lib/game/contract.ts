@@ -7,7 +7,7 @@ import { createFriendSeed } from '../friend/genesis';
 import { createWorldSeed } from '../world/genesis';
 import { composeQuest } from '../world/quest';
 import { generateWorld } from '../world/generator';
-import { registerContract, type QualityContract, type QualityReport, type CuratedSeed } from '../kernel/quality-contract';
+import { registerContract, type QualityContract, type QualityReport, type CuratedSeed, type Stratum } from '../kernel/quality-contract';
 import { createGameSeed, generateGame, hashArtifact, GAME_GENERATOR_VERSION } from './generator';
 import type { GameSeedData, GameArtifact } from './types';
 
@@ -70,11 +70,23 @@ const CURATED: ReadonlyArray<CuratedSeed<GameSeedData>> = [
 export const GameQualityContract: QualityContract<GameSeedData, GameArtifact, GameInverted> = {
   domain: 'game',
   version: GAME_GENERATOR_VERSION,
+  strata: ['Story', 'Mind', 'World', 'Field', 'Culture'] as const,
+  engineOwner: 'Game Engine',
   synthesize,
   invert,
   rate,
   curated: () => CURATED,
   hashArtifact,
+
+  manifest() {
+    return {
+      domain: 'game',
+      version: '1.0.0',
+      strata: ['Story', 'Mind', 'World', 'Field', 'Culture'] as const,
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
 
-registerContract(GameQualityContract as any);
+registerContract(GameQualityContract);

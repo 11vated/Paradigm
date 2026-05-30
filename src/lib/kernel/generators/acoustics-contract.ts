@@ -6,7 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateAcoustics } from './acoustics';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'acoustics'; $name?: string; genes: any }
@@ -27,7 +27,7 @@ export const AcousticsQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'acoustics-'));
     const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateAcoustics(seed as any, out));
+    const r = await withKernelClock(0, () => generateAcoustics(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
     return { filePath: data, meta: {} };
@@ -58,5 +58,15 @@ export const AcousticsQualityContract: QualityContract<S, A, any> = {
     return { score: Math.round(score * 100) / 100, axes, notes, conformsTo: '1.0.0' };
   },
   hashArtifact,
+  strata: ['Sound', 'Field'] as const,
+  engineOwner: 'Acoustics Engine',
+  manifest() {
+    return {
+      domain: 'acoustics',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(AcousticsQualityContract as any);
+registerContract(AcousticsQualityContract);

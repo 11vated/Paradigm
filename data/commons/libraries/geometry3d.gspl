@@ -1,0 +1,11 @@
+// Paradigm Canonical Geometry3D Schema (GSPL)
+// For SDF-based procedural 3D meshes with PBR.
+
+seed Geometry3D in geometry3d {
+  gene primitive: categorical in ["sphere", "box", "torus", "capsule", "cylinder", "cone", "sdf_union"];
+  gene complexity: scalar in [0.1, 0.95];
+  gene scale: scalar in [0.5, 4.0];
+  gene material_metallic: scalar in [0.0, 1.0];
+  gene material_roughness: scalar in [0.0, 1.0];
+  gene lod_levels: scalar in [1, 4];
+}

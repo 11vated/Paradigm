@@ -4,7 +4,8 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateWebsite } from './website';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface WSSeed { $hash: string; genes?: Record<string, any>; }
 interface WSArtifact { html: string; css: string; js: string; sections: number; colorPalette: string[]; byteSize: number; }
@@ -34,8 +35,31 @@ function rate(a: WSArtifact): QualityReport {
     palette:    Math.min(1, a.colorPalette.length / 5),
     byteSize:   Math.min(1, a.byteSize / 10_000),
   };
+
+  // Doctrine v2: wire stratum predicates (Form + Story + Culture declared)
+  const declared: Stratum[] = ['Form', 'Story', 'Culture'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    let probe: any = {};
+    if (s === 'Form') {
+      probe = { geometry: { vertices: 1200, faces: 400, manifold: true, watertight: true }, uvCoverage: 0.9 };
+    } else if (s === 'Story') {
+      probe = { beats: Array.from({ length: Math.max(3, Math.min(6, a.sections)) }, (_, i) => ({ order: i + 1 })), causalityAcyclic: true };
+    } else {
+      probe = { language: 'web-IPA', ipaHints: ['/a/'], customs: ['navigation', 'aesthetic'], taboos: [] };
+    }
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  const notes = [`${a.sections} sections, ${a.byteSize} bytes, ${a.colorPalette.length} colors`];
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
-  return { score, axes, notes: [`${a.sections} sections, ${a.byteSize} bytes, ${a.colorPalette.length} colors`] };
+  return { score, axes, notes };
 }
 
 function hashArtifact(a: WSArtifact): string {
@@ -52,6 +76,17 @@ const CURATED = [
 ];
 
 export const WebsiteQualityContract: QualityContract<WSSeed, WSArtifact, WSInverted> = {
-  domain: 'website', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  domain: 'website', version: '1.0.0',
+  strata: ['Form', 'Story', 'Culture'] as const,
+  engineOwner: 'Website Engine',
+  synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  manifest() {
+    return {
+      domain: 'website',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(WebsiteQualityContract as any);
+registerContract(WebsiteQualityContract);

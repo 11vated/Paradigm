@@ -4,7 +4,7 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateMolecule } from './molecule';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface MSeed { $hash: string; genes?: Record<string, any>; }
 interface MArtifact { svg: string; pdb: string; smiles: string; formula: string; mw: number; atomCount: number; bondCount: number; }
@@ -54,6 +54,17 @@ const CURATED = [
 ];
 
 export const MoleculeQualityContract: QualityContract<MSeed, MArtifact, MInverted> = {
-  domain: 'molecule', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  domain: 'molecule', version: '1.0.0',
+  strata: ['Form'] as const,
+  engineOwner: 'Molecule Engine',
+  synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  manifest() {
+    return {
+      domain: 'molecule',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(MoleculeQualityContract as any);
+registerContract(MoleculeQualityContract);

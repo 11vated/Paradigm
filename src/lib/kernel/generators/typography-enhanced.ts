@@ -1,5 +1,10 @@
 /**
- * Typography Generator — produces SVG/Variable font text
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * Typography sibling (enhanced). 
+ * CANONICAL PRIMARY lives in typography.ts + typography-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Typography Generator — produces SVG/Variable font text (legacy enhanced)
  * Enhanced with embedded glyph paths and font specimen pages
  */
 

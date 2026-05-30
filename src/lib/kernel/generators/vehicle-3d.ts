@@ -1,5 +1,10 @@
 /**
- * Vehicle Generator — produces GLTF vehicles
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2) — PARADIGM-RENAME-OK waiver active (sunset 2026-08-25)
+ * 3D vehicle sibling. 
+ * CANONICAL PRIMARY lives in vehicle.ts + vehicle-contract.ts.
+ * All new development + dispatch must target the primary. This file will be removed after golden regeneration.
+ *
+ * Vehicle Generator — produces GLTF vehicles (legacy 3d)
  * Enhanced with detailed 3D models and PBR materials
  */
 

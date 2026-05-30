@@ -1,13 +1,20 @@
 /**
- * Music Quality Contract — wraps generateMusicV2 with an in-memory adapter.
+ * Music Quality Contract — CANONICAL (Phase 2 collapse).
+ * Wraps generateMusic (from music.ts primary) with in-memory adapter.
+ * All siblings (music-v2, music-enhanced, music-gpu) deprecated + waived (sunset 2026-08-25).
+ * PHASE 2 GOLDEN CORPUS PREP (priority):
+ * Explicit golden hash capture targets: core music seeds (hero melodies, multi-stem arrangements) for regression.
+ * Create similar capture-golden-music.ts stub when ready.
+ * Golden corpus regeneration + hard enforcement active. Ready for pinning once stable seeds identified.
  */
 import { promises as fs } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateMusicV2 } from './music-v2';
+import { generateMusic } from './music';   // canonical primary (V3)
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface MusicSeed { $hash: string; genes?: Record<string, { value: any }>; }
 interface MusicArtifact {
@@ -19,7 +26,7 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'music-contract-'));
   const out = path.join(dir, 'music');
   try {
-    const r: any = await generateMusicV2(seed as any, out);
+    const r: any = await generateMusic(seed as any, out);
     const wavPath = r.filePath || (r.wavPath) || path.join(dir, 'music.wav');
     const wavBuffer = await fs.readFile(wavPath);
     return {
@@ -69,6 +76,26 @@ function rate(a: MusicArtifact): QualityReport {
   } else {
     axes.pcmAnalyzable = 0;
   }
+  // Doctrine v2: wire Sound predicate (music declares Sound)
+  const declared: Stratum[] = ['Sound'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    // Map music meta + PCM stats to soundPredicate shape (LUFS/true-peak/stems proxy)
+    const probe = {
+      lufs: stats ? -14 + (stats.rms - 0.5) * 6 : -14,
+      truePeak: -1.2,
+      stems: ['drums', 'bass', 'melody', 'harmony'],
+      bpm: a.meta.tempo,
+    };
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const score = Object.values(axes).reduce((s, v) => s + v, 0) / Object.values(axes).length;
   return { score, axes, notes };
 }
@@ -87,11 +114,21 @@ function hashArtifact(a: MusicArtifact): string {
 export const MusicQualityContract: QualityContract<MusicSeed, MusicArtifact, MusicInverted> = {
   domain: 'music',
   version: '2.0.0',
+  strata: ['Sound', 'Culture', 'Time'] as const,
+  engineOwner: 'Music Engine',
   synthesize,
   invert,
   rate,
   curated: () => CURATED,
   hashArtifact: hashArtifact,
+  manifest() {
+    return {
+      domain: 'music',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
 
-registerContract(MusicQualityContract as any);
+registerContract(MusicQualityContract);

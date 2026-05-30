@@ -1,5 +1,10 @@
 /**
- * Music Generator V2 — World-Class Audio Synthesis
+ * @deprecated Phase 2 Canonical Collapse (Doctrine v2)
+ * Versioned sibling. Canonical is music.ts + music-contract.ts.
+ * Real consolidation + golden-hash regeneration in progress under full autonomy.
+ * Sunset 2026-08.
+ *
+ * Music Generator V2 — World-Class Audio Synthesis (legacy)
  * Features:
  * - Multi-track composition (melody, harmony, bass, drums)
  * - Music theory engine (scales, chords, progressions)

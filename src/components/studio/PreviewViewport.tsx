@@ -55,6 +55,29 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
             </div>
           </div>
 
+          {/* Sovereign one-click "Export to Deployable App" for flagship domains (character rig + narrative player) */}
+          {(artifact.domain === 'character' || artifact.domain === 'narrative') && (
+            <button
+              onClick={() => {
+                // Triggers real app generator with interactiveDemo when wired to server
+                const params = { archetype: 'tool', interactiveDemo: true, name: `${artifact.domain}-studio-export` };
+                fetch('/api/seeds/grow', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ domain: 'app', prompt: `${artifact.domain} interactive demo`, genes: params, count: 1 })
+                }).then(r => r.json()).then(() => {
+                  window.alert('App generation started with interactiveDemo=true. Check Export panel or /apps for the deployable build containing the live rig/player.');
+                }).catch(() => {
+                  // Graceful fallback for local dev
+                  window.open('/character-rig', '_blank');
+                });
+              }}
+              className="absolute bottom-2 right-2 z-30 px-2 py-0.5 text-[8px] font-mono border border-primary/60 bg-black/60 hover:bg-primary/10 rounded"
+            >
+              EXPORT AS LIVE APP →
+            </button>
+          )}
+
           {view === 'hyperobject' ? (
             <div className="absolute inset-0" data-testid="viewport-hyperobject-container">
               <GSeedHyperobject seed={seed} width={800} height={600} autoRotate={true} showAllSystems={true} />

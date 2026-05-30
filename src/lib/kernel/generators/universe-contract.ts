@@ -6,37 +6,57 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateUniverse } from './universe';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
-interface S { $domain: 'universe'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface S { $domain: 'universe'; $name?: string; genes?: Record<string, unknown> }
+interface A { filePath: string; meta?: Record<string, unknown> }
+interface I { size: number }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta ?? {})).digest('hex');
 }
 
-export const UniverseQualityContract: QualityContract<S, A, any> = {
+async function synthesize(seed: S): Promise<A> {
+  const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'universe-'));
+  const out = path.join(dir, 'a.json');
+  // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
+  const r = await withKernelClock(0, () => generateUniverse(seed as any, out)) as { filePath?: string };
+  const filePath = r.filePath ?? out;
+  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+  return { filePath: data, meta: {} };
+}
+
+function invert(a: A): I {
+  return { size: a.filePath.length };
+}
+
+function rate(a: A): QualityReport {
+  const score = a.filePath.length > 0 ? 0.9 : 0;
+  return { score, axes: { hasOutput: score }, notes: [] };
+}
+
+export const UniverseQualityContract: QualityContract<S, A, I> = {
   domain: 'universe',
   version: '1.0.0',
+  strata: ['Form', 'World', 'Field', 'Culture', 'Time', 'Story', 'Mind'] as const,
+  engineOwner: 'Universe / Multiverse Director',
+  synthesize,
+  invert,
+  rate,
   curated: () => [
-    { id: 'universe-default', name: 'Default universe', intent: 'baseline', seed: { $domain: 'universe', $name: 'universe-default', genes: {} } },
-    { id: 'universe-bright', name: 'Bright universe', intent: 'high-energy', seed: { $domain: 'universe', $name: 'universe-bright', genes: { energy: 0.9 } } },
-    { id: 'universe-quiet', name: 'Quiet universe', intent: 'low-energy', seed: { $domain: 'universe', $name: 'universe-quiet', genes: { energy: 0.1 } } },
+    { id: 'universe-default', name: 'Default universe', intent: 'baseline', seed: { $domain: 'universe', $name: 'universe-default', genes: {} } as S },
+    { id: 'universe-bright', name: 'Bright universe', intent: 'high-energy', seed: { $domain: 'universe', $name: 'universe-bright', genes: { energy: 0.9 } } as S },
+    { id: 'universe-quiet', name: 'Quiet universe', intent: 'low-energy', seed: { $domain: 'universe', $name: 'universe-quiet', genes: { energy: 0.1 } } as S },
   ],
-  synthesize: async (seed) => {
-    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'universe-'));
-    const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generateUniverse(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
-  },
-  invert: (a) => ({ size: a.filePath.length }),
-  rate: (a) => {
-    const score = a.filePath.length > 0 ? 0.9 : 0;
-    return { score, axes: { hasOutput: score }, notes: [] };
-  },
   hashArtifact,
+  manifest() {
+    return {
+      domain: 'universe',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(UniverseQualityContract as any);
+registerContract(UniverseQualityContract);

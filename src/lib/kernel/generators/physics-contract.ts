@@ -7,7 +7,7 @@ import os from 'os';
 import crypto from 'crypto';
 import { generatePhysics } from './physics';
 import { withKernelClock } from '../clock';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
 interface PhysicsSeed { $hash?: string; $name?: string; genes?: any; }
 interface PhysicsArtifact { config: string; size: number; }
@@ -29,6 +29,8 @@ function fingerprint(a: PhysicsArtifact): string { return crypto.createHash('sha
 export const PhysicsQualityContract: QualityContract<PhysicsSeed, PhysicsArtifact, PhysicsInverted> = {
   domain: 'physics',
   version: '1.0.0',
+  strata: ['Field'] as const,
+  engineOwner: 'Physics Engine',
   synthesize: synth,
   invert: (a) => {
     let kind = 'unknown';
@@ -51,4 +53,4 @@ export const PhysicsQualityContract: QualityContract<PhysicsSeed, PhysicsArtifac
   hashArtifact: fingerprint,
 };
 
-registerContract(PhysicsQualityContract as any);
+registerContract(PhysicsQualityContract);

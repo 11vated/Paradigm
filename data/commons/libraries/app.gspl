@@ -1,0 +1,22 @@
+// Paradigm Canonical App Schema (GSPL)
+// Authoritative gene definition for the App domain.
+// Supports full React/TS/Vite app generation with real interactive demos.
+
+seed App in app {
+  // Core
+  gene archetype: categorical in ["dashboard", "marketplace", "social", "tool", "game", "docs", "portfolio", "saas", "admin", "blog"];
+  gene themeMode: categorical in ["dark", "light", "system"];
+
+  // Visual identity (drives generated Tailwind + components)
+  gene primaryHue: scalar in [0, 360];
+  gene accentHue: scalar in [0, 360];
+  gene density: scalar in [0.4, 0.95];   // UI density / spacing
+
+  // Content & features (constrained)
+  gene featureCount: scalar in [3, 8];
+  gene interactiveDemo: boolean;         // Whether to embed flagship character rig demo
+
+  // Personality for generated copy / tone
+  gene tone: categorical in ["professional", "playful", "minimal", "bold", "technical"];
+  gene expressiveness: scalar in [0.2, 0.9]; // influences how "alive" the demo feels (ties to character morphs)
+}

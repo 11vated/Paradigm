@@ -6,37 +6,57 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generatePublishing } from './publishing';
-import { registerContract, type QualityContract } from '../quality-contract';
+import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
 import { withKernelClock } from '../clock';
 
-interface S { $domain: 'publishing'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface S { $domain: 'publishing'; $name?: string; genes?: Record<string, unknown> }
+interface A { filePath: string; meta?: Record<string, unknown> }
+interface I { size: number }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
+  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta ?? {})).digest('hex');
 }
 
-export const PublishingQualityContract: QualityContract<S, A, any> = {
+async function synthesize(seed: S): Promise<A> {
+  const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'publishing-'));
+  const out = path.join(dir, 'a.json');
+  // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
+  const r = await withKernelClock(0, () => generatePublishing(seed as any, out)) as { filePath?: string };
+  const filePath = r.filePath ?? out;
+  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+  return { filePath: data, meta: {} };
+}
+
+function invert(a: A): I {
+  return { size: a.filePath.length };
+}
+
+function rate(a: A): QualityReport {
+  const score = a.filePath.length > 0 ? 0.9 : 0;
+  return { score, axes: { hasOutput: score }, notes: [] };
+}
+
+export const PublishingQualityContract: QualityContract<S, A, I> = {
   domain: 'publishing',
   version: '1.0.0',
+  strata: ['Story', 'Culture', 'Mind'] as const,
+  engineOwner: 'Publishing Engine',
+  synthesize,
+  invert,
+  rate,
   curated: () => [
-    { id: 'publishing-default', name: 'Default publishing', intent: 'baseline', seed: { $domain: 'publishing', $name: 'publishing-default', genes: {} } },
-    { id: 'publishing-bright', name: 'Bright publishing', intent: 'high-energy', seed: { $domain: 'publishing', $name: 'publishing-bright', genes: { energy: 0.9 } } },
-    { id: 'publishing-quiet', name: 'Quiet publishing', intent: 'low-energy', seed: { $domain: 'publishing', $name: 'publishing-quiet', genes: { energy: 0.1 } } },
+    { id: 'publishing-default', name: 'Default publishing', intent: 'baseline', seed: { $domain: 'publishing', $name: 'publishing-default', genes: {} } as S },
+    { id: 'publishing-bright', name: 'Bright publishing', intent: 'high-energy', seed: { $domain: 'publishing', $name: 'publishing-bright', genes: { energy: 0.9 } } as S },
+    { id: 'publishing-quiet', name: 'Quiet publishing', intent: 'low-energy', seed: { $domain: 'publishing', $name: 'publishing-quiet', genes: { energy: 0.1 } } as S },
   ],
-  synthesize: async (seed) => {
-    const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'publishing-'));
-    const out = path.join(dir, 'a.json');
-    const r: any = await withKernelClock(0, () => generatePublishing(seed as any, out));
-    const filePath = r.filePath ?? out;
-    const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
-  },
-  invert: (a) => ({ size: a.filePath.length }),
-  rate: (a) => {
-    const score = a.filePath.length > 0 ? 0.9 : 0;
-    return { score, axes: { hasOutput: score }, notes: [] };
-  },
   hashArtifact,
+  manifest() {
+    return {
+      domain: 'publishing',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(PublishingQualityContract as any);
+registerContract(PublishingQualityContract);

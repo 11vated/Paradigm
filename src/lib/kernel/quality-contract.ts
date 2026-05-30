@@ -38,12 +38,33 @@ import { kernelNow, kernelNowIso } from './clock';
  * `TArtifact` is what `synthesize` produces.
  * `TGenes` is what `invert` reconstructs (typically a subset of `TSeed`).
  */
+/**
+ * The nine canonical substrate strata (Doctrine v2 Part II.2 + VI).
+ * Every artifact lives at the composition of some subset of these.
+ */
+export type Stratum =
+  | 'Form'      // shape, geometry, topology
+  | 'Motion'    // kinematics, dynamics, gait
+  | 'Sound'     // timbre, rhythm, harmony, phonology
+  | 'Mind'      // intent, behavior, cognition
+  | 'Story'     // narrative, dialogue, beat structure
+  | 'World'     // space, biome, topology of place
+  | 'Field'     // physics, magic, economy, rule-set
+  | 'Culture'   // language, custom, ritual, taboo
+  | 'Time';     // causality, history, chronology
+
 export interface QualityContract<TSeed, TArtifact, TGenes> {
   /** Human-readable id, e.g. 'sprite', 'music', 'narrative'. */
   readonly domain: string;
 
   /** Semver — bump when output bytes change. */
   readonly version: string;
+
+  /**
+   * Doctrine v2 — The 9 strata this generator participates in.
+   * (Temporarily optional during Phase 1 sweep — will become required.)
+   */
+  readonly strata?: readonly Stratum[];
 
   /** Clause 1: synthesize an artifact from a seed. */
   synthesize(seed: TSeed): Promise<TArtifact> | TArtifact;
@@ -63,6 +84,28 @@ export interface QualityContract<TSeed, TArtifact, TGenes> {
    * JSON-canonicalize + SHA-256.
    */
   hashArtifact?(artifact: TArtifact): string;
+
+  /**
+   * Doctrine v2 — Machine-readable manifest for the contract.
+   * Used by Substrate Health, oracle, and the agent stack.
+   *
+   * Temporarily optional during the Phase 1 sweep. When absent, the
+   * quality runner will synthesize a best-effort manifest.
+   */
+  manifest?(): {
+    domain: string;
+    version: string;
+    strata: readonly Stratum[];
+    clauses: string[];
+    determinism: 'strict' | 'strong' | 'best-effort';
+    goldenHash?: string;
+  } | Record<string, unknown>;
+
+  /**
+   * Optional engine owner / steward for this contract (used for ownership
+   * and the public Substrate Health Dashboard).
+   */
+  readonly engineOwner?: string;
 }
 
 export interface QualityReport {
@@ -368,4 +411,84 @@ function firstFailure(r: ConformanceResult): string {
     if (!cl.passed) return `${name}: ${cl.detail}`;
   }
   return '';
+}
+
+// ─── Doctrine v2 Stratum helpers (Part VI.10 + XV.3) ──────────────────────────
+
+export interface StratumDeclaration {
+  domain: string;
+  strata: readonly Stratum[];
+  engineOwner?: string;
+  hasManifest: boolean;
+}
+
+export function listStrataDeclarations(): StratumDeclaration[] {
+  const out: StratumDeclaration[] = [];
+  for (const c of REGISTRY.values()) {
+    out.push({
+      domain: c.domain,
+      strata: c.strata ?? [],
+      engineOwner: c.engineOwner,
+      hasManifest: typeof c.manifest === 'function',
+    });
+  }
+  return out.sort((a, b) => a.domain.localeCompare(b.domain));
+}
+
+export interface StratumCoverageIndex {
+  [stratum: string]: {
+    domains: string[];
+    count: number;
+    coverage: number; // 0..1 — fraction of registered contracts that declare this stratum
+  };
+}
+
+export function computeStratumCoverage(): StratumCoverageIndex {
+  const all = listStrataDeclarations();
+  const total = all.length || 1;
+
+  const index: StratumCoverageIndex = {};
+  const ALL_STRATA: Stratum[] = ['Form', 'Motion', 'Sound', 'Mind', 'Story', 'World', 'Field', 'Culture', 'Time'];
+
+  for (const s of ALL_STRATA) {
+    const domains = all.filter(d => d.strata.includes(s)).map(d => d.domain);
+    index[s] = {
+      domains,
+      count: domains.length,
+      coverage: domains.length / total,
+    };
+  }
+  return index;
+}
+
+/**
+ * Returns a compact summary suitable for the Substrate Health Dashboard.
+ */
+export { calculateStratumConformance } from './quality/predicates.js';
+
+export function getStratumHealthSummary() {
+  const declarations = listStrataDeclarations();
+  const coverage = computeStratumCoverage();
+  const withManifest = declarations.filter(d => d.hasManifest).length;
+
+  // Doctrine v2 enhancement: expose sample predicate availability (including strengthened Time)
+  let timePredicateAvailable = false;
+  try {
+    // Dynamic import to avoid circular issues at load time
+    const preds = require('./quality/predicates');
+    timePredicateAvailable = typeof preds.timePredicate === 'function' || typeof preds.stratumPredicates?.Time === 'function';
+  } catch {}
+
+  return {
+    totalContracts: declarations.length,
+    contractsWithStrata: declarations.filter(d => d.strata.length > 0).length,
+    contractsWithManifest: withManifest,
+    coverage,
+    declarations,
+    timeStratum: {
+      predicateImplemented: timePredicateAvailable,
+      note: 'Time stratum significantly expanded in Phase 1 (8 axes: events, acyclic, ordering, duration, rhythm, no-paradox, timescale, causality depth)',
+    },
+    availablePredicates: Object.keys(require('./quality/predicates').stratumPredicates || {}),
+  };
 }

@@ -1,0 +1,12 @@
+{
+  "generatedAt": "2026-05-30T01:46:36.415Z",
+  "generator": "sprite (CANONICAL)",
+  "status": "PINNED (stable across multiple re-runs — first fully regression-enforced family)",
+  "targets": {
+    "sprite-hero-walk": "bf837aaf3338110ebe9510be9720d044f1885f6032a276933d470b05085c8288",
+    "sprite-coin-spin": "f391f83f9a6241138dbfc413c1600bdc92b78af6e93f1510ff5cc8298ba42d23",
+    "sprite-tile-set": "efd8aa560b024f749305d7be61a87fa42fbd3766ed6f93c92c11bf687f3dfcd5",
+    "sprite-spell-fx": "f44f702abbbb162026fb5ff5938da296f2d7d8bb06bb4e6a3a1951655caa4d6f"
+  },
+  "note": "OFFICIALLY PINNED for golden corpus regression. Hashes have remained identical across multiple re-runs. This fixture is now the source of truth for sprite regression."
+}

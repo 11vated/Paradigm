@@ -1,0 +1,41 @@
+// Paradigm Canonical Music Schema (GSPL)
+// Authoritative gene definition for the music domain.
+// Supports multi-stem generation, real synthesis, and cross-domain composition.
+
+seed Music in music {
+  // Core musical parameters
+  gene tempo: scalar in [60, 180];
+  gene key: categorical in ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  gene scale: categorical in ["major", "minor", "dorian", "phrygian", "lydian", "mixolydian", "aeolian", "locrian"];
+  gene timeSignature: categorical in ["4/4", "3/4", "5/4", "7/8", "6/8"];
+
+  // Timbre and production (for real synthesis)
+  gene warmth: scalar in [0.0, 1.0];
+  gene brightness: scalar in [0.0, 1.0];
+  gene complexity: scalar in [0.1, 0.95];
+
+  // Multi-stem control (directly drives the 4+ stem engine)
+  gene stemDrums: scalar in [0.4, 1.0];
+  gene stemBass: scalar in [0.5, 1.0];
+  gene stemMelody: scalar in [0.6, 1.0];
+  gene stemHarmony: scalar in [0.3, 0.95];
+
+  // Duration and structure
+  gene duration: scalar in [20, 180]; // seconds
+
+  // Cross-domain personality (for composition functors)
+  gene mood: categorical in ["melancholy", "energetic", "mysterious", "triumphant", "ethereal", "aggressive", "playful"];
+  gene resonance: vector[4] in [0.0, 1.0]; // emotional profile
+}
+
+// Usage example:
+// let track = grow Music from {
+//   tempo: 128,
+//   key: "A",
+//   scale: "minor",
+//   stemDrums: 0.85,
+//   mood: "melancholy",
+//   ...
+// }
+//
+// This seed can be composed with Character, Visual2D, Narrative, etc. via kernel functors.

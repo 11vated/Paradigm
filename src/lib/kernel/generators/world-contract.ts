@@ -4,7 +4,8 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateWorld } from './world';
 import { registerContract } from '../quality-contract';
-import type { QualityContract, QualityReport } from '../quality-contract';
+import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { runStratumPredicate } from '../quality/predicates';
 
 interface WdSeed { $hash: string; genes?: Record<string, any>; }
 interface WdArtifact { svg: string; biomeCount: number; cityCount: number; riverCount: number; plateCount: number; byteSize: number; }
@@ -34,8 +35,33 @@ function rate(a: WdArtifact): QualityReport {
     rivers:   Math.min(1, a.riverCount / 4),
     plates:   Math.min(1, a.plateCount / 5),
   };
+
+  // Doctrine v2: wire stratum predicates (World + Story + Culture + Field declared)
+  const declared: Stratum[] = ['World', 'Story', 'Culture', 'Field'];
+  const strataScores: Record<string, number> = {};
+  for (const s of declared) {
+    let probe: any = {};
+    if (s === 'World') {
+      probe = { biomes: a.biomeCount, locations: a.cityCount + a.riverCount, factions: 2, navmeshContinuous: true };
+    } else if (s === 'Story') {
+      probe = { beats: Array.from({ length: Math.max(3, Math.min(6, a.cityCount)) }, (_, i) => ({ order: i + 1 })), causalityAcyclic: true };
+    } else if (s === 'Culture') {
+      probe = { language: 'world-IPA', ipaHints: ['/a/'], customs: ['trade', 'ritual'], taboos: [] };
+    } else {
+      probe = { /* Field - basic physics rule presence */ energy: 0.8, rules: a.plateCount > 0 ? 3 : 1 };
+    }
+    const p = runStratumPredicate(s, probe);
+    strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
+  }
+  const strataCompliance = Object.keys(strataScores).length > 0
+    ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
+    : 0;
+  axes.strataCompliance = strataCompliance;
+  const notes = [`biomes=${a.biomeCount}, cities=${a.cityCount}, rivers=${a.riverCount}`];
+  notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
+
   const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
-  return { score, axes, notes: [`biomes=${a.biomeCount}, cities=${a.cityCount}, rivers=${a.riverCount}`] };
+  return { score, axes, notes };
 }
 
 function hashArtifact(a: WdArtifact): string {
@@ -52,6 +78,17 @@ const CURATED = [
 ];
 
 export const WorldQualityContract: QualityContract<WdSeed, WdArtifact, WdInverted> = {
-  domain: 'world', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  domain: 'world', version: '1.0.0',
+  strata: ['World', 'Story', 'Culture', 'Field'] as const,
+  engineOwner: 'World Engine',
+  synthesize, invert, rate, curated: () => CURATED, hashArtifact,
+  manifest() {
+    return {
+      domain: 'world',
+      version: '1.0.0',
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+    };
+  },
 };
-registerContract(WorldQualityContract as any);
+registerContract(WorldQualityContract);

@@ -1,7 +1,16 @@
 /**
- * Typography Generator V3 — Typeface Design with Glyphs
+ * Typography Generator — CANONICAL (Doctrine v2 Phase 2 Consolidation)
+ *
+ * PRIMARY / canonical implementation for typography/font generation.
+ * All engine dispatch, contracts, paradigm make, and new development MUST target this file + typography-contract.ts.
+ *
+ * Siblings (typography-enhanced.ts) carry deprecation banners + PARADIGM-RENAME-OK waivers (sunset 2026-08-25).
+ * Real dispatch enforcement + golden regeneration in progress.
+ *
  * Features: Custom fonts, 256 glyphs, hinting, multiple weights
  * Export: OTF, TTF, WOFF2, SVG
+ *
+ * PHASE 2 NOTE: Canonical primary. Target typography.ts exclusively for new work.
  */
 
 import * as fs from 'fs';
