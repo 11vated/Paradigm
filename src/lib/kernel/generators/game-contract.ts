@@ -7,7 +7,7 @@ import { promises as fsp } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateGameV2 } from './game-v2';
+import { generateGameV3 as generateGameV2 } from './game';
 import { registerContract, type QualityContract, type QualityReport } from '../quality-contract';
 
 interface S { $hash?: string; $domain: 'game'; $name?: string; genes: Record<string, unknown> }
@@ -54,7 +54,7 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'game-'));
     const out = path.join(dir, 'game.html');
     const result = await generateGameV2(seed as never, out);
-    const html = await fsp.readFile(result.filePath, 'utf-8');
+    const html = await fsp.readFile(result.htmlPath, 'utf-8');
     return { html, levelCount: result.levelCount, fileSize: result.fileSize };
   },
   invert: (a) => ({ size: a.html.length, levels: a.levelCount }),

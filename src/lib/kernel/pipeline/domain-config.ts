@@ -3,45 +3,33 @@ import type { GeneratorOutput, Seed } from './types';
 
 // Generator imports
 import { generateCharacterV3 as generateCharacter } from '../generators/character';
-import { generateSpriteAnimated } from '../generators/sprite-animated';
-import { generateMusicV2 as generateMusic } from '../generators/music-v2';
-import { generateVisual2DV2 as generateVisual2D } from '../generators/visual2d-v2';
+import { generateSpriteV3 as generateSprite } from '../generators/sprite';
+import { generateMusicV3 as generateMusic } from '../generators/music';
+import { generateVisual2DV3 as generateVisual2D } from '../generators/visual2d';
 import { generateNarrative } from '../generators/narrative';
 import { generateUI } from '../generators/ui';
-import { generateGameV2 as generateGame } from '../generators/game-v2';
+import { generateGameV3 as generateGame } from '../generators/game';
+import { generateCardGame as generateCardGames } from '../generators/cardgame';
+import { generateBoardGame as generateBoardGames } from '../generators/boardgame';
 import { generateGeometry3D } from '../generators/geometry3d';
 import { generateAnimation } from '../generators/animation';
-import { generateAnimationEnhanced } from '../generators/animation-enhanced';
 import { generateShader } from '../generators/shader';
-import { generateShaderEnhanced } from '../generators/shader-enhanced';
 import { generateParticle } from '../generators/particle';
-import { generateParticleGPU } from '../generators/particle-gpu';
 import { generateEcosystem } from '../generators/ecosystem';
-import { generateEcosystemWorker } from '../generators/ecosystem-worker';
 import { generateProcedural } from '../generators/procedural';
-import { generateProcedural3D } from '../generators/procedural-3d';
 import { generateFullGame } from '../generators/fullgame';
 import { generateTypography } from '../generators/typography';
-import { generateTypographyEnhanced } from '../generators/typography-enhanced';
 import { generateArchitecture } from '../generators/architecture';
-import { generateArchitecture3D } from '../generators/architecture-3d';
 import { generateVehicle } from '../generators/vehicle';
-import { generateVehicle3D } from '../generators/vehicle-3d';
 import { generateFurniture } from '../generators/furniture';
-import { generateFurniture3D } from '../generators/furniture-3d';
 import { generateFashion } from '../generators/fashion';
-import { generateFashion3D } from '../generators/fashion-3d';
 import { generateRobotics } from '../generators/robotics';
-import { generateRobotics3D } from '../generators/robotics-3d';
 import { generateCircuit } from '../generators/circuit';
 import { generateFood } from '../generators/food';
-import { generateFood3D } from '../generators/food-3d';
 import { generateChoreography } from '../generators/choreography';
 import { generateAlife } from '../generators/alife';
-import { generateAlifeWorker } from '../generators/alife-worker';
 import { generateAgent } from '../generators/agent';
 import { generatePhysics } from '../generators/physics';
-import { generatePhysicsEnhanced } from '../generators/physics-enhanced';
 import { generateAudio } from '../generators/audio';
 import { generateWebsite } from '../generators/website';
 import { generateField } from '../generators/field';
@@ -89,7 +77,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'sprite', version: 'v2', outputExtension: 'png',
-    generator: (s, p) => generateSpriteAnimated(s, p),
+    generator: (s, p) => generateSprite(s, p),
     postProcess: (o: GeneratorOutput, s: Seed) => {
       let resolution = geneNumber(s, 'resolution', 32);
       if (resolution <= 1) resolution = Math.floor(resolution * 64);
@@ -114,8 +102,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
       const fs = await import('fs');
       const dir = 'data/artifacts/music';
       if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-      const { generateMusicEnhanced } = await import('../generators/music-enhanced');
-      return generateMusicEnhanced(s, p);
+      return generateMusic(s, p);
     },
     postProcess: (o: GeneratorOutput, s: Seed) => {
       const res = o as any;
@@ -147,7 +134,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'procedural', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateProcedural3D(s, p),
+    generator: (s, p) => generateProcedural(s, p),
     postProcess: (o: GeneratorOutput, s: Seed) => {
       let octaves = geneNumber(s, 'octaves', 4);
       if (octaves <= 1) octaves = Math.max(1, Math.floor(octaves * 8));
@@ -177,7 +164,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'animation', version: 'enhanced', outputExtension: 'png',
-    generator: (s, p) => generateAnimationEnhanced(s, p),
+    generator: (s, p) => generateAnimation(s, p),
     postProcess: (o: GeneratorOutput, s: Seed) => ({
       animation: {
         frame_count: Math.max(4, Math.floor(geneNumber(s, 'frameCount', 0.5) * 60)),
@@ -255,7 +242,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'ecosystem', version: 'worker', outputExtension: 'json',
-    generator: (s, p) => generateEcosystemWorker(s, p),
+    generator: (s, p) => generateEcosystem(s, p),
     postProcess: (o: any, s: Seed) => ({
       ecosystem: {
         speciesCount: geneNumber(s, 'speciesCount', 10),
@@ -279,6 +266,31 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
         hasPowerups: geneVal(s, 'hasPowerups', true),
       },
       render_hints: { mode: 'game_logic', interactive: true, wasmReady: true },
+    }),
+  },
+  {
+    domain: 'cardgame', version: 'v1', outputExtension: 'html',
+    generator: (s, p) => generateCardGames(s, p) as Promise<GeneratorOutput>,
+    postProcess: (o: any, s: Seed) => ({
+      cardgame: {
+        type: geneVal(s, 'gameType', 'blackjack'),
+        difficulty: geneNumber(s, 'difficulty', 0.5),
+        playerCount: Math.max(1, Math.floor(geneNumber(s, 'playerCount', 2))),
+        startingChips: Math.max(100, Math.floor(geneNumber(s, 'startingChips', 1000))),
+      },
+      render_hints: { mode: 'card_game', interactive: true },
+    }),
+  },
+  {
+    domain: 'boardgame', version: 'v1', outputExtension: 'html',
+    generator: (s, p) => generateBoardGames(s, p) as Promise<GeneratorOutput>,
+    postProcess: (o: any, s: Seed) => ({
+      boardgame: {
+        type: geneVal(s, 'gameType', 'chess'),
+        difficulty: geneNumber(s, 'difficulty', 0.5),
+        boardSize: Math.max(3, Math.floor(geneNumber(s, 'boardSize', 8))),
+      },
+      render_hints: { mode: 'board_game', interactive: true },
     }),
   },
   {
@@ -309,7 +321,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'particle', version: 'gpu', outputExtension: 'json',
-    generator: (s, p) => generateParticleGPU(s, p),
+    generator: (s, p) => generateParticle(s, p),
     postProcess: (o: any, s: Seed) => ({
       particle: {
         count: geneNumber(s, 'count', 100),
@@ -322,7 +334,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'typography', version: 'enhanced', outputExtension: 'json',
-    generator: (s, p) => generateTypographyEnhanced(s, p),
+    generator: (s, p) => generateTypography(s, p),
     postProcess: (o: any, s: Seed) => ({
       text: {
         fontFamily: geneVal(s, 'fontFamily', 'Arial'),
@@ -336,7 +348,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'architecture', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateArchitecture3D(s, p),
+    generator: (s, p) => generateArchitecture(s, p),
     postProcess: (o: any, s: Seed) => ({
       building: {
         buildingType: geneVal(s, 'buildingType', 'residential'),
@@ -349,7 +361,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'vehicle', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateVehicle3D(s, p),
+    generator: (s, p) => generateVehicle(s, p),
     postProcess: (o: any, s: Seed) => ({
       vehicle: {
         vehicleType: geneVal(s, 'vehicleType', 'car'),
@@ -361,7 +373,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'furniture', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateFurniture3D(s, p),
+    generator: (s, p) => generateFurniture(s, p),
     postProcess: (o: any, s: Seed) => ({
       furniture: {
         furnitureType: geneVal(s, 'furnitureType', 'chair'),
@@ -373,7 +385,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'fashion', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateFashion3D(s, p),
+    generator: (s, p) => generateFashion(s, p),
     postProcess: (o: any, s: Seed) => ({
       garment: {
         clothingType: geneVal(s, 'clothingType', 'shirt'),
@@ -385,7 +397,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'robotics', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateRobotics3D(s, p),
+    generator: (s, p) => generateRobotics(s, p),
     postProcess: (o: any, s: Seed) => {
       let armCount = geneVal(s, 'armCount', 2);
       if (typeof armCount === 'number' && armCount <= 1) armCount = Math.max(2, Math.floor(armCount * 10));
@@ -413,7 +425,7 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'food', version: 'v3', outputExtension: 'gltf',
-    generator: (s, p) => generateFood3D(s, p),
+    generator: (s, p) => generateFood(s, p),
     postProcess: (o: any, s: Seed) => ({
       food: {
         foodType: geneVal(s, 'foodType', 'apple'),

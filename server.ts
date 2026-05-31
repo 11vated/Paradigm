@@ -167,6 +167,9 @@ import { registerFriendRoutes } from './src/server/routes/friend.js';
 import { registerWorldGameRoutes } from './src/server/routes/world-game.js';
 import { registerDaoRoutes } from './src/server/routes/dao.js';
 import { registerQftPipelineRoutes } from './src/server/routes/qft-pipeline.js';
+import { registerFederationRoutes } from './src/server/routes/federation.js';
+import { registerRoyaltyRoutes } from './src/server/routes/royalty.js';
+import { registerMetaGeneratorRoutes } from './src/server/routes/meta-generator.js';
 
 // ─── NEW: Zod Validation ─────────────────────────────────────────────────────
 import { validateBody } from './src/lib/validation/middleware.js';
@@ -428,6 +431,15 @@ async function startServer() {
   registerWorldGameRoutes(app, { optionalAuth, createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact: hashWorldArtifact, composeQuest, createFriendSeed, createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, directorBrief, directedSearch, hashGameArtifact, log });
 
   registerDaoRoutes(app, { optionalAuth, seeds, trainingCanon, daoProvider, log });
+
+  // Phase 9: Federation routes (P2P seed exchange)
+  registerFederationRoutes(app);
+
+  // Phase 10: Royalty waterfall routes
+  registerRoyaltyRoutes(app);
+
+  // Phase 13: MetaGenerator routes (recursive self-improvement)
+  registerMetaGeneratorRoutes(app);
 
   // CATCH-ALL & VITE (encapsulated in extracted module)
   // ═══════════════════════════════════════════════════════════════════════════

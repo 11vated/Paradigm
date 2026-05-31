@@ -141,6 +141,8 @@ import { generatePhysicsV3 } from './generators/physics';
 import { generateAudioV3 } from './generators/audio';
 import { generateEcosystemV3 } from './generators/ecosystem';
 import { generateGameV3 } from './generators/game';
+import { generateCardGame } from './generators/cardgame';
+import { generateBoardGame } from './generators/boardgame';
 import { generateALifeV3 } from './generators/alife';
 import { generateShaderV3 } from './generators/shader';
 import { generateParticleV3 } from './generators/particle';
@@ -277,6 +279,8 @@ const DOMAIN_MAP: Record<string, GeneratorFn> = {
   audio: generateAudioV3,
   ecosystem: generateEcosystemV3,
   game: generateGameV3,
+  cardgame: generateCardGame,
+  boardgame: generateBoardGame,
   alife: generateALifeV3,
   shader: generateShaderV3,
   particle: generateParticleV3,

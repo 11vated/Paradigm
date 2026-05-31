@@ -1,0 +1,12 @@
+{
+  "id": "sample-game",
+  "intent": "Build a platformer game with jumping puzzles",
+  "memoryState": {
+    "layer": "episodic",
+    "entries": [
+      "platformer-experience"
+    ]
+  },
+  "seedCorpus": [],
+  "expectedDomain": "game"
+}

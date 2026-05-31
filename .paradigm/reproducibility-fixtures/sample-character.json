@@ -1,0 +1,12 @@
+{
+  "id": "sample-character",
+  "intent": "Design a fantasy warrior character with sword and shield",
+  "memoryState": {
+    "layer": "episodic",
+    "entries": [
+      "fantasy-preference"
+    ]
+  },
+  "seedCorpus": [],
+  "expectedDomain": "character"
+}

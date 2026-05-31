@@ -1,0 +1,13 @@
+{
+  "id": "sample-music",
+  "intent": "Create a jazz improvisation with walking bass",
+  "memoryState": {
+    "layer": "episodic",
+    "entries": [
+      "jazz-preference",
+      "bass-technique"
+    ]
+  },
+  "seedCorpus": [],
+  "expectedDomain": "music"
+}

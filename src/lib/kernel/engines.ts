@@ -13,19 +13,9 @@
 import type { GeneratorOutput } from './types';
 import type { Seed, Artifact } from './pipeline/types';
 import { createPipeline, getDomainConfig } from './pipeline';
-import { createWebGPUGeneratorSystem, type WebGPUGeneratorSystem } from './generators/webgpu-system';
 import { getGenerationQuality, type GenerationQuality } from './generation-quality';
 import { dispatch as dispatchSeed, DOMAIN_MAP } from './engine-dispatcher';
 import { buildC2PAManifest } from './c2pa-manifest';
-
-let gpuSystem: WebGPUGeneratorSystem | null = null;
-
-async function getGPUSystem(): Promise<WebGPUGeneratorSystem> {
-  if (!gpuSystem) {
-    gpuSystem = await createWebGPUGeneratorSystem({ preferGPU: true, fallbackToCPU: true });
-  }
-  return gpuSystem;
-}
 
 export type { Seed, Artifact, GeneratorOutput };
 
@@ -166,8 +156,6 @@ export function getAllDomains(): string[] {
 export async function getGenerator(domain: string) {
   return DOMAIN_MAP[domain] ?? null;
 }
-
-export { WebGPUGeneratorSystem } from './generators/webgpu-system';
 
 // Re-export GSPL
 export { GsplLexer, TokenType } from './gspl-lexer';

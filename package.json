@@ -44,7 +44,13 @@
     "evolve": "tsx scripts/evolve_demo.mts",
     "gspl": "tsx scripts/gspl.mts",
     "test:webllm:smoke": "npx playwright test tests/browser/webllm-smoke.spec.ts",
-    "test:webllm:full": "ENABLE_WEBLLM_SMOKE=1 npx playwright test tests/browser/webllm-smoke.spec.ts"
+    "test:webllm:full": "ENABLE_WEBLLM_SMOKE=1 npx playwright test tests/browser/webllm-smoke.spec.ts",
+    "reproducibility:gate": "node scripts/agent-reproducibility-gate.mjs",
+    "golden:matrix": "node scripts/golden-matrix-verify.mjs",
+    "golden:matrix:strict": "node scripts/golden-matrix-verify.mjs --strict",
+    "lint:canonical-rename:bun": "bun run scripts/lint-canonical-rename.ts",
+    "lint:no-evasion:bun": "bun run scripts/lint-no-evasion.ts",
+    "preflight:all": "npm run typecheck && npm run determinism:check && npm run lint:canonical-rename:bun && npm run reproducibility:gate && npm run quality:contract"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

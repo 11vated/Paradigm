@@ -1,0 +1,168 @@
+{
+  "flagships": [
+    {
+      "id": "tidepool",
+      "name": "Tidepool",
+      "strataStress": ["Form", "Space"],
+      "description": "Living ocean ecosystem with procedural tide-pool creatures, rocks, and vegetation",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "puzzle" },
+        "difficulty": { "value": 0.4 },
+        "levelCount": { "value": 8 },
+        "mechanics": { "value": ["exploration", "collection", "breathing"] }
+      },
+      "theme": "A living tide pool where you discover and catalog sea creatures. Each creature is procedurally generated with unique behaviors, colors, and movement patterns. The ecosystem evolves over time as you interact with it."
+    },
+    {
+      "id": "threnody",
+      "name": "Threnody",
+      "strataStress": ["Sound", "Time"],
+      "description": "Procedural elegy that evolves through time — music tells a story",
+      "domain": "music",
+      "genes": {
+        "tempo": { "value": 60 },
+        "key": { "value": "Dm" },
+        "scale": { "value": "dorian" },
+        "instruments": { "value": ["cello", "piano", "choir"] }
+      },
+      "theme": "A musical elegy that tells the story of loss and renewal. The piece starts slow and mournful, builds to a passionate climax, then resolves into peaceful acceptance. Each performance is unique but emotionally consistent."
+    },
+    {
+      "id": "cartograph",
+      "name": "Cartograph",
+      "strataStress": ["Space", "Structure"],
+      "description": "Infinite atlas generator — procedural maps of impossible worlds",
+      "domain": "world",
+      "genes": {
+        "era": { "value": "age-of-discovery" },
+        "biome": { "value": "mixed" },
+        "conflict": { "value": "exploration" }
+      },
+      "theme": "An infinite atlas of procedurally generated worlds. Each map is internally consistent with proper geography, climate zones, and cultural regions. Zoom in to see cities, zoom out to see continents."
+    },
+    {
+      "id": "mycelium",
+      "name": "Mycelium",
+      "strataStress": ["Structure", "Semantics"],
+      "description": "Distributed intelligence network — puzzle game where mechanics are semantically meaningful",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "puzzle" },
+        "difficulty": { "value": 0.7 },
+        "levelCount": { "value": 12 },
+        "mechanics": { "value": ["network-building", "resource-sharing", "emergent-behavior"] }
+      },
+      "theme": "A puzzle game where you grow a mycelium network. Each node has a type and purpose (nutrient absorption, communication, reproduction). The network must solve problems by connecting the right nodes."
+    },
+    {
+      "id": "masque",
+      "name": "Masque",
+      "strataStress": ["Culture", "Semantics"],
+      "description": "Generative theater of masks — character-driven narrative with culturally resonant archetypes",
+      "domain": "narrative",
+      "genes": {
+        "genre": { "value": "drama" },
+        "era": { "value": "renaissance" },
+        "culture": { "value": "venetian" }
+      },
+      "theme": "A generative theatrical experience set in a Venetian masquerade. Characters wear masks that reflect their true nature. The story explores themes of identity, deception, and revelation."
+    },
+    {
+      "id": "chimaera",
+      "name": "Chimaera",
+      "strataStress": ["Form", "Motion", "Sound"],
+      "description": "Chimera breeding ground — creature generator with animation and sound synthesis",
+      "domain": "character",
+      "genes": {
+        "bodyType": { "value": "chimera" },
+        "complexity": { "value": 0.8 },
+        "animation": { "value": true },
+        "sound": { "value": true }
+      },
+      "theme": "Breed fantastical chimeras by combining parts from different creatures. Each chimera has unique animations, sounds, and behaviors based on its genetic composition."
+    },
+    {
+      "id": "loom",
+      "name": "Loom",
+      "strataStress": ["Time", "Structure"],
+      "description": "Timeline weaving game — temporal puzzle with structured narrative branches",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "puzzle" },
+        "difficulty": { "value": 0.8 },
+        "levelCount": { "value": 10 },
+        "mechanics": { "value": ["timeline-manipulation", "causal-logic", "pattern-recognition"] }
+      },
+      "theme": "A puzzle game where you manipulate timelines to solve problems. Each action creates causal chains that ripple through time. Master the loom of fate to weave the correct timeline."
+    },
+    {
+      "id": "nomad",
+      "name": "Nomad",
+      "strataStress": ["Space", "Time", "Culture"],
+      "description": "Wandering civilization sim — migration with temporal progression and cultural evolution",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "strategy" },
+        "difficulty": { "value": 0.6 },
+        "levelCount": { "value": 20 },
+        "mechanics": { "value": ["migration", "resource-management", "cultural-evolution"] }
+      },
+      "theme": "Guide a nomadic civilization across an evolving world. Manage resources, adapt to climates, and develop culture as you migrate. Each generation inherits and evolves your choices."
+    },
+    {
+      "id": "witness",
+      "name": "Witness",
+      "strataStress": ["Semantics", "Possibility"],
+      "description": "Alternate history engine — branching paths with semantic consistency",
+      "domain": "narrative",
+      "genes": {
+        "genre": { "value": "alternate-history" },
+        "era": { "value": "modern" },
+        "branching": { "value": 0.9 }
+      },
+      "theme": "An alternate history generator that creates internally consistent timelines. Each branch explores a different 'what if' scenario while maintaining historical plausibility."
+    },
+    {
+      "id": "kintsugi",
+      "name": "Kintsugi",
+      "strataStress": ["Form", "Culture"],
+      "description": "Broken-beauty ceramics — aesthetic game about imperfection and cultural appreciation",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "art" },
+        "difficulty": { "value": 0.3 },
+        "mechanics": { "value": ["repair", "beauty-finding", "cultural-appreciation"] }
+      },
+      "theme": "Inspired by the Japanese art of kintsugi, repair broken ceramics with gold. Each piece tells a story through its cracks. Find beauty in imperfection."
+    },
+    {
+      "id": "vesper",
+      "name": "Vesper",
+      "strataStress": ["Sound", "Time", "Possibility"],
+      "description": "Bell-toll prophecy engine — audio-driven prophecy with temporal branching",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "puzzle" },
+        "difficulty": { "value": 0.7 },
+        "levelCount": { "value": 7 },
+        "mechanics": { "value": ["audio-puzzles", "prophecy-interpretation", "temporal-branching"] }
+      },
+      "theme": "A mystical puzzle game where bells toll to reveal prophecies. Interpret the sounds to predict and shape the future. Each bell pattern opens different temporal branches."
+    },
+    {
+      "id": "aleph",
+      "name": "Aleph",
+      "strataStress": ["Form", "Motion", "Sound", "Space", "Time", "Structure", "Semantics", "Culture", "Possibility"],
+      "description": "The Everything seed — stress-tests all 9 strata simultaneously",
+      "domain": "game",
+      "genes": {
+        "genre": { "value": "hybrid" },
+        "difficulty": { "value": 0.9 },
+        "levelCount": { "value": 15 },
+        "mechanics": { "value": ["all-mechanics"] }
+      },
+      "theme": "The ultimate Paradigm showcase. A game that combines music, 3D worlds, narrative, puzzles, strategy, and art. Every stratum is exercised. The Everything seed."
+    }
+  ]
+}

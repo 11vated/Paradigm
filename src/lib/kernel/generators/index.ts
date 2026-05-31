@@ -8,13 +8,14 @@ export { generateProtein } from './protein';
 export { generateMarket } from './market';
 export { generateDomainGenerator as generateMetaDomain } from './meta-domain';
 
-// V2 World-Class Generators (new)
+// V2 World-Class Generators (canonical)
 export { generateCharacterV3 as generateCharacter } from './character';
-export { generateCharacterV2 } from './character-v2'; // OBJ fallback
-export { generateMusicV2 as generateMusic } from './music-v2';
-export { generateSpriteV2 as generateSprite } from './sprite-v2';
-export { generateVisual2DV2 as generateVisual2D } from './visual2d-v2';
-export { generateGameV2 as generateGame } from './game-v2';
+export { generateMusicV3 as generateMusic } from './music';
+export { generateSpriteV3 as generateSprite } from './sprite';
+export { generateVisual2DV3 as generateVisual2D } from './visual2d';
+export { generateGameV3 as generateGame } from './game';
+export { generateCardGame as generateCardGames } from './cardgame';
+export { generateBoardGame as generateBoardGames } from './boardgame';
 
 // WebGPU RNG for compute shaders
 export { XOSHIRO256_WGSL, hashToU64, createRNGStateBuffer } from './webgpu-rng';
@@ -78,7 +79,7 @@ export { generateNeuroscience } from './neuroscience';
 export { generateEdTech } from './edtech';
 
 // Session 7: Music, Film, Theater, Dance, Literature, Journalism, Publishing, Advertising, Marketing
-export { generateMusicV2 as generateMusicLegacy } from './music-v2';
+export { generateMusicV3 as generateMusicLegacy } from './music';
 export { generateFilm } from './film';
 export { generateTheater } from './theater';
 export { generateDance } from './dance';
