@@ -11,7 +11,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateFullGameV3 } from './fullgame';
 import { registerContract, type QualityContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { fullGameContract as fullgame15 } from '../../contracts/domains/fullgame';
 
 interface S { $domain: 'fullgame'; $name?: string; genes: Record<string, unknown> }
 interface A { filePath: string; meta: Record<string, unknown> }
@@ -43,3 +49,4 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
   hashArtifact,
 };
 registerContract(FullgameQualityContract as never);
+

@@ -463,14 +463,26 @@ export function buildResponse(plan: ReasoningPlan, parsed: ParsedQuery, startTim
   // Generate contextual suggestions
   const suggestions = generateSuggestions(parsed, allSeeds);
 
+  // Basic personality injection (conversational upgrade + sovereign agent state)
+  let finalMessage = messages.join('\n');
+  // Safely extract personality from last tool result (agentState or direct personality payload)
+  const lastData = lastStep?.result?.data || {};
+  const personality = lastData?.agentState?.personality || lastData?.personality;
+  if (personality && typeof personality === 'object') {
+    const dominantTrait = Object.entries(personality).sort((a: any, b: any) => (b[1] as number) - (a[1] as number))[0]?.[0];
+    if (dominantTrait) {
+      finalMessage = `[${dominantTrait}] ${finalMessage}`;
+    }
+  }
+
   return {
     success: true,
     intent: parsed.intent,
     tier: parsed.tier,
-    message: messages.join('\n'),
+    message: finalMessage,
     data,
     suggestions,
-    plan: plan.steps.length > 1 ? plan : undefined, // only include plan for multi-step
+    plan: plan.steps.length > 1 ? plan : undefined,
     timing: { parseMs: 0, planMs: 0, executeMs: endTime - startTime, totalMs: endTime - startTime },
   };
 }

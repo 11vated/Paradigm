@@ -1,0 +1,24 @@
+{
+  "id": "collapsing-temple-monk-v1",
+  "domain": "narrative",
+  "intent": "Long-form story of the lone monk who paints with living sound as the temple collapses — full character arc + 9-strata overlay",
+  "seed": {
+    "$domain": "narrative",
+    "$name": "Collapsing_Temple_Monk",
+    "genes": {
+      "story": { "arcs": 5, "length": "long-form-chapter", "resolution": "transcendent" },
+      "mind": { "characterGrowth": 0.94, "decisionDepth": 0.89 },
+      "time": { "timescale": "generational-collapse", "causalityDepth": 7 },
+      "culture": { "rituals": 4, "transmissionDepth": 0.82 }
+    }
+  },
+  "expected": {
+    "strata": ["Story", "Mind", "Time", "Culture", "Field", "Sound"],
+    "minScore": 0.91,
+    "determinism": "full",
+    "reproducibilityHash": "temple-monk-v1-stable-2026-05"
+  },
+  "hash": "15-real-1780184077902",
+  "created": "2026-05-post-generator-patches",
+  "note": "Narrative flagship golden. Pairs with Goku character and hero melody for closed-loop demos."
+}

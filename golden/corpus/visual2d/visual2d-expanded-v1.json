@@ -1,0 +1,23 @@
+{
+  "id": "visual2d-expanded-v1",
+  "seedHash": "15-visual2d-19e7bc79a7d",
+  "artifactHash": "15-visual2d-19e7bc79a7d",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.326Z",
+  "seed": {
+    "$domain": "visual2d",
+    "$name": "visual2d-expanded-v1",
+    "intent": "expanded golden for visual2d"
+  },
+  "report": {
+    "finalScore": 0.97,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

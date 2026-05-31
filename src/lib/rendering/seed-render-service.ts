@@ -76,7 +76,7 @@ export async function renderSeed(
 
   // Check cache
   const cached = await cache.get(cacheKey);
-  if (cached) {
+  if (cached && typeof cached === 'string') {
     return { ...JSON.parse(cached), cached: true } as RenderResponse;
   }
 

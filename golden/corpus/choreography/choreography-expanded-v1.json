@@ -1,0 +1,23 @@
+{
+  "id": "choreography-expanded-v1",
+  "seedHash": "15-choreography-19e7bc79a8a",
+  "artifactHash": "15-choreography-19e7bc79a8a",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.339Z",
+  "seed": {
+    "$domain": "choreography",
+    "$name": "choreography-expanded-v1",
+    "intent": "expanded golden for choreography"
+  },
+  "report": {
+    "finalScore": 0.945,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

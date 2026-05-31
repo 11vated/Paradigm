@@ -8,6 +8,10 @@ import crypto from 'crypto';
 import { generateAudio } from './audio';
 import { analyzePcm, audioQualityAxes } from '../quality/audio-features';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface AudioSeed { $hash?: string; $name?: string; genes?: any; }
@@ -92,3 +96,4 @@ export const AudioQualityContract: QualityContract<AudioSeed, AudioArtifact, Aud
 };
 
 registerContract(AudioQualityContract);
+

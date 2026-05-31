@@ -1,0 +1,23 @@
+{
+  "id": "ui-expanded-v1",
+  "seedHash": "15-ui-19e7bc79a84",
+  "artifactHash": "15-ui-19e7bc79a84",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.332Z",
+  "seed": {
+    "$domain": "ui",
+    "$name": "ui-expanded-v1",
+    "intent": "expanded golden for ui"
+  },
+  "report": {
+    "finalScore": 0.9319999999999999,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

@@ -13,6 +13,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateMusic } from './music';   // canonical primary (V3)
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
+// Direct 15_ contract usage (Epoch 2 pattern) — the engineering-grade version is the source of truth for strata + manifest
+import { musicContract as music15Contract } from '../../contracts/domains/music';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -132,3 +139,4 @@ export const MusicQualityContract: QualityContract<MusicSeed, MusicArtifact, Mus
 };
 
 registerContract(MusicQualityContract);
+

@@ -7,6 +7,9 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateSyntheticBiology } from './synthetic-biology';
 import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'synthetic-biology'; $name?: string; genes?: Record<string, unknown> }

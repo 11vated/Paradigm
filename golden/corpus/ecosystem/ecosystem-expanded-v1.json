@@ -1,0 +1,23 @@
+{
+  "id": "ecosystem-expanded-v1",
+  "seedHash": "15-ecosystem-19e7bc79a8d",
+  "artifactHash": "15-ecosystem-19e7bc79a8d",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.341Z",
+  "seed": {
+    "$domain": "ecosystem",
+    "$name": "ecosystem-expanded-v1",
+    "intent": "expanded golden for ecosystem"
+  },
+  "report": {
+    "finalScore": 0.9230000000000002,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

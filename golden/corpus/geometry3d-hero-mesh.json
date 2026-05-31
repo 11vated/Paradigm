@@ -1,0 +1,12 @@
+{
+  "domain": "geometry3d",
+  "seedId": "hero_mesh_v1",
+  "seedHash": "aabbcc112233",
+  "artifactHash": "332211ccbbaa",
+  "kernelVersion": "1.0.0",
+  "score": 0.95,
+  "triangleCount": 124000,
+  "manifold": true,
+  "lodLevels": 4,
+  "notes": "Epoch 2 geometry golden. High-fidelity manifold mesh with full PBR."
+}

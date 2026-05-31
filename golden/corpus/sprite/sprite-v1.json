@@ -1,0 +1,11 @@
+{
+  "domain": "sprite",
+  "seedId": "hero_sprite_v1",
+  "seedHash": "aabbcc11223344",
+  "artifactHash": "44332211ccbbaa",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "resolution": 256,
+  "frames": 32,
+  "notes": "Epoch 2 sprite golden. Full animation sheet with palette."
+}

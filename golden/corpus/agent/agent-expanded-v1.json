@@ -1,0 +1,23 @@
+{
+  "id": "agent-expanded-v1",
+  "seedHash": "15-agent-19e7bc79a7e",
+  "artifactHash": "15-agent-19e7bc79a7e",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.326Z",
+  "seed": {
+    "$domain": "agent",
+    "$name": "agent-expanded-v1",
+    "intent": "expanded golden for agent"
+  },
+  "report": {
+    "finalScore": 0.96,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

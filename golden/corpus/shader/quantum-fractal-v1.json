@@ -1,0 +1,22 @@
+{
+  "id": "quantum-fractal-v1",
+  "domain": "shader",
+  "intent": "Quantum fractal shader with real-time 9-strata modulation",
+  "seed": {
+    "$domain": "shader",
+    "$name": "Quantum_Fractal",
+    "genes": {
+      "form": { "iterations": 47, "symmetry": 0.96 },
+      "field": { "invariance": 0.93, "energyConservation": true },
+      "time": { "rhythm": "recursive", "causalityDepth": 6 }
+    }
+  },
+  "expected": {
+    "strata": ["Form", "Field", "Time", "Mind"],
+    "minScore": 0.89,
+    "determinism": "full"
+  },
+  "hash": "f1a8c3e6b9d2f5a7c4e1b8d3f6a9c2e5b7f4a1d6c8e3b9f2a5d7c1e4b6f8a3c9d",
+  "created": "2026-05-continuation",
+  "note": "Shader flagship golden seed."
+}

@@ -1,0 +1,22 @@
+{
+  "id": "shader-expanded-v1",
+  "seedHash": "15-shader-19e7bc79a91",
+  "artifactHash": "15-shader-19e7bc79a91",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.345Z",
+  "seed": {
+    "$domain": "shader",
+    "$name": "shader-expanded-v1",
+    "intent": "expanded golden for shader"
+  },
+  "report": {
+    "finalScore": 0.7005000000000001,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

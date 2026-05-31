@@ -13,7 +13,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateParticle } from './particle';
 import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { particleContract as particle15 } from '../../contracts/domains/particle';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'particle'; $name?: string; genes?: Record<string, unknown> }

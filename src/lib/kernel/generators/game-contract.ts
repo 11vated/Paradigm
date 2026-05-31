@@ -10,6 +10,10 @@ import crypto from 'crypto';
 import { generateGameV3 as generateGameV2 } from './game';
 import { registerContract, type QualityContract, type QualityReport } from '../quality-contract';
 
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
 interface S { $hash?: string; $domain: 'game'; $name?: string; genes: Record<string, unknown> }
 interface A { html: string; levelCount: number; fileSize: number }
 
@@ -62,3 +66,4 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
   hashArtifact,
 };
 registerContract(GameQualityContract as never);
+

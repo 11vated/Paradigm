@@ -7,7 +7,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateAnimation } from './animation';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (correct relative from generators/)
 import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { animationContract as animation15 } from '../../contracts/domains/animation';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'animation'; $name?: string; genes: any }
@@ -78,3 +84,4 @@ export const AnimationQualityContract: QualityContract<S, A, any> = {
   },
 };
 registerContract(AnimationQualityContract);
+

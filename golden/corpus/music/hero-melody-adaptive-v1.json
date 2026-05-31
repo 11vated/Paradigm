@@ -1,0 +1,24 @@
+{
+  "id": "hero-melody-adaptive-v1",
+  "domain": "music",
+  "intent": "Hero melody that adapts to emotional state — 5-stem 24-bit, full spectral + dynamic axes, 9-strata overlay",
+  "seed": {
+    "$domain": "music",
+    "$name": "Hero_Melody_Adaptive",
+    "genes": {
+      "sound": { "stems": 5, "bitDepth": 24, "sampleRate": 48000 },
+      "mind": { "emotionalArc": ["resolve", "doubt", "transcendence"], "decisionDepth": 0.88 },
+      "time": { "rhythm": "evolving-3/4-to-7/8", "duration": 187.4 },
+      "story": { "characterGrowth": 0.91, "resolution": true }
+    }
+  },
+  "expected": {
+    "strata": ["Sound", "Mind", "Story", "Time", "Field"],
+    "minScore": 0.93,
+    "determinism": "full",
+    "reproducibilityHash": "hero-melody-v1-stable-2026-05"
+  },
+  "hash": "15-real-1780184076350",
+  "created": "2026-05-post-generator-patches",
+  "note": "First adaptive music golden for 15_ music contract. 5-stem + full spectral/dynamic predicates. Synthesize now produces deterministic 24-bit WAV files synchronously per stem (drums/bass/melody/harmony/atmosphere)."
+}

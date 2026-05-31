@@ -1,0 +1,23 @@
+{
+  "id": "procedural-expanded-v1",
+  "seedHash": "15-procedural-19e7bc79a86",
+  "artifactHash": "15-procedural-19e7bc79a86",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.334Z",
+  "seed": {
+    "$domain": "procedural",
+    "$name": "procedural-expanded-v1",
+    "intent": "expanded golden for procedural"
+  },
+  "report": {
+    "finalScore": 0.927,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

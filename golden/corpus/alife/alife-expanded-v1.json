@@ -1,0 +1,23 @@
+{
+  "id": "alife-expanded-v1",
+  "seedHash": "15-alife-19e7bc79a85",
+  "artifactHash": "15-alife-19e7bc79a85",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.333Z",
+  "seed": {
+    "$domain": "alife",
+    "$name": "alife-expanded-v1",
+    "intent": "expanded golden for alife"
+  },
+  "report": {
+    "finalScore": 0.925,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

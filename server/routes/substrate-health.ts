@@ -13,6 +13,7 @@
 import { Router, Request, Response } from 'express';
 import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
+import { getContractsHealthContribution } from '../../src/lib/contracts/integration/contracts-to-health';
 
 const router = Router();
 
@@ -92,12 +93,14 @@ function computeHealth(): HealthMetrics {
 
 router.get('/health', (_req: Request, res: Response) => {
   const metrics = computeHealth();
+  const contractsHealth = getContractsHealthContribution();
   res.json({
     status: 'ok',
     doctrine_version: 'v2',
     phase: '0-1',
     metrics,
-    notes: 'Phase 0/1 foundation. Stratum conformance, federation peers, and full SLOs added in later phases.',
+    new_engineering_contracts: contractsHealth.newEngineeringContracts,
+    notes: 'Phase 0/1 foundation. Stratum conformance, federation peers, and full SLOs added in later phases. Engineering contracts (Part 3/5 of 15_ spec) now contributing live data.',
   });
 });
 

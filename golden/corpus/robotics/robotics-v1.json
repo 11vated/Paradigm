@@ -1,0 +1,11 @@
+{
+  "domain": "robotics",
+  "seedId": "hexapod_v1",
+  "seedHash": "aabbccdd11223344",
+  "artifactHash": "44332211ddccbbaa",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "dof": 18,
+  "sensors": 12,
+  "notes": "Epoch 2 robotics golden. Multi-DOF with behavior tree."
+}

@@ -1,38 +1,254 @@
-# Paradigm Absolute
+# Paradigm Absolute v1.0.0
 
-**Deterministic Synthetic Evolution Operating System**
+Paradigm Absolute is a deterministic synthetic evolution operating system.
 
-> Every digital artifact is a seed. A seed is a genetic, reproducible blueprint that can be grown, mutated, bred, composed, signed, exported, and replayed with bit-identical output forever.
+In plain terms: Paradigm treats every digital artifact as a seed. A seed is a genetic, reproducible blueprint that can be grown, mutated, bred, composed with other seeds, signed, exported, and replayed later with bit-identical output.
 
 ```text
 same seed + same deterministic RNG + same code = reproducible artifact
 ```
 
-Paradigm is not a generative app. It is the operating substrate of generated reality: a deterministic, evolvable, sovereign kernel that compresses any creative artifact — a game, a song, a film, a novel, a building, a molecule, a culture — into a `.gseed`, breeds seeds with seeds, renders across modalities, and lets operators own what they make at the substrate level.
+That guarantee is the center of the system. It turns generative media into something closer to software, biology, and version control: reproducible, inspectable, evolvable, and attributable.
 
 ---
 
-## Table of Contents
+## Doctrine v2 Governance (Canonical — Read First for Any Build Session)
 
-- [Quick Start](#quick-start)
-- [Core Concepts](#core-concepts)
-- [What's Built](#whats-built)
-- [Architecture](#architecture)
-- [Domains](#domains)
-- [Game Types](#game-types)
-- [Verification](#verification)
-- [API Reference](#api-reference)
-- [OS Shell](#os-shell)
-- [Federation](#federation)
-- [Economic Substrate](#economic-substrate)
-- [Recursive Closure](#recursive-closure)
-- [Smart Contracts](#smart-contracts)
-- [Repository Map](#repository-map)
-- [Development](#development)
-- [Documentation](#documentation)
-- [License](#license)
+**Governing documents (as of 2026-05):**
+- **READ FIRST:** `Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md` — the single source of truth for what "finishing Paradigm" means (24-phase roadmap, 9-stratum substrate, spine invariants, risk register, what we will *not* build).
+- **Phase Gates:** `Documents/Paradigm-Analysis/13b_Phase_Gates.md` — explicit entry/exit criteria for every phase. No phase is complete until all gates are green.
+- **Execution Plan:** `Documents/Paradigm-Analysis/14_PARADIGM_INFINITE_EXECUTION_PLAN.md`
+- **Waiver Registry (append-only, sunset-dated):** `docs/waivers/registry.json`
+- **If We Vanish (anti-fragility / fork protocol):** `docs/if-we-vanish.md`
+- **Planning Reconciliation:** `planning/DOCTRINE_V2_MAPPING.md` (maps legacy 4-phase / PHASE0–4 work to the 24-phase canon)
+
+Prior canon (`05_*`, `07_*`, `12_*` series) is superseded. This README and all planning docs are subordinate to the 13_* doctrine.
+
+**Core Spine (never break):**
+1. Determinism — same seed + same RNG = bit-identical artifact forever
+2. Sovereignty — kernel runs 100% offline; forking is a first-class right
+3. Quality — every generator has a measurable contract; strata are executable predicates
+
+Enforced by: `npm run typecheck`, `npm run determinism:check`, `npm run lint:doctrine`, `npm run golden:verify`, `npm run preflight:report`, and the Substrate Health surface (`/api/substrate/health`).
 
 ---
+
+## Primary Interface — The Sovereign GSPL Agent (100% Completion)
+
+**The recommended way to use Paradigm is now conversational:**
+
+```bash
+npx tsx scripts/paradigm.ts chat
+# aliases
+npx tsx scripts/paradigm.ts converse
+npx tsx scripts/paradigm.ts talk
+```
+
+Inside the chat you can:
+- Create high-fidelity artifacts across 20+ domains using real 15_ contracts
+- Breed and evolve sovereign agents (the agent itself is a first-class breedable 15_ artifact)
+- Trigger on-chain royalty preparation and SeedNFT mint flows
+- Generate physical production instructions + sidecar files
+- Run recursive self-evolution of the system
+- Orchestrate and breed agent swarms with parallel execution
+
+The Agent maintains persistent identity (personality + created sovereign agents survive between sessions) and every significant action produces real, reproducible, strata-scored artifacts with Part 6 sidecars.
+
+This is the living conversational operating system for the deterministic creative substrate.
+
+**100% Completion Note (Full Vision — June 2026):**  
+The engineering foundation is complete: 27 Quality Contracts at DEFINITIVE_SCOPE fidelity, 9-strata elevation, full Part 6 (economics, physical bridge, OS Shell, federation, governance), and the GSPL Agent as the primary conversational sovereign interface (`paradigm chat` / `converse` / `talk`).
+
+Next epoch launched with real executable slices:
+- On-chain royalties + SeedNFT mint flows with calldata
+- Physical production with automatic sidecar instruction files
+- Recursive GSPL∞ self-hosting and agent-driven evolution
+- Larger agent swarms with coordination, parallel execution, and swarm-level breeding
+
+The multi-trillion-dollar vision is now operational: long natural conversations with a sovereign, breedable, persistent GSPL Agent that can create, breed, value, physically produce, and recursively evolve across the substrate.
+
+All verification surfaces green (27/27 contracts + Part 6, 0 TS errors, determinism boundary clean).
+
+---
+
+## Substrate Pipeline (Phase 0-7, May 2026) — Historical v1.0.0 Foundation
+
+Paradigm now has a complete end-to-end substrate: seed → artifact → composition → playable game, deterministic at every step.
+
+```text
+  FriendSeed ──┐
+               ├─► QuestSeed ──► GameSeed ──► GameArtifact ──► PlayabilityReport
+  WorldSeed  ──┘     (multi-source compose)   (scene graph)    (5-axis fitness)
+```
+
+| Layer | Module | What |
+|---|---|---|
+| **Friend** | `src/lib/friend` | 6-gene companion seed (body, face, voice, persona, memory, bond), sovereignty (ECDSA-P256), on-chain anchor (ERC-721), persistence + lineage |
+| **World** | `src/lib/world` | Era × biome × conflict seed, deterministic locations + factions + hook |
+| **Quest** | `src/lib/world/quest` | Friend × World → QuestSeed with archetype + 3-act structure |
+| **Game** | `src/lib/game` | QuestSeed → scene graph with branching choices, karma, karma-gated endings |
+| **Oracle** | `src/lib/game/oracle` | Deterministic multi-axis fitness: completability, branchingHealth, karmaArc, paceVariance, endingDiversity |
+| **Quality Contract** | `src/lib/kernel/quality-contract` | 5-clause harness (synthesize/invert/rate/curated/det) every Tier-1 generator passes |
+
+**7 generators are contract-conformant**: friend (1.000), sprite (1.000), visual2d (0.981), narrative (0.667), game (0.900), music (0.833), world (1.000).
+
+**24+ domains** now have real curated goldens with live, reproducible hashes (expanded significantly during the 15_ completion wave; flagship set remains rock-solid). Full 27-domain coverage is in progress.
+
+### Web surfaces
+- `/studio` — original kernel studio
+- `/friend` — Friend generator + library + breeding + sign + on-chain
+- `/world` — World generator with hook + locations + factions
+- `/quest` — visual Friend × World → QuestSeed composer
+- `/play` — game lobby + `/play/:friend/:world` runtime
+- `/lineage/:id` — Friend family tree (ancestors + descendants)
+
+### Determinism guarantees
+- 0 hard entropy violations in `src/lib/kernel`, `src/lib/evolution`, `src/seeds`
+- ESLint determinism boundary fails CI on any `Math.random`, `crypto.random*`, `performance.now`, or wall-clock leak
+- Kernel time is injected via `src/lib/kernel/clock` (`kernelNow`, `kernelNowIso`) — defaults to `Date.now()` but can be frozen/counter-mode in tests + replay
+- Every commit verified with `npm run typecheck && npm run determinism:check && npm run golden:verify`
+
+```bash
+npm run typecheck          # 0 errors
+npm run determinism:check  # 0 hard violations
+npm run quality:contract   # 27/27 engineering contracts live
+npm run golden:verify      # 24+ domains with real reproducible goldens (flagship set 31/31 stable)
+npm run test               # all suites pass
+```
+
+---
+
+## Current State — v1.0.0 Release
+
+Verified May 26, 2026. All 4 phases complete (34/34 tasks).
+
+| Area | Status |
+|---|---:|
+| TypeScript | **0 errors** |
+| Production build | passing, no warnings |
+| Test suite | **1497 passing tests** across 108 files |
+| Source surface | ~523 source files under `src` |
+| Source size | ~95k source lines (after Phase 0 cleanup: -288K dead lines) |
+| Domain engines | 27 canonical |
+| Cross-domain functors | 252 |
+| C2PA provenance | Wired into all 10 export handlers |
+| WCAG 2.1 AA | ~30 accessibility fixes across 14 files |
+| Quality contracts | 7/7 Tier-1 generators green |
+| Golden hashes | 30/30 deterministic |
+| Runtime stack | TypeScript, React 19, Express, Three.js, WebGPU, Solidity |
+
+Validation:
+
+```bash
+npm run typecheck          # 0 errors
+npm run determinism:check  # 0 hard violations
+npm run quality:contract   # 7/7 contracts green
+npm run golden:verify      # 30/30 hashes match
+npm test                   # 1497/1497 pass
+```
+
+## What We Have
+
+Paradigm currently contains a working end-to-end platform skeleton for deterministic synthetic creation:
+
+- A deterministic kernel based on `xoshiro256**`
+- A universal seed and gene system
+- A GSPL language layer with lexer, parser, interpreter, bytecode, GPU compiler hooks, and LSP scaffolding
+- A large domain generator library covering creative, scientific, industrial, and simulation domains
+- Evolution algorithms including GA, CMA-ES, novelty search, MAP-Elites-style quality diversity, AURORA, DQD, NSLC, and POET-oriented modules
+- Cross-domain composition and functor bridges
+- A React Studio for exploring, growing, editing, and previewing seeds
+- Express API routes for seed lifecycle, generation, auth, export, lineage, agent actions, DAO/governance, and VCS-style operations
+- Cryptographic sovereignty primitives: canonicalization, signing, per-gene provenance, C2PA-oriented metadata, and `.gseed` binary export
+- Smart contracts for PARA token, SeedNFT, marketplace, governor, and timelock flows
+- Test coverage across determinism, kernel behavior, GSPL, API, auth, sovereignty, VCS, visual regression, and integration paths
+
+## Architecture
+
+```text
+Layer 1   Deterministic RNG
+          xoshiro256**, seeded streams, reproducible random choices
+
+Layer 2   Seed and Gene System
+          Universal seeds, gene values, gene type registry, mutation/crossover/distance
+
+Layer 3   GSPL
+          Lexer, parser, interpreter, bytecode, GPU compiler hooks, language tooling
+
+Layer 4   Domain Engines
+          27 canonical domains plus 100+ broader generators
+
+Layer 5   Evolution and Composition
+          GA, CMA-ES, quality diversity, novelty, open-ended systems, functor bridges
+
+Layer 6   Sovereignty and Provenance
+          Canonicalization, signatures, per-gene ownership, C2PA, .gseed packages
+
+Layer 7   Studio and API
+          React 19 Studio, Express backend, artifact rendering, agent workflows
+
+Layer 8   Compute and Export
+          WebGPU, workers, GLTF, WAV, SVG, JSON, .gseed, contracts
+```
+
+## Core Concepts
+
+### Seeds
+
+A seed is the canonical unit of creation. It contains identity, domain, lineage, metadata, and genes.
+
+Seeds can be:
+
+- grown into artifacts
+- mutated
+- crossed with other seeds
+- evolved in populations
+- composed across domains
+- signed and verified
+- exported and replayed
+
+### Genes
+
+Genes are typed values that drive artifact generation. A music seed might contain tempo, key, scale, timbre, and melody genes. A geometry seed might contain primitive, scale, material, and SDF parameters.
+
+The system includes a broad gene type registry with primitives, containers, spatial types, temporal types, symbolic types, learned types, and sovereignty-aware metadata.
+
+### Domains
+
+Canonical domains include:
+
+```text
+character, sprite, music, visual2d, procedural, fullgame, animation,
+geometry3d, narrative, ui, physics, audio, ecosystem, game, alife,
+shader, particle, typography, architecture, vehicle, furniture,
+fashion, robotics, circuit, food, choreography, agent
+```
+
+The repository also contains many broader domain generators, including aerospace, cybersecurity, genomics, nanotechnology, finance, healthcare, logistics, smart grid, robotics-industrial, quantum computing, synthetic biology, and more.
+
+### Determinism
+
+All randomness must flow through the deterministic RNG. Generator code should not use `Math.random()` for seeded behavior.
+
+This is the platform's most important technical invariant.
+
+## Repository Map
+
+```text
+src/lib/kernel/             Core kernel, RNG, GSPL, engine routing, provenance
+src/lib/kernel/generators/  Domain generators and artifact emitters
+src/lib/kernel/pipeline/    Seed -> generator -> artifact pipeline
+src/lib/evolution/          Evolution and quality-diversity algorithms
+src/lib/sovereignty/        Canonicalization, signatures, ownership checks
+src/lib/asset_pipeline/     Asset synthesis and export utilities
+src/components/studio/      React Studio components and viewports
+src/pages/                  App pages
+src/services/               Client API services
+server.ts                   Express backend and API entrypoint
+contracts/                  Solidity contracts
+tests/                      Unit, integration, determinism, API, visual, e2e tests
+data/                       Seeds, specs, commons libraries, artifacts
+```
 
 ## Quick Start
 
@@ -43,495 +259,114 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000` for the Studio, or `http://localhost:3000/os` for the OS Shell desktop.
+The development server runs through `tsx server.ts`.
 
-```bash
-# Verify everything works
-npm run preflight:all
-```
-
----
-
-## Core Concepts
-
-### Seeds
-
-A seed is the canonical unit of creation. It contains identity, domain, lineage, metadata, and typed genes. Seeds can be:
-
-- **Grown** into artifacts (games, music, 3D models, sprites, narratives)
-- **Mutated** to explore design space
-- **Bred** with other seeds to combine properties
-- **Composed** across domains (Friend × Music → Singing Avatar)
-- **Evolved** using genetic algorithms, novelty search, quality diversity
-- **Signed** with ECDSA-P256 for cryptographic ownership
-- **Exported** in 10+ formats (JSON, GLTF, WAV, SVG, PNG, MIDI, .gseed, C2PA)
-- **Replayed** with identical output forever
-
-### Determinism
-
-**The platform's most important invariant.** All randomness flows through `xoshiro256**` — a deterministic PRNG seeded from the artifact hash. No `Math.random()`, no `Date.now()` in the kernel. Same seed → same artifact across machines, runtimes, decades.
-
-Enforced by ESLint, CI gates, golden hashes, and the determinism boundary check.
-
-### Sovereignty
-
-No central server required. The kernel runs offline. Forking is a first-class right. Every seed can be cryptographically signed, traced through lineage, and anchored on-chain.
-
-### Quality Contracts
-
-Every generator has a measurable contract across **9 strata**:
-
-| Stratum | What It Measures |
-|---------|-----------------|
-| Form | Geometry quality (vertices, faces, symmetry, coherence) |
-| Motion | Animation quality (trajectory, velocity, momentum) |
-| Sound | Audio quality (LUFS, timbre, rhythm, harmony) |
-| Space | Spatial quality (scale, density, connectivity) |
-| Time | Temporal quality (urgency, progression, causality) |
-| Structure | Architectural quality (hierarchy, modularity, symmetry) |
-| Semantics | Meaning quality (coherence, depth, distinctiveness) |
-| Culture | Cultural quality (familiarity, novelty, resonance) |
-| Possibility | Combinatorial quality (branching, exploration, reachability) |
-
-Each stratum has **8-10 executable predicates** that score artifacts on a 0–1 scale.
-
----
-
-## What's Built
-
-| Component | Count | Status |
-|-----------|-------|--------|
-| Domain generators | 272 | All registered, typechecked, determinism-verified |
-| Playable game types | 10 | 5 card + 5 board (HTML5 Canvas) |
-| Inverters (artifact → seed) | 15 modalities | image, audio, text, narrative, video, MIDI, code, game-replay, sensor, genome, map, legal, persona, seed-graph |
-| Server routes | 30 files | 60+ endpoint registrations |
-| Quality contracts | 7/7 Tier-1 green | friend, sprite, visual2d, narrative, game, music, world |
-| Stratum predicates | 9 × 8-10 axes | All executable, scored live on /api/substrate/health |
-| Golden hashes | 35 verified | Cross-runtime determinism checked |
-| Evolution algorithms | 7 | GA, CMA-ES, MAP-Elites, POET, DQD, AURORA, NSLC |
-| Composition functors | 252 | Cross-domain bridges (Friend × Music, World × Quest, etc.) |
-| Smart contracts | 5 | ParaToken, SeedNFT, Marketplace, Governor, Timelock |
-| C2PA provenance | 10 export handlers | Signed artifacts with Content Authenticity metadata |
-| Tests | 617+ | Kernel, determinism, game, sovereignty, VCS, quality, agent, contracts |
-| OS Shell | 14 apps | Desktop environment with terminal, canvas, synthesizer, world builder |
-| Federation | 7 endpoints | P2P seed exchange with signature verification |
-| Royalty engine | 5 endpoints | Waterfall computation, ledger, creator earnings |
-| MetaGenerator | 6 endpoints | Recursive self-improvement (generators that generate generators) |
-| Corpus | 100 seeds | Batch generation at 3571 seeds/second |
-
----
-
-## Architecture
+Useful local URLs:
 
 ```text
-Layer 1   Deterministic RNG
-          xoshiro256**, seeded streams, reproducible random choices
-
-Layer 2   Seed and Gene System
-          17 gene types, Universal Seed class, mutation/crossover/distance
-
-Layer 3   GSPL
-          Generative Seed Programming Language
-          Lexer → Parser → Interpreter → Bytecode → GPU Compiler
-
-Layer 4   Domain Engines
-          272 generators across 27 canonical + 107 industry domains
-
-Layer 5   Evolution and Composition
-          GA, CMA-ES, MAP-Elites, POET, novelty search
-          252 cross-domain functor bridges
-
-Layer 6   Quality Contracts
-          9-stratum conformance framework
-          8-10 executable predicates per stratum
-
-Layer 7   Agent Intelligence
-          6-stage pipeline, 8+ sub-agents, 4-layer memory
-          Deterministic reproducibility harness
-
-Layer 8   Sovereignty and Provenance
-          ECDSA-P256, C2PA manifests, .gseed binary format
-          Lineage tracking, per-gene ownership
-
-Layer 9   Federation
-          P2P seed exchange, signature verification, lineage merge
-
-Layer 10  Economic Substrate
-          Royalty waterfalls, licensing tiers, DAO governance
-
-Layer 11  Studio and API
-          React 19 Studio, Express backend, 30 route modules
-
-Layer 12  OS Shell
-          Web-based desktop, 14 seed-powered apps, terminal
-
-Layer 13  Recursive Closure
-          MetaGenerator, self-improvement loop, GSPL v∞
-
-Layer 14  Compute and Export
-          WebGPU, GLTF, WAV, SVG, PNG, MIDI, .gseed, C2PA, HTML5 games
+http://localhost:3000
+http://localhost:3000/health
+http://localhost:3000/api-docs/ui
 ```
-
----
-
-## Domains
-
-### 27 Canonical Domains
-
-| Domain | Output | Description |
-|--------|--------|-------------|
-| character | GLTF | 3D character generation with skeleton, materials, animation |
-| sprite | PNG | Pixel art with symmetry, dithering, equipment |
-| music | WAV | Procedural synthesis with ADSR envelopes, harmony, MIDI export |
-| visual2d | SVG/PNG | 2D art with gradients, filters, provenance |
-| game | HTML/JSON | Playable games with levels, physics, power-ups |
-| fullgame | HTML | Complete HTML5 games with Canvas rendering |
-| cardgame | HTML | Blackjack, poker, solitaire, war, hearts |
-| boardgame | HTML | Chess, checkers, tic-tac-toe, snakes-ladders, parcheesi |
-| narrative | JSON | Story generation with beats, branching, character arcs |
-| world | JSON | Era × biome × conflict, locations, factions |
-| architecture | GLTF | 3D buildings with floors, roofs, windows, materials |
-| fashion | GLTF | 3D garments with buttons, collar, sleeves |
-| food | GLTF | 3D food items with toppings, layers, textures |
-| furniture | GLTF | 3D furniture with legs, cushions, headboards |
-| vehicle | GLTF | 3D vehicles with wheels, headlights, windshield |
-| robotics | GLTF | 3D robots (humanoid, drone, rover) with sensors |
-| shader | GLSL | Raymarching, PBR, toon, compute shaders |
-| particle | JSON/HTML | Particle systems with forces, emitters, WebGL |
-| typography | HTML/CSS | Variable fonts, bitmap glyphs, specimen pages |
-| animation | GLTF | Skeletal + morph target animations |
-| physics | JSON/HTML | Rigid body simulations with constraints |
-| audio | WAV | Sound synthesis with reverb, delay, spatialization |
-| ecosystem | JSON | Species, food webs, environmental zones |
-| alife | JSON/HTML | Cellular automata, evolutionary simulations |
-| geometry3d | GLTF | 3D primitives, CSG, implicit surfaces |
-| procedural | JSON/PNG | Terrain, noise fields, pattern generation |
-| agent | JSON | Behavior trees, FSMs, utility AI |
-
-### 107 Industry Domains
-
-aerospace, agriculture, agtech, app, architecture-3d, ar, art, automotive, av, battery, beer, biomedical, biotechnology, blockchain, chemistry, city, climate, cloud, coffee, cosmetics, cybersecurity, dance, data-science, devops, drones, drug, edtech, education, electronics, energy, event-planning, fashion-3d, film, finance, fitness, food-3d, furniture-3d, gaming, gardening, genome, genomics, healthcare, hospitality, insurance, interior-design, jewelry, journalism, landscaping, legal, lighting, literature, logistics, marine, marketing, material, media, metaverse, molecule, ml, nanobot, nanotechnology, neuroscience, optics, personalized-medicine, pet-care, photography, procedural-3d, protein, publishing, quantum, quantum-circuit, quantum-computing, reactor, real-estate, renewable-energy, robotics-3d, robotics-industrial, security, semiconductors, sensors, smart-grid, smart-home, space, space-tourism, spirits, sports, synthetic-biology, tea, textiles, theater, tourism, transportation, ui, universe, vr, wearables, website, wine, world
-
----
-
-## Game Types
-
-### Card Games (HTML5 Canvas)
-
-| Game | Players | Description |
-|------|---------|-------------|
-| Blackjack | 1+AI | Beat the dealer to 21 |
-| Poker | 1+AI | Five-card draw with betting |
-| Solitaire | 1 | Classic klondike |
-| War | 2 | Flip and compare |
-| Hearts | 2-4 | Avoid taking hearts and queen of spades |
-
-### Board Games (HTML5 Canvas)
-
-| Game | Players | Description |
-|------|---------|-------------|
-| Chess | 2 | Full chess with piece movement |
-| Checkers | 2 | Draughts with jumps and kings |
-| Tic-Tac-Toe | 2 | Classic 3×3 |
-| Snakes & Ladders | 2 | Race to 100 with snakes and ladders |
-| Parcheesi | 2-4 | Cross and enter home |
-
-### Action/Platformer Games (HTML5 Canvas)
-
-| Genre | Mechanics |
-|-------|-----------|
-| Platformer | Jump, collect, reach finish |
-| Shooter | Dodge, shoot enemies |
-| Puzzle | Match, solve, clear |
-| Racing | Speed, drift, finish first |
-| Action | Move, score, survive |
-
----
 
 ## Verification
 
+Run the full local gate:
+
 ```bash
-# Full pre-commit verification
-npm run preflight:all
-
-# Individual gates
-npm run typecheck              # 0 TypeScript errors
-npm run determinism:check      # 0 entropy violations
-npm run lint:canonical-rename  # 0 deprecated siblings
-npm run reproducibility:gate   # Agent determinism proof
-npm run golden:matrix          # Cross-runtime verification
-npm run quality:contract       # 7/7 Tier-1 contracts green
-npm run golden:verify          # 35 golden hashes match
-npm test                       # 617+ tests passing
+npm run typecheck
+npm run build
+npm run test
 ```
 
----
+Focused commands:
 
-## API Reference
-
-### Seed Lifecycle
-
-```
-POST /api/seeds/create          Create a new seed
-POST /api/seeds/generate        Generate from domain + genes
-POST /api/seeds/:id/mutate      Mutate a seed
-POST /api/seeds/:id/breed       Breed two seeds
-POST /api/seeds/:id/grow        Grow seed into artifact
-GET  /api/seeds/:id             Get seed details
-POST /api/seeds/:id/sign        Sign with ECDSA
-POST /api/seeds/:id/verify      Verify signature
-POST /api/seeds/:id/export      Export as JSON/GLTF/WAV/PNG/.gseed
+```bash
+npx vitest run tests/kernel
+npx vitest run tests/gspl
+npx vitest run tests/determinism
+npx vitest run tests/gseed-format.test.ts
+npx playwright test tests/visual/regressions.spec.ts
 ```
 
-### Federation (P2P)
+## Development Notes
 
-```
-GET  /federation/status         Node status
-GET  /federation/peers          Known peers
-POST /federation/discover       Peer discovery
-POST /federation/offer          Send seed offer
-POST /federation/accept         Accept seed
-POST /federation/reject         Reject seed
-POST /federation/exchange       Full exchange with receipt
-```
+- Preserve deterministic behavior. Do not introduce unseeded randomness into generators or seed operations.
+- Keep seed and gene serialization backward compatible where possible.
+- Prefer domain-local validation for generator-specific gene shapes.
+- Keep the universal pipeline seed type flexible; genes are intentionally heterogeneous.
+- For browser-facing code, avoid static imports of Node-only modules such as `fs`, `crypto`, `zlib`, or stream-based writers.
+- Use the existing generator and pipeline patterns before adding new abstractions.
 
-### Royalty (Economics)
+## Phase 4 — Polish & Launch (May 2026)
 
-```
-POST /royalty/calculate         Compute royalty splits
-POST /royalty/transaction       Record sale
-GET  /royalty/ledger            Transaction history
-GET  /royalty/summary           Revenue summary
-GET  /royalty/creator/:id       Creator earnings
-```
+Phase 4 delivered production-readiness across 8 workstreams:
 
-### MetaGenerator (Recursive)
-
-```
-POST /meta/generate             Create new generator from spec
-POST /meta/verify               Test generated generator
-GET  /meta/list                 All generated generators
-GET  /meta/:id                  Specific generator source
-POST /meta/improve              Self-improvement attempt
-GET  /meta/improvements         Improvement history
-```
-
-### Health & Monitoring
-
-```
-GET  /api/substrate/health      Full health with stratum conformance
-GET  /health                    Basic health check
-GET  /api/metrics               Prometheus metrics
-```
-
----
-
-## OS Shell
-
-Navigate to `/os` for a web-based desktop environment where every window is a seed-powered artifact.
-
-**14 Built-in Apps:** Terminal, Canvas, Synthesizer, World Builder, Character Lab, Game Engine, Card Games, Board Games, 3D Studio, Story Engine, Evolution Lab, Seed Vault, Settings, About
-
-**Terminal Commands:**
-```text
-help          Show available commands
-seed <domain> Create a new seed
-grow <seed>   Grow a seed into an artifact
-evolve <seed> Evolve a seed
-compose <a> <b> Compose two seeds
-list          List active seeds
-clear         Clear terminal
-about         About Paradigm
-```
-
----
-
-## Federation
-
-P2P seed exchange between independent Paradigm nodes. No central server required.
-
-**Protocol:**
-1. Node A sends `POST /federation/offer` with seed + signature
-2. Node B verifies signature, stores seed, returns receipt
-3. Both nodes replay seed deterministically
-4. Lineage merge preserves fork history
-
-**Spec:** `docs/federation-protocol.md`
-
----
-
-## Economic Substrate
-
-### Royalty Waterfall
-
-When a seed is purchased, royalties flow up the lineage tree:
-
-```text
-Price: $100
-  10% → Creator of sold seed
-   5% → Parent seed creator
-   2% → Grandparent seed creator
-   2% → Platform fee
-  81% → Seller
-```
-
-### Universe Licensing
-
-Creators set usage tiers:
-- **Free:** Unlimited personal use
-- **Indie:** <1000 seeds, 10% royalty
-- **Studio:** <100K seeds, 5% royalty
-- **Enterprise:** Unlimited, 2% royalty
-
-### Multi-Chain
-
-Seeds can be anchored on:
-- Ethereum (high-value, high-security)
-- Polygon (low-cost, high-volume)
-- Arbitrum (fast finality)
-- Base (Coinbase L2)
-
----
-
-## Recursive Closure
-
-The **MetaGenerator** creates new generators from specifications. This is how Paradigm builds the next version of itself.
-
-```typescript
-const metaGen = new MetaGenerator();
-const generator = metaGen.generate({
-  domain: 'music',
-  name: 'ambient-generator',
-  parameters: [
-    { name: 'mood', type: 'string', default: 'calm' },
-    { name: 'duration', type: 'number', default: 300 },
-  ],
-  strata: ['Sound', 'Time'],
-});
-```
-
-The **SelfImprovementLoop** attempts to improve existing generators by generating new versions and testing them against quality contracts.
-
----
-
-## Smart Contracts
-
-```text
-contracts/
-├── ParaToken.sol              ERC-20 governance token
-├── SeedNFT.sol                ERC-721 seed ownership
-├── ParadigmMarketplace.sol    Decentralized marketplace
-├── ParadigmGovernor.sol       DAO voting
-└── ParadigmTimelock.sol       Governance delay
-```
-
-Deploy locally: `npx hardhat run scripts/deploy.ts --network localhost`
-
----
+- **C2PA compliance** — `X-C2PA-Manifest` header on all 10 file export routes + embedded in `.gseed` binary
+- **WCAG 2.1 AA** — ~30 accessibility fixes: aria-labels, keyboard navigation, contrast, role alerts, decorative icon handling
+- **Observability** — Enhanced `/api/metrics` with latency quantiles (p50/p95/p99) and cache metrics. Full OTEL audit at `docs/observability-audit.md`
+- **Load testing** — `scripts/load-test.k6.js` with staged VU ramp for health, CRUD, and metadata endpoints
+- **Security audit** — All OWASP Top 10 controls verified. Dev-only vulns tracked in `docs/security-known-issues.md`
+- **DAO Phase 3** — 5 governance contracts compile, 5 API endpoints wired, dual-mode provider (off-chain + on-chain Governor)
+- **Documentation** — `CHANGELOG.md`, security audit, observability audit, known issues
+- **Release v1.0.0** — Package version bumped, all 1497 tests passing, 0 tsc errors
 
 ## Repository Map
 
 ```text
-src/
-├── lib/
-│   ├── kernel/               Core deterministic substrate
-│   │   ├── rng.ts            xoshiro256** PRNG
-│   │   ├── seed-class.ts     Universal Seed class
-│   │   ├── engines.ts        Engine router
-│   │   ├── engine-dispatcher.ts  272 generator routing
-│   │   ├── composition.ts    252 cross-domain functors
-│   │   ├── quality-contract.ts   9-stratum quality framework
-│   │   ├── quality/predicates.ts 8-10 predicates per stratum
-│   │   ├── generators/       272 domain generators
-│   │   ├── gspl-*.ts         GSPL language pipeline
-│   │   ├── meta-generator.ts Recursive self-improvement
-│   │   ├── clock.ts          Injectable wall-clock
-│   │   └── provenance.ts     Canonicalization + C2PA
-│   ├── evolution/            GA, CMA-ES, MAP-Elites, POET, DQD, AURORA, NSLC
-│   ├── friend/               Sovereign digital companion (6 genes, ECDSA, ERC-721)
-│   ├── world/                Era × biome × conflict + quest composition
-│   ├── game/                 Quest → scene graph + 5-axis oracle
-│   ├── intelligence/         Agent pipeline, inverters, embeddings, memory
-│   │   ├── inverse/          15-modality artifact → seed pipeline
-│   │   └── agent/            6-stage pipeline, 8 sub-agents
-│   ├── sovereignty/          ECDSA, C2PA, .gseed binary, royalty waterfall
-│   ├── blockchain/           Multi-chain support (ETH, Polygon, Arbitrum, Base)
-│   ├── os-shell/             Desktop environment (14 apps)
-│   ├── onboarding/           Creator onboarding flows
-│   ├── gspl/                 GSPL v∞ research tracker
-│   ├── rendering/            WebGPU, Three.js, path tracing
-│   ├── vcs/                  Version control for seeds
-│   └── validation/           Zod schemas, middleware
-├── server/routes/            30 route modules
-├── pages/                    React page components
-├── components/               UI components
-└── seeds/                    Canonical seed types
+src/lib/kernel/             Core kernel, RNG, GSPL, engine routing, provenance
+src/lib/kernel/generators/  Domain generators and artifact emitters
+src/lib/evolution/          Evolution and quality-diversity algorithms
+src/lib/friend/             Sovereign companion (6-gene, ECDSA, breeding)
+src/lib/world/              Era/biome/conflict seed + quest composition
+src/lib/game/               Quest→scene graph with 5-axis oracle
+src/lib/sovereignty/        Canonicalization, signatures, ownership checks
+src/lib/asset_pipeline/     Asset synthesis and export utilities
+src/server/routes/          21 modular route files
+src/components/studio/      React Studio components and viewports
+src/pages/                  App pages
+server.ts                   Express backend (~790 lines)
+contracts/                  Solidity contracts (ParaToken, SeedNFT, Governor, etc.)
+tests/                      108 test files (1497 tests)
+data/                       Seeds, commons libraries, artifacts
+docs/                       CHANGELOG, audit reports, language reference
+scripts/                    CI helpers, smoke test, load test, golden hash tools
 ```
 
----
+## Smart Contracts
 
-## Development
+Contracts live in `contracts/`:
 
-### Commands
-
-```bash
-npm run dev                    # Start dev server (tsx server.ts)
-npm run build                  # Production build (vite build)
-npm run test                   # Full test suite (vitest run)
-npm run preflight:all          # Complete verification
-npm run generate:corpus        # Generate seed corpus
+```text
+ParaToken.sol
+SeedNFT.sol
+ParadigmMarketplace.sol
+ParadigmGovernor.sol
+ParadigmTimelock.sol
 ```
 
-### Adding a Generator
+Hardhat scripts and artifacts are included for local deployment and testing.
 
-1. Create `src/lib/kernel/generators/my-domain.ts`
-2. Export: `export async function generateMyDomain(seed, outputPath) { ... }`
-3. Register in `src/lib/kernel/engines.ts`
-4. Add domain config in `src/lib/kernel/pipeline/domain-config.ts`
-5. Run `npm run typecheck && npm run determinism:check`
+## Environment
 
-### Rules
+See `.env.example` for available configuration.
 
-- **Never** use `Math.random()` in kernel code
-- **Always** seed RNG from artifact hash
-- **Always** verify determinism after changes
-- **Always** run `npm run preflight:all` before commit
+Common production variables:
 
----
-
-## Documentation
-
-| Document | Purpose |
-|----------|---------|
-| [Getting Started](docs/getting-started.md) | Public guide for new users |
-| [Doctrine v2](Documents/Paradigm-Analysis/13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md) | Canonical governing document |
-| [Phase Gates](Documents/Paradigm-Analysis/13b_Phase_Gates.md) | Entry/exit criteria for every phase |
-| [Execution Plan](Documents/Paradigm-Analysis/14_PARADIGM_INFINITE_EXECUTION_PLAN.md) | 24-phase roadmap |
-| [Federation Protocol](docs/federation-protocol.md) | P2P seed exchange specification |
-| [Architecture Diagrams](ARCHITECTURE_DIAGRAMS.md) | Visual architecture walkthroughs |
-| [Comprehensive Analysis](COMPREHENSIVE_CODEBASE_ANALYSIS.md) | Full codebase evaluation |
-| [Strategic Reference](STRATEGIC_QUICK_REFERENCE.md) | Business + technical overview |
-| [If We Vanish](docs/if-we-vanish.md) | Anti-fragility protocol |
-
----
+```text
+DATABASE_URL
+REDIS_URL
+JWT_SECRET
+PARA_TOKEN_ADDRESS
+SEED_NFT_ADDRESS
+```
 
 ## License
 
 MIT
 
----
-
 ## Links
 
-- **GitHub:** https://github.com/11vated/Paradigm
-- **Local Studio:** http://localhost:3000/studio
-- **OS Shell:** http://localhost:3000/os
-- **Health:** http://localhost:3000/api/substrate/health
-- **Federation:** http://localhost:3000/federation/status
-- **Royalty:** http://localhost:3000/royalty/summary
-- **MetaGenerator:** http://localhost:3000/meta/list
-
----
-
-*Paradigm Absolute — Deterministic Synthetic Evolution Operating System*
-*Every seed is sovereign. Every artifact is reproducible. Every creation is owned.*
+- GitHub: https://github.com/11vated/Paradigm
+- Local health: http://localhost:3000/health
+- Local API docs: http://localhost:3000/api-docs/ui

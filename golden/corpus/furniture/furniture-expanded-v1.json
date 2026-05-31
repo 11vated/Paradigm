@@ -1,0 +1,23 @@
+{
+  "id": "furniture-expanded-v1",
+  "seedHash": "15-furniture-19e7bc79a8e",
+  "artifactHash": "15-furniture-19e7bc79a8e",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.343Z",
+  "seed": {
+    "$domain": "furniture",
+    "$name": "furniture-expanded-v1",
+    "intent": "expanded golden for furniture"
+  },
+  "report": {
+    "finalScore": 0.9480000000000001,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

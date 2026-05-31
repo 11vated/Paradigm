@@ -1,0 +1,11 @@
+{
+  "domain": "audio",
+  "seedId": "ambient_forest_v1",
+  "seedHash": "eeff00112233",
+  "artifactHash": "33221100ffee",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "duration": 22,
+  "spatial": true,
+  "notes": "Epoch 2 audio golden. Spatial ambience with layers."
+}

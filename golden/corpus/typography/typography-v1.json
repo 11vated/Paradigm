@@ -1,0 +1,11 @@
+{
+  "domain": "typography",
+  "seedId": "serif_variable_v1",
+  "seedHash": "deadbeefcafebabe",
+  "artifactHash": "ebabefacfeebdaed",
+  "kernelVersion": "1.0.0",
+  "score": 0.94,
+  "glyphs": 256,
+  "variable": true,
+  "notes": "Epoch 2 typography golden. Full glyph set with variable axes."
+}

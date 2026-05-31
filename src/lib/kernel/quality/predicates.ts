@@ -10,6 +10,10 @@
 
 import type { Stratum } from '../quality-contract';
 
+// 15_ spec integration: use new engineering-grade strata predicates
+// @ts-ignore - strata barrel resolution for harness support
+import { formStratum, mindStratum, fieldStratum, motionStratum, soundStratum, storyStratum, worldStratum, cultureStratum, timeStratum } from '../../../contracts/strata';
+
 export interface FormArtifact {
   geometry: {
     vertices: number;

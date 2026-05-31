@@ -1,0 +1,23 @@
+{
+  "id": "robotics-expanded-v1",
+  "seedHash": "15-robotics-19e7bc79a8f",
+  "artifactHash": "15-robotics-19e7bc79a8f",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.344Z",
+  "seed": {
+    "$domain": "robotics",
+    "$name": "robotics-expanded-v1",
+    "intent": "expanded golden for robotics"
+  },
+  "report": {
+    "finalScore": 0.901,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

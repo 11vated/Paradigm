@@ -1,0 +1,25 @@
+{
+  "id": "goku-son-v1",
+  "domain": "character",
+  "intent": "Goku Son — the legendary saiyan who paints with living sound in a collapsing temple, 48 blendshapes, 13 animation sets, 8 transformations as Mind+Form+Field state machines",
+  "seed": {
+    "$domain": "character",
+    "$name": "Goku_Son",
+    "genes": {
+      "form": { "vertices": 12400, "faces": 24800, "rig": "full-PBR-48-blendshapes" },
+      "motion": { "animations": 13, "transformations": 8 },
+      "mind": { "decisionDepth": 0.91, "transformations": ["SuperSaiyan", "UltraInstinct", "GodKi", "Fusion", "Beast", "MUI", "Ego", "TrueForm"] },
+      "story": { "arcs": 7, "lineageDepth": 3 },
+      "field": { "energySignature": "divine-ki", "auraLayers": 5 }
+    }
+  },
+  "expected": {
+    "strata": ["Form", "Motion", "Sound", "Mind", "Story", "World", "Field", "Culture", "Time"],
+    "minScore": 0.94,
+    "determinism": "full",
+    "reproducibilityHash": "goku-son-v1-stable-2026-05"
+  },
+  "hash": "15-real-1780184074902",
+  "created": "2026-05-post-generator-patches",
+  "note": "Reference flagship for 15_ character contract. Must remain bit-identical forever."
+}

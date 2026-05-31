@@ -10,6 +10,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateVisual2DV3 } from './visual2d';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { visual2DContract as visual2d15 } from '../../contracts/domains/visual2d';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -98,3 +105,4 @@ export const Visual2DQualityContract: QualityContract<V2Seed, V2Artifact, V2Inve
 };
 
 registerContract(Visual2DQualityContract);
+

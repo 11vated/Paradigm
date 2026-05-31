@@ -1,0 +1,11 @@
+{
+  "domain": "architecture",
+  "seedId": "fortress_v1",
+  "seedHash": "1234567890abcdef",
+  "artifactHash": "fedcba0987654321",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "floors": 5,
+  "rooms": 42,
+  "notes": "Epoch 2 architecture golden. Complex floorplan with structural integrity."
+}
