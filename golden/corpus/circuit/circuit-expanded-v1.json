@@ -1,0 +1,23 @@
+{
+  "id": "circuit-expanded-v1",
+  "seedHash": "15-circuit-19e7bc79a8c",
+  "artifactHash": "15-circuit-19e7bc79a8c",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.340Z",
+  "seed": {
+    "$domain": "circuit",
+    "$name": "circuit-expanded-v1",
+    "intent": "expanded golden for circuit"
+  },
+  "report": {
+    "finalScore": 0.9200000000000002,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

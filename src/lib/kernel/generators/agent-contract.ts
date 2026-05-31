@@ -11,6 +11,9 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateAgentV3 } from './agent';
 import { registerContract, type QualityContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'agent'; $name?: string; genes: Record<string, unknown> }
@@ -44,3 +47,4 @@ export const AgentQualityContract: QualityContract<S, A, Record<string, unknown>
   hashArtifact,
 };
 registerContract(AgentQualityContract as never);
+

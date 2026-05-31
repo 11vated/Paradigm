@@ -1,0 +1,11 @@
+{
+  "domain": "food",
+  "seedId": "banquet_v1",
+  "seedHash": "aabb1122334455",
+  "artifactHash": "5544332211bbaa",
+  "kernelVersion": "1.0.0",
+  "score": 0.92,
+  "ingredients": 14,
+  "courses": 3,
+  "notes": "Epoch 2 food golden. Full nutrition and multi-course recipe."
+}

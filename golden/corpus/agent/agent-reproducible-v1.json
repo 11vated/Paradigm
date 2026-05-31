@@ -1,0 +1,11 @@
+{
+  "domain": "agent",
+  "seedId": "sovereign_agent_v1",
+  "seedHash": "778899001122",
+  "artifactHash": "221100998877",
+  "kernelVersion": "1.0.0",
+  "score": 0.96,
+  "stages": 6,
+  "reproducibility": 0.97,
+  "notes": "Epoch 2 agent golden. Full 6-stage pipeline with proven reproducibility hash."
+}

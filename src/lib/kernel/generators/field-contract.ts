@@ -4,6 +4,10 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateField } from './field';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface FSeed { $hash: string; genes?: Record<string, any>; }
@@ -53,3 +57,4 @@ export const FieldQualityContract: QualityContract<FSeed, FArtifact, FInverted> 
   domain: 'field', version: '1.0.0', synthesize, invert, rate, curated: () => CURATED, hashArtifact,
 };
 registerContract(FieldQualityContract);
+

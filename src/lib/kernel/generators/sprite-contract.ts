@@ -28,6 +28,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateSpriteV3 } from './sprite';  // PHASE 2: Explicitly the CANONICAL primary only. No sibling imports allowed.
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { spriteContract as sprite15 } from '../../contracts/domains/sprite';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -135,3 +142,4 @@ try {
 } catch { _canvasFunctional = false; }
 if (_canvasFunctional) registerContract(SpriteQualityContract);
 else console.warn('[contract] sprite: skipping registration — `canvas` native binary not built');
+

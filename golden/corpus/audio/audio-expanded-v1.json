@@ -1,0 +1,23 @@
+{
+  "id": "audio-expanded-v1",
+  "seedHash": "15-audio-19e7bc79a89",
+  "artifactHash": "15-audio-19e7bc79a89",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.337Z",
+  "seed": {
+    "$domain": "audio",
+    "$name": "audio-expanded-v1",
+    "intent": "expanded golden for audio"
+  },
+  "report": {
+    "finalScore": 0.9339999999999999,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

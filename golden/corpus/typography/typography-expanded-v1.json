@@ -1,0 +1,23 @@
+{
+  "id": "typography-expanded-v1",
+  "seedHash": "15-typography-19e7bc79a92",
+  "artifactHash": "15-typography-19e7bc79a92",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.346Z",
+  "seed": {
+    "$domain": "typography",
+    "$name": "typography-expanded-v1",
+    "intent": "expanded golden for typography"
+  },
+  "report": {
+    "finalScore": 0.941,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

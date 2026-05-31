@@ -8,8 +8,15 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateCharacterV3 } from './character';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
+
+// Direct 15_ usage (Epoch 2 pattern): the engineering-grade contract from src/lib/contracts/domains/ is the canonical source for strata + elevation
+import { characterContract as character15 } from '../../contracts/domains/character';
 
 // Minimal FileReader polyfill for Node.js (Three.js GLTFExporter requires it).
 // Uses Blob.arrayBuffer() which is available in Node.js 18+.
@@ -145,4 +152,5 @@ export const CharacterQualityContract: QualityContract<ChSeed, ChArtifact, ChInv
 };
 
 registerContract(CharacterQualityContract);
+
 

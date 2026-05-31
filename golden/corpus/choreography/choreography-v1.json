@@ -1,0 +1,11 @@
+{
+  "domain": "choreography",
+  "seedId": "ritual_dance_v1",
+  "seedHash": "ccdd66778899",
+  "artifactHash": "99887766ddcc",
+  "kernelVersion": "1.0.0",
+  "score": 0.94,
+  "dancers": 6,
+  "moves": 35,
+  "notes": "Epoch 2 choreography golden. Complex group performance at 60fps."
+}

@@ -14,6 +14,9 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateAnimationEnhanced } from './animation-enhanced';
 import { registerContract, type QualityContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'animation-enhanced'; $name?: string; genes: Record<string, unknown> }
@@ -47,3 +50,4 @@ export const AnimationEnhancedQualityContract: QualityContract<S, A, Record<stri
   hashArtifact,
 };
 registerContract(AnimationEnhancedQualityContract as never);
+

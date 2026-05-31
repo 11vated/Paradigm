@@ -8,6 +8,10 @@ import crypto from 'crypto';
 import { generateDance } from './dance';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
 interface DanceSeed { $hash?: string; $name?: string; genes?: any; }
 interface DanceArtifact { choreo: string; style: string; size: number; }
 interface DanceInverted { style: string; lines: number; bytes: number; }
@@ -57,3 +61,4 @@ export const DanceQualityContract: QualityContract<DanceSeed, DanceArtifact, Dan
 };
 
 registerContract(DanceQualityContract);
+

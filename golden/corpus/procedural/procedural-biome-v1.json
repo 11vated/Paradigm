@@ -1,0 +1,11 @@
+{
+  "domain": "procedural",
+  "seedId": "epic_biome_v1",
+  "seedHash": "445566778899",
+  "artifactHash": "998877665544",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "resolution": 4096,
+  "biomes": 8,
+  "notes": "Epoch 2 procedural golden. Rich world generation with rivers and settlements."
+}

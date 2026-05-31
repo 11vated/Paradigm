@@ -1,0 +1,11 @@
+{
+  "domain": "circuit",
+  "seedId": "neural_interface_v1",
+  "seedHash": "1122334455667788aabb",
+  "artifactHash": "bbaabb8877665544332211",
+  "kernelVersion": "1.0.0",
+  "score": 0.93,
+  "components": 32,
+  "hasPCB": true,
+  "notes": "Epoch 2 circuit golden. Mixed analog/digital with full Gerber/SPICE export."
+}

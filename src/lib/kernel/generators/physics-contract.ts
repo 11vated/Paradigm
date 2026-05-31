@@ -9,6 +9,9 @@ import { generatePhysics } from './physics';
 import { withKernelClock } from '../clock';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+
 interface PhysicsSeed { $hash?: string; $name?: string; genes?: any; }
 interface PhysicsArtifact { config: string; size: number; }
 interface PhysicsInverted { kind: string; bytes: number; }

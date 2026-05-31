@@ -1,0 +1,24 @@
+{
+  "id": "cosmology-scale-v1",
+  "domain": "universe",
+  "intent": "Cosmology-scale universe seed with time, field, story as first-class generative dimensions",
+  "seed": {
+    "$domain": "universe",
+    "$name": "Cosmology_Scale",
+    "genes": {
+      "world": { "scale": "cosmology", "biomes": 12, "epochs": 4 },
+      "time": { "timescale": "13.8-billion-years", "causalityDepth": 9 },
+      "field": { "invariance": 0.97, "conservationLaws": ["energy", "information"] },
+      "story": { "arcs": 3, "resolutionPresent": true }
+    }
+  },
+  "expected": {
+    "strata": ["World", "Time", "Field", "Story", "Mind", "Form"],
+    "minScore": 0.90,
+    "determinism": "full",
+    "reproducibilityHash": "universe-v1-stable-2026-05"
+  },
+  "hash": "15-real-1780184080741",
+  "created": "2026-05-post-generator-patches",
+  "note": "Universe flagship golden. Heavy on Time + Field + Story strata per 15_ spec."
+}

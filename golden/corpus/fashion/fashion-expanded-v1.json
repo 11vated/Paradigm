@@ -1,0 +1,23 @@
+{
+  "id": "fashion-expanded-v1",
+  "seedHash": "15-fashion-19e7bc79a81",
+  "artifactHash": "15-fashion-19e7bc79a81",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.329Z",
+  "seed": {
+    "$domain": "fashion",
+    "$name": "fashion-expanded-v1",
+    "intent": "expanded golden for fashion"
+  },
+  "report": {
+    "finalScore": 0.937,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

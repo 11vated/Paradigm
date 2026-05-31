@@ -1,0 +1,23 @@
+{
+  "id": "vehicle-expanded-v1",
+  "seedHash": "15-vehicle-19e7bc79a80",
+  "artifactHash": "15-vehicle-19e7bc79a80",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.329Z",
+  "seed": {
+    "$domain": "vehicle",
+    "$name": "vehicle-expanded-v1",
+    "intent": "expanded golden for vehicle"
+  },
+  "report": {
+    "finalScore": 0.9360000000000002,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

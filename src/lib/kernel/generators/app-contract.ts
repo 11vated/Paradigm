@@ -4,6 +4,10 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateApp } from './app';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -96,3 +100,4 @@ export const AppQualityContract: QualityContract<AppSeed, AppQualityArtifact, Ap
   },
 };
 registerContract(AppQualityContract);
+

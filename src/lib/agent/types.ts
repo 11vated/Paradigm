@@ -159,6 +159,13 @@ export interface ToolContext {
   plan?: ReasoningPlan;
   memory: MemoryEntry[];
   agentConfig: AgentConfig;
+  // Sovereign Agent Seed support (Agent as first-class 15_ breedable/signable artifact)
+  agents?: any[];
+  agentState?: {
+    personality?: Record<string, number>;
+    memoryDepth?: number;
+    [key: string]: any;
+  };
 }
 
 export interface ToolResult {

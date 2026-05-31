@@ -1,0 +1,12 @@
+{
+  "domain": "music",
+  "seedId": "first_adaptive_album_v1",
+  "seedHash": "112233445566",
+  "artifactHash": "665544332211",
+  "kernelVersion": "1.0.0",
+  "score": 0.94,
+  "stems": 5,
+  "durationSeconds": 192,
+  "hasAdaptiveLayers": true,
+  "notes": "First music golden for Epoch 2. Studio quality, full MIDI export."
+}

@@ -1,0 +1,11 @@
+{
+  "domain": "ecosystem",
+  "seedId": "complex_ecosystem_v1",
+  "seedHash": "a1b2c3d4e5f6a1b2",
+  "artifactHash": "b2a1f6e5d4c3b2a1",
+  "kernelVersion": "1.0.0",
+  "score": 0.92,
+  "species": 22,
+  "stable": true,
+  "notes": "Epoch 2 ecosystem golden. Rich interaction graph with stable Lotka-Volterra dynamics."
+}

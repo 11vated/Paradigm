@@ -1,0 +1,23 @@
+{
+  "id": "sprite-expanded-v1",
+  "seedHash": "15-sprite-19e7bc79a78",
+  "artifactHash": "15-sprite-19e7bc79a78",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.324Z",
+  "seed": {
+    "$domain": "sprite",
+    "$name": "sprite-expanded-v1",
+    "intent": "expanded golden for sprite"
+  },
+  "report": {
+    "finalScore": 0.9355,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

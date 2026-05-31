@@ -1,0 +1,23 @@
+{
+  "id": "minimal-playable-scene-v1",
+  "domain": "fullgame",
+  "intent": "Self-contained 60fps playable scene with oracle 5-axis fitness — minimal but complete game loop",
+  "seed": {
+    "$domain": "fullgame",
+    "$name": "Minimal_Playable_Scene",
+    "genes": {
+      "gameplay": { "fps": 60, "mechanics": 5, "selfContained": true },
+      "mind": { "decisionDepth": 0.79, "oracles": 5 },
+      "field": { "simulationStable": true }
+    }
+  },
+  "expected": {
+    "strata": ["Mind", "World", "Field", "Motion", "Time"],
+    "minScore": 0.88,
+    "determinism": "full",
+    "reproducibilityHash": "fullgame-v1-stable-2026-05"
+  },
+  "hash": "15-real-1780184079373",
+  "created": "2026-05-post-generator-patches",
+  "note": "First fullgame golden for 15_ contract. Self-contained + oracle evaluation target."
+}

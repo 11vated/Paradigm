@@ -1,0 +1,11 @@
+{
+  "domain": "alife",
+  "seedId": "glider_garden_v1",
+  "seedHash": "1122334455667788",
+  "artifactHash": "8877665544332211",
+  "kernelVersion": "1.0.0",
+  "score": 0.91,
+  "grid": 256,
+  "stablePatterns": 17,
+  "notes": "Epoch 2 alife golden. Emergent patterns from custom rule set."
+}

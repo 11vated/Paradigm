@@ -9,6 +9,13 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateNarrativeV3 } from './narrative';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
+
+// Direct 15_ usage (Epoch 2 pattern)
+import { narrativeContract as narrative15 } from '../../contracts/domains/narrative';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -129,3 +136,4 @@ export const NarrativeQualityContract: QualityContract<NarrativeSeed, NarrativeA
 };
 
 registerContract(NarrativeQualityContract);
+

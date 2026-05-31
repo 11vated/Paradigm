@@ -27,7 +27,11 @@ import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-hea
 import { registerStaticRoutes } from './src/server/routes/static.js';
 import { registerFinalRoutes } from './src/server/routes/final.js';
 import { sendWsFrame, sendJson, parseWsFrame, registerWebsocketUpgrade } from './src/server/routes/websocket.js';
+import { bootstrapParadigmContracts } from './src/lib/contracts/bootstrap';
 initServerPolyfills();
+
+// 15_ spec bootstrap — new engineering contracts + Part 6 systems
+bootstrapParadigmContracts();
 
 import express from 'express';
 import http from 'http';
@@ -401,11 +405,11 @@ async function startServer() {
 
   registerSeedsLineageRoutes(app, { seeds });
 
-  registerSeedsGrowRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, BodyGrowSeedSchema, GrowSeedSchema, getAllDomains, growSeed, buildC2PAManifest, growCacheKey, cache, log });
+  registerSeedsGrowRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, BodyGrowSeedSchema, GrowSeedSchema, getAllDomains, growSeed, buildC2PAManifest, growCacheKey, cache: cache as any, log });
 
   registerSeedsComposeRoutes(app, { seeds, saveSeeds, optionalAuth, validateBody, ComposeSeedSchema, crypto: crypto as any, composeSeed, findCompositionPath, log, audit, metrics });
 
-  registerCompositionRoutes(app, { getCompositionGraph, findCompositionPath, cache, compositionPathKey });
+  registerCompositionRoutes(app, { getCompositionGraph, findCompositionPath, cache: cache as any, compositionPathKey });
 
   registerGsplRoutes(app, { validateBody, optionalAuth, GsplParseSchema, GsplExecuteSchema, seeds, saveSeeds });
 

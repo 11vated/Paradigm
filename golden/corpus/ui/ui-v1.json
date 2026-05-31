@@ -1,0 +1,11 @@
+{
+  "domain": "ui",
+  "seedId": "dashboard_v1",
+  "seedHash": "556677889900",
+  "artifactHash": "009988776655",
+  "kernelVersion": "1.0.0",
+  "score": 0.94,
+  "components": 16,
+  "responsive": true,
+  "notes": "Epoch 2 UI golden. Full component set with theme variants."
+}

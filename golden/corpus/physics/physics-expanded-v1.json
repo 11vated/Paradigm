@@ -1,0 +1,23 @@
+{
+  "id": "physics-expanded-v1",
+  "seedHash": "15-physics-19e7bc79a7f",
+  "artifactHash": "15-physics-19e7bc79a7f",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.327Z",
+  "seed": {
+    "$domain": "physics",
+    "$name": "physics-expanded-v1",
+    "intent": "expanded golden for physics"
+  },
+  "report": {
+    "finalScore": 0.9430000000000001,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}

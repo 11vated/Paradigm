@@ -1,0 +1,22 @@
+{
+  "id": "consciousness-swarm-v1",
+  "domain": "particle",
+  "intent": "Living consciousness swarm with Mind + Field + Time strata dominance",
+  "seed": {
+    "$domain": "particle",
+    "$name": "Consciousness_Swarm",
+    "genes": {
+      "mind": { "decisionDepth": 0.84, "coherence": 0.91 },
+      "field": { "agentDensity": 12400, "ecologicalCoherence": 0.87 },
+      "time": { "timescale": "emergent", "rhythmStability": 0.89 }
+    }
+  },
+  "expected": {
+    "strata": ["Mind", "Field", "Time", "World"],
+    "minScore": 0.86,
+    "determinism": "full"
+  },
+  "hash": "a4b7c2e9f1d6a8c3e5b2f7d9a1c4e6b8f3d5a9c2e7b1f4d6a8c3e5b9f2a7d1c",
+  "created": "2026-05-continuation",
+  "note": "Particle flagship golden for 15_ elevation."
+}

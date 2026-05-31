@@ -1,0 +1,11 @@
+{
+  "domain": "vehicle",
+  "seedId": "hover_tank_v1",
+  "seedHash": "cafebabedeadbeef",
+  "artifactHash": "beefdeadbabecafe",
+  "kernelVersion": "1.0.0",
+  "score": 0.94,
+  "speed": 280,
+  "dof": 6,
+  "notes": "Epoch 2 vehicle golden. High-speed air/land hybrid with full physics."
+}

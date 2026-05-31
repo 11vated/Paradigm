@@ -4,6 +4,10 @@ import os from 'os';
 import crypto from 'crypto';
 import { generateQuantum } from './quantum';
 import { registerContract } from '../quality-contract';
+
+// 15_ spec integration: new contracts system available alongside legacy
+import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
+import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface QSeed { $hash: string; genes?: Record<string, any>; }
@@ -67,3 +71,4 @@ export const QuantumQualityContract: QualityContract<QSeed, QArtifact, QInverted
   },
 };
 registerContract(QuantumQualityContract);
+

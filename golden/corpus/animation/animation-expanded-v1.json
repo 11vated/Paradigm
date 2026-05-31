@@ -1,0 +1,23 @@
+{
+  "id": "animation-expanded-v1",
+  "seedHash": "15-animation-19e7bc79a87",
+  "artifactHash": "15-animation-19e7bc79a87",
+  "kernelVersion": "15.0",
+  "createdAt": "2026-05-31T02:05:39.335Z",
+  "seed": {
+    "$domain": "animation",
+    "$name": "animation-expanded-v1",
+    "intent": "expanded golden for animation"
+  },
+  "report": {
+    "finalScore": 0.9365,
+    "gatesPassed": [
+      "synthesize",
+      "invert",
+      "rate",
+      "curate",
+      "determinism_lock",
+      "cross_modal_verify"
+    ]
+  }
+}
