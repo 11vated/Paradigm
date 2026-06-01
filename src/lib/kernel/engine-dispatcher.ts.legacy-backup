@@ -13,7 +13,7 @@ import { Xoshiro256StarStar, rngFromHash } from './rng.js';
 import type { Seed as EngineSeed } from '../kernel/engines.js';
 import path from 'path';
 
-export interface Seed {
+interface Seed {
   $name?: string;
   $domain?: string;
   $hash?: string;
@@ -22,6 +22,7 @@ export interface Seed {
   [key: string]: unknown;
 }
 
+// Import all 103+ generators
 // 15_ PRIMARY (Doctrine v2 / Epoch 2): For the 27 canonical domains, prefer the engineering-grade
 // QualityContract.synthesize from src/lib/contracts when available. Legacy generators remain as
 // fallback for the long tail of 100+ domains during transition. See quality-contract bridge.
@@ -45,38 +46,65 @@ function try15Contract(seed: any, rng: Xoshiro256StarStar) {
   }
   return null;
 }
-
-// === LEGACY HEAVY GENERATORS (server-only) ===
-// These static imports of the real implementations have been moved to a server-only lazy loader
-// to prevent the browser bundle from ever seeing the raw generator .ts files (the source of the
-// persistent 404s on quality-contract + generators during dev).
-// Client code and the Studio must go through the clean 15_ QualityContract layer only.
-
-let _legacyHeavyLoaded = false;
-let _legacyDOMAIN_MAP: Record<string, GeneratorFn> | null = null;
-
-async function getLegacyDOMAIN_MAP(): Promise<Record<string, GeneratorFn>> {
-  if (_legacyDOMAIN_MAP) return _legacyDOMAIN_MAP;
-
-  if (typeof window !== 'undefined') {
-    // Client: never load the heavy implementations. Use contracts.
-    console.warn('[engine-dispatcher] Legacy heavy generators requested from browser — falling back to 15_ contracts only. This path should not be hit for canonical domains.');
-    return {};
-  }
-
-  // Server only: dynamically load the heavy legacy wiring so Vite never analyzes the real generator files for the client bundle.
-  const mod = await import('./server/legacy-engine-dispatcher-impl.js');
-  _legacyDOMAIN_MAP = mod.DOMAIN_MAP;
-  _legacyHeavyLoaded = true;
-  return _legacyDOMAIN_MAP;
-}
+import { generateUniverse } from './generators/universe.js';
+import { generateProtein } from './generators/protein.js';
+import { generateMarket } from './generators/market.js';
+import { generateDomainGenerator as generateMetaDomain } from './generators/meta-domain.js';
+import { generateConsciousness } from './generators/consciousness.js';
+import { generateQuantumCircuit } from './generators/quantum-circuit.js';
+import { generateReactor } from './generators/reactor.js';
+import { generateNanobot } from './generators/nanobot.js';
+import { generateCity } from './generators/city.js';
+import { generateClimate } from './generators/climate.js';
+import { generateMaterial } from './generators/material.js';
+import { generateAerospace } from './generators/aerospace.js';
+import { generateGenome } from './generators/genome.js';
+import { generateRobotics } from './generators/robotics.js';
+import { generateAgriculture } from './generators/agriculture.js';
+import { generateDrug } from './generators/drug.js';
+import { generateBlockchain } from './generators/blockchain.js';
+import { generateEducation } from './generators/education.js';
+import { generateFinance } from './generators/finance.js';
+import { generateHealthcare } from './generators/healthcare.js';
+import { generateLogistics } from './generators/logistics.js';
+import { generateMedia } from './generators/media.js';
+import { generateRealEstate } from './generators/real-estate.js';
+import { generateSecurity } from './generators/security.js';
+import { generateSpace } from './generators/space.js';
+import { generateTransportation } from './generators/transportation.js';
+import { generateEnergy } from './generators/energy.js';
+import { generateChemical } from './generators/chemical.js';
+import { generateAutomotive } from './generators/automotive.js';
+import { generateMarine } from './generators/marine.js';
+import { generateLegal } from './generators/legal.js';
+import { generateInsurance } from './generators/insurance.js';
+import { generateTourism } from './generators/tourism.js';
+import { generateHospitality } from './generators/hospitality.js';
+import { generateSports } from './generators/sports.js';
+import { generateGaming } from './generators/gaming.js';
+import { generateFashion } from './generators/fashion.js';
+import { generateCosmetics } from './generators/cosmetics.js';
+import { generateFurniture } from './generators/furniture.js';
+import { generateTextiles } from './generators/textiles.js';
+import { generateArt } from './generators/art.js';
+import { generatePhotography } from './generators/photography.js';
+import { generateArchitecture } from './generators/architecture.js';
+import { generateInteriorDesign } from './generators/interior-design.js';
+import { generateLandscaping } from './generators/landscaping.js';
+import { generateLighting } from './generators/lighting.js';
+import { generateAcoustics } from './generators/acoustics.js';
+import { generateBiomedical } from './generators/biomedical.js';
+import { generateNeuroscience } from './generators/neuroscience.js';
+import { generateEdTech } from './generators/edtech.js';
+import { generateMusic } from './generators/music.js';
+import { generateFilm } from './generators/film.js';
 import { generateTheater } from './generators/theater.js';
 import { generateDance } from './generators/dance.js';
 import { generateLiterature } from './generators/literature.js';
 import { generateJournalism } from './generators/journalism.js';
 import { generatePublishing } from './generators/publishing.js';
 import { generateAdvertising } from './generators/advertising.js';
-// (removed stray legacy import during isolation)
+import { generateMarketing } from './generators/marketing.js';
 import { generateWine } from './generators/wine.js';
 import { generateBeer } from './generators/beer.js';
 import { generateSpirits } from './generators/spirits.js';
@@ -172,7 +200,142 @@ import { generateAgentV3 } from './generators/agent';
 
 export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ [key: string]: any }>;
 
-// Legacy heavy DOMAIN_MAP block removed (client/server isolation)
+// Domain → generator mapping (103+ domains)
+const DOMAIN_MAP: Record<string, GeneratorFn> = {
+  universe: generateUniverse,
+  protein: generateProtein,
+  market: generateMarket,
+  'meta-domain': generateMetaDomain,
+  consciousness: generateConsciousness,
+  'quantum-circuit': generateQuantumCircuit,
+  reactor: generateReactor,
+  nanobot: generateNanobot,
+  city: generateCity,
+  climate: generateClimate,
+  material: generateMaterial,
+  aerospace: generateAerospace,
+  genome: generateGenome,
+  // robotics: generateRobotics, // Removed - using generateRoboticsV3
+  agriculture: generateAgriculture,
+  drug: generateDrug,
+  blockchain: generateBlockchain,
+  education: generateEducation,
+  finance: generateFinance,
+  healthcare: generateHealthcare,
+  logistics: generateLogistics,
+  media: generateMedia,
+  'real-estate': generateRealEstate,
+  security: generateSecurity,
+  space: generateSpace,
+  transportation: generateTransportation,
+  energy: generateEnergy,
+  chemical: generateChemical,
+  automotive: generateAutomotive,
+  marine: generateMarine,
+  legal: generateLegal,
+  insurance: generateInsurance,
+  tourism: generateTourism,
+  hospitality: generateHospitality,
+  sports: generateSports,
+  gaming: generateGaming,
+  // fashion: generateFashion, // Removed - using generateFashionV3
+  cosmetics: generateCosmetics,
+  // furniture: generateFurniture, // Removed - using generateFurnitureV3
+  textiles: generateTextiles,
+  art: generateArt,
+  photography: generatePhotography,
+  // architecture: generateArchitecture, // Removed - using generateArchitectureV3
+  'interior-design': generateInteriorDesign,
+  landscaping: generateLandscaping,
+  lighting: generateLighting,
+  acoustics: generateAcoustics,
+  biomedical: generateBiomedical,
+  neuroscience: generateNeuroscience,
+  edtech: generateEdTech,
+  // music: generateMusic, // Removed - using generateMusicV3 below
+  film: generateFilm,
+  theater: generateTheater,
+  dance: generateDance,
+  literature: generateLiterature,
+  journalism: generateJournalism,
+  publishing: generatePublishing,
+  advertising: generateAdvertising,
+  marketing: generateMarketing,
+  wine: generateWine,
+  beer: generateBeer,
+  spirits: generateSpirits,
+  coffee: generateCoffee,
+  tea: generateTea,
+  'event-planning': generateEventPlanning,
+  fitness: generateFitness,
+  'pet-care': generatePetCare,
+  gardening: generateGardening,
+  jewelry: generateJewelry,
+  electronics: generateElectronics,
+  semiconductors: generateSemiconductors,
+  optics: generateOptics,
+  sensors: generateSensors,
+  drones: generateDrones,
+  ar: generateAR,
+  vr: generateVR,
+  metaverse: generateMetaverse,
+  cybersecurity: generateCybersecurity,
+  cloud: generateCloud,
+  devops: generateDevOps,
+  'data-science': generateDataScience,
+  ml: generateML,
+  'robotics-industrial': generateRoboticsIndustrial,
+  biotechnology: generateBiotechnology,
+  nanotechnology: generateNanotechnology,
+  'renewable-energy': generateRenewableEnergy,
+  battery: generateBattery,
+  'smart-grid': generateSmartGrid,
+  '5g': generate5G,
+  '6g': generate6G,
+  'quantum-computing': generateQuantumComputing,
+  'synthetic-biology': generateSyntheticBiology,
+  genomics: generateGenomics,
+  'agtech': generateAgTech,
+  'food-delivery': generateFoodDelivery,
+  'smart-home': generateSmartHome,
+  wearables: generateWearables,
+  '3d-printing': generate3DPrinting,
+  'drone-delivery': generateDroneDelivery,
+  av: generateAV,
+  'personalized-medicine': generatePersonalizedMedicine,
+  'space-tourism': generateSpaceTourism,
+  
+  // 27 New V3 Domains
+  character: generateCharacterV3,
+  sprite: generateSpriteV3,
+  music: generateMusicV3,
+  visual2d: generateVisual2DV3,
+  geometry3d: generateGeometry3DV4,
+  fullgame: generateFullGameV3,
+  animation: generateAnimationV3,
+  narrative: generateNarrativeV3,
+  ui: generateUIV3,
+  physics: generatePhysicsV3,
+  audio: generateAudioV3,
+  ecosystem: generateEcosystemV3,
+  game: generateGameV3,
+  cardgame: generateCardGame,
+  boardgame: generateBoardGame,
+  alife: generateALifeV3,
+  shader: generateShaderV3,
+  particle: generateParticleV3,
+  procedural: generateProceduralV3,
+  typography: generateTypographyV3,
+  architecture: generateArchitectureV3,
+  vehicle: generateVehicleV3,
+  furniture: generateFurnitureV3,
+  fashion: generateFashionV3,
+  robotics: generateRoboticsV3,
+  circuit: generateCircuitV3,
+  food: generateFoodV3,
+  choreography: generateChoreographyV3,
+  agent: generateAgentV3,
+};
 
 /**
  * Generate an artifact from a seed using the appropriate domain generator.
@@ -208,12 +371,10 @@ export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain
     return { result: fifteenArtifact, domain };
   }
 
-  // Legacy heavy path — lazy loaded only on server
-  const legacyMap = await getLegacyDOMAIN_MAP();
-  const generator = legacyMap[domain];
+  const generator = DOMAIN_MAP[domain];
 
   if (!generator) {
-    throw new Error(`Unknown domain: ${domain}. No 15_ contract handled it and no legacy generator is registered for this runtime.`);
+    throw new Error(`Unknown domain: ${domain}. Available: ${Object.keys(DOMAIN_MAP).join(', ')}`);
   }
 
   const output = await generator(seed, outputPath);
@@ -221,36 +382,17 @@ export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain
 }
 
 /**
- * Get list of all available domains.
- * For the 27 canonical 15_ domains this is authoritative via the QualityContract registry.
- * Full legacy list (100+) requires server runtime (lazy loaded to keep client bundles clean).
+ * Get list of all available domains (103+).
  */
 export function getDomains(): string[] {
-  const contractDomains = getAllDomainsFromRegistrySafe();
-  return contractDomains.length > 0 ? contractDomains : ['(legacy heavy domains only available on server)'];
-}
-
-function getAllDomainsFromRegistrySafe(): string[] {
-  try {
-    // Dynamic to avoid pulling heavy things at top level
-    const mod = require('../contracts/domain-registry.js');
-    return mod.getAllDomains ? mod.getAllDomains() : [];
-  } catch {
-    return [];
-  }
+  return Object.keys(DOMAIN_MAP);
 }
 
 /**
  * Check if a domain is supported.
- * Canonical 15_ domains are always available via contracts.
- * Legacy domains require server.
  */
 export function hasDomain(domain: string): boolean {
-  if (CANONICAL_15_DOMAINS.has(domain)) return true;
-  // For non-canonical, we would need the legacy map — only checkable on server without loading everything
-  return false;
+  return domain in DOMAIN_MAP;
 }
 
-// Safe empty export for legacy synchronous callers (engines.ts, dao.ts, etc.).
-// The real populated map for legacy domains is only available via the lazy server-only path.
-export const DOMAIN_MAP: Record<string, GeneratorFn> = {};
+export { DOMAIN_MAP };

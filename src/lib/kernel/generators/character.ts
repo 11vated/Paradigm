@@ -99,7 +99,7 @@ export async function generateCharacterV3(
   let gsplSchemaLoaded: string | undefined;
   let characterConstraints: any = null;
   try {
-    const schemaContent = await import('fs/promises').then(fs => 
+    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs => 
       fs.readFile('data/commons/libraries/character.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
       gsplSchemaLoaded = 'character.gspl';
@@ -216,11 +216,11 @@ export async function generateCharacterV3(
   const texturePaths: string[] = [];
   if (!hasTextures) {
     for (const [name, texture] of Object.entries(textures)) {
-      if (texture && (texture as any).image) {
+      if (texture && (texture as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).image) {
         const texPath = path.join(dir, `${path.basename(mainPath, path.extname(mainPath))}_${name}.png`);
         // Best effort write (works in browser canvas path)
         try {
-          const dataUrl = (texture as any).image.toDataURL ? (texture as any).image.toDataURL('image/png') : null;
+          const dataUrl = (texture as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).image.toDataURL ? (texture as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).image.toDataURL('image/png') : null;
           if (dataUrl) {
             const base64 = dataUrl.split(',')[1];
             fs.writeFileSync(texPath, Buffer.from(base64, 'base64'));
@@ -239,7 +239,7 @@ export async function generateCharacterV3(
     animations: animations.length,
     bones: skeleton.bones.length,
     gsplSchema: gsplSchemaLoaded
-  } as any;
+  } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */;
 }
 
 /**
@@ -560,7 +560,7 @@ function unwrapUVs(geo: THREE.BufferGeometry, rng: Xoshiro256StarStar): THREE.Bu
     const z = positions.getZ(i);
 
     const u = 0.5 + Math.atan2(z, x) / (2 * Math.PI);
-     const v = 0.5 + y / ((geo as any).parameters?.height || 2);
+     const v = 0.5 + y / ((geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).parameters?.height || 2);
 
     uvs[i * 2] = u;
     uvs[i * 2 + 1] = v;
@@ -588,7 +588,7 @@ async function generateTextureSet(
 ): Promise<Record<string, THREE.Texture>> {
   const res = Math.min(resolution, 2048);
   const canvas = createCanvas(res, res);
-  const ctx = canvas ? (canvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null) : null;
+  const ctx = canvas ? (canvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
 
   if (!canvas || !ctx) {
     // Graceful fallback — still produce a valid material later
@@ -631,13 +631,13 @@ async function generateTextureSet(
     ctx.stroke();
   }
 
-  const albedoTex = new THREE.CanvasTexture(canvas as any);
+  const albedoTex = new THREE.CanvasTexture(canvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */);
   albedoTex.name = 'character_albedo';
   albedoTex.flipY = false;
 
   // --- Roughness map ---
   const roughCanvas = createCanvas(res, res);
-  const rctx = roughCanvas ? (roughCanvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null) : null;
+  const rctx = roughCanvas ? (roughCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
   if (rctx) {
     const baseRough = 0.55 + (params.proportions.muscleMass - 0.5) * 0.25 + (params.proportions.fatDistribution - 0.5) * 0.15;
     rctx.fillStyle = `rgb(${Math.floor(baseRough*255)},${Math.floor(baseRough*255)},${Math.floor(baseRough*255)})`;
@@ -655,12 +655,12 @@ async function generateTextureSet(
     rctx.globalAlpha = 1;
   }
 
-  const roughTex = roughCanvas ? new THREE.CanvasTexture(roughCanvas as any) : null;
+  const roughTex = roughCanvas ? new THREE.CanvasTexture(roughCanvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) : null;
   if (roughTex) { roughTex.name = 'character_roughness'; roughTex.flipY = false; }
 
   // --- Simple normal map ---
   const normCanvas = createCanvas(res, res);
-  const nctx = normCanvas ? (normCanvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null) : null;
+  const nctx = normCanvas ? (normCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
   if (nctx) {
     nctx.fillStyle = '#8080ff';
     nctx.fillRect(0, 0, res, res);
@@ -678,23 +678,23 @@ async function generateTextureSet(
     nctx.globalAlpha = 1;
   }
 
-  const normalTex = normCanvas ? new THREE.CanvasTexture(normCanvas as any) : null;
+  const normalTex = normCanvas ? new THREE.CanvasTexture(normCanvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) : null;
   if (normalTex) { normalTex.name = 'character_normal'; normalTex.flipY = false; }
 
   // --- Metallic (small, mostly non-metal for organic characters) ---
   const metalCanvas = createCanvas(res, res);
-  const mctx = metalCanvas ? (metalCanvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null) : null;
+  const mctx = metalCanvas ? (metalCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
   if (mctx) {
     const metalVal = Math.floor(0.08 * 255);
     mctx.fillStyle = `rgb(${metalVal},${metalVal},${metalVal})`;
     mctx.fillRect(0, 0, res, res);
   }
-  const metalTex = metalCanvas ? new THREE.CanvasTexture(metalCanvas as any) : null;
+  const metalTex = metalCanvas ? new THREE.CanvasTexture(metalCanvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) : null;
   if (metalTex) { metalTex.name = 'character_metallic'; metalTex.flipY = false; }
 
   // --- AO (simple cavity approximation) ---
   const aoCanvas = createCanvas(res, res);
-  const actx = aoCanvas ? (aoCanvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null) : null;
+  const actx = aoCanvas ? (aoCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
   if (actx) {
     actx.fillStyle = '#ffffff';
     actx.fillRect(0, 0, res, res);
@@ -711,7 +711,7 @@ async function generateTextureSet(
     }
     actx.globalAlpha = 1;
   }
-  const aoTex = aoCanvas ? new THREE.CanvasTexture(aoCanvas as any) : null;
+  const aoTex = aoCanvas ? new THREE.CanvasTexture(aoCanvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) : null;
   if (aoTex) { aoTex.name = 'character_ao'; aoTex.flipY = false; }
 
   const result: Record<string, THREE.Texture> = {};
@@ -831,15 +831,15 @@ function addBlendShapes(geo: THREE.BufferGeometry, params: CharacterParams, rng:
   }
 
   // Attach as morph attributes (GLTF will pick them up as morph targets) — now 5 richer ones
-  (geo as any).morphAttributes = (geo as any).morphAttributes || {};
-  (geo as any).morphAttributes.position = [
+  (geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).morphAttributes = (geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).morphAttributes || {};
+  (geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).morphAttributes.position = [
     new THREE.BufferAttribute(smile, 3),
     new THREE.BufferAttribute(frown, 3),
     new THREE.BufferAttribute(surprise, 3),
     new THREE.BufferAttribute(blink, 3),
     new THREE.BufferAttribute(angry, 3),
   ];
-  (geo as any).morphTargetsRelative = true;
+  (geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).morphTargetsRelative = true;
 
   return geo;
 }
@@ -1028,3 +1028,5 @@ function generateMuscleGroups(props: BodyProportions, rng: Xoshiro256StarStar): 
 
 // ── Canonical aliases (added by phase-0.5 consolidation) ──
 export { generateCharacterV3 as generateCharacter };
+
+

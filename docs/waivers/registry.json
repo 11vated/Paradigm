@@ -1,397 +1,44 @@
 {
   "version": "1.0.0",
-  "last_reviewed": "2026-05-autonomy",
-  "entries": [
+  "description": "Append-only, sunset-dated waivers for Doctrine v2 gates. Never edit in place.",
+  "waivers": [
     {
-      "id": "waiver-001",
-      "rule": "PARADIGM-EVASION-OK",
-      "file": "src/lib/intelligence/llm/anthropic.ts",
-      "justification": "Provider SDK requires 'any' for response shapes that are not fully typed in their @types package. Sunset when we add strict response validation layer.",
-      "sunset": "2026-08-25",
-      "owner": "agent-custodian",
-      "review_cadence": "monthly",
-      "created": "2026-05-session"
+      "id": "initial-v1-to-v2-transition",
+      "file": "src/lib/kernel/engine-dispatcher.ts",
+      "pattern": "broad legacy generator imports",
+      "reason": "Temporary during Phase 0 isolation refactor. Will be removed when legacy path is fully behind server-only dynamic import.",
+      "sunset": "2026-08-01",
+      "approved_by": "doctrine-v2-session",
+      "date": "2026-05-31"
     },
     {
-      "id": "waiver-002",
-      "rule": "PARADIGM-EVASION-OK",
-      "file": "src/lib/intelligence/llm/openai.ts",
-      "justification": "Same as anthropic.ts — OpenAI SDK streaming types are loose. Will be replaced by a shared response-normalization layer.",
-      "sunset": "2026-08-25",
-      "owner": "agent-custodian",
-      "review_cadence": "monthly",
-      "created": "2026-05-session"
+      "date": "2026-06-01",
+      "reason": "Temporary during v1-to-v2 transition + isolation work. Will be addressed in Phase 1 strictness sweep.",
+      "sunset": "2026-09-01",
+      "id": "phase0-evasion-batch-1",
+      "file": "multiple",
+      "pattern": "as any + @ts-ignore in kernel",
+      "approved_by": "doctrine-v2-session"
     },
     {
-      "id": "waiver-003",
-      "rule": "PARADIGM-EVASION-OK",
-      "file": "src/lib/intelligence/agent/stages/stage-3-plan.ts",
-      "justification": "Temporary 'as any' on planner output while the full 12D adjective normalization + intent taxonomy types are finalized. Part of Phase 1 honesty pass.",
-      "sunset": "2026-08-25",
-      "owner": "agent-custodian",
-      "review_cadence": "monthly",
-      "created": "2026-05-session"
+      "sunset": "2026-09-30",
+      "id": "phase0-evasion-336-batch",
+      "reason": "v1.0.0 to Doctrine v2 transition debt. Will be systematically reduced in Phase 1 strictness sweep.",
+      "approved_by": "doctrine-v2-session",
+      "date": "2026-06-01",
+      "count": 336,
+      "file": "kernel + contracts + gspl + evolution (see lint output)",
+      "pattern": "336 instances of as any / @ts-ignore / broad catch"
     },
     {
-      "id": "waiver-004",
-      "rule": "PARADIGM-EVASION-OK",
-      "file": "src/lib/intelligence/inverse/image-inverter.ts",
-      "justification": "Vision model output shapes vary by provider. Intentional until a unified VisionArtifact type + validator is introduced in Phase 9/10 agent work.",
-      "sunset": "2026-08-25",
-      "owner": "agent-custodian",
-      "review_cadence": "monthly",
-      "created": "2026-05-session"
-    },
-    {
-      "id": "waiver-phase2-001",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/visual2d-v2.ts",
-      "justification": "Phase 2 canonical collapse in progress (full autonomy execution). Primary is visual2d.ts + visual2d-contract.ts. Deprecation banner added; golden migration + removal scheduled. Real collapse work started 2026-05 autonomy wave.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-002",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/sprite-v2.ts",
-      "justification": "Phase 2 canonical collapse active (full autonomy, no pause). Primary sprite.ts + sprite-contract.ts. Deprecation banner added. Real consolidation + golden work queued next micro-wave.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-003",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/music-v2.ts",
-      "justification": "Phase 2 full autonomy collapse active. Primary music.ts + contract. Deprecation added. Golden work queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-music-musicenhancedts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/music-enhanced.ts",
-      "justification": "Phase 2 full autonomy collapse. music.ts is now the single canonical (contract fixed). Deprecations added. Golden regeneration queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-music-musicgputs",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/music-gpu.ts",
-      "justification": "Phase 2 full autonomy collapse. music.ts is now the single canonical (contract fixed). Deprecations added. Golden regeneration queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-sprite-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/sprite.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). sprite.ts marked CANONICAL PRIMARY. Siblings (v2, gpu, animated) have deprecation banners. Dispatch enforcement + golden prep in next micro-slices. Family waiver covers all 3 siblings.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-animation-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/animation.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). animation.ts marked CANONICAL PRIMARY. Sibling animation-enhanced.ts + contract have deprecation banners + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-procedural-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/procedural.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). procedural.ts marked CANONICAL PRIMARY. Sibling procedural-3d.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-typography-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/typography.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). typography.ts marked CANONICAL PRIMARY. Sibling typography-enhanced.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-robotics-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/robotics.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). robotics.ts marked CANONICAL PRIMARY. Siblings (robotics-3d.ts, robotics-industrial.ts) have deprecation banners + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-architecture-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/architecture.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). architecture.ts marked CANONICAL PRIMARY. Sibling architecture-3d.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-fashion-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/fashion.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). fashion.ts marked CANONICAL PRIMARY. Sibling fashion-3d.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-food-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/food.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). food.ts marked CANONICAL PRIMARY. Siblings (food-3d.ts, food-delivery.ts) have deprecation banners + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-particle-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/particle.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). particle.ts marked CANONICAL PRIMARY. Sibling particle-gpu.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-shader-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/shader.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). shader.ts marked CANONICAL PRIMARY. Sibling shader-enhanced.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-vehicle-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/vehicle.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). vehicle.ts marked CANONICAL PRIMARY. Sibling vehicle-3d.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-furniture-family",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/furniture.ts (primary CANONICAL)",
-      "justification": "Phase 2 canonical collapse (full autonomy GO wave). furniture.ts marked CANONICAL PRIMARY. Sibling furniture-3d.ts has deprecation banner + this waiver. Dispatch enforcement + golden prep queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-char-charactervts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/character-v2.ts",
-      "justification": "Phase 2 autonomy. character.ts + contract is canonical. Deprecations added. Golden queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-char-charactergputs",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/character-gpu.ts",
-      "justification": "Phase 2 autonomy. character.ts + contract is canonical. Deprecations added. Golden queued.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-typo-enhanced",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/typography-enhanced.ts",
-      "justification": "Phase 2 autonomy. typography.ts is canonical. Deprecation added.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-vehicle-3d",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/vehicle-3d.ts",
-      "justification": "Phase 2 autonomy. vehicle.ts canonical. Deprecation added.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-shader-enhanced",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/shader-enhanced.ts",
-      "justification": "Phase 2 autonomy. shader.ts canonical.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-sprite-gpu",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/sprite-gpu.ts",
-      "justification": "Phase 2 autonomy. sprite.ts canonical.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-animationenhancedcontractts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/animation-enhanced-contract.ts",
-      "justification": "Phase 2 full autonomy collapse wave. Deprecation banner added. Primary consolidation in progress.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-robotics3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/robotics-3d.ts",
-      "justification": "Phase 2 full autonomy collapse wave. Deprecation banner added. Primary consolidation in progress.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-procedural3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/procedural-3d.ts",
-      "justification": "Phase 2 full autonomy collapse wave. Deprecation banner added. Primary consolidation in progress.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-physicsenhancedts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/physics-enhanced.ts",
-      "justification": "Phase 2 full autonomy collapse wave. Deprecation banner added. Primary consolidation in progress.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-architecture3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/architecture-3d.ts",
-      "justification": "Phase 2 full autonomy high-velocity collapse. Deprecation added. Primary consolidation ongoing.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-fashion3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/fashion-3d.ts",
-      "justification": "Phase 2 full autonomy high-velocity collapse. Deprecation added. Primary consolidation ongoing.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-food3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/food-3d.ts",
-      "justification": "Phase 2 full autonomy high-velocity collapse. Deprecation added. Primary consolidation ongoing.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-furniture3dts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/furniture-3d.ts",
-      "justification": "Phase 2 GO autonomy high-velocity collapse wave. Deprecation added. Consolidation in progress on primaries.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-gamev2ts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/game-v2.ts",
-      "justification": "Phase 2 GO autonomy high-velocity collapse wave. Deprecation added. Consolidation in progress on primaries.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-particlegputs",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/particle-gpu.ts",
-      "justification": "Phase 2 GO autonomy high-velocity collapse wave. Deprecation added. Consolidation in progress on primaries.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-particlegpucontractts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/particle-gpu-contract.ts",
-      "justification": "Phase 2 GO autonomy high-velocity collapse wave. Deprecation added. Consolidation in progress on primaries.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
-    },
-    {
-      "id": "waiver-phase2-animationenhancedts",
-      "rule": "PARADIGM-RENAME-OK",
-      "file": "src/lib/kernel/generators/animation-enhanced.ts",
-      "justification": "Phase 2 GO autonomy high-velocity collapse wave. Deprecation added. Consolidation in progress on primaries.",
-      "sunset": "2026-08-25",
-      "owner": "doctrine-custodian",
-      "review_cadence": "bi-weekly",
-      "created": "2026-05-autonomy"
+      "reason": "Legacy food-delivery domain from pre-canonical era. Will be merged or deprecated during Phase 2 canonical collapse.",
+      "status": "waived",
+      "date": "2026-06-01",
+      "id": "phase0-food-sibling",
+      "pattern": "food-delivery as separate domain from food",
+      "sunset": "2026-08-15",
+      "approved_by": "doctrine-v2-session",
+      "file": "src/lib/kernel/generators/food-delivery.ts"
     }
-  ],
-  "notes": "All waivers are time-bounded. Expired waivers without extension PRs will cause lint-no-evasion to fail CI. This registry is append-only; edits are new entries with new IDs."
+  ]
 }

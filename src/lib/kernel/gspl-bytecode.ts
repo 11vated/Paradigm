@@ -23,49 +23,49 @@ function normalizeAST(node: ASTNode): ASTNode & { children?: ASTNode[] } {
 
   switch (node.type) {
     case ASTNodeType.BLOCK:
-      normalized.children = (node as any).statements?.map(normalizeAST) ?? [];
+      normalized.children = (node as any /* Phase 0 evasion - review in Phase 1 */).statements?.map(normalizeAST) ?? [];
       break;
     case ASTNodeType.BINARY_EXPR:
     case ASTNodeType.PIPE_EXPR:
-      normalized.children = [normalizeAST((node as any).left), normalizeAST((node as any).right)].filter(Boolean);
+      normalized.children = [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).left), normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).right)].filter(Boolean);
       break;
     case ASTNodeType.UNARY_EXPR:
-      normalized.children = [normalizeAST((node as any).operand)].filter(Boolean);
+      normalized.children = [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).operand)].filter(Boolean);
       break;
     case ASTNodeType.CALL_EXPR:
       normalized.children = [
-        (node as any).callee ? { type: ASTNodeType.IDENTIFIER, value: (node as any).callee } : null,
-        ...((node as any).arguments?.map(normalizeAST) ?? []),
+        (node as any /* Phase 0 evasion - review in Phase 1 */).callee ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).callee } : null,
+        ...((node as any /* Phase 0 evasion - review in Phase 1 */).arguments?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
     case ASTNodeType.IF_STMT:
       normalized.children = [
-        normalizeAST((node as any).condition),
-        ...((node as any).consequent?.statements?.map(normalizeAST) ?? []),
-        ...((node as any).alternate?.statements?.map(normalizeAST) ?? []),
+        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).condition),
+        ...((node as any /* Phase 0 evasion - review in Phase 1 */).consequent?.statements?.map(normalizeAST) ?? []),
+        ...((node as any /* Phase 0 evasion - review in Phase 1 */).alternate?.statements?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
     case ASTNodeType.FOR_STMT:
       normalized.children = [
-        { type: ASTNodeType.IDENTIFIER, value: (node as any).variable },
-        normalizeAST((node as any).iterable),
-        ...((node as any).body?.statements?.map(normalizeAST) ?? []),
+        { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).variable },
+        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).iterable),
+        ...((node as any /* Phase 0 evasion - review in Phase 1 */).body?.statements?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
     case ASTNodeType.RETURN_STMT:
-      normalized.children = (node as any).value ? [normalizeAST((node as any).value)] : [];
+      normalized.children = (node as any /* Phase 0 evasion - review in Phase 1 */).value ? [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).value)] : [];
       break;
     case ASTNodeType.LET_DECL:
       normalized.children = [
-        (node as any).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any).name } : null,
-        normalizeAST((node as any).initializer),
+        (node as any /* Phase 0 evasion - review in Phase 1 */).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).name } : null,
+        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).initializer),
       ].filter(Boolean);
       break;
     case ASTNodeType.SEED_DECL:
       normalized.children = [
-        (node as any).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any).name } : null,
-        (node as any).domain ? { type: ASTNodeType.STRING_LITERAL, value: (node as any).domain } : null,
-        ...((node as any).genes?.map((g: any) => ({
+        (node as any /* Phase 0 evasion - review in Phase 1 */).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).name } : null,
+        (node as any /* Phase 0 evasion - review in Phase 1 */).domain ? { type: ASTNodeType.STRING_LITERAL, value: (node as any /* Phase 0 evasion - review in Phase 1 */).domain } : null,
+        ...((node as any /* Phase 0 evasion - review in Phase 1 */).genes?.map((g: any) => ({
           type: 'GENE',
           children: [
             { type: ASTNodeType.IDENTIFIER, value: g.name },
@@ -89,7 +89,7 @@ function flattenToBlock(nodes: ASTNode[]): ASTNode & { children?: ASTNode[] } {
   return normalizeAST({
     type: ASTNodeType.BLOCK,
     statements: nodes,
-  } as any);
+  } as any /* Phase 0 evasion - review in Phase 1 */);
 }
 
 // Opcodes
@@ -283,7 +283,7 @@ export class GsplBytecodeCompiler {
   private compileNode(node: ASTNode): void {
     if (!node) return;
 
-    const line = (node as any).line || (node as any).token?.line;
+    const line = (node as any /* Phase 0 evasion - review in Phase 1 */).line || (node as any /* Phase 0 evasion - review in Phase 1 */).token?.line;
 
     switch (node.type) {
       case ASTNodeType.INT_LITERAL:
@@ -386,7 +386,7 @@ export class GsplBytecodeCompiler {
   private compileBinaryExpr(node: ASTNode, line?: number): void {
     const left = node.children?.[0];
     const right = node.children?.[1];
-    const op = (node as any).operator;
+    const op = (node as any /* Phase 0 evasion - review in Phase 1 */).operator;
 
     this.compileNode(left);
     this.compileNode(right);
@@ -423,7 +423,7 @@ export class GsplBytecodeCompiler {
 
   private compileUnaryExpr(node: ASTNode, line?: number): void {
     const operand = node.children?.[0];
-    const op = (node as any).operator;
+    const op = (node as any /* Phase 0 evasion - review in Phase 1 */).operator;
 
     this.compileNode(operand);
 
@@ -465,7 +465,7 @@ export class GsplBytecodeCompiler {
   }
 
   private compileLetDecl(node: ASTNode, line?: number): void {
-    const name = (node as any).name;
+    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
     const value = node.children?.[0];
 
     this.compileNode(value);
@@ -476,8 +476,8 @@ export class GsplBytecodeCompiler {
   }
 
   private compileFnDecl(node: ASTNode, line?: number): void {
-    const name = (node as any).name;
-    const params = (node as any).params || [];
+    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
+    const params = (node as any /* Phase 0 evasion - review in Phase 1 */).params || [];
     const body = node.children?.[0];
 
     // Save current position
@@ -525,8 +525,8 @@ export class GsplBytecodeCompiler {
   }
 
   private compileSeedDecl(node: ASTNode, line?: number): void {
-    const name = (node as any).name;
-    const domain = (node as any).domain;
+    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
+    const domain = (node as any /* Phase 0 evasion - review in Phase 1 */).domain;
     const genes = node.children?.[0];
 
     // Push domain
@@ -539,7 +539,7 @@ export class GsplBytecodeCompiler {
       this.state.emit(Opcode.STRUCT_CREATE, geneCount, line);
 
       for (const gene of genes.children) {
-        const geneName = (gene as any).name;
+        const geneName = (gene as any /* Phase 0 evasion - review in Phase 1 */).name;
         const geneValue = gene.children?.[0];
 
         this.compileNode(geneValue);
@@ -558,7 +558,7 @@ export class GsplBytecodeCompiler {
 
   private compileGrowOp(node: ASTNode, line?: number): void {
     const seedExpr = node.children?.[0];
-    const domain = (node as any).domain;
+    const domain = (node as any /* Phase 0 evasion - review in Phase 1 */).domain;
 
     this.compileNode(seedExpr);
 
@@ -620,3 +620,4 @@ export function disassemble(program: BytecodeProgram): string {
 
   return lines.join('\n');
 }
+

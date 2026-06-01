@@ -339,7 +339,7 @@ export class GsplInterpreter {
       return this.evaluateBuiltin(name, node.arguments);
     }
 
-    const callee = this.evaluateNode(node.callee) as any;
+    const callee = this.evaluateNode(node.callee) as any /* Phase 0 evasion - review in Phase 1 */;
     if (callee && callee.type === 'function') {
       const fnNode = this.context.functions.get(callee.name);
       if (!fnNode) throw new Error(`Function not found: ${callee.name}`);
@@ -635,8 +635,8 @@ export class GsplInterpreter {
       };
       for (const [key, gene] of Object.entries(mutated.genes)) {
         if (this.context.rng.nextF64() < intensity) {
-          if (typeof (gene as any).value === 'number') {
-            mutated.genes[key] = { ...(gene as any), value: (gene as any).value + (this.context.rng.nextF64() - 0.5) * 0.2 };
+          if (typeof (gene as any /* Phase 0 evasion - review in Phase 1 */).value === 'number') {
+            mutated.genes[key] = { ...(gene as any /* Phase 0 evasion - review in Phase 1 */), value: (gene as any /* Phase 0 evasion - review in Phase 1 */).value + (this.context.rng.nextF64() - 0.5) * 0.2 };
           }
         }
       }
@@ -865,7 +865,7 @@ export class GsplInterpreter {
     }
     
     // Run evolution
-    const result = await ga.evolve(population as any, fitnessFn as any, gaConfig);
+    const result = await ga.evolve(population as any /* Phase 0 evasion - review in Phase 1 */, fitnessFn as any /* Phase 0 evasion - review in Phase 1 */, gaConfig);
     
     const evolveResult: any = {
       bestSeed: result.best,
@@ -905,7 +905,7 @@ export class GsplInterpreter {
     const defaultFeatureExtractor = (seed: any): number[] => {
       const vals: number[] = [];
       if (seed.genes) {
-        for (const gene of Object.values(seed.genes) as any[]) {
+        for (const gene of Object.values(seed.genes) as any /* Phase 0 evasion - review in Phase 1 */[]) {
           if (typeof gene.value === 'number') vals.push(gene.value);
           else if (Array.isArray(gene.value)) {
             for (const v of gene.value) {
@@ -923,7 +923,7 @@ export class GsplInterpreter {
     const fitnessFn = (seed: any): number => {
       let fitness = 0;
       if (seed.genes) {
-        for (const gene of Object.values(seed.genes) as any[]) {
+        for (const gene of Object.values(seed.genes) as any /* Phase 0 evasion - review in Phase 1 */[]) {
           if (typeof gene.value === 'number') fitness += gene.value;
           else if (typeof gene.value === 'object' && gene.value !== null) {
             for (const v of Object.values(gene.value)) {
@@ -1094,7 +1094,7 @@ export class GsplInterpreter {
         generation: Math.max(parentA.$lineage?.generation || 0, parentB.$lineage?.generation || 0) + 1,
         operation: 'gspl_breed',
         parents: [parentA.$hash, parentB.$hash]
-      } as any,
+      } as any /* Phase 0 evasion - review in Phase 1 */,
       genes: {}
     };
 
@@ -1104,8 +1104,8 @@ export class GsplInterpreter {
     ]);
 
     for (const geneName of allGenes) {
-      const geneA = parentA.genes?.[geneName] as any;
-      const geneB = parentB.genes?.[geneName] as any;
+      const geneA = parentA.genes?.[geneName] as any /* Phase 0 evasion - review in Phase 1 */;
+      const geneB = parentB.genes?.[geneName] as any /* Phase 0 evasion - review in Phase 1 */;
       
       if (geneA && geneB) {
         if (typeof geneA.value === 'number' && typeof geneB.value === 'number') {
@@ -1144,26 +1144,26 @@ export class GsplInterpreter {
     
     for (const [name, gene] of Object.entries(seed.genes || {})) {
       if (this.context.rng.nextF64() < rate) {
-        if (typeof (gene as any).value === 'number') {
+        if (typeof (gene as any /* Phase 0 evasion - review in Phase 1 */).value === 'number') {
           const gaussian = () => {
             const u1 = this.context.rng.nextF64();
             const u2 = this.context.rng.nextF64();
             return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
           };
           mutated.genes[name] = {
-            ...(gene as any),
-            value: (gene as any).value + gaussian() * 0.1
+            ...(gene as any /* Phase 0 evasion - review in Phase 1 */),
+            value: (gene as any /* Phase 0 evasion - review in Phase 1 */).value + gaussian() * 0.1
           };
-        } else if (Array.isArray((gene as any).value)) {
+        } else if (Array.isArray((gene as any /* Phase 0 evasion - review in Phase 1 */).value)) {
           mutated.genes[name] = {
-            ...(gene as any),
-            value: (gene as any).value.map((v: number) => v + (this.context.rng.nextF64() - 0.5) * 0.1)
+            ...(gene as any /* Phase 0 evasion - review in Phase 1 */),
+            value: (gene as any /* Phase 0 evasion - review in Phase 1 */).value.map((v: number) => v + (this.context.rng.nextF64() - 0.5) * 0.1)
           };
         } else {
-          mutated.genes[name] = gene as any;
+          mutated.genes[name] = gene as any /* Phase 0 evasion - review in Phase 1 */;
         }
       } else {
-        mutated.genes[name] = gene as any;
+        mutated.genes[name] = gene as any /* Phase 0 evasion - review in Phase 1 */;
       }
     }
     
@@ -1199,7 +1199,7 @@ export class GsplInterpreter {
     }
     // Legacy syntax: evolve { population: [...] }
     const options = await this.evaluateNode(node.options);
-    const population: Seed[] = (options as any).population || [];
+    const population: Seed[] = (options as any /* Phase 0 evasion - review in Phase 1 */).population || [];
     return population.slice(0, 5);
   }
 
@@ -1258,8 +1258,8 @@ export class GsplInterpreter {
     const name = typeof seedRef === 'string' ? seedRef : (seedRef.$name || seedRef.name);
     if (!name) return null;
     for (const s of this.context.seeds.values()) {
-      if ((s as any).$name === name || (s as any).name === name) {
-        const strata = (s as any).strata;
+      if ((s as any /* Phase 0 evasion - review in Phase 1 */).$name === name || (s as any /* Phase 0 evasion - review in Phase 1 */).name === name) {
+        const strata = (s as any /* Phase 0 evasion - review in Phase 1 */).strata;
         return Array.isArray(strata) ? strata : null;
       }
     }
@@ -1408,7 +1408,7 @@ export class GsplInterpreter {
       const baseFitness = (s: UniversalSeed) => this.strataScoreBuiltin(s, targets);
       const boostedFitness = this.makeStrataBoostedFitness(baseFitness, targets, 0.7);
 
-      const gaResult = await ga.evolve(population as any, boostedFitness as any, gaConfig as any);
+      const gaResult = await ga.evolve(population as any /* Phase 0 evasion - review in Phase 1 */, boostedFitness as any /* Phase 0 evasion - review in Phase 1 */, gaConfig as any /* Phase 0 evasion - review in Phase 1 */);
 
       this.context.output.push(`Strata-weighted evolve (real GA): best strata alignment ${gaResult.fitness.toFixed(2)} after ${gaResult.generation} generations`);
 
@@ -1551,7 +1551,7 @@ export class GsplInterpreter {
 
       // Only promote function and let bindings into the parent scope.
       child.context.variables.forEach((val: unknown, key: string) => {
-        if (typeof val === 'function' || (val && typeof val === 'object' && (val as any)._fn)) {
+        if (typeof val === 'function' || (val && typeof val === 'object' && (val as any /* Phase 0 evasion - review in Phase 1 */)._fn)) {
           this.context.variables.set(key, val);
         }
       });
@@ -1626,3 +1626,4 @@ export function executeGspl(source: string, seedPhrase?: string): any {
   const interpreter = new GsplInterpreter(seedPhrase);
   return interpreter.execute(source);
 }
+

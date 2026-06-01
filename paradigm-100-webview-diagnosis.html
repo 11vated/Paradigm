@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradigm 100% — AI Webview Diagnosis (Live Data)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #ddd; margin: 0; padding: 20px; line-height: 1.5; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { color: #0af; }
+    .section { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+    .success { border-color: #0a0; background: #0a1a0a; }
+    .problem { border-color: #f80; background: #2a1a0a; }
+    .diagram { font-family: monospace; background: #111; padding: 12px; border-radius: 4px; white-space: pre; overflow-x: auto; }
+    .metric { display: inline-block; background: #222; padding: 4px 8px; border-radius: 4px; margin: 4px; }
+    .fix { color: #0f0; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Paradigm 100% — AI Visual Companion / Webview Diagnosis</h1>
+  <p><strong>Live data captured while your dev server was running (2026-05-31)</strong></p>
+
+  <div class="section success">
+    <h2>✅ What is Working (A + C partially achieved)</h2>
+    <ul>
+      <li>Dev server starts cleanly with hardened vite.config (nuclear plugin + virtualization)</li>
+      <li>200 on / and /studio</li>
+      <li>All 27 15_ contracts + Part 6 load successfully</li>
+      <li>Typecheck: 0 errors in your local folder</li>
+      <li>Determinism: 0 hard violations (Math.random in quality-contract fixed live)</li>
+      <li>CSP frame-ancestors *; present (good for embedding)</li>
+    </ul>
+  </div>
+
+  <div class="section problem">
+    <h2>❌ Root Causes of "Still Not Working" (A + B gaps)</h2>
+    
+    <h3>1. Generator Dynamic Load + fs/promises (A failure)</h3>
+    <p>Client-side code (Studio previews / engine-dispatcher dynamic paths) executes:</p>
+    <div class="diagram">await import(`.../generators/${domain}.ts`)</div>
+    <p>This pulls old generator modules (still containing bare <code>import("fs/promises")</code> or top-level fs in your local copy) into the browser bundle → Vite import-analysis crash + 404s on raw .ts sources for the error overlay.</p>
+    <p class="fix"><strong>Fix already applied in your folder:</strong> geometry3d.ts + others patched with @vite-ignore. vite.config.ts replaced with full auto-protect + virtualization plugin.</p>
+  </div>
+
+  <div class="section problem">
+    <h3>2. LCP / Critical Path in Webview (B failure) — Live Probe Data</h3>
+    <p>From direct fetch of the running /studio page:</p>
+    <ul>
+      <li><strong>2 synchronous &lt;script type="module"&gt; in &lt;head&gt;</strong> (React Refresh + /@vite/client) → High <strong>Element Render Delay</strong></li>
+      <li><strong>0 preload links</strong></li>
+      <li><strong>No fetchpriority hints</strong></li>
+      <li><strong>No critical CSS inlined</strong></li>
+      <li>Entry: standard Vite SPA (main.tsx → App → route-based Studio)</li>
+    </ul>
+    <p><strong>Impact in AI webview:</strong> Slow "Studio ready" feel + layout shift when heavy Three.js + generator chunks load after the blocking scripts.</p>
+  </div>
+
+  <div class="section">
+    <h2>Proposed Path to A + B + C (Design Starting Point)</h2>
+    <p><strong>Approach 1 (Recommended — Defense in Depth + Critical Path):</strong></p>
+    <ul>
+      <li>Keep the nuclear Vite plugin (already in your folder) as permanent guard against any future bare Node imports in generators/contracts.</li>
+      <li>Add Vite plugin or index.html improvements for Studio critical path (preload key chunks, defer non-critical, better shell for webviews).</li>
+      <li>Guard dynamic generator loads in client code (try/catch + safe stub for webview context).</li>
+      <li>Result: A (zero errors), B (better LCP), C (gates stay green).</li>
+    </ul>
+    
+    <p><strong>Approach 2 (Full Isolation):</strong> Move all generator side-effect code behind explicit server-only entry points. Client only ever imports pure "generateX(seed)" functions that never touch fs.</p>
+    
+    <p><strong>Approach 3 (Hybrid + Emulation):</strong> Keep current, add a "webview-lite" entry point + LCP-focused Vite config for embedded use, plus automated LCP trace in CI.</p>
+  </div>
+
+  <p style="text-align:center; color:#666; margin-top:40px;">This is the live diagnosis from your running server. Next step: approve this summary or tell me which approach to design in detail (with visuals).</p>
+</div>
+</body>
+</html>

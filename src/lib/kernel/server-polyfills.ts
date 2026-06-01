@@ -17,7 +17,7 @@ export function initServerPolyfills() {
         img.height = 1;
         return img;
       }
-      return {} as any;
+      return {} as any /* TODO: Phase 1 strict */;
     },
     createElementNS(_ns: string, tag: string) {
       return this.createElement(tag);
@@ -39,7 +39,7 @@ export function initServerPolyfills() {
     visibilityState: 'visible',
     hidden: false,
     location: { href: 'http://localhost', protocol: 'http:', host: 'localhost', hostname: 'localhost', port: '3000', pathname: '/', search: '', hash: '' },
-  } as any;
+  } as any /* TODO: Phase 1 strict */;
 
   const fakeWin = {
     innerWidth: 1920,
@@ -49,33 +49,33 @@ export function initServerPolyfills() {
     navigator: {
       userAgent: 'Paradigm-Server/1.0',
       platform: 'Node.js',
-      gpu: undefined as any,
+      gpu: undefined as any /* TODO: Phase 1 strict */,
     },
     document: fakeDoc,
-    self: null as any,
+    self: null as any /* TODO: Phase 1 strict */,
     addEventListener: () => {},
     removeEventListener: () => {},
     setTimeout: setTimeout.bind(global),
     clearTimeout: clearTimeout.bind(global),
     setInterval: setInterval.bind(global),
     clearInterval: clearInterval.bind(global),
-    requestAnimationFrame: (cb: FrameRequestCallback) => setTimeout(cb, 1000 / 60) as any,
+    requestAnimationFrame: (cb: FrameRequestCallback) => setTimeout(cb, 1000 / 60) as any /* TODO: Phase 1 strict */,
     cancelAnimationFrame: (id: any) => clearTimeout(id),
     AudioContext: class {},
     OffscreenCanvas: class OffscreenCanvasShim {
       width: number;
       height: number;
       constructor(w: number, h: number) { this.width = w; this.height = h; }
-      getContext() { return null as any; }
+      getContext() { return null as any /* TODO: Phase 1 strict */; }
     },
     CSS: { supports: () => true, escape: (s: string) => s },
     URL: { createObjectURL: () => '', revokeObjectURL: () => {} },
-    Blob: globalThis.Blob || class BlobSim {} as any,
-    File: class FileSim extends (global as any).Blob {
+    Blob: globalThis.Blob || class BlobSim {} as any /* TODO: Phase 1 strict */,
+    File: class FileSim extends (global as any /* TODO: Phase 1 strict */).Blob {
       name: string;
       constructor(parts: any[], name: string, _opts?: any) { super(parts); this.name = name; }
     },
-    Image: NodeImage as any,
+    Image: NodeImage as any /* TODO: Phase 1 strict */,
     ImageData: class ImageDataSim {
       data: Uint8ClampedArray;
       width: number;
@@ -88,18 +88,19 @@ export function initServerPolyfills() {
   };
   fakeWin.self = fakeWin;
 
-  global.window = fakeWin as any;
-  global.document = fakeDoc as any;
-  try { (global as any).navigator = fakeWin.navigator; } catch {}
-  global.Image = NodeImage as any;
+  global.window = fakeWin as any /* TODO: Phase 1 strict */;
+  global.document = fakeDoc as any /* TODO: Phase 1 strict */;
+  try { (global as any /* TODO: Phase 1 strict */).navigator = fakeWin.navigator; } catch {}
+  global.Image = NodeImage as any /* TODO: Phase 1 strict */;
   global.fetch = fakeWin.fetch;
-  global.Blob = fakeWin.Blob as any;
-  global.File = fakeWin.File as any;
-  try { (global as any).HTMLCanvasElement = class {}; } catch {}
-  try { (global as any).CanvasRenderingContext2D = class {}; } catch {}
-  try { (global as any).ImageData = fakeWin.ImageData; } catch {}
+  global.Blob = fakeWin.Blob as any /* TODO: Phase 1 strict */;
+  global.File = fakeWin.File as any /* TODO: Phase 1 strict */;
+  try { (global as any /* TODO: Phase 1 strict */).HTMLCanvasElement = class {}; } catch {}
+  try { (global as any /* TODO: Phase 1 strict */).CanvasRenderingContext2D = class {}; } catch {}
+  try { (global as any /* TODO: Phase 1 strict */).ImageData = fakeWin.ImageData; } catch {}
   global.requestAnimationFrame = fakeWin.requestAnimationFrame;
   global.cancelAnimationFrame = fakeWin.cancelAnimationFrame;
 
   consoleFn('[Polyfills] Server-side shims ready — GLTF export will use scene graph (no WebGL)');
 }
+

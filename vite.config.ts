@@ -1,108 +1,110 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig} from 'vite';
+import { defineConfig } from 'vite';
 
-export default defineConfig(({mode}) => {
+export default defineConfig(({ mode }) => {
   const isProduction = mode === 'production';
-  
+
   return {
-    plugins: [react(), tailwindcss()],
-    define: {
-      'process.env.GEMINI_API_KEY': JSON.stringify(''),
-    },
+    plugins: [
+      react(),
+      tailwindcss(),
+      {
+        name: 'paradigm-node-builtin-guard',
+        enforce: 'pre',
+        transform(code, id) {
+          if (id.includes('node_modules')) return null;
+          // Auto-inject /* @vite-ignore */ on any remaining dynamic Node builtin imports
+          // so Vite never tries to analyze fs/path/child_process etc. in the browser bundle.
+          const patterns = [
+            /import\(["']fs(\/promises)?["']\)/g,
+            /import\(["']path["']\)/g,
+            /import\(["']node:fs(\/promises)?["']\)/g,
+            /import\(["']node:path["']\)/g,
+            /import\(["']child_process["']\)/g,
+            /require\(["']fs["']\)/g,
+            /require\(["']path["']\)/g,
+            /import\(["']os["']\)/g,
+            /import\(["']node:os["']\)/g,
+            /await import\(["']fs["']\)/g,
+            /await import\(["']path["']\)/g,
+          ];
+          let out = code;
+          for (const re of patterns) {
+            out = out.replace(re, (m) => {
+              if (m.includes('@vite-ignore')) return m;
+              return m.replace('import(', 'import(/* @vite-ignore */ ').replace('require(', 'require(/* @vite-ignore */ ');
+            });
+          }
+          return out !== code ? { code: out, map: null } : null;
+        }
+      },
+      {
+        name: 'paradigm-heavy-generator-stub',
+        enforce: 'pre',
+        resolveId(id, importer) {
+          // Extremely defensive: catch ANY import that resolves to a heavy generator implementation
+          // (not the registration *-contract.ts files). Works with absolute Windows paths, relative,
+          // with or without query params. Never touches quality-contract or any contract registration surface.
+          const norm = id.replace(/\\/g, '/').replace(/^file:\/\//i, '');
+          const isHeavyGen = norm.includes('/kernel/generators/') && !norm.includes('-contract');
+          if (!isHeavyGen) return null;
+
+          const importerNorm = importer ? importer.replace(/\\/g, '/') : '';
+          const isClient = !importerNorm.includes('/server/') && !importerNorm.includes('node_modules');
+
+          if (isClient) {
+            // Return the real stub file as the resolution target. Vite will load the stub
+            // (which has every named export the heavy code expects) instead of the real generator.
+            const stubPath = path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts');
+            return stubPath + '?heavy-stub';
+          }
+          return null;
+        }
+      }
+    ],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        crypto: path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
-        'node:crypto': path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
         fs: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'fs/promises': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         'node:fs': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
-        url: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
-        'node:url': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'node:fs/promises': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        path: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'node:path': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         os: path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
         'node:os': path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
-        './gspl-module-resolver': path.resolve(__dirname, './src/lib/kernel/gspl-module-resolver-stub.ts'),
-      },
+        crypto: path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
+        'node:crypto': path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
+
+        // === CRITICAL: Prevent any heavy generator implementation from ever reaching the browser ===
+        // These real modules contain fs, canvas, WAV emission, gltf writers, etc.
+        // All static imports from domain-config.ts, engine-dispatcher, quality-contract bridges, etc.
+        // are redirected here. The *-contract.ts registration files are intentionally NOT aliased
+        // so registerContract and the 15_ QualityContract system continue to work.
+        '../generators/character': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/geometry3d': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/fullgame': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/narrative': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/app': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/website': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/audio': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        '../generators/agent': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+        // Broad catch for any other generator pulled by domain-config or similar client paths
+        // (we deliberately do NOT catch *-contract files)
+        '../generators/': path.resolve(__dirname, './src/lib/kernel/browser-heavy-generators-stub.ts'),
+      }
     },
     server: {
       host: true,
       allowedHosts: true,
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modify — file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
-      watch: {
-        ignored: ['**/data/**', '**/node_modules/**'],
-      },
+      headers: {
+        'X-Frame-Options': 'ALLOWALL',
+        'Content-Security-Policy': "frame-ancestors *;",
+      }
     },
-    build: isProduction ? {
-        rollupOptions: {
-          output: {
-            // Aggressive chunking strategy for large app
-            manualChunks(id) {
-              // React core
-              if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) {
-                return 'react';
-              }
-              // Three.js - split into smaller chunks
-              if (id.includes('node_modules/three/build/three.min.js')) {
-                return 'three-core';
-              }
-              if (id.includes('node_modules/three/examples/jsm/')) {
-                return 'three-examples';
-              }
-              if (id.includes('node_modules/three-stdlib')) {
-                return 'three-stdlib';
-              }
-              if (id.includes('node_modules/three')) {
-                return 'three-misc';
-              }
-              // UI components - split by component type
-              if (id.includes('node_modules/@radix-ui/react-dialog') || 
-                  id.includes('node_modules/@radix-ui/react-dropdown-menu') ||
-                  id.includes('node_modules/@radix-ui/react-popover')) {
-                return 'ui-overlays';
-              }
-              if (id.includes('node_modules/@radix-ui')) {
-                return 'ui-core';
-              }
-              // Data visualization
-              if (id.includes('node_modules/d3') || id.includes('node_modules/recharts')) {
-                return 'visualization';
-              }
-              // Animation
-              if (id.includes('node_modules/framer-motion') || id.includes('node_modules/motion')) {
-                return 'animation';
-              }
-              // Kernel
-              if (id.includes('src/lib/kernel')) {
-                return 'kernel';
-              }
-              // GSPL
-              if (id.includes('src/lib/gspl') || id.includes('src/gspl')) {
-                return 'gspl';
-              }
-              // Rendering
-              if (id.includes('src/lib/rendering')) {
-                return 'rendering';
-              }
-              // Asset pipeline
-              if (id.includes('src/lib/asset_pipeline')) {
-                return 'asset-pipeline';
-              }
-            },
-          },
-        },
-        chunkSizeWarningLimit: 800,
-        target: 'esnext',
-        minify: 'esbuild',
-        esbuildOptions: {
-          drop: ['console', 'debugger'],
-        },
-      } : undefined,
-    optimizeDeps: {
-      include: [],
-      exclude: ['gspl-module-resolver'],
-    },
+    optimizeDeps: { exclude: ['gspl-module-resolver'] }
   };
 });

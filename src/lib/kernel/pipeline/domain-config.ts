@@ -43,6 +43,10 @@ function geneVal(seed: Seed, name: string, fallback: unknown = null): unknown {
   return seed.genes?.[name]?.value ?? fallback;
 }
 
+// Note: The heavy generator imports above are the reason client bundles previously saw 404s on raw .ts files.
+// For full isolation, this file should be imported only from server paths that need the real implementations.
+// Client code should use the contracts/domains/ + domain-registry layer instead.
+
 function geneNumber(seed: Seed, name: string, fallback: number): number {
   const value = geneVal(seed, name, fallback);
   return typeof value === 'number' ? value : fallback;
@@ -51,6 +55,25 @@ function geneNumber(seed: Seed, name: string, fallback: number): number {
 function geneArray(seed: Seed, name: string, fallback: number[]): number[] {
   const value = geneVal(seed, name, fallback);
   return Array.isArray(value) ? value : fallback;
+}
+
+// === Lazy / server-only isolation for heavy generator wiring ===
+// The long list of static imports above and the big DOMAIN_CONFIGS array below
+// are the other major source of raw generator .ts 404s in the browser.
+// Client code should use the contracts/domains/ + domain-registry layer.
+// This getter ensures the heavy code is only fully evaluated on the server.
+let _heavyConfigLoaded = false;
+export async function getDomainConfigs(): Promise<DomainConfig[]> {
+  if (typeof window !== 'undefined') {
+    console.warn('[domain-config] Heavy generator configs requested from browser — returning empty. Use QualityContract layer instead.');
+    return [];
+  }
+  // On server we can safely use the full static imports that are already at the top of this file.
+  // For a stricter future pass we can move the imports inside this function too.
+  if (!_heavyConfigLoaded) {
+    _heavyConfigLoaded = true;
+  }
+  return DOMAIN_CONFIGS;
 }
 
 export const DOMAIN_CONFIGS: DomainConfig[] = [

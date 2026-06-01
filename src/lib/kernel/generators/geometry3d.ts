@@ -627,7 +627,7 @@ export async function generateGeometry3DV4(seed: Seed, outputPath: string): Prom
   let gsplSchemaLoaded: string | undefined;
   let geometryConstraints: any = null;
   try {
-    const schemaContent = await import('fs/promises').then(fs => 
+    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs => 
       fs.readFile('data/commons/libraries/geometry3d.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
       gsplSchemaLoaded = 'geometry3d.gspl';

@@ -13,8 +13,6 @@
     "lint:ci": "npm run typecheck && npm run determinism:check",
     "lint:determinism": "eslint src/lib/kernel src/lib/evolution src/seeds --max-warnings=10000",
     "lint:determinism:strict": "eslint src/lib/kernel src/lib/evolution src/seeds --max-warnings=0",
-    "lint:canonical-rename": "bun run scripts/lint-canonical-rename.ts",
-    "lint:no-evasion": "bun run scripts/lint-no-evasion.ts",
     "lint:doctrine": "npm run lint:determinism && npm run lint:canonical-rename && npm run lint:no-evasion && npm run typecheck",
     "phase0:verify": "npm run typecheck && npm run determinism:check && npm run lint:doctrine && npm test -- tests/gspl/interpreter.test.ts --run && npx tsx scripts/preflight-report.ts",
     "preflight:report": "npx tsx scripts/preflight-report.ts",
@@ -53,7 +51,10 @@
     "golden:matrix:strict": "node scripts/golden-matrix-verify.mjs --strict",
     "lint:canonical-rename:bun": "bun run scripts/lint-canonical-rename.ts",
     "lint:no-evasion:bun": "bun run scripts/lint-no-evasion.ts",
-    "preflight:all": "npm run typecheck && npm run determinism:check && npm run lint:canonical-rename:bun && npm run reproducibility:gate && npm run quality:contract"
+    "preflight:all": "npm run typecheck && npm run determinism:check && npm run lint:canonical-rename:bun && npm run reproducibility:gate && npm run quality:contract",
+    "lint:canonical-rename": "tsx scripts/lint-canonical-rename.ts",
+    "lint:no-evasion": "tsx scripts/lint-no-evasion.ts",
+    "substrate:health": "echo Substrate health endpoint (Phase 0) - run via server"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",

@@ -49,7 +49,7 @@ export async function generateFullGameV3(
   let gsplSchemaLoaded: string | undefined;
   let fullgameConstraints: any = null;
   try {
-    const schemaContent = await import('fs/promises').then(fs => 
+    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs => 
       fs.readFile('data/commons/libraries/fullgame.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
       gsplSchemaLoaded = 'fullgame.gspl';

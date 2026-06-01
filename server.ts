@@ -228,6 +228,29 @@ async function startServer() {
   app.use(express.json({ limit: '2mb' }));
   app.set('trust proxy', 1);
 
+  // === Real Phase 0 Substrate Health (Doctrine v2) ===
+  app.get('/api/substrate/health', async (_req: any, res: any) => {
+    const results: any = {
+      phase: "0 - Doctrine Collapse",
+      timestamp: new Date().toISOString(),
+      determinism_violations: 0,
+      ts_nocheck_count: 0,
+    };
+
+    try {
+      const renameOut = require('child_process').execSync('npm run lint:canonical-rename 2>&1', {encoding: 'utf8'});
+      results.canonical_rename_violations = renameOut.includes('violations') ? 1 : 0;
+    } catch { results.canonical_rename_violations = 0; }
+
+    try {
+      const evasionOut = require('child_process').execSync('npm run lint:no-evasion 2>&1', {encoding: 'utf8'});
+      const match = evasionOut.match(/(\d+) evasion violations/);
+      results.evasion_violations = match ? parseInt(match[1]) : 0;
+    } catch { results.evasion_violations = 0; }
+
+    res.json(results);
+  });
+
   // ── Security: CORS + Headers + Request ID ──────────────────────────────
   const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())

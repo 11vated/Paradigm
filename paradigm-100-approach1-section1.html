@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paradigm 100% — Approach 1: Design Section 1 (Defense Layer)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0f0f0f; color: #ddd; margin: 0; padding: 20px; line-height: 1.6; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1, h2, h3 { color: #0af; }
+    .section { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .approved { border-color: #0a0; }
+    .diagram { font-family: monospace; background: #111; padding: 14px; border-radius: 6px; white-space: pre; overflow-x: auto; border-left: 4px solid #0af; }
+    .status { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.85em; }
+    .good { background: #0a3; color: white; }
+    .action { background: #f80; color: white; }
+    ul { margin: 8px 0; }
+    .approval { margin-top: 20px; padding: 12px; background: #222; border-radius: 6px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Approach 1 — Design Section 1</h1>
+  <p><strong>Goal:</strong> Achieve A + B + C for AI Visual Companion / webview use of Paradigm Studio.</p>
+  <p><strong>Focus of this section:</strong> The permanent, bulletproof Vite defense layer (the foundation that makes A and C possible no matter what generator code exists).</p>
+
+  <div class="section approved">
+    <h2>Current State (Live from your running server + local files)</h2>
+    <ul>
+      <li><span class="status good">GOOD</span> geometry3d.ts (and the other generators you were hitting) now have <code>/* @vite-ignore */</code> on the fs/promises lines.</li>
+      <li><span class="status good">GOOD</span> Your local <code>vite.config.ts</code> contains the full <code>paradigm-nuclear-dev-hardening</code> plugin (auto @vite-ignore + resolveId virtualization for contracts + domain-config).</li>
+      <li><span class="status good">GOOD</span> Typecheck = 0, Determinism = 0 in your local folder right now.</li>
+      <li><span class="status good">GOOD</span> Dev server was still healthy and listening when we last probed.</li>
+    </ul>
+    <p><strong>Remaining risk for A:</strong> Any future developer (or future you) adding a new generator or a new dynamic <code>import()</code> of a generator can re-introduce a bare Node builtin. The current plugin catches most cases at transform time, but we can make it stricter.</p>
+  </div>
+
+  <div class="section">
+    <h2>Proposed Design — Permanent Defense Layer (Section 1 of Approach 1)</h2>
+
+    <h3>What it must guarantee</h3>
+    <ul>
+      <li>No generator or contract module can ever cause a Vite import-analysis failure in the browser, even if it contains top-level or dynamic <code>fs</code>/<code>path</code>/<code>child_process</code> etc.</li>
+      <li>Dynamic loads from Studio preview code, engine-dispatcher fallbacks, or any future "live generator" feature must never pull Node-only code into the client bundle.</li>
+      <li>The protection must be automatic and hard to accidentally bypass.</li>
+    </ul>
+
+    <h3>Concrete Changes (all in the existing hardened config + one small addition)</h3>
+
+    <div class="diagram">
+1. Keep + slightly strengthen the existing plugin (already in your folder):
+   - The resolveId hook already virtualizes anything under contracts/domains or *-contract for client.
+   - Extend it to also catch any import whose id contains "/generators/" + a file that is known to have had Node side-effects in the past (or simply treat the entire generators/ tree as "client must only get pure functions").
+
+2. Add one small, robust transform that is impossible to miss:
+   - Any dynamic import string that looks like a generator (contains "generators/" and ends with .ts or .js) gets an automatic /* @vite-ignore */ if it doesn't already have one.
+   - This is defense-in-depth on top of the existing patterns.
+
+3. (Optional but recommended for B + long-term) Add a tiny Vite dev-only plugin that, when running in "webview mode" (detected via env or query param), serves a "lite" shell with better preload hints for the critical Studio chunks.
+    </div>
+
+    <h3>How this directly enables A + C</h3>
+    <p>With this layer in place, even if someone later removes a @vite-ignore comment by accident, or adds a brand new generator with top-level fs code, the client bundle will never see the bad import. The virtualization + auto-rewrite makes A (zero console errors on generator loads) and C (gates staying green) extremely robust.</p>
+  </div>
+
+  <div class="approval">
+    <strong>Does this Section 1 (the permanent defense layer) look correct as the foundation?</strong><br><br>
+    Reply with one of:<br>
+    • <strong>"approve section 1"</strong> — move to Section 2 (Critical Path / LCP improvements for B)<br>
+    • <strong>"changes: ..."</strong> — tell me what to adjust<br>
+    • <strong>"explain X more"</strong> — ask about any part
+  </div>
+
+  <p style="margin-top: 30px; color: #666; font-size: 0.9em;">
+    This visual is based on the actual live state of your running server and local files (probed moments ago). 
+    Next visual will show the LCP/critical path section once you approve this foundation.
+  </p>
+
+</div>
+</body>
+</html>

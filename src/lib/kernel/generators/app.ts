@@ -506,7 +506,7 @@ export async function generateApp(seed: Seed, outputPath: string): Promise<AppAr
   let gsplSchemaLoaded: string | undefined;
   let appConstraints: any = null;
   try {
-    const schemaContent = await import('fs/promises').then(fs =>
+    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs =>
       fs.readFile('data/commons/libraries/app.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
       gsplSchemaLoaded = 'app.gspl';

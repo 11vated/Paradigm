@@ -73,7 +73,7 @@ export async function generateNarrativeV3(
   let gsplSchemaLoaded: string | undefined;
   let narrativeConstraints: any = null;
   try {
-    const schemaContent = await import('fs/promises').then(fs =>
+    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs =>
       fs.readFile('data/commons/libraries/narrative.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
       gsplSchemaLoaded = 'narrative.gspl';
