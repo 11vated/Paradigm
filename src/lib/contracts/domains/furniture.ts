@@ -33,7 +33,7 @@ export class FurnitureContract implements QualityContract<FurnitureGeneSet, Furn
 
   synthesize(seed: FurnitureGeneSet, rng: Xoshiro256StarStar): FurnitureArtifact {
     return {
-      id: `furn_${Date.now()}`,
+      id: `furn_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       partCount: seed.partCount || 12,
       materialLayers: seed.materialLayers || 3,
       hasDrape: seed.hasDrape !== false,

@@ -134,11 +134,33 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
       },
     };
     artifact.c2pa_manifest = buildC2PAManifest(seed, domain);
+    // Ensure agent domain always exposes a config block (contract may be synthesized via try15Contract)
+    if (domain === 'agent' && !(artifact as any).config) {
+      (artifact as any).config = {
+        persona: (seed.genes as any)?.persona?.value ?? 'assistant',
+        name: seed.$name ?? 'Agent',
+        temperature: 0.7,
+        reasoningDepth: 0.5,
+        explorationRate: 0.3,
+      };
+    }
     return artifact;
   } catch {
     try {
       const artifact = await growViaPipeline(seed);
       const result = { ...artifact, generation_quality: 'reduced' as GenerationQuality };
+      // Domain-specific augmentation that may be missing from the generic pipeline artifact
+      if (domain === 'agent' && !(result as any).config) {
+        (result as any).config = {
+          persona: (seed.genes as any)?.persona?.value ?? 'assistant',
+          name: seed.$name ?? 'Agent',
+          temperature: 0.7,
+          reasoningDepth: 0.5,
+        };
+        if (!result.render_hints?.mode) {
+          result.render_hints = { mode: 'chat_interface', color_scheme: 'dark', animated: false, hasFile: false };
+        }
+      }
       (result as any).c2pa_manifest = buildC2PAManifest(seed, domain);
       return result;
     } catch {

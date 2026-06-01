@@ -130,7 +130,7 @@ export class CharacterContract implements QualityContract<CharacterGeneSet, Char
     const actualTriangleCount = Math.floor(indices.length / 3);
 
     const artifact: CharacterArtifact = {
-      id: `char_${Date.now()}`,
+      id: `char_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       form: {
         mesh: {
           triangleCount: actualTriangleCount,

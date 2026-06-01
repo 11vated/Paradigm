@@ -33,7 +33,7 @@ export class RoboticsContract implements QualityContract<RoboticsGeneSet, Roboti
 
   synthesize(seed: RoboticsGeneSet, rng: Xoshiro256StarStar): RoboticsArtifact {
     return {
-      id: `rob_${Date.now()}`,
+      id: `rob_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       dof: seed.dof || 6,
       sensorCount: seed.sensorCount || 8,
       behaviorTreeDepth: seed.behaviorTreeDepth || 5,

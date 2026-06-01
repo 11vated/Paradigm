@@ -232,7 +232,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: npm audit
-        run: npm audit --audit-level=high || echo "WARN: dev-only vulns remain (hardhat/mocha toolchain). Tracked in docs/security-known-issues.md."
+        run: |
+          npm audit --audit-level=high || echo "WARN: dev-only vulns remain (hardhat/mocha toolchain). Tracked in docs/security-known-issues.md."
 
   release:
     name: Release

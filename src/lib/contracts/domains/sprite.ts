@@ -33,7 +33,7 @@ export class SpriteContract implements QualityContract<SpriteGeneSet, SpriteArti
 
   synthesize(seed: SpriteGeneSet, rng: Xoshiro256StarStar): SpriteArtifact {
     return {
-      id: `sprite_${Date.now()}`,
+      id: `sprite_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       resolution: seed.resolution || 256,
       frameCount: seed.frameCount || 24,
       paletteSize: seed.paletteSize || 32,

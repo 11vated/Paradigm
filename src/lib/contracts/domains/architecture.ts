@@ -31,7 +31,7 @@ export class ArchitectureContract implements QualityContract<ArchitectureGeneSet
 
   synthesize(seed: ArchitectureGeneSet, rng: Xoshiro256StarStar): ArchitectureArtifact {
     return {
-      id: `arch_${Date.now()}`,
+      id: `arch_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       floorCount: seed.floorCount || 4,
       roomCount: seed.roomCount || 28,
       hasFloorplan: true,

@@ -32,7 +32,7 @@ export class ProceduralContract implements QualityContract<ProceduralGeneSet, Pr
 
   synthesize(seed: ProceduralGeneSet, rng: Xoshiro256StarStar): ProceduralArtifact {
     return {
-      id: `proc_${Date.now()}`,
+      id: `proc_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       width: seed.resolution || 4096,
       height: seed.resolution || 4096,
       biomeCount: seed.biomeCount || 8,

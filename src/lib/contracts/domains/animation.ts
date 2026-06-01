@@ -32,7 +32,7 @@ export class AnimationContract implements QualityContract<AnimationGeneSet, Anim
 
   synthesize(seed: AnimationGeneSet, rng: Xoshiro256StarStar): AnimationArtifact {
     return {
-      id: `anim_${Date.now()}`,
+      id: `anim_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       boneCount: seed.boneCount || 72,
       keyframeCount: 48 + Math.floor(seed.keyframeDensity * 80),
       particleCount: seed.particleEmitters * 1200,

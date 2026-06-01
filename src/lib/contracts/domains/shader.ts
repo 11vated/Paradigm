@@ -31,7 +31,7 @@ export class ShaderContract implements QualityContract<ShaderGeneSet, ShaderArti
 
   synthesize(seed: ShaderGeneSet, rng: Xoshiro256StarStar): ShaderArtifact {
     return {
-      id: `shader_${Date.now()}`,
+      id: `shader_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       glslLines: 180 + Math.floor(seed.complexity * 420),
       pbrSupport: seed.pbrFeatures > 3,
       fpsAt1080p: seed.targetFps || 120,

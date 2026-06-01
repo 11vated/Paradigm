@@ -1,4 +1,28 @@
-import { createCanvas, Image as NodeImage } from 'canvas';
+// Canvas import guarded: native binary may not be built in all environments (CI, CPU-only boxes).
+// Fall back to a minimal shim that satisfies the DOM polyfill contract without crashing.
+let createCanvas: (w: number, h: number) => any;
+let NodeImage: any;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const canvasMod = require('canvas');
+  createCanvas = canvasMod.createCanvas;
+  NodeImage = canvasMod.Image;
+} catch {
+  createCanvas = (w: number, h: number) => ({
+    width: w,
+    height: h,
+    getContext: () => null,
+    toBuffer: () => Buffer.alloc(0),
+    toDataURL: () => '',
+  });
+  NodeImage = class NodeImageShim {
+    width = 1;
+    height = 1;
+    src = '';
+    onload: (() => void) | null = null;
+    onerror: ((e: Error) => void) | null = null;
+  };
+}
 
 const SHIM_MODE = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 

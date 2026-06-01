@@ -33,7 +33,7 @@ export class FoodContract implements QualityContract<FoodGeneSet, FoodArtifact> 
 
   synthesize(seed: FoodGeneSet, rng: Xoshiro256StarStar): FoodArtifact {
     return {
-      id: `food_${Date.now()}`,
+      id: `food_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       ingredientCount: seed.ingredientCount || 12,
       courseCount: seed.courseCount || 3,
       nutritionScore: 0.92,

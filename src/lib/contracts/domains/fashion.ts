@@ -33,7 +33,7 @@ export class FashionContract implements QualityContract<FashionGeneSet, FashionA
 
   synthesize(seed: FashionGeneSet, rng: Xoshiro256StarStar): FashionArtifact {
     return {
-      id: `fash_${Date.now()}`,
+      id: `fash_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       layerCount: seed.layerCount || 3,
       fabricTypes: seed.fabricTypes || 4,
       hasDrapeSim: seed.hasDrapeSim !== false,

@@ -31,7 +31,7 @@ export class ParticleContract implements QualityContract<ParticleGeneSet, Partic
 
   synthesize(seed: ParticleGeneSet, rng: Xoshiro256StarStar): ParticleArtifact {
     return {
-      id: `part_${Date.now()}`,
+      id: `part_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       emitterCount: seed.emitterCount || 7,
       maxParticles: seed.maxParticles || 12500,
       behaviorModules: seed.behaviorComplexity * 9 + 2,

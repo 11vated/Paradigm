@@ -35,7 +35,7 @@ export class Geometry3DContract implements QualityContract<Geometry3DGeneSet, Ge
   synthesize(seed: Geometry3DGeneSet, rng: Xoshiro256StarStar): Geometry3DArtifact {
     const tris = Math.min(500000, seed.targetTris || 85000);
     return {
-      id: `geom3d_${Date.now()}`,
+      id: `geom3d_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       triangleCount: tris,
       isManifold: true,
       lodLevels: 4,

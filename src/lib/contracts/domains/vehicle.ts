@@ -34,7 +34,7 @@ export class VehicleContract implements QualityContract<VehicleGeneSet, VehicleA
 
   synthesize(seed: VehicleGeneSet, rng: Xoshiro256StarStar): VehicleArtifact {
     return {
-      id: `veh_${Date.now()}`,
+      id: `veh_${Math.trunc(rng.nextF64() * 0xFFFFFFFF).toString(10)}`,
       type: seed.type,
       wheelsOrDOF: seed.wheelsOrDOF || 4,
       topSpeedKmh: seed.topSpeedKmh || 220,

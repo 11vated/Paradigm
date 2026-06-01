@@ -26,6 +26,15 @@ export interface AgentArtifact {
   owner?: string;
   lineage?: string[];
   $name?: string;
+  // Agent configuration block — consumed by Studio and engines.test
+  config: {
+    persona: string;
+    name: string;
+    temperature: number;
+    reasoningDepth: number;
+    explorationRate: number;
+    autonomy?: number;
+  };
 }
 
 export class AgentContract implements QualityContract<AgentGeneSet, AgentArtifact> {
@@ -38,6 +47,8 @@ export class AgentContract implements QualityContract<AgentGeneSet, AgentArtifac
   crossModalConsistency = [{ targetModality: 'decision', requiredConsistency: 'semantic', tolerance: 0.05 }];
 
   synthesize(seed: AgentGeneSet, rng: Xoshiro256StarStar): AgentArtifact {
+    const personaChoices = ['assistant', 'architect', 'analyst', 'creative', 'expert'];
+    const persona = personaChoices[Math.floor(rng.nextF64() * personaChoices.length)];
     // The agent itself is now a first-class 15_ sovereign artifact — breedable, ownable, signable
     return {
       id: `agent_${Math.floor(rng.nextF64() * 1e12)}`,
@@ -49,6 +60,14 @@ export class AgentContract implements QualityContract<AgentGeneSet, AgentArtifac
       breedable: true,
       signable: true,
       owner: `agent-owner-${Math.floor(rng.nextF64() * 1e10)}`,
+      config: {
+        persona,
+        name: (seed as any).$name ?? 'Paradigm Agent',
+        temperature: +(rng.nextF64() * 0.5 + 0.5).toFixed(2),
+        reasoningDepth: +(rng.nextF64() * 0.5 + 0.5).toFixed(2),
+        explorationRate: +(rng.nextF64() * 0.4 + 0.1).toFixed(2),
+        autonomy: +(rng.nextF64() * 0.5 + 0.5).toFixed(2),
+      },
     };
   }
 
