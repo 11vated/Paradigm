@@ -501,7 +501,7 @@ const executeGsplTool: AgentTool = {
         const geneMatch = trimmed.match(/^(?:gene\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*[:=]\s*(.+)$/);
         if (!geneMatch) continue;
         const key = geneMatch[1];
-        let valStr = geneMatch[2].replace(/[,;]$/, '').trim();
+        const valStr = geneMatch[2].replace(/[,;]$/, '').trim();
 
         // Detect type from value syntax
         if (valStr.startsWith('"') && valStr.endsWith('"')) {

@@ -76,7 +76,7 @@ export function exportToGLB(mesh: MeshData, name: string = 'Paradigm Seed', mate
   offset += normBytes;
 
   // Colors (vec4 float, alpha = 1.0)
-  let colorOffset = offset;
+  const colorOffset = offset;
   if (hasColors) {
     for (let i = 0; i < vertexCount; i++) {
       const base = offset + i * 16;

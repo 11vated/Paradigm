@@ -15,7 +15,6 @@
 
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
-import { kernelNowIso } from './src/lib/kernel/clock.js';
 import { registerHealthRoutes } from './src/server/routes/health.js';
 import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
 import { registerCompositionRoutes } from './src/server/routes/composition.js';
@@ -26,7 +25,7 @@ import { registerEvolveRoutes } from './src/server/routes/evolve.js';
 import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
 import { registerStaticRoutes } from './src/server/routes/static.js';
 import { registerFinalRoutes } from './src/server/routes/final.js';
-import { sendWsFrame, sendJson, parseWsFrame, registerWebsocketUpgrade } from './src/server/routes/websocket.js';
+import { registerWebsocketUpgrade } from './src/server/routes/websocket.js';
 import { bootstrapParadigmContracts } from './src/lib/contracts/bootstrap';
 initServerPolyfills();
 
@@ -37,7 +36,6 @@ import express from 'express';
 import http from 'http';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
-import fs from 'fs';
 import crypto from 'crypto';
 
 // ─── Core GSPL loader (existing) ─────────────────────────────────────────────
@@ -57,8 +55,8 @@ import { IntelligenceLayer } from './src/lib/intelligence/index.js';
 import {
   Xoshiro256Star, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo, validateGeneWithDetails,
-  ENGINES, growSeed, getAllDomains,
-  getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
+  growSeed, getAllDomains,
+  findCompositionPath, composeSeed, getCompositionGraph,
   buildC2PAManifest, encodeC2PAManifest
 } from './src/lib/kernel/index.js';
 import { geneTypeRegistry, GENE_TYPE_LIST } from './src/lib/kernel/gene-type-registry.js';
@@ -79,8 +77,8 @@ import { RegisterGeneTypeSchema } from './src/lib/validation/schemas.js';
 
 // ─── NEW: Authentication & Rate Limiting ─────────────────────────────────────
 import {
-  registerUser, loginUser, verifyToken, requireAuth, optionalAuth, verifyTokenRaw,
-  refreshAccessToken, revokeToken, requireRole, createRateLimiter
+  registerUser, loginUser, optionalAuth, verifyTokenRaw,
+  refreshAccessToken, revokeToken, createRateLimiter
 } from './src/lib/auth/index.js';
 
 // ─── NEW: Seed Ownership & Authorization (Phase 3) ───────────────────────────
@@ -143,8 +141,8 @@ import {
 } from './src/lib/sovereignty/adapters.js';
 
 // ─── NEW: Data Access Layer ──────────────────────────────────────────────────
-import { initStore, getStore } from './src/lib/data/index.js';
-import type { SeedStore, AuditEntry } from './src/lib/data/types.js';
+import { initStore } from './src/lib/data/index.js';
+import type { AuditEntry } from './src/lib/data/types.js';
 
 // ─── NEW: Cache Layer (LRU in-memory / Redis) ───────────────────────────────
 import { initCache, getCache, growCacheKey, compositionPathKey } from './src/lib/cache/index.js';

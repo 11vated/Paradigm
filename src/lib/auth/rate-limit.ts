@@ -3,7 +3,7 @@ import { createClient, type RedisClientType } from 'redis';
 
 let redisClient: RedisClientType | null = null;
 let useRedis = false;
-let inMemRates = new Map<string, number[]>();
+const inMemRates = new Map<string, number[]>();
 
 const RATE_WINDOW_MS = 60 * 1000;
 const DEFAULT_LIMIT = 30;

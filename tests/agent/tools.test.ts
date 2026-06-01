@@ -164,7 +164,7 @@ describe('Agent Tool System - Determinism', () => {
 
   describe('breed_seeds', () => {
     it('should produce identical offspring for identical parents', async () => {
-      let seeds: any[] = [];
+      const seeds: any[] = [];
 
       // Create two parent seeds and accumulate them
       const rA = await executeTool('create_seed', {
@@ -196,7 +196,7 @@ describe('Agent Tool System - Determinism', () => {
 
   describe('evolve_seeds', () => {
     it('should produce identical populations for identical inputs', async () => {
-      let seeds: any[] = [];
+      const seeds: any[] = [];
 
       const rCreate = await executeTool('create_seed', {
         domain: 'character', name: 'EvolveBase',

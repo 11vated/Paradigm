@@ -19,7 +19,7 @@
  * It is exempted from the determinism boundary lint rule.
  */
 
-/* eslint-disable no-restricted-properties, no-restricted-syntax */
+/* eslint-disable no-restricted-syntax */
 
 export type KernelClockMode = 'wall' | 'counter' | 'frozen';
 

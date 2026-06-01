@@ -112,7 +112,7 @@ export class PgVectorStore {
   ): Promise<SimilaritySearchResult[]> {
     const embeddingStr = `[${embedding.join(',')}]`;
     
-    let sql = `
+    const sql = `
       SELECT 
         seed_id,
         1 - (embedding <=> $1::vector) as similarity,

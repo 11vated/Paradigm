@@ -144,7 +144,7 @@ export function useAgent() {
           const reader = res.body.getReader();
           const decoder = new TextDecoder();
           let buffer = '';
-          let collectedCards: SurfacedCard[] = [];
+          const collectedCards: SurfacedCard[] = [];
           let tier: string | undefined;
           let accumulatedText = '';
           let done = false;

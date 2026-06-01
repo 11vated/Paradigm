@@ -126,7 +126,7 @@ async function main() {
     case 'make':
     case 'grow': {
       // Parse intent and optional --domain flag
-      let intentParts: string[] = [];
+      const intentParts: string[] = [];
       let explicitDomain: string | undefined;
 
       for (let i = 1; i < args.length; i++) {

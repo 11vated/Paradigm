@@ -154,8 +154,8 @@ describe('marchingCubes — box SDF', () => {
 
   it('produces a mesh with more vertices near the corners than centers of faces', () => {
     // Loose check: bounding box should be close to [-0.5, 0.5] on each axis.
-    let min = [Infinity, Infinity, Infinity];
-    let max = [-Infinity, -Infinity, -Infinity];
+    const min = [Infinity, Infinity, Infinity];
+    const max = [-Infinity, -Infinity, -Infinity];
     for (let i = 0; i < mesh.vertices.length; i += 3) {
       for (let a = 0; a < 3; a++) {
         const c = mesh.vertices[i + a];

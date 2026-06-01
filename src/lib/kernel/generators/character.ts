@@ -178,7 +178,7 @@ export async function generateCharacterV3(
   
   // Export — prefer binary GLB + embedded images when we have real textures (much better PBR result)
   const hasTextures = Object.keys(textures).length > 0;
-  let gltfBuffer = await exportGLTF(scene, { 
+  const gltfBuffer = await exportGLTF(scene, { 
     binary: hasTextures,           // binary when we have maps
     embedImages: hasTextures,
     trs: false
@@ -469,7 +469,7 @@ function generateHeadMesh(params: CharacterParams, rng: Xoshiro256StarStar): THR
   const positions = headGeo.attributes.position as THREE.BufferAttribute;
   for (let i = 0; i < positions.count; i++) {
     let x = positions.getX(i);
-    let y = positions.getY(i);
+    const y = positions.getY(i);
     let z = positions.getZ(i);
 
     // Eye sockets

@@ -87,7 +87,7 @@ export class QFTSolver {
     steps: number
   ): QuantumState[] {
     const states: QuantumState[] = [];
-    let currentState = { ...initialState };
+    const currentState = { ...initialState };
     
     const hbar = 1.0545718e-34; // Planck constant
     const mass = currentState.mass || 1; // Normalized mass

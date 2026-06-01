@@ -222,7 +222,7 @@ class MarketMakingStrategy:
 }
 
 function backtestAlgorithm(prices: number[], algorithm: any, rng: Xoshiro256StarStar): any {
-  let position = 0;
+  const position = 0;
   let cash = 10000;
   let shares = 0;
 

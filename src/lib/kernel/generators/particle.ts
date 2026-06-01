@@ -136,7 +136,7 @@ function initializeParticles(params: ParticleParams, emitters: Emitter[], rng: X
 
 function runParticleSimulation(particles: Particle[], emitters: Emitter[], params: ParticleParams, frames: number, rng: Xoshiro256StarStar): any[] {
   const history: any[] = [];
-  let simParticles = JSON.parse(JSON.stringify(particles));
+  const simParticles = JSON.parse(JSON.stringify(particles));
   
   for (let f = 0; f < frames; f++) {
     const snapshot: any[] = [];

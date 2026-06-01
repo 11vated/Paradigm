@@ -81,7 +81,7 @@ export function getPgPool(config?: PoolConfig): Pool {
   // Surface pool errors to stderr rather than letting them kill the process
   // silently. pg emits these when idle clients die (e.g. pg restart).
   _pool.on('error', (err) => {
-    // eslint-disable-next-line no-console -- pool-level error path, before logger may exist
+     
     console.error('[pgvector] pool error:', err.message);
   });
   return _pool;

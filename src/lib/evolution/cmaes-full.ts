@@ -57,7 +57,7 @@ export class CMAES {
 
     let xmean = this.extractGenes(seed, geneKeys);
     let sigma = this.config.initialSigma;
-    let C: number[][] = Array.from({ length: dim }, (_, i) =>
+    const C: number[][] = Array.from({ length: dim }, (_, i) =>
       Array.from({ length: dim }, (_, j) => (i === j ? 1 : 0))
     );
     let pSigma = new Array(dim).fill(0);

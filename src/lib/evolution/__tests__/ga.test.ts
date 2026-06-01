@@ -73,7 +73,7 @@ describe('Genetic Algorithm', () => {
 
     it('should improve fitness over generations', async () => {
       const ga = new GeneticAlgorithm(rng);
-      let pop = makeTestPopulation(rng, 10);
+      const pop = makeTestPopulation(rng, 10);
       
       // Set known fitness values
       for (let i = 0; i < pop.length; i++) {

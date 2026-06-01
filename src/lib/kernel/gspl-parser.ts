@@ -703,7 +703,7 @@ export class GsplParser {
   private parseMutateOp(): ASTNode {
     const token = this.advance(); // mutate
     let seed: ASTNode;
-    let options: Record<string, any> = {};
+    const options: Record<string, any> = {};
 
     // Support both mutate seed and mutate(seed, rate) syntax
     if (this.match('LPAREN')) {

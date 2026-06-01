@@ -400,10 +400,19 @@ export async function run15SpecConformance(opts: any = {}) {
   }
 }
 
+// Helper to run all conformance on legacy contracts
+async function runAllConformanceLegacy(opts: ConformanceOptions = {}): Promise<ConformanceResult[]> {
+  const results: ConformanceResult[] = [];
+  for (const contract of listContracts()) {
+    const result = await runConformance(contract, opts);
+    results.push(result);
+  }
+  return results;
+}
+
 // Make the new contracts participate in the main runAllConformance when available
-const originalRunAll = runAllConformance;
 export async function runAllConformance(opts: ConformanceOptions = {}): Promise<ConformanceResult[]> {
-  const legacyResults = await originalRunAll(opts);
+  const legacyResults = await runAllConformanceLegacy(opts);
   
   try {
     const new15Results = await run15SpecConformance(opts);
@@ -661,8 +670,8 @@ export function formatLeaderboard(results: ConformanceResult[]): string {
 
   // Sort: passed contracts first, then by domain name
   const sorted = [...results].sort((a, b) => {
-    if (a.passed !== b.passed) return b.passed ? -1 : 1;
-    return a.domain.localeCompare(b.domain);
+    if ((a as any).passed !== (b as any).passed) return (b as any).passed ? -1 : 1;
+    return (a as any).domain.localeCompare((b as any).domain);
   });
 
   let output = 'Generator Quality Contract Leaderboard\n';
@@ -671,13 +680,15 @@ export function formatLeaderboard(results: ConformanceResult[]): string {
   output += '─'.repeat(60) + '\n';
 
   for (const r of sorted) {
-    const status = r.passed ? '✓ PASS' : '✗ FAIL';
-    const duration = `${r.durationMs}ms`;
-    output += r.domain.padEnd(20) + r.version.padEnd(12) + status.padEnd(12) + duration + '\n';
+    const status = (r as any).passed ? '✓ PASS' : '✗ FAIL';
+    const duration = `${(r as any).durationMs || 0}ms`;
+    const domain = String((r as any).domain || '?').padEnd(20);
+    const version = String((r as any).version || '?').padEnd(12);
+    output += domain + version + status.padEnd(12) + duration + '\n';
   }
 
   output += '─'.repeat(60) + '\n';
-  const passCount = sorted.filter(r => r.passed).length;
+  const passCount = sorted.filter(r => (r as any).passed).length;
   output += `Total: ${passCount}/${sorted.length} passed\n`;
 
   return output;

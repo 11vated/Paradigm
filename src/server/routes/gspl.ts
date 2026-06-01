@@ -96,7 +96,7 @@ export function registerGsplRoutes(app: Express, deps: GsplDeps): void {
         deps.saveSeeds();
       }
       // Carry schemas through execute as well (so RUN result still shows the governing contracts)
-      let schemas: Record<string, any> = {};
+      const schemas: Record<string, any> = {};
       try {
         const src = source || '';
         const domains = new Set<string>([...src.matchAll(/seed\s+["']?[^"']+["']?\s+in\s+([a-zA-Z0-9_-]+)/gi)].map(m => m[1].toLowerCase()));

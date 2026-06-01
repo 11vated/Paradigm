@@ -657,7 +657,7 @@ export async function generateGeometry3DV4(seed: Seed, outputPath: string): Prom
     const r = c.scalars.scale;
     scale = scale.map(s => Math.max(r.min, Math.min(r.max, s)));
   }
-  let params = (Array.isArray(seed.genes?.params?.value)
+  const params = (Array.isArray(seed.genes?.params?.value)
     ? seed.genes?.params?.value
     : [0.5 + rng.nextF64(), 0.5 + rng.nextF64(), 0.5 + rng.nextF64()]) as number[];
 

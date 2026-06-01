@@ -986,7 +986,7 @@ export class GsplInterpreter {
   }
   
   private evaluatePipe(node: ASTNode): any {
-    let result = this.evaluateNode(node.left);
+    const result = this.evaluateNode(node.left);
     const right = node.right;
 
     if (right.type === ASTNodeType.CALL_EXPR) {
@@ -1434,7 +1434,7 @@ export class GsplInterpreter {
       while (newPop.length < current.length) {
         const pool = current.slice(0, Math.max(2, Math.floor(current.length / 2)));
         const idx = Math.floor(this.context.rng.nextF64() * pool.length);
-        let chosen = { ...pool[idx] };
+        const chosen = { ...pool[idx] };
 
         if (this.context.rng.nextF64() < 0.4) {
           const delta = (this.context.rng.nextF64() - 0.5) * 0.1;

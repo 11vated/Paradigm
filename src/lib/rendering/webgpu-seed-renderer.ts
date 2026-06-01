@@ -251,7 +251,7 @@ export class GSeedRenderer {
     // Create particle buffer (1000 particles)
     const particleCount = 1000;
     const particleSize = 12 * 4; // 12 floats * 4 bytes
-    let particleBuffer = this.device.createBuffer({
+    const particleBuffer = this.device.createBuffer({
       size: particleCount * particleSize,
       usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST
     });

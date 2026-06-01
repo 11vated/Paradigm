@@ -36,9 +36,9 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
   const parser = new GsplParser(tokens);
   const ast = parser.parse();
 
-  let name = '';
-  let baseType = 'scalar';
-  let description = '';
+  const name = '';
+  const baseType = 'scalar';
+  const description = '';
   const constraints: Partial<GeneSchema> = {};
 
   const validate: string[] = [];

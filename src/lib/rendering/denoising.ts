@@ -189,7 +189,7 @@ export class DenoisingSystem {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         let weightSum = 0;
-        let colorSum = [0, 0, 0, 0];
+        const colorSum = [0, 0, 0, 0];
 
         const centerIdx = (y * width + x) * 4;
         const centerColor = [
@@ -265,7 +265,7 @@ export class DenoisingSystem {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         let weightSum = 0;
-        let colorSum = [0, 0, 0, 0];
+        const colorSum = [0, 0, 0, 0];
 
         const centerIdx = (y * width + x) * 4;
         const centerColor = [
