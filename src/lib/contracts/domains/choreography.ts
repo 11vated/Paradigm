@@ -33,7 +33,7 @@ export class ChoreographyContract implements QualityContract<ChoreographyGeneSet
 
   synthesize(seed: ChoreographyGeneSet, rng: Xoshiro256StarStar): ChoreographyArtifact {
     return {
-      id: `choreo_${Date.now()}`,
+      id: `choreo_${Math.floor(rng.nextF64() * 1e15)}`,
       dancerCount: seed.dancerCount || 4,
       moveCount: seed.moveCount || 28,
       fps: seed.fps || 60,

@@ -69,8 +69,7 @@ function generateAudioSamples(params: AudioParams, rng: Xoshiro256StarStar): Flo
   for (let i = 0; i < sampleCount; i++) {
     const t = i / params.sampleRate;
     let sample = 0;
-    let sampleR = 0;
-    
+
     // Base waveform
     const wave = (pitch: number, t: number): number => {
       switch (params.timbre) {
@@ -82,28 +81,22 @@ function generateAudioSamples(params: AudioParams, rng: Xoshiro256StarStar): Flo
         default: return 0;
       }
     };
-    
+
     sample = wave(params.pitch, t);
-    sampleR = params.channels === 2 ? wave(params.pitch * (0.97 + rng.nextF64() * 0.06), t) : 0;
-    
+
     // Apply envelope (ADSR)
     const attack = 0.01;
     const decay = 0.1;
     const sustain = 0.7;
     const release = 0.2;
     const envelope = getADSR(t, params.duration, attack, decay, sustain, release);
-    
+
     sample *= envelope;
-    sampleR *= envelope;
-    
+
     // Add harmonics for richness
     sample += 0.3 * Math.sin(2 * Math.PI * params.pitch * 2 * t) * envelope;
     sample += 0.1 * Math.sin(2 * Math.PI * params.pitch * 3 * t) * envelope;
-    if (params.channels === 2) {
-      sampleR += 0.3 * Math.sin(2 * Math.PI * params.pitch * 2 * t * 1.03) * envelope;
-      sampleR += 0.1 * Math.sin(2 * Math.PI * params.pitch * 3 * t * 1.02) * envelope;
-    }
-    
+
     const vol = params.channels === 2 ? 0.35 : 0.5;
     samples[i] = Math.max(-1, Math.min(1, sample * vol));
   }
@@ -158,7 +151,7 @@ async function exportWAV(samples: Float32Array, params: AudioParams, outputPath:
   return filePath;
 }
 
-async function exportMP3(samples: Float32Array, outputPath: string, seed: Seed): Promise<string> {
+async function exportMP3(_samples: Float32Array, outputPath: string, seed: Seed): Promise<string> {
   const filename = `audio_${seed.$hash || 'unknown'}.mp3`;
   const filePath = path.join(outputPath, filename);
   
@@ -168,7 +161,7 @@ async function exportMP3(samples: Float32Array, outputPath: string, seed: Seed):
   return filePath;
 }
 
-async function exportOGG(samples: Float32Array, outputPath: string, seed: Seed): Promise<string> {
+async function exportOGG(_samples: Float32Array, outputPath: string, seed: Seed): Promise<string> {
   const filename = `audio_${seed.$hash || 'unknown'}.ogg`;
   const filePath = path.join(outputPath, filename);
   

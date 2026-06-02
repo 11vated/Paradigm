@@ -4,9 +4,6 @@
  */
 
 // ===== Core Types =====
-interface Vector3 { x: number; y: number; z: number }
-interface ColorRGB { r: number; g: number; b: number }
-interface BoundingBox { min: Vector3; max: Vector3 }
 
 // ===== Domain 1: Character =====
 export interface CharacterSchema {

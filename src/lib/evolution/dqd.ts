@@ -64,7 +64,6 @@ export class DQD {
 
     for (let gen = 0; gen < this.config.generations; gen++) {
       const entries = Array.from(archive.values());
-      const newEntries: typeof entries = [];
 
       for (const entry of entries) {
         for (let s = 0; s < this.config.gradientSteps; s++) {

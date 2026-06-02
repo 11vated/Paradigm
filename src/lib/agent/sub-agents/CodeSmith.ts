@@ -63,7 +63,7 @@ export class CodeSmith implements SubAgent {
    * Refine existing GSPL code based on validation feedback.
    * Called during the refine cycle when validation fails.
    */
-  refine(gsplCode: string, issues: string[], intent: IntentEnvelope): string {
+  refine(_gsplCode: string, issues: string[], intent: IntentEnvelope): string {
     const header = `// Refined GSPL — addressing: ${issues.join('; ')}\n`;
     const body = this.generateCode(intent);
     return header + body;

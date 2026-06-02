@@ -208,8 +208,6 @@ export function createRoyaltyTransaction(
  * Verify a royalty transaction.
  */
 export function verifyRoyaltyTransaction(tx: RoyaltyTransaction): boolean {
-  // Verify signature
-  const signatureInput = `${tx.transactionId}:${tx.seedHash}:${tx.amount}:${tx.buyerId}:${tx.sellerId}`;
   // In production: ECDSA P-256 verification against known public key
   // For now: structural validation
   if (!tx.transactionId || !tx.seedHash || !tx.signature) return false;
@@ -217,7 +215,6 @@ export function verifyRoyaltyTransaction(tx: RoyaltyTransaction): boolean {
   
   // Verify splits sum to total royalty
   const splitsTotal = tx.splits.reduce((sum, s) => sum + s.amount, 0);
-  const expectedTotal = tx.totalRoyalty + tx.sellerAmount;
   if (Math.abs(splitsTotal + tx.platformFee - tx.amount) > 0.01) return false;
 
   return true;

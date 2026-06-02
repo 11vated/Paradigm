@@ -16,7 +16,6 @@ import { BranchesRibbon } from './BranchesRibbon';
 import { Conversation } from './Conversation';
 import { Composer } from './Composer';
 import { AgentFooter } from './Footer';
-import { Fiducial } from '@/ui/primitives/Fiducial';
 
 export const AgentPanel: React.FC = () => (
   <section

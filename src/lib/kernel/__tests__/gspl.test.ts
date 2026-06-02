@@ -1,9 +1,9 @@
 /**
  * GSPL INTERPRETER TESTS
- * 
+ *
  * Unit tests for GSPL (Generative Seed Programming Language)
  */
-
+/* eslint-disable @typescript-eslint/no-require-imports -- Test fixtures use dynamic require() to load kernel modules lazily across describe blocks. */
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Xoshiro256StarStar, rngFromHash } from '../../src/lib/kernel/rng';
 

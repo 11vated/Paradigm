@@ -16,7 +16,7 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
-import { visual2DContract as visual2d15 } from '../../contracts/domains/visual2d';
+import { visual2DContract as _visual2d15 } from '../../contracts/domains/visual2d';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 

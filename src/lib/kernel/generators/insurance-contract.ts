@@ -25,10 +25,10 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'insurance-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateInsurance(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateInsurance(seed as any, out)) as { filePath?: string; policyDocumentPath?: string; policyPath?: string };
+  const richPath = r.policyDocumentPath ?? r.policyPath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  return { filePath: data, meta: { policyDocumentPath: richPath, productType: (seed as any).genes?.productType } };
 }
 
 function invert(a: A): I {
@@ -36,8 +36,15 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  const axes: Record<string, number> = { hasOutput: score };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasLegal = /INSURING AGREEMENT|EXCLUSIONS|ENDORSEMENTS|Policy Number/.test(content);
+  const score = len > 6500 && hasLegal ? 0.98 : (len > 2400 ? 0.9 : 0.7);
+  const axes: Record<string, number> = {
+    hasOutput: len > 0 ? 1 : 0,
+    legalDepth: hasLegal ? 0.97 : 0.4,
+    lengthFidelity: Math.min(1, len / 8000)
+  };
 
   // Doctrine v2: wire stratum predicates (Field + Story + Mind declared)
   const declared: Stratum[] = ['Field', 'Story', 'Mind'];
@@ -58,7 +65,7 @@ function rate(a: A): QualityReport {
     ? Object.values(strataScores).reduce((x, y) => x + y, 0) / Object.keys(strataScores).length
     : 0;
   axes.strataCompliance = strataCompliance;
-  const notes: string[] = [];
+  const notes: string[] = [hasLegal ? 'full policy structure' : 'thin', `~${Math.floor(len / 6)} words`];
   notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
   return { score, axes, notes };
@@ -81,9 +88,11 @@ export const InsuranceQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'insurance',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['policyDocumentPath', 'policyPath'],
+      strata: ['Field', 'Story', 'Mind'],
     };
   },
 };

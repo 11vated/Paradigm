@@ -6,7 +6,7 @@
  * tier routing, caching, health, strict-tier, and fallback behavior are
  * correct against any server that speaks the OpenAI chat/completions API.
  */
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { Phi4InferenceClient } from '../../src/lib/agent/phi4_inference.js';
 import { InferenceTier } from '../../src/lib/agent/types.js';
 
@@ -339,8 +339,8 @@ describe('Phi4InferenceClient — auth headers', () => {
 
   it('omits Authorization when no apiKey is configured', async () => {
     const seenAuth: (string | undefined)[] = [];
-    const customFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
-      const headers = init?.headers as Record<string, string> | undefined;
+    const customFetch = (async (_input: RequestInfo | URL, _init?: RequestInit) => {
+      const headers = _init?.headers as Record<string, string> | undefined;
       seenAuth.push(headers?.Authorization);
       return new Response(JSON.stringify({ data: [{ id: 'phi-4' }] }), { status: 200 });
     }) as unknown as typeof fetch;
@@ -355,7 +355,7 @@ describe('Phi4InferenceClient — auth headers', () => {
 describe('Phi4InferenceClient — no hidden fallbacks', () => {
   it('never contacts any URL outside the configured baseUrl', async () => {
     const visited: string[] = [];
-    const recordingFetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    const recordingFetch = (async (input: RequestInfo | URL, _init?: RequestInit) => {
       const url = typeof input === 'string' ? input : (input as URL | Request).toString();
       visited.push(url);
       if (url.endsWith('/v1/models')) {

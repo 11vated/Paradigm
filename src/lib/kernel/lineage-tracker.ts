@@ -196,7 +196,7 @@ export class LineageTracker {
    * Record compose operation (replaces cross-domain branch)
    * Transforms seed from one domain to another
    */
-  recordCompose(sourceSeed: Seed, targetSeed: Seed, functor: string): LineageNode {
+  recordCompose(sourceSeed: Seed, targetSeed: Seed, _functor: string): LineageNode {
     const sourceHash = sourceSeed.$hash || '';
     const targetHash = targetSeed.$hash || this.generateHash(targetSeed);
 

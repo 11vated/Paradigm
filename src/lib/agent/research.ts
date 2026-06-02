@@ -5,7 +5,6 @@
  */
 
 import { SeedAgent } from '../kernel/seed-agent';
-import type { Seed } from '../kernel/types';
 
 export interface ResearchConfig {
   enabled: boolean;

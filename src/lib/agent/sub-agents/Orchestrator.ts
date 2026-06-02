@@ -14,7 +14,7 @@
  */
 
 import type { MemorySystem } from '../../commons/memory/memory-system';
-import type { SubAgent, AgentMessage, AgentContext, PipelineResult } from './SubAgent';
+import type { SubAgent, AgentContext, PipelineResult } from './SubAgent';
 import type { IntentEnvelope, GrowthOutput, CodeGenOutput } from './SubAgent';
 import { IntentOracle } from './IntentOracle';
 import { CodeSmith } from './CodeSmith';

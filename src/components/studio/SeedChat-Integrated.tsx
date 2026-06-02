@@ -22,7 +22,7 @@ interface Message {
 
 type LoadingStep = 'idle' | 'seed' | 'gspl' | 'grow' | 'complete' | 'error';
 
-export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArtifactGenerated }: { onArtifactGenerated?: (artifact: any) => void }) {
+export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArtifactGenerated: _onArtifactGenerated }: { onArtifactGenerated?: (artifact: any) => void }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '0',
@@ -37,7 +37,7 @@ export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArt
   const [apiKey, setApiKey] = useState('');
 
   // Use the store which calls backend API
-  const { generateNewSeed, growCurrentSeed, currentSeed, artifact } = useSeedStore() as any;
+  const { generateNewSeed, growCurrentSeed } = useSeedStore() as any;
 
   const sendMessage = async () => {
     if (!input.trim() || loadingStep !== 'idle') return;

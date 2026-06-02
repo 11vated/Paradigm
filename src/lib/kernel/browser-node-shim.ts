@@ -46,11 +46,24 @@ export const renameSync = (..._args: unknown[]) => notInBrowser('fs.renameSync')
 export const createReadStream = (..._args: unknown[]) => notInBrowser('fs.createReadStream');
 export const createWriteStream = (..._args: unknown[]) => notInBrowser('fs.createWriteStream');
 
+// path stubs — safe no-ops for browser bundle
+// (vite.config.ts aliases both 'path' and 'node:path' to this file)
+export const join = (..._args: string[]): string => '';
+export const dirname = (_p: string): string => '';
+export const resolve = (..._args: string[]): string => '';
+export const basename = (_p: string, _ext?: string): string => '';
+export const extname = (_p: string): string => '';
+export const sep: string = '/';
+export const posix: any = { join, dirname, resolve, basename, extname, sep };
+export const win32: any = { join, dirname, resolve, basename, extname, sep: '\\' };
+
 const fsDefault: any = {
   promises,
   readFile, writeFile, readFileSync, writeFileSync,
   existsSync, mkdirSync, readdirSync, statSync,
   unlinkSync, renameSync, createReadStream, createWriteStream,
+  // path members
+  join, dirname, resolve, basename, extname, sep, posix, win32,
 };
 
 export default fsDefault;

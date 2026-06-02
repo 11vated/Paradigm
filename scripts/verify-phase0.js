@@ -4,7 +4,6 @@
  * Tests all critical bug fixes and security hardening
  */
 
-import { spawn } from 'child_process';
 import axios from 'axios';
 
 const API_URL = process.env.API_URL || 'http://localhost:3000';

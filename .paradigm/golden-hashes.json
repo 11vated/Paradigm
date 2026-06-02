@@ -21,6 +21,24 @@
       "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
     },
     {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-mage",
+      "artifactHash": "d9981ea55acca516d72bb077b3dde3934cea37e254e0bb03f32c5fc23b08a6b4"
+    },
+    {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-rogue",
+      "artifactHash": "2590f2d34ecf7355aa05b2691d0459172a8c8ad09c7f489457383e75355c78bd"
+    },
+    {
+      "contract": "character",
+      "contractVersion": "3.0.0",
+      "curatedId": "ch-warrior",
+      "artifactHash": "4feb50e75416943d67a9772e02615ef66de7eac9a515dd5191c13355f91b2648"
+    },
+    {
       "contract": "cosmology",
       "contractVersion": "1.0.0",
       "curatedId": "cosmology-collision",
@@ -75,6 +93,24 @@
       "artifactHash": "5a79051ae7a3e42c1ddbb4b2750bf21284f1b1faee68bcec0d56f32b70683157"
     },
     {
+      "contract": "geometry3d",
+      "contractVersion": "4.0.0",
+      "curatedId": "g3-glass-vessel",
+      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+    },
+    {
+      "contract": "geometry3d",
+      "contractVersion": "4.0.0",
+      "curatedId": "g3-iron-gear",
+      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+    },
+    {
+      "contract": "geometry3d",
+      "contractVersion": "4.0.0",
+      "curatedId": "g3-stone-idol",
+      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+    },
+    {
       "contract": "molecule",
       "contractVersion": "1.0.0",
       "curatedId": "molecule-acyclic-default",
@@ -96,25 +132,25 @@
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-ambient-drift",
-      "artifactHash": "2d4ce646378f91d02c381193eda13006d6d1d321b215cd90e533d4af05ec7bb5"
+      "artifactHash": "db4a7c183270aa8761845e4ecefb44dafd37467b44a6a1c8993d11b7b8548be7"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-classical-sonata-fragment",
-      "artifactHash": "99ef8cda816df8b886c908425e26f009d9014beb8beb75d9f4f6e8c358f5f0e8"
+      "artifactHash": "9401e300b990b2d4ea7aca845a47c2caa4efe22ac05b307cfd05765350c91f30"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-electronic-pulse",
-      "artifactHash": "e19c31633d401aea9656c23027f8488128244a33f9c49c59e1b0e2e10a05e1f8"
+      "artifactHash": "218c710ba21d3b2716f567f58d06bd66c91c9d2ea36e957464eaa6019849ff5f"
     },
     {
       "contract": "music",
       "contractVersion": "2.0.0",
       "curatedId": "music-jazz-walking-bass",
-      "artifactHash": "33f1361472b34ad585412a6b2dafe85b67097fa015539f53c9239acb5458ea78"
+      "artifactHash": "58dbcc8794d8ae1317fd57111137ae67b289b131202669995a917171f13b9479"
     },
     {
       "contract": "quantum",
@@ -180,19 +216,19 @@
       "contract": "website",
       "contractVersion": "1.0.0",
       "curatedId": "website-brutalist-agency",
-      "artifactHash": "48a6787a2a0e022e3f807660e82dc1abec4f04edf21c2cefb39694a7e19da1cf"
+      "artifactHash": "2e0958102508c15cbcb6b6e8368249cf305d5e5a563a2b7863096377bab8e041"
     },
     {
       "contract": "website",
       "contractVersion": "1.0.0",
       "curatedId": "website-glassmorphic-saas",
-      "artifactHash": "f1fe328ec4e0a6d79a7771c7a938f19cf5c021755a1a64aa8c6e2bb09a74dad1"
+      "artifactHash": "6983e7f2ce9f384a7937f5fade15220fbe24b6406dedeee98845aab1e73b4d53"
     },
     {
       "contract": "website",
       "contractVersion": "1.0.0",
       "curatedId": "website-minimal-portfolio",
-      "artifactHash": "e06f6ac66f9dffcc1a34b602f475e6e65b66d52e19e4de86bf3a9174e02774b1"
+      "artifactHash": "6537f0839ebbba4b55eb0859dc3d2f51fe59b1f44f5897c56f2fe3c4fff97338"
     },
     {
       "contract": "world",

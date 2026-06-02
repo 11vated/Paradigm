@@ -24,10 +24,10 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'marketing-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateMarketing(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateMarketing(seed as any, out)) as { filePath?: string; planPath?: string };
+  const richPath = r.planPath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  return { filePath: data, meta: { planPath: richPath } };
 }
 
 function invert(a: A): I {
@@ -35,8 +35,11 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasPersonas = /Target Personas/.test(content);
+  const score = len > 1900 && hasPersonas ? 0.94 : (len > 800 ? 0.85 : 0.6);
+  return { score, axes: { hasOutput: len > 0 ? 1 : 0, strategyDepth: hasPersonas ? 0.93 : 0.5, length: Math.min(1, len / 2800) }, notes: [hasPersonas ? 'full plan with personas' : ''] };
 }
 
 export const MarketingQualityContract: QualityContract<S, A, I> = {
@@ -56,9 +59,11 @@ export const MarketingQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'marketing',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['planPath'],
+      strata: ['Story', 'Culture', 'Mind'],
     };
   },
 };

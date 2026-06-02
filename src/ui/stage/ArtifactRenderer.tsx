@@ -72,6 +72,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
 
   // Fetch SVG inline (for animations, themability, embedded interactivity)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setSvgInline(null);
     setFetchError(null);
     if (kind !== 'svg' || !artifact) return;

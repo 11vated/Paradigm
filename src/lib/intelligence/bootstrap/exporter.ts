@@ -2,7 +2,7 @@
  * Dataset exporter — convert captured examples into fine-tune-ready
  * formats. JSONL is the raw store; sharegpt + alpaca are derived views.
  */
-import type { BootstrapExample, BootstrapFilter } from './types';
+import type { BootstrapExample } from './types';
 
 export interface ExportResult {
   format: 'jsonl' | 'sharegpt' | 'alpaca';

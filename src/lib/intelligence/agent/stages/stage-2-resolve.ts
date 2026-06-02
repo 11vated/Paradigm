@@ -21,11 +21,9 @@ import type {
   ResolvedGeneSpec,
   ResolvedIntent,
   SubAgent,
-  SubAgentInput,
-  SubAgentOutput,
 } from '../types';
 import { scopedMemoryView } from '../sub-agents/base';
-import { selectTemplate as bridgeSelect, type Template } from '../template-bridge';
+import { selectTemplate as bridgeSelect } from '../template-bridge';
 
 export interface ResolveOptions {
   subAgents: SubAgent[];

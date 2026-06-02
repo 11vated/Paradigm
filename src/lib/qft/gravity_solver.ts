@@ -46,7 +46,7 @@ export class GravitySolver {
     return i * this.ny * this.nz + j * this.nz + k;
   }
   
-  setBinaryInspiralSource(pos: [number, number, number], mass: number, radius: number, frequency: number) {
+  setBinaryInspiralSource(pos: [number, number, number], mass: number, radius: number, _frequency: number) {
     // Simplified quadrupole source for a binary system
     const cx = pos[0]; const cy = pos[1]; const cz = pos[2];
     const i = this.idx(cx, cy, cz);
@@ -73,7 +73,6 @@ export class GravitySolver {
     
     const amp = this.T_xx[srcIdx]; // use as base amplitude
     const t_xx = amp * Math.cos(2 * phase);
-    const t_yy = -amp * Math.cos(2 * phase);
     const t_xy = amp * Math.sin(2 * phase);
     
     const next_xx = new Float32Array(this.nx * this.ny * this.nz);

@@ -2,8 +2,8 @@
  * Seed output routes: export, import, render, preview, formats.
  * Slice 14 of the modular router split.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Server-side lazy loading: dynamic requires for fs, data store, and asset pipelines; ESM-bundled server routes intentionally use require() for runtime hot-reload and Node built-ins. */
 import type { Express } from 'express';
-import path from 'path';
 
 function setC2PAHeaders(res: any, seed: any, domain: string | undefined, buildC2PAManifest: any, encodeC2PAManifest: any): void {
   if (!seed) return;
@@ -35,7 +35,7 @@ export interface SeedsOutputDeps {
 }
 
 export function registerSeedsExportRoutes(app: Express, deps: SeedsOutputDeps): void {
-  const { seeds, optionalAuth, ARTIFACTS_BASE, safeArtifactPath, log, buildC2PAManifest, encodeC2PAManifest } = deps;
+  const { seeds, optionalAuth, ARTIFACTS_BASE, safeArtifactPath, log: _log, buildC2PAManifest, encodeC2PAManifest } = deps;
 
   app.get('/api/seeds/export', optionalAuth, async (req: any, res: any) => {
     if (req.user?.role !== 'admin') return res.status(403).json({ error: 'Admin access required' });

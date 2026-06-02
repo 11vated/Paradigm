@@ -293,7 +293,7 @@ fn random2D(p: vec2<f32>) -> f32 {
  * Example: Compile a Mandelbrot function
  */
 export function compileMandelbrotExample(): string {
-  const exampleGSPL = `
+  const _exampleGSPL = `
 @gpu
 fn mandelbrot(c: vec2<f32>) -> f32 {
   let z = vec2<f32>(0.0, 0.0);
@@ -329,7 +329,7 @@ fn mandelbrot(c: vec2<f32>) -> f32 {
  * Call this when @gpu directive is encountered
  */
 export function handleGPUDirective(
-  funcName: string,
+  _funcName: string,
   ast: ASTNode[]
 ): GPUComputePipeline | null {
   const result = compileToWGSL(ast);

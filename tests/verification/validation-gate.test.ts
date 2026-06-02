@@ -169,7 +169,7 @@ describe('Validation Gate — Phase 3 Threshold (0.7+)', () => {
     const assembled = { seed, planHash: '0xplan', domain: 'character' };
 
     const result = await validate(assembled, {
-      oracle: { async evaluate(s: any) { return { overall: 0.85, axes: { coherence: 0.8, novelty: 0.7, fidelity: 0.85, expressivity: 0.75 }, notes: ['good'], conformsTo: 'character@test' }; } },
+      oracle: { async evaluate(_s: any) { return { overall: 0.85, axes: { coherence: 0.8, novelty: 0.7, fidelity: 0.85, expressivity: 0.75 }, notes: ['good'], conformsTo: 'character@test' }; } },
       passThreshold: 0.55,
     });
 
@@ -200,7 +200,7 @@ describe('Validation Gate — Phase 3 Threshold (0.7+)', () => {
 
     const result = await validate(assembled, {
       oracle: { async evaluate() { return { overall: 0.9, axes: { coherence: 0.9, novelty: 0.5, fidelity: 0.9, expressivity: 0.8 }, notes: [], conformsTo: 'test@oracle' }; } },
-      signer: { async sign(p: string) { return { sigHex: '0xsig', pubKeyHex: '0xpub' }; } },
+      signer: { async sign(_p: string) { return { sigHex: '0xsig', pubKeyHex: '0xpub' }; } },
       passThreshold: 0.55,
     });
 
@@ -216,7 +216,7 @@ describe('Validation Gate — Phase 3 Threshold (0.7+)', () => {
 
     const result = await validate(assembled, {
       oracle: { async evaluate() { return { overall: 0.2, axes: {}, notes: [], conformsTo: 'test@oracle' }; } },
-      signer: { async sign(p: string) { return { sigHex: 'x', pubKeyHex: 'x' }; } },
+      signer: { async sign(_p: string) { return { sigHex: 'x', pubKeyHex: 'x' }; } },
       passThreshold: 0.55,
     });
 

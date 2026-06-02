@@ -31,7 +31,7 @@ export class TypographyContract implements QualityContract<TypographyGeneSet, Ty
 
   synthesize(seed: TypographyGeneSet, rng: Xoshiro256StarStar): TypographyArtifact {
     return {
-      id: `type_${Date.now()}`,
+      id: `type_${Math.floor(rng.nextF64() * 1e15)}`,
       glyphCount: seed.glyphCount || 256,
       variableAxes: seed.variableAxes || 3,
       formats: ['TTF', 'OTF', 'WOFF2'],

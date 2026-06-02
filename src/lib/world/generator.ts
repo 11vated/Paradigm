@@ -3,7 +3,6 @@
  */
 import { createHash } from 'crypto';
 import { Xoshiro256StarStar } from '../kernel/rng';
-import { kernelNowIso } from '../kernel/clock';
 import type {
   WorldSeedData, WorldArtifact, WorldLocation, WorldFaction, WorldRng,
 } from './types';
@@ -118,7 +117,6 @@ function canonicalJson(value: unknown): string {
 
 export function generateWorld(seed: WorldSeedData): WorldArtifact {
   const rng = asWorldRng(new Xoshiro256StarStar(seed.seedHash));
-  const startedAt = kernelNowIso();
   const locations = sampleLocations(seed, rng);
   const factions = sampleFactions(seed, rng);
   const hook = buildHook(seed, rng);

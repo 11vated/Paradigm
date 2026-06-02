@@ -1,7 +1,6 @@
 import { Xoshiro256StarStar } from './rng';
 import {
   GENE_TYPES as FLAT_TYPES, type GeneTypeOps, type GeneSchema, type ValidateFn, type MutateFn, type DistanceFn,
-  validateGene, mutateGene, crossoverGene, distanceGene,
 } from './gene_system';
 export type { GeneTypeOps, GeneSchema };
 
@@ -305,7 +304,7 @@ export class GeneTypeRegistry {
    */
   serializeCustomTypes(): SerializedCustomType[] {
     const result: SerializedCustomType[] = [];
-    for (const [name, t] of this.customTypes) {
+    for (const t of this.customTypes.values()) {
       result.push({
         name: t.name,
         parent: t.parent || 'scalar',

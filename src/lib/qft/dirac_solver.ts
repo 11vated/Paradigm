@@ -114,19 +114,8 @@ export class DiracSolver {
           for (let c = 0; c < 4; c++) {
             const idx = this.idx(c, i, j, k);
             
-            // Central differences for derivatives
-            // d/dx
-            const dRe_dx = (this.psiReal[this.idx(c, i+1, j, k)] - this.psiReal[this.idx(c, i-1, j, k)]) / dx2;
-            const dIm_dx = (this.psiImag[this.idx(c, i+1, j, k)] - this.psiImag[this.idx(c, i-1, j, k)]) / dx2;
-            
-            // d/dy
-            const dRe_dy = (this.psiReal[this.idx(c, i, j+1, k)] - this.psiReal[this.idx(c, i, j-1, k)]) / dx2;
-            const dIm_dy = (this.psiImag[this.idx(c, i, j+1, k)] - this.psiImag[this.idx(c, i, j-1, k)]) / dx2;
-            
-            // d/dz
-            const dRe_dz = (this.psiReal[this.idx(c, i, j, k+1)] - this.psiReal[this.idx(c, i, j, k-1)]) / dx2;
-            const dIm_dz = (this.psiImag[this.idx(c, i, j, k+1)] - this.psiImag[this.idx(c, i, j, k-1)]) / dx2;
-            
+            // Central differences for derivatives (placeholder; unused — see comment at Hamiltonian application)
+            // d/dx, d/dy, d/dz derivatives are computed below in the full matrix multiplication placeholder.
             // Apply Hamiltonian (simplified Dirac-Dirac representation)
             // This is a placeholder for the full matrix multiplication
             // In a full implementation, alpha and beta matrices mix the components
@@ -157,7 +146,7 @@ export class DiracSolver {
             if (c === 3) { c_x = 0; c_y = 0; c_z = 1; sign_y = 1; }
             
             // -i * alpha_x * d/dx
-            const idx_x = this.idx(c_x, i, j, k);
+            const _idx_x = this.idx(c_x, i, j, k);
             const dRe_dx_c = (this.psiReal[this.idx(c_x, i+1, j, k)] - this.psiReal[this.idx(c_x, i-1, j, k)]) / dx2;
             const dIm_dx_c = (this.psiImag[this.idx(c_x, i+1, j, k)] - this.psiImag[this.idx(c_x, i-1, j, k)]) / dx2;
             H_psiRe += dIm_dx_c;

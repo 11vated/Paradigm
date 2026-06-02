@@ -288,14 +288,14 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
             iterations++;
             confidence = Math.min(1, confidence + 0.15);
           }
-        } catch {}
+        } catch { /* swallow: best-effort inverse probe, no impact on output */ }
       }
     }
 
     if (artifact && !artifact.render_hints?.error) {
       confidence = Math.min(1, 0.5 + iterations * 0.15);
     }
-  } catch {}
+  } catch { /* swallow: best-effort inverse probe, no impact on output */ }
 
   return {
     seed,

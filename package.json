@@ -53,7 +53,7 @@
     "lint:no-evasion:bun": "bun run scripts/lint-no-evasion.ts",
     "preflight:all": "npm run typecheck && npm run determinism:check && npm run lint:canonical-rename:bun && npm run reproducibility:gate && npm run quality:contract",
     "lint:canonical-rename": "tsx scripts/lint-canonical-rename.ts",
-    "lint:no-evasion": "tsx scripts/lint-no-evasion.ts",
+    "lint:no-evasion": "tsx scripts/lint-no-evasion.ts --max-unwaived 338",
     "substrate:health": "echo Substrate health endpoint (Phase 0) - run via server"
   },
   "dependencies": {

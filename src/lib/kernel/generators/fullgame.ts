@@ -55,7 +55,7 @@ export async function generateFullGameV3(
       gsplSchemaLoaded = 'fullgame.gspl';
       fullgameConstraints = parseFullGameSchemaConstraints(schemaContent);
     }
-  } catch (e) {}
+  } catch (_) { /* swallow: schema is optional, fall through to default */ }
 
   const params = extractFullGameParams(seed, rng, fullgameConstraints);
 

@@ -45,7 +45,7 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
         result = await growSeed(seed);
       }
       if (result?.svgPath) {
-        try { const { readFileSync } = await import('fs'); result.svgContent = readFileSync(result.svgPath, 'utf-8'); } catch {}
+        try { const { readFileSync } = await import('fs'); result.svgContent = readFileSync(result.svgPath, 'utf-8'); } catch { /* swallow: best-effort seeds-grow route cleanup */ }
       }
       if (result?.indexHtml || result?.htmlContent) { result.htmlContent = result.htmlContent ?? result.indexHtml; }
       res.json(result);

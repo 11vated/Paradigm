@@ -83,7 +83,7 @@ async function main() {
 
   // For upgradeable proxies, we need implementation address
   const seedNFT = await ethers.getContractAt('SeedNFT', seedNFTAddress);
-  const implementationAddress = await ethers.getContractAt(
+  await ethers.getContractAt(
     'SeedNFT',
     await (seedNFT as any).implementation()
   ).then(c => c.address).catch(() => seedNFTAddress);

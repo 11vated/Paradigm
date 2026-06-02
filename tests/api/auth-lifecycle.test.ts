@@ -13,7 +13,7 @@ import path from 'path';
 const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 
 function clearUsers() {
-  try { if (fs.existsSync(USERS_FILE)) fs.unlinkSync(USERS_FILE); } catch {}
+  try { if (fs.existsSync(USERS_FILE)) fs.unlinkSync(USERS_FILE); } catch { /* swallow: best-effort test cleanup, fixture torn down */ }
 }
 
 // ─── Token Lifecycle ────────────────────────────────────────────────────────

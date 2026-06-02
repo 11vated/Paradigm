@@ -6,7 +6,6 @@
  * self-reflection instead of weight updates.
  */
 
-import type { Seed } from '../kernel/types';
 
 export interface ReflectionEntry {
   id: string;
@@ -135,9 +134,9 @@ export class ReflexionExecutor {
     for (let trial = 1; trial <= this.maxTrials; trial++) {
       try {
         // Build context from previous reflections
-        const reflectionContext = this.memory.getReflectionContext();
-        const prompt = reflectionContext
-          ? `${task}\n\nPrevious reflections:\n${reflectionContext}`
+        // Build enriched prompt with prior reflection context; executor closes over `task` so this is informational for now.
+        const _prompt = this.memory.getReflectionContext()
+          ? `${task}\n\nPrevious reflections:\n${this.memory.getReflectionContext()}`
           : task;
 
         // Execute (we wrap to add context - actual implementation depends on agent)

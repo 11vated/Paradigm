@@ -31,8 +31,8 @@ try {
   process.exit(1);
 }
 
-const errors: string[] = [];
-const warnings: string[] = [];
+const errors = [];
+const warnings = [];
 
 console.log(`\n🔍 Verifying seed: ${seed.$name || seed.$hash?.slice(0, 16) || 'unnamed'}`);
 console.log(`   File: ${SEED_PATH}\n`);

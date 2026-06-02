@@ -653,7 +653,7 @@ function handleSubmit(e) {
   e.preventDefault();
   const status = document.getElementById('form-status');
   if (status) {
-    status.textContent = 'Message sent. We\'ll be in touch within one business day.';
+    status.textContent = "Message sent. We'll be in touch within one business day.";
     e.target.reset();
   }
 }

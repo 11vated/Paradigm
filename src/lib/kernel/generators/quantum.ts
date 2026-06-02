@@ -122,7 +122,7 @@ function buildPotential(potential: PotentialType, N: number, strength: number, r
   return V;
 }
 
-function initializeWavefunction(state: InitialState, N: number, V: Float32Array, params: QuantumParams, rng: Xoshiro256StarStar): { psiR: Float32Array; psiI: Float32Array } {
+function initializeWavefunction(state: InitialState, N: number, _V: Float32Array, params: QuantumParams, rng: Xoshiro256StarStar): { psiR: Float32Array; psiI: Float32Array } {
   const psiR = new Float32Array(N * N);
   const psiI = new Float32Array(N * N);
   const half = N / 2;

@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { Play, Pause, SkipForward, BarChart3, Bot, Star, Users } from 'lucide-react';
-import { createSwarm } from '@/lib/agent/swarm';
+import { useState, useCallback, useRef } from 'react';
+import { Play, Pause, BarChart3, Bot, Star, Users } from 'lucide-react';
 
 // Define AgentThought type
 interface AgentThought {
@@ -17,7 +16,6 @@ interface AgentPanelProps {
 }
 
 export default function AgentPanel({ onSeedCreated }: AgentPanelProps) {
-  const [swarm] = useState(() => createSwarm());
   const [isEvolving, setIsEvolving] = useState(false);
   const [generation, setGeneration] = useState(0);
   const [population, setPopulation] = useState<any[]>([]);
@@ -47,13 +45,13 @@ export default function AgentPanel({ onSeedCreated }: AgentPanelProps) {
        setReputations({});
        setThoughts([]);
      }
-  }, [isEvolving, swarm]);
+  }, [isEvolving]);
 
   const handleStopEvolution = useCallback(() => {
     // stopEvolution is no longer needed in the new functional swarm API
     setIsEvolving(false);
     evolutionRef.current = false;
-  }, [swarm]);
+  }, []);
 
   const handleSelectSeed = useCallback((seed: any) => {
     if (onSeedCreated) {

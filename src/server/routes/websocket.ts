@@ -22,7 +22,7 @@ export function sendWsFrame(socket: any, payload: Buffer, opcode = 0x01) {
     header[1] = 127;
     header.writeBigUInt64BE(BigInt(len), 2);
   }
-  try { socket.write(Buffer.concat([header, payload])); } catch {}
+  try { socket.write(Buffer.concat([header, payload])); } catch { /* swallow: best-effort ws cleanup, peer is already gone */ }
 }
 
 export function sendJson(socket: any, obj: any) {
@@ -75,7 +75,7 @@ export interface WebsocketUpgradeDeps {
 export function registerWebsocketUpgrade(httpServer: any, deps: WebsocketUpgradeDeps): void {
   const { PORT, verifyTokenRaw, log, metrics, gsplAgent, seeds, saveSeeds } = deps;
 
-  httpServer.on('upgrade', async (req: any, socket: any, head: Buffer) => {
+  httpServer.on('upgrade', async (req: any, socket: any, _head: Buffer) => {
     const urlParsed = new URL(req.url || '', `http://localhost:${PORT}`);
     if (urlParsed.pathname !== '/ws/agent') {
       socket.destroy();
@@ -142,7 +142,7 @@ export function registerWebsocketUpgrade(httpServer: any, deps: WebsocketUpgrade
         header[1] = 127;
         header.writeBigUInt64BE(BigInt(len), 2);
       }
-      try { socket.write(Buffer.concat([header, payload])); } catch {}
+      try { socket.write(Buffer.concat([header, payload])); } catch { /* swallow: best-effort ws cleanup, peer is already gone */ }
     }
 
     function sendJsonLocal(obj: any) { sendWsFrameLocal(JSON.stringify(obj)); }
@@ -189,7 +189,7 @@ export function registerWebsocketUpgrade(httpServer: any, deps: WebsocketUpgrade
           const closeFrame = Buffer.alloc(2);
           closeFrame[0] = 0x88;
           closeFrame[1] = 0;
-          try { socket.write(closeFrame); } catch {}
+          try { socket.write(closeFrame); } catch { /* swallow: best-effort ws cleanup, peer is already gone */ }
           socket.end();
           return;
         }
@@ -198,7 +198,7 @@ export function registerWebsocketUpgrade(httpServer: any, deps: WebsocketUpgrade
           pong[0] = 0x8A;
           pong[1] = frame.payload.length;
           frame.payload.copy(pong, 2);
-          try { socket.write(pong); } catch {}
+          try { socket.write(pong); } catch { /* swallow: best-effort ws cleanup, peer is already gone */ }
           continue;
         }
         if (frame.opcode !== 0x01) continue;

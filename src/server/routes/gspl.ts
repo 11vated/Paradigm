@@ -1,12 +1,12 @@
 /**
  * GSPL parse + execute routes — second slice of the modular router split.
  */
-import type { Express, Request, Response } from 'express';
+import type { Express } from 'express';
 import * as fs from 'fs';
 import * as path from 'path';
 import { GsplLexer } from '../../lib/kernel/gspl-lexer.js';
 import { GsplParser } from '../../lib/kernel/gspl-parser.js';
-import { GsplInterpreter, executeGspl } from '../../lib/kernel/gspl-interpreter.js';
+import { GsplInterpreter } from '../../lib/kernel/gspl-interpreter.js';
 
 export interface GsplDeps {
   validateBody: (schema: any) => any;
@@ -105,7 +105,7 @@ export function registerGsplRoutes(app: Express, deps: GsplDeps): void {
           const p = path.join(commonsRoot, `${d}.gspl`);
           if (fs.existsSync(p)) schemas[d] = { content: fs.readFileSync(p, 'utf8'), path: `data/commons/libraries/${d}.gspl` };
         }
-      } catch {}
+      } catch { /* swallow: best-effort gspl route cleanup */ }
 
       res.json({
         seeds: seedsOut,

@@ -269,7 +269,6 @@ export class AnimationSystem {
     if (!this.skeleton) return;
 
     const maxIterations = 10;
-    const tolerance = 0.001;
 
     for (let iter = 0; iter < maxIterations; iter++) {
       // Process bones from end effector to root
@@ -351,7 +350,7 @@ export class AnimationSystem {
   /**
    * Jacobian IK solver (simplified)
    */
-  private solveJacobianIK(chain: IKChain): void {
+  private solveJacobianIK(_chain: IKChain): void {
     // Placeholder for Jacobian-based IK
     // In production, would compute Jacobian matrix and solve using damped least squares
   }

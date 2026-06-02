@@ -229,7 +229,7 @@ export class SovereignAgent {
       if (artifacts.length > 0) {
         stratumConformance = calculateStratumConformance(artifacts);
       }
-    } catch {}
+    } catch { /* swallow: best-effort orchestrator probe, agent continues */ }
 
     return {
       intent,
@@ -249,7 +249,7 @@ export class SovereignAgent {
   /** Stage-6: write the run into the right memory layers. */
   private async archive(
     intent: ParsedIntent,
-    resolved: ResolvedIntent,
+    _resolved: ResolvedIntent,
     plan: ConstructionPlan,
     validated: ValidatedSeed,
   ): Promise<void> {

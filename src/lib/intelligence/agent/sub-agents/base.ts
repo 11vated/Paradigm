@@ -21,7 +21,7 @@ import type { Vec12 } from '../adjective-normalization';
 import { VAD_AXES, blendVectors, cosine12 } from '../adjective-normalization';
 
 /** Build a memory view scoped to a single sub-agent */
-export function scopedMemoryView(memory: MemoryOrchestrator, subAgentId: string): SubAgentMemoryView {
+export function scopedMemoryView(memory: MemoryOrchestrator, _subAgentId: string): SubAgentMemoryView {
   return {
     recall(key: string) {
       const layer = memory.layer('working');

@@ -188,7 +188,7 @@ export function useAgent() {
                   case 'tier':
                     tier = TIER_NAMES[event.tier as number] ?? String(event.tier);
                     break;
-                  case 'done':
+                  case 'done': {
                     done = true;
                     // Synthesize cards from the accumulated text.
                     const synthCards = [...collectedCards];
@@ -250,6 +250,7 @@ export function useAgent() {
                       fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
                     });
                     break;
+                  }
                 }
               } catch {
                 /* skip malformed */

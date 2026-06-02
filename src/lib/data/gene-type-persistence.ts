@@ -20,7 +20,6 @@ export function loadCustomGeneTypes(dataDir: string): number {
     const filePath = path.join(dataDir, FILE_NAME);
     if (!fs.existsSync(filePath)) return 0;
     const raw = fs.readFileSync(filePath, 'utf-8');
-    const data = JSON.parse(raw);
     const count = geneTypeRegistry.deserializeCustomTypes(JSON.parse(raw));
     return count;
   } catch {

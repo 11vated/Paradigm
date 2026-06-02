@@ -11,6 +11,14 @@ interface LineageNode {
   children: string[];
 }
 
+const Node: React.FC<{ n: LineageNode; accent: string }> = ({ n, accent }) => (
+  <Link to={`/lineage/${n.id}`} className={`block px-3 py-2 rounded-lg border ${accent} hover:bg-neutral-800/60 transition-colors`}>
+    <div className="text-xs text-neutral-400 font-mono">gen {n.generation} · {n.operator}</div>
+    <div className="text-sm font-semibold text-neutral-100">{n.name}</div>
+    <div className="text-[10px] text-neutral-500 font-mono">{n.id.slice(0, 12)}…</div>
+  </Link>
+);
+
 export default function LineagePage() {
   const { id } = useParams<{ id: string }>();
   const [self, setSelf] = useState<LineageNode | null>(null);
@@ -20,6 +28,7 @@ export default function LineagePage() {
 
   useEffect(() => {
     if (!id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setErr(null); setSelf(null);
     fetch(`/api/v1/friend/${id}/lineage?depth=6`)
       .then(r => r.json())
@@ -30,14 +39,6 @@ export default function LineagePage() {
       })
       .catch(e => setErr(String(e)));
   }, [id]);
-
-  const Node = ({ n, accent }: { n: LineageNode; accent: string }) => (
-    <Link to={`/lineage/${n.id}`} className={`block px-3 py-2 rounded-lg border ${accent} hover:bg-neutral-800/60 transition-colors`}>
-      <div className="text-xs text-neutral-400 font-mono">gen {n.generation} · {n.operator}</div>
-      <div className="text-sm font-semibold text-neutral-100">{n.name}</div>
-      <div className="text-[10px] text-neutral-500 font-mono">{n.id.slice(0, 12)}…</div>
-    </Link>
-  );
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">

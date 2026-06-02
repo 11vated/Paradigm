@@ -180,7 +180,7 @@ function generateGenePortrait(seed: any): string {
   // Generate geometric elements from gene values
   const elements: string[] = [];
   let i = 0;
-  for (const [name, gene] of Object.entries(genes) as [string, any][]) {
+  for (const [_name, gene] of Object.entries(genes) as [string, any][]) {
     const angle = (i * 137.5) % 360; // Golden angle
     const hIdx = (i * 4) % (hash.length - 4);
     const cx = 256 + Math.cos(angle * Math.PI / 180) * (80 + parseInt(hash.substring(hIdx, hIdx + 2), 16) * 0.4);

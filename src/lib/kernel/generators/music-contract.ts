@@ -19,7 +19,6 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 // Direct 15_ contract usage (Epoch 2 pattern) — the engineering-grade version is the source of truth for strata + manifest
-import { musicContract as music15Contract } from '../../contracts/domains/music';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -32,6 +31,7 @@ interface MusicArtifact {
 async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'music-contract-'));
   const out = path.join(dir, 'music');
+  await fs.mkdir(out, { recursive: true });
   try {
     const r: any = await generateMusic(seed as any, out);
     const wavPath = r.filePath || (r.wavPath) || path.join(dir, 'music.wav');

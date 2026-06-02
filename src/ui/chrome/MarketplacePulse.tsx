@@ -25,6 +25,7 @@ export const MarketplacePulse: React.FC = () => {
   // For Phase A, just rotate the placeholder list slowly so the strip
   // feels live without polling. Deterministic per-day order.
   const events = useMemo(() => {
+    // eslint-disable-next-line react-hooks/purity -- Date.now() derives a per-day rotate index, not a render-pure value
     const day = Math.floor(Date.now() / 86_400_000);
     const start = day % PLACEHOLDER.length;
     return [

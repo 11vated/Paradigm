@@ -1,14 +1,14 @@
-import { Pool, type PoolConfig } from 'pg';
+import { Pool } from 'pg';
 import type { SeedStore, Seed, User, AuditEntry, PaginationOptions, PaginatedResult } from './types';
 
-const SEED_FIELDS = ['id', 'hash', 'domain', 'payload', 'signature', 'author_id',
-  'parent_count', 'quality_vector', 'quality_scalar', 'title', 'description',
-  'tags', 'license', 'visibility', 'is_marketplace', 'generation', 'operation',
-  'lineage_parents', 'fitness_overall', 'federation_origin', 'created_at', 'updated_at'];
-
-const USER_FIELDS = ['id', 'username', 'email', 'display_name', 'password_hash',
-  'sovereignty_pubkey', 'sovereignty_thumbprint', 'stripe_account_id', 'role',
-  'is_verified', 'seed_count', 'last_login_at', 'created_at', 'updated_at'];
+// Column sets are documented here for the production Postgres schema mirror:
+//   SEED_FIELDS = id, hash, domain, payload, signature, author_id, parent_count,
+//     quality_vector, quality_scalar, title, description, tags, license, visibility,
+//     is_marketplace, generation, operation, lineage_parents, fitness_overall,
+//     federation_origin, created_at, updated_at
+//   USER_FIELDS = id, username, email, display_name, password_hash, sovereignty_pubkey,
+//     sovereignty_thumbprint, stripe_account_id, role, is_verified, seed_count,
+//     last_login_at, created_at, updated_at
 
 export class PostgresStore implements SeedStore {
   readonly backend = 'postgres' as const;

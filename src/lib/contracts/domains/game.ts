@@ -33,7 +33,7 @@ export class GameMechanicsContract implements QualityContract<GameMechanicsGeneS
 
   synthesize(seed: GameMechanicsGeneSet, rng: Xoshiro256StarStar): GameMechanicsArtifact {
     return {
-      id: `game-mech_${Date.now()}`,
+      id: `game-mech_${Math.floor(rng.nextF64() * 1e15)}`,
       playerCount: seed.playerCount || 4,
       formalizedRules: Math.floor(seed.ruleComplexity * 85) + 15,
       winLossConditions: seed.winConditions || 3,

@@ -50,7 +50,7 @@ describe('Viewport Routing', () => {
   });
 
   it('each viewport type has at least one domain', () => {
-    for (const [type, domains] of Object.entries(VIEWPORT_TYPES)) {
+    for (const [, domains] of Object.entries(VIEWPORT_TYPES)) {
       expect(domains.length).toBeGreaterThan(0);
     }
   });

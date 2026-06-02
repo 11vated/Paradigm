@@ -7,10 +7,10 @@
  */
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { executeGSPL, parseGSPL } from '../../services/api';
-import type { Seed, Artifact } from '../../lib/kernel/engines';
+import { executeGSPL } from '../../services/api';
+import type { Artifact } from '../../lib/kernel/engines';
 import { GsplLexer, TokenType } from '../../lib/kernel/gspl-lexer';
-import { Play, RotateCcw, Download, Eye, Code2, FileText, AlertCircle, CheckCircle } from 'lucide-react';
+import { Play, RotateCcw, Download, Eye, Code2, AlertCircle, CheckCircle } from 'lucide-react';
 import { GsplParser } from '../../lib/kernel/gspl-parser';
 
 // Default GSPL example
@@ -59,7 +59,7 @@ export const GsplRepl = React.memo(function GsplRepl() {
   const [activeTab, setActiveTab] = useState<'output' | 'tokens' | 'ast' | 'preview'>('output');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
-  const previewRef = useRef<HTMLIFrameElement>(null);
+  const _previewRef = useRef<HTMLIFrameElement>(null);
 
   // Execute GSPL code via backend API
   const execute = useCallback(async () => {
@@ -128,6 +128,7 @@ export const GsplRepl = React.memo(function GsplRepl() {
     } finally {
       setIsExecuting(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to code changes; setExecuting/setResult closures are stable, generatePreview is hoisted
   }, [code]);
 
   // Generate preview URL for artifact
@@ -135,7 +136,6 @@ export const GsplRepl = React.memo(function GsplRepl() {
     if (!artifact || !artifact.data) return;
 
     let blob: Blob;
-    let type: string;
 
     switch (artifact.format) {
       case 'gltf-binary':
@@ -163,18 +163,8 @@ export const GsplRepl = React.memo(function GsplRepl() {
     return () => {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-once cleanup; previewUrl is captured in closure at mount time
   }, []);
-
-  // Syntax highlighting (simple)
-  const highlightCode = (code: string): string => {
-    return code
-      .replace(/(\/\/.*)/g, '<span class="text-green-500">$1</span>')
-      .replace(/\b(seed|breed|mutate|compose|evolve|grow|export|import|let|fn|if|else|match|for|while|return|type|trait|impl|where|gene|domain|in|signed)\b/g,
-        '<span class="text-purple-500 font-semibold">$1</span>')
-      .replace(/\b(true|false|null)\b/g, '<span class="text-orange-500">$1</span>')
-      .replace(/"([^"]*)"/g, '<span class="text-yellow-500">"$1"</span>')
-      .replace(/\b(\d+\.?\d*)\b/g, '<span class="text-blue-500">$1</span>');
-  };
 
   return (
     <div className="flex flex-col h-full bg-gray-900 text-white">
@@ -365,46 +355,62 @@ function OutputPanel({ result }: { result: ExecutionResult | null }) {
 
 // Tokens Panel
 function TokensPanel({ code }: { code: string }) {
+  const rendered = renderTokensPanel(code);
+  if (rendered.error) return <div className="text-red-400">Error: {rendered.error}</div>;
+  return rendered.node;
+}
+
+function renderTokensPanel(code: string): { node: React.ReactNode; error: string | null } {
   try {
     const lexer = new GsplLexer(code);
     const tokens = lexer.tokenize();
-
-    return (
-      <div className="space-y-1">
-        <div className="text-sm text-gray-400 mb-2">{tokens.length} tokens</div>
-        {tokens.map((token, i) => (
-          <div key={i} className="text-xs font-mono flex gap-2">
-            <span className="text-gray-500 w-8">{i}</span>
-            <span className="text-purple-400 w-24">{TokenType[token.type]}</span>
-            <span className="text-gray-300">{token.value}</span>
-            <span className="text-gray-600 ml-auto">L{token.line}:C{token.column}</span>
-          </div>
-        ))}
-      </div>
-    );
+    return {
+      error: null,
+      node: (
+        <div className="space-y-1">
+          <div className="text-sm text-gray-400 mb-2">{tokens.length} tokens</div>
+          {tokens.map((token, i) => (
+            <div key={i} className="text-xs font-mono flex gap-2">
+              <span className="text-gray-500 w-8">{i}</span>
+              <span className="text-purple-400 w-24">{TokenType[token.type]}</span>
+              <span className="text-gray-300">{token.value}</span>
+              <span className="text-gray-600 ml-auto">L{token.line}:C{token.column}</span>
+            </div>
+          ))}
+        </div>
+      ),
+    };
   } catch (e: any) {
-    return <div className="text-red-400">Error: {e.message}</div>;
+    return { node: null, error: e.message };
   }
 }
 
 // AST Panel
 function ASTPanel({ code }: { code: string }) {
+  const rendered = renderASTPanel(code);
+  if (rendered.error) return <div className="text-red-400">Error: {rendered.error}</div>;
+  return rendered.node;
+}
+
+function renderASTPanel(code: string): { node: React.ReactNode; error: string | null } {
   try {
     const lexer = new GsplLexer(code);
     const tokens = lexer.tokenize();
     const parser = new GsplParser(tokens.filter(t => t.type !== TokenType.ERROR));
     const ast = parser.parse();
-
-    return (
-      <div className="space-y-1">
-        <div className="text-sm text-gray-400 mb-2">Abstract Syntax Tree</div>
-        <pre className="text-xs bg-gray-800 p-3 rounded overflow-auto">
-          {JSON.stringify(ast, null, 2)}
-        </pre>
-      </div>
-    );
+    return {
+      error: null,
+      node: (
+        <div className="space-y-1">
+          <div className="text-sm text-gray-400 mb-2">Abstract Syntax Tree</div>
+          <pre className="text-xs bg-gray-800 p-3 rounded overflow-auto">
+            {JSON.stringify(ast, null, 2)}
+          </pre>
+        </div>
+      ),
+    };
   } catch (e: any) {
-    return <div className="text-red-400">Error: {e.message}</div>;
+    return { node: null, error: e.message };
   }
 }
 

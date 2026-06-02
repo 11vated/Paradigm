@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Tailwind config is CommonJS by design */
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],

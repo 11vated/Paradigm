@@ -113,26 +113,6 @@ function createDeck(rng: Xoshiro256StarStar): Card[] {
   return deck;
 }
 
-function cardNumericValue(value: CardValue): number {
-  if (value === 'A') return 11;
-  if (['K', 'Q', 'J'].includes(value)) return 10;
-  return parseInt(value);
-}
-
-function handValue(hand: Card[]): number {
-  let value = 0;
-  let aces = 0;
-  for (const card of hand) {
-    value += cardNumericValue(card.value);
-    if (card.value === 'A') aces++;
-  }
-  while (value > 21 && aces > 0) {
-    value -= 10;
-    aces--;
-  }
-  return value;
-}
-
 function initializeGame(params: CardGameParams, rng: Xoshiro256StarStar): GameState {
   const deck = createDeck(rng);
   const players = [];

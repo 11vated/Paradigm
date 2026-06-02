@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+/* eslint-disable react-refresh/only-export-components -- shadcn/ui pattern: re-exporting toggleVariants alongside Toggle component is intentional for consumer API symmetry. */
 import * as TogglePrimitive from "@radix-ui/react-toggle"
 import { cva, type VariantProps } from "class-variance-authority";
 

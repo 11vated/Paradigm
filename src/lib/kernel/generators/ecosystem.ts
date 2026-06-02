@@ -143,7 +143,7 @@ function createFoodWeb(species: Species[], rng: Xoshiro256StarStar): Species[] {
   return species;
 }
 
-function runEcosystemSimulation(species: Species[], foodWeb: Species[], generations: number, rng: Xoshiro256StarStar): any[] {
+function runEcosystemSimulation(species: Species[], _foodWeb: Species[], generations: number, rng: Xoshiro256StarStar): any[] {
   const results: any[] = [];
   const popHistory = species.map(s => s.population);
   
@@ -173,7 +173,7 @@ async function exportEcosystemJSON(data: any, outputPath: string, seed: Seed): P
   return filePath;
 }
 
-async function exportInteractiveHTML(biomes: Biome[], species: Species[], foodWeb: Species[], outputPath: string, seed: Seed): Promise<string> {
+async function exportInteractiveHTML(biomes: Biome[], species: Species[], _foodWeb: Species[], outputPath: string, seed: Seed): Promise<string> {
   const filename = `ecosystem_${seed.$hash || 'unknown'}.html`;
   const filePath = path.join(outputPath, filename);
   

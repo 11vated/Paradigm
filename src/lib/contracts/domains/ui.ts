@@ -33,7 +33,7 @@ export class UIContract implements QualityContract<UIGeneSet, UIArtifact> {
 
   synthesize(seed: UIGeneSet, rng: Xoshiro256StarStar): UIArtifact {
     return {
-      id: `ui_${Date.now()}`,
+      id: `ui_${Math.floor(rng.nextF64() * 1e15)}`,
       componentCount: seed.componentCount || 14,
       responsive: seed.responsive !== false,
       themeVariants: seed.themeVariants || 2,

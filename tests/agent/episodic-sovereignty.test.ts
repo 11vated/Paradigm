@@ -6,7 +6,6 @@ import { webcrypto as nodeWebCrypto } from 'node:crypto';
 import {
   deriveEpisodicKeyFromSovereignty,
   createEpisodicMemoryFromSovereignty,
-  EpisodicMemory,
 } from '../../src/lib/intelligence/memory/episodic';
 
 beforeAll(() => {

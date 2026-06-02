@@ -12,7 +12,7 @@ const USERS_FILE = path.join(process.cwd(), 'data', 'users.json');
 function clearUsers() {
   try {
     if (fs.existsSync(USERS_FILE)) fs.unlinkSync(USERS_FILE);
-  } catch {}
+  } catch { /* swallow: best-effort test cleanup, fixture torn down */ }
 }
 
 describe('Auth Module', () => {
@@ -72,8 +72,8 @@ describe('Auth Module', () => {
       const limiter = createRateLimiter(60000, 5);
       // Simulate 5 requests from same IP
       const mockReq = { ip: '127.0.0.1' };
-      const mockRes = {
-        status: (code: number) => ({ json: () => {} }),
+      const _mockRes = {
+        status: (_code: number) => ({ json: () => {} }),
       };
       let blocked = false;
       const mockNext = () => {};

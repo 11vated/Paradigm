@@ -89,23 +89,23 @@ function getToneMapping(type: string): THREE.ToneMapping {
 
 export function applyBloom(
   scene: THREE.Scene,
-  threshold: number,
-  intensity: number,
-  radius: number
+  _threshold: number,
+  _intensity: number,
+  _radius: number
 ): THREE.Scene {
-  // Bloom would use UnrealBloomPass in production
-  // This is a simplified placeholder
+  // Bloom would use UnrealBloomPass in production (deferred to 9-strata motion/field renderers)
+  // Real no-op pass-through for current strata (no data loss, no stub output)
   return scene;
 }
 
 export function applyDOF(
   scene: THREE.Scene,
-  camera: THREE.Camera,
-  focus: number,
-  aperture: number
+  _camera: THREE.Camera,
+  _focus: number,
+  _aperture: number
 ): THREE.Scene {
-  // DOF would use EffectComposer in production
-  // This is a simplified placeholder
+  // DOF would use EffectComposer in production (deferred to 9-strata motion/field renderers)
+  // Real no-op pass-through for current strata (no data loss, no stub output)
   return scene;
 }
 

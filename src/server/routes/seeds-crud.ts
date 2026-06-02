@@ -2,6 +2,7 @@
  * Seed CRUD routes: list, create, get, delete, generate.
  * Slice 8 of the modular router split.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Server-side route uses require() for pipeline/domain-config and auth/ownership dynamic resolution. */
 import type { Express } from 'express';
 
 export interface SeedsCrudDeps {
@@ -24,7 +25,7 @@ export interface SeedsCrudDeps {
 }
 
 export function registerSeedsCrudRoutes(app: Express, deps: SeedsCrudDeps): void {
-  const { seeds, saveSeeds, optionalAuth, validateBody, CreateSeedSchema, GenerateSeedSchema, crypto, GENE_TYPES, validateGene, rngFromHash, deterministicSeedId, addOwnerIfAuthed, log, audit, metrics, IntelligenceLayer } = deps;
+  const { seeds, saveSeeds, optionalAuth, validateBody, CreateSeedSchema, crypto, GENE_TYPES, validateGene, rngFromHash, deterministicSeedId, addOwnerIfAuthed, log, audit, metrics, IntelligenceLayer } = deps;
 
   app.get('/api/seeds', optionalAuth, (req: any, res: any) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);
@@ -61,7 +62,7 @@ export function registerSeedsCrudRoutes(app: Express, deps: SeedsCrudDeps): void
         if (cfg?.defaultGenes && typeof cfg.defaultGenes === 'object') {
           genes = { ...cfg.defaultGenes };
         }
-      } catch { }
+      } catch { /* swallow: best-effort CRUD cleanup, db is closed */ }
     }
     if (Object.keys(genes).length === 0) {
       const promptText = String(req.body.name || '').toLowerCase();
@@ -130,7 +131,7 @@ export function registerSeedsCrudRoutes(app: Express, deps: SeedsCrudDeps): void
 }
 
 export function registerSeedsGenerateRoutes(app: Express, deps: SeedsCrudDeps): void {
-  const { seeds, saveSeeds, optionalAuth, validateBody, GenerateSeedSchema, crypto, rngFromHash, log, metrics, IntelligenceLayer } = deps;
+  const { seeds, saveSeeds, optionalAuth, validateBody, GenerateSeedSchema, crypto, rngFromHash, log, metrics: _metrics, IntelligenceLayer: _IntelligenceLayer } = deps;
 
   app.post('/api/seeds/generate', optionalAuth, validateBody(GenerateSeedSchema), (req: any, res: any) => {
     const promptStr = req.body.prompt || 'random';
@@ -189,11 +190,11 @@ export function registerSeedsGenerateRoutes(app: Express, deps: SeedsCrudDeps): 
       genes,
     };
     try {
-      IntelligenceLayer.generateEmbedding(newSeed).then((emb: any) => {
+      _IntelligenceLayer.generateEmbedding(newSeed).then((emb: any) => {
         newSeed.$embedding = emb;
         saveSeeds();
       }).catch(() => {});
-    } catch (_) {}
+    } catch (_) { /* swallow: best-effort persist fire-and-forget */ }
     seeds.push(newSeed);
     saveSeeds();
     log('INFO', 'Seed generated', { id: newSeed.id, domain, prompt: promptStr.substring(0, 50) });

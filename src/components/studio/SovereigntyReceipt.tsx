@@ -14,7 +14,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, ShieldCheck, ShieldX, Link, Hash, GitCommit, ExternalLink, Copy } from 'lucide-react';
+import { Shield, ShieldCheck, ShieldX, Hash, GitCommit, Copy } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

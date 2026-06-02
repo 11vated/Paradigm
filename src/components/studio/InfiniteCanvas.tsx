@@ -96,6 +96,7 @@ const InfiniteCanvas = React.memo(function InfiniteCanvas({
 
   useEffect(() => {
     if (seedNodes.length > 0) {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
       setNodes(seedNodes);
     }
   }, [seedNodes]);
@@ -120,7 +121,7 @@ const InfiniteCanvas = React.memo(function InfiniteCanvas({
         });
       }
     });
-
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from seedNodes/linkData; effect is correct
     setLinks(linkData);
 
     const sim = forceSimulation(seedNodes)

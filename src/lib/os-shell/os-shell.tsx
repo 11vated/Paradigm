@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { createHash } from 'crypto';
-import { ShellState, type ShellWindow, type ShellApp, DEFAULT_APPS } from './shell-state';
+import { ShellState, type ShellWindow, DEFAULT_APPS } from './shell-state';
 
 interface ShellProps {
   seedHash?: string;

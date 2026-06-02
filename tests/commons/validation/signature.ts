@@ -53,9 +53,8 @@ async function main() {
     const seed = JSON.parse(raw) as Seed;
 
     // 1. canonicalize the payload
-    let canonical: string;
     try {
-      canonical = canonicalize(seed.payload);
+      canonicalize(seed.payload);
     } catch (err) {
       report.pass = false;
       report.errors.push(`canonicalization failed: ${(err as Error).message}`);

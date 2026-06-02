@@ -56,7 +56,7 @@ export class ParallelGeneticAlgorithm {
       const worker = new Worker(new URL('../../workers/ga-worker.ts', import.meta.url), { type: 'module' });
       
       worker.onmessage = (event: MessageEvent<WorkerResult>) => {
-        const { type, data, id, error } = event.data;
+        const { data, id, error } = event.data;
         
         if (id && this.pendingPromises.has(id)) {
           if (error) {
@@ -129,7 +129,7 @@ export class ParallelGeneticAlgorithm {
     const id = `select_${kernelNow()}`;
     
     // Use first available worker for selection
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.pendingPromises.set(id, resolve);
       
       this.workers[0].postMessage({
@@ -163,8 +163,8 @@ export class ParallelGeneticAlgorithm {
       if (batch.length === 0) continue;
       
       const id = `cross_${kernelNow()}_${i}`;
-      
-      const promise = new Promise<any[]>((resolve, reject) => {
+
+      const promise = new Promise<any[]>((resolve) => {
         this.pendingPromises.set(id, resolve);
         
         this.workers[i].postMessage({
@@ -196,8 +196,8 @@ export class ParallelGeneticAlgorithm {
       if (batch.length === 0) continue;
       
       const id = `mutate_${kernelNow()}_${i}`;
-      
-      const promise = new Promise<any[]>((resolve, reject) => {
+
+      const promise = new Promise<any[]>((resolve) => {
         this.pendingPromises.set(id, resolve);
         
         this.workers[i].postMessage({

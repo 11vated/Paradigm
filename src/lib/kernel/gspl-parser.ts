@@ -4,7 +4,7 @@
  * Phase 3: GSPL Language Completion
  */
 
-import { Token, TokenType } from './gspl-lexer';
+import { Token } from './gspl-lexer';
 
 export enum ASTNodeType {
   // Literals

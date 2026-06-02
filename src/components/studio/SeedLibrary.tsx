@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Library, Download, Loader2, Sparkles } from 'lucide-react';
 import { useSeedStore } from '@/stores/seedStore';
-import { getSimilarSeeds, getLibrary, importFromLibrary as importFromLibraryApi } from '@/services/api';
+import { getSimilarSeeds, getLibrary } from '@/services/api';
 import { DOMAIN_COLORS } from '@/lib/constants';
 
 const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { onImport: any; activeSeed: any }) {

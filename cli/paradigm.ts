@@ -22,9 +22,8 @@
  *   paradigm --help
  */
 
-import { parseArgs } from 'util';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
-import { join, resolve, extname, basename } from 'path';
+import { join, resolve } from 'path';
 import { createHash }  from 'crypto';
 import { Xoshiro256StarStar, rngFromHash } from '../src/lib/kernel/rng';
 import { growSeed, ENGINES } from '../src/lib/kernel/engines';
@@ -121,7 +120,7 @@ async function cmdMake(args: string[]) {
             const mod = await import(p);
             const c = Object.values(mod).find((v: any) => v && typeof v.manifest === 'function') as any;
             if (c) { loaded = c; break; }
-          } catch {}
+          } catch { /* swallow: best-effort CLI helper, original error already logged */ }
         }
         if (loaded && typeof loaded.manifest === 'function') {
           const m = loaded.manifest();
@@ -131,7 +130,7 @@ async function cmdMake(args: string[]) {
             manifestText = `\n  Contract Manifest:\n${lines.join('\n')}`;
           }
         }
-      } catch {}
+      } catch { /* swallow: best-effort CLI helper, original error already logged */ }
 
       const topStrata = Object.entries(conf.perStratum || {})
         .sort((a: any, b: any) => b[1].score - a[1].score)
@@ -143,7 +142,7 @@ async function cmdMake(args: string[]) {
       if (topStrata.length) log('info', `  Top strata: ${topStrata.join(' ')}`);
       if (manifestText) log('info', manifestText);
       log('info', `  (full details: /api/substrate/health)`);
-    } catch {}
+    } catch { /* swallow: best-effort CLI helper, original error already logged */ }
   } catch (e: any) {
     log('error', `make failed: ${e.message}`);
   }
@@ -537,7 +536,7 @@ async function cmdMake(args: string[]) {
             console.log(`  Contract manifest: ${m.domain || domainForManifest} v${m.version || '1'} | determinism:${m.determinism || 'strict'} | clauses:${(m.clauses||[]).length}`);
           }
         }
-      } catch {}
+      } catch { /* swallow: best-effort CLI helper, original error already logged */ }
     } catch (e) {
       // Non-fatal — conformance reporting is best-effort enrichment
     }

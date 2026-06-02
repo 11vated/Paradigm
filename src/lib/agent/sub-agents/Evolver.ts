@@ -5,6 +5,7 @@
  * Wraps existing GA implementation for population-based
  * optimization with tournament selection.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Evolver uses require() to load the contracts domain-registry dynamically. */
 
 import type { SubAgent, AgentMessage, AgentResult, AgentContext, EvolutionOutput } from './SubAgent';
 import { Xoshiro256StarStar, rngFromHash } from '../../kernel/rng';
@@ -69,13 +70,11 @@ export class Evolver implements SubAgent {
     const population: any[] = [];
     for (let i = 0; i < size; i++) {
       const newGenes: Record<string, any> = {};
-      let mutations = 0;
 
       for (const [k, g] of Object.entries(baseSeed.genes || {}) as [string, any][]) {
         if (rng.nextF64() < rate) {
           const newVal = this.mutateValue(g.value, rng);
           newGenes[k] = { ...g, value: newVal };
-          mutations++;
         } else {
           newGenes[k] = JSON.parse(JSON.stringify(g));
         }

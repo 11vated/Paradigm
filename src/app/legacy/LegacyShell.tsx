@@ -8,7 +8,6 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { TopNav } from '@/components/TopNav';
-import { StudioPage } from '@/pages/StudioPage';
 import FriendPage from '@/pages/FriendPage';
 import PlayPage from '@/pages/PlayPage';
 import WorldPage from '@/pages/WorldPage';

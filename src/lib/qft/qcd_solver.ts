@@ -135,8 +135,6 @@ export class QCDSolver {
 
   // Real Metropolis update step
   step() {
-    let accepted = 0;
-    let total = 0;
     const epsilon = 0.2; // Step size
 
     for (let dir = 0; dir < 4; dir++) {
@@ -162,9 +160,7 @@ export class QCDSolver {
                 this.links[i+1] = newU[1];
                 this.links[i+2] = newU[2];
                 this.links[i+3] = newU[3];
-                accepted++;
               }
-              total++;
             }
           }
         }

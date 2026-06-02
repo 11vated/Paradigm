@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { createSeedLLM, type SeedLLM, type SeedLLMConfig } from 
+import { createSeedLLM, type SeedLLM } from 
 '../../lib/intelligence/llm/base';
 import { executeGspl } from '../../lib/kernel/gspl-interpreter';
 import { encodeGseed, createGseed } from '../../lib/kernel/binary-format';

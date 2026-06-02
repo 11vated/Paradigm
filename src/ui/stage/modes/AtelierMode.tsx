@@ -14,6 +14,7 @@ export const AtelierMode: React.FC = () => {
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     if (!seed?.id) { setBody(null); setEdits({}); return; }
     let cancelled = false;
     fetch(`/api/seeds/${seed.id}`).then(r => r.json()).then(b => { if (!cancelled) { setBody(b); setEdits({}); } }).catch(() => {});
@@ -31,6 +32,7 @@ export const AtelierMode: React.FC = () => {
     setPending(true);
   }, []);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler can't trace CustomEvent dispatch via window object
   const commit = useCallback(async () => {
     if (!seed?.id || Object.keys(edits).length === 0) return;
     try {
@@ -38,7 +40,7 @@ export const AtelierMode: React.FC = () => {
       window.dispatchEvent(new CustomEvent("paradigm:grow-success"));
       setEdits({}); setPending(false);
       const r = await fetch(`/api/seeds/${seed.id}`); const b = await r.json(); setBody(b);
-    } catch {}
+    } catch { /* swallow: best-effort atelier probe */ }
   }, [seed?.id, edits]);
 
   if (!seed) return <CrucibleMode />;

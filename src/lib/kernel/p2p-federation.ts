@@ -203,7 +203,7 @@ export class P2PFederationProtocol {
   }
 
   private setupMessageHandlers(): void {
-    this.federation.on('SEED', (msg: FederationMessage, peer: PeerInfo) => {
+    this.federation.on('SEED', (msg: FederationMessage, _peer: PeerInfo) => {
       if (msg.payload?.data) {
         const record = msg.payload.data as SeedExchangeRecord;
         if (record && record.seedHash && !this.localArchive.cells.has(record.seedHash)) {
@@ -215,7 +215,7 @@ export class P2PFederationProtocol {
       }
     });
 
-    this.federation.on('HELLO_ACK', (msg: FederationMessage, peer: PeerInfo) => {
+    this.federation.on('HELLO_ACK', (_msg: FederationMessage, peer: PeerInfo) => {
       console.log(`[P2P] Peer connected: ${peer.id}`);
     });
   }

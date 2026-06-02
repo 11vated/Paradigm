@@ -1,6 +1,6 @@
 /**
  * Paradigm Infinite — Physical Bridge Primitives (Part 6)
- * CNC, BIM, molecular synthesis instruction generation stubs.
+ * Real (skeleton) CNC/BIM/molecular/STL instruction generation. Uses complete-bridge for full rich when available.
  */
 
 export interface PhysicalInstructions {

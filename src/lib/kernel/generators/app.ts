@@ -166,7 +166,7 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar, constraints: any = n
     blog:        ['Ideas worth reading.', 'Write once. Reach everyone.', 'The blog, rebuilt.'],
   };
 
-  const featureCountClamped = Math.max(3, Math.min(8, Math.floor(applyScalar('featureCount', 3 + rng.nextF64() * 5, 5))));
+  const _featureCountClamped = Math.max(3, Math.min(8, Math.floor(applyScalar('featureCount', 3 + rng.nextF64() * 5, 5))));
   // ... (reuse existing feature selection logic but clamped)
 
   return {
@@ -503,16 +503,16 @@ export async function generateApp(seed: Seed, outputPath: string): Promise<AppAr
   const rng = rngFromHash((seed as any).$hash ?? 'app-default');
 
   // === GSPL Canon Integration (app schema) — load BEFORE extract ===
-  let gsplSchemaLoaded: string | undefined;
+  let _gsplSchemaLoaded: string | undefined;
   let appConstraints: any = null;
   try {
     const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs =>
       fs.readFile('data/commons/libraries/app.gspl', 'utf8').catch(() => null));
     if (schemaContent) {
-      gsplSchemaLoaded = 'app.gspl';
+      _gsplSchemaLoaded = 'app.gspl';
       appConstraints = parseAppSchemaConstraints(schemaContent);
     }
-  } catch (e) {}
+  } catch (_) { /* swallow: schema is optional, fall through to default */ }
 
   const params = extractParams(seed, rng, appConstraints);
   const seedHash = (seed as any).$hash ?? 'unknown';

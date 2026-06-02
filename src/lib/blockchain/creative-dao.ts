@@ -114,7 +114,7 @@ export class CreativeDAO {
   /**
    * Cast a vote on a proposal.
    */
-  vote(proposalId: string, voter: string, support: boolean, votingPower: number): { success: boolean } | { error: string } {
+  vote(proposalId: string, _voter: string, support: boolean, votingPower: number): { success: boolean } | { error: string } {
     const prop = this.proposals.find(p => p.id === proposalId);
     if (!prop) return { error: 'Proposal not found' };
     if (prop.status !== 'voting') return { error: 'Voting period ended' };

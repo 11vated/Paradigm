@@ -16,7 +16,7 @@ import { SovereigntyCard } from './SovereigntyCard';
 export const SurfacedCardView: React.FC<{ card: SurfacedCard }> = ({ card }) => {
   const setSeed = useActiveSeed((s) => s.setSeed);
 
-  const growFromPlan = async () => {
+  const _growFromPlan = async () => {
     try {
       const created = await generateSeed('plan grow', 'character');
       const active = kernelSeedToActive(created as Record<string, unknown>);

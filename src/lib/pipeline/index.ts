@@ -1,5 +1,5 @@
 import { QFTEngine } from '../qft/engine.js';
-import { MeshExtractor, TextureBaker, AnimationExtractor } from '../asset_pipeline/index.js';
+import { MeshExtractor, TextureBaker } from '../asset_pipeline/index.js';
 import crypto from 'crypto';
 
 export class ParadigmPipeline {

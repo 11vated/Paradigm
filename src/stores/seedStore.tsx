@@ -150,7 +150,7 @@ export const useSeedStore = create((set: any, get: any) => ({
   },
 
   // ─── Gene Editing ────────────────────────────────────────────────────────
-  updateGene: async (geneName: any, geneType: any, value: any) => {
+  updateGene: async (geneName: any, _geneType: any, value: any) => {
     const { currentSeed } = get();
     if (!currentSeed) return;
     set({ loading: true, error: null });
@@ -177,7 +177,7 @@ export const useSeedStore = create((set: any, get: any) => ({
     }
   },
 
-  signCurrentSeed: async (privateKey: any) => {
+  signCurrentSeed: async (_privateKey: any) => {
     const { currentSeed } = get();
     if (!currentSeed) return;
     set({ loading: true, error: null });
@@ -190,7 +190,7 @@ export const useSeedStore = create((set: any, get: any) => ({
     }
   },
 
-  verifyCurrentSeed: async (publicKey: any) => {
+  verifyCurrentSeed: async (_publicKey: any) => {
     const { currentSeed } = get();
     if (!currentSeed) return;
     set({ loading: true, error: null });

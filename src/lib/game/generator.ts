@@ -36,10 +36,6 @@ function hashId(input: string, prefix = ''): string {
   return prefix + createHash('sha256').update(input).digest('hex').slice(0, 16);
 }
 
-function shortHash(input: string): string {
-  return createHash('sha256').update(input).digest('hex').slice(0, 12);
-}
-
 /** Build a GameSeedData from a QuestSeedData. */
 export function createGameSeed(quest: QuestSeedData, salt?: string): GameSeedData {
   const sceneRng = new Xoshiro256StarStar(`game/${quest.seedHash}/${salt ?? 'v1'}`);
@@ -160,7 +156,6 @@ export function generateGame(seed: GameSeedData, world?: WorldArtifact): GameArt
   const endingIds = Array.from({ length: seed.endingCount }, (_, i) => hashId(`${seed.seedHash}/end/${i}`, 'e'));
   for (let i = 0; i < scenes.length; i++) {
     const isLast = i === scenes.length - 1;
-    const nextIds = isLast ? endingIds : [scenes[i + 1].id];
     // Multiple "next" options come from the same next-scene for now (the linear arc
     // diverges only at endings). Future work: real branching.
     const targets = isLast ? endingIds : Array.from({ length: seed.branchingFactor }, () => scenes[i + 1].id);

@@ -99,13 +99,14 @@ export class TextureBaker {
           v = ((y - minY) / sizeY) * scale + offset[1];
           break;
           
-        case 'cylindrical':
+        case 'cylindrical': {
           const angle = Math.atan2(z - minZ - sizeZ/2, x - minX - sizeX/2);
           u = ((angle / (Math.PI * 2)) + 0.5) * scale + offset[0];
           v = ((y - minY) / sizeY) * scale + offset[1];
           break;
-          
-        case 'spherical':
+        }
+
+        case 'spherical': {
           const nx = (x - minX - sizeX/2) / (sizeX/2);
           const ny = (y - minY - sizeY/2) / (sizeY/2);
           const nz = (z - minZ - sizeZ/2) / (sizeZ/2);
@@ -115,8 +116,9 @@ export class TextureBaker {
           u = ((phi / (Math.PI * 2)) + 0.5) * scale + offset[0];
           v = (theta / Math.PI) * scale + offset[1];
           break;
-          
-        case 'triplanar':
+        }
+
+        case 'triplanar': {
           // Blend three planar projections based on normal direction
           const nxTri = Math.abs(x - minX - sizeX/2) / (sizeX/2);
           const nyTri = Math.abs(y - minY - sizeY/2) / (sizeY/2);
@@ -125,14 +127,15 @@ export class TextureBaker {
           u = (nxTri * ((x - minX) / sizeX) + nyTri * ((y - minY) / sizeY) + nzTri * ((z - minZ) / sizeZ)) / total * scale + offset[0];
           v = (nxTri * ((y - minY) / sizeY) + nyTri * ((z - minZ) / sizeZ) + nzTri * ((x - minX) / sizeX)) / total * scale + offset[1];
           break;
-          
-        case 'box':
+        }
+
+        case 'box': {
           // Project onto the face with largest normal component
           // For simplicity, use absolute position
           const absX = Math.abs(x - minX - sizeX/2);
           const absY = Math.abs(y - minY - sizeY/2);
           const absZ = Math.abs(z - minZ - sizeZ/2);
-          
+
           if (absX >= absY && absX >= absZ) {
             u = ((y - minY) / sizeY) * scale + offset[0];
             v = ((z - minZ) / sizeZ) * scale + offset[1];
@@ -144,6 +147,7 @@ export class TextureBaker {
             v = ((y - minY) / sizeY) * scale + offset[1];
           }
           break;
+        }
       }
       
       // Apply rotation
@@ -170,7 +174,6 @@ export class TextureBaker {
     textureSets: { textureMaps: TextureMapSet; materialId: string }[],
     options: TextureAtlasOptions
   ): { atlas: Float32Array; layout: { materialId: string; x: number; y: number; width: number; height: number }[] } {
-    const maxRes = options.maxResolution;
     const padding = options.padding;
     
     // Calculate total area needed
@@ -309,7 +312,7 @@ export class TextureBaker {
   /**
    * Compress texture (placeholder - actual compression would use external libraries)
    */
-  static compressTexture(texture: Float32Array, resolution: number, options: TextureCompressionOptions): Uint8Array {
+  static compressTexture(texture: Float32Array, _resolution: number, options: TextureCompressionOptions): Uint8Array {
     // Placeholder for actual compression
     // In production, this would use:
     // - BC7: Basis Universal or DirectXTex

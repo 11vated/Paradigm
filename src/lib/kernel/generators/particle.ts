@@ -187,7 +187,7 @@ async function exportParticleJSON(data: any, outputPath: string, seed: Seed): Pr
   return filePath;
 }
 
-async function exportInteractiveHTML(params: ParticleParams, emitters: Emitter[], history: any[], outputPath: string, seed: Seed): Promise<string> {
+async function exportInteractiveHTML(params: ParticleParams, _emitters: Emitter[], history: any[], outputPath: string, seed: Seed): Promise<string> {
   const filename = `particle_${seed.$hash || 'unknown'}.html`;
   const filePath = path.join(outputPath, filename);
   

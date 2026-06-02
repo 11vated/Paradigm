@@ -5,11 +5,10 @@
  *
  * Per `06_Frontend_Redesign_And_Completion_Spec.md` §IV.1.
  */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
-import { createSeed } from '@/services/api';
 
 export interface TopBarProps {
   onCosmos?: () => void;
@@ -22,10 +21,10 @@ function shortHash(h: string | undefined): string {
 
 export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
   const { seed } = useActiveSeed();
-  const setSeed = useActiveSeed((s: any) => s.setSeed);
+  const _setSeed = useActiveSeed((s: any) => s.setSeed);
   const [kernelTick, setKernelTick] = useState(0);
-  const [creatingSeed, setCreatingSeed] = useState(false);
-  const [now, setNow] = useState(() => new Date());
+  const [_creatingSeed, _setCreatingSeed] = useState(false);
+  const [_now, _setNow] = useState(() => new Date());
 
   // Engine count for atlas chip
   const [engineCount, setEngineCount] = useState(0);

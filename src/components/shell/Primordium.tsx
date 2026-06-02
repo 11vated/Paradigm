@@ -19,6 +19,7 @@ export function Primordium({ prompt = '' }: PrimordiumProps) {
 
   useEffect(() => {
     const intensity = Math.min(1, prompt.length / 40);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from prompt; effect is correct
     setBrightness(0.4 + intensity * 0.6);
   }, [prompt]);
 

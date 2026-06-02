@@ -32,6 +32,7 @@ export const FriendLineage: React.FC<FriendLineageProps> = ({ rootId, onNavigate
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     if (!rootId) { setData(null); return; }
     setLoading(true);
     setError(null);
@@ -78,8 +79,8 @@ export const FriendLineage: React.FC<FriendLineageProps> = ({ rootId, onNavigate
               role="button"
               tabIndex={0}
               className="flex items-center gap-1 py-0.5 px-1 rounded bg-neutral-900 border border-accent/30 cursor-pointer"
-              onClick={() => data.self.id && onNavigate?.(data.self.id)}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); data.self.id && onNavigate?.(data.self.id); } }}
+              onClick={() => { if (data.self.id) onNavigate?.(data.self.id); }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (data.self.id) onNavigate?.(data.self.id); } }}
             >
               <span className="text-blue-400">◆</span>
               <span className="truncate flex-1">{data.self.name}</span>
@@ -153,8 +154,8 @@ const NodeRow: React.FC<NodeRowProps> = ({ node, byId, depth, onClick }) => {
           tabIndex={0}
           className="flex items-center gap-1 py-0.5 px-1 rounded cursor-pointer hover:bg-neutral-900"
           style={{ paddingLeft: `${depth * 12 + 4}px` }}
-          onClick={() => node.id && onClick?.(node.id)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); node.id && onClick?.(node.id); } }}
+          onClick={() => { if (node.id) onClick?.(node.id); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (node.id) onClick?.(node.id); } }}
         >
         <span className={opColor}>{opGlyph}</span>
         <span className="truncate flex-1">{node.name}</span>
@@ -184,8 +185,8 @@ const AncestorChain: React.FC<{ ancestors: LineageNode[]; onClick?: (id: string)
           role="button"
           tabIndex={0}
           className="flex items-center gap-1 py-0.5 px-1 rounded cursor-pointer hover:bg-neutral-900 opacity-70"
-          onClick={() => a.id && onClick?.(a.id)}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); a.id && onClick?.(a.id); } }}
+          onClick={() => { if (a.id) onClick?.(a.id); }}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (a.id) onClick?.(a.id); } }}
         >
           <span className={opColor}>{opGlyph}</span>
           <span className="truncate flex-1">{a.name}</span>

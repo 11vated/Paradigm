@@ -10,18 +10,13 @@
  * - All 103+ engines working together
  */
 
-import React, { useState, useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import React, { useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sky, Environment } from '@react-three/drei';
-import { executeGspl } from '../lib/kernel/gspl-interpreter';
+import { OrbitControls, Sky } from '@react-three/drei';
 import { growSeed, type Seed, type Artifact } from '../lib/kernel/engines';
-import { SeedAgent } from '../lib/kernel/seed-agent';
-import { SwarmRuntime } from '../lib/kernel/swarm-runtime';
-import { GsplBytecodeCompiler } from '../lib/kernel/gspl-bytecode';
 import { GsplRepl } from '../components/studio/GsplRepl';
 import { rngFromHash } from '../lib/kernel/rng';
-import { GlassPanel } from '@/components/shell/GlassPanel';
+import { GsplBytecodeCompiler } from '../lib/kernel/gspl-bytecode';
 import { SeedGlyph } from '@/components/shell/SeedGlyph';
 
 // World definition
@@ -65,7 +60,7 @@ export function WorldSeedPage() {
   const [entities, setEntities] = useState<WorldEntity[]>([]);
   const [console, setConsole] = useState<string[]>([]);
   const [showREPL, setShowREPL] = useState(false);
-  const [gsplCode, setGsplCode] = useState(`// World Seed GSPL Example
+  const [gsplCode, _setGsplCode] = useState(`// World Seed GSPL Example
 seed WorldGenesis in game {
   name = "Genesis"
   biome = "forest"
@@ -125,7 +120,7 @@ let world = grow(WorldGenesis, "game")
       addConsoleLog('⚙️ Executing GSPL in PVM...');
       const compiler = new GsplBytecodeCompiler();
       const program = compiler.compile(gsplCode);
-      const pvm = { execute: (prog: any) => ({ steps: 100 }) }; // Mock PVM
+      const pvm = { execute: (_prog: any) => ({ steps: 100 }) }; // Mock PVM
       const result = await pvm.execute(program);
       addConsoleLog(`✓ PVM executed in ${result.steps} steps`);
 
@@ -166,11 +161,12 @@ let world = grow(WorldGenesis, "game")
         addConsoleLog(`🌦️ Weather changed to ${params.weather}`);
         break;
 
-      case 'spawn_character':
+      case 'spawn_character': {
         const newChar = await spawnCharacter(world.seed + Date.now());
         setEntities(prev => [...prev, newChar]);
         addConsoleLog(`👤 Spawned new character`);
         break;
+      }
 
       case 'clear_world':
         setEntities([]);

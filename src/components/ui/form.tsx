@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { Controller, type ControllerProps, type FieldValues, FormProvider, useFormContext } from "react-hook-form";
+import { Controller, FormProvider, useFormContext } from "react-hook-form";
+/* eslint-disable react-refresh/only-export-components -- shadcn/ui pattern: useFormField hook co-located with form components is intentional. */
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"

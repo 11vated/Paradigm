@@ -45,11 +45,12 @@ export const Conversation = React.memo(() => {
     });
   }, [thread, lens]);
 
+  const lastTurnText = filteredTurns[filteredTurns.length - 1]?.text;
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [filteredTurns.length, filteredTurns[filteredTurns.length - 1]?.text]);
+  }, [filteredTurns.length, lastTurnText]);
 
   if (!thread) {
     return (

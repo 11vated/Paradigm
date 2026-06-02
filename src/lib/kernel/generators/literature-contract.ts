@@ -24,10 +24,11 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'literature-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateLiterature(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateLiterature(seed as any, out)) as { filePath?: string; storyPath?: string; manuscriptPath?: string };
+  const richPath = r.storyPath ?? r.manuscriptPath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  const jsonData = await fsp.readFile(r.filePath ?? out, 'utf-8').catch(() => '{}');
+  return { filePath: data, meta: { richPath, json: jsonData.substring(0, 512), wordCount: data.length } };
 }
 
 function invert(a: A): I {
@@ -35,8 +36,19 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasNarrative = /CHAPTER|PROLOGUE|EPILOGUE|The .* murmured/.test(content);
+  const wordEst = Math.floor(len / 5.5);
+  const score = len > 8000 ? 1.0 : (len > 4000 ? 0.96 : (len > 1200 ? 0.88 : 0.6));
+  const axes: Record<string, number> = {
+    hasOutput: len > 0 ? 1 : 0,
+    narrativeDepth: hasNarrative ? 0.97 : 0.4,
+    lengthFidelity: Math.min(1, wordEst / 2000),
+    coherence: hasNarrative && len > 3000 ? 0.91 : 0.65
+  };
+  const notes: string[] = [`rich-text ${wordEst} words`, hasNarrative ? 'plot+dialogue present' : 'minimal'];
+  return { score, axes, notes };
 }
 
 export const LiteratureQualityContract: QualityContract<S, A, I> = {
@@ -56,9 +68,11 @@ export const LiteratureQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'literature',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['storyPath', 'manuscriptPath'],
+      strata: ['Story', 'Mind', 'Culture'],
     };
   },
 };

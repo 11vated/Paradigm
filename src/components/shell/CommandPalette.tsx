@@ -54,6 +54,7 @@ export function CommandPalette({ open, onOpenChange, onNavigate, onBottomNavigat
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     if (!open) setSearch('');
   }, [open]);
 

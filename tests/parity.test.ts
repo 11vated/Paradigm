@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Parity test fixtures use require() to load commons/data dynamically inside parity checks. */
 import { describe, it, expect } from 'vitest';
 import { UniversalSeed, GeneType } from '../src/seeds';
 import { GeneticAlgorithm } from '../src/lib/evolution/ga';
@@ -31,7 +32,6 @@ describe('Cross-Engine Parity Tests', () => {
 
     it('should mutate with consistent probability', () => {
       const seed = testSeed();
-      const originalGenes = seed.getAllGenes();
       
       const mutateCount = 1000;
       let changedCount = 0;

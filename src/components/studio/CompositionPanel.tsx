@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { GitBranch, ArrowRight, Loader2 } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { useSeedStore } from '@/stores/seedStore';
 import { composeSeed, getCompositionGraph, getCompositionPath } from '@/services/api';
 
 const CompositionPanel = React.memo(function CompositionPanel({ seed, onComposed }: { seed: any; onComposed?: any }) {

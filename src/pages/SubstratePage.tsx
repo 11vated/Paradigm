@@ -15,11 +15,11 @@
  *   7. Export Panel        — .gseed binary, GLTF, WAV, HTML, JSON
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DimensionalViewer } from '@/components/studio/DimensionalViewer';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Layers, Cpu, GitBranch, Zap, Award, Download, Share2,
+  Layers, GitBranch, Zap, Award, Download,
   Play, RefreshCw, ChevronRight, Activity, Globe, Music,
   Box, FileCode, Atom, Telescope, Waves,
 } from 'lucide-react';
@@ -320,7 +320,7 @@ function MAPElitesArchive({ seed }: { seed: Seed }) {
       setGridCells(fb);
       setCoverage(0.32);
     }
-  }, [seed, hash, domain, mutationRate, featureExtractor, fitnessFn]);
+  }, [seed, hash, mutationRate, featureExtractor, fitnessFn]);
 
   // Initial build + rebuild when key inputs change
   useEffect(() => {
@@ -588,6 +588,7 @@ export default function SubstratePage() {
 
   useEffect(() => {
     handleGrow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run on seed identity only; handleGrow identity is stable via useCallback upstream
   }, [seed.$hash]);
 
   const color = DOMAIN_COLORS[selectedDomain] ?? '#6366f1';

@@ -182,7 +182,7 @@ export function MAPElitesGrid({ data, onSelect, dimensions = [10, 10] }: MAPElit
     return <div style={{ padding: 20, color: '#888' }}>No MAP-Elites data</div>;
   }
 
-  const [rows, cols] = dimensions;
+  const [, cols] = dimensions;
   const maxFitness = Math.max(...data.flat().filter(c => c).map(c => c.fitness));
 
   return (
@@ -237,7 +237,7 @@ interface EvolutionTheaterProps {
   onSeedSelect: (seed: Seed) => void;
 }
 
-export function EvolutionTheater({ config, onEvolve, onSeedSelect }: EvolutionTheaterProps) {
+export function EvolutionTheater({ config, onSeedSelect }: EvolutionTheaterProps) {
   const [population, setPopulation] = useState<Seed[]>([]);
   const [history, setHistory] = useState<{ generation: number; avgFitness: number; maxFitness: number; minFitness: number }[]>([]);
   const [isRunning, setIsRunning] = useState(false);

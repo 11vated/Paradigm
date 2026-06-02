@@ -31,9 +31,6 @@ export const Resonant: React.FC<ResonantProps> = ({
     return () => window.clearTimeout(t);
   }, [pulse]);
 
-  return React.createElement(
-    as,
-    { ref: ref as any, className, style },
-    children,
-  );
+  // eslint-disable-next-line react-hooks/refs -- ref is forwarded to the host element via React.createElement; React Compiler can't trace this pattern
+  return React.createElement(as, { ref: ref as any, className, style }, children);
 };

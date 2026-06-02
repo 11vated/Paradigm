@@ -96,7 +96,6 @@ describe('Seed Lifecycle E2E', () => {
   it('5. Evolve — generates diverse population from seed', () => {
     const rng = rngFromHash('e2e-evolve-test');
     const domain = 'character';
-    const baseGenes = { strength: { type: 'scalar' as const, value: 0.5 } };
     const popSize = 5;
 
     const population = Array.from({ length: popSize }, (_, i) => {

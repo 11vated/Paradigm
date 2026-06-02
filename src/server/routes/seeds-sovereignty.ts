@@ -35,7 +35,7 @@ export interface SeedsSovereigntyDeps {
 }
 
 export function registerSeedsSovereigntyRoutes(app: Express, deps: SeedsSovereigntyDeps): void {
-  const { seeds, saveSeeds, optionalAuth, validateBody, SignSeedSchema, VerifySeedSchema, MintSeedSchema, crypto, SovereigntyLayer, OnChainSovereignty, canonicalizeSeed, seedDigestBytes32, createSovereignGene, isSovereignGene, getGeneProvenance, licenseSovereignGene, checkGenePermission, authorizeSeedMutation, LocalHmacSigner, LocalDryRunAnchor, LocalFilePin, mintSeedSovereignty, buildC2PAManifest, encodeGseed, log, audit } = deps;
+  const { seeds, saveSeeds, optionalAuth, validateBody, SignSeedSchema, VerifySeedSchema, MintSeedSchema, crypto, SovereigntyLayer, OnChainSovereignty, canonicalizeSeed, seedDigestBytes32, createSovereignGene, isSovereignGene, getGeneProvenance, licenseSovereignGene, checkGenePermission, LocalHmacSigner, LocalDryRunAnchor, LocalFilePin, mintSeedSovereignty, encodeGseed, log, audit } = deps;
 
   app.get('/api/sovereignty/receipt', optionalAuth, async (req: any, res: any) => {
     const hash = req.query.hash as string;

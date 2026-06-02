@@ -1,6 +1,6 @@
 /**
- * Paradigm Infinite — OS Shell CLI Stub (Part 6)
- * `paradigm make <intent>` style entrypoint.
+ * Paradigm Infinite — OS Shell CLI (Part 6)
+ * `paradigm make <intent>` style entrypoint. Delegates to paradigmOSShell for full rich artifact + Part 6 flows.
  */
 
 import { paradigmOSShell } from './hooks';

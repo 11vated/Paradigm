@@ -196,13 +196,13 @@ self.onmessage = (e: MessageEvent<EvolutionMessage>) => {
       isRunning = false;
       break;
       
-    case 'step':
+    case 'step': {
       if (newConfig) config = newConfig;
       if (newPop) population = newPop;
-      
+
       population = evolveGeneration(population, config);
       generation++;
-      
+
       const fitnesses = population.map(s => s.fitness || 0);
       const result: EvolutionResult = {
         type: 'generation_complete',
@@ -214,9 +214,10 @@ self.onmessage = (e: MessageEvent<EvolutionMessage>) => {
           minFitness: Math.min(...fitnesses)
         }
       };
-      
+
       self.postMessage(result);
       break;
+    }
   }
 };
 

@@ -13,6 +13,19 @@ export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ [key: st
 // For now we provide an empty map. In a follow-up pass we can move the full 100+
 // static imports here. The important thing is that these imports are no longer
 // in the client-reachable engine-dispatcher.ts.
-export const DOMAIN_MAP: Record<string, GeneratorFn> = {};
+// Wire the recently upgraded rich generators (real PNG, WASM+playable, STL, Gerber, SDF) so dispatch/grow always gets rich paths.
+import { generateNanobot } from '../generators/nanobot.js';
+import { generateDrug } from '../generators/drug.js';
+import { generateGameWASM } from '../generators/game-wasm.js';
+import { generateProceduralV3 } from '../generators/procedural.js';
+import { generateCircuitV3 } from '../generators/circuit.js';
+
+export const DOMAIN_MAP: Record<string, GeneratorFn> = {
+  nanobot: generateNanobot,
+  drug: generateDrug,
+  'game-wasm': generateGameWASM,
+  procedural: generateProceduralV3,
+  circuit: generateCircuitV3,
+};
 
 console.debug('[legacy-engine-dispatcher-impl] Server-only legacy module loaded (heavy generators isolated)');

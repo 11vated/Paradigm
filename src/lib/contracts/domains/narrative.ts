@@ -33,7 +33,7 @@ export class NarrativeContract implements QualityContract<NarrativeGeneSet, Narr
 
   synthesize(seed: NarrativeGeneSet, rng: Xoshiro256StarStar): NarrativeArtifact {
     return {
-      id: `narrative_${Date.now()}`,
+      id: `narrative_${Math.floor(rng.nextF64() * 1e15)}`,
       wordCount: seed.lengthWords || 12500,
       actCount: 5,
       transformationBeats: seed.transformationBeats || 14,

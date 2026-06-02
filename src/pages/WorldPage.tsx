@@ -34,6 +34,7 @@ const WorldPage: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setState({ kind: 'loading' });
     fetch('/api/v1/world/generate', {
       method: 'POST',

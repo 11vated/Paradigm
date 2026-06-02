@@ -88,7 +88,7 @@ export class CharacterContract implements QualityContract<CharacterGeneSet, Char
     const baseTriangles = 45000;
     const geneVariation = (seed.powerSignature || 0.5) * 20000;
     const rand = rng.nextF64();
-    const triangleCount = Math.floor(baseTriangles + geneVariation + rand * 15000);
+    const _triangleCount = Math.floor(baseTriangles + geneVariation + rand * 15000);
 
     // Generate real vertex data (simple but real subdivided icosahedron-like humanoid proxy)
     const vertices: number[] = [];
@@ -130,7 +130,7 @@ export class CharacterContract implements QualityContract<CharacterGeneSet, Char
     const actualTriangleCount = Math.floor(indices.length / 3);
 
     const artifact: CharacterArtifact = {
-      id: `char_${Date.now()}`,
+      id: `char_${Math.floor(rng.nextF64() * 1e15)}`,
       form: {
         mesh: {
           triangleCount: actualTriangleCount,

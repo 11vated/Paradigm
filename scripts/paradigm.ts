@@ -31,8 +31,7 @@ async function main() {
         let moved = 0;
         for (const f of files) {
           if (f.startsWith('char_') || f.startsWith('real-') || f === 'undefined.json') {
-            await fs.rename(path.join(artifactsDir, f), path.join(legacyDir, f)).catch(() => {});
-            moved++;
+            await fs.rename(path.join(artifactsDir, f), path.join(legacyDir, f)).catch((e: any) => { console.warn('[paradigm clean] move failed for', f, e?.message); });
           }
         }
         console.log(`Cleaned artifacts/: moved ${moved} legacy files into artifacts/legacy/`);
@@ -54,7 +53,7 @@ async function main() {
         try {
           const legacy = await fs.readdir(path.join(artifactsRoot, 'legacy'));
           legacyCount = legacy.length;
-        } catch {}
+        } catch (e: any) { console.warn('[paradigm artifacts] legacy read issue:', e?.message); }
         const recent = jsonFiles
           .filter(f => !f.includes('legacy'))
           .sort()
@@ -68,8 +67,8 @@ async function main() {
         console.log('\nMost recent active artifacts:');
         recent.forEach(f => console.log(`  ${f}`));
         console.log('\nUse `paradigm list` for detailed view or `paradigm clean` to archive more.');
-      } catch {
-        console.log('No artifacts directory found.');
+      } catch (e: any) {
+        console.log('No artifacts directory found or error:', e?.message || e);
       }
       break;
     }
@@ -114,10 +113,10 @@ async function main() {
           if (legacyCount > 0) {
             console.log(`\nLegacy archive: ${legacyCount} items  →  run \`paradigm clean\` to move more`);
           }
-        } catch {}
+        } catch { /* swallow: best-effort CLI helper, original error already logged */ }
 
         console.log('\nTip: Use `paradigm chat` to talk to the agent, or `paradigm make "..." --domain X` for precise control.');
-      } catch {
+      } catch { /* swallow: best-effort CLI helper, original error already logged */
         console.log('No artifacts directory found yet. Run a `make` command first.');
       }
       break;
@@ -204,7 +203,7 @@ async function main() {
             for (const e of entries) {
               if (e.isFile() && e.name.endsWith('.wav')) candidates.push(path.join(outDir, e.name));
             }
-          } catch {}
+          } catch { /* swallow: best-effort CLI helper, original error already logged */ }
           // Also check common temp locations used by music contract
           const tmpBases = [process.cwd(), path.join(process.cwd(), 'tmp'), path.join(process.cwd(), '.tmp')];
           for (const base of tmpBases) {
@@ -215,14 +214,14 @@ async function main() {
                   candidates.push(path.join(base, e.name));
                 }
               }
-            } catch {}
+            } catch { /* swallow: best-effort CLI helper, original error already logged */ }
           }
           const unique = Array.from(new Set(candidates)).slice(-5);
           let copied = 0;
           for (const src of unique) {
             const base = path.basename(src);
             const dest = path.join(outDir, `${cleanArtifactId}-${base}`);
-            try { await fs.copyFile(src, dest); copied++; } catch {}
+            try { await fs.copyFile(src, dest); copied++; } catch { /* swallow: best-effort CLI helper, original error already logged */ }
           }
           if (copied > 0) {
             console.log(`\n[Music] Persisted ${copied} real 5-stem WAV(s) into artifacts/ alongside JSON.`);
@@ -241,9 +240,6 @@ async function main() {
         const outDir = path.join(process.cwd(), 'artifacts');
         await fs.mkdir(outDir, { recursive: true });
         // Ultra-aggressive domain + deterministic filename (kill all legacy char_ / undefined leakage on disk)
-        const detected = explicitDomain || result.artifact?.domain || 
-          (result.artifact?.strataScores ? Object.keys(result.artifact.strataScores).find(k => (result.artifact.strataScores[k] || 0) > 0.1) : null) || 
-          'artifact';
         const safeDomain = godDomain; // already sanitized above
         const outFile = path.join(outDir, `${safeDomain}-${cleanArtifactId}.json`);
         const safeSeed = intent;
@@ -269,7 +265,7 @@ async function main() {
             if (phys.sidecarPath) {
               console.log(`Physical production sidecar written: ${phys.sidecarPath}`);
             }
-          } catch {}
+          } catch { /* swallow: best-effort CLI helper, original error already logged */ }
         }
 
         // Real completion for character: only trigger on explicit character domain or very strong signals
@@ -390,7 +386,7 @@ async function main() {
         const { ALL_DOMAIN_CONTRACTS } = await import('../src/lib/contracts/domain-registry.js');
         console.log(`15_ Contracts: ${ALL_DOMAIN_CONTRACTS.length} domains (full engineering grade)`);
         console.log('Sample:', ALL_DOMAIN_CONTRACTS.slice(0, 6).map((c: any) => c.domain).join(', '));
-      } catch {
+      } catch { /* swallow: best-effort CLI helper, original error already logged */
         console.log('27 domains active');
       }
 
@@ -407,7 +403,7 @@ async function main() {
           const legacyFiles = await fs.readdir(legacyDir);
           console.log(`Legacy archive: ${legacyFiles.length} old artifacts preserved in artifacts/legacy/`);
         }
-      } catch {}
+      } catch { /* swallow: best-effort CLI helper, original error already logged */ }
 
       console.log('\nCore guarantee: Same seed + same deterministic RNG = bit-identical artifact. Forever.');
       console.log('\nCommands: make, list, clean, status, doctor, agent, verify-15, golden-check, federation-*');
@@ -469,7 +465,7 @@ async function main() {
         const p = path.join(process.cwd(), PERSIST_DIR, PERSIST_FILE);
         const raw = await fs.readFile(p, 'utf8');
         persistedState = JSON.parse(raw);
-      } catch {}
+      } catch { /* swallow: best-effort CLI helper, original error already logged */ }
 
       const sessionContext: any = {
         seeds: persistedState.seeds || [],

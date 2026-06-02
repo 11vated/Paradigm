@@ -212,7 +212,7 @@ export function embedInGLTF(gltfJson: any, provenance: SeedProvenance): any {
 /**
  * Embed provenance into WAV metadata
  */
-export function embedInWAV(wavBuffer: Buffer, provenance: SeedProvenance): Buffer {
+export function embedInWAV(wavBuffer: Buffer, _provenance: SeedProvenance): Buffer {
   // In production: add to WAV metadata chunk (INFO chunk)
   // For now, return buffer as-is
   return wavBuffer;
@@ -226,7 +226,7 @@ export function verifyArtifactIntegrity(
   provenance: SeedProvenance
 ): boolean {
   // Check if artifact hash matches seed hash
-  const artifactHash = sha256Sync(artifactData);
+  const _artifactHash = sha256Sync(artifactData);
   
   // Simplified: in production, use actual deterministic hash from seed
   return verifyProvenance(provenance);

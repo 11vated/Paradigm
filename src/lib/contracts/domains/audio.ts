@@ -33,7 +33,7 @@ export class AudioContract implements QualityContract<AudioGeneSet, AudioArtifac
 
   synthesize(seed: AudioGeneSet, rng: Xoshiro256StarStar): AudioArtifact {
     return {
-      id: `audio_${Date.now()}`,
+      id: `audio_${Math.floor(rng.nextF64() * 1e15)}`,
       duration: seed.duration || 18,
       sampleRate: 44100,
       spatial: seed.spatial !== false,

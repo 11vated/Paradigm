@@ -88,6 +88,7 @@ export function useVirtualScroll(
 export function usePerformanceMonitor() {
   const fpsRef = useRef<number>(60);
   const frameCountRef = useRef<number>(0);
+  // eslint-disable-next-line react-hooks/purity -- performance.now() is used to seed a ref, not to drive render
   const lastTimeRef = useRef<number>(performance.now());
 
   useEffect(() => {

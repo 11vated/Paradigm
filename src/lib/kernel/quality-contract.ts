@@ -25,9 +25,21 @@
  * Phase 2 (1/n) — Generator Renaissance.
  * See Documents/Paradigm-Vision/05_GENERATOR_RENAISSANCE.md.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Quality Contract loads predicate registry and stratum predicates via require() to break circular deps. */
 
 import { createHash } from 'crypto';
 import { kernelNow, kernelNowIso } from './clock';
+
+const QC_VERBOSE =
+  process.env.PARADIGM_QC_VERBOSE === '1' || process.env.PARADIGM_QC_VERBOSE === 'true';
+
+function qcLog(...args: unknown[]): void {
+  if (QC_VERBOSE) console.log(...args);
+}
+
+function qcDebug(...args: unknown[]): void {
+  if (QC_VERBOSE) console.debug(...args);
+}
 
 // ─── Contract interface ──────────────────────────────────────────────────────
 
@@ -360,28 +372,27 @@ export function getContract(domain: string): QualityContract<any, any, any> | un
 }
 
 export function listContracts(): QualityContract<any, any, any>[] {
-  return Array.from(REGISTRY.values());
+  // Kernel 5-clause contracts only (curated/synthesize/invert/rate/hashArtifact).
+  // Engineering-grade 15_ contracts live in src/lib/contracts/domain-registry.ts — not REGISTRY.
+  return Array.from(REGISTRY.values()).filter(
+    (c) => typeof (c as QualityContract<unknown, unknown, unknown>).curated === 'function',
+  );
 }
 
 // ─── Bridge to new engineering-grade contracts (15_ spec integration) ────────
-// This makes the new Part 3/5 contracts first-class citizens in the kernel registry.
-// @ts-ignore - dynamic 15_ bridge (runtime only, shapes evolve with the 27 contracts)
+// Expose manifest for health/preflight; do NOT register into REGISTRY (different contract shape).
 import('../contracts/domain-registry.js').then((mod: any) => {
   const ALL = mod.ALL_DOMAIN_CONTRACTS || [];
   const getFull27Manifest = mod.getFull27Manifest;
-  let newlyRegistered = 0;
-  ALL.forEach((c: any) => {
-    if (!REGISTRY.has(c.domain)) {
-      registerContract(c);
-      newlyRegistered++;
-    }
-  });
-  console.log(`[15_spec] Registered ${newlyRegistered} new engineering-grade contracts into kernel REGISTRY (total: ${ALL.length})`);
-  (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_CONTRACTS__ = { count: ALL.length, manifest: getFull27Manifest?.() || [] };
+  (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_CONTRACTS__ = {
+    count: ALL.length,
+    manifest: getFull27Manifest?.() || [],
+  };
+  qcLog(`[15_spec] ${ALL.length} engineering-grade contracts available via domain-registry (kernel REGISTRY unchanged)`);
 }).catch(() => { /* silent */ });
 
 // Expose helper to run conformance specifically on the new 15_ contracts
-export async function run15SpecConformance(opts: any = {}) {
+export async function run15SpecConformance(_opts: any = {}) {
   try {
     const { ALL_DOMAIN_CONTRACTS } = await import('../contracts/domain-registry.js');
     const results = [];
@@ -429,42 +440,23 @@ export async function runAllConformance(opts: ConformanceOptions = {}): Promise<
   }
 }
 
-// Auto-expose 15_ contracts in health surfaces when the kernel health module loads
-try {
-  // @ts-ignore - optional dev bridge (only on server / Node)
-  if (typeof process !== 'undefined' && process.versions?.node) {
-    // @ts-ignore - server-only optional bridge, never executed in browser
-    const health = await import(/* @vite-ignore */ '../server/routes/substrate-health.js');
-    if (health && typeof (health as any /* TODO: Phase 1 strict */).register15SpecData === 'function') {
-      (health as any /* TODO: Phase 1 strict */).register15SpecData(() => (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_CONTRACTS__ || {});
-    }
-  }
-} catch {}
-
-// Final integration: ensure new contracts appear in preflight golden corpus checks when relevant
-try {
-  // @ts-ignore - optional script bridge (only present in some build contexts, server only)
-  if (typeof process !== 'undefined' && process.versions?.node) {
-    // @ts-ignore - server-only optional script, never executed in browser
-    const preflight = await import(/* @vite-ignore */ '../../scripts/preflight-report.ts');
-    if (preflight) {
-      console.debug('[15_spec] New contracts visible to preflight surfaces');
-    }
-  }
-} catch {}
+// Server/preflight bridges live in src/server/routes/substrate-health.ts and scripts/preflight-report.ts
+// (imported from server bootstrap only — never from this module, so Vite client bundles stay clean).
 
 // Make run15SpecConformance available globally for surfaces
 (globalThis as any /* TODO: Phase 1 strict */).run15SpecConformance = run15SpecConformance;
 
 // Force the new contracts into the main conformance leaderboard on first load
-setTimeout(async () => {
-  try {
-    const results = await run15SpecConformance();
-    if (results.length > 0) {
-      console.log(`[15_spec] 15_ contracts now participating in conformance: ${results.length} domains`);
-    }
-  } catch {}
-}, 100);
+if (QC_VERBOSE) {
+  setTimeout(async () => {
+    try {
+      const results = await run15SpecConformance();
+      if (results.length > 0) {
+        qcLog(`[15_spec] 15_ contracts now participating in conformance: ${results.length} domains`);
+      }
+    } catch { /* swallow: best-effort quality probe, contract is informational */ }
+  }, 100);
+}
 
 // Final hook: make the new contracts visible in the global Paradigm namespace for OS Shell / external tools
 try {
@@ -473,33 +465,32 @@ try {
     getAll: () => (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_CONTRACTS__?.manifest || [],
     runConformance: run15SpecConformance,
   };
-  console.log('[15_spec] Paradigm.Contracts15 namespace populated with 27 new contracts');
-} catch {}
+  qcLog('[15_spec] Paradigm.Contracts15 namespace populated with 27 new contracts');
+} catch { /* swallow: best-effort quality probe, contract is informational */ }
 
 // One last integration: ensure the new contracts are visible to the main preflight golden corpus when the script runs
 try {
   (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_GOLDEN_DOMAINS__ = (globalThis as any /* TODO: Phase 1 strict */).__PARADIGM_15_GOLDEN_DOMAINS__ || [];
-  console.debug('[15_spec] New contracts ready for golden corpus participation');
-} catch {}
+  qcDebug('[15_spec] New contracts ready for golden corpus participation');
+} catch { /* swallow: best-effort quality probe, contract is informational */ }
 
 // Ultimate hook: the new 15_ contracts are now the canonical source of truth for the 27 domains
 // Legacy generator contracts remain for backward compatibility during transition
-console.log('[15_spec] Paradigm 15_ engineering-grade contracts fully live and integrated');
+qcLog('[15_spec] Paradigm 15_ engineering-grade contracts fully live and integrated');
 
 // One final safeguard: ensure the new contracts can be hot-reloaded in dev without breaking the kernel
-// @ts-ignore - webpack HMR only (safe no-op in Node / tsx)
 if (typeof (module as any /* TODO: Phase 1 strict */) !== 'undefined' && (module as any /* TODO: Phase 1 strict */).hot) {
   (module as any /* TODO: Phase 1 strict */).hot.accept('../contracts/domain-registry.js', () => {
-    console.log('[15_spec] Hot-reloaded new contracts registry');
+    qcLog('[15_spec] Hot-reloaded new contracts registry');
   });
 }
 
 // The new 15_ contracts are now the canonical, production-grade implementation for all 27 domains.
 // This completes the core contracts + integration wave of the 15_ spec implementation.
-console.log('[15_spec] 15_ contracts wave complete. Paradigm 100% contracts system fully operational.');
+qcLog('[15_spec] 15_ contracts wave complete. Paradigm 100% contracts system fully operational.');
 
 // Final status line for logs / health
-console.log('[15_spec] All 27 domains + full Part 6 (economics, federation, physical, OS Shell, governance) now live in the kernel.');
+qcLog('[15_spec] All 27 domains + full Part 6 (economics, federation, physical, OS Shell, governance) now live in the kernel.');
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
@@ -643,7 +634,7 @@ export function getStratumHealthSummary() {
     // Dynamic import to avoid circular issues at load time
     const preds = require('./quality/predicates');
     timePredicateAvailable = typeof preds.timePredicate === 'function' || typeof preds.stratumPredicates?.Time === 'function';
-  } catch {}
+  } catch { /* swallow: best-effort quality probe, contract is informational */ }
 
   return {
     totalContracts: declarations.length,

@@ -1,7 +1,6 @@
 import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } from './types';
 import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
 import { distanceGene } from '../lib/kernel/gene_system.js';
-import { canonicalizeSeed } from '../lib/sovereignty/canonical.js';
 import crypto from 'crypto';
 import { signData, verifySignature } from '../lib/sovereignty/signing.js';
 
@@ -238,7 +237,7 @@ export class UniversalSeed {
     const nextFloat = this.requireDeterministicFloat(rng);
     const mutated = this.clone();
 
-    for (const [type, gene] of mutated.genes) {
+    for (const [, gene] of mutated.genes) {
       if (!gene.metadata.mutable || gene.metadata.locked) continue;
 
       if (nextFloat() < gene.metadata.mutationRate * intensity) {

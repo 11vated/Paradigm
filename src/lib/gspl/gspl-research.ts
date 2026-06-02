@@ -12,8 +12,6 @@
  * 5. Can GSPL be the universal interface for human-AI collaboration?
  */
 
-import { createHash } from 'crypto';
-
 // ─── Research Dimensions ─────────────────────────────────────────────────────
 
 export interface ResearchDimension {

@@ -267,8 +267,7 @@ export class PathTracer {
   /**
    * Generate bounce ray based on material
    */
-  private generateBounceRay(hit: any, scene: any): any {
-    const roughness = hit.material.roughness || 0.5;
+  private generateBounceRay(hit: any, _scene: any): any {
     const metallic = hit.material.metallic || 0.0;
 
     // Diffuse bounce (Lambertian)

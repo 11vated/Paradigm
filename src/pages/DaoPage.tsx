@@ -42,6 +42,7 @@ export default function DaoPage() {
     try { setProposals((await getDAOProposals()).proposals || []); } catch { /* ignore */ }
   };
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
   useEffect(() => { load(); }, []);
 
   const filtered = tab === 'all' ? proposals : proposals.filter(p => p.status === tab);

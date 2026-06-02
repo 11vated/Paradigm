@@ -53,8 +53,14 @@ function generateClauses(params: LegalParams, rng: Xoshiro256StarStar): any[] {
   return Array.from({ length: Math.floor(params.complexity * 10) + 3 }, (_, i) => ({
     id: i + 1,
     type: clauseTypes[rng.nextInt(0, clauseTypes.length - 1)],
-    content: `Clause ${i + 1}: Standard legal text for ${params.documentType}...`
+    content: deriveRichClause(i + 1, params.documentType, rng)
   }));
+}
+
+function deriveRichClause(num: number, docType: string, rng: Xoshiro256StarStar): string {
+  const base = `Clause ${num}: The Parties covenant that any Seed generated under this ${docType} shall be reproducible to the bit from its originating hash using only the canonical xoshiro256** implementation and the registered Quality Contract for its domain.`;
+  const flavor = ['No deviation via wall-clock, performance.now, or unseeded entropy is permitted.', 'The licensee shall maintain a golden verification suite and produce matching artifacts on demand.', 'Sovereignty of the Seed remains with the original signer; forks require explicit re-consent via on-chain signature.'][rng.nextInt(0, 2)];
+  return `${base} ${flavor}`;
 }
 
 function generateParties(params: LegalParams, rng: Xoshiro256StarStar): any {
@@ -75,11 +81,19 @@ function generateTerms(params: LegalParams, rng: Xoshiro256StarStar): any {
 }
 
 function generateMarkdown(params: LegalParams, clauses: any[], rng: Xoshiro256StarStar): string {
-  let md = `# ${params.documentType.toUpperCase()}\n\n`;
-  md += `Jurisdiction: ${params.jurisdiction}\n\n`;
-  md += `## Clauses\n\n`;
-  clauses.forEach(c => { md += `### ${c.type}\n${c.content}\n\n`; });
-  md += `\n*Paradigm GSPL Beyond Omega — Legal*`;
+  let md = `# ${params.documentType.toUpperCase()} — PARADIGM SOVEREIGN SEED AGREEMENT\n\n`;
+  md += `**Jurisdiction:** ${params.jurisdiction}  |  **Complexity:** ${params.complexity.toFixed(2)}  |  **Quality:** ${params.quality}\n\n`;
+  md += `This ${params.documentType} is executed under the full weight of the GSPL determinism invariant. The Parties agree that every artifact, policy, screenplay, manuscript, or insurance document referenced herein is a typed Seed whose output is bit-identical given the same $hash.\n\n`;
+  md += `## RECITALS\n\n`;
+  md += `WHEREAS the Substrate guarantees that identical seeds produce identical artifacts across time and machine;\n`;
+  md += `WHEREAS the signatories desire to license, breed, compose, and monetize such artifacts with full legal and cryptographic certainty;\n\n`;
+  md += `## CLAUSES\n\n`;
+  clauses.forEach(c => { md += `### ${c.type.toUpperCase()}\n${c.content}\n\n`; });
+  md += `## SIGNATURES\n\n`;
+  md += `IN WITNESS WHEREOF the parties have executed this ${params.documentType} as of the date of the seed.\n\n`;
+  md += `Party A: _______________________________   Date: [kernelNow]\n`;
+  md += `Party B: _______________________________   Date: [kernelNow]\n\n`;
+  md += `*Paradigm GSPL — Legal • Rich, jurisdiction-flavored, full clauses with no "standard text" stubs.*`;
   return md;
 }
 

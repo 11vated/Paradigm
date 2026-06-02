@@ -80,6 +80,7 @@ export default function ResonanceWave({ value = {}, color = '#00E5FF', height = 
     ctx.fillStyle = gradient;
     ctx.fill();
 
+    // eslint-disable-next-line react-hooks/immutability -- self-referential rAF chain; draw is captured by closure and re-queued after each frame
     frameRef.current = requestAnimationFrame(draw);
   }, [frequency, amplitude, harmonics, phase, color]);
 

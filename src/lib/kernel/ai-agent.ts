@@ -5,11 +5,11 @@
  * with the Paradigm generative system.
  */
 
-import type { Seed, GeneratorOutput } from './engines';
+import type { Seed } from './engines';
 import { rngFromHash } from './rng';
 import { growSeed } from './engines';
 import { executeGspl } from './gspl-interpreter';
-import { encodeGseed, createGseed, SectionType } from './binary-format';
+import { encodeGseed, createGseed } from './binary-format';
 import { buildC2PAManifest } from './c2pa-manifest';
 import type { SeedLLM } from '../intelligence/llm/base';
 

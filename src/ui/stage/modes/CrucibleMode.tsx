@@ -32,6 +32,7 @@ export const CrucibleMode: React.FC = () => {
 
   useEffect(() => {
     if (!seed?.hash) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     const cleanup = revealHud();
     return cleanup;
   }, [seed?.hash, revealHud]);

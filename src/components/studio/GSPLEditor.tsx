@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Code2, Play, AlertCircle } from 'lucide-react';
+import { Play, AlertCircle } from 'lucide-react';
 import { useSeedStore } from '@/stores/seedStore';
 
 // Removed unused GSPL_KEYWORDS
@@ -116,7 +116,7 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
                       }
                     }
                   });
-                } catch {}
+                } catch { /* swallow: best-effort editor probe, autocomplete is non-critical */ }
                 return (
                   <div key={domain} className="mb-2 last:mb-0">
                     <div className="text-[10px] font-mono text-[#8f8] mb-0.5">{domain}.gspl <span className="text-[#555] text-[8px]">({info.path})</span></div>

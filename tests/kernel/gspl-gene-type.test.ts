@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { registerGSPLGeneType } from '../../src/lib/kernel/gspl-gene-type';
 import { geneTypeRegistry } from '../../src/lib/kernel/gene-type-registry';
 import { Xoshiro256StarStar } from '../../src/lib/kernel/rng';

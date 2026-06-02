@@ -334,8 +334,8 @@ export class OptimizationSystem {
    */
   occlusionCull(
     meshIndices: number[],
-    depthBuffer: Float32Array,
-    resolution: number
+    _depthBuffer: Float32Array,
+    _resolution: number
   ): CullingResult {
     const visibleMeshes: number[] = [];
     const culledMeshes: number[] = [];
@@ -413,7 +413,7 @@ export class OptimizationSystem {
     triIndex: number,
     indices: Uint32Array,
     vertexCache: number[],
-    cacheSize: number
+    _cacheSize: number
   ): number {
     const idx = triIndex * 3;
     const v0 = indices[idx];

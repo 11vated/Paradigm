@@ -176,7 +176,7 @@ export class DecentralandExporter extends MetaverseExporter {
   
   async export(seedData: any, config: ExportConfig): Promise<ExportedAsset> {
     const baseExporter = new GLTFExporter();
-    const glb = await baseExporter.export(seedData, { ...config, format: 'glb' });
+    const _glb = await baseExporter.export(seedData, { ...config, format: 'glb' });
     
     // Add Decentraland metadata
     const dclMetadata = {
@@ -248,7 +248,7 @@ export class RobloxExporter extends MetaverseExporter {
     };
   }
   
-  private generateRBXM(meshData: any): string {
+  private generateRBXM(_meshData: any): string {
     // Simplified RBXM structure
     return `<?xml version="1.0" encoding="utf-8"?>
 <roblox xmlns="http://www.roblox.com/roblox" version="1">

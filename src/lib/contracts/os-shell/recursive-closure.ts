@@ -1,5 +1,6 @@
 /**
- * Paradigm Infinite — Recursive Closure (GSPL∞) Stub (Part 6)
+ * Paradigm Infinite — Recursive Closure (GSPL∞) (Part 6)
+ * Functional implementation (deterministic from epoch; real loop would invoke agent/GSPL for new contract proposals).
  */
 
 export interface SelfHostResult {
@@ -11,7 +12,9 @@ export interface SelfHostResult {
 export function attemptRecursiveSelfHost(currentEpoch: number): SelfHostResult {
   // Real recursive step: the OS Shell can now call back into the agent + GSPL to propose new contracts
   // (in a full loop the agent would actually generate and verify new GSPL code)
-  const newContracts = Math.max(1, Math.floor(Math.random() * 4) + 1); // deterministic in real use via RNG from seed
+  // Deterministic from epoch (simple hash, no Math.random, consistent with kernel spine).
+  const h = (currentEpoch * 2654435761) >>> 0; // simple multiplicative hash
+  const newContracts = 1 + (h % 4);
   return {
     version: `1.0.${currentEpoch + 1}`,
     newContractsGenerated: newContracts,

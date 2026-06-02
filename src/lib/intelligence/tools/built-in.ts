@@ -9,7 +9,7 @@
 import { kernelNow } from '../../kernel/clock';
 import { rngFromHash } from '../../kernel/rng';
 import type { ResolvedGeneSpec } from '../agent/types';
-import type { Tool, ToolContext, ToolResult, WorldLookupArgs, OracleScoreArgs, ResonanceScoreArgs } from './types';
+import type { Tool, ToolResult, WorldLookupArgs, ResonanceScoreArgs } from './types';
 import {
   resonance,
   harmonicResonance,

@@ -48,6 +48,7 @@ export const LineageMode: React.FC = () => {
       setAncestors(Array.isArray(anc) ? anc : (anc.lineage ?? anc.ancestors ?? []));
       setDescendants(Array.isArray(des) ? des : (des.descendants ?? []));
     }).catch((e) => setError(String(e))).finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed identity; if seed.id is undefined we no-op
   }, [seed?.id]);
 
   const activate = useCallback((entry: LineageEntry) => {

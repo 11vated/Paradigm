@@ -2,7 +2,7 @@
  * Auth routes — register / login / refresh / logout.
  * Slice 5 of the modular router split. Extracted from server.ts.
  */
-import type { Express, Request, Response } from 'express';
+import type { Express } from 'express';
 
 export interface AuthDeps {
   authLimiter: (req: any, res: any, next: any) => void;

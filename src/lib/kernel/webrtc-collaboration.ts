@@ -392,7 +392,7 @@ export class WebRTCManager {
   /**
    * Send evolution update
    */
-  sendEvolveUpdate(generation: number, bestFitness: number, roomId: string): void {
+  sendEvolveUpdate(generation: number, bestFitness: number, _roomId: string): void {
     const message = JSON.stringify({
       type: 'evolve-update',
       generation,
@@ -424,7 +424,7 @@ export class WebRTCManager {
    on(event: 'evolve-update', handler: (data: any, fromPeer: string) => void): void;
    on(event: 'user-joined', handler: (userId: string, name: string) => void): void;
    on(event: 'user-left', handler: (userId: string) => void): void;
-   on(event: string, handler: Function): void {
+   on(event: string, handler: (...args: any[]) => any): void {
      switch (event) {
        case 'seed-shared':
          this.onSeedShared = handler as (seed: Seed, fromPeer: string) => void;

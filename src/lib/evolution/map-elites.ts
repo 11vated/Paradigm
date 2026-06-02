@@ -79,7 +79,7 @@ export class MAPElites {
     
     for (const seed of population) {
       const features = this.featureExtractor(seed);
-      const interpolated = this.interpolateFeatures(features);
+      this.interpolateFeatures(features);
       const key = this.getCellKey(features);
       
       const fitness = fitnessFn(seed);
@@ -105,7 +105,7 @@ export class MAPElites {
     
     if (!geneCopy.genes) return geneCopy;
     
-    for (const [key, gene] of Object.entries(geneCopy.genes)) {
+    for (const [, gene] of Object.entries(geneCopy.genes)) {
       if (this.rng.nextF64() < this.config.mutationRate) {
         const g = gene as any;
         switch (g.type) {

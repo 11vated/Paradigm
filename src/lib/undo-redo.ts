@@ -16,7 +16,7 @@ interface UndoRedoActions<T> {
 
 type UndoRedoStore<T> = HistoryState<T> & UndoRedoActions<T>;
 
-export function createUndoRedoStore<T>(initialState: T, maxHistory: number = 50) {
+export function createUndoRedoStore<T>(_initialState: T, maxHistory: number = 50) {
   return create<UndoRedoStore<T>>((set, get) => ({
     past: [],
     future: [],
@@ -74,7 +74,7 @@ export function createUndoRedoStore<T>(initialState: T, maxHistory: number = 50)
 }
 
 export function undoRedoMiddleware<T extends object>(
-  createFn: (fn: (state: T) => T) => void
+  _createFn: (fn: (state: T) => T) => void
 ) {
   return {
     undo: () => {

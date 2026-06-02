@@ -44,6 +44,7 @@ export const FriendLibrary: React.FC<FriendLibraryProps> = ({
       .finally(() => setLoading(false));
   }, [limit, sortBy]);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
   useEffect(() => { refresh(); }, [refresh, refreshKey]);
 
   const handleDelete = useCallback(async (id: string) => {

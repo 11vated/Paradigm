@@ -218,7 +218,7 @@ export class MeshQualitySystem {
   private static getVertexNeighbors(
     mesh: MeshData,
     vertexIndex: number,
-    edgeMap: Map<string, number>
+    _edgeMap: Map<string, number>
   ): number[] {
     const neighbors: Set<number> = new Set();
 
@@ -302,13 +302,14 @@ export class MeshQualitySystem {
             vertices[i + 1] -= displacement * v[1];
             vertices[i + 2] -= displacement * v[2];
             break;
-          case 'smooth':
+          case 'smooth': {
             // Laplacian smoothing
             const avg = this.computeVertexAverage(mesh, i / 3);
             vertices[i] += displacement * (avg[0] - v[0]);
             vertices[i + 1] += displacement * (avg[1] - v[1]);
             vertices[i + 2] += displacement * (avg[2] - v[2]);
             break;
+          }
         }
       }
     }
@@ -344,7 +345,6 @@ export class MeshQualitySystem {
    */
   private static computeVertexAverage(mesh: MeshData, vertexIndex: number): [number, number, number] {
     const neighbors: number[] = [];
-    const idx = vertexIndex * 3;
 
     for (let i = 0; i < mesh.indices.length; i += 3) {
       const v0 = mesh.indices[i];

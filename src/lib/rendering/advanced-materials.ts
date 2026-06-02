@@ -270,7 +270,7 @@ export class AdvancedMaterialSystem {
    */
   static subsurfaceScattering(
     material: DisneyMaterial,
-    thickness: number,
+    _thickness: number,
     NdotL: number,
     NdotV: number
   ): [number, number, number] {
@@ -327,8 +327,8 @@ export class AdvancedMaterialSystem {
 
   static distributionAnisotropicGGX(
     NdotH: number,
-    TdotH: number,
-    BdotH: number,
+    _TdotH: number,
+    _BdotH: number,
     alphaT: number,
     alphaB: number
   ): number {

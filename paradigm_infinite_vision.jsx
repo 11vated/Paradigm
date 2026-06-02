@@ -585,7 +585,7 @@ export default function App() {
                     "transformations:": "#e8e87c", "quality:": "#7ce8e8",
                     "SSJ": "#e8e87c", "UI": "#e2e8f0", "Base": "#94a3b8",
                   };
-                  const highlighted = line;
+                  const _highlighted = line;
                   return (
                     <div key={i} style={{ display: "flex" }}>
                       <span style={{ color: "#334155", minWidth: 28, userSelect: "none", fontSize: 10 }}>{i + 1}</span>

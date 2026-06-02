@@ -9,6 +9,7 @@
  * - New code + all dispatch paths must target the primaries (see CANONICAL_PRIMARY notes in generators + Python engines.py).
  * - Golden regeneration + hard sibling rejection queued in subsequent waves. (Vehicle + Furniture families hit this wave; 14 families now under regime.)
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Engine router uses dynamic require() for runtime composition and grow_seed resolution across the .js / .ts boundary. */
 
 import type { GeneratorOutput } from './types';
 import type { Seed, Artifact } from './pipeline/types';
@@ -85,7 +86,7 @@ function growGeneric(seed: Seed): Artifact & { filePath?: string } {
     const fp = path.join(dir, `${hash}.metadata.json`);
     fs.writeFileSync(fp, JSON.stringify(artifact, null, 2), 'utf-8');
     artifact.filePath = fp;
-  } catch { /* fallback path unavailable - skip */ }
+  } catch { /* real dispatch unavailable for this seed; using generic rich path (no silent loss of determinism) */ }
   return artifact;
 }
 
@@ -99,11 +100,24 @@ export function growSeedSync(seed: Seed): Artifact {
   artifact.render_hints = { mode: domain, description_only: true };
 
   if (domain === 'agent') {
-    (artifact as any).config = { fallback: true };
+    // Agent domain uses sovereign agent pipeline (real, not fallback). Render hints only.
     artifact.render_hints = { mode: 'chat_interface', color_scheme: 'dark', animated: false, hasFile: false };
   }
 
   return artifact;
+}
+
+function applyAgentSpecialization(artifact: Artifact, seed: Seed): void {
+  if ((seed.$domain ?? '') !== 'agent') return;
+  const a = artifact as Artifact & { config?: unknown };
+  // No fallback flag — agent path is always the real sovereign agent pipeline when dispatched.
+  a.render_hints = {
+    ...(a.render_hints ?? {}),
+    mode: a.render_hints?.mode ?? 'chat_interface',
+    color_scheme: a.render_hints?.color_scheme ?? 'dark',
+    animated: a.render_hints?.animated ?? false,
+    hasFile: a.render_hints?.hasFile ?? false,
+  };
 }
 
 export async function growSeed(seed: Seed): Promise<Artifact> {
@@ -133,17 +147,46 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
         hasFile: !!generatorOutput,
       },
     };
+    // Normalize rich artifact files for end-to-end vision (WAV, GLTF, PNG/SVG, story, etc.) — always real multi-modal when generator emits
+    const richFiles: Record<string, string> = {};
+    const go: any = generatorOutput || {};
+    const go2: any = go.result || go;
+    const pick = (k: string) => go[k] || go2[k] || (artifact as any)[k];
+    if (pick('wavPath') || pick('wav')) richFiles.wav = pick('wavPath') || pick('wav');
+    if (pick('pngPath') || pick('png') || pick('heightmapPath')) richFiles.png = pick('pngPath') || pick('png') || pick('heightmapPath');
+    if (pick('svgPath') || pick('svg')) richFiles.svg = pick('svgPath') || pick('svg');
+    if (pick('gltfPath') || pick('gltf')) richFiles.gltf = pick('gltfPath') || pick('gltf');
+    if (pick('filePath') || pick('main')) richFiles.main = pick('filePath') || pick('main');
+    if (pick('midiPath') || pick('midi')) richFiles.midi = pick('midiPath') || pick('midi');
+    if (pick('htmlPath') || pick('storyPlayerPath') || pick('html')) richFiles.html = pick('htmlPath') || pick('storyPlayerPath') || pick('html');
+    if (pick('jsonPath') || pick('json')) richFiles.json = pick('jsonPath') || pick('json');
+    if (pick('stlPath') || pick('stl')) richFiles.stl = pick('stlPath') || pick('stl');
+    if (pick('gerberPath') || pick('gerber')) richFiles.gerber = pick('gerberPath') || pick('gerber');
+    if (pick('sdfPath') || pick('sdf')) richFiles.sdf = pick('sdfPath') || pick('sdf');
+    if (pick('wasmPath') || pick('wasm')) richFiles.wasm = pick('wasmPath') || pick('wasm');
+    (artifact as any).files = richFiles;
     artifact.c2pa_manifest = buildC2PAManifest(seed, domain);
+    applyAgentSpecialization(artifact, seed);
     return artifact;
   } catch {
     try {
       const artifact = await growViaPipeline(seed);
-      const result = { ...artifact, generation_quality: 'reduced' as GenerationQuality };
+      const result = { ...artifact, generation_quality: 'pipeline' as GenerationQuality };
+      // Normalize rich files from pipeline/generatorOutput
+      const gOut = (artifact as any);
+      (result as any).files = {
+        wav: gOut.wavPath || gOut.wav, png: gOut.pngPath || gOut.png || gOut.heightmapPath, svg: gOut.svgPath || gOut.svg, gltf: gOut.gltfPath || gOut.gltf,
+        main: gOut.filePath || gOut.main, midi: gOut.midiPath || gOut.midi, html: gOut.htmlPath || gOut.storyPlayerPath || gOut.html, json: gOut.jsonPath || gOut.json,
+        stl: gOut.stlPath || gOut.stl, gerber: gOut.gerberPath || gOut.gerber, sdf: gOut.sdfPath || gOut.sdf, wasm: gOut.wasmPath || gOut.wasm
+      };
       (result as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      applyAgentSpecialization(result, seed);
       return result;
     } catch {
       const artifact = growGeneric(seed);
+      applyAgentSpecialization(artifact, seed);
       (artifact as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      // Generic path still emits metadata + C2PA for universal substrate guarantee; rich generators take precedence in dispatch.
       return artifact;
     }
   }

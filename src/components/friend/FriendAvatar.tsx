@@ -50,6 +50,18 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
     return { energy, warmth };
   }, [artifact]);
 
+  // Hooks (must be called before any early return — Rules of Hooks)
+  const [speaking, setSpeaking] = useState(false);
+
+  useEffect(() => {
+    if (!seed || !greeting || !isSpeechAvailable()) return;
+    const stop = speakAs(seed, greeting);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- speaking flag is set from inside speech-playback effect, not derived from props
+    setSpeaking(true);
+    const t = setTimeout(() => setSpeaking(false), Math.max(1200, greeting.length * 70));
+    return () => { stop(); clearTimeout(t); setSpeaking(false); };
+  }, [seed, greeting]);
+
   if (!artifact) {
     return (
       <div
@@ -70,15 +82,6 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
     : 0;
 
   const canSpeak = !!(seed && isSpeechAvailable());
-  const [speaking, setSpeaking] = useState(false);
-
-  useEffect(() => {
-    if (!seed || !greeting || !isSpeechAvailable()) return;
-    const stop = speakAs(seed, greeting);
-    setSpeaking(true);
-    const t = setTimeout(() => setSpeaking(false), Math.max(1200, greeting.length * 70));
-    return () => { stop(); clearTimeout(t); setSpeaking(false); };
-  }, [seed, greeting]);
 
   const handleSpeak = () => {
     if (!seed) return;
@@ -107,7 +110,6 @@ export const FriendAvatar: React.FC<FriendAvatarProps> = ({
       <div
         className="relative w-full h-full rounded-md overflow-hidden border border-neutral-800"
         // SVG is server-generated from our own code — safe to inline.
-        // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: svgInline }}
       />
 

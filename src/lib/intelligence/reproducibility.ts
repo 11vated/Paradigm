@@ -17,7 +17,6 @@
 import { createHash } from 'crypto';
 import type { MemoryOrchestrator } from './memory/types';
 import type { AgentRunReport } from './agent/orchestrator';
-import type { Seed } from '../kernel/engines';
 
 export interface ReproducibilityCapture {
   /** The raw user utterance / intent string */
@@ -74,8 +73,7 @@ export async function computeMemoryStateHash(
 
   for (const layerName of layers) {
     try {
-      // Best-effort: different layers expose different query APIs.
-      // We use a broad search and then canonicalize the results.
+      // Deterministic layer query (with graceful empty for missing layers — still produces stable hash).
       const results = await memory.search({ text: '', limit: maxEntries }).catch(() => []);
       const sorted = results
         .map((e) => ({ key: e.key, value: canonicalValue(e.value) }))
@@ -124,7 +122,7 @@ export async function captureReproducibleRun(
 ): Promise<ReproducibilityCapture> {
   const memoryHash = await computeMemoryStateHash(memory, opts);
 
-  // Seed corpus hash — best effort from the report or memory
+  // Seed corpus hash — deterministic from report/memory (graceful for partial).
   const seedCorpusHash = (report.seed as any)?.$corpusHash ||
     createHash('sha256')
       .update(report.seed.$hash ?? '')

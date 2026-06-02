@@ -8,9 +8,9 @@
  * Deprecated sibling patterns (-v2, -3d, -enhanced, -gpu, food-delivery when routing to legacy) should be rejected or warned.
  * Python side (engines.py etc.) must mirror this map + hard enforcement in grow_* functions.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Engine dispatcher uses require() to load contracts/domain-registry.js dynamically for hot-reload. */
 
 import { Xoshiro256StarStar, rngFromHash } from './rng.js';
-import type { Seed as EngineSeed } from '../kernel/engines.js';
 import path from 'path';
 
 export interface Seed {
@@ -31,7 +31,8 @@ import { getContractByDomain } from '../contracts/domain-registry.js';
 const CANONICAL_15_DOMAINS = new Set([
   'character','sprite','music','visual2d','procedural','fullgame','animation','geometry3d','narrative',
   'ui','physics','audio','ecosystem','game','alife','shader','particle','typography','architecture',
-  'vehicle','furniture','fashion','robotics','circuit','food','choreography','agent'
+  'vehicle','furniture','fashion','robotics','circuit','food','choreography','agent',
+  'nanobot','drug','game-wasm'
 ]);
 
 function try15Contract(seed: any, rng: Xoshiro256StarStar) {
@@ -41,7 +42,7 @@ function try15Contract(seed: any, rng: Xoshiro256StarStar) {
   if (contract && typeof contract.synthesize === 'function') {
     try {
       return contract.synthesize(seed, rng);
-    } catch {}
+    } catch { /* swallow: best-effort dispatch probe, registry is non-fatal */ }
   }
   return null;
 }
@@ -96,16 +97,15 @@ import { generateAR } from './generators/ar.js';
 import { generateVR } from './generators/vr.js';
 
 // 15_ spec integration: new engineering contracts now available for quality/dispatch
-import('../contracts/domain-registry.js').then(({ ALL_DOMAIN_CONTRACTS, getContractByDomain }) => {
-  // All 27 new contracts registered and available for conformance in dispatch paths
-  console.debug('[15_spec] New contracts bridged into engine dispatcher:', ALL_DOMAIN_CONTRACTS.length, 'domains');
+const QC_VERBOSE_DISPATCH =
+  process.env.PARADIGM_QC_VERBOSE === '1' || process.env.PARADIGM_QC_VERBOSE === 'true';
 
-  // Real usage example for flagship domains (character, music, geometry3d, etc.)
-  // These can now be used in grow/dispatch paths instead of (or alongside) legacy contracts
+import('../contracts/domain-registry.js').then(({ ALL_DOMAIN_CONTRACTS, getContractByDomain }) => {
+  if (!QC_VERBOSE_DISPATCH) return;
+  console.debug('[15_spec] New contracts bridged into engine dispatcher:', ALL_DOMAIN_CONTRACTS.length, 'domains');
   const charContract = getContractByDomain('character');
   const musicContract = getContractByDomain('music');
   const geomContract = getContractByDomain('geometry3d');
-  
   if (charContract) console.debug('[15_spec] Character contract ready for dispatch');
   if (musicContract) console.debug('[15_spec] Music contract ready for dispatch');
   if (geomContract) console.debug('[15_spec] Geometry3D contract ready for dispatch');
@@ -203,7 +203,7 @@ export async function dispatch(seed: Seed, outputPath: string): Promise<{ domain
           path.join(outputPath, `${domain}-15-real.json`),
           JSON.stringify(fifteenArtifact, null, 2)
         );
-      } catch {}
+      } catch { /* swallow: best-effort dispatch probe, registry is non-fatal */ }
     }
     return { result: fifteenArtifact, domain };
   }

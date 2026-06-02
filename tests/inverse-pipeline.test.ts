@@ -97,7 +97,7 @@ describe('inversePipeline', () => {
   it('produces genes with type and value for each entry', async () => {
     const result = await inversePipeline({ description: 'A wizard casting spells', domain: 'character' });
     const genes = result.seed.genes;
-    for (const [name, gene] of Object.entries(genes)) {
+    for (const [, gene] of Object.entries(genes)) {
       expect(gene).toHaveProperty('type');
       expect(gene).toHaveProperty('value');
       expect(typeof gene.type).toBe('string');

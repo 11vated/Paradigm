@@ -86,7 +86,7 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
 export function compileGSPLOperators(
   definition: GSPLGeneTypeDefinition,
 ): GeneTypeOps {
-  const makeFn = (body: string, params: string[]): Function => {
+  const makeFn = (body: string, params: string[]): ((...args: unknown[]) => unknown) => {
     const rngHelpers = `
       var _rngNextF64 = function() { return _rng.nextF64() };
       var _rngNextInt = function(m,x) { return _rng.nextInt(m||0,x||100) };
@@ -94,7 +94,7 @@ export function compileGSPLOperators(
       var _rngNextGaussian = function() { return _rng.nextGaussian() };
       var _rngChoice = function(a) { return _rng.nextChoice(a) };
     `;
-    return new Function('_v', '_r', '_a', '_b', '_rng', '_s', rngHelpers + '\n' + body);
+    return new Function('_v', '_r', '_a', '_b', '_rng', '_s', rngHelpers + '\n' + body) as unknown as ((...args: unknown[]) => unknown);
   };
 
   return {

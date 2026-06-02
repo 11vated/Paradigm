@@ -88,7 +88,7 @@ export async function getDAOState(): Promise<DAOState> {
   if (!governorContract || !timelockContract) return getDAOStateFromCreativeDAO();
 
   try {
-    const [delay, votingDelay, votingPeriod] = await Promise.all([
+    const [_delay, _votingDelay, _votingPeriod] = await Promise.all([
       timelockContract.minDelay(),
       governorContract.votingDelay(),
       governorContract.votingPeriod(),

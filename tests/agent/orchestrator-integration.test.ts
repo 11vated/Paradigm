@@ -5,7 +5,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createSovereignAgent } from '../../src/lib/intelligence/agent/orchestrator';
 import { MockSeedLLM } from '../../src/lib/intelligence/llm/base';
 import { createMemoryOrchestrator } from '../../src/lib/intelligence/memory/orchestrator';
-import { computeMemoryStateHash, createReproducibilityHarness } from '../../src/lib/intelligence/reproducibility';
+import { createReproducibilityHarness } from '../../src/lib/intelligence/reproducibility';
 import type { Oracle } from '../../src/lib/intelligence/agent/stages/stage-5-validate';
 import type { OracleReport } from '../../src/lib/intelligence/agent/types';
 

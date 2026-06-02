@@ -25,7 +25,9 @@ export default function VectorRadar({ value = [0.5, 0.5, 0.5], onChange, labels 
         y: cy + Math.sin(angle) * radius,
         angle,
       };
-    }), [n]);
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- n captures the dimensions count; cx/cy/radius are derived from size which is module-constant
+    [n]);
 
   const points = values.map((v, i) => {
     const angle = (i / n) * Math.PI * 2 - Math.PI / 2;

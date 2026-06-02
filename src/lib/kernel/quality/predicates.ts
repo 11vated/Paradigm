@@ -11,8 +11,8 @@
 import type { Stratum } from '../quality-contract';
 
 // 15_ spec integration: use new engineering-grade strata predicates
-// @ts-ignore - strata barrel resolution for harness support
-import { formStratum, mindStratum, fieldStratum, motionStratum, soundStratum, storyStratum, worldStratum, cultureStratum, timeStratum } from '../../../contracts/strata';
+// @ts-expect-error - strata barrel resolution for harness support
+import { formStratum as _formStratum, mindStratum as _mindStratum, fieldStratum as _fieldStratum, motionStratum as _motionStratum, soundStratum as _soundStratum, storyStratum as _storyStratum, worldStratum as _worldStratum, cultureStratum as _cultureStratum, timeStratum as _timeStratum } from '../../../contracts/strata';
 
 export interface FormArtifact {
   geometry: {

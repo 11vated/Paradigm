@@ -286,8 +286,8 @@ function generateRadialSprite(
 function generateAsymmetricSprite(
   ctx: CanvasRenderingContext2D,
   params: SpriteParams,
-  frameIndex: number,
-  animationOffset: { x: number; y: number; rotation: number },
+  _frameIndex: number,
+  _animationOffset: { x: number; y: number; rotation: number },
   rng: Xoshiro256StarStar
 ) {
   const centerX = params.resolution / 2;

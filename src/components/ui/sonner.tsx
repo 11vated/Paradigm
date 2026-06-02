@@ -1,5 +1,6 @@
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, toast } from "sonner"
+/* eslint-disable react-refresh/only-export-components -- sonner library re-exports `toast` helper alongside Toaster component; required for consumer API. */
 
 const Toaster = ({
   ...props

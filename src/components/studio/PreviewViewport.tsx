@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { GerminatingSpinner } from '@/components/shell/GerminatingSpinner';
 import { Primordium } from '@/components/shell/Primordium';
 import { GSeedHyperobject } from './GSeedHyperobject';
-import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';
 import {
   ThreeViewport, SvgViewport, AudioViewport, GameViewport,
   CodeViewport, SimViewport, AnimViewport, TwoDViewport, ArtifactInfo, DomainIcon,
@@ -12,10 +11,10 @@ import {
 export default function PreviewViewport({ artifact, loading, seed, promptText = '' }: { artifact: any; loading: any; seed: any; promptText?: any }) {
   const defaultView = artifact ? getViewportType(artifact.domain) : '3d';
   const [view, setView] = useState(defaultView);
-  const domainColor = DOMAIN_COLORS_HEX[artifact?.domain] || '#00E5FF';
 
   useEffect(() => {
     if (artifact) setView(getViewportType(artifact.domain));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to domain change; artifact reference may rotate
   }, [artifact?.domain]);
 
   const availableViews = artifact ? ['hyperobject', ...AVAILABLE_VIEWS.slice(1)].filter(v =>

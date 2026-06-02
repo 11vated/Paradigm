@@ -328,7 +328,7 @@ export class DigitalNation {
    * Propose treaty with another nation
    */
   async proposeTreaty(
-    proposer: string,
+    _proposer: string,
     otherNationId: string,
     type: Treaty['type'],
     terms: Record<string, any>

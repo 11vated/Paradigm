@@ -31,6 +31,7 @@ export const CodexMode: React.FC = () => {
   const [output, setOutput] = useState<{ kind: 'ast' | 'exec' | 'error' | null; payload?: any }>({ kind: null });
 
   // Sync source when seed changes (but preserve user's edits to a fresh seed)
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed identity; if seed.id is undefined we no-op
   useEffect(() => { setSource(defaultGsplFor(seed)); setOutput({ kind: null }); }, [seed?.id]);
 
   const onParse = useCallback(async () => {

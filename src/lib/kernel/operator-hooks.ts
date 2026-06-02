@@ -264,7 +264,7 @@ export const validationHook: HookHandler = async (seed, context) => {
  * Lineage Hook: Updates lineage tracker automatically
  * Replaces Nexus state tracking
  */
-export const lineageHook = (lineageTracker: any): HookHandler => {
+export const lineageHook = (_lineageTracker: any): HookHandler => {
   return async (seed, context) => {
     if (context.operation === 'fork' && context.childSeed) {
       // This would call lineageTracker.recordFork()

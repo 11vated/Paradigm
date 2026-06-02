@@ -63,6 +63,7 @@ export default function SeedSimilarityList({
     };
 
     fetchSimilar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to the seed's identity hash; currentSeed object reference is irrelevant
   }, [seedId, currentSeed?.$hash, limit]);
 
   if (loading) {

@@ -1,4 +1,4 @@
-import { UniversalSeed, GeneType } from '../seeds';
+import { UniversalSeed } from '../seeds';
 import { GSPLAgent } from '../intelligence';
 
 export interface User {
@@ -294,7 +294,7 @@ export class APIRoutes {
     return { seeds: [], total: 0 };
   }
 
-  private createSeed(body: object) {
+  private createSeed(_body: object) {
     const seed = new UniversalSeed();
     return { id: seed.id, ...seed.serialize() };
   }
@@ -303,7 +303,7 @@ export class APIRoutes {
     return { id };
   }
 
-  private updateSeed(id: string, body: object) {
+  private updateSeed(id: string, _body: object) {
     return { id, updated: true };
   }
 

@@ -20,23 +20,18 @@ import type { Seed, Artifact } from './engines';
 import { executeGspl } from './gspl-interpreter';
 import { growSeed } from './engines';
 import { rngFromHash, Xoshiro256StarStar } from './rng';
-import { createSeed } from '../../seeds';
 
 // ─── Integrate 6 Kernel Files (Reconstructed Nexus) ───
-import { routeSeed, routeToLLM, routeByStance, type RoutingDecision } from './seed-router';
-import { 
-  STANCE_REGISTRY, applyStance, breedStances, mutateStance, 
-  stanceDistance, recommendStance, type StanceConfig 
+import { routeSeed, type RoutingDecision } from './seed-router';
+import {
+  STANCE_REGISTRY, applyStance,
+  type StanceConfig
 } from './stance-genetics';
-import { LineageTracker, type LineageNode } from './lineage-tracker';
-import { SeedDependencyGraph, type SeedGraphNode } from './seed-dependency-graph';
-import { 
-  operatorHooks, safetyHook, loggingHook, validationHook, 
-  breedWithHooks, mutateWithHooks, growWithHooks 
-} from './operator-hooks';
-import { 
-  sovereigntyChecker, checkSovereigntyHook, signAfterOperation,
-  PermissionLevel, type SovereigntyCheck 
+import { LineageTracker } from './lineage-tracker';
+import { SeedDependencyGraph } from './seed-dependency-graph';
+import {
+  sovereigntyChecker,
+  type SovereigntyCheck
 } from './sovereignty-checker';
 import { kernelNow, kernelNowIso } from './clock';
 
@@ -580,7 +575,7 @@ export class SeedAgent {
    */
   mutateGenes(mutationRate: number = 0.1): void {
     const rng = rngFromHash(`agent-mutate:${this.agentSeed.hash}:${mutationRate}:${this.agentSeed.$lineage?.generation ?? 0}`);
-    for (const [key, gene] of Object.entries(this.agentSeed.genes)) {
+    for (const [, gene] of Object.entries(this.agentSeed.genes)) {
       if (rng.nextF64() < mutationRate) {
         if (typeof gene.value === 'number') {
           gene.value += (rng.nextF64() - 0.5) * 0.2;

@@ -24,6 +24,7 @@ export const PlayRuntime: React.FC<{ artifact: GameArtifact }> = ({ artifact }) 
   const [history, setHistory] = useState<string[]>([]);
 
   // Reset state when artifact changes
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
   useEffect(() => { setCurrentId(firstScene); setKarma(0); setHistory([]); }, [firstScene]);
 
   if (!currentId) return <div className="text-zinc-400">No scenes in this game.</div>;

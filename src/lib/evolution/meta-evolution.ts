@@ -12,7 +12,6 @@
  */
 
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
-import { type Seed } from '../kernel/types';
 import { kernelNow, kernelNowIso } from '../kernel/clock';
 
 export interface MetaGene {

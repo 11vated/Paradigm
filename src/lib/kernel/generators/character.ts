@@ -17,8 +17,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
-import { exportGLTF, createPBRMaterial } from './gltf-exporter';
-import { createProvenance, signData, verifyProvenance, embedInGLTF } from '../provenance';
+import { exportGLTF } from './gltf-exporter';
+import { createProvenance } from '../provenance';
 import { createCanvas } from './canvas-utils.js';
 import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
@@ -105,7 +105,7 @@ export async function generateCharacterV3(
       gsplSchemaLoaded = 'character.gspl';
       characterConstraints = parseCharacterSchemaConstraints(schemaContent);
     }
-  } catch (e) {}
+  } catch (_) { /* swallow: schema is optional, fall through to default */ }
 
   // NOTE (verify-sweep): Real 5-map PBR + richer animations require golden updates.
 
@@ -226,7 +226,7 @@ export async function generateCharacterV3(
             fs.writeFileSync(texPath, Buffer.from(base64, 'base64'));
             texturePaths.push(texPath);
           }
-        } catch {}
+        } catch { /* swallow: best-effort generator probe, no impact on output */ }
       }
     }
   }
@@ -256,19 +256,11 @@ function extractParams(seed: Seed, rng: Xoshiro256StarStar, constraints: any = n
     if (range) return Math.max(range.min, Math.min(range.max, val ?? fallback));
     return val ?? fallback;
   };
-  const applyCategorical = (name: string, fallbackList: string[]) => {
-    const opts = c.categoricals?.[name];
-    const val = (seed.genes?.[name]?.value as string) || (seed.genes?.[name.replace(/_/g, '')]?.value as string);
-    if (opts && val && opts.includes(val)) return val;
-    if (opts) return opts[Math.floor(rng.nextF64() * opts.length)];
-    return val || fallbackList[Math.floor(rng.nextF64() * fallbackList.length)];
-  };
 
   // Base height (1.4m - 2.1m) — schema uses proportions_height
   const heightGene = (seed.genes?.height?.value as number) ?? (seed.genes?.proportions_height?.value as number) ?? 0.5;
   const baseHeight = 1.4 + applyScalar('proportions_height', heightGene, 0.5) * 0.7;
   const genderFactor = gender === 'male' ? 1.1 : gender === 'female' ? 0.95 : 1.0;
-  const bodyFactor = bodyType === 'slim' ? 0.85 : bodyType === 'athletic' ? 1.0 : bodyType === 'heavy' ? 1.15 : 1.0;
 
   const proportions: BodyProportions = {
     height: baseHeight * genderFactor,
@@ -582,7 +574,7 @@ function unwrapUVs(geo: THREE.BufferGeometry, rng: Xoshiro256StarStar): THREE.Bu
  */
 async function generateTextureSet(
   params: CharacterParams,
-  geo: THREE.BufferGeometry,
+  _geo: THREE.BufferGeometry,
   resolution: number,
   rng: Xoshiro256StarStar
 ): Promise<Record<string, THREE.Texture>> {
@@ -808,7 +800,6 @@ function addBlendShapes(geo: THREE.BufferGeometry, params: CharacterParams, rng:
   for (let i = 0; i < count; i++) {
     const y = positions.getY(i);
     const x = positions.getX(i);
-    const z = positions.getZ(i);
 
     const isFace = Math.abs(y - faceYCenter) < params.proportions.headSize * 0.6;
     const mouthZone = y < faceYCenter - 0.02 && Math.abs(x) < params.proportions.headSize * 0.35;

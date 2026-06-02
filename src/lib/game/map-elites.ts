@@ -4,8 +4,6 @@ import { createWorldSeed } from '../world/genesis';
 import { composeQuest } from '../world/quest';
 import { createGameSeed, generateGame } from './generator';
 import { evaluate } from './oracle';
-import type { FriendSeedData } from '../friend';
-import type { WorldSeedData } from '../world';
 
 const ARCHETYPES = ['heroic', 'mystery', 'survival', 'discovery', 'political', 'redemption'] as const;
 type Archetype = typeof ARCHETYPES[number];
@@ -95,7 +93,7 @@ export function mapElitesGames(opts: MapEliteOptions): MapEliteResult {
         score: report.score,
         completability: report.axes.completability,
         branching: report.axes.branchingHealth,
-        ending: String(report.paths[0]?.steps ?? 0) ?? '?',
+        ending: report.paths[0]?.steps !== undefined ? String(report.paths[0].steps) : '?',
         archetypeFound: arch,
       });
     }

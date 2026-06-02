@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva } from "class-variance-authority";
+/* eslint-disable react-refresh/only-export-components -- shadcn/ui pattern: re-exporting badgeVariants alongside Badge component is intentional for consumer API symmetry. */
 
 import { cn } from "@/lib/utils"
 

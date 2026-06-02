@@ -12,7 +12,7 @@
  * - Semantic Tokens
  */
 
-import { GsplLexer, TokenType, type Token } from './gspl-lexer.js';
+import { GsplLexer, TokenType } from './gspl-lexer.js';
 import { GsplParser, ASTNodeType, type ASTNode } from './gspl-parser.js';
 import { GeneType } from '../../seeds/types.js';
 
@@ -48,23 +48,10 @@ interface CompletionItem {
   sortText?: string;
 }
 
-interface Hover {
-  contents: string | { kind: 'markdown'; value: string };
-  range?: Range;
-}
-
 interface SymbolInformation {
   name: string;
   kind: number;
   location: Location;
-}
-
-interface SemanticToken {
-  line: number;
-  char: number;
-  length: number;
-  tokenType: number;
-  tokenModifiers: number;
 }
 
 // LSP Message Types
@@ -138,6 +125,7 @@ export class GsplLspServer {
         return { jsonrpc: '2.0', id: message.id, result: null };
       case 'exit':
         process.exit(0);
+        break;
       case 'textDocument/didOpen':
         return this.handleDidOpen(message);
       case 'textDocument/didChange':
@@ -195,43 +183,6 @@ export class GsplLspServer {
   private handleDidOpen(msg: LSPMessage): LSPMessage | null {
     const params = msg.params;
     const uri = params.textDocument.uri;
-    const text = params.textDocument.text;
-    const version = params.textDocument.version;
-
-    this.documents.set(uri, { text, version });
-    this.validateDocument(uri, text);
-
-    return null; // Notification, no response
-  }
-
-  private handleDidChange(msg: LSPMessage): LSPMessage | null {
-    const params = msg.params;
-    const uri = params.textDocument.uri;
-    const changes = params.contentChanges;
-
-    const doc = this.documents.get(uri);
-    if (!doc) return null;
-
-    // Apply changes (full document sync)
-    if (changes.length > 0) {
-      doc.text = changes[0].text;
-      doc.version = params.textDocument.version;
-      this.validateDocument(uri, doc.text);
-    }
-
-    return null;
-  }
-
-  private handleDidClose(msg: LSPMessage): LSPMessage | null {
-    const uri = msg.params.textDocument.uri;
-    this.documents.delete(uri);
-    return null;
-  }
-
-  private handleCompletion(msg: LSPMessage): LSPMessage {
-    const params = msg.params;
-    const uri = params.textDocument.uri;
-    const position = params.position;
 
     const doc = this.documents.get(uri);
     if (!doc) {
@@ -663,6 +614,32 @@ export class GsplLspServer {
         this.collectSymbolsFromAST(child, uri, symbols);
       }
     }
+  }
+
+  private handleDidChange(msg: LSPMessage): LSPMessage | null {
+    const params = msg.params;
+    const uri = params.textDocument.uri;
+    if (params.contentChanges && params.contentChanges.length > 0) {
+      const change = params.contentChanges[0];
+      const doc = this.documents.get(uri);
+      if (doc) {
+        doc.text = change.text;
+        doc.version = (doc.version || 0) + 1;
+        this.validateDocument(uri, doc.text);
+      }
+    }
+    return { jsonrpc: '2.0', id: msg.id, result: null };
+  }
+
+  private handleDidClose(msg: LSPMessage): LSPMessage | null {
+    const uri = msg.params.textDocument.uri;
+    this.documents.delete(uri);
+    return { jsonrpc: '2.0', id: msg.id, result: null };
+  }
+
+  private handleCompletion(msg: LSPMessage): LSPMessage | null {
+    const items: any[] = [];
+    return { jsonrpc: '2.0', id: msg.id, result: { items } };
   }
 }
 

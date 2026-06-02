@@ -156,8 +156,8 @@ export function routeToLLM(
   reasoningStyle: string,
   agentGenes?: Record<string, any>
 ): string {
-  const confidence = agentGenes?.confidence?.value || 0.7;
-  const depth = agentGenes?.depth?.value || 0.5;
+  const _confidence = agentGenes?.confidence?.value || 0.7;
+  const _depth = agentGenes?.depth?.value || 0.5;
 
   // Reasoning style routing
   switch (reasoningStyle) {

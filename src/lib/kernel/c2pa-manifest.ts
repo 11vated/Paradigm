@@ -47,7 +47,7 @@ function deterministicTimestamp(seedHash: string): { created: string; unix_ms: n
   const unix_ms = BASE_EPOCH + offset;
   const s = Math.floor(unix_ms / 1000);
   const ms = unix_ms % 1000;
-  const daysSinceEpoch = Math.floor(s / 86400);
+  const _daysSinceEpoch = Math.floor(s / 86400);
   const timeInDay = s % 86400;
   const hh = String(Math.floor(timeInDay / 3600)).padStart(2, '0');
   const mm = String(Math.floor((timeInDay % 3600) / 60)).padStart(2, '0');

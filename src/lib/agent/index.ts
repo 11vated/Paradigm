@@ -20,19 +20,19 @@
  */
 import crypto from 'crypto';
 import {
-  Xoshiro256Star, rngFromHash,
-  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
-  ENGINES, growSeed, growSeedSync, getAllDomains,
+  rngFromHash,
+  GENE_TYPES, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
+  growSeed, growSeedSync, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
 
-import { InferenceTier, INTENT_TIER } from './types.js';
+import { InferenceTier } from './types.js';
 import type {
-  AgentIntent, AgentResponse, AgentConfig, ParsedQuery,
-  ReasoningPlan, ToolContext, InferenceResponse,
+  AgentResponse, AgentConfig,
+  ToolContext,
 } from './types.js';
 import { parseQuery, buildPlan, executePlan, buildResponse, buildHelpResponse } from './reasoning.js';
-import { AGENT_TOOLS, executeTool, getAvailableTools } from './tools.js';
+import { AGENT_TOOLS } from './tools.js';
 import { AgentMemory } from './memory.js';
 import { getInferenceClient, LocalInferenceClient } from './inference.js';
 import { MemorySystem } from '../commons/memory/memory-system.js';
@@ -122,6 +122,7 @@ class KnowledgeBase {
     // Index all gene types
     for (const geneType of Object.keys(GENE_TYPES)) {
       const info = getGeneTypeInfo().find(i => i.name === geneType);
+      void info;
       this.entries.push({
         category: 'gene_type',
         key: geneType,
@@ -356,7 +357,6 @@ export class ParadigmAgent {
 
     // Synchronous execution — executePlan is async but kernel tools are sync
     // We wrap in a resolved promise pattern for compatibility
-    const completedPlan = plan;
     const toolContext: ToolContext = {
       seeds,
       plan,

@@ -23,7 +23,7 @@ export default function HomePage() {
   const [artifact, setArtifact] = useState<FriendArtifact | null>(null);
   const [count, setCount] = useState<number>(0);
   const [notes, setNotes] = useState<FriendNote[]>([]);
-  const [allFriends, setAllFriends] = useState<FriendListItem[]>([]);
+  const [_allFriends, setAllFriends] = useState<FriendListItem[]>([]);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {

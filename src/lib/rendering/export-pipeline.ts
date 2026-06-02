@@ -316,7 +316,7 @@ export class ProductionExportPipeline {
   /**
    * Get texture index
    */
-  private getTextureIndex(texture: ExportTexture): number {
+  private getTextureIndex(_texture: ExportTexture): number {
     // Simplified - would need proper tracking
     return 0;
   }
@@ -324,7 +324,7 @@ export class ProductionExportPipeline {
   /**
    * Convert texture to base64
    */
-  private textureToBase64(texture: ExportTexture): string {
+  private textureToBase64(_texture: ExportTexture): string {
     // Simplified - would use proper PNG encoding
     return `data:image/png;base64,${btoa('placeholder')}`;
   }
@@ -400,7 +400,7 @@ export class ProductionExportPipeline {
   /**
    * Compress GLB using Draco
    */
-  async compressGLB(glb: Uint8Array, level: number): Promise<Uint8Array> {
+  async compressGLB(glb: Uint8Array, _level: number): Promise<Uint8Array> {
     // Placeholder for Draco compression
     // In production, would use Draco encoder or similar
     return glb;
@@ -409,7 +409,7 @@ export class ProductionExportPipeline {
   /**
    * Export to USD (Universal Scene Description)
    */
-  async exportUSD(asset: ExportAsset, options: ExportOptions): Promise<string> {
+  async exportUSD(_asset: ExportAsset, _options: ExportOptions): Promise<string> {
     // Placeholder for USD export
     // In production, would generate USD files for Pixar pipeline integration
     return '';
@@ -418,7 +418,7 @@ export class ProductionExportPipeline {
   /**
    * Export to Alembic
    */
-  async exportAlembic(asset: ExportAsset, options: ExportOptions): Promise<Uint8Array> {
+  async exportAlembic(_asset: ExportAsset, _options: ExportOptions): Promise<Uint8Array> {
     // Placeholder for Alembic export
     // In production, would generate ABC files for animation pipeline
     return new Uint8Array(0);

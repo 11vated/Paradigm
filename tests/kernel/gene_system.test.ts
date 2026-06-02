@@ -19,7 +19,7 @@ describe('Gene System', () => {
     });
 
     it('every type has all 4 operators', () => {
-      for (const [name, ops] of Object.entries(GENE_TYPES) as [string, any][]) {
+      for (const [, ops] of Object.entries(GENE_TYPES) as [string, any][]) {
         expect(ops).toHaveProperty('validate');
         expect(ops).toHaveProperty('mutate');
         expect(ops).toHaveProperty('crossover');

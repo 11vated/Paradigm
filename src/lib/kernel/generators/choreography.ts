@@ -368,7 +368,7 @@ function generateMotionFrames(sequences: Sequence[], channelCount: number): numb
         const headJoint = motion.joints['head'];
         
         const t = f / frameCount;
-        const lerp = (a: number, b: number) => a + (b - a) * t;
+        const _lerp = (a: number, b: number) => a + (b - a) * t;
         
         frame.push(hipJoint ? hipJoint.position[0] : 0);
         frame.push(hipJoint ? hipJoint.position[1] : 1.0);

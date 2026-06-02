@@ -94,7 +94,7 @@ function generateTrial(params: GenomeParams, rng: Xoshiro256StarStar): any {
   };
 }
 
-function generateFASTA(params: GenomeParams, sequence: any, rng: Xoshiro256StarStar): string {
+function generateFASTA(params: GenomeParams, _sequence: any, rng: Xoshiro256StarStar): string {
   const header = `>gnl|gene|${params.targetGene} ${params.therapyType} therapy target`;
   const seq = Array.from({ length: 500 }, () => ['A', 'T', 'G', 'C'][rng.nextInt(0, 3)]).join('');
   return `${header}\n${seq}`;

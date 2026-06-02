@@ -11,19 +11,11 @@ import { Xoshiro256StarStar } from '../../kernel/rng';
 import { MACRO_EPOCHS, getEpoch } from '../epoch/epoch-model';
 import { calculateLineageRoyalties } from '../economics/lineage-royalties';
 import { calculateCivilizationalDividends } from '../economics/dividends';
-// @ts-ignore - demo file; real verification is in scripts/15-contracts-verify.ts and replay.mts
-import * as fullEcon from '../economics/full-economics';
-// @ts-ignore
 import { createSignedExchange } from '../federation/signed-exchange';
-// @ts-ignore
-import { federationMerge } from '../federation/protocol';
-// @ts-ignore
 import * as physicalMod from '../physical/full-bridge';
-// @ts-ignore
+// @ts-expect-error - demo file; barrel resolution tolerated at runtime
 import { paradigmOSShell, fullParadigmCLI } from '../os-shell';
-// @ts-ignore
 const generateFullPhysicalBridge = (physicalMod as any).generateFullPhysicalBridge || ((s:any)=> ({seed:s}));
-// @ts-ignore
 const advancedPhysicalBridge = (physicalMod as any).advancedPhysicalBridge || ((s:any)=> ({seed:s}));
 import { getCurrentCanonPolicy, proposeCanonUpdate } from '../governance/canon-stewardship';
 

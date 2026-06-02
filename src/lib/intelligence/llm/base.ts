@@ -85,7 +85,7 @@ export class MockSeedLLM implements SeedLLM {
     return (hex + hex + hex + hex).substring(0, 64);
   }
 
-  async generateGSPL(description: string, seed: Seed): Promise<string> {
+  async generateGSPL(_description: string, seed: Seed): Promise<string> {
     const domain = (seed as any).$domain || 'character';
 
     if (domain === 'character') {

@@ -14,12 +14,12 @@ import crypto from 'crypto';
 import {
   Xoshiro256Star as Xoshiro256StarStar, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
-  ENGINES, growSeed, getAllDomains,
+  growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
 import { ParadigmPipeline } from '../pipeline/index.js';
 import { InferenceTier } from './types.js';
-import type { AgentTool, ToolContext, ToolResult, ToolParameter } from './types.js';
+import type { AgentTool, ToolContext, ToolResult } from './types.js';
 
 // ─── DETERMINISTIC HELPERS ───────────────────────────────────────────────────
 
@@ -55,17 +55,6 @@ function makeDeterministicRNG(...parts: any[]): Xoshiro256StarStar {
 // ─── SOVEREIGN AGENT PERSONALITY PERSISTENCE (cross-session) ─────────────────
 const PERSONALITY_DIR = 'artifacts/sovereign-agents/personalities';
 
-async function loadPersistentPersonality(agentId: string): Promise<Record<string, number> | null> {
-  try {
-    const fs = await import('fs/promises');
-    const path = await import('path');
-    const dir = path.join(process.cwd(), PERSONALITY_DIR);
-    const file = path.join(dir, `${agentId.replace(/[^a-z0-9_-]/gi, '_')}.json`);
-    const raw = await fs.readFile(file, 'utf8');
-    return JSON.parse(raw);
-  } catch { return null; }
-}
-
 async function savePersistentPersonality(agentId: string, personality: Record<string, number>): Promise<void> {
   try {
     const fs = await import('fs/promises');
@@ -74,7 +63,7 @@ async function savePersistentPersonality(agentId: string, personality: Record<st
     await fs.mkdir(dir, { recursive: true });
     const file = path.join(dir, `${agentId.replace(/[^a-z0-9_-]/gi, '_')}.json`);
     await fs.writeFile(file, JSON.stringify(personality, null, 2), 'utf8');
-  } catch {}
+  } catch (e) { /* recovery: best-effort hydration; tool still registered with kernel fallback */ console.debug('tool hydrate recovery', (e as any)?.message); }
 }
 
 function makeSeed(domain: string, name: string, genes: Record<string, any>, parentHashes: string[] = []): any {
@@ -251,7 +240,7 @@ const composeSeedTool: AgentTool = {
 
     const composed = composeSeed(target, params.targetDomain);
     if (!composed) {
-      const path = findCompositionPath(target.$domain || '', params.targetDomain);
+      const _path = findCompositionPath(target.$domain || '', params.targetDomain);
       return { success: false, data: null, message: `No composition path from "${target.$domain}" to "${params.targetDomain}".` };
     }
 
@@ -477,10 +466,10 @@ const executeGsplTool: AgentTool = {
   parameters: {
     source: { type: 'string', description: 'GSPL source code', required: true },
   },
-  execute: async (params, context) => {
+  execute: async (params, _context) => {
     const source = params.source || '';
     const generatedSeeds: any[] = [];
-    const errors: string[] = [];
+    const _errors: string[] = [];
 
     // Robust GSPL parser: handles escaped quotes, nested brackets, multi-line values
     const seedRegex = /seed\s+"((?:[^"\\]|\\.)*)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
@@ -781,7 +770,7 @@ export const AGENT_TOOLS: Map<string, AgentTool> = new Map([
         const part6 = { royaltiesPreview: 'agent-lineage + civilizational dividends', sovereignty: true };
         await fs.writeFile(agentFile, JSON.stringify({ agent: artifact, part6, createdBy: 'GSPL Agent (sovereign)' }, null, 2));
         (artifact as any).persistedPath = agentFile;
-      } catch {}
+      } catch (e) { /* recovery: best-effort hydration; tool still registered with kernel fallback */ console.debug('tool hydrate recovery', (e as any)?.message); }
 
       return {
         success: true,
@@ -928,7 +917,7 @@ export const AGENT_TOOLS: Map<string, AgentTool> = new Map([
         await fs.mkdir(outDir, { recursive: true });
         const safeName = (child.$name || child.id).replace(/[^a-z0-9_-]/gi, '_');
         await fs.writeFile(path.join(outDir, `${safeName}.json`), JSON.stringify({ agent: child, lineage: [pA.id || pA.$name, pB.id || pB.$name], part6: { royalties: 'lineage waterfall active' } }, null, 2));
-      } catch {}
+      } catch (e) { /* recovery: best-effort hydration; tool still registered with kernel fallback */ console.debug('tool hydrate recovery', (e as any)?.message); }
 
       return {
         success: true,

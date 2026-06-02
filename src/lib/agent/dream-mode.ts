@@ -1,4 +1,4 @@
-import { growSeed, getAllDomains } from '../kernel/engines';
+import { growSeed } from '../kernel/engines';
 import { createSeed } from '../../seeds';
 import { rngFromHash } from '../kernel/rng';
 

@@ -8,24 +8,37 @@
  *  - Sovereignty signing
  *  - Structured logging
  *  - Health endpoint
+ */
+/* eslint-disable @typescript-eslint/no-require-imports -- Production server: requires ioredis and Node crypto built-ins in module-scope initializers. */
+
+/**
+ * Paradigm Absolute — Production Server
+ * Unified Express server with:
+ *  - Deterministic kernel (xoshiro256**, 17 gene types, 26 engines, 9 functors)
+ *  - JWT authentication + PBKDF2 hashing
+ *  - In-memory rate limiting
+ *  - QFT physics pipeline
+ *  - Sovereignty signing
+ *  - Structured logging
+ *  - Health endpoint
  *
  * ZERO external AI dependency for core logic. All mutation, breeding,
  * composition, and growth operations are handled by the local kernel.
  */
 
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
-import { initServerPolyfills } from './src/lib/kernel/server-polyfills.js';
-import { registerHealthRoutes } from './src/server/routes/health.js';
-import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.js';
-import { registerCompositionRoutes } from './src/server/routes/composition.js';
-import { registerLibraryRoutes } from './src/server/routes/library.js';
-import { registerGsplRoutes } from './src/server/routes/gspl.js';
-import { registerAuthRoutes } from './src/server/routes/auth.js';
-import { registerEvolveRoutes } from './src/server/routes/evolve.js';
-import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.js';
-import { registerStaticRoutes } from './src/server/routes/static.js';
-import { registerFinalRoutes } from './src/server/routes/final.js';
-import { registerWebsocketUpgrade } from './src/server/routes/websocket.js';
+import { initServerPolyfills } from './src/lib/kernel/server-polyfills.ts';
+import { registerHealthRoutes } from './src/server/routes/health.ts';
+import { registerSovereignAgentRoutes } from './src/server/routes/sovereign-agent.ts';
+import { registerCompositionRoutes } from './src/server/routes/composition.ts';
+import { registerLibraryRoutes } from './src/server/routes/library.ts';
+import { registerGsplRoutes } from './src/server/routes/gspl.ts';
+import { registerAuthRoutes } from './src/server/routes/auth.ts';
+import { registerEvolveRoutes } from './src/server/routes/evolve.ts';
+import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.ts';
+import { registerStaticRoutes } from './src/server/routes/static.ts';
+import { registerFinalRoutes } from './src/server/routes/final.ts';
+import { registerWebsocketUpgrade } from './src/server/routes/websocket.ts';
 import { bootstrapParadigmContracts } from './src/lib/contracts/bootstrap';
 initServerPolyfills();
 
@@ -34,7 +47,6 @@ bootstrapParadigmContracts();
 
 import express from 'express';
 import http from 'http';
-import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import crypto from 'crypto';
 
@@ -42,70 +54,70 @@ import crypto from 'crypto';
 const loadAllGsplSeeds = (): any[] => [];
 
 // ─── QFT & Pipeline (existing, real physics) ─────────────────────────────────
-import { QFTEngine } from './src/lib/qft/index.js';
-import { ParadigmPipeline } from './src/lib/pipeline/index.js';
+import { QFTEngine } from './src/lib/qft/index.ts';
+import { ParadigmPipeline } from './src/lib/pipeline/index.ts';
 
 // ─── Sovereignty (existing, ECDSA signing) ───────────────────────────────────
-import { SovereigntyLayer } from './src/lib/sovereignty/index.js';
+import { SovereigntyLayer } from './src/lib/sovereignty/index.ts';
 
 // ─── Intelligence Layer (optional — Gemini embeddings, non-critical) ─────────
-import { IntelligenceLayer } from './src/lib/intelligence/index.js';
+import { IntelligenceLayer } from './src/lib/intelligence/index.ts';
 
 // ─── NEW: Deterministic Kernel ───────────────────────────────────────────────
 import {
-  Xoshiro256Star, rngFromHash,
-  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo, validateGeneWithDetails,
+  rngFromHash,
+  GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, validateGeneWithDetails,
   growSeed, getAllDomains,
   findCompositionPath, composeSeed, getCompositionGraph,
   buildC2PAManifest, encodeC2PAManifest
-} from './src/lib/kernel/index.js';
-import { geneTypeRegistry, GENE_TYPE_LIST } from './src/lib/kernel/gene-type-registry.js';
+} from './src/lib/kernel/index.ts';
+import { geneTypeRegistry } from './src/lib/kernel/gene-type-registry.ts';
 import {
-  registerGSPLGeneType, parseGSPLGeneType, GSPL_GENE_TYPE_EXAMPLE,
-} from './src/lib/kernel/gspl-gene-type.js';
+  registerGSPLGeneType, GSPL_GENE_TYPE_EXAMPLE,
+} from './src/lib/kernel/gspl-gene-type.ts';
 import {
-  createSovereignGene, mutateSovereignGene, breedSovereignGenes,
+  createSovereignGene,
   licenseSovereignGene, getGeneProvenance, checkGenePermission,
-  extractValue, isSovereignGene,
-} from './src/lib/kernel/gene-sovereignty.js';
-import { inversePipeline, formatInverseResult } from './src/lib/kernel/inverse-pipeline.js';
-import { renderSeed, getSupportedFormats, packagePSeed, parsePSeed } from './src/lib/rendering/seed-render-service.js';
-import { encodeGseed, decodeGseed, signGseed, verifyGseedSignature, writeGseedFile, readGseedFile, exportGseedToFile } from './src/lib/kernel/binary-format.js';
-import { creativeDAO, trainingCanon, DEFAULT_ROYALTY_CURVE } from './src/lib/blockchain/creative-dao.js';
-import * as daoProvider from './src/lib/blockchain/dao-provider.js';
-import { RegisterGeneTypeSchema } from './src/lib/validation/schemas.js';
+  isSovereignGene,
+} from './src/lib/kernel/gene-sovereignty.ts';
+import { inversePipeline, formatInverseResult } from './src/lib/kernel/inverse-pipeline.ts';
+import { renderSeed, getSupportedFormats, packagePSeed } from './src/lib/rendering/seed-render-service.ts';
+import { encodeGseed, decodeGseed } from './src/lib/kernel/binary-format.ts';
+import { trainingCanon } from './src/lib/blockchain/creative-dao.ts';
+import * as daoProvider from './src/lib/blockchain/dao-provider.ts';
+import { RegisterGeneTypeSchema } from './src/lib/validation/schemas.ts';
 
 // ─── NEW: Authentication & Rate Limiting ─────────────────────────────────────
 import {
   registerUser, loginUser, optionalAuth, verifyTokenRaw,
   refreshAccessToken, revokeToken, createRateLimiter
-} from './src/lib/auth/index.js';
+} from './src/lib/auth/index.ts';
 
 // ─── NEW: Seed Ownership & Authorization (Phase 3) ───────────────────────────
 import {
   addOwnerIfAuthed,
   authorizeSeedMutation,
   resolveCommitAuthor,
-} from './src/lib/auth/ownership.js';
+} from './src/lib/auth/ownership.ts';
 
 // ─── NEW: Native GSPL Agent ──────────────────────────────────────────────────
-import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.js';
+import { agent as gsplAgent, Orchestrator } from './src/lib/agent/index.ts';
 
 // ─── NEW: Paradigm Friend (Phase 1) ──────────────────────────────────────────
 import {
   createFriendSeed, breedFriends, mutateFriend, generateFriend,
-  getFriendStore, type FriendSeedData, type LineageNode,
+  getFriendStore,
   generateFriendKeyPair, signFriendSeed, verifyFriendSovereignty,
   anchorFriendOnChain, prepareFriendMint,
   prepareList, prepareDelist, prepareBuy,
-} from './src/lib/friend/index.js';
+} from './src/lib/friend/index.ts';
 
 // ─── NEW: Paradigm World + Quest + Game (Phase 3-5) ──────────────────────────
-import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest, type WorldSeedData, type QuestSeedData } from './src/lib/world/index.js';
-import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, directorBrief, directedSearch, hashArtifact as hashGameArtifact, type GameSeedData, type GameArtifact } from './src/lib/game/index.js';
+import { createWorldSeed, generateWorld, breedWorlds, mutateWorld, hashArtifact as hashWorldArtifact, composeQuest } from './src/lib/world/index.ts';
+import { createGameSeed, generateGame, evaluateGame, evolveGames, mapElitesGames, directorBrief, directedSearch, hashArtifact as hashGameArtifact } from './src/lib/game/index.ts';
 
 // ─── NEW: Memory System + Sub-Agent Pipeline ─────────────────────────────────
-import { MemorySystem } from './src/lib/commons/memory/memory-system.js';
+import { MemorySystem } from './src/lib/commons/memory/memory-system.ts';
 
 const memorySystem = new MemorySystem('server');
 gsplAgent.setMemorySystem(memorySystem);
@@ -128,53 +140,53 @@ interface EvolutionJob {
 const evolutionJobs: Map<string, EvolutionJob> = new Map();
 
 // ─── NEW: On-Chain Sovereignty (ERC-721 minting) ─────────────────────────────
-import { OnChainSovereignty } from './src/lib/sovereignty/onchain.js';
+import { OnChainSovereignty } from './src/lib/sovereignty/onchain.ts';
 import {
   canonicalizeSeed,
   seedDigestBytes32,
-} from './src/lib/sovereignty/canonical.js';
+} from './src/lib/sovereignty/canonical.ts';
 import {
   LocalHmacSigner,
   LocalDryRunAnchor,
   LocalFilePin,
   mintSeedSovereignty,
-} from './src/lib/sovereignty/adapters.js';
+} from './src/lib/sovereignty/adapters.ts';
 
 // ─── NEW: Data Access Layer ──────────────────────────────────────────────────
-import { initStore } from './src/lib/data/index.js';
-import type { AuditEntry } from './src/lib/data/types.js';
+import { initStore } from './src/lib/data/index.ts';
+import type { AuditEntry } from './src/lib/data/types.ts';
 
 // ─── NEW: Cache Layer (LRU in-memory / Redis) ───────────────────────────────
-import { initCache, getCache, growCacheKey, compositionPathKey } from './src/lib/cache/index.js';
+import { initCache, growCacheKey, compositionPathKey } from './src/lib/cache/index.ts';
 
 // ─── NEW: Security Middleware (CORS + Headers) ──────────────────────────────
-import { corsMiddleware, securityHeaders, requestId, httpsRedirect } from './src/lib/security/middleware.js';
+import { corsMiddleware, securityHeaders, requestId, httpsRedirect } from './src/lib/security/middleware.ts';
 
 // ─── NEW: OpenAPI Specification ──────────────────────────────────────────────
-import { OPENAPI_SPEC, swaggerUIHTML } from './src/lib/openapi/spec.js';
+import { OPENAPI_SPEC, swaggerUIHTML } from './src/lib/openapi/spec.ts';
 
 // ─── Extracted Route Modules (server split workstream C) ───────────────
-import { registerSeedsCrudRoutes, registerSeedsGenerateRoutes } from './src/server/routes/seeds-crud.js';
-import { registerSeedsOpsRoutes } from './src/server/routes/seeds-ops.js';
-import { registerSeedsEvolutionRoutes } from './src/server/routes/seeds-evolution.js';
-import { registerSeedsGrowRoutes } from './src/server/routes/seeds-grow.js';
-import { registerSeedsExportRoutes, registerSeedsRenderRoutes } from './src/server/routes/seeds-output.js';
-import { registerSeedsLineageRoutes } from './src/server/routes/seeds-lineage.js';
-import { registerSeedsComposeRoutes } from './src/server/routes/seeds-compose.js';
-import { registerSeedsVcsRoutes } from './src/server/routes/seeds-vcs.js';
-import { registerSeedsSovereigntyRoutes } from './src/server/routes/seeds-sovereignty.js';
-import { registerStatsMetaRoutes } from './src/server/routes/stats-meta.js';
-import { registerAgentRoutes } from './src/server/routes/agent.js';
-import { registerFriendRoutes } from './src/server/routes/friend.js';
-import { registerWorldGameRoutes } from './src/server/routes/world-game.js';
-import { registerDaoRoutes } from './src/server/routes/dao.js';
-import { registerQftPipelineRoutes } from './src/server/routes/qft-pipeline.js';
-import { registerFederationRoutes } from './src/server/routes/federation.js';
-import { registerRoyaltyRoutes } from './src/server/routes/royalty.js';
-import { registerMetaGeneratorRoutes } from './src/server/routes/meta-generator.js';
+import { registerSeedsCrudRoutes, registerSeedsGenerateRoutes } from './src/server/routes/seeds-crud.ts';
+import { registerSeedsOpsRoutes } from './src/server/routes/seeds-ops.ts';
+import { registerSeedsEvolutionRoutes } from './src/server/routes/seeds-evolution.ts';
+import { registerSeedsGrowRoutes } from './src/server/routes/seeds-grow.ts';
+import { registerSeedsExportRoutes, registerSeedsRenderRoutes } from './src/server/routes/seeds-output.ts';
+import { registerSeedsLineageRoutes } from './src/server/routes/seeds-lineage.ts';
+import { registerSeedsComposeRoutes } from './src/server/routes/seeds-compose.ts';
+import { registerSeedsVcsRoutes } from './src/server/routes/seeds-vcs.ts';
+import { registerSeedsSovereigntyRoutes } from './src/server/routes/seeds-sovereignty.ts';
+import { registerStatsMetaRoutes } from './src/server/routes/stats-meta.ts';
+import { registerAgentRoutes } from './src/server/routes/agent.ts';
+import { registerFriendRoutes } from './src/server/routes/friend.ts';
+import { registerWorldGameRoutes } from './src/server/routes/world-game.ts';
+import { registerDaoRoutes } from './src/server/routes/dao.ts';
+import { registerQftPipelineRoutes } from './src/server/routes/qft-pipeline.ts';
+import { registerFederationRoutes } from './src/server/routes/federation.ts';
+import { registerRoyaltyRoutes } from './src/server/routes/royalty.ts';
+import { registerMetaGeneratorRoutes } from './src/server/routes/meta-generator.ts';
 
 // ─── NEW: Zod Validation ─────────────────────────────────────────────────────
-import { validateBody } from './src/lib/validation/middleware.js';
+import { validateBody } from './src/lib/validation/middleware.ts';
 import {
   RegisterSchema, LoginSchema,
   CreateSeedSchema, GenerateSeedSchema,
@@ -187,19 +199,19 @@ import {
   QftSimulateSchema, PipelineExecuteSchema,
   EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
   FriendGenerateSchema, FriendBreedSchema, FriendMutateSchema, FriendAnchorSchema,
-} from './src/lib/validation/schemas.js';
-import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.js';
+} from './src/lib/validation/schemas.ts';
+import { persistCustomGeneTypes, loadCustomGeneTypes } from './src/lib/data/index.ts';
 
 // ─── Structured Logger (Phase 1: pino) ──────────────────────────────────────
 // The shape `log('LEVEL', 'msg', {data})` is preserved so existing call sites
 // don't need to change. Internals now go through pino, which gives us JSON
 // output, redaction, and child loggers. See src/lib/logger/index.ts.
-import { log } from './src/lib/logger/index.js';
+import { log } from './src/lib/logger/index.ts';
 
 // ─── Readiness probes (Phase 1: /ready endpoint) ───────────────────────────
 import {
   checkSbert, checkPostgres, checkStore, buildReport, checkRedis
-} from './src/lib/health/readiness.js';
+} from './src/lib/health/readiness.ts';
 
 // ─── Seed Version Control (Phase 2: git-for-seeds) ─────────────────────────
 import {
@@ -211,10 +223,7 @@ import {
   branch as vcsBranch,
   checkout as vcsCheckout,
   ensureRef as vcsEnsureRef,
-  findMergeBase,
-  type ObjectStore as VcsObjectStoreT,
-  type RefStore as VcsRefStoreT,
-} from './src/lib/vcs/index.js';
+} from './src/lib/vcs/index.ts';
 
 // ─── Server Boot ─────────────────────────────────────────────────────────────
 
@@ -392,12 +401,6 @@ async function startServer() {
     const base = parentHash ? parentHash.slice(0, 16) : deterministicIdCounter.toString(36);
     const suffix = extra ? `-${extra}` : '';
     return `seed-${base}${suffix}-${deterministicIdCounter.toString(36).padStart(4, '0')}`;
-  }
-
-  // Helper: create a deterministic RNG from a seed's hash
-  function rngFor(seed: any, extra: string = ''): ReturnType<typeof rngFromHash> {
-    const hashSource = (seed.$hash || seed.id || 'deterministic-fallback') + extra;
-    return rngFromHash(hashSource);
   }
 
   // ── Route Registrations ──────────────────────────────────────────────────────

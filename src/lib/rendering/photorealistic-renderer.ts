@@ -9,7 +9,7 @@ import { TextureSynthesisEngine, type TextureMapSet, type TextureParams } from '
 import { generateMaterial, type PBRMaterial } from '../asset_pipeline/material_generator.js';
 import { TextureBaker, type UVUnwrapMethod } from '../asset_pipeline/texture_baker.js';
 import { PathTracer, type PathTracerConfig } from './path-tracer.js';
-import { AdvancedMaterialSystem, type DisneyMaterial } from './advanced-materials.js';
+import { AdvancedMaterialSystem as _AdvancedMaterialSystem, type DisneyMaterial as _DisneyMaterial } from './advanced-materials.js';
 import { LightingSystem } from './lighting.js';
 import { DenoisingSystem, type DenoiserConfig } from './denoising.js';
 import { AIGenerationSystem, type AIModelConfig } from './ai-generation.js';
@@ -18,7 +18,6 @@ import { AnimationSystem, type AnimationClip, type IKChain } from './animation.j
 import { PostProcessingPipeline, type PostProcessingConfig } from './postprocessing.js';
 import { OptimizationSystem, type LODMesh } from './optimization.js';
 import { ProductionExportPipeline, type ExportAsset, type ExportOptions } from './export-pipeline.js';
-import { type Seed } from '../kernel/types.js';
 
 export interface PhotorealisticRendererConfig {
   pathTracer: PathTracerConfig;
@@ -190,7 +189,7 @@ export class PhotorealisticRenderer {
   /**
    * Generate texture maps for material
    */
-  generateTextureMaps(seed: any, material: PBRMaterial, resolution: number): TextureMapSet {
+  generateTextureMaps(seed: any, _material: PBRMaterial, resolution: number): TextureMapSet {
     const engine = new TextureSynthesisEngine();
     const defaultPattern: TextureParams = { resolution: resolution, seed: 12345, pattern: 'noise', scale: 1, octaves: 4, lacunarity: 2, gain: 0.5 };
     return engine.generateTextureMaps(defaultPattern);
@@ -241,14 +240,14 @@ export class PhotorealisticRenderer {
   /**
    * Set environment HDRI
    */
-  setEnvironment(url: string): void {
+  setEnvironment(_url: string): void {
     // Placeholder - environment map loading
   }
 
   /**
    * Bake light probe
    */
-  bakeLightProbe(position: [number, number, number], radius: number = 10): void {
+  bakeLightProbe(position: [number, number, number], _radius: number = 10): void {
     // Placeholder - light probe baking
   }
 

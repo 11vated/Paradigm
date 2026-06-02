@@ -156,7 +156,7 @@ export class GradientEvolution {
     population: Seed[],
     scores: number[],
     gradients: Record<string, GeneGradient>,
-    stepSize: number,
+    _stepSize: number,
     threshold: number,
   ): Seed[] {
     const result = [...population];

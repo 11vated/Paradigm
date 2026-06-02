@@ -9,7 +9,7 @@
  * - Constant pool for numbers
  */
 
-import { GsplLexer, TokenType } from './gspl-lexer';
+import { GsplLexer } from './gspl-lexer';
 import { GsplParser, ASTNodeType, type ASTNode } from './gspl-parser';
 
 /**

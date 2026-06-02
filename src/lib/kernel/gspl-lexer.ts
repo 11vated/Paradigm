@@ -356,8 +356,8 @@ export class GsplLexer {
   private tokenizeOperator(): boolean {
     const char = this.source[this.pos];
     const next = this.peek();
-    const startLine = this.line;
-    const startCol = this.column;
+    const _startLine = this.line;
+    const _startCol = this.column;
 
     // Two-character operators
     if (char === '=' && next === '=') {

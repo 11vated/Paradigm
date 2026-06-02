@@ -45,6 +45,7 @@ export function useSeed(id: string) {
 
   useEffect(() => {
     if (!id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setLoading(true);
     api.getSeed(id)
       .then(result => setSeed(result))

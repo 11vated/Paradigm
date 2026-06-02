@@ -1,6 +1,6 @@
 import { rngFromHash } from '../rng';
 import { getGenerationQuality } from '../generation-quality';
-import type { Stage, Seed, GeneratorOutput, Artifact, PipelineContext, DomainConfig, PipelineReport, EngineVersion } from './types';
+import type { Stage, Seed, Artifact, PipelineContext, DomainConfig, PipelineReport, EngineVersion } from './types';
 import { validateStage, generateStage, createPostProcessStage, errorFallbackStage } from './stages';
 import { kernelNow, kernelNowIso } from '../clock';
 

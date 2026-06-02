@@ -6,7 +6,7 @@
 import { JsonStore } from './json-store.js';
 import { MongoStore } from './mongo-store.js';
 import { PostgresStore } from './postgres-store.js';
-import { runMigrations, getMigrationStatus } from './migrations.js';
+import { runMigrations } from './migrations.js';
 import type { SeedStore } from './types.js';
 import path from 'path';
 

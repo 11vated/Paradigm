@@ -15,7 +15,7 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
-import { shaderContract as shader15 } from '../../contracts/domains/shader';
+import { shaderContract as _shader15 } from '../../contracts/domains/shader';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'shader'; $name?: string; genes?: Record<string, unknown> }

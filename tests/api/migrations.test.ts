@@ -20,7 +20,7 @@ describe('Migration System', () => {
 
   afterEach(async () => {
     await store.close();
-    try { fs.rmSync(TEST_DIR, { recursive: true, force: true }); } catch {}
+    try { fs.rmSync(TEST_DIR, { recursive: true, force: true }); } catch { /* swallow: best-effort test cleanup, fixture torn down */ }
   });
 
   it('starts at version 0 with no migrations applied', () => {

@@ -3,7 +3,7 @@
  * Canon policy enforcement, waiver handling, forkable governance.
  */
 
-import { getCurrentCanonPolicy, proposeCanonUpdate } from './canon-stewardship';
+import { getCurrentCanonPolicy } from './canon-stewardship';
 
 export function enforceCanonPolicy(domain: string, transformation?: string): boolean {
   const policy = getCurrentCanonPolicy();

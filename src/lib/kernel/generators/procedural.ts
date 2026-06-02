@@ -17,6 +17,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar } from '../rng';
+import { createCanvas, ensureNodeCanvas } from './canvas-utils';
 
 interface ProceduralParams {
   width: number;
@@ -59,7 +60,7 @@ export async function generateProceduralV3(
   const worldData = applyBiomes(heightmap, biomes, params);
   
   // Export
-  const heightmapPath = await exportHeightmapPNG(heightmap, params, outputPath, seed);
+  const heightmapPath = await exportHeightmapPNG(heightmap, biomes, params, outputPath, seed);
   const jsonPath = await exportWorldJSON({ params, heightmap, biomes, worldData }, outputPath, seed);
   const htmlPath = await exportInteractive3D(heightmap, biomes, params, outputPath, seed);
   
@@ -176,21 +177,72 @@ function applyBiomes(heightmap: number[][], biomes: Biome[], params: ProceduralP
   }));
 }
 
-async function exportHeightmapPNG(heightmap: number[][], params: ProceduralParams, outputPath: string, seed: Seed): Promise<string> {
+async function exportHeightmapPNG(heightmap: number[][], biomes: Biome[], params: ProceduralParams, outputPath: string, seed: Seed): Promise<string> {
   const filename = `procedural_${seed.$hash || 'unknown'}.png`;
   const filePath = path.join(outputPath, filename);
   
-  // Simple grayscale PNG representation
-  const data = [];
+  await ensureNodeCanvas();
+  const canvas = createCanvas(params.width, params.height);
+  const ctx = canvas.getContext('2d')!;
+  
+  // Real valid PNG with rich colored procedural terrain (biome-aware, shaded by height, seeded deterministic via heightmap)
+  // Uses canvas-utils; produces complete valid raster image matching seed (full header + pixel data).
+  const imageData = ctx.createImageData(params.width, params.height);
   for (let y = 0; y < params.height; y++) {
     for (let x = 0; x < params.width; x++) {
-      const v = Math.floor(heightmap[y][x] * 255);
-      data.push(v, v, v, 255);
+      const idx = (y * params.width + x) * 4;
+      const h = heightmap[y]?.[x] ?? 0;
+      // Find matching biome for color (deterministic)
+      const biome = biomes.find(b => h >= b.minHeight && h < b.maxHeight) || biomes[biomes.length - 1];
+      const [br, bg, bb] = biome.color;
+      // Shading: lighter at higher elevation within biome for rich 3D-like appearance
+      const shade = 0.6 + (h - biome.minHeight) * 0.8 / Math.max(0.001, (biome.maxHeight - biome.minHeight));
+      const r = Math.floor(Math.min(255, Math.max(0, br * 255 * shade)));
+      const g = Math.floor(Math.min(255, Math.max(0, bg * 255 * shade)));
+      const b = Math.floor(Math.min(255, Math.max(0, bb * 255 * shade)));
+      imageData.data[idx] = r;
+      imageData.data[idx + 1] = g;
+      imageData.data[idx + 2] = b;
+      imageData.data[idx + 3] = 255;
     }
   }
+  ctx.putImageData(imageData, 0, 0);
   
-  // Minimal PNG placeholder
-  if (typeof fs !== 'undefined') fs.writeFileSync(filePath, Buffer.from(data.slice(0, 1000)));
+  // Optional overlay: deterministic contour lines and feature hints (no extra RNG)
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 1;
+  for (let k = 1; k < 6; k++) {
+    const thresh = k / 6;
+    ctx.beginPath();
+    let started = false;
+    for (let y = 0; y < params.height; y += 2) {
+      for (let x = 0; x < params.width; x += 2) {
+        const h = heightmap[y]?.[x] ?? 0;
+        if (Math.abs(h - thresh) < 0.03) {
+          if (!started) { ctx.moveTo(x, y); started = true; } else { ctx.lineTo(x, y); }
+        }
+      }
+    }
+    ctx.stroke();
+  }
+  
+  // Title label for world-class artifact richness
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 14px sans-serif';
+  ctx.fillText(`Procedural Terrain • ${params.width}×${params.height} • ${biomes.length} biomes • seed:${(seed.$hash || '').slice(0, 8)}`, 8, 20);
+  
+  // Produce REAL valid PNG bytes. Prefer toBuffer (node-canvas) for exact binary; fallback to dataURL for browser.
+  let pngBuffer: Buffer;
+  if (typeof (canvas as any).toBuffer === 'function') {
+    pngBuffer = (canvas as any).toBuffer('image/png');
+  } else {
+    const pngDataUrl = (canvas as any).toDataURL('image/png');
+    const base64 = pngDataUrl.split(',')[1];
+    pngBuffer = Buffer.from(base64, 'base64');
+  }
+  if (typeof fs !== 'undefined' && fs.writeFileSync) {
+    fs.writeFileSync(filePath, pngBuffer);
+  }
   return filePath;
 }
 

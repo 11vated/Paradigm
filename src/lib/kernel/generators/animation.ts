@@ -8,10 +8,8 @@
  * Real dispatch enforcement + golden regeneration in progress.
  *
  * Features: Keyframe animation, skeletal animation, morph targets
- * Export: FBX, GLTF with animations, MP4 video
- *
- * PHASE 2 NOTE: Canonical primary. Target animation.ts exclusively for new work.
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Animation generator dynamically loads three/examples/jsm/exporters/GLTFExporter.js for GLTF output. */
 
 import * as THREE from 'three';
 import * as fs from 'fs';
@@ -25,13 +23,6 @@ interface AnimationParams {
   type: 'skeletal' | 'keyframe' | 'morph' | 'procedural';
   bones: number;           // 1-64
   resolution: number;      // for 2D output
-}
-
-interface Keyframe {
-  time: number;
-  position: [number, number, number];
-  rotation: [number, number, number, number]; // quaternion
-  scale: [number, number, number];
 }
 
 export async function generateAnimationV3(
@@ -132,7 +123,7 @@ function createAnimatedMesh(params: AnimationParams, clips: THREE.AnimationClip[
 }
 
 async function exportGLTFAnimation(
-  mesh: THREE.SkinnedMesh,
+  _mesh: THREE.SkinnedMesh,
   clips: THREE.AnimationClip[],
   outputPath: string,
   seed: Seed
@@ -198,7 +189,7 @@ async function exportFBX(
 }
 
 async function exportMP4(
-  mesh: THREE.SkinnedMesh,
+  _mesh: THREE.SkinnedMesh,
   params: AnimationParams,
   outputPath: string,
   seed: Seed

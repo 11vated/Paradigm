@@ -7,8 +7,13 @@
 import { ALL_DOMAIN_CONTRACTS } from './domain-registry';
 import '../kernel/quality-contract'; // triggers the bridge
 
+const QC_VERBOSE =
+  process.env.PARADIGM_QC_VERBOSE === '1' || process.env.PARADIGM_QC_VERBOSE === 'true';
+
 export function bootstrapParadigmContracts() {
-  console.log(`[15_spec] Bootstrapped ${ALL_DOMAIN_CONTRACTS.length} engineering-grade contracts`);
+  if (QC_VERBOSE) {
+    console.log(`[15_spec] Bootstrapped ${ALL_DOMAIN_CONTRACTS.length} engineering-grade contracts`);
+  }
   // In full system: also init OS Shell, physical bridge, etc.
   return { contracts: ALL_DOMAIN_CONTRACTS.length };
 }

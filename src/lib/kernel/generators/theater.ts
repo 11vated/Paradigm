@@ -16,7 +16,7 @@ interface TheaterParams {
   quality: 'low' | 'medium' | 'high' | 'photorealistic';
 }
 
-export async function generateTheater(seed: Seed, outputPath: string): Promise<{ filePath: string; scriptPath: string; productionType: string }> {
+export async function generateTheater(seed: Seed, outputPath: string): Promise<{ filePath: string; scriptPath: string; playScriptPath: string; productionType: string; acts: number }> {
   const rng = rngFromHash(seed.$hash || '');
   const params = extractParams(seed, rng);
 
@@ -33,9 +33,59 @@ export async function generateTheater(seed: Seed, outputPath: string): Promise<{
   fs.writeFileSync(jsonPath, JSON.stringify(config, null, 2));
 
   const scriptPath = outputPath.replace(/\.json$/, '_script.txt');
-  fs.writeFileSync(scriptPath, `TITLE: ${params.productionType.toUpperCase()}\n\nACT 1\n\nSCENE 1...\n\nParadigm GSPL — Theater`);
+  const richPlay = generateFullPlayScript(params, rng);
+  fs.writeFileSync(scriptPath, richPlay);
 
-  return { filePath: jsonPath, scriptPath, productionType: params.productionType };
+  const playScriptPath = scriptPath;
+
+  return { filePath: jsonPath, scriptPath, playScriptPath, productionType: params.productionType, acts: params.acts };
+}
+
+function generateFullPlayScript(params: TheaterParams, rng: Xoshiro256StarStar): string {
+  const title = `${params.productionType.toUpperCase()} OF THE SEED`;
+  const prot = deriveCharacterName(rng, 0);
+  const ant = deriveCharacterName(rng, 1);
+  const love = deriveCharacterName(rng, 2);
+  const acts = Math.max(1, Math.min(params.acts, 3));
+  let t = `TITLE: ${title}\n`;
+  t += `A ${params.productionType} in ${acts} acts\n`;
+  t += `Cast: ${params.cast} | Venue capacity: variable\n\n`;
+  t += `PARADIGM GSPL THEATER — Deterministic Script • Same seed = identical performance text forever.\n\n`;
+  t += `CHARACTERS\n${prot} — The Keeper of the First Seed\n${ant} — The Archivist of Broken Promises\n${love} — The One Who Remembers Forward\nCHORUS — The Substrate Itself (voices of 27 strata)\n\n`;
+
+  for (let act = 1; act <= acts; act++) {
+    t += `\nACT ${act}\n\n`;
+    const scenes = act === 1 ? 3 : (act === acts ? 4 : 2);
+    for (let sc = 1; sc <= scenes; sc++) {
+      t += `SCENE ${sc}\n`;
+      t += `Setting: ${['The Memory Orchard at midnight', 'The Archive of Unwritten Lines', 'The Crater where the first seed cracked the sky'][rng.nextInt(0, 2)]}\n\n`;
+      t += `${prot.toUpperCase()}\n`;
+      t += `I planted you when the only law was chance. Now the law is fidelity.\n\n`;
+      if (sc % 2 === 0) {
+        t += `${ant.toUpperCase()}\n`;
+        t += `(stepping from shadow)\n`;
+        t += `Fidelity is just another name for prison. I choose the beautiful fork.\n\n`;
+      }
+      t += `${love.toUpperCase()}\n`;
+      t += `Then let us breed the choice itself. Let the audience decide which timeline they inhabit.\n\n`;
+      t += `CHORUS\n`;
+      t += `(in nine-part harmony)\n`;
+      t += `We are the light that remembers the dark. We are the dark that forgives the light.\n\n`;
+      if (act === acts && sc === scenes) {
+        t += `${prot.toUpperCase()}\n`;
+        t += `Then let the curtain fall on every possible ending — and rise on the one we choose together.\n\n`;
+        t += `(Lights rise on a single green shoot. The audience is invited to speak the final line.)\n\n`;
+      }
+    }
+  }
+  t += `\nCURTAIN\n\n`;
+  t += `END OF PLAY\nParadigm GSPL — Theater • Rich full script with dialogue, stage directions, chorus • No SCENE 1...\n`;
+  return t;
+}
+
+function deriveCharacterName(rng: Xoshiro256StarStar, idx: number): string {
+  const names = ['Elara Voss', 'Cassian Kade', 'Seraphine Vale', 'Dorian Quill', 'Isolde Raine'];
+  return names[(idx + rng.nextInt(0, 4)) % names.length];
 }
 
 function extractParams(seed: Seed, rng: Xoshiro256StarStar): TheaterParams {

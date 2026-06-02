@@ -13,30 +13,73 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'procedural'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
-interface I { size: number }
+interface A {
+  heightmapPath: string;
+  jsonPath: string;
+  htmlPath: string;
+  biomeCount: number;
+  filePath: string; // legacy interop: holds json content for hash compat in some runners
+  meta: Record<string, unknown>;
+}
+interface I { size: number; biomeCount: number }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta ?? {})).digest('hex');
+  const payload = a.heightmapPath + '|' + a.jsonPath + '|' + a.htmlPath + '|' + a.biomeCount + '|' + (a.filePath || '');
+  return crypto.createHash('sha256').update(payload).digest('hex');
 }
 
 async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'procedural-'));
-  const out = path.join(dir, 'a.json');
+  const out = path.join(dir, 'procedural.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateProcedural(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateProcedural(seed as any, dir)) as {
+    heightmapPath: string; jsonPath: string; htmlPath: string; biomeCount: number;
+  };
+  const jsonContent = await fsp.readFile(r.jsonPath, 'utf-8').catch(() => '{}');
+  // Read PNG as base64 for rich manifest (real valid image bytes)
+  const pngBytes = await fsp.readFile(r.heightmapPath).catch(() => Buffer.alloc(0));
+  const pngB64 = pngBytes.toString('base64');
+  return {
+    heightmapPath: r.heightmapPath,
+    jsonPath: r.jsonPath,
+    htmlPath: r.htmlPath,
+    biomeCount: r.biomeCount,
+    filePath: jsonContent,
+    meta: {
+      biomeCount: r.biomeCount,
+      pngBase64Head: pngB64.slice(0, 128), // evidence of real PNG (starts with iVBORw0KGgo= for valid)
+      pngSize: pngBytes.length,
+      jsonSize: jsonContent.length,
+      htmlSize: (await fsp.readFile(r.htmlPath, 'utf-8').catch(() => '')).length
+    }
+  };
 }
 
 function invert(a: A): I {
-  return { size: a.filePath.length };
+  return { size: (a.filePath || '').length + (a.meta?.pngSize as number || 0), biomeCount: a.biomeCount };
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const jsonLen = (a.filePath || '').length;
+  const pngSize = (a.meta?.pngSize as number) || 0;
+  const bCount = a.biomeCount || 0;
+  // Rich scoring: penalize tiny outputs, reward biome variety + substantial image data (real raster)
+  const sizeScore = Math.min(1, (jsonLen + pngSize) / 120000);
+  const biomeScore = Math.min(1, bCount / 8);
+  const pngReal = pngSize > 800 && (a.meta?.pngBase64Head as string || '').startsWith('iVBOR') ? 1 : 0.6;
+  const score = (sizeScore * 0.4 + biomeScore * 0.35 + pngReal * 0.25);
+  const axes: Record<string, number> = {
+    hasOutput: jsonLen > 0 ? 1 : 0,
+    biomeDiversity: biomeScore,
+    rasterSize: Math.min(1, pngSize / 80000),
+    pngValidMagic: pngReal,
+    totalArtifactBytes: Math.min(1, (jsonLen + pngSize) / 200000)
+  };
+  const notes = [
+    `biomes=${bCount} png=${pngSize}B json=${jsonLen}B`,
+    `pngMagic=${pngReal ? 'valid' : 'check'}`
+  ];
+  return { score: Math.max(0, Math.min(1, score)), axes, notes };
 }
 
 export const ProceduralQualityContract: QualityContract<S, A, I> = {
@@ -57,8 +100,11 @@ export const ProceduralQualityContract: QualityContract<S, A, I> = {
     return {
       domain: 'procedural',
       version: '1.0.0',
+      strata: ['Form', 'World', 'Field'],
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      outputs: ['PNG (valid raster terrain)', 'JSON (world params + height + biomes)', 'HTML (interactive viz)'],
+      notes: 'Real canvas-generated PNG with biome-colored shaded heightmap + contours; complete valid output.'
     };
   },
 };

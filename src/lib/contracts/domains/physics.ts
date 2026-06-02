@@ -31,7 +31,7 @@ export class PhysicsContract implements QualityContract<PhysicsGeneSet, PhysicsA
 
   synthesize(seed: PhysicsGeneSet, rng: Xoshiro256StarStar): PhysicsArtifact {
     return {
-      id: `phys_${Date.now()}`,
+      id: `phys_${Math.floor(rng.nextF64() * 1e15)}`,
       activeBodies: seed.bodyCount || 1240,
       stableAt60fps: true,
       constraintCount: seed.constraintComplexity * 180,

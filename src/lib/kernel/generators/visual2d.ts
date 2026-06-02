@@ -17,7 +17,6 @@
  * - Deterministic: same seed = identical artwork
  */
 
-import * as THREE from 'three';
 import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
@@ -141,7 +140,7 @@ async function generateArtwork(
 function renderFractalLayer(
   ctx: CanvasRenderingContext2D,
   params: Visual2DParams,
-  layerIndex: number,
+  _layerIndex: number,
   rng: Xoshiro256StarStar
 ) {
   const fractalTypes = ['mandelbrot', 'julia', 'burningship', 'tricorn'];
@@ -198,7 +197,7 @@ function renderFractalLayer(
 function renderGeometricLayer(
   ctx: CanvasRenderingContext2D,
   params: Visual2DParams,
-  layerIndex: number,
+  _layerIndex: number,
   rng: Xoshiro256StarStar
 ) {
   const numShapes = 5 + Math.floor(params.complexity * 20);
@@ -255,7 +254,7 @@ function renderGeometricLayer(
 function renderOrganicLayer(
   ctx: CanvasRenderingContext2D,
   params: Visual2DParams,
-  layerIndex: number,
+  _layerIndex: number,
   rng: Xoshiro256StarStar
 ) {
   const numShapes = 3 + Math.floor(params.complexity * 10);
@@ -304,7 +303,7 @@ function renderOrganicLayer(
 function renderAbstractLayer(
   ctx: CanvasRenderingContext2D,
   params: Visual2DParams,
-  layerIndex: number,
+  _layerIndex: number,
   rng: Xoshiro256StarStar
 ) {
   const numElements = 10 + Math.floor(params.complexity * 30);
@@ -341,9 +340,9 @@ function renderAbstractLayer(
 /**
  * Get blend mode for layer
  */
-function getBlendMode(layerIndex: number, totalLayers: number): GlobalCompositeOperation {
+function getBlendMode(_layerIndex: number, _totalLayers: number): GlobalCompositeOperation {
   const blendModes: GlobalCompositeOperation[] = ['source-over', 'multiply', 'screen', 'overlay', 'soft-light', 'hard-light', 'difference', 'exclusion'];
-  return blendModes[layerIndex % blendModes.length];
+  return blendModes[_layerIndex % blendModes.length];
 }
 
 /**
@@ -385,7 +384,7 @@ function generateColorPalette(rng: Xoshiro256StarStar): number[] {
 /**
  * Apply color grading using LUT
  */
-function applyColorGrading(canvas: HTMLCanvasElement, palette: number[], rng: Xoshiro256StarStar) {
+function applyColorGrading(canvas: HTMLCanvasElement, _palette: number[], rng: Xoshiro256StarStar) {
   // Simple color grading: adjust hue/saturation/lightness
   const ctx = canvas.getContext('2d')!;
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

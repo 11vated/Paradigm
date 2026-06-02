@@ -9,6 +9,7 @@
  * Stage 5: Evolution/Composition — Optional refinement via GA
  * Stage 6: Archive/Sign      — Sign and archive seed
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Agent pipeline uses require('crypto') for SHA-256 hash checks during stage 3 growth. */
 
 import type { MemorySystem } from '../memory/memory-system';
 import type {
@@ -17,8 +18,8 @@ import type {
   ArchiveResult, PipelineResult,
 } from './stages';
 import { Xoshiro256StarStar, rngFromHash } from '../../kernel/rng';
-import { ENGINES, growSeed } from '../../kernel/engines';
-import { encodeGseed, signGseed, writeGseedFile } from '../../kernel/binary-format';
+import { growSeed } from '../../kernel/engines';
+import { encodeGseed } from '../../kernel/binary-format';
 import { VerificationGate } from '../verification/verification-gate';
 
 export interface PipelineConfig {
@@ -195,7 +196,7 @@ ${paramEntries}
   }
 
   /** Stage 3: Grow seed deterministically */
-  private async deterministicGrowth(intent: IntentEnvelope, code: CodeGenResult): Promise<GrowthResult> {
+  private async deterministicGrowth(intent: IntentEnvelope, _code: CodeGenResult): Promise<GrowthResult> {
     const hash = this.hashIntent(intent);
     const seed: any = {
       id: `seed-${hash.slice(0, 12)}`,
@@ -259,7 +260,7 @@ ${paramEntries}
   }
 
   /** Stage 5: Optional evolution refinement */
-  private async evolve(intent: IntentEnvelope, growth: GrowthResult): Promise<EvolutionResult> {
+  private async evolve(_intent: IntentEnvelope, growth: GrowthResult): Promise<EvolutionResult> {
     return {
       refinedSeedId: growth.seedId,
       refinedSeedHash: growth.seedHash,

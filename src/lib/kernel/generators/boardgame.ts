@@ -22,8 +22,6 @@ interface BoardGameParams {
   quality: 'low' | 'medium' | 'high' | 'photorealistic';
 }
 
-interface Position { x: number; y: number; }
-
 export async function generateBoardGame(
   seed: Seed,
   outputPath: string

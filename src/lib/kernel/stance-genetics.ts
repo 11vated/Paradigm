@@ -344,7 +344,7 @@ export function mutateStance(stanceName: string, mutationRate: number = 0.1): Pa
   const mutated: Partial<StanceGenes> = { ...stance.genes };
 
   // Mutate numeric genes
-  for (const [key, gene] of Object.entries(mutated)) {
+  for (const [, gene] of Object.entries(mutated)) {
     if (rng.nextF64() >= mutationRate) continue;
 
     if (gene && typeof gene === 'object' && 'value' in gene) {

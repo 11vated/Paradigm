@@ -1,7 +1,5 @@
 import type { Seed } from '../kernel/types';
 import { rngFromHash } from '../kernel/rng';
-import type { InferenceClient } from './types.js';
-import { InferenceTier } from './types.js';
 
 export interface SwarmAgent {
   id: string;
@@ -184,6 +182,15 @@ export function createSwarm(config: Partial<SwarmConfig> = {}): SwarmConfig {
     minConsensus: config.minConsensus ?? 0.65,
   };
 }
+
+export {
+  SwarmOrchestrator,
+  DEFAULT_ROLES,
+  parseVerdict,
+  type SwarmRole,
+  type SwarmRunResult,
+  type SwarmUntilShippedResult,
+} from './swarm-orchestrator.js';
 
 /** Swarm-level sovereign breeding */
 export function breedSwarm(swarmA: SwarmConfig, swarmB: SwarmConfig): SwarmConfig {

@@ -105,7 +105,7 @@ export const PhotorealisticRendererDemo: React.FC<PhotorealisticRendererDemoProp
         -1, -1, -1, -1, -1,  1, -1,  1,  1, -1,  1, -1,
       ]);
 
-      const normals = new Float32Array([
+      const _normals = new Float32Array([
         // Front
         0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
         // Back
@@ -120,7 +120,7 @@ export const PhotorealisticRendererDemo: React.FC<PhotorealisticRendererDemoProp
         -1, 0, 0, -1, 0, 0, -1, 0, 0, -1, 0, 0,
       ]);
 
-      const indices = new Uint32Array([
+      const _indices = new Uint32Array([
         0, 1, 2, 0, 2, 3,    // Front
         4, 5, 6, 4, 6, 7,    // Back
         8, 9, 10, 8, 10, 11, // Top
@@ -217,7 +217,7 @@ export const PhotorealisticRendererDemo: React.FC<PhotorealisticRendererDemoProp
           // Apply material properties
           const baseColor = hexToRgb(obj.material.baseColor);
           const metallic = obj.material.metallic;
-          const roughness = obj.material.roughness;
+          const _roughness = obj.material.roughness;
 
           // Combine base color with lighting
           const r = Math.min(255, baseColor.r * lightIntensity * lightColor.r);

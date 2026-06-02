@@ -4,18 +4,11 @@
  * Determinism tests for the agent tool system.
  * Verifies that same inputs produce same outputs (key invariant).
  */
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { executeTool, getAvailableTools } from '../../src/lib/agent/tools';
-import { InferenceTier } from '../../src/lib/agent/types';
 import type { ToolContext } from '../../src/lib/agent/types';
 
-async function execAndAccumulate(toolName: string, params: any, ctx: ToolContext): Promise<any> {
-  const result = await executeTool(toolName, params, ctx);
-  if (result.seedsCreated) {
-    ctx.seeds.push(...result.seedsCreated);
-  }
-  return result;
-}
+
 
 function makeTestContext(seeds: any[] = []): ToolContext {
   return {

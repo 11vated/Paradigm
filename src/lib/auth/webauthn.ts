@@ -18,10 +18,6 @@ function base64url(buf: Buffer): string {
   return buf.toString('base64url');
 }
 
-function fromBase64url(s: string): Buffer {
-  return Buffer.from(s, 'base64url');
-}
-
 export function generateRegistrationOptions(userId: string, username: string) {
   const challenge = crypto.randomBytes(32);
   const userIdBuf = Buffer.from(userId, 'utf-8');
@@ -65,10 +61,8 @@ export async function verifyRegistrationResponse(
 
   const authData = Buffer.from(credential.response.attestationObject, 'base64url');
   const credIdLen = authData.readUInt16BE(53);
-  const credId = authData.subarray(55, 55 + credIdLen);
   const pubKeyBytes = authData.subarray(55 + credIdLen);
 
-  const coseKey = parseCOSEKey(pubKeyBytes);
   const record: CredentialRecord = {
     id: credential.id,
     publicKey: pubKeyBytes,
@@ -127,10 +121,6 @@ export async function verifyAuthenticationResponse(
 
   record.counter++;
   return { credentialId: credential.id, counter: record.counter };
-}
-
-function parseCOSEKey(keyBytes: Buffer): { crv: number; x: Buffer; y: Buffer } {
-  return { crv: 1, x: Buffer.alloc(32), y: Buffer.alloc(32) };
 }
 
 function verifyCOSESignature(publicKey: Buffer, data: Buffer, signature: Buffer): boolean {

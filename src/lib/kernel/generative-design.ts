@@ -13,8 +13,7 @@ import type { AIAgentTool } from './ai-agent';
 import { createSeedTools, executeTool } from './ai-agent';
 import { growSeed } from './engines';
 import { executeGspl } from './gspl-interpreter';
-import { encodeGseed, createGseed } from './binary-format';
-import { buildC2PAManifest } from './c2pa-manifest';
+import { encodeGseed } from './binary-format';
 
 /**
  * Workflow step result
@@ -46,7 +45,7 @@ export async function workflowNaturalLanguageToArtifact(
   context: WorkflowContext,
   prompt: string
 ): Promise<WorkflowContext> {
-  const { llm, tools } = context;
+  const { tools } = context;
 
   // Step 1: Generate seed
   context.history.push({ step: 'generate_seed', input: prompt });

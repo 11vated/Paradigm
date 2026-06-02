@@ -63,12 +63,12 @@ function splitTopLevel(source: string): string[] {
 }
 
 function parseStatement(source: string): Statement | null {
-  const seedEditor = source.match(/^seed\s+"([^"]+)"\s+in\s+([\w.-]+)\s*(?:strata:\s*([^\{]+))?\s*\{([\s\S]*)\}$/);
+  const seedEditor = source.match(/^seed\s+"([^"]+)"\s+in\s+([\w.-]+)\s*(?:strata:\s*([^{]+))?\s*\{([\s\S]*)\}$/);
   if (seedEditor) {
     const strata = seedEditor[3] ? seedEditor[3].trim().split('+').map(s => s.trim()) : [];
     return { kind: 'seed_decl', name: literal(seedEditor[1]), domain: literal(seedEditor[2]), strata, genes: parseGenes(seedEditor[4]) };
   }
-  const seedLibrary = source.match(/^seed\s+([\w.]+)\s*(?:strata:\s*([^\{]+))?\s*\{([\s\S]*)\}$/);
+  const seedLibrary = source.match(/^seed\s+([\w.]+)\s*(?:strata:\s*([^{]+))?\s*\{([\s\S]*)\}$/);
   if (seedLibrary) {
     const strata = seedLibrary[2] ? seedLibrary[2].trim().split('+').map(s => s.trim()) : [];
     return { kind: 'seed_decl', name: ident(seedLibrary[1]), domain: ident(seedLibrary[1]), strata, genes: parseGenes(seedLibrary[3]) };

@@ -4,7 +4,7 @@
  * Tests for domain validation, migration, and engine dispatch.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { getAllDomains, ENGINES } from '../src/lib/kernel/engines';
 import { dispatch } from '../src/lib/kernel/engine-dispatcher';
 
@@ -141,7 +141,7 @@ describe('Domain Migration', () => {
   it('should map all legacy domains to valid domains', () => {
     const validDomains = getAllDomains();
     
-    for (const [legacy, target] of Object.entries(DOMAIN_MAP)) {
+    for (const [, target] of Object.entries(DOMAIN_MAP)) {
       expect(validDomains).toContain(target);
     }
   });
@@ -149,7 +149,7 @@ describe('Domain Migration', () => {
   it('should not map to invalid domains', () => {
     const validDomains = getAllDomains();
     
-    for (const [legacy, target] of Object.entries(DOMAIN_MAP)) {
+    for (const [, target] of Object.entries(DOMAIN_MAP)) {
       expect(validDomains).toContain(target);
     }
   });

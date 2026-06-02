@@ -103,8 +103,8 @@ describe('log', () => {
   it('walks first-parent back to the initial commit', async () => {
     const objs = new MemoryObjectStore();
     const refs = new MemoryRefStore();
-    const a = await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 1 } }), branch: 'main', author: 'a', message: 'a', timestamp: TS });
-    const b = await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 2 } }), branch: 'main', author: 'a', message: 'b', timestamp: TS2 });
+    await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 1 } }), branch: 'main', author: 'a', message: 'a', timestamp: TS });
+    await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 2 } }), branch: 'main', author: 'a', message: 'b', timestamp: TS2 });
     const c = await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 3 } }), branch: 'main', author: 'a', message: 'c', timestamp: TS3 });
     const entries = await log(objs, c.commit);
     expect(entries.map((e) => e.commit.message)).toEqual(['c', 'b', 'a']);
@@ -172,7 +172,7 @@ describe('findMergeBase', () => {
     const objs = new MemoryObjectStore();
     const refs = new MemoryRefStore();
     // main: A -> B -> C
-    const A = await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 1 } }), branch: 'main', author: 'a', message: 'A', timestamp: TS });
+    await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 1 } }), branch: 'main', author: 'a', message: 'A', timestamp: TS });
     const B = await commit(objs, refs, { seed: makeSeed('s', { g: { type: 's', value: 2 } }), branch: 'main', author: 'a', message: 'B', timestamp: TS2 });
     // dev branches off B:  B -> D
     await branch(refs, 's', 'dev', B.commit);

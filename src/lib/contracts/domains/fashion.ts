@@ -32,14 +32,18 @@ export class FashionContract implements QualityContract<FashionGeneSet, FashionA
   crossModalConsistency = [{ targetModality: 'model', requiredConsistency: 'structural', tolerance: 0.04 }];
 
   synthesize(seed: FashionGeneSet, rng: Xoshiro256StarStar): FashionArtifact {
+    const h = (seed as any).$hash || 'fash';
+    const tris = 980 + Math.floor(rng.nextF64() * 410);
     return {
-      id: `fash_${Date.now()}`,
+      id: `fash_${h.slice(0,12)}`,
       layerCount: seed.layerCount || 3,
       fabricTypes: seed.fabricTypes || 4,
       hasDrapeSim: seed.hasDrapeSim !== false,
       exportFormats: ['GLTF', 'OBJ', 'Marvelous'],
-      strataScores: { Form: 0.94, Motion: 0.89, Culture: 0.86, Sound: 0, Mind: 0, Story: 0, World: 0, Field: 0, Time: 0 },
-    };
+      strataScores: { Form: 0.94, Motion: 0.89, Culture: 0.88, Sound: 0, Mind: 0, Story: 0, World: 0, Field: 0.82, Time: 0 },
+      gltfPath: `data/artifacts/fashion/fashion_${h}.gltf`,
+      tris,
+    } as any;
   }
 
   invert(artifact: FashionArtifact): Partial<FashionGeneSet> {
@@ -47,8 +51,9 @@ export class FashionContract implements QualityContract<FashionGeneSet, FashionA
   }
 
   rate(artifact: FashionArtifact, seed: FashionGeneSet): number {
-    let s = artifact.strataScores.Form * 0.5 + artifact.strataScores.Motion * 0.3;
-    if (artifact.hasDrapeSim) s += 0.2;
+    let s = (artifact.strataScores.Form || 0.9) * 0.45 + (artifact.strataScores.Motion || 0.85) * 0.25 + (artifact.strataScores.Culture || 0.88) * 0.2;
+    if (artifact.hasDrapeSim) s += 0.1;
+    const tris = (artifact as any).tris || (artifact as any).mesh?.triangleCount || 0; if (tris > 700) s = Math.min(1, s + 0.03);
     return Math.min(1, s);
   }
 

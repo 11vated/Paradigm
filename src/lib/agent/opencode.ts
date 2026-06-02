@@ -43,7 +43,7 @@ export async function executeOpenCodeTool(
   context: any
 ) {
   const toolEntries = Object.entries(AGENT_TOOLS) as [string, AgentTool][];
-  for (const [key, tool] of toolEntries) {
+  for (const [, tool] of toolEntries) {
     if (tool.name === name) {
       return await tool.execute(args, context);
     }

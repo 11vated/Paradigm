@@ -8,7 +8,6 @@ import type { Seed, User, PaginationOptions, PaginatedResult, AuditEntry, SeedSt
 
 // Dynamic import to avoid hard dependency when MongoDB isn't used
 let MongoClient: any;
-let Db: any;
 
 export class MongoStore implements SeedStore {
   readonly backend = 'mongodb' as const;
@@ -144,7 +143,7 @@ export class MongoStore implements SeedStore {
     return [];
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
+  async getUserByUsername(_username: string): Promise<User | undefined> {
     // This needs to be async in MongoDB, but the interface is sync for compat.
     // We handle this by maintaining a user cache similar to seeds.
     return undefined; // Overridden by async lookup in auth module

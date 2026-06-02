@@ -30,12 +30,7 @@ interface NarrativeParams {
 }
 
 // Deterministic easing curves (std/ease subset, pure, no RNG — used for pacing & emotional beats)
-function easeLinear(t: number): number { return t; }
 function easeCubicInOut(t: number): number { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-function easeElasticOut(t: number): number {
-  const c4 = (2 * Math.PI) / 3;
-  return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-}
 function easeOutQuad(t: number): number { return 1 - (1 - t) * (1 - t); }
 
 interface Character {
@@ -79,7 +74,7 @@ export async function generateNarrativeV3(
       gsplSchemaLoaded = 'narrative.gspl';
       narrativeConstraints = parseNarrativeSchemaConstraints(schemaContent);
     }
-  } catch (e) {}
+  } catch (_) { /* swallow: schema is optional, fall through to default */ }
 
   const params = extractNarrativeParams(seed, rng, narrativeConstraints);
   
@@ -234,7 +229,7 @@ function generatePlotStructure(params: NarrativeParams, characters: Character[],
   return acts;
 }
 
-function generateScenes(params: NarrativeParams, characters: Character[], plot: any, rng: Xoshiro256StarStar): Scene[] {
+function generateScenes(params: NarrativeParams, characters: Character[], _plot: any, rng: Xoshiro256StarStar): Scene[] {
   const scenes: Scene[] = [];
   const intensity = params.emotionalIntensity;
   const depth = params.characterDepth;

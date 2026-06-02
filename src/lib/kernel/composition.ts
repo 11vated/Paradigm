@@ -395,13 +395,13 @@ export function composeSeed(seed: any, targetDomain: string): any {
       transformedGenes = {};
       // Project genes forward: keep ones that map to target domain
       if (typeof sourceGenes === 'object') {
-        let kept = 0;
+        let _kept = 0;
         const targetGeneNames = DOMAIN_GENES[targetDomain] ?? [];
         for (const [key, gene] of Object.entries(sourceGenes)) {
           // Keep if the source gene name or category exists in target domain
           if (targetGeneNames.includes(key) || targetGeneNames.some(tg => geneCategory(tg) === geneCategory(key))) {
             transformedGenes[key] = typeof gene === 'object' ? { ...gene } : gene;
-            kept++;
+            _kept++;
           }
         }
         // Fill missing genes with defaults

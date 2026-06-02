@@ -13,13 +13,20 @@
 import type { SubAgentInput, SubAgentOutput } from '../types';
 import { BaseSubAgent, emit, intentVector, mapTo, projectAxis } from './base';
 
-const STRUCTURES = ['three-act', 'kishotenketsu', 'heros-journey', 'vignette', 'mosaic'] as const;
+type STRUCTURE = 'three-act' | 'kishotenketsu' | 'heros-journey' | 'vignette' | 'mosaic';
+type POV = 'first' | 'third-limited' | 'third-omniscient';
+type CURVE = 'rising' | 'falling' | 'oscillating' | 'plateau';
+type THEME =
+  | 'love' | 'loss' | 'redemption' | 'power' | 'identity' | 'freedom' | 'duty'
+  | 'justice' | 'revenge' | 'family' | 'survival' | 'discovery' | 'corruption'
+  | 'sacrifice' | 'transformation' | 'belonging';
+
 const POVS = ['first', 'third-limited', 'third-omniscient'] as const;
 const CURVES = ['rising', 'falling', 'oscillating', 'plateau'] as const;
 const THEMES = [
   'love', 'loss', 'redemption', 'power', 'identity', 'freedom', 'duty',
   'justice', 'revenge', 'family', 'survival', 'discovery', 'corruption',
-  'sacrifice', 'transformation', 'belonging',
+  'sacrifice', 'transformation', 'belonging'
 ] as const;
 
 export class NarrativeAgent extends BaseSubAgent {

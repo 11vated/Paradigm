@@ -129,13 +129,22 @@ export const LeftRail: React.FC<{
     if (!seed?.id) return;
     setActionState({ kind: 'grow', busy: true });
     try {
-      const artifact = await growSeed(seed.id);
-      window.dispatchEvent(new CustomEvent('paradigm:grow-success', { detail: { seedId: seed.id, artifact } }));
+      const next = await growSeed(seed.id);
+      if (next && next.id) {
+        setActive({
+          id: next.id,
+          name: next.name ?? next.id,
+          domain: next.domain ?? seed.domain,
+          hash: next.seed_hash ?? seed.hash,
+          generation: (seed.generation ?? 0) + 1,
+        });
+      }
       setActionState(null);
     } catch (e: any) {
       setActionState({ kind: 'grow', busy: false, error: String(e?.message ?? e) });
       window.setTimeout(() => setActionState(null), 4000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fireGrow reads seed.domain/seed.hash/seed.generation and setActive; intentionally narrowed to seed.id to avoid recreating callback on every seed mutation
   }, [seed?.id]);
 
   const fireMutate = useCallback(async () => {

@@ -10,8 +10,6 @@
  * Each chain gets the same seed NFT, but with chain-specific optimizations.
  */
 
-import { createHash } from 'crypto';
-
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type ChainId = 1 | 137 | 42161 | 8453;

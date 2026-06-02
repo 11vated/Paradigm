@@ -1,6 +1,7 @@
 /**
  * UI Polish Components — Error Boundaries, Toasts, Onboarding
  */
+/* eslint-disable react-refresh/only-export-components -- Polish components file co-locates hooks (useToast, useKeyboardShortcuts) with components by design. */
 
 import React, { Component, ErrorInfo, createContext, useContext, useState } from 'react';
 

@@ -34,7 +34,7 @@ export class EcosystemContract implements QualityContract<EcosystemGeneSet, Ecos
   synthesize(seed: EcosystemGeneSet, rng: Xoshiro256StarStar): EcosystemArtifact {
     const species = seed.speciesCount || 22;
     return {
-      id: `eco_${Date.now()}`,
+      id: `eco_${Math.floor(rng.nextF64() * 1e15)}`,
       speciesCount: species,
       biomeCount: seed.biomeCount || 3,
       interactionGraphEdges: Math.floor(species * species * (seed.interactionDensity || 0.35)),

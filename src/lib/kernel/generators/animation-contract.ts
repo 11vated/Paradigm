@@ -13,7 +13,6 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (co
 import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
-import { animationContract as animation15 } from '../../contracts/domains/animation';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'animation'; $name?: string; genes: any }

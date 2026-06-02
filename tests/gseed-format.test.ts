@@ -180,7 +180,7 @@ describe('GSeed — Round Trip', () => {
       };
       const output = { format: 'obj', mesh: 'v 0 0 0\nv 1 0 0\n' };
       const fp = path.join(tmpDir, 'export-test.gseed');
-      const pkg = exportGseedToFile(fp, seed as any, 'export-test', output as any);
+      exportGseedToFile(fp, seed as any, 'export-test', output as any);
       expect(fs.existsSync(fp)).toBe(true);
       const read = readGseedFile(fp);
       expect(read.metadata?.generator).toBe('export-test');

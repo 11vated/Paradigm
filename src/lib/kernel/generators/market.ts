@@ -221,8 +221,8 @@ class MarketMakingStrategy:
 `;
 }
 
-function backtestAlgorithm(prices: number[], algorithm: any, rng: Xoshiro256StarStar): any {
-  const position = 0;
+function backtestAlgorithm(prices: number[], _algorithm: any, rng: Xoshiro256StarStar): any {
+  const _position = 0;
   let cash = 10000;
   let shares = 0;
 

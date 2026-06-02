@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
-import { Loader2, Hexagon, ExternalLink, Image, Copy, Check } from 'lucide-react';
+import { Loader2, Hexagon, Image, Copy, Check } from 'lucide-react';
 
 export default function MintPanel({ seed }: { seed: any }) {
   const [ownerAddress, setOwnerAddress] = useState('');

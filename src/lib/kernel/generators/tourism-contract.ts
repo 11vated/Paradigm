@@ -24,10 +24,10 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'tourism-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateTourism(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateTourism(seed as any, out)) as { filePath?: string; brochurePath?: string };
+  const richPath = r.brochurePath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  return { filePath: data, meta: { brochurePath: richPath } };
 }
 
 function invert(a: A): I {
@@ -35,8 +35,11 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasDays = /Day \d:/.test(content);
+  const score = len > 2100 && hasDays ? 0.95 : (len > 900 ? 0.86 : 0.6);
+  return { score, axes: { hasOutput: len > 0 ? 1 : 0, itineraryDepth: hasDays ? 0.94 : 0.45, length: Math.min(1, len / 3000) }, notes: [hasDays ? 'day-by-day rich' : ''] };
 }
 
 export const TourismQualityContract: QualityContract<S, A, I> = {
@@ -56,9 +59,11 @@ export const TourismQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'tourism',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['brochurePath'],
+      strata: ['World', 'Story', 'Culture'],
     };
   },
 };

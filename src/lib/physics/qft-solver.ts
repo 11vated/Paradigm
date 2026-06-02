@@ -369,7 +369,7 @@ export class QFTSolver {
     if (!field) throw new Error(`Field ${fieldId} not found`);
     
     // Simplified field evolution using finite differences
-    const t = 0;
+    const _t = 0;
     const evolution: number[] = [...initialConditions];
     
     for (let i = 0; i < 100; i++) {

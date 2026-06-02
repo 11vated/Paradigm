@@ -11,7 +11,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RefreshCw, Download, Maximize2, Info } from 'lucide-react';
+import { Play, Pause, RefreshCw } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

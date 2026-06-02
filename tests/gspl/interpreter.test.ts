@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { executeGSPL, GSPLInterpreter } from '../../src/lib/gspl/interpreter.js';
+import { executeGSPL } from '../../src/lib/gspl/interpreter.js';
 
 describe('GSPL Interpreter', () => {
   describe('seed creation', () => {

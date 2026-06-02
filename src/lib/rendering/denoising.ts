@@ -116,7 +116,7 @@ export class DenoisingSystem {
   /**
    * Temporal accumulation with motion compensation
    */
-  private temporalAccumulation(frame: Float32Array, width: number, height: number): Float32Array {
+  private temporalAccumulation(frame: Float32Array, _width: number, _height: number): Float32Array {
     const accumulated = new Float32Array(frame.length);
     const alpha = this.config.temporalAlpha;
 
@@ -267,14 +267,6 @@ export class DenoisingSystem {
         let weightSum = 0;
         const colorSum = [0, 0, 0, 0];
 
-        const centerIdx = (y * width + x) * 4;
-        const centerColor = [
-          frame[centerIdx],
-          frame[centerIdx + 1],
-          frame[centerIdx + 2],
-          frame[centerIdx + 3],
-        ];
-
         for (const [ox, oy] of offsets) {
           const px = Math.max(0, Math.min(width - 1, x + ox));
           const py = Math.max(0, Math.min(height - 1, y + oy));
@@ -327,7 +319,7 @@ export class DenoisingSystem {
    * ML-based denoising (placeholder)
    * In production, this would use TensorFlow.js or ONNX Runtime
    */
-  private mlDenoise(frame: Float32Array, width: number, height: number): Float32Array {
+  private mlDenoise(frame: Float32Array, _width: number, _height: number): Float32Array {
     // Placeholder for ML denoising
     // Would integrate with:
     // - TensorFlow.js for inference

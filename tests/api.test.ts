@@ -3,7 +3,7 @@
  * Tests seed CRUD, operations, and validation endpoints
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 const API_URL = 'http://localhost:3000/api';
 const BASE_URL = 'http://localhost:3000';

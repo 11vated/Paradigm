@@ -23,6 +23,7 @@ export default function ScalarGauge({ value = 0.5, onChange, label, color = '#00
       }, 800);
       return () => clearTimeout(timer);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- prevValue/setPrevValue are only used inside the setTimeout callback, which runs once per value change
   }, [value]);
 
   const handlePointerDown = (e: any) => {

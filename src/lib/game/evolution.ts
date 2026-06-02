@@ -8,8 +8,6 @@ import { createWorldSeed } from '../world/genesis';
 import { composeQuest } from '../world/quest';
 import { generateGame, createGameSeed } from './generator';
 import { evaluate, type FitnessReport } from './oracle';
-import type { FriendSeedData } from '../friend/types';
-import type { WorldSeedData } from '../world/types';
 
 export interface Candidate {
   friendSeed: string;

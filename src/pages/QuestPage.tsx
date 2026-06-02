@@ -10,6 +10,22 @@ import { Link } from 'react-router-dom';
 const FRIENDS = ['iris', 'atlas-the-bold', 'sora', 'nori-the-curious', 'wren-the-quiet', 'vesper'];
 const WORLDS = ['vellichor', 'iron-marsh', 'thrice-fallen', 'oak-hollow', 'cinder-spire', 'glasshalls'];
 
+const Picker: React.FC<{ label: string; value: string; options: string[]; onChange: (v: string) => void }> = ({ label, value, options, onChange }) => (
+  <div>
+    <div className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-2">{label}</div>
+    <input value={value} onChange={(e) => onChange(e.target.value)}
+      className="w-full mb-2 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded text-zinc-100 font-mono text-sm" />
+    <div className="flex flex-wrap gap-1">
+      {options.map((o) => (
+        <button key={o} onClick={() => onChange(o)}
+          className={`px-2 py-1 rounded text-xs ${o === value ? 'bg-amber-700 text-zinc-100' : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800'}`}>
+          {o}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 interface QuestData {
   id: string;
   title: string;
@@ -29,6 +45,7 @@ const QuestPage: React.FC = () => {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setErr(null);
     fetch('/api/v1/quest/compose', {
       method: 'POST',
@@ -42,22 +59,6 @@ const QuestPage: React.FC = () => {
     }).catch((e) => { if (!cancelled) setErr(String(e)); });
     return () => { cancelled = true; };
   }, [friend, world]);
-
-  const Picker: React.FC<{ label: string; value: string; options: string[]; onChange: (v: string) => void }> = ({ label, value, options, onChange }) => (
-    <div>
-      <div className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-2">{label}</div>
-      <input value={value} onChange={(e) => onChange(e.target.value)}
-        className="w-full mb-2 px-3 py-2 bg-zinc-900 border border-zinc-800 rounded text-zinc-100 font-mono text-sm" />
-      <div className="flex flex-wrap gap-1">
-        {options.map((o) => (
-          <button key={o} onClick={() => onChange(o)}
-            className={`px-2 py-1 rounded text-xs ${o === value ? 'bg-amber-700 text-zinc-100' : 'bg-zinc-900 text-zinc-400 hover:bg-zinc-800'}`}>
-            {o}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">

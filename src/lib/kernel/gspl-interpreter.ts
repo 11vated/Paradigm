@@ -2,9 +2,10 @@
  * GSPL Language — Interpreter
  * Executes GSPL AST (from parser)
  * Phase 3: GSPL Language Completion
- * 
+ *
  * NOW WIRED TO KERNEL: breed, mutate, evolve, crossover all invoke actual operators
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- GSPL interpreter loads engine and composition modules dynamically via require() to avoid circular ESM imports at boot. */
 
 import { UniversalSeed } from '../../seeds/universal-seed';
 import { GsplLexer } from './gspl-lexer';
@@ -144,20 +145,22 @@ export class GsplInterpreter {
       case ASTNodeType.NULL_LITERAL:
         return node.value;
 
-      case ASTNodeType.VECTOR_LITERAL:
+      case ASTNodeType.VECTOR_LITERAL: {
         const elements = [];
         for (const e of node.elements) {
           elements.push(await this.evaluateNode(e));
         }
         return elements;
+      }
 
-      case ASTNodeType.STRUCT_LITERAL:
+      case ASTNodeType.STRUCT_LITERAL: {
         const struct: Record<string, any> = {};
         const fields = node.fields as Record<string, any> || {};
         for (const [key, value] of Object.entries(fields)) {
           struct[key] = await this.evaluateNode(value);
         }
         return struct;
+      }
 
       // Identifiers
       case ASTNodeType.IDENTIFIER:
@@ -171,12 +174,13 @@ export class GsplInterpreter {
         throw new Error(`Undefined variable: ${node.name} at line ${node.loc?.line}`);
 
       // Gene access
-      case ASTNodeType.GENE_ACCESS:
+      case ASTNodeType.GENE_ACCESS: {
         const seed = await this.evaluateNode(node.object);
         if (!seed || !seed.genes) {
           throw new Error(`Cannot access genes of non-seed at line ${node.loc?.line}`);
         }
         return seed.genes[node.geneName]?.value;
+      }
 
       // Binary expressions
       case ASTNodeType.BINARY_EXPR:
@@ -195,25 +199,28 @@ export class GsplInterpreter {
         return this.evaluatePipe(node);
 
       // Member access
-      case ASTNodeType.MEMBER_ACCESS:
+      case ASTNodeType.MEMBER_ACCESS: {
         const obj = await this.evaluateNode(node.object);
         return obj[node.property];
+      }
 
       // Array access
-      case ASTNodeType.ARRAY_ACCESS:
+      case ASTNodeType.ARRAY_ACCESS: {
         const arr = await this.evaluateNode(node.array);
         const idx = await this.evaluateNode(node.index);
         return arr[idx];
+      }
 
       // Seed declaration
       case ASTNodeType.SEED_DECL:
         return this.evaluateSeedDecl(node);
 
       // Let declaration
-      case ASTNodeType.LET_DECL:
+      case ASTNodeType.LET_DECL: {
         const letValue = await this.evaluateNode(node.value);
         this.context.variables.set(node.name, letValue);
         return letValue;
+      }
 
       // Function declaration
       case ASTNodeType.FN_DECL:
@@ -221,9 +228,10 @@ export class GsplInterpreter {
         return { type: 'function', name: node.name };
 
       // Return statement
-      case ASTNodeType.RETURN_STMT:
+      case ASTNodeType.RETURN_STMT: {
         const retValue = node.value ? await this.evaluateNode(node.value) : undefined;
         throw new GSPLReturn(retValue);
+      }
 
       // If statement
       case ASTNodeType.IF_STMT:
@@ -376,20 +384,22 @@ export class GsplInterpreter {
         return min + this.context.rng.nextF64() * (max - min);
       }
       
-      case 'print':
+      case 'print': {
         const value = evaluatedArgs.length > 0 ? evaluatedArgs[0] : '';
         const strValue = typeof value === 'object' && value !== null ? JSON.stringify(value) : String(value);
         this.context.output.push(strValue);
         return value;
+      }
 
       // Utility functions
-      case 'len':
+      case 'len': {
         if (evaluatedArgs.length === 0) throw new Error('len requires 1 argument');
         const lenArg = evaluatedArgs[0];
         if (Array.isArray(lenArg)) return lenArg.length;
         if (typeof lenArg === 'string') return lenArg.length;
         if (lenArg && typeof lenArg === 'object') return Object.keys(lenArg).length;
         return 0;
+      }
 
       case 'domains':
         return [
@@ -400,7 +410,7 @@ export class GsplInterpreter {
           'metaverse', 'quantum', 'blockchain', 'dao', 'knowledge_graph'
         ];
 
-      case 'range':
+      case 'range': {
         const rangeEnd = evaluatedArgs[0] || 0;
         const rangeStart = evaluatedArgs.length > 1 ? evaluatedArgs[0] : 0;
         const rangeEndActual = evaluatedArgs.length > 1 ? evaluatedArgs[1] : rangeEnd;
@@ -409,6 +419,7 @@ export class GsplInterpreter {
           arr.push(i);
         }
         return arr;
+      }
 
       case 'abs': return Math.abs(evaluatedArgs[0]);
       case 'min': return Math.min(...evaluatedArgs);
@@ -427,12 +438,13 @@ export class GsplInterpreter {
       case 'E': return Math.E;
       
       // Kernel operators (wired to actual functions)
-      case 'mutate':
+      case 'mutate': {
         if (evaluatedArgs.length < 1) throw new Error('mutate requires at least 1 argument');
         const mutateTarget = evaluatedArgs[0];
         const mutationRate = evaluatedArgs[1] || 0.1;
         // Call actual kernel mutation operator
         return this.callKernelMutate(mutateTarget, mutationRate);
+      }
       
       case 'breed':
       case 'crossover':
@@ -689,7 +701,7 @@ export class GsplInterpreter {
     throw new Error(`crossover expects two Seeds`);
   }
   
-  private callKernelSelect(population: any[], fitnessFn: any): any {
+  private callKernelSelect(population: any[], _fitnessFn: any): any {
     // In production: import { select } from '../kernel/operators';
     // For now, return best individual
     if (!Array.isArray(population) || population.length === 0) return null;
@@ -759,35 +771,7 @@ export class GsplInterpreter {
   private async callEngine(domain: string, seed: any): Promise<any> {
     // Dynamically import and call the engine
     try {
-      // Map domain to generator function
-      const engineMap: Record<string, string> = {
-        'character': 'character-v3',
-        'music': 'music-v2',
-        'sprite': 'sprite-v2',
-        'visual2d': 'visual2d-v2',
-        'game': 'game-v2',
-        'geometry3d': 'geometry3d',
-        'audio': 'audio',
-        'narrative': 'narrative',
-        'physics': 'physics',
-        'shader': 'shader',
-        'particle': 'particle',
-        'ecosystem': 'ecosystem',
-        'typography': 'typography',
-        'architecture': 'architecture',
-        'vehicle': 'vehicle',
-        'furniture': 'furniture',
-        'fashion': 'fashion',
-        'robotics': 'robotics',
-        'circuit': 'circuit',
-        'food': 'food',
-        'choreography': 'choreography',
-        'agent': 'agent'
-      };
-      
-      const moduleName = engineMap[domain] || domain;
-      
-      // In production: dynamic import
+      // In production: dynamic import using domain-to-engine map
       // For now, return structured output with seed
       return {
         type: 'engine_call',
@@ -1542,7 +1526,7 @@ export class GsplInterpreter {
       const lexer  = new GsplLexer(resolution.source);
       const tokens = lexer.tokenize();
       const parser = new GsplParser(tokens);
-      const ast    = parser.parse();
+      parser.parse();
 
       // Execute the module in an isolated child interpreter so seed/type
       // declarations don't pollute the global gene type registry.
@@ -1574,7 +1558,7 @@ export class GsplInterpreter {
     return null;
   }
 
-  private async evaluateExportDecl(node: ASTNode): Promise<any> {
+  private async evaluateExportDecl(_node: ASTNode): Promise<any> {
     // Exports are recorded for the module system
     // For now, just acknowledge the export
     return null;
@@ -1582,7 +1566,6 @@ export class GsplInterpreter {
 
   private async evaluateTypeDecl(node: ASTNode): Promise<any> {
     const name = node.name as string;
-    const baseType = node.baseType;
     const isTrait = node.isTrait === true;
 
     this.context.types.set(name, node);

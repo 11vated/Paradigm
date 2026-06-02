@@ -64,7 +64,7 @@ const scalar: GeneTypeOps = {
     const r = hi - lo > 0 ? hi - lo : 1.0;
     return Math.abs(a - b) / r;
   },
-  canonicalize(value, schema) {
+  canonicalize(value, _schema) {
     return fixedPrecision(value, 7);
   },
   repair(value, schema) {

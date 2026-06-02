@@ -113,7 +113,7 @@ ${components.map(c => `<div class="${c.name}">${c.name}</div>`).join('\n')}
   return filePath;
 }
 
-async function exportReact(components: any[], styles: string, outputPath: string, seed: Seed): Promise<string> {
+async function exportReact(components: any[], _styles: string, outputPath: string, seed: Seed): Promise<string> {
   const filename = `ui_${seed.$hash || 'unknown'}.tsx`;
   const filePath = path.join(outputPath, filename);
   

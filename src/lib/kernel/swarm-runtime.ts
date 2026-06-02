@@ -11,8 +11,8 @@
  */
 
 import { createHash } from 'crypto';
-import { SeedAgent, type SeedAgentConfig as AgentConfig, type AgentState } from './seed-agent';
-import type { Seed, Artifact } from './engines';
+import { SeedAgent, type SeedAgentConfig as AgentConfig } from './seed-agent';
+import type { Artifact } from './engines';
 import { kernelNow, kernelNowIso } from './clock';
 
 // Swarm configuration

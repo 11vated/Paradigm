@@ -9,6 +9,7 @@
  *   POST /api/substrate/health/report  — CI annotation endpoint (ring buffer / observability sink)
  *   GET  /api/strata                   — full stratum declarations + coverage
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Substrate-health route uses child_process require() to shell out to lint scripts and capture output. */
 
 import type { Express, Request, Response } from 'express';
 
@@ -18,10 +19,7 @@ import {
   getFull27Manifest,
 } from '../../lib/contracts/index.js';
 
-export interface SubstrateHealthDeps {
-  // Currently minimal — most logic is self-contained or uses dynamic imports.
-  // Future: inject store, logger, or a real metrics sink when we expand the ring buffer.
-}
+export type SubstrateHealthDeps = Record<string, never>;
 
 export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHealthDeps = {}): void {
   // ═══════════════════════════════════════════════════════════════════════════
@@ -36,20 +34,20 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
     try {
       const { getStratumHealthSummary } = await import('../../lib/kernel/quality-contract.js');
       stratumSummary = getStratumHealthSummary();
-    } catch {}
+    } catch { /* swallow: best-effort health probe, missing field is non-fatal */ }
 
     // Live numbers from doctrine lints (best effort)
     try {
       const evasionOut = require('child_process').execSync('npx tsx scripts/lint-no-evasion.ts 2>&1', { encoding: 'utf8' });
       const m = evasionOut.match(/as any:\s*(\d+)/);
       if (m) realEvasion = parseInt(m[1], 10);
-    } catch {}
+    } catch { /* swallow: best-effort health probe, missing field is non-fatal */ }
 
     try {
       const renameOut = require('child_process').execSync('npx tsx scripts/lint-canonical-rename.ts 2>&1', { encoding: 'utf8' });
       const m2 = renameOut.match(/(\d+)\s+unwaived/);
       if (m2) realCanonicalSiblings = parseInt(m2[1], 10);
-    } catch {}
+    } catch { /* swallow: best-effort health probe, missing field is non-fatal */ }
 
     const contractHonesty = (stratumSummary?.totalContracts || 0) > 0
       ? '100% (all contracts strata-declared)'
@@ -178,7 +176,7 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
   });
 
   app.post('/api/substrate/health/report', (req: Request, res: Response) => {
-    const { source, runId, metrics } = (req.body || {}) as any;
+    const { source, metrics } = (req.body || {}) as any;
     if (!source || typeof metrics !== 'object') {
       return res.status(400).json({ error: 'source + metrics object required' });
     }

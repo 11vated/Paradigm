@@ -13,16 +13,15 @@
  */
 
 import {
-  GENE_TYPES, getAllDomains, getCompositionGraph, getGeneTypeInfo,
+  GENE_TYPES, getAllDomains, getCompositionGraph,
   rngFromHash,
 } from '../kernel/index.js';
 import { InferenceTier, INTENT_TIER } from './types.js';
 import type {
-  AgentIntent, ParsedQuery, ReasoningPlan, PlanStep,
-  AgentResponse, AgentConfig, ToolContext,
+  AgentIntent, ParsedQuery, ReasoningPlan,
+  AgentResponse, ToolContext,
 } from './types.js';
-import { AGENT_TOOLS, executeTool } from './tools.js';
-import { AgentMemory } from './memory.js';
+import { executeTool } from './tools.js';
 import { getInferenceClient } from './inference.js';
 
 // ─── CONSTANTS ──────────────────────────────────────────────────────────────

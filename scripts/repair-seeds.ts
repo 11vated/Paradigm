@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { DOMAIN_SET, DOMAIN_ALIASES, resolveDomain } from '../src/lib/kernel/domain-constants';
+import { resolveDomain } from '../src/lib/kernel/domain-constants';
 
 interface Seed {
   id: string;
@@ -39,7 +39,6 @@ function validateAndRepairSeed(seed: Seed): RepairResult {
   if (canonical !== originalDomain) {
     seed.$domain = canonical;
     // Recompute hash
-    const oldHash = seed.$hash;
     seed.$hash = crypto.createHash('sha256').update(JSON.stringify(seed.genes ?? {}) + canonical).digest('hex');
     return { seedId: seed.id, originalDomain, newDomain: canonical, action: 'remapped', warnings: [`${originalDomain} → ${canonical}`] };
   }

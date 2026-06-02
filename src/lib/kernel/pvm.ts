@@ -437,7 +437,7 @@ export class PVM {
       }
 
       case Opcode.SEED_GROW: {
-        const domain = operand > 0 ? stack.pop() : undefined;
+        const _domain = operand > 0 ? stack.pop() : undefined;
         const seed = stack.pop();
 
         try {

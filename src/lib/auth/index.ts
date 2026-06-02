@@ -3,6 +3,7 @@
  * JWT-based auth with bcrypt password hashing.
  * Users stored in a flat JSON file (upgradeable to MongoDB later).
  */
+/* eslint-disable @typescript-eslint/no-require-imports -- Auth module uses require() to load Node built-ins (fs, path) and resolve to ESM-style types where needed. */
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';

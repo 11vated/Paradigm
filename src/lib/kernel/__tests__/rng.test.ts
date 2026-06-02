@@ -7,7 +7,7 @@
  * - No correlation between sequences
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   Xoshiro256StarStar,
   rngFromHash,

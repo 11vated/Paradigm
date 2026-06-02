@@ -74,7 +74,7 @@ export class MusicContract implements QualityContract<MusicGeneSet, MusicArtifac
         }
         fs.writeFileSync(wavPath, Buffer.concat([header, data]));
       }
-    } catch {}
+    } catch (e) { /* recovery: best-effort music probe; primary rich WAV/MIDI path unaffected */ console.debug('music probe recovery', (e as any)?.message); }
 
     return {
       id,

@@ -19,7 +19,7 @@
  */
 
 import { readFileSync, writeFileSync, unlinkSync, renameSync, readdirSync, statSync } from "node:fs";
-import { join, basename, dirname } from "node:path";
+import { join, dirname } from "node:path";
 
 const APPLY = process.argv.includes("--apply");
 const AUDIT = "scripts/.audit-output/generators.v2.json";

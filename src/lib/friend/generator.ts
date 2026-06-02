@@ -243,7 +243,6 @@ function escapeXml(s: string): string {
 }
 
 function buildHairPath(style: string, cx: number, cy: number, headRx: number, headRy: number): string {
-  const skin = '#000'; // not used — but each style varies
   // Each style returns one or more SVG path elements
   switch (style) {
     case 'buzz':

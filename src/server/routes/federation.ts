@@ -117,7 +117,7 @@ export function registerFederationRoutes(app: any) {
    * Discover peers by querying a known peer list.
    */
   app.post('/federation/discover', (req: Request, res: Response) => {
-    const { peerUrl } = req.body;
+    const { peerUrl: _peerUrl } = req.body;
     
     // In production: fetch peer list from the given URL
     // For now: return known peers
@@ -191,7 +191,7 @@ export function registerFederationRoutes(app: any) {
    * Accept a previously sent offer (acknowledgement).
    */
   app.post('/federation/accept', (req: Request, res: Response) => {
-    const { offerHash, receiverNodeId, receiverSignature } = req.body;
+    const { offerHash, receiverNodeId, receiverSignature: _receiverSignature } = req.body;
 
     if (!offerHash || !receiverNodeId) {
       res.status(400).json({ error: 'Missing offerHash or receiverNodeId' });
@@ -275,7 +275,7 @@ export function registerFederationRoutes(app: any) {
    * High-level seed exchange: offer + auto-accept if valid.
    */
   app.post('/federation/exchange', (req: Request, res: Response) => {
-    const { seed, signature, senderNodeId, senderPublicKey, targetNodeId } = req.body;
+    const { seed, signature, senderNodeId, senderPublicKey, targetNodeId: _targetNodeId } = req.body;
 
     if (!seed || !signature) {
       res.status(400).json({ error: 'Missing seed or signature' });

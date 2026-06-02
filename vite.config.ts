@@ -4,7 +4,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => {
-  const isProduction = mode === 'production';
+  const _isProduction = mode === 'production';
 
   return {
     plugins: [
@@ -105,6 +105,34 @@ export default defineConfig(({ mode }) => {
         'Content-Security-Policy': "frame-ancestors *;",
       }
     },
-    optimizeDeps: { exclude: ['gspl-module-resolver'] }
+    optimizeDeps: { exclude: ['gspl-module-resolver'] },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (id.includes('node_modules/three') || id.includes('node_modules/@react-three')) {
+              return 'vendor-three';
+            }
+            if (
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/react-router')
+            ) {
+              return 'vendor-react';
+            }
+            if (
+              id.includes('node_modules/framer-motion') ||
+              id.includes('node_modules/motion/') ||
+              id.includes('node_modules/motion-dom') ||
+              id.includes('node_modules/motion-utils') ||
+              id.includes('node_modules/recharts') ||
+              id.includes('node_modules/d3')
+            ) {
+              return 'vendor-viz';
+            }
+          }
+        }
+      }
+    }
   };
 });

@@ -90,7 +90,7 @@ function runFDTD(params: FieldParams, rng: Xoshiro256StarStar): FieldSnapshot[] 
   const { gridSize: N, steps, frequency, amplitude } = params;
   const dx = 1.0 / N;
   const dt = dx / (2.0 * 3e8);
-  const k = (2 * Math.PI * frequency) / 3e8;
+  const _k = (2 * Math.PI * frequency) / 3e8;
 
   const Ex = new Float32Array(N * N);
   const Ey = new Float32Array(N * N);

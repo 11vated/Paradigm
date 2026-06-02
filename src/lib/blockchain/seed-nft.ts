@@ -36,7 +36,7 @@ export class SeedNFTClient {
   private signer: ethers.Signer;
 
   constructor(
-    provider: ethers.Provider,
+    _provider: ethers.Provider,
     signer: ethers.Signer,
     network: keyof typeof CONTRACT_ADDRESSES = 'localhost'
   ) {

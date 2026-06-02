@@ -31,7 +31,7 @@ export class ALifeContract implements QualityContract<ALifeGeneSet, ALifeArtifac
 
   synthesize(seed: ALifeGeneSet, rng: Xoshiro256StarStar): ALifeArtifact {
     return {
-      id: `alife_${Date.now()}`,
+      id: `alife_${Math.floor(rng.nextF64() * 1e15)}`,
       gridSize: seed.gridSize || 256,
       ruleSetSize: seed.ruleComplexity * 12 + 4,
       stablePatterns: Math.floor(seed.generations * 0.18),

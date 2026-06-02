@@ -24,10 +24,10 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'legal-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateLegal(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateLegal(seed as any, out)) as { filePath?: string; docPath?: string };
+  const richPath = r.docPath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  return { filePath: data, meta: { docPath: richPath } };
 }
 
 function invert(a: A): I {
@@ -35,8 +35,11 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasRecitals = /RECITALS|IN WITNESS WHEREOF/.test(content);
+  const score = len > 1600 && hasRecitals ? 0.94 : (len > 700 ? 0.84 : 0.6);
+  return { score, axes: { hasOutput: len > 0 ? 1 : 0, legalStructure: hasRecitals ? 0.93 : 0.5, length: Math.min(1, len / 2400) }, notes: [hasRecitals ? 'recitals + rich clauses' : ''] };
 }
 
 export const LegalQualityContract: QualityContract<S, A, I> = {
@@ -56,9 +59,11 @@ export const LegalQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'legal',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['docPath'],
+      strata: ['Field', 'Story', 'Culture'],
     };
   },
 };

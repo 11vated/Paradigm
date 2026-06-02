@@ -4,7 +4,6 @@
 import { useEffect } from 'react';
 import { useMode } from '@/stores/modeStore';
 import { useActiveSeed } from '@/stores/activeSeed';
-import { kernelSeedToActive } from '@/lib/ui/seedBridge';
 
 function isInputFocused(): boolean {
   const el = document.activeElement as HTMLElement | null;
@@ -70,5 +69,6 @@ export function useCreativeActs(opts: { onCosmos: () => void }) {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- opts is captured in closure; subscribing to its identity would re-bind keydown on every render
   }, [opts.onCosmos, setMode, seed, setSeed, patchSeed]);
 }

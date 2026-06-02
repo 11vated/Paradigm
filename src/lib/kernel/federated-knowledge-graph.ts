@@ -9,7 +9,6 @@
  * - Federated sync across nodes
  */
 
-import { ethers } from 'ethers';
 import { kernelNow, kernelNowIso } from './clock';
 
 export interface KnowledgeNode {
@@ -305,7 +304,7 @@ export class FederatedKnowledgeGraph {
     let synced = 0;
     let conflicts = 0;
     
-    for (const [peerId, endpoint] of this.peerConnections) {
+    for (const [peerId, _endpoint] of this.peerConnections) {
       try {
         // In production, this would be actual HTTP/WebSocket
         // For now, simulate sync

@@ -336,7 +336,7 @@ export class GSeedRenderer {
 
     // Create bind group
     const bindGroup = this.device.createBindGroup({
-      layout: this.pipelines.get('quantumCore')?.getBindGroupLayout(0)!,
+      layout: this.pipelines.get('quantumCore')!.getBindGroupLayout(0)!,
       entries: [
         { binding: 0, resource: { buffer: uniformBuffer } },
         { binding: 1, resource: outputTexture.createView() }
@@ -371,7 +371,7 @@ export class GSeedRenderer {
     // Energy streams to every ancestor
     // Recursive rendering of parent->child relationships
     if (config.lineage.parents) {
-      config.lineage.parents.forEach(parentHash => {
+      config.lineage.parents.forEach(_parentHash => {
         // Render tendril from parent to current seed
       });
     }
@@ -384,24 +384,11 @@ export class GSeedRenderer {
 
   private renderDomainHalo(config: GSeedVisualConfig): void {
     // Colored ring based on domain
-    const haloColors: Record<string, [number, number, number]> = {
-      character: [1.0, 0.84, 0.0], // Gold
-      music: [0.75, 0.75, 0.75], // Silver
-      sprite: [0.96, 0.64, 0.38], // Copper
-      visual2d: [0.0, 0.0, 0.0],   // Black
-      // ... 96 more domains
-    };
-    const color = haloColors[config.domain] || [0.5, 0.5, 0.5];
     // Render halo ring with 60fps shader
   }
 
   private renderFitnessFlame(config: GSeedVisualConfig): void {
     // Particle system above seed, height = fitness
-    const flameHeight = config.fitness * 2.0;
-    const colorGradient = [
-      [0.0, 0.0, 1.0],  // Blue (low fitness)
-      [1.0, 0.0, 0.0]   // Red (high fitness)
-    ];
     // Render flame particles
   }
 

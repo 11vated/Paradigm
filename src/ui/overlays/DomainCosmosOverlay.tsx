@@ -60,6 +60,7 @@ export const DomainCosmosOverlay: React.FC<OverlayProps> = ({ open, onClose }) =
 
   useEffect(() => {
     if (!open) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setSearch('');
     fetch('/api/cosmos/engines')
       .then((r) => r.json())
@@ -127,7 +128,7 @@ export const DomainCosmosOverlay: React.FC<OverlayProps> = ({ open, onClose }) =
         hash: json.$hash ?? '',
         generation: 0,
       });
-    } catch {}
+    } catch { /* swallow: best-effort overlay probe */ }
     onClose();
   }, [search, setSeed, onClose]);
 

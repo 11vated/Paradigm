@@ -17,7 +17,7 @@
 
 import { useState } from 'react';
 import { Download, Package, FileText, Music, Box, Code, Globe, Atom, Sigma, FileCode } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -93,8 +93,40 @@ const FORMATS: ExportFormat[] = [
     label: 'GLTF 3D Model',
     mime: 'model/gltf+json',
     icon: <Box className="w-4 h-4" />,
-    domains: ['character', 'geometry3d', 'vehicle', 'architecture', 'furniture'],
+    domains: ['character', 'geometry3d', 'vehicle', 'architecture', 'furniture', 'fashion', 'robotics'],
     endpoint: '/api/seeds/export/gltf',
+  },
+  {
+    ext: '.stl',
+    label: 'STL (3D Print / Nanobot)',
+    mime: 'model/stl',
+    icon: <Box className="w-4 h-4" />,
+    domains: ['nanobot', 'vehicle', 'furniture', 'robotics', 'geometry3d'],
+    endpoint: '/api/seeds/export/stl',
+  },
+  {
+    ext: '.gerber',
+    label: 'Gerber (PCB / Circuit)',
+    mime: 'text/plain',
+    icon: <FileCode className="w-4 h-4" />,
+    domains: ['circuit'],
+    endpoint: '/api/seeds/export/gerber',
+  },
+  {
+    ext: '.sdf',
+    label: 'SDF (Molecule / Drug)',
+    mime: 'chemical/x-mdl-sdfile',
+    icon: <Atom className="w-4 h-4" />,
+    domains: ['drug', 'molecule'],
+    endpoint: '/api/seeds/export/sdf',
+  },
+  {
+    ext: '.wasm',
+    label: 'WASM Module + Playable HTML',
+    mime: 'application/wasm',
+    icon: <Code className="w-4 h-4" />,
+    domains: ['game-wasm'],
+    endpoint: '/api/seeds/export/wasm',
   },
   {
     ext: '.pdb',
@@ -207,6 +239,39 @@ export function ExportPanel({ seed, domain, artifact, seedId }: ExportPanelProps
           );
         })}
       </div>
+
+      {/* Direct rich artifacts produced during this grow (end-to-end vision: real WAV/GLTF/PNG/SVG/story from generators) */}
+      {(() => {
+        const files = (artifact as any)?.files || {};
+        const direct = {
+          wav: (artifact as any)?.wavPath || files.wav,
+          png: (artifact as any)?.pngPath || files.png,
+          svg: (artifact as any)?.svgPath || files.svg,
+          gltf: (artifact as any)?.gltfPath || files.gltf,
+          midi: (artifact as any)?.midiPath || files.midi,
+          html: (artifact as any)?.htmlPath || (artifact as any)?.storyPlayerPath || files.html,
+        };
+        const hasAny = Object.values(direct).some(Boolean);
+        if (!hasAny) return null;
+        return (
+          <div className="px-3 pb-3 border-t border-zinc-800 mt-1 pt-2">
+            <div className="text-[10px] text-emerald-400/80 mb-1">Produced Rich Artifacts (download)</div>
+            <div className="flex flex-wrap gap-1">
+              {Object.entries(direct).filter(([,v]) => v).map(([k, v]) => (
+                <a
+                  key={k}
+                  href={String(v)}
+                  download
+                  className="text-[10px] px-1.5 py-0.5 bg-emerald-950/50 border border-emerald-900/60 rounded hover:bg-emerald-900/40 text-emerald-300"
+                >
+                  {k}
+                </a>
+              ))}
+            </div>
+            <div className="text-[9px] text-zinc-600 mt-1">Real files from deterministic generation (WAV synthesis, canvas art, GLTF meshes, MIDI, stories...)</div>
+          </div>
+        );
+      })()}
 
       <div className="px-4 pb-3">
         <p className="text-[10px] text-zinc-600 leading-relaxed">

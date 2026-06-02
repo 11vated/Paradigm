@@ -87,7 +87,7 @@ export class AURORA {
 
   private selectParent(
     archive: { seed: Seed; fitness: number; measures: number[] }[],
-    userPreference: ((measures: number[]) => number) | undefined,
+    _userPreference: ((measures: number[]) => number) | undefined,
     rng: { nextF64: () => number }
   ): { seed: Seed; fitness: number; measures: number[] } {
     if (archive.length === 0) throw new Error('Empty archive');

@@ -4,8 +4,8 @@
  */
 
 import type { Seed, Artifact } from '../kernel/types';
-import { buildC2PAManifest, type C2PAClaim } from '../kernel/c2pa-manifest';
-import { createDefaultRoyaltyConfig, type RoyaltyConfig } from '../kernel/royalty-system';
+import { buildC2PAManifest } from '../kernel/c2pa-manifest';
+import { type RoyaltyConfig } from '../kernel/royalty-system';
 
 export interface ProvenanceConfig {
   includeManifest: boolean;
@@ -83,7 +83,6 @@ export function attachRoyalty(
 
   if (config.autoCalculate) {
     const lineage = (seed.$lineage || {}) as any;
-    const lineageWithParents = { ...lineage, parents: lineage.parents || [] };
     const royalty: RoyaltyConfig = {
       schema: 'royalty-1.0',
       enabled: true,
@@ -95,7 +94,7 @@ export function attachRoyalty(
           role: 'author'
         }
       ],
-      resaleSplits: lineage.slice(0, 5).map((hash: any, idx: any) => ({
+      resaleSplits: lineage.slice(0, 5).map((_hash: any, idx: any) => ({
         address: `ANCESTOR_${idx}`,
         percentage: Math.floor(config.ancestorSplits / Math.max(1, lineage.length)) / 100,
         role: 'contributor'

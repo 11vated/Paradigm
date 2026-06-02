@@ -33,7 +33,7 @@ export class Visual2DContract implements QualityContract<Visual2DGeneSet, Visual
 
   synthesize(seed: Visual2DGeneSet, rng: Xoshiro256StarStar): Visual2DArtifact {
     return {
-      id: `visual2d_${Date.now()}`,
+      id: `visual2d_${Math.floor(rng.nextF64() * 1e15)}`,
       width: seed.resolution || 2048,
       height: seed.resolution || 2048,
       layerCount: seed.layers || 9,

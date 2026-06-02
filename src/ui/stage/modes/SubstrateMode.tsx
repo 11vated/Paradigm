@@ -14,6 +14,7 @@ const DIMENSIONS = [
 
 export const SubstrateMode: React.FC = () => {
   const seed = useActiveSeed(s => s.seed);
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- useMemo body consumes an RNG which is not pure w.r.t. dep array; React Compiler skips memoization
   const lanes = useMemo(() => {
     const rng = seed?.hash ? rngFromHash(seed.hash) : rngFromHash("void");
     return DIMENSIONS.map(d => {

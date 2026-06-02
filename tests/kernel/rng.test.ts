@@ -151,16 +151,14 @@ describe('Xoshiro256StarStar', () => {
       const child = parent.fork('child-stream');
 
       // Parent and child should produce different sequences
-      const parentVal = parent.nextF64();
-      const childVal = child.nextF64();
       // They COULD be equal by chance but that's astronomically unlikely
       // What we really test is that fork is deterministic:
       const parent2 = new Xoshiro256StarStar(42n);
-      const child2 = parent2.fork('child-stream');
+      parent2.fork('child-stream');
       expect(child.nextF64()).not.toBeUndefined(); // just ensuring it works
       // The key property: same fork key = same child
       const p3 = new Xoshiro256StarStar(42n);
-      const c3 = p3.fork('child-stream');
+      p3.fork('child-stream');
       // Reset and compare
       const pa = new Xoshiro256StarStar(42n);
       const ca = pa.fork('child-stream');

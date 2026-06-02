@@ -17,6 +17,8 @@ import { runStratumPredicate } from '../quality/predicates';
 
 // Direct 15_ usage (Epoch 2 pattern): the engineering-grade contract from src/lib/contracts/domains/ is the canonical source for strata + elevation
 import { characterContract as character15 } from '../../contracts/domains/character';
+import type { TransformationName } from '../../contracts/domains/character';
+import { rngFromHash } from '../rng';
 
 // Minimal FileReader polyfill for Node.js (Three.js GLTFExporter requires it).
 // Uses Blob.arrayBuffer() which is available in Node.js 18+.
@@ -63,6 +65,44 @@ async function withGltfExporterNoiseSuppressed<T>(fn: () => Promise<T>): Promise
   }
 }
 
+/** Deterministic GLTF-shaped artifact when native `canvas` is not installed (CI / minimal hosts). */
+function synthesizeFrom15Contract(seed: ChSeed): ChArtifact {
+  const rng = rngFromHash(seed.$hash ?? 'character-fallback');
+  const geneSet = {
+    proportions: Array.from({ length: 12 }, () => 0.5 + rng.nextF64() * 0.1),
+    personalityCore: ['deterministic', 'sovereign'],
+    powerSignature: 0.5 + rng.nextF64() * 0.1,
+    transformationPotential: ['Base'] as TransformationName[],
+    voiceProfile: { basePitch: 0.5, timbre: 0.5, resonance: 0.5 },
+  };
+  const art = character15.synthesize(geneSet, rng);
+  const verts = art.form.mesh.vertices?.length ? Math.floor(art.form.mesh.vertices.length / 3) : 512;
+  const faces = art.form.mesh.triangleCount ?? 1024;
+  const gltf = JSON.stringify({
+    asset: { version: '2.0', generator: 'Paradigm-character-fallback' },
+    scene: 0,
+    scenes: [{ nodes: [0] }],
+    nodes: [{ mesh: 0, name: art.id }],
+    meshes: [{ primitives: [{ attributes: { POSITION: 0 }, indices: 1 }] }],
+    accessors: [
+      { bufferView: 0, componentType: 5126, count: verts, type: 'VEC3' },
+      { bufferView: 1, componentType: 5123, count: faces * 3, type: 'SCALAR' },
+    ],
+    bufferViews: [{ byteLength: verts * 12 }, { byteLength: faces * 6 }],
+    buffers: [{ byteLength: verts * 12 + faces * 6 }],
+  });
+  return {
+    gltf,
+    meta: {
+      filePath: `${art.id}.gltf`,
+      vertices: verts,
+      faces,
+      animations: 2,
+      textures: ['albedo', 'normal', 'roughness'],
+    },
+  };
+}
+
 async function synthesize(seed: ChSeed): Promise<ChArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-ch-'));
   try {
@@ -73,6 +113,10 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
       gltf,
       meta: { filePath: r.filePath, vertices: r.vertices, faces: r.faces, animations: r.animations ?? 0, textures: r.textures ?? [] },
     };
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (!msg.includes('Canvas not available')) throw e;
+    return synthesizeFrom15Contract(seed);
   } finally {
     await fs.rm(dir, { recursive: true, force: true }).catch(() => {});
   }

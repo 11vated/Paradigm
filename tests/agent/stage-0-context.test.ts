@@ -17,7 +17,6 @@ describe('Stage 0 — live context', () => {
 
   it('gathers recent utterances from working memory when conversationId is set', async () => {
     const wm = new WorkingMemory();
-    const now = Date.now();
     await wm.put({ key: 'utt:conv-1:0', value: 'first message', topic: 'utterance', source: 'user' });
     await wm.put({ key: 'utt:conv-1:1', value: 'second message', topic: 'utterance', source: 'user' });
     const memory = new DefaultMemoryOrchestrator({ working: wm });

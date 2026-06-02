@@ -19,7 +19,7 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
-import { particleContract as particle15 } from '../../contracts/domains/particle';
+import { particleContract as _particle15 } from '../../contracts/domains/particle';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'particle'; $name?: string; genes?: Record<string, unknown> }

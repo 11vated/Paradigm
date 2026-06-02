@@ -12,7 +12,7 @@ import {
   AgentQuerySchema,
   SignSeedSchema, VerifySeedSchema,
   MintSeedSchema,
-  EmbedSeedSchema, LibraryImportSchema, SeedDistanceSchema,
+  LibraryImportSchema, SeedDistanceSchema,
 } from '../../src/lib/validation/schemas.js';
 
 // ─── Helper ──────────────────────────────────────────────────────────────────

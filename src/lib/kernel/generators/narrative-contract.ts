@@ -15,7 +15,6 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
-import { narrativeContract as narrative15 } from '../../contracts/domains/narrative';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
 
@@ -78,7 +77,7 @@ function rate(a: NarrativeArtifact): QualityReport {
     if (s === 'Story') {
       // Derive beats proxy from chapters + emotionalArc if present (ordering/causality aware)
       const chapters = a.meta.chapters || 3;
-      const arc = a.manuscript?.emotionalArc || a.manuscript?.metadata?.emotionalArc || 'rise-fall';
+      const _arc = a.manuscript?.emotionalArc || a.manuscript?.metadata?.emotionalArc || 'rise-fall';
       probe = {
         beats: Array.from({ length: Math.max(3, Math.min(8, chapters)) }, (_, i) => ({ order: i + 1 })),
         causalityAcyclic: true,

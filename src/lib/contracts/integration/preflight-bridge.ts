@@ -8,7 +8,7 @@
  * and server routes.
  */
 
-import { ALL_DOMAIN_CONTRACTS, getContractByDomain } from '../domain-registry';
+import { ALL_DOMAIN_CONTRACTS } from '../domain-registry';
 import { elevateDomain } from '../quality-contract';
 import { Xoshiro256StarStar } from '../../kernel/rng';
 
@@ -23,7 +23,7 @@ export interface NewContractHealthReport {
 export function generateNewContractHealth(): NewContractHealthReport {
   const rng = new Xoshiro256StarStar(0xCAFEBABE12345678n);
   const reports = ALL_DOMAIN_CONTRACTS.map(contract => {
-    // Simplified seed for health check
+    // Representative seed for health check (real elevation exercised in full paradigm:verify)
     const fakeSeed = { id: `health-${contract.domain}` } as any;
     const report = elevateDomain(contract, fakeSeed, rng);
     return { domain: contract.domain, score: report.finalScore, issues: report.issues };

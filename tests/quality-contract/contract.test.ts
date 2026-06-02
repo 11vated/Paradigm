@@ -9,7 +9,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   runConformance, runAllConformance, formatLeaderboard,
-  getContract, listContracts, registerContract,
+  getContract, listContracts,
   type QualityContract, type ConformanceResult,
 } from '@/lib/kernel/quality-contract';
 import { FriendQualityContract } from '@/lib/friend';
@@ -122,7 +122,7 @@ describe('runConformance — failure detection', () => {
       version: '0.0.1',
       synthesize: () => ({ value: Math.random() }), // non-deterministic
       invert: (a) => ({ value: a.value }),
-      rate: (a) => ({ score: 1, axes: { value: 1 } }),
+      rate: (_a) => ({ score: 1, axes: { value: 1 } }),
       curated: () => [
         { id: 'f1', name: 'F1', seed: { seed: 'a' }, intent: 'flaky' },
         { id: 'f2', name: 'F2', seed: { seed: 'b' }, intent: 'flaky' },
@@ -135,7 +135,7 @@ describe('runConformance — failure detection', () => {
   });
 
   it('detects a too-small curated library', async () => {
-    const tiny: QualityContract<{}, {}, {}> = {
+    const tiny: QualityContract<Record<string, never>, Record<string, never>, Record<string, never>> = {
       domain: 'tiny-test',
       version: '0.0.1',
       synthesize: () => ({}),
@@ -149,7 +149,7 @@ describe('runConformance — failure detection', () => {
   });
 
   it('detects an invalid rate score', async () => {
-    const bad: QualityContract<{}, {}, {}> = {
+    const bad: QualityContract<Record<string, never>, Record<string, never>, Record<string, never>> = {
       domain: 'bad-rate-test',
       version: '0.0.1',
       synthesize: () => ({}),

@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva } from "class-variance-authority";
+/* eslint-disable react-refresh/only-export-components -- shadcn/ui pattern: re-exporting buttonVariants alongside Button component is intentional for consumer API symmetry. */
 
 import { cn } from "@/lib/utils"
 

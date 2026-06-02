@@ -56,7 +56,7 @@ export class SovereigntyChecker {
     seed: Seed,
     operation: GeneticOperation,
     requesterId?: string,
-    providedSignature?: string
+    _providedSignature?: string
   ): SovereigntyCheck {
     const genes = seed.genes || {};
 
@@ -163,7 +163,7 @@ export class SovereigntyChecker {
     // In production, this would use ECDSA verification
     // For now, check if signature exists and is non-empty
     // Also verify that signer matches owner
-    const ownership = seed.genes?.ownership?.value;
+    // const ownership = seed.genes?.ownership?.value; // reserved for future ECDSA ownership check
     const seedSignature = seed.$provenance?.signature;
 
     // Simple check: signature must match what's in provenance
@@ -201,7 +201,7 @@ export class SovereigntyChecker {
   /**
    * Generate signature (simplified - in production use ECDSA)
    */
-  private generateSignature(seed: Seed, privateKey?: string): string {
+  private generateSignature(seed: Seed, _privateKey?: string): string {
     const rng = rngFromHash(seed.$hash || '');
     const bytes = new Uint8Array(64);
     for (let i = 0; i < 64; i++) {

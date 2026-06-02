@@ -64,6 +64,17 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
   invert: (a) => ({ size: a.html.length, levels: a.levelCount }),
   rate,
   hashArtifact,
+  manifest() {
+    return {
+      domain: 'game',
+      version: '2.0.0',
+      strata: ['Form', 'Motion', 'Field', 'Mind'],
+      clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
+      determinism: 'strict',
+      outputs: ['HTML5 playable game (canvas+raf+input+collision)', 'WASM companion via game-wasm integration'],
+      notes: 'Full rich playable artifact; WASM module for compute offload when paired with game-wasm generator.'
+    };
+  },
 };
 registerContract(GameQualityContract as never);
 

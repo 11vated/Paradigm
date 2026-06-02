@@ -200,8 +200,8 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   },
   {
     domain: 'geometry3d', version: 'v1', outputExtension: 'gltf',
-    generator: (s, p) => generateGeometry3D(s, p) as any,
-    postProcess: (o: any, s: Seed) => ({
+    generator: (_s, p) => generateGeometry3D(_s, p) as any,
+    postProcess: (o: any, _s: Seed) => ({
       mesh: {
         vertices: o.vertices, faces: o.faces, material: o.material,
       },

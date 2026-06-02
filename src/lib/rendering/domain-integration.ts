@@ -3,12 +3,11 @@
  * Provides rendering capabilities for all 27+ domain engines in Paradigm
  */
 
-import { PhotorealisticRenderer, createPhotorealisticRenderer, type RenderScene, type RenderMesh } from './photorealistic-renderer.js';
+import { PhotorealisticRenderer, createPhotorealisticRenderer, type RenderScene } from './photorealistic-renderer.js';
 import type { PBRMaterial } from '../asset_pipeline/material_generator.js';
 import { TextureSynthesisEngine, type TextureMapSet } from './texture-synthesis.js';
 import { generateMaterial } from '../asset_pipeline/material_generator.js';
-import { TextureBaker, type UVUnwrapMethod } from '../asset_pipeline/texture_baker.js';
-import type { Seed as SeedType, Artifact, GeneratorOutput } from '../kernel/types.js';
+import type { Seed as SeedType, Artifact } from '../kernel/types.js';
 import type { ExportAsset, ExportMaterial } from './export-pipeline.js';
 
 export interface DomainRenderingConfig {

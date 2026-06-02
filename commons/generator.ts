@@ -169,7 +169,7 @@ export class SeedGenerator {
   }
 }
 
-export async function generateSeedCommons(outputPath: string, targetCount: number = 1000): Promise<{ seeds: UniversalSeed[]; manifest: object }> {
+export async function generateSeedCommons(_outputPath: string, targetCount: number = 1000): Promise<{ seeds: UniversalSeed[]; manifest: object }> {
   const generator = new SeedGenerator();
   const seeds = generator.generateAll().slice(0, targetCount);
   const manifest = generator.exportManifest(seeds);

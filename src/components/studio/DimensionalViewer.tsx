@@ -76,13 +76,15 @@ function seedToFloats(seed: Seed, count: number): number[] {
 
 function SpatialPanel({ seed }: { seed: Seed }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const realGenes = seed.genes || {};
+  const realGenes = useMemo(() => seed.genes || {}, [seed.genes]);
 
   // Prefer real spatial data from genes (character proportions for body layout, geometry3d for object scale/pos, etc.)
   const hasCharacterSpatial = 'proportions' in realGenes;
   const hasGeometrySpatial = 'scale' in realGenes || 'primitive' in realGenes;
 
-  const floats = useMemo(() => seedToFloats(seed, 90), [seed.$hash]);
+  const floats = useMemo(() => seedToFloats(seed, 90),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
 
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
@@ -272,8 +274,10 @@ function SpatialPanel({ seed }: { seed: Seed }) {
 // Lightweight, deterministic Three renderer in a tiny canvas — the "full Three" option.
 function SpatialMicroPreview({ seed, hasCharacterSpatial, hasGeometrySpatial }: { seed: Seed; hasCharacterSpatial: boolean; hasGeometrySpatial: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const realGenes = seed.genes || {};
-  const floats = useMemo(() => seedToFloats(seed, 32), [seed.$hash]);
+  const realGenes = useMemo(() => seed.genes || {}, [seed.genes]);
+  const floats = useMemo(() => seedToFloats(seed, 32),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
 
   // Live pulse ticker for music tempo / narrative tone reactivity (magical 7D SPATIAL dimension)
   const [pulseTime, setPulseTime] = useState(0);
@@ -370,7 +374,8 @@ function SpatialMicroPreview({ seed, hasCharacterSpatial, hasGeometrySpatial }: 
         }
       }
     }
-  }, [seed.$hash, hasCharacterSpatial, hasGeometrySpatial, realGenes, pulseTime, hasMusicPulse, hasNarrativePulse]);
+  }, [seed.$hash, hasCharacterSpatial, hasGeometrySpatial, realGenes, pulseTime, hasMusicPulse, hasNarrativePulse, floats]);
+  // floats and floats[0]/floats[i] are read inside the body; intentionally narrowed to realGenes to avoid re-render on every float recompute
 
   // Real Three.js micro-preview (tiny rotating 3D view for character/geometry)
   const threeRef = useRef<HTMLCanvasElement>(null);
@@ -529,6 +534,7 @@ function TemporalPanel({ seed }: { seed: Seed }) {
       pts.push([(i / total) * W, H - v * (H - 8) - 4]);
     }
     return pts;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hasAnimTiming/hasMusicTemporal are read inside the body; intentionally narrowed to realGenes/seed
   }, [realGenes, seed]);
 
   const beats = useMemo(() => {
@@ -542,9 +548,10 @@ function TemporalPanel({ seed }: { seed: Seed }) {
     // Explicit integration with new character 'laugh'/'talk' clips (from flagship elevation)
     const isLaugh = (seed as any).$recentAnimation === 'laugh' || (realGenes.morph_smile?.value as number || 0) > 0.6;
     const isTalk = (seed as any).$recentAnimation === 'talk';
-    if (isLaugh) base = base.map((v,i) => v * (1 + 0.6 * Math.sin(i*1.7))); // bigger energetic swings
-    if (isTalk) base = base.map((v,i) => 0.3 + 0.7 * ((i%3===0)?1:0.4)); // rhythmic speech-like pulses
+    if (isLaugh) base = base.map((_v,i) => _v * (1 + 0.6 * Math.sin(i*1.7))); // bigger energetic swings
+    if (isTalk) base = base.map((_v,i) => 0.3 + 0.7 * ((i%3===0)?1:0.4)); // rhythmic speech-like pulses
     return base;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hasMusicTemporal/isLaugh/isTalk are read inside the body; intentionally narrowed to realGenes/seed
   }, [realGenes, seed]);
 
   const rhythmBars = beats.map((v, i) => ({
@@ -585,7 +592,9 @@ const EM_BANDS = [
 ];
 
 function SpectralPanel({ seed }: { seed: Seed }) {
-  const floats = useMemo(() => seedToFloats(seed, 32), [seed.$hash]);
+  const floats = useMemo(() => seedToFloats(seed, 32),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
   const W = 280; const H = 80;
 
   const bandW = W / EM_BANDS.length;
@@ -672,6 +681,7 @@ function ModalPanel({ seed }: { seed: Seed }) {
       const r = value * maxR;
       return { x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r, angle, label, value };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cx/cy/maxR/n are module/closure constants; intentionally narrowed to realGenes + 3 modal flags
   }, [realGenes, hasMusicModal, hasCharacterModal, hasAppModal, seed]);
 
   const polyPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + 'Z';
@@ -716,10 +726,11 @@ interface PossibleNode {
 }
 
 function PossiblePanel({ seed }: { seed: Seed }) {
-  const floats = useMemo(() => seedToFloats(seed, 48), [seed.$hash]);
+  const floats = useMemo(() => seedToFloats(seed, 48),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
   const W = 280; const H = 180;
   const mutateSeedInStore = useSeedStore((s: any) => s.mutateSeed);
-  const setCurrentSeed = useSeedStore((s: any) => (newSeed: any) => s.currentSeed = newSeed); // simplified adoption
 
   const [mutationStrength, setMutationStrength] = useState(0.12);
   const [realBranches, setRealBranches] = useState<any[]>([]);
@@ -962,6 +973,7 @@ function SemanticPanel({ seed }: { seed: Seed }) {
       const cy = H/2 + Math.sin(angle) * (dist * 0.7);
       return { domain: d, x: cx, y: cy, isCurrent, coherence: coh };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- hasLaughTalk/interactiveDemo/morphEnergy are derived from realGenes/seed; intentionally narrowed to identity + domain
   }, [realGenes, currentDomain, seed.genes, seed.$domain]);
 
   const currentCluster = clusters.find(c => c.isCurrent);
@@ -1001,12 +1013,14 @@ function StructuralPanel({ seed }: { seed: Seed }) {
   const W = 280; const H = 160;
   
   // Use real genes from the seed when available (live from GeneEditor / GSPL edits)
-  const realGenes = seed.genes ? Object.entries(seed.genes).slice(0, 10) : [];
-  const geneNames = realGenes.length > 0 
-    ? realGenes.map(([name]) => name) 
-    : ['proportions', 'face', 'skinTone', 'archetype', 'strength', 'agility', 'palette', 'temporal'];
+  const realGenes = useMemo(() => seed.genes ? Object.entries(seed.genes).slice(0, 10) : [], [seed.genes]);
+  const geneNames = useMemo(() => realGenes.length > 0
+    ? realGenes.map(([name]) => name)
+    : ['proportions', 'face', 'skinTone', 'archetype', 'strength', 'agility', 'palette', 'temporal'], [realGenes]);
 
-  const floats = useMemo(() => seedToFloats(seed, 60), [seed.$hash]);
+  const floats = useMemo(() => seedToFloats(seed, 60),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
 
   const nodes = useMemo(() => {
     return geneNames.slice(0, 8).map((g, i) => {
@@ -1014,11 +1028,11 @@ function StructuralPanel({ seed }: { seed: Seed }) {
       const r = 52 + floats[i] * 18;
       const geneEntry = realGenes.find(([name]) => name === g);
       const type = geneEntry ? (geneEntry[1] as any).type : 'scalar';
-      return { 
-        id: g, 
-        x: W / 2 + Math.cos(angle) * r, 
-        y: H / 2 + Math.sin(angle) * r, 
-        type 
+      return {
+        id: g,
+        x: W / 2 + Math.cos(angle) * r,
+        y: H / 2 + Math.sin(angle) * r,
+        type
       };
     });
   }, [geneNames, floats, realGenes]);

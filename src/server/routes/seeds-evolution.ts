@@ -113,7 +113,7 @@ export function registerSeedsEvolutionRoutes(app: Express, deps: SeedsEvolutionD
           result = nslcResult.archive.slice(0, popSize).map((a: any) => a.seed);
         } else {
           const poet = new POET({ maxEnvironments: popSize, generations });
-          const poetResult = await poet.run([parent], async (env: any, sol: any) => sol.$fitness?.overall || 0.5, (env: any, r: any) => { const child = JSON.parse(JSON.stringify(env)); if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); } return child; });
+          const poetResult = await poet.run([parent], async (_env: any, sol: any) => sol.$fitness?.overall || 0.5, (env: any, r: any) => { const child = JSON.parse(JSON.stringify(env)); if (child.genes) for (const [, g] of Object.entries(child.genes)) { const ge = g as any; if (typeof ge.value === 'number') ge.value = Math.max(0, Math.min(1, ge.value + (r.nextF64() - 0.5) * 0.2)); } return child; });
           result = poetResult.environments.slice(0, popSize).map((e: any) => e.solution);
         }
         for (const seed of result) { seeds.push(seed); }

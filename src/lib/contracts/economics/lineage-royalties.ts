@@ -1,6 +1,6 @@
 /**
- * Paradigm Infinite — Lineage Royalties Primitive (Part 6 stub)
- * Engineering-grade skeleton for sovereign economics.
+ * Paradigm Infinite — Lineage Royalties Primitive (Part 6)
+ * Real waterfall calc for sovereign lineage dividends (used by manifests + full-economics).
  */
 
 export interface RoyaltyWaterfall {

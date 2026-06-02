@@ -13,30 +13,62 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'nanobot'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
-interface I { size: number }
+interface A {
+  filePath: string; // json content for compat
+  stlPath: string;
+  botCount: number;
+  meta: Record<string, unknown>;
+}
+interface I { size: number; botCount: number; facets?: number }
 
 function hashArtifact(a: A): string {
-  return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta ?? {})).digest('hex');
+  const payload = (a.filePath || '') + '|' + (a.stlPath || '') + '|' + a.botCount + '|' + JSON.stringify(a.meta ?? {});
+  return crypto.createHash('sha256').update(payload).digest('hex');
 }
 
 async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'nanobot-'));
-  const out = path.join(dir, 'a.json');
-  // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateNanobot(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const out = path.join(dir, 'nanobot.json');
+  const r = await withKernelClock(0, () => generateNanobot(seed as any, out)) as { filePath: string; stlPath: string; botCount: number };
+  const jsonContent = await fsp.readFile(r.filePath, 'utf-8').catch(() => '{}');
+  const stlContent = await fsp.readFile(r.stlPath, 'utf-8').catch(() => 'solid empty\nendsolid empty');
+  // Count facets for rich report (real detailed geometry)
+  const facetCount = (stlContent.match(/facet normal/g) || []).length;
+  return {
+    filePath: jsonContent,
+    stlPath: r.stlPath,
+    botCount: r.botCount,
+    meta: {
+      stlSize: stlContent.length,
+      facetCount,
+      botCount: r.botCount,
+      stlHead: stlContent.slice(0, 64)
+    }
+  };
 }
 
 function invert(a: A): I {
-  return { size: a.filePath.length };
+  return { size: (a.filePath || '').length + ((a.meta?.stlSize as number) || 0), botCount: a.botCount, facets: (a.meta?.facetCount as number) || 0 };
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const jsonLen = (a.filePath || '').length;
+  const stlLen = (a.meta?.stlSize as number) || 0;
+  const facets = (a.meta?.facetCount as number) || 0;
+  const botC = a.botCount || 1;
+  const facetScore = Math.min(1, facets / 180); // world-class detailed requires >~150 facets
+  const sizeScore = Math.min(1, (jsonLen + stlLen) / 45000);
+  const botScore = Math.min(1, Math.log10(botC + 1) / 6);
+  const score = facetScore * 0.45 + sizeScore * 0.35 + botScore * 0.2;
+  const axes: Record<string, number> = {
+    hasOutput: jsonLen > 10 ? 1 : 0,
+    facetDetail: facetScore,
+    stlBytes: Math.min(1, stlLen / 30000),
+    swarmScale: botScore,
+    manifoldEvidence: facets > 40 ? 1 : 0.3
+  };
+  const notes = [`bots=${botC} facets=${facets} stl=${stlLen}B`, `detail=${facetScore.toFixed(2)}`];
+  return { score: Math.max(0, Math.min(1, score)), axes, notes };
 }
 
 export const NanobotQualityContract: QualityContract<S, A, I> = {
@@ -57,8 +89,11 @@ export const NanobotQualityContract: QualityContract<S, A, I> = {
     return {
       domain: 'nanobot',
       version: '1.0.0',
+      strata: ['Form', 'Motion', 'Field'],
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      outputs: ['JSON (design+swarm+assembly)', 'STL (detailed ASCII, 100s of facets, manifold)'],
+      notes: 'Real multi-faceted nanobot geometry (capsule+flagella+sensor+actuators) generated from seed; complete detailed STL.'
     };
   },
 };

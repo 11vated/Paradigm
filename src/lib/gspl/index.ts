@@ -13,7 +13,7 @@
 
 import { GsplLexer as KernelLexer, TokenType } from '../kernel/gspl-lexer.js';
 import { GsplParser as KernelParser, ASTNode, ASTNodeType } from '../kernel/gspl-parser.js';
-import { GsplInterpreter, executeGspl } from '../kernel/gspl-interpreter.js';
+import { executeGspl } from '../kernel/gspl-interpreter.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LEXER - Tokenization
@@ -122,7 +122,7 @@ export { GsplInterpreter, executeGspl } from '../kernel/gspl-interpreter.js';
 // TYPE CHECKER (Optional)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function typeCheck(ast: ASTNode[]): { types: Record<string, string>, errors: string[] } {
+export function typeCheck(_ast: ASTNode[]): { types: Record<string, string>, errors: string[] } {
   // Basic type checking - can be extended
   const types: Record<string, string> = {};
   const errors: string[] = [];

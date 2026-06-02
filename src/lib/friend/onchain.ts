@@ -24,7 +24,7 @@
 
 import { createHash } from 'crypto';
 import type { FriendSeedData, FriendSovereignty } from './types';
-import { friendPayloadHash, canonicalFriendJson } from './sovereignty';
+import { friendPayloadHash } from './sovereignty';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

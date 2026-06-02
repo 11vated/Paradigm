@@ -69,7 +69,7 @@ export class FederationManager {
         this.knownSeeds.add(peerId);
         return true;
       }
-    } catch {}
+    } catch { /* swallow: best-effort federation probe, peer is non-essential */ }
 
     return false;
   }
@@ -87,7 +87,7 @@ export class FederationManager {
     for (const [peerId, peer] of this.peers) {
       try {
         this.sendMessage(peer.url, msg).catch(() => this.peers.delete(peerId));
-      } catch {}
+      } catch { /* swallow: best-effort federation probe, peer is non-essential */ }
     }
   }
 

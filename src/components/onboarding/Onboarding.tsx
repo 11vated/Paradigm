@@ -3,7 +3,7 @@
  * Interactive first-time user experience
  */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface OnboardingStep {
   id: number;

@@ -14,19 +14,6 @@ function extractNumericHint(desc: string, keywords: Record<string, number>): num
   return null;
 }
 
-function statInRange(artifact: Record<string, unknown>, path: string[], min: number, max: number, label: string): string | null {
-  let obj: unknown = artifact;
-  for (const key of path) {
-    if (!obj || typeof obj !== 'object') return null;
-    obj = (obj as Record<string, unknown>)[key];
-  }
-  if (typeof obj === 'number') {
-    if (obj < min) return `${label} ${obj} is below expected ${min}`;
-    if (obj > max) return `${label} ${obj} is above expected ${max}`;
-  }
-  return null;
-}
-
 function checkStyle(artifact: Record<string, unknown>, desc: string): number {
   const lower = desc.toLowerCase();
   const styleMap: Record<string, string[]> = {
@@ -57,8 +44,6 @@ const characterChecker: DomainChecker = (a, d) => {
   if (stats) {
     const strengthHint = extractNumericHint(d, { strong: 0.8, weak: 0.2, mighty: 0.9, fragile: 0.2 });
     const agilityHint = extractNumericHint(d, { agile: 0.8, swift: 0.8, quick: 0.7, clumsy: 0.2, slow: 0.2 });
-    const sizeHint = extractNumericHint(d, { tall: 0.8, huge: 0.9, large: 0.7, small: 0.3, tiny: 0.2 });
-
     if (strengthHint !== null) { const s = stats.strength as number; if (s !== undefined && s < strengthHint * 100 - 20) issues.push(`strength ${s} below expected ${Math.round(strengthHint * 100)}`); }
     if (agilityHint !== null) { const a2 = stats.agility as number; if (a2 !== undefined && a2 < agilityHint * 100 - 20) issues.push(`agility ${a2} below expected ${Math.round(agilityHint * 100)}`); }
     if (lower.includes('warrior') || lower.includes('fighter') || lower.includes('knight')) {

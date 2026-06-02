@@ -49,12 +49,11 @@ export class AdsrEnvelope {
     public release: number = 0.3
   ) {}
 
-  getEnvelope(sampleIndex: number, totalSamples: number, noteDuration: number): number {
+  getEnvelope(sampleIndex: number, _totalSamples: number, noteDuration: number): number {
     const attackSamples = this.attack * DEFAULT_SAMPLE_RATE;
     const decaySamples = this.decay * DEFAULT_SAMPLE_RATE;
     const releaseSamples = this.release * DEFAULT_SAMPLE_RATE;
-    const sustainSamples = Math.max(0, noteDuration * DEFAULT_SAMPLE_RATE - attackSamples - decaySamples - releaseSamples);
-    
+
     const releaseStart = noteDuration * DEFAULT_SAMPLE_RATE - releaseSamples;
     
     if (sampleIndex < attackSamples) {
@@ -117,7 +116,6 @@ export class WavWriter {
       }
       
       const noteProgress = i - note.startTime * this.sampleRate;
-      const noteTotalSamples = note.duration * this.sampleRate;
       const envelopeValue = envelope.getEnvelope(noteProgress, samples, note.duration);
       
       const frequency = note.frequency;
@@ -168,7 +166,7 @@ export class WavWriter {
   }
 
   toWavBuffer(audio: AudioBuffer): Buffer {
-    const { left, right, sampleRate, channels, duration } = audio;
+    const { left, right, sampleRate, channels } = audio;
     const numSamples = left.length;
     const bytesPerSample = this.bitDepth / 8;
     const dataSize = numSamples * channels * bytesPerSample;
@@ -218,7 +216,7 @@ export class WavWriter {
     return keyToMidi[key] ?? 0;
   }
 
-  scaleDegrees(tonic: number, scaleType: string): number[] {
+  scaleDegrees(_tonic: number, scaleType: string): number[] {
     const scales: Record<string, number[]> = {
       major: [0, 2, 4, 5, 7, 9, 11],
       minor: [0, 2, 3, 5, 7, 8, 10],

@@ -41,12 +41,6 @@ interface Note {
   instrument: string;
 }
 
-interface Stem {
-  name: string;
-  audioBuffer: AudioBuffer | null;
-  path: string;
-}
-
 /**
  * Main music generation function
  */
@@ -102,12 +96,24 @@ function extractMusicParams(seed: Seed, rng: Xoshiro256StarStar): MusicParams {
     }
   }
   
+  const rawDuration = seed.genes?.duration?.value;
+  let duration: number;
+  if (typeof rawDuration === 'number') {
+    // Curated / contract seeds use absolute seconds (>1). Legacy genes may use 0–1 normalization.
+    duration =
+      rawDuration <= 1
+        ? 30 + Math.floor(rawDuration * 270)
+        : Math.min(300, Math.max(1, Math.floor(rawDuration)));
+  } else {
+    duration = 30 + Math.floor(rng.nextF64() * 270);
+  }
+
   return {
     tempo: 60 + Math.floor((seed.genes?.tempo?.value || rng.nextF64()) * 140), // 60-200
     key: (seed.genes?.key?.value || keys[Math.floor(rng.nextF64() * keys.length)]) as string,
     scale: (seed.genes?.scale?.value || scales[Math.floor(rng.nextF64() * scales.length)]) as string,
     timeSignature: (seed.genes?.timeSignature?.value || timeSigs[Math.floor(rng.nextF64() * timeSigs.length)]) as string,
-    duration: 30 + Math.floor((seed.genes?.duration?.value || rng.nextF64()) * 270), // 30-300
+    duration,
     instruments: seed.genes?.instruments?.value || selectedInstruments,
     genre: (seed.genes?.genre?.value || genres[Math.floor(rng.nextF64() * genres.length)]) as string,
     mood: ((seed.genes?.mood?.value as string) || 'neutral') as string
@@ -221,7 +227,7 @@ function generateChordProgression(params: MusicParams, rng: Xoshiro256StarStar):
  */
 function generateMelodyForChord(
   chord: number[],
-  scaleNotes: number[],
+  _scaleNotes: number[],
   measure: number,
   params: MusicParams,
   rng: Xoshiro256StarStar
@@ -252,7 +258,7 @@ function generateMelodyForChord(
  */
 function generateHarmonyForChord(
   chord: number[],
-  scaleNotes: number[],
+  _scaleNotes: number[],
   measure: number,
   params: MusicParams,
   rng: Xoshiro256StarStar
@@ -348,38 +354,6 @@ function generateDrumsForMeasure(
   }
   
   return notes;
-}
-
-/**
- * Synthesize stems from notes
- */
-async function synthesizeStems(
-  notes: Note[],
-  params: MusicParams,
-  rng: Xoshiro256StarStar
-): Promise<Stem[]> {
-  const stems: Stem[] = [];
-  
-  // Group notes by instrument
-  const byInstrument = notes.reduce((acc, note) => {
-    if (!acc[note.instrument]) acc[note.instrument] = [];
-    acc[note.instrument].push(note);
-    return acc;
-  }, {} as Record<string, Note[]>);
-  
-  // Create stem for each instrument
-  for (const [instrument, instrumentNotes] of Object.entries(byInstrument)) {
-    // In browser: use WebAudio API to synthesize
-    // In Node: use offline audio context or library
-    const stem: Stem = {
-      name: instrument,
-      audioBuffer: null, // Would be AudioBuffer in browser
-      path: `stem_${instrument}.wav`
-    };
-    stems.push(stem);
-  }
-  
-  return stems;
 }
 
 /**
@@ -515,33 +489,79 @@ async function exportMIDI(
   const filename = `music_${seed.$hash || 'unknown'}.mid`;
   const filePath = path.join(outputPath, filename);
   
-  // Generate MIDI file
-  // MIDI format: header chunk + track chunks
+  const ticksPerBeat = 480;
+  const beatsPerSecond = params.tempo / 60;
+  const ticksPerSecond = ticksPerBeat * beatsPerSecond;
   
-  // Header chunk (18 bytes)
+  // Group notes by instrument for tracks
+  const tracksByInst: Record<string, Note[]> = {};
+  for (const n of notes) {
+    const inst = n.instrument || 'piano';
+    if (!tracksByInst[inst]) tracksByInst[inst] = [];
+    tracksByInst[inst].push(n);
+  }
+  const instNames = Object.keys(tracksByInst);
+  const numTracks = Math.max(1, instNames.length + 1); // +1 for tempo/meta track
+  
+  // Header
   const header = Buffer.alloc(14);
   header.write('MThd', 0);
-  header.writeUInt32BE(6, 4); // Header length
-  header.writeUInt16BE(1, 8); // Format 1 (multiple tracks)
-  header.writeUInt16BE(Object.keys(notes.reduce((acc, n) => { acc[n.instrument] = true; return acc; }, {} as Record<string, boolean>)).length, 10); // Num tracks
-  header.writeUInt16BE(480, 12); // Ticks per beat
+  header.writeUInt32BE(6, 4);
+  header.writeUInt16BE(1, 8); // format 1
+  header.writeUInt16BE(numTracks, 10);
+  header.writeUInt16BE(ticksPerBeat, 12);
   
-  // Simple track chunk (placeholder)
-  const trackData = Buffer.alloc(100);
-  trackData.write('MTrk', 0);
-  trackData.writeUInt32BE(trackData.length - 8, 4);
+  const chunks: Buffer[] = [header];
   
+  // Track 0: tempo + time sig + end
+  const track0Events: Buffer[] = [];
+  // Tempo meta (set tempo)
+  const tempoMicros = Math.floor(60_000_000 / params.tempo);
+  const tempoEvent = Buffer.from([0x00, 0xFF, 0x51, 0x03, (tempoMicros >> 16) & 0xFF, (tempoMicros >> 8) & 0xFF, tempoMicros & 0xFF]);
+  track0Events.push(tempoEvent);
+  // Time signature (assume 4/4)
+  const tsEvent = Buffer.from([0x00, 0xFF, 0x58, 0x04, 0x04, 0x02, 0x18, 0x08]); // 4/4, 24 clocks, 8 32nds
+  track0Events.push(tsEvent);
   // End of track
-  trackData.writeUInt8(0xFF, 8);
-  trackData.writeUInt8(0x2F, 9);
-  trackData.writeUInt8(0x00, 10);
+  track0Events.push(Buffer.from([0x00, 0xFF, 0x2F, 0x00]));
+  const track0Data = Buffer.concat(track0Events);
+  const t0Len = Buffer.alloc(4);
+  t0Len.writeUInt32BE(track0Data.length, 0);
+  chunks.push(Buffer.concat([Buffer.from('MTrk'), t0Len, track0Data]));
   
-  const midiBuffer = Buffer.concat([header, trackData]);
+  // Per-instrument tracks with notes
+  instNames.forEach((inst, tIdx) => {
+    const trackNotes = tracksByInst[inst].sort((a, b) => a.start - b.start);
+    const events: Buffer[] = [];
+    let lastTick = 0;
+    const program = (['piano','bass','strings','drums','guitar','synth','flute','violin'].indexOf(inst) + 1) || 1;
+    // Program change
+    events.push(Buffer.from([0x00, 0xC0 | (tIdx % 16), program & 0x7F]));
+    
+    trackNotes.forEach(n => {
+      const startTick = Math.floor(n.start * ticksPerSecond);
+      const durTicks = Math.max(1, Math.floor(n.duration * ticksPerSecond));
+      const deltaStart = Math.max(0, startTick - lastTick);
+      const vel = Math.max(1, Math.min(127, n.velocity));
+      const pitch = Math.max(0, Math.min(127, n.pitch));
+      // Note on (delta, status+ch, pitch, vel)
+      events.push(Buffer.from([deltaStart & 0x7F, 0x90 | (tIdx % 16), pitch, vel]));
+      // Note off after duration (delta = dur, status, pitch, 0)
+      events.push(Buffer.from([durTicks & 0x7F, 0x80 | (tIdx % 16), pitch, 0]));
+      lastTick = startTick + durTicks;
+    });
+    // End of track
+    events.push(Buffer.from([0x00, 0xFF, 0x2F, 0x00]));
+    const tData = Buffer.concat(events);
+    const tLen = Buffer.alloc(4);
+    tLen.writeUInt32BE(tData.length, 0);
+    chunks.push(Buffer.concat([Buffer.from('MTrk'), tLen, tData]));
+  });
   
+  const midiBuffer = Buffer.concat(chunks);
   if (typeof fs !== 'undefined') {
     fs.writeFileSync(filePath, midiBuffer);
   }
-  
   return filePath;
 }
 

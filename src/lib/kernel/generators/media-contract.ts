@@ -24,10 +24,10 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'media-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateMedia(seed as any, out)) as { filePath?: string };
-  const filePath = r.filePath ?? out;
-  const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const r = await withKernelClock(0, () => generateMedia(seed as any, out)) as { filePath?: string; planPath?: string };
+  const richPath = r.planPath ?? r.filePath ?? out;
+  const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
+  return { filePath: data, meta: { planPath: richPath, mediaType: (seed as any).genes?.mediaType } };
 }
 
 function invert(a: A): I {
@@ -35,8 +35,19 @@ function invert(a: A): I {
 }
 
 function rate(a: A): QualityReport {
-  const score = a.filePath.length > 0 ? 0.9 : 0;
-  return { score, axes: { hasOutput: score }, notes: [] };
+  const content = typeof a.filePath === 'string' ? a.filePath : '';
+  const len = content.length;
+  const hasSections = /Executive Vision|Narrative Architecture|Creative Copy|Visual Style Guide/.test(content);
+  const score = len > 4200 && hasSections ? 0.97 : (len > 1800 ? 0.89 : 0.65);
+  return {
+    score,
+    axes: {
+      hasOutput: len > 0 ? 1 : 0,
+      planDepth: hasSections ? 0.96 : 0.5,
+      lengthFidelity: Math.min(1, len / 5500)
+    },
+    notes: [hasSections ? 'rich sections present' : 'thin', `${Math.floor(len / 5)} chars`]
+  };
 }
 
 export const MediaQualityContract: QualityContract<S, A, I> = {
@@ -56,9 +67,11 @@ export const MediaQualityContract: QualityContract<S, A, I> = {
   manifest() {
     return {
       domain: 'media',
-      version: '1.0.0',
+      version: '1.1.0',
       clauses: ['synthesize', 'invert', 'rate', 'curated', 'deterministic'],
       determinism: 'strict',
+      richArtifacts: ['planPath', 'mediaPath'],
+      strata: ['Form', 'Story', 'Sound', 'Culture'],
     };
   },
 };

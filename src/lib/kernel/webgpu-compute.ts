@@ -174,7 +174,7 @@ export class WebGPUComputeManager {
     this.device = await initWebGPU();
   }
   
-  async createPipeline(name: string, shaderCode: string, workgroupSize: number = 64): Promise<ComputePipeline | null> {
+  async createPipeline(name: string, shaderCode: string, _workgroupSize: number = 64): Promise<ComputePipeline | null> {
     if (!this.device) return null;
     
     try {

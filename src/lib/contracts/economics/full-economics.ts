@@ -1,6 +1,6 @@
 /**
- * Paradigm Infinite — Full Economics Layer (Part 6 v2)
- * Combines royalties, dividends, Universe licensing stub.
+ * Paradigm Infinite — Full Economics Layer (Part 6)
+ * Combines royalties, civilizational dividends, Universe licensing. Functional (wired to manifests + royalties calc).
  */
 
 import { calculateLineageRoyalties } from './lineage-royalties';

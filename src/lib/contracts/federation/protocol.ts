@@ -53,7 +53,7 @@ export function federationMerge(
  * Real fork: create independent sovereign copy with preserved parent lineage.
  */
 export function federationFork(
-  sourceSeedId: string,
+  _sourceSeedId: string,
   sourceLineage: string[],
   newOperatorPrivateKey: string
 ): FederationForkResult {

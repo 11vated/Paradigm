@@ -20,7 +20,7 @@
  */
 
 import { Xoshiro256StarStar } from './rng';
-import { GeneSystem, GeneTypeOps, GeneSchema } from './gene_system';
+import { GeneSystem, GeneSchema } from './gene_system';
 
 import crypto from 'crypto';
 import { kernelNow, kernelNowIso } from './clock';

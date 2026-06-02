@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, ContactShadows, Grid, Html } from '@react-three/drei';
 import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';
-import { loadOBJFromURL, parseOBJ, objToBufferGeometry } from '@/lib/kernel/generators/obj-loader';
+import { parseOBJ, objToBufferGeometry } from '@/lib/kernel/generators/obj-loader';
 import type { ViewportProps, MeshData } from './types';
 
 function EmergentMesh({ meshData, color }: { meshData: MeshData | null; color: string }) {
@@ -76,6 +76,9 @@ function FallbackMesh({ domain, color, artifact }: { domain: string; color: stri
   const variant = signature % 5;
   const scale = 0.75 + ((signature % 17) / 40);
 
+  // Hooks (must be called before any early return — Rules of Hooks)
+  const [expr, setExpr] = useState({ smile: 0.3, laugh: 0, talk: 0 });
+
   useFrame(() => {
     if (meshRef.current && reducedMotion !== true) {
       meshRef.current.rotation.y += 0.005;
@@ -102,7 +105,7 @@ function FallbackMesh({ domain, color, artifact }: { domain: string; color: stri
   if (domain === 'character' || domain === 'agent' || domain === 'fashion') {
     // Enhanced flagship-style character rig preview with live LAUGH / TALK reactivity
     // (uses the same emotional timing philosophy as the full CharacterRigDemo + character elevation)
-    const [expr, setExpr] = useState({ smile: 0.3, laugh: 0, talk: 0 });
+    // eslint-disable-next-line react-hooks/purity -- Date.now() is used to drive a frame-time animation, not a state mutation
     const t = Date.now() / 1000;
 
     const laughPulse = Math.max(0, 1 - Math.abs(((t * 1.8) % 1.6) - 0.7) * 2.2) * expr.laugh;

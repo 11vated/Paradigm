@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable @typescript-eslint/no-require-imports -- Preflight script shells out to child processes and reads filesystem state via require('fs')/require('child_process'); CLI tooling. */
 /**
  * Paradigm Preflight Report (Doctrine v2 Part V.8 + XV.3)
  *
@@ -115,7 +116,7 @@ function main() {
       const data = JSON.parse(readFileSync('docs/waivers/registry.json', 'utf8'));
       report.gates.waiverRegistry.count = (data.entries || []).length;
       report.gates.waiverRegistry.valid = true;
-    } catch {}
+    } catch { /* swallow: best-effort preflight, missing/corrupt file is non-fatal */ }
   }
 
   // Golden Corpus (Doctrine v2 Phase 2/3 — real regression enforcement for pinned families)
@@ -138,7 +139,7 @@ function main() {
       try {
         const data = JSON.parse(readFileSync(p, 'utf8'));
         goldenCorpus[family].pinnedTargets = data.targets || {};
-      } catch {}
+      } catch { /* swallow: best-effort preflight, missing/corrupt file is non-fatal */ }
     }
   }
 
@@ -232,7 +233,7 @@ function main() {
     golden15Drift = (golden15Raw.match(/WARN|missing|no golden/g) || []).length;
     (report as any).golden15 = { drift: golden15Drift, checked: true };
     if (golden15Drift === 0) score += 6; // bonus for clean 15_ golden check
-  } catch {
+  } catch { /* swallow: best-effort preflight, missing/corrupt file is non-fatal */
     (report as any).golden15 = { error: 'could not run golden-15-regression' };
   }
 
@@ -275,7 +276,7 @@ function main() {
       if (fifteenArtifacts.sampleRealArtifact) score += 5;
       if (fifteenArtifacts.part6SidecarsPresent) score += 4;
     }
-  } catch {}
+  } catch { /* swallow: best-effort preflight, missing/corrupt file is non-fatal */ }
   report.gates.fifteenArtifacts = fifteenArtifacts;
 
   report.summary.doctrineCompliance = Math.max(0, Math.min(100, score));

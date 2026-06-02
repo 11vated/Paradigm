@@ -9,7 +9,7 @@
  */
 
 import { rngFromHash, Xoshiro256StarStar } from '../kernel/rng';
-import { PathTracer, type PathTracerConfig } from './path-tracer';
+import { PathTracer } from './path-tracer';
 import { type Seed } from '../kernel/types';
 
 export interface RenderConfig {
@@ -607,7 +607,7 @@ export class UniversalRenderer {
     };
   }
 
-  private buildTechObject(color: [number, number, number], domain: string, rng: Xoshiro256StarStar): DomainObject {
+  private buildTechObject(color: [number, number, number], _domain: string, _rng: Xoshiro256StarStar): DomainObject {
     return {
       type: 'box',
       position: [0, 0, 0],
@@ -616,7 +616,7 @@ export class UniversalRenderer {
     };
   }
 
-  private buildDefaultSeedObject(c1: [number, number, number], c2: [number, number, number], rng: Xoshiro256StarStar, domain: string): DomainObject {
+  private buildDefaultSeedObject(c1: [number, number, number], c2: [number, number, number], _rng: Xoshiro256StarStar, _domain: string): DomainObject {
     return {
       type: 'sphere',
       position: [0, 0, 0],
@@ -625,7 +625,7 @@ export class UniversalRenderer {
     };
   }
 
-  private extractColor(genes: Record<string, any>, rng: Xoshiro256StarStar): [number, number, number] {
+  private extractColor(_genes: Record<string, any>, rng: Xoshiro256StarStar): [number, number, number] {
     const hue = rng.nextF64();
     const sat = 0.4 + rng.nextF64() * 0.5;
     const val = 0.3 + rng.nextF64() * 0.6;
@@ -710,7 +710,7 @@ export class UniversalRenderer {
     return numerator / denominator;
   }
 
-  private buildRaymarchWGSL(scene: DomainScene, cfg: RenderConfig, seedHash: string): string {
+  private buildRaymarchWGSL(scene: DomainScene, _cfg: RenderConfig, seedHash: string): string {
     return `
       struct Uniforms {
         camPos: vec4<f32>,

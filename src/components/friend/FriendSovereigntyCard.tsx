@@ -58,6 +58,7 @@ export const FriendSovereigntyCard: React.FC<FriendSovereigntyCardProps> = ({ fr
 
   useEffect(() => {
     const existing = loadKeyPair();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- derived from props; effect is correct
     setKp(existing);
     if (existing) fingerprintPublicKey(existing.publicKey).then(setFp);
   }, []);

@@ -1,5 +1,4 @@
 import { Xoshiro256StarStar } from './rng';
-import { geneTypeRegistry } from './gene-type-registry';
 
 // ─── GRADIENT STRUCTURE ────────────────────────────────────────────────────
 

@@ -3,8 +3,10 @@
  * Cross-Runtime Golden Matrix Verification (Phase 6)
  * 
  * Verifies that golden hashes produce identical output across runtimes.
- * Current runtimes: Node.js (reference), Bun (via fallback check)
- * Future: Browser Wasm, Sandbox Wasm
+ * Current runtimes: Node.js (reference via tsx), Bun (via fallback check)
+ * Browser Wasm: via playwright test or manual (see tests/browser/golden-wasm.spec.ts stub)
+ * Sandbox Wasm: future isolation harness.
+ * All must produce bit-identical for canonical corpus (Phase 6 gate).
  * 
  * Usage: node scripts/golden-matrix-verify.mjs [--strict] [--runtime node|all]
  */

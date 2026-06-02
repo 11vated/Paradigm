@@ -33,7 +33,7 @@ export class CircuitContract implements QualityContract<CircuitGeneSet, CircuitA
 
   synthesize(seed: CircuitGeneSet, rng: Xoshiro256StarStar): CircuitArtifact {
     return {
-      id: `circ_${Date.now()}`,
+      id: `circ_${Math.floor(rng.nextF64() * 1e15)}`,
       componentCount: seed.componentCount || 28,
       analogPercent: seed.analogPercent || 0.35,
       hasPCB: seed.hasPCB !== false,

@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { growSeed, getAllDomains } from '../kernel/engines';
+import { growSeed } from '../kernel/engines';
 import { getCache } from '../cache';
 
 // ─── RENDER FORMATS ──────────────────────────────────────────────────────

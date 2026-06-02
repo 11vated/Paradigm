@@ -37,7 +37,7 @@ export const PhysicsQualityContract: QualityContract<PhysicsSeed, PhysicsArtifac
   synthesize: synth,
   invert: (a) => {
     let kind = 'unknown';
-    try { const o = JSON.parse(a.config); kind = o.type || o.solver || 'json'; } catch {}
+    try { const o = JSON.parse(a.config); kind = o.type || o.solver || 'json'; } catch { /* swallow: best-effort physics-contract probe */ }
     return { kind, bytes: a.size };
   },
   rate: (a) => ({

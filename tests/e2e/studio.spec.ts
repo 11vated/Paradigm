@@ -3,7 +3,7 @@
  * Features: Studio workflow, evolution, breeding, composition
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 test.describe('Paradigm Studio', () => {
   test('loads studio page', async ({ page }) => {
