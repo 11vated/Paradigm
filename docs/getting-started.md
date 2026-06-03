@@ -28,6 +28,23 @@ Open `http://localhost:3000` in your browser.
 - Your seed is created deterministically
 
 **Option B: Command Line**
+
+## Production Setup & Full Generation Quality (for prod + best local gens)
+
+For production or full-fidelity local server generations:
+
+1. **Set secrets for prod** (copy `.env.example` → `.env`):
+   - `JWT_SECRET=...` (run `openssl rand -hex 32`)
+   - `DATABASE_URL=postgresql://...` (enables Postgres instead of JSON fallback)
+   - In `NODE_ENV=production`, server refuses to boot without `JWT_SECRET`.
+
+2. **Canvas native libs** (for server-side 2D/character/SVG/PNG generation in some engines):
+   - macOS: `brew install pkg-config cairo pango libpng jpeg giflib librsvg`
+   - Windows: Install [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (C++ workload) + Python; then `npm rebuild canvas`.
+   - Linux: `sudo apt install build-essential libcairo2-dev libpango1.0-dev ...`
+   - **Easier alternative**: Use the browser-based Studio (`/studio`) — it uses native browser Canvas/WebGL for rendering. Server shims are fine for CLI/API seed creation and logic. See polyfill warnings on `npm run dev`.
+
+See `DEPLOY.md` and top of `.env.example` for full details.
 ```bash
 # Generate a game seed
 npx tsx cli/paradigm.ts grow game --genes genre=platformer

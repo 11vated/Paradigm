@@ -22,7 +22,9 @@ function replayQuiet(seedString: string): string {
     `npx tsx ${JSON.stringify(SCRIPT)} replay friend ${JSON.stringify(seedString)} --quiet`,
     { cwd: REPO_ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
   ).trim();
-  return out;
+  // Robust to side-effect logs (e.g. polyfill init on Windows shim): extract last 64-hex token
+  const match = out.match(/[0-9a-f]{64}/g);
+  return match && match.length ? match[match.length - 1] : out;
 }
 
 describe('Friend replay CLI — determinism contract', () => {

@@ -30,13 +30,25 @@
  */
 
 // Load .env if present (non-fatal — allows docker/k8s injection without the file)
+// Supports dotenvx for encrypted .env files in production (see https://www.dotenvx.com)
 import { config as loadDotenv } from 'dotenv';
 loadDotenv({ override: false });
-// Fail-safe defaults so the server boots in dev without a configured .env
+
+// Production safety: require strong JWT_SECRET
+const isProd = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'prod';
 if (!process.env.JWT_SECRET) {
+  if (isProd) {
+    console.error('[BOOT] FATAL: JWT_SECRET is required in production. Set a strong random value (e.g. via `openssl rand -hex 32`) in .env or environment.');
+    process.exit(1);
+  }
   const fallback = 'paradigm-dev-insecure-fallback-00000000-change-in-production';
   process.env.JWT_SECRET = fallback;
   console.warn('[BOOT] ⚠️  JWT_SECRET not set — using insecure dev fallback. Set in .env for production!');
+}
+
+// DATABASE_URL guidance (logged once)
+if (!process.env.DATABASE_URL) {
+  console.log('[BOOT] DATABASE_URL not set — using JSON file storage fallback (see .env.example for PostgreSQL setup).');
 }
 
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────

@@ -1,4 +1,6 @@
 # Docker Compose — Production Stack
+# IMPORTANT: Export JWT_SECRET (strong value) and set real DATABASE_URL before `docker compose -f docker-compose.production.yml up`
+# Example: JWT_SECRET=$(openssl rand -hex 32) docker compose -f docker-compose.production.yml up -d
 version: '3.8'
 
 services:
@@ -12,7 +14,7 @@ services:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/paradigm
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
+      - JWT_SECRET=${JWT_SECRET:?FATAL: JWT_SECRET must be set for production (use a strong random value, never the default)}
       - CORS_ORIGINS=${CORS_ORIGINS:-https://paradigm.gg}
     depends_on:
       db:

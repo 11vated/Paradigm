@@ -34,21 +34,46 @@ vercel --prod
 ### Production (Docker)
 
 ```bash
-# Build images
+# 1. Set production env (copy .env.example to .env, fill JWT_SECRET + DATABASE_URL etc.)
+cp .env.example .env
+# Edit .env with strong JWT_SECRET (openssl rand -hex 32) and real DATABASE_URL
+
+# 2. Build images
 docker build -t paradigm/gspl-platform:latest .
 
-# Deploy with docker-compose
+# 3. Deploy with docker-compose
 ./infrastructure/deploy.sh production
+```
+
+**Post-deploy verification (as user):**
+- `curl https://your-api/health`
+- `npx tsx cli/paradigm.ts doctor`
+- `npx tsx cli/paradigm.ts make "test warrior" --verify`
 ```
 
 ## Environment Variables
 
+For production, **always** set strong values (never commit secrets):
+
 ```env
+NODE_ENV=production
+JWT_SECRET=your-very-long-random-secret-from-openssl-rand-hex-32
 DATABASE_URL=postgresql://postgres:password@db:5432/paradigm
 REDIS_URL=redis://redis:6379
-JWT_SECRET=your-secret-key
 API_URL=https://api.paradigm.gspl.com
+CORS_ORIGINS=https://yourdomain.com
 ```
+
+Copy from `.env.example` and customize. See `.env.example` for full list + canvas native lib install instructions (required for full server-side 2D/character generation on some platforms).
+
+**Important for full local generation quality:**
+- Canvas native libs (for server-side SVG/PNG/2D renders in generators like character, visual2d, etc.):
+  - See instructions at top of `.env.example` (or run `npm run` and watch polyfill warnings).
+  - On Windows (common pain point): Visual Studio Build Tools (C++ workload) + `npm rebuild canvas`.
+  - Alternative (recommended for most users): Use the browser-based Studio for rendering (full Canvas/WebGL support there). Server shims are sufficient for API/CLI seed logic.
+```
+
+Also add a quick prod setup note.
 
 ## Services
 

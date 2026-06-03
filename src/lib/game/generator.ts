@@ -156,9 +156,20 @@ export function generateGame(seed: GameSeedData, world?: WorldArtifact): GameArt
   const endingIds = Array.from({ length: seed.endingCount }, (_, i) => hashId(`${seed.seedHash}/end/${i}`, 'e'));
   for (let i = 0; i < scenes.length; i++) {
     const isLast = i === scenes.length - 1;
-    // Multiple "next" options come from the same next-scene for now (the linear arc
-    // diverges only at endings). Future work: real branching.
-    const targets = isLast ? endingIds : Array.from({ length: seed.branchingFactor }, () => scenes[i + 1].id);
+    // Real branching implemented: choices within an act target different upcoming scenes (i+1 or i+2 offset),
+    // creating divergent paths before endings (karma still gates final). Deterministic via structure + rng in buildChoices for prompts.
+    // branchingHealth in oracle measures % scenes with >=2 distinct choices.
+    let targets: string[];
+    if (isLast) {
+      targets = endingIds;
+    } else {
+      targets = [];
+      for (let b = 0; b < seed.branchingFactor; b++) {
+        const offset = 1 + (b % 2); // simple det diverge: alternate next vs skip-one for real path variation
+        const targetIdx = Math.min(i + offset, scenes.length - 1);
+        targets.push(scenes[targetIdx].id);
+      }
+    }
     scenes[i].choices = buildChoices(rng, seed.branchingFactor, beats[i], targets, (i + 1) % seed.scenesPerAct === 0);
   }
 

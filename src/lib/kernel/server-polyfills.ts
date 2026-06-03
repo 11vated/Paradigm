@@ -11,7 +11,12 @@ export function initServerPolyfills() {
     NodeImage = canvas.Image;
   } catch (e) {
     const consoleFn = SHIM_MODE === 'production' ? () => {} : console.warn;
-    consoleFn('[Polyfills] canvas native not available (common on mac without system libs: brew install pkg-config cairo pango libpng jpeg giflib librsvg); using no-op shims');
+    consoleFn('[Polyfills] canvas native not available.\n' +
+      'For full local server-side generation (SVGs, 2D renders, character portraits, etc.):\n' +
+      '  - macOS: brew install pkg-config cairo pango libpng jpeg giflib librsvg\n' +
+      '  - Windows: Install Visual Studio Build Tools (Desktop development with C++ workload) + Python + node-gyp prerequisites, then `npm rebuild canvas`.\n' +
+      '  - Or rely on browser/client for canvas (Studio viewports use native browser Canvas/WebGL).\n' +
+      'Using no-op shims for server (some 2D/character gens will be limited).');
     createCanvas = (w: number, h: number) => ({ width: w, height: h, getContext: () => ({ fillRect: () => {}, clearRect: () => {}, drawImage: () => {}, getImageData: () => ({ data: new Uint8ClampedArray(w * h * 4) }) }) });
     NodeImage = class { width = 1; height = 1; };
   }

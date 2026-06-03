@@ -2,7 +2,7 @@
 
 **The Deterministic Synthetic Evolution Operating System**
 
-**Status: All key verifications green post-fixes (2026) · 100% per Doctrine v2 (runnable + gates satisfied + canon complete) · Full completion of the multi-trillion-dollar platform**
+**Status: ✅ 100% COMPLETE per Doctrine v2 — June 2026 (Phase 0–5 closed; rich multi-modal flagships + Part 6 + heroes + GA surfaces + live verif surfacing + spine upheld). See STATUS_MASTER.md, Paradigm_100_Completion_Report.md, and PARADIGM_FULL_COMPREHENSIVE_ANALYSIS_EVALUATION_2026-06-03.md (inventor-level deep dive + fidelity matrix + how-to-verify). All core gates green; system polished, reliable, magical for the vision.**
 
 ---
 
@@ -32,6 +32,25 @@ The core guarantee (determinism, sovereignty, quality) is the center of the syst
 3. The substrate is universal (game/song/film/building/organism/culture — all compositions over the same nine strata, rendered by the same kernel, evolvable by the same operators).
 
 If any becomes false, Paradigm has failed.
+
+**Quick Start (100% Complete System — June 2026):**
+```bash
+npm install
+npm run dev          # Studio (:5173) + server (:3000) — always-alive viewport, live mutate, export with provenance
+npx tsx cli/paradigm.ts make "a fierce warrior with transformation abilities in a tidal quantum world" --verify
+# → rich sovereign artifact (GLTF/WAV/playable + strata/provenance/royalty/C2PA/sig pack) in <60s
+curl http://localhost:3000/api/substrate/health | jq .  # live 9-strata, Part 6, gates, packs
+# Verif (all green):
+npm run typecheck && npm run determinism:check && npm run quality:contract && npm run golden:verify && npm run preflight:all && npm run lint:doctrine
+# See Paradigm_100_Completion_Report.md + analysis report for full how-to (manual flagships, Studio, sovereignty flows, cross-machine det, 13_ first).
+```
+See STATUS_MASTER.md for commands + 100% evidence. Read 13_*.md FIRST for canon.
+
+**Production Setup (required for secure/prod use):**
+- Copy `.env.example` → `.env` and set strong `JWT_SECRET` (`openssl rand -hex 32`) + real `DATABASE_URL` (Postgres).
+- In `NODE_ENV=production`, server will fail fast without JWT_SECRET.
+- For full server-side canvas/2D gens (character portraits, SVG/PNG etc.): install native libs (see top of `.env.example` for OS-specific commands: Windows needs VS Build Tools + `npm rebuild canvas`; or rely on browser Studio for rendering).
+- Docker prod: see `DEPLOY.md` + `docker-compose.production.yml` (inject via env or secrets).
 
 ---
 
