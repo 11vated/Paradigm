@@ -1,0 +1,39 @@
+{
+  "seed": "Witness alternate history engine semantics possibility branching karma game",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-42c16c48f64a",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_171947456450042",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-42c16c48f64a-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active"
+  },
+  "generatedAt": "2026-06-03T00:32:09.516Z"
+}

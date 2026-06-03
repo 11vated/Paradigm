@@ -348,7 +348,7 @@ let world = grow(WorldGenesis, "game")
             </div>
             <div className="flex-1 overflow-y-auto p-2 font-mono text-xs">
               {console.map((line, i) => (
-                <div key={i} className="text-gray-400 mb-1">{line}</div>
+                <div key={`${i}-${line.slice(0,30)}`} className="text-gray-400 mb-1">{line}</div>
               ))}
             </div>
           </div>

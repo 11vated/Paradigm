@@ -1,0 +1,39 @@
+{
+  "seed": "chronomancer parliament where time rewrites culture through every player-chosen alternate history",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-f3827872cb78",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_766571372148302",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-f3827872cb78-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active"
+  },
+  "generatedAt": "2026-06-03T00:52:40.475Z"
+}

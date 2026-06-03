@@ -23,6 +23,9 @@
  */
 
 import { promises as fs } from 'fs';
+import { initServerPolyfills } from '../src/lib/kernel/server-polyfills.ts';
+
+initServerPolyfills();
 import path from 'path';
 import process from 'process';
 import crypto from 'crypto';

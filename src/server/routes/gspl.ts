@@ -50,8 +50,9 @@ export function registerGsplRoutes(app: Express, deps: GsplDeps): void {
       const nodes = Array.isArray(astNodes) ? astNodes : [];
       const domains = new Set<string>();
       for (const n of nodes) {
-        if (n.type === 'SEED_DECL') {
-          const dom = n.domain || n.in || (n.name && typeof n.name === 'object' ? n.name.domain : null);
+        const node = n as any /* justified: AST from tolerant GSPL parser; shape varies (SEED_DECL has domain/in/name); full branded AST is later phase */;
+        if (node.type === 'SEED_DECL') {
+          const dom = node.domain || node.in || (node.name && typeof node.name === 'object' ? node.name.domain : null);
           if (dom && typeof dom === 'string') domains.add(dom.toLowerCase());
         }
       }
@@ -89,7 +90,7 @@ export function registerGsplRoutes(app: Express, deps: GsplDeps): void {
       const source = req.body.source || '';
       // Use kernel interpreter (wired to real breed/mutate/evolve/grow + UniversalSeed/GA/MAPElites)
       const interp = new GsplInterpreter();
-      const result = await interp.execute(source);
+      const result: any = await interp.execute(source); // any: execute returns dynamic {seeds, errors, output} from GSPL interp (carveout consistent with interpreter)
       const seedsOut = result?.seeds ? Array.from(result.seeds.values ? result.seeds.values() : []) : [];
       if (seedsOut.length > 0) {
         for (const s of seedsOut) deps.seeds.push(s);

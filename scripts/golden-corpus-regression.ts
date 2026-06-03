@@ -17,6 +17,9 @@ import { existsSync, readFileSync } from 'fs';
 import { SpriteQualityContract } from '../src/lib/kernel/generators/sprite-contract.js';
 import { ParticleQualityContract } from '../src/lib/kernel/generators/particle-contract.js';
 import { VehicleQualityContract } from '../src/lib/kernel/generators/vehicle-contract.js';
+import { initServerPolyfills } from '../src/lib/kernel/server-polyfills.ts';
+
+initServerPolyfills();
 
 interface PinnedFixture {
   targets: Record<string, string>;

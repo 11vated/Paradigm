@@ -29,7 +29,7 @@ export const DrugQualityContract: QualityContract<S, A, any> = {
   ],
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'drug-'));
-    const out = path.join(dir, 'drug.json');
+    const _out = path.join(dir, 'drug.json');
     const r = await withKernelClock(0, () => generateDrug(seed, dir));
     const jsonContent = await fsp.readFile(r.filePath, 'utf-8').catch(() => '{}');
     const sdfContent = await fsp.readFile(r.sdfPath, 'utf-8').catch(() => 'M  END');
@@ -53,7 +53,7 @@ export const DrugQualityContract: QualityContract<S, A, any> = {
     const sdfLen = (a.meta?.sdfSize as number) || 0;
     const atoms = (a.meta?.atomCount as number) || 0;
     const bonds = (a.meta?.bondCount as number) || 0;
-    const sdfReal = sdfLen > 120 && /M  END/.test(a.filePath + (a.meta?.sdfHead as string || '')) ? 1 : 0.5;
+    const sdfReal = sdfLen > 120 && /M {2}END/.test(a.filePath + (a.meta?.sdfHead as string || '')) ? 1 : 0.5;
     const molScore = Math.min(1, (atoms + bonds * 0.6) / 28);
     const sizeScore = Math.min(1, (jsonLen + sdfLen) / 14000);
     const score = molScore * 0.5 + sdfReal * 0.3 + sizeScore * 0.2;

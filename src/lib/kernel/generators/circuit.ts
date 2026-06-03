@@ -182,7 +182,7 @@ async function exportSchematicSVG(components: Component[], connections: Connecti
   return filePath;
 }
 
-async function exportGerber(pcb: any, components: Component[], connections: Connection[], outputPath: string, seed: Seed): Promise<string> {
+async function exportGerber(pcb: any, components: Component[], _connections: Connection[], outputPath: string, seed: Seed): Promise<string> {
   const filename = `circuit_${seed.$hash || 'unknown'}_gerber.gbr`;
   const filePath = path.join(outputPath, filename);
   

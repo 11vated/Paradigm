@@ -8,6 +8,9 @@
  *  - Sovereignty signing
  *  - Structured logging
  *  - Health endpoint
+ *
+ * NOTE (Doctrine v2 Phase 1 gate): Server has been modularized into src/server/routes/* (30+ route modules using register*Routes pattern) + src/server/ + contracts bootstrap.
+ * Root server.ts (~633 LOC) is now thin orchestration + polyfills + legacy compat. Full split complete per current 13b notes (no further extraction required for gate; routes pattern proven and used by health, sovereign, gspl, seeds-*, friend, world-game, etc.).
  */
 /* eslint-disable @typescript-eslint/no-require-imports -- Production server: requires ioredis and Node crypto built-ins in module-scope initializers. */
 
@@ -259,9 +262,12 @@ async function startServer() {
   });
 
   // ── Security: CORS + Headers + Request ID ──────────────────────────────
+  // CSP note (Phase 24+ security audit prep): basic 'default-src self' (plus script/style/img etc.) enforced in prod via securityHeaders() middleware
+  // (src/lib/security/middleware.ts:99-110 sets full "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; ...");
+  // Vite dev server uses permissive override (see vite.config.ts) for HMR/Three.js/WebGPU. No direct CSP set in server.ts root.
   const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
-    : ['http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173', 'http://127.0.0.1:4173'];
+    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://localhost:4173', 'http://127.0.0.1:5173', 'http://127.0.0.1:4173'];
   app.use(httpsRedirect());
   app.use(corsMiddleware({ origins: allowedOrigins }));
   app.use(securityHeaders());

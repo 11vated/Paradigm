@@ -97,3 +97,50 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   background: rgba(0, 229, 255, 0.3);
   color: #fff;
 }
+
+/* Deeper AAA (WCAG 2.2 AAA where possible per 13b Phase 24+ p24-4 + user "deeper AAA, etc."):
+   High-contrast 7:1+ overrides for sovereign flows (PlayRuntime strata/pack, Export, Studio, Quest/World provenance bars, Onboarding).
+   Uses prefers-contrast: more + forced-colors for Windows high-contrast / AT.
+   Preserves zinc/amber dark theme for normal; boosts for AAA. No sole color meaning (icons/text already paired).
+*/
+@media (prefers-contrast: more) {
+  .bg-zinc-900, .bg-zinc-950, .border-zinc-800, .border-zinc-900 {
+    border-color: #fff !important;
+  }
+  .text-emerald-100, .text-emerald-200, .text-emerald-300, .text-emerald-400 {
+    color: #a3e635 !important; /* brighter lime for 7:1+ on #050505 */
+  }
+  .text-amber-100, .text-amber-200, .text-amber-300, .text-amber-400, .bg-amber-300, .bg-amber-400, .bg-amber-700 {
+    color: #fde047 !important; /* gold/yellow high contrast */
+    background-color: #422006 !important;
+  }
+  .bg-amber-950\/30, .border-amber-900\/40 {
+    background-color: #1c1406 !important;
+    border-color: #fde047 !important;
+  }
+  [role="progressbar"] > div {
+    background-color: #fde047 !important;
+  }
+  .text-zinc-100, .text-zinc-200, .text-zinc-300 {
+    color: #fff !important;
+  }
+}
+
+@media (forced-colors: active) {
+  /* Windows high-contrast mode: respect system colors, ensure focus/selection visible */
+  .focus-visible\:outline-amber-400:focus-visible,
+  .focus-visible\:outline-2:focus-visible {
+    outline-color: Highlight !important;
+    outline-width: 2px !important;
+  }
+  [role="progressbar"] {
+    forced-color-adjust: none;
+    border-color: CanvasText !important;
+  }
+  .bg-amber-300, .bg-amber-400 {
+    background-color: Highlight !important;
+  }
+  .text-emerald-300, .text-amber-300 {
+    color: CanvasText !important;
+  }
+}

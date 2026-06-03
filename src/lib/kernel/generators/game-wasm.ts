@@ -219,9 +219,9 @@ function generateLevels(params: GameParams, rng: Xoshiro256StarStar): any[] {
 
 async function exportPlayableWasmGameHTML(
   params: GameParams,
-  gameLogic: string,
+  _gameLogic: string,
   wasmPath: string,
-  levels: any[],
+  _levels: any[],
   outputPath: string,
   seed: Seed
 ): Promise<string> {

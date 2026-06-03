@@ -123,10 +123,10 @@ function generateSTL(params: NanobotParams, rng: Xoshiro256StarStar): string {
   const H = L * 0.28;
   const segments = 6 + Math.floor(params.autonomy * 6); // longitudinal detail
   const rings = 5 + Math.floor(rng.nextF64() * 3);
-  const capFacets = 5;
+  const _capFacets = 5;
   const flagellaCount = params.capability === 'medical' ? 3 : 2 + rng.nextInt(0, 2);
   const flagellaSegs = 4 + Math.floor(rng.nextF64() * 3);
-  let facets: string[] = [];
+  const facets: string[] = [];
   const addTri = (n: number[], v0: number[], v1: number[], v2: number[]) => {
     facets.push(`facet normal ${n[0].toFixed(6)} ${n[1].toFixed(6)} ${n[2].toFixed(6)}
   outer loop
@@ -139,7 +139,7 @@ endfacet`);
   const norm = (a: number[], b: number[], c: number[]) => {
     const ux=b[0]-a[0], uy=b[1]-a[1], uz=b[2]-a[2];
     const vx=c[0]-a[0], vy=c[1]-a[1], vz=c[2]-a[2];
-    let nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx;
+    const nx=uy*vz-uz*vy, ny=uz*vx-ux*vz, nz=ux*vy-uy*vx;
     const len = Math.sqrt(nx*nx+ny*ny+nz*nz) || 1;
     return [nx/len, ny/len, nz/len];
   };

@@ -103,7 +103,7 @@ function deriveSetting(genre: string, rng: Xoshiro256StarStar): string {
   return places[rng.nextInt(0, places.length - 1)];
 }
 
-function deriveTheme(genre: string, rng: Xoshiro256StarStar): string {
+function deriveTheme(_genre: string, rng: Xoshiro256StarStar): string {
   const t = ['redemption through sacrifice', 'the cost of memory', 'forbidden knowledge and its keepers', 'love that outlives empires', 'the machine that learned to grieve', 'identity in a world of copies'][rng.nextInt(0, 5)];
   return t;
 }
@@ -171,7 +171,7 @@ function generatePoetryCycle(title: string, prot: string, setting: string, theme
   for (let s = 0; s < stanzas; s++) {
     p += '\n';
     for (let l = 0; l < 4 + rng.nextInt(0, 2); l++) {
-      let line = linesPool[rng.nextInt(0, linesPool.length - 1)]
+      const line = linesPool[rng.nextInt(0, linesPool.length - 1)]
         .replace('${setting}', setting)
         .replace('${prot}', prot.split(',')[0])
         .replace('${theme}', theme)
@@ -188,7 +188,7 @@ function generatePoetryCycle(title: string, prot: string, setting: string, theme
   return p;
 }
 
-function generateCriticalEssay(title: string, theme: string, setting: string, rng: Xoshiro256StarStar, target: number): string {
+function generateCriticalEssay(title: string, theme: string, setting: string, rng: Xoshiro256StarStar, _target: number): string {
   let e = `${title}\n\n`;
   e += `The ${theme} is not a question of aesthetics but of survival. In ${setting}, every artifact carries the residue of decisions made before language hardened into law.\n\n`;
   const sections = ['I. The Premise', 'II. The Counter-Argument', 'III. The Evidence of Ruins', 'IV. The Necessary Conclusion'];
@@ -201,7 +201,7 @@ function generateCriticalEssay(title: string, theme: string, setting: string, rn
   return e;
 }
 
-function generateBiography(title: string, prot: string, foil: string, rng: Xoshiro256StarStar, target: number): string {
+function generateBiography(title: string, prot: string, foil: string, rng: Xoshiro256StarStar, _target: number): string {
   let b = `${title}\n\n`;
   b += `Born in the margins of ${['a collapsing republic', 'an orbital failure', 'the last analog city'][rng.nextInt(0, 2)]}, ${prot.split(',')[0]} learned early that names are contracts we sign with the dead.\n\n`;
   const eras = ['The Early Silence (Age 7–19)', 'The First Fracture', 'The Long Apprenticeship', 'The Public Reckoning', 'The Final Transmission'];

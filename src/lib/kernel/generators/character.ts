@@ -239,7 +239,7 @@ export async function generateCharacterV3(
     animations: animations.length,
     bones: skeleton.bones.length,
     gsplSchema: gsplSchemaLoaded
-  } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */;
+  } as unknown as any; /* Phase 1: narrow interop return for THREE group; tracked in waiver */
 }
 
 /**
@@ -552,7 +552,7 @@ function unwrapUVs(geo: THREE.BufferGeometry, rng: Xoshiro256StarStar): THREE.Bu
     const z = positions.getZ(i);
 
     const u = 0.5 + Math.atan2(z, x) / (2 * Math.PI);
-     const v = 0.5 + y / ((geo as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */).parameters?.height || 2);
+     const v = 0.5 + y / (((geo as unknown as { parameters?: { height?: number } }).parameters?.height) || 2);
 
     uvs[i * 2] = u;
     uvs[i * 2 + 1] = v;
@@ -580,7 +580,7 @@ async function generateTextureSet(
 ): Promise<Record<string, THREE.Texture>> {
   const res = Math.min(resolution, 2048);
   const canvas = createCanvas(res, res);
-  const ctx = canvas ? (canvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
+  const ctx = canvas ? (canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null) : null;
 
   if (!canvas || !ctx) {
     // Graceful fallback — still produce a valid material later
@@ -623,13 +623,13 @@ async function generateTextureSet(
     ctx.stroke();
   }
 
-  const albedoTex = new THREE.CanvasTexture(canvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */);
+  const albedoTex = new THREE.CanvasTexture(canvas);
   albedoTex.name = 'character_albedo';
   albedoTex.flipY = false;
 
   // --- Roughness map ---
   const roughCanvas = createCanvas(res, res);
-  const rctx = roughCanvas ? (roughCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
+  const rctx = roughCanvas ? (roughCanvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null) : null;
   if (rctx) {
     const baseRough = 0.55 + (params.proportions.muscleMass - 0.5) * 0.25 + (params.proportions.fatDistribution - 0.5) * 0.15;
     rctx.fillStyle = `rgb(${Math.floor(baseRough*255)},${Math.floor(baseRough*255)},${Math.floor(baseRough*255)})`;
@@ -647,12 +647,12 @@ async function generateTextureSet(
     rctx.globalAlpha = 1;
   }
 
-  const roughTex = roughCanvas ? new THREE.CanvasTexture(roughCanvas as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) : null;
+  const roughTex = roughCanvas ? new THREE.CanvasTexture(roughCanvas) : null;
   if (roughTex) { roughTex.name = 'character_roughness'; roughTex.flipY = false; }
 
   // --- Simple normal map ---
   const normCanvas = createCanvas(res, res);
-  const nctx = normCanvas ? (normCanvas.getContext('2d', { willReadFrequently: true } as any /* Phase 0 evasion - review in Phase 1 */ /* TODO: Phase 1 strict */) as CanvasRenderingContext2D | null) : null;
+  const nctx = normCanvas ? (normCanvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null) : null;
   if (nctx) {
     nctx.fillStyle = '#8080ff';
     nctx.fillRect(0, 0, res, res);

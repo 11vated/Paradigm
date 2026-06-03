@@ -1,0 +1,32 @@
+{
+  "seed": "ultimate platform showcase: GSPL v∞ roundtrip harness + recursive OS self-host + full econ civ dividend + fed p2p + all 9 strata stress",
+  "domain": "15_ real recursive GSPL closure via import",
+  "reproducibilityHash": "15-os-cc7f050a77eb",
+  "strataScores": {},
+  "artifact": {
+    "type": "recursive-evolution",
+    "version": "1.0.2",
+    "newContractsGenerated": 2,
+    "epochAdvanced": true,
+    "message": "GSPL∞ advanced to 1.0.2. 2 new contract patterns proposed by the substrate.",
+    "source": "15_ real recursive GSPL closure via import",
+    "gsplVInfty": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:44:12.743Z"
+    }
+  },
+  "part6": {
+    "gsplVInftySelfHost": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:44:12.743Z"
+    },
+    "perf": {
+      "durationMs": 13,
+      "budgetMs": 100,
+      "path": "os-shell/GSPL_recursive"
+    }
+  },
+  "generatedAt": "2026-06-03T03:44:12.746Z"
+}

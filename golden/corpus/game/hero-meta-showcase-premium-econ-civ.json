@@ -1,0 +1,22 @@
+{
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"civilizational dividend econ...\"",
+  "doctrineRef": "13b Phase 24+ polish-2",
+  "strata": {
+    "overall": 0.555,
+    "source": "real calc"
+  },
+  "royalty": {
+    "author": 700,
+    "platform": 300,
+    "civ": 10
+  },
+  "provenance": {
+    "fullPack": true,
+    "fed": "ready",
+    "onchain": "called",
+    "note": "Full 27+Part6 + civ dividend"
+  },
+  "grade": "premium",
+  "date": "2026-06-03T03:44:36.579Z",
+  "premium": true
+}

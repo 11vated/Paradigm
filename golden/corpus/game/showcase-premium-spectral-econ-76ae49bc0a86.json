@@ -1,0 +1,44 @@
+{
+  "seed": "spectral econ civ dividend forge with onchain PARA SeedNFT prep + opt-out protocol + full GSPL v∞ + fed two-node p2p + all strata stress",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-60fe7567d326",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_457925322405827",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-60fe7567d326-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 0,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-03T03:53:54.512Z"
+}

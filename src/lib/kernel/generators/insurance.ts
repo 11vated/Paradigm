@@ -59,7 +59,7 @@ function generatePolicy(params: InsuranceParams, rng: Xoshiro256StarStar): any {
   };
 }
 
-function generateFullPolicyDocument(params: InsuranceParams, pol: any, pricing: any, risk: any, rng: Xoshiro256StarStar): string {
+function generateFullPolicyDocument(params: InsuranceParams, pol: any, pricing: any, _risk: any, rng: Xoshiro256StarStar): string {
   const polNum = `PARA-${rng.nextInt(100000, 999999)}-${params.productType.toUpperCase().slice(0, 3)}`;
   const effective = `2026-${String(rng.nextInt(1, 12)).padStart(2, '0')}-01`;
   const expiry = `20${26 + params.term}-${String(rng.nextInt(1, 12)).padStart(2, '0')}-01`;

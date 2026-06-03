@@ -45,5 +45,3 @@ export const useActiveSeed = create<ActiveSeedState>((set) => ({
   patchSeed: (patch) =>
     set((s) => (s.seed ? { seed: { ...s.seed, ...patch } } : s)),
 }));
-
-(window as any).useActiveSeed = useActiveSeed;

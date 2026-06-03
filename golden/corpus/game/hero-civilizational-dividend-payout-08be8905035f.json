@@ -1,0 +1,15 @@
+{
+  "seed": "the recursive self-hosting OS shell that runs Paradigm as .gseed compositions inside itself",
+  "domain": "15_ real recursive GSPL closure via import",
+  "reproducibilityHash": "15-os-8829645d1006",
+  "strataScores": {},
+  "artifact": {
+    "type": "recursive-evolution",
+    "version": "1.0.2",
+    "newContractsGenerated": 2,
+    "epochAdvanced": true,
+    "message": "GSPL∞ advanced to 1.0.2. 2 new contract patterns proposed by the substrate.",
+    "source": "15_ real recursive GSPL closure via import"
+  },
+  "generatedAt": "2026-06-03T01:05:51.188Z"
+}

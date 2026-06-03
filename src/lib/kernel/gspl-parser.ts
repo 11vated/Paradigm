@@ -62,7 +62,7 @@ export enum ASTNodeType {
 export interface ASTNode {
   type: ASTNodeType;
   loc?: { line: number; column: number };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export class GsplParser {
@@ -181,8 +181,8 @@ export class GsplParser {
     const nameToken = this.advance(); // gene name or bare identifier
     const name = nameToken.value;
 
-    let geneType: any = null;
-    let constraints: any = null;
+    let geneType: unknown = null;
+    let constraints: unknown = null;
 
     // Optional type annotation: `gene foo: scalar` or `foo: scalar in [...]`
     // Tolerant mode (Phase 0): if the token after `:` does not look like a type start (IDENTIFIER or SEED),
@@ -199,7 +199,7 @@ export class GsplParser {
         if (this.check('IN')) {
           this.advance(); // in
           this.expect('LBRACKET');
-          const items: any[] = [];
+          const items: unknown[] = [];
           if (!this.check('RBRACKET')) {
             do {
               const item = this.parseExpression();

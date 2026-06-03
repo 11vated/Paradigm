@@ -16,7 +16,8 @@ export function calculateLineageRoyalties(
 ): RoyaltyWaterfall[] {
   const waterfall: RoyaltyWaterfall[] = [];
   let remaining = baseRate;
-  for (let d = 0; d < lineageDepth && remaining > 0.001; d++) {
+  const maxD = Math.max(1, Math.min(100, lineageDepth)); // arbitrary depth (capped sane for v1)
+  for (let d = 0; d < maxD && remaining > 0.0001; d++) {
     const pct = remaining * (1 / (d + 2)); // diminishing
     waterfall.push({
       depth: d,
@@ -24,6 +25,11 @@ export function calculateLineageRoyalties(
       cumulative: saleAmount * pct,
     });
     remaining -= pct;
+  }
+  // ensure at least depth entries by padding zeros if needed for arbitrary
+  while (waterfall.length < maxD) {
+    const d = waterfall.length;
+    waterfall.push({ depth: d, percentage: 0, cumulative: 0 });
   }
   return waterfall;
 }

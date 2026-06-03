@@ -6,7 +6,7 @@ export function initServerPolyfills() {
   let createCanvas: any;
   let NodeImage: any;
   try {
-    const canvas = require('canvas');
+    const canvas = require('canvas'); // eslint-disable-line @typescript-eslint/no-require-imports -- intentional for native canvas polyfill in server (carve-out like server.ts)
     createCanvas = canvas.createCanvas;
     NodeImage = canvas.Image;
   } catch (e) {
@@ -50,7 +50,7 @@ export function initServerPolyfills() {
     visibilityState: 'visible',
     hidden: false,
     location: { href: 'http://localhost', protocol: 'http:', host: 'localhost', hostname: 'localhost', port: '3000', pathname: '/', search: '', hash: '' },
-  } as any /* TODO: Phase 1 strict */;
+  } as any /* justified Phase1 strict carveout: browser polyfill global for node (waived in registry; see 13b server-polyfills) */;
 
   const fakeWin = {
     innerWidth: 1920,

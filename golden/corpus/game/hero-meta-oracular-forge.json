@@ -1,0 +1,31 @@
+{
+  "hero": "Oracular Forge",
+  "slug": "oracular-forge",
+  "intent": "oracular forge of karmic iron mind story world decisions smelted into deterministic fate across strata",
+  "hash": "7735b12baa59",
+  "artifactPath": "golden/corpus/game/hero-oracular-forge-7735b12baa59.json",
+  "part6Path": "golden/corpus/game/hero-oracular-forge-7735b12baa59-part6.json",
+  "strata": {
+    "overall": 0.555,
+    "conformancePercent": "55.5%",
+    "strataCovered": 9,
+    "source": "calculateStratumConformance on real artifact + strataScores from paradigm make (real 15_ predicate bodies, Part 6)",
+    "strataStress": ["Mind", "Story", "World", "Time"],
+    "perStratumSample": "see full in artifact; overall 0.555 as reported in make provenance pack (Mind/Story/World/Time karmic forge stress)"
+  },
+  "royalty": {
+    "fromMakeProvenance": "author:700 platform:300",
+    "directPreview": { "toCreator": 940 },
+    "calcMethod": "createDefaultRoyaltyConfig + calculateRoyalty + computeFullPayout (depth + civ 1%)",
+    "part6": "lineage + civilizational dividends active"
+  },
+  "provenance": {
+    "makeCmd": "npx tsx scripts/paradigm.ts make \"oracular forge of karmic iron mind story world decisions smelted into deterministic fate across strata\" --domain game",
+    "timeToArtifact": "0.0s",
+    "reproducibility": "Live Sovereign Provenance Pack printed with real calculateStratumConformance, C2PA, ECDSA-P256 sig, self HTML, 5-clause curate/synthesize/invert/evolve/roundtrip",
+    "note": "forkable .gseed for 1M corpus + 12 heroes vision (13_ Part XIX/XX, Phase 14-15). Full actual artifact fields used; credit fallback only on missing (max possible shown)."
+  },
+  "grade": "0.555 overall per GameMechanicsContract + 5-clause manifest() + live strata on 9 scenes/choices/karma. Oracle-graded via game oracle in fullgame domain for 5-axis if needed. Stress: Mind/Story/World/Time oracular karmic forge.",
+  "date": "2026-06-03",
+  "doctrineRef": "13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md Part XIX/XX + 13b_Phase_Gates Phase 14-15 + 14_ + DOCTRINE_V2_MAPPING"
+}

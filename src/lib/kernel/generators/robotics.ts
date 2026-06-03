@@ -229,7 +229,7 @@ function buildRoboticsMesh(params: RoboticsParams, kinematics: { links: any[]; j
     group.add(linkMesh);
 
     if (i < kinematics.joints.length) {
-      const j = kinematics.joints[i];
+      const _j = kinematics.joints[i];
       const joint = new THREE.Mesh(new THREE.SphereGeometry(0.07, 10, 10), jointMat);
       joint.position.y = y + ly;
       group.add(joint);

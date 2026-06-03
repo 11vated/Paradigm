@@ -130,3 +130,22 @@ export function typeCheck(_ast: ASTNode[]): { types: Record<string, string>, err
   // For now, return empty results - full type checking can be added later
   return { types, errors };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FORMAL VERIFIER (GSPL v∞ research axis starter; Phase ∞ per 13_*)
+// Small, read-only checks for determinism + gene type soundness.
+// Re-exports the v0 starter. Does not affect runtime or add production deps.
+// See docs/GSPL-v-infty-research.md and src/lib/gspl/formal-verifier.ts
+// ─────────────────────────────────────────────────────────────────────────────
+
+export {
+  verifyGSPLProgramDeterminism,
+  checkGeneTypesInGSPLProgram,
+  getFormalVerifierReport,
+  isValidGSPLGeneType,
+  GSPL_GENE_TYPE_NAMES,
+  type GSPLDeterminismResult,
+  type GeneTypeCheckResult,
+  type FormalVerifierReport,
+  type GSPLGeneType,
+} from './formal-verifier.js';

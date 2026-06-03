@@ -319,4 +319,40 @@ test.describe('Authentication', () => {
     // Verify rate limit message
     await expect(page.locator('[data-testid="rate-limit-message"]')).toContainText('Too many attempts');
   });
+
+});
+
+// p24-12 final e2e (top level to avoid nesting under auth): sovereign play flow (Play lobby + runtime) with live strata viz from calculateStratumConformance, provenance pack (civ/royalty/Fed v1/Full 27+Part6), keyboard nav (Enter/Space/restart focus), WCAG roles/aria, <60s claim surface, no weak/placeholder text in sovereign.
+test.describe('Sovereign Play Flow (p24-12 final)', () => {
+  test('shows live strata conformance, provenance pack with civ/fed/Full 27, keyboard nav, WCAG roles', async ({ page }) => {
+    await page.goto('/play');
+
+    // Use lobby inputs (aria-labels from PlayPage) to compile to runtime
+    await page.getByLabel('Friend seed name or hash').fill('iris');
+    await page.getByLabel('World seed name or hash').fill('vellichor');
+    await page.getByRole('button', { name: /Generate deterministic game from friend and world seeds and enter PlayRuntime/i }).click();
+
+    // Wait for PlayRuntime region (role=application from component) + strata/provenance rendered
+    const runtime = page.getByRole('application', { name: /Playable sovereign game runtime/i });
+    await expect(runtime).toBeVisible({ timeout: 30000 });
+
+    // Strata and pack (from LIVE 9-STRATUM and Sovereign Provenance Pack divs)
+    await expect(page.getByText(/LIVE 9-STRATUM|Strata conf:/i).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/civ:|royalty|Fed v1|5-clause/i).first()).toBeVisible();
+
+    // Keyboard nav on choices (Enter/Space) + restart button (aria-label from component)
+    await page.keyboard.press('Enter');
+    await page.keyboard.press(' ');
+    const restartBtn = page.getByRole('button', { name: /restart/i });
+    if (await restartBtn.count() > 0) {
+      await restartBtn.first().focus();
+      await expect(restartBtn.first()).toBeFocused();
+    }
+
+    // WCAG / <60s surface (from lobby text and runtime)
+    await expect(page.getByText(/<60s|zero-onboard|WCAG|keyboard|min-h|Play lobby/i).first()).toBeVisible({ timeout: 5000 });
+
+    // No placeholder/weak in sovereign
+    await expect(page.getByText(/placeholder|stub|weak implementation/i)).not.toBeVisible();
+  });
 });

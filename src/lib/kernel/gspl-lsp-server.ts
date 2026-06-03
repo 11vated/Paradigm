@@ -578,7 +578,7 @@ export class GsplLspServer {
 
     // Recurse
     if (node.children) {
-      for (const child of node.children) {
+      for (const child of (node.children as any[] || [])) {
         this.findDefinitionInAST(child, word, uri, locations);
       }
     }
@@ -595,9 +595,9 @@ export class GsplLspServer {
     };
 
     const kind = kindMap[node.type];
-    if (kind && node.name) {
+    if (kind && (node as any).name) {
       symbols.push({
-        name: node.name,
+        name: (node as any).name,
         kind,
         location: {
           uri,
@@ -610,7 +610,7 @@ export class GsplLspServer {
     }
 
     if (node.children) {
-      for (const child of node.children) {
+      for (const child of (node.children as any[] || [])) {
         this.collectSymbolsFromAST(child, uri, symbols);
       }
     }

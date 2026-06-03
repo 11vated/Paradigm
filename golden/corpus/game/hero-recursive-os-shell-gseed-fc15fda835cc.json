@@ -1,0 +1,39 @@
+{
+  "seed": "civilizational dividend payout engine that feeds the sovereign operators of the infinite substrate across all lineages",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-c199dce50f23",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_536560408082180",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-c199dce50f23-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active"
+  },
+  "generatedAt": "2026-06-03T01:05:51.195Z"
+}

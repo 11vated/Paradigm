@@ -8,17 +8,19 @@ import {
   getViewportType, AVAILABLE_VIEWS,
 } from './viewports';
 
-export default function PreviewViewport({ artifact, loading, seed, promptText = '' }: { artifact: any; loading: any; seed: any; promptText?: any }) {
-  const defaultView = artifact ? getViewportType(artifact.domain) : '3d';
+export default function PreviewViewport({ artifact, loading, seed, promptText = '' }: { artifact: any /* justified carveout: artifact from store/parent is dynamic (multi-domain Seed+Artifact union + runtime loaded); full branded types in strata sweep; no silent */; loading: boolean; seed: any /* justified: seed loose from caller */; promptText?: string }) {
+  const defaultView = artifact ? getViewportType((artifact as any).domain) : '3d'; // any cast: artifact unknown from prop (loose from store); justified same-line
   const [view, setView] = useState(defaultView);
 
   useEffect(() => {
-    if (artifact) setView(getViewportType(artifact.domain));
+    const art = artifact as Record<string, unknown> | null;
+    if (art) setView(getViewportType(art.domain as string | undefined));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to domain change; artifact reference may rotate
-  }, [artifact?.domain]);
+  }, [(artifact as Record<string, unknown> | null)?.domain]);
 
-  const availableViews = artifact ? ['hyperobject', ...AVAILABLE_VIEWS.slice(1)].filter(v =>
-    v === 'hyperobject' || v === '3d' || v === getViewportType(artifact.domain) || v === '2d'
+  const artForViews = artifact as Record<string, unknown> | null;
+  const availableViews = artForViews ? ['hyperobject', ...AVAILABLE_VIEWS.slice(1)].filter(v =>
+    v === 'hyperobject' || v === '3d' || v === getViewportType(artForViews.domain as string | undefined) || v === '2d'
   ) : ['hyperobject', '3d'];
 
   return (
@@ -35,10 +37,10 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
         </div>
       ) : artifact ? (
         <>
-          <div className="absolute top-2 right-2 z-20 flex gap-1 flex-wrap max-w-[70%] justify-end">
+          <div className="absolute top-2 right-2 z-20 flex gap-1 flex-wrap max-w-[70%] justify-end" role="tablist" aria-label="Viewport type selector">
             {availableViews.map((v) => (
-              <button key={v} onClick={() => setView(v)}
-                className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors ${
+              <button key={v} type="button" role="tab" aria-selected={view === v} aria-label={`${v} viewport`} onClick={() => setView(v)}
+                className={`px-2 py-0.5 font-mono text-[8px] uppercase border transition-colors min-h-[28px] touch-manipulation motion-reduce:transition-none focus-visible:ring-1 ${
                   view === v ? 'border-primary text-primary bg-primary/10' : 'border-neutral-800 text-neutral-600'
                 }`}>
                 {v}

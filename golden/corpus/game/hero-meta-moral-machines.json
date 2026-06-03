@@ -1,0 +1,31 @@
+{
+  "hero": "Moral Machines City",
+  "slug": "moral-machines",
+  "intent": "fractal city of moral machines and branching karma under twin suns",
+  "hash": "a7978d7624bd",
+  "artifactPath": "golden/corpus/game/hero-moral-machines-a7978d7624bd.json",
+  "part6Path": "golden/corpus/game/hero-moral-machines-a7978d7624bd-part6.json",
+  "strata": {
+    "overall": 0.555,
+    "conformancePercent": "55.5%",
+    "strataCovered": 9,
+    "source": "calculateStratumConformance on real artifact + strataScores from paradigm make (real 15_ predicate bodies, Part 6)",
+    "strataStress": ["Story", "Mind", "World", "Culture"],
+    "perStratumSample": "see full in artifact; overall 0.555 as reported in make provenance pack"
+  },
+  "royalty": {
+    "fromMakeProvenance": "author:700 platform:300",
+    "directPreview": { "toCreator": 940 },
+    "calcMethod": "createDefaultRoyaltyConfig + calculateRoyalty + computeFullPayout (depth + civ 1%)",
+    "part6": "lineage + civilizational dividends active"
+  },
+  "provenance": {
+    "makeCmd": "npx tsx scripts/paradigm.ts make \"fractal city of moral machines and branching karma under twin suns\" --domain game",
+    "timeToArtifact": "0.1s",
+    "reproducibility": "Live Sovereign Provenance Pack printed with real calculateStratumConformance, C2PA, ECDSA-P256 sig, self HTML, 5-clause curate/synthesize/invert/evolve/roundtrip",
+    "note": "forkable .gseed for 1M corpus + 12 heroes vision (13_ Part XIX/XX, Phase 14-15). Full actual artifact fields used; credit fallback only on missing (max possible shown)."
+  },
+  "grade": "0.555 overall per GameMechanicsContract + 5-clause manifest() + live strata on 9 scenes/choices/karma. Oracle-graded via game oracle in fullgame domain for 5-axis if needed.",
+  "date": "2026-06-03",
+  "doctrineRef": "13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md Part XIX/XX + 13b_Phase_Gates Phase 14-15 + 14_ + DOCTRINE_V2_MAPPING"
+}

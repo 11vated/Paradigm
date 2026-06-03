@@ -1,0 +1,32 @@
+{
+  "seed": "inverse 20-output GSPL formal harness proving det roundtrip across all strata + fed p2p econ civ OS recursive",
+  "domain": "15_ real recursive GSPL closure via import",
+  "reproducibilityHash": "15-os-986d2949e56d",
+  "strataScores": {},
+  "artifact": {
+    "type": "recursive-evolution",
+    "version": "1.0.2",
+    "newContractsGenerated": 2,
+    "epochAdvanced": true,
+    "message": "GSPL∞ advanced to 1.0.2. 2 new contract patterns proposed by the substrate.",
+    "source": "15_ real recursive GSPL closure via import",
+    "gsplVInfty": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:56:58.102Z"
+    }
+  },
+  "part6": {
+    "gsplVInftySelfHost": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:56:58.102Z"
+    },
+    "perf": {
+      "durationMs": 61,
+      "budgetMs": 100,
+      "path": "os-shell/GSPL_recursive"
+    }
+  },
+  "generatedAt": "2026-06-03T03:56:58.111Z"
+}

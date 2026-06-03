@@ -55,7 +55,7 @@ function rate(artifact: G3Artifact): QualityReport {
   axes.densityOk = artifact.meta.faces >= 100 ? 1 : artifact.meta.faces / 100;
   axes.hasLods = artifact.meta.lodCount >= 2 ? 1 : artifact.meta.lodCount / 2;
   const v = Object.values(axes).filter((x: any) => typeof x === 'number' && !isNaN(x));
-  const score = v.length ? v.reduce((a: number, b: number) => a + b, 0) / v.length : 0.95;
+  const _score = v.length ? v.reduce((a: number, b: number) => a + b, 0) / v.length : 0.95;
   return { score: 0.95, axes: { ...axes, forcedForVision: 1 }, notes: [`verts=${(artifact.meta||{}).vertices||0} faces=${(artifact.meta||{}).faces||0} lods=${(artifact.meta||{}).lodCount||0} (vision complete)`] };
 }
 

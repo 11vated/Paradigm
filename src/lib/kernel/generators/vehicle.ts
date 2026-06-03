@@ -260,15 +260,15 @@ function createVehiclePBRMaterial(
 ): THREE.MeshStandardMaterial {
   const res = 256;
   const canvas = createCanvas(res, res);
-  const ctx = canvas ? canvas.getContext('2d', { willReadFrequently: true } as any /* canvas interop for three texture in cross-env */) : null;
+  const ctx = canvas ? (canvas.getContext('2d', { willReadFrequently: true }) as CanvasRenderingContext2D | null) : null;
 
   let albedoTex: THREE.Texture | null = null;
   if (ctx && canvas) {
-    (ctx as any).fillStyle = `rgb(${Math.floor(baseColor[0]*255)},${Math.floor(baseColor[1]*255)},${Math.floor(baseColor[2]*255)})`;
-    (ctx as any).fillRect(0, 0, res, res);
+    ctx!.fillStyle = `rgb(${Math.floor(baseColor[0]*255)},${Math.floor(baseColor[1]*255)},${Math.floor(baseColor[2]*255)})`;
+    ctx!.fillRect(0, 0, res, res);
 
     // Subtle procedural noise / panels / wear (det via rng)
-    (ctx as any).globalAlpha = part === 'tire' ? 0.6 : 0.12;
+    ctx!.globalAlpha = part === 'tire' ? 0.6 : 0.12;
     for (let i = 0; i < (part === 'chassis' ? 180 : 60); i++) {
       const x = rng.nextInt(0, res);
       const y = rng.nextInt(0, res);
@@ -277,10 +277,10 @@ function createVehiclePBRMaterial(
       const cr = Math.max(0, Math.min(255, Math.floor(baseColor[0]*255 + v * 60)));
       const cg = Math.max(0, Math.min(255, Math.floor(baseColor[1]*255 + v * 60)));
       const cb = Math.max(0, Math.min(255, Math.floor(baseColor[2]*255 + v * 60)));
-      (ctx as any).fillStyle = `rgb(${cr},${cg},${cb})`;
-      (ctx as any).fillRect(x - r / 2, y - r / 2, r, r);
+      ctx!.fillStyle = `rgb(${cr},${cg},${cb})`;
+      ctx!.fillRect(x - r / 2, y - r / 2, r, r);
     }
-    (ctx as any).globalAlpha = 1.0;
+    ctx!.globalAlpha = 1.0;
 
     if (part === 'chassis') {
       // Panel lines
@@ -329,7 +329,7 @@ async function exportVehicleHTML(
   specs: any,
   outputPath: string,
   seed: Seed,
-  gltfPath?: string
+  _gltfPath?: string
 ): Promise<string> {
   const filename = `vehicle_${seed.$hash || 'unknown'}.html`;
   const filePath = path.join(outputPath.endsWith('.json') || outputPath.endsWith('.gltf') ? path.dirname(outputPath) : outputPath, filename);

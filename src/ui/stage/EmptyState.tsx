@@ -64,7 +64,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ suggestions, onPick }) =
         <div className="p-empty-prompts">
           {prompts.slice(0, 8).map((p, i) => (
             <button
-              key={i}
+              key={p.text || i}
               className="p-prompt-card"
               onClick={() => onPick(p.text)}
               type="button"

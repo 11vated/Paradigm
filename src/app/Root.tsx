@@ -20,6 +20,16 @@ import { DomainCosmosOverlay } from '@/ui/overlays/DomainCosmosOverlay';
 import { Onboarding } from '@/components/onboarding/Onboarding';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
+// AAA skip link for keyboard users (WCAG 2.2 AAA best practice)
+const SkipLink: React.FC = () => (
+  <a
+    href="#main-content"
+    className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-amber-400 focus:text-black focus:rounded focus:font-medium focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-amber-600 min-h-[44px] flex items-center"
+  >
+    Skip to main content
+  </a>
+);
+
 const Gripper: React.FC<
   React.HTMLAttributes<HTMLDivElement> & {
     bind: ReturnType<typeof usePaneLayout>['leftGripper'];
@@ -56,6 +66,21 @@ export const Root: React.FC = () => {
   const themeHash = seed?.hash ?? getInstallGenesisHash();
   const theme = useSeedTheme(themeHash);
   const cssVars = useMemo(() => themeToCssVars(theme), [theme]);
+
+  // Bridge legacy --r-* (used in this shell's inline layout) to the active
+  // paradigm-os tokens (--p-*) so widths, borders, and dark substrate render.
+  // Dynamic prism colors (--r-prism-*) come from seed theme above.
+  const shellVars = useMemo(() => ({
+    ...cssVars,
+    '--r-void': 'var(--p-void)',
+    '--r-ink-4': 'var(--p-ink-4)',
+    '--r-rail-min': 'var(--p-leftrail-w)',
+    '--r-rail-max': '400px',
+    '--r-agent-min': 'var(--p-agent-w)',
+    '--r-agent-max': '640px',
+    '--r-z-pane': '10',
+  } as React.CSSProperties), [cssVars]);
+
   const [cosmosOpen, setCosmosOpen] = useState(false);
   const openCosmos = useCallback(() => setCosmosOpen(true), []);
   const closeCosmos = useCallback(() => setCosmosOpen(false), []);
@@ -92,19 +117,23 @@ export const Root: React.FC = () => {
     <div
       data-paradigm-shell="paradigm-os"
       style={{
-        ...cssVars,
+        ...shellVars,
         position: 'fixed',
         inset: 0,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
         background: `radial-gradient(ellipse 120% 80% at 50% 0%, color-mix(in oklab, var(--r-prism-core) 6%, var(--r-void)), var(--r-void))`,
+        backgroundColor: '#030306',
+        color: '#e6edf3',
       } as React.CSSProperties}
     >
       <TopBar onCosmos={openCosmos} />
+      <SkipLink />
       <Onboarding onComplete={() => {}} onSkip={() => {}} />
 
       <div
+        id="main-content"
         style={{
           flex: 1,
           minHeight: 0,

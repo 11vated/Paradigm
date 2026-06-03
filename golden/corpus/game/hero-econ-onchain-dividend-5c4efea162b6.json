@@ -1,0 +1,44 @@
+{
+  "seed": "econ onchain real civilizational dividend flow across sovereign lineages with PARA SeedNFT prep",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-6c5e9847fbc3",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_234176954755500",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-6c5e9847fbc3-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 1,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-03T01:20:52.892Z"
+}

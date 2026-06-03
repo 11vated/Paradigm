@@ -16,56 +16,71 @@ import { GsplParser, ASTNodeType, type ASTNode } from './gspl-parser';
  * Normalize kernel AST (named properties) to generic `.children` format
  * expected by the bytecode compiler.
  */
-function normalizeAST(node: ASTNode): ASTNode & { children?: ASTNode[] } {
+function normalizeAST(node: any): any { // any: normalized dynamic AST for bytecode (carveout)
   if (!node || typeof node !== 'object') return node;
 
   const normalized: any = { ...node };
 
   switch (node.type) {
     case ASTNodeType.BLOCK:
-      normalized.children = (node as any /* Phase 0 evasion - review in Phase 1 */).statements?.map(normalizeAST) ?? [];
+      normalized.children = ((node as any) as { statements?: ASTNode[] }).statements?.map(normalizeAST) ?? [];
       break;
     case ASTNodeType.BINARY_EXPR:
-    case ASTNodeType.PIPE_EXPR:
-      normalized.children = [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).left), normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).right)].filter(Boolean);
+    case ASTNodeType.PIPE_EXPR: {
+      const bin = (node as any) as { left?: ASTNode; right?: ASTNode };
+      normalized.children = [normalizeAST(bin.left!), normalizeAST(bin.right!)].filter(Boolean);
       break;
-    case ASTNodeType.UNARY_EXPR:
-      normalized.children = [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).operand)].filter(Boolean);
+    }
+    case ASTNodeType.UNARY_EXPR: {
+      const un = (node as any) as { operand?: ASTNode };
+      normalized.children = [normalizeAST(un.operand!)].filter(Boolean);
       break;
-    case ASTNodeType.CALL_EXPR:
+    }
+    case ASTNodeType.CALL_EXPR: {
+      const call = (node as any) as { callee?: string; arguments?: ASTNode[] };
       normalized.children = [
-        (node as any /* Phase 0 evasion - review in Phase 1 */).callee ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).callee } : null,
-        ...((node as any /* Phase 0 evasion - review in Phase 1 */).arguments?.map(normalizeAST) ?? []),
+        call.callee ? { type: ASTNodeType.IDENTIFIER, value: call.callee } : null,
+        ...(call.arguments?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
-    case ASTNodeType.IF_STMT:
+    }
+    case ASTNodeType.IF_STMT: {
+      const ifn = (node as any) as { condition?: ASTNode; consequent?: { statements?: ASTNode[] }; alternate?: { statements?: ASTNode[] } };
       normalized.children = [
-        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).condition),
-        ...((node as any /* Phase 0 evasion - review in Phase 1 */).consequent?.statements?.map(normalizeAST) ?? []),
-        ...((node as any /* Phase 0 evasion - review in Phase 1 */).alternate?.statements?.map(normalizeAST) ?? []),
+        normalizeAST(ifn.condition!),
+        ...(ifn.consequent?.statements?.map(normalizeAST) ?? []),
+        ...(ifn.alternate?.statements?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
-    case ASTNodeType.FOR_STMT:
+    }
+    case ASTNodeType.FOR_STMT: {
+      const forn = (node as any) as { variable?: string; iterable?: ASTNode; body?: { statements?: ASTNode[] } };
       normalized.children = [
-        { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).variable },
-        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).iterable),
-        ...((node as any /* Phase 0 evasion - review in Phase 1 */).body?.statements?.map(normalizeAST) ?? []),
+        { type: ASTNodeType.IDENTIFIER, value: forn.variable! },
+        normalizeAST(forn.iterable!),
+        ...(forn.body?.statements?.map(normalizeAST) ?? []),
       ].filter(Boolean);
       break;
-    case ASTNodeType.RETURN_STMT:
-      normalized.children = (node as any /* Phase 0 evasion - review in Phase 1 */).value ? [normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).value)] : [];
+    }
+    case ASTNodeType.RETURN_STMT: {
+      const ret = (node as any) as { value?: ASTNode };
+      normalized.children = ret.value ? [normalizeAST(ret.value)] : [];
       break;
-    case ASTNodeType.LET_DECL:
+    }
+    case ASTNodeType.LET_DECL: {
+      const letn = (node as any) as { name?: string; initializer?: ASTNode };
       normalized.children = [
-        (node as any /* Phase 0 evasion - review in Phase 1 */).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).name } : null,
-        normalizeAST((node as any /* Phase 0 evasion - review in Phase 1 */).initializer),
+        letn.name ? { type: ASTNodeType.IDENTIFIER, value: letn.name } : null,
+        normalizeAST(letn.initializer!),
       ].filter(Boolean);
       break;
-    case ASTNodeType.SEED_DECL:
+    }
+    case ASTNodeType.SEED_DECL: {
+      const seedn = (node as any) as { name?: string; domain?: string; genes?: Array<{ name: string; value: ASTNode }> };
       normalized.children = [
-        (node as any /* Phase 0 evasion - review in Phase 1 */).name ? { type: ASTNodeType.IDENTIFIER, value: (node as any /* Phase 0 evasion - review in Phase 1 */).name } : null,
-        (node as any /* Phase 0 evasion - review in Phase 1 */).domain ? { type: ASTNodeType.STRING_LITERAL, value: (node as any /* Phase 0 evasion - review in Phase 1 */).domain } : null,
-        ...((node as any /* Phase 0 evasion - review in Phase 1 */).genes?.map((g: any) => ({
+        seedn.name ? { type: ASTNodeType.IDENTIFIER, value: seedn.name } : null,
+        seedn.domain ? { type: ASTNodeType.STRING_LITERAL, value: seedn.domain } : null,
+        ...(seedn.genes?.map((g) => ({
           type: 'GENE',
           children: [
             { type: ASTNodeType.IDENTIFIER, value: g.name },
@@ -74,6 +89,7 @@ function normalizeAST(node: ASTNode): ASTNode & { children?: ASTNode[] } {
         })) ?? []),
       ].filter(Boolean);
       break;
+    }
     default:
       // Leaf nodes (LITERAL, IDENTIFIER, etc.) have no children
       break;
@@ -89,7 +105,7 @@ function flattenToBlock(nodes: ASTNode[]): ASTNode & { children?: ASTNode[] } {
   return normalizeAST({
     type: ASTNodeType.BLOCK,
     statements: nodes,
-  } as any /* Phase 0 evasion - review in Phase 1 */);
+  } as unknown as ASTNode);
 }
 
 // Opcodes
@@ -267,9 +283,9 @@ export class GsplBytecodeCompiler {
   /**
    * Compile top-level program
    */
-  private compileProgram(node: ASTNode): void {
+  private compileProgram(node: any): void {
     if (node.type === ASTNodeType.BLOCK && node.children) {
-      for (const child of node.children) {
+      for (const child of (node.children || [] as any[])) {
         this.compileNode(child);
       }
     } else {
@@ -280,10 +296,10 @@ export class GsplBytecodeCompiler {
   /**
    * Compile a single AST node
    */
-  private compileNode(node: ASTNode): void {
+  private compileNode(node: any): void {
     if (!node) return;
 
-    const line = (node as any /* Phase 0 evasion - review in Phase 1 */).line || (node as any /* Phase 0 evasion - review in Phase 1 */).token?.line;
+    const line = Number((node as { line?: unknown; token?: { line?: unknown } }).line ?? (node as { token?: { line?: unknown } }).token?.line) || undefined; // number | undefined for emit
 
     switch (node.type) {
       case ASTNodeType.INT_LITERAL:
@@ -346,7 +362,7 @@ export class GsplBytecodeCompiler {
 
       case ASTNodeType.BLOCK:
         if (node.children) {
-          for (const child of node.children) {
+          for (const child of (node.children || [] as any[])) {
             this.compileNode(child);
           }
         }
@@ -363,7 +379,7 @@ export class GsplBytecodeCompiler {
   }
 
   private compileStringLiteral(value: string, line?: number): void {
-    const idx = this.state.addString(value);
+    const idx = this.state.addString( value);
     this.state.emit(Opcode.PUSH_CONST, idx, line);
   }
 
@@ -378,15 +394,16 @@ export class GsplBytecodeCompiler {
       this.state.emit(Opcode.LOAD_LOCAL, idx, line);
     } else {
       // Global variable or function
-      const strIdx = this.state.addString(name);
+      const strIdx = this.state.addString( name);
       this.state.emit(Opcode.LOAD_GLOBAL, strIdx, line);
     }
   }
 
-  private compileBinaryExpr(node: ASTNode, line?: number): void {
-    const left = node.children?.[0];
-    const right = node.children?.[1];
-    const op = (node as any /* Phase 0 evasion - review in Phase 1 */).operator;
+  private compileBinaryExpr(node: any, line?: number): void {
+    const children = (node.children || []) as any[];
+    const left = children[0];
+    const right = children[1];
+    const op = (node as { operator?: unknown }).operator as string | undefined ?? '';
 
     this.compileNode(left);
     this.compileNode(right);
@@ -413,7 +430,7 @@ export class GsplBytecodeCompiler {
       '>>': Opcode.SHR,
     };
 
-    const opcode = opcodeMap[op];
+    const opcode = opcodeMap[op || '']; // op may be undefined from node.operator; '' safe (no-op)
     if (opcode !== undefined) {
       this.state.emit(opcode, 0, line);
     } else {
@@ -421,9 +438,10 @@ export class GsplBytecodeCompiler {
     }
   }
 
-  private compileUnaryExpr(node: ASTNode, line?: number): void {
-    const operand = node.children?.[0];
-    const op = (node as any /* Phase 0 evasion - review in Phase 1 */).operator;
+  private compileUnaryExpr(node: any, line?: number): void {
+    const children = (node.children || []) as any[];
+    const operand = children[0];
+    const op = (node as { operator?: unknown }).operator as string | undefined ?? '';
 
     this.compileNode(operand);
 
@@ -437,8 +455,8 @@ export class GsplBytecodeCompiler {
   }
 
   private compileCallExpr(node: ASTNode, line?: number): void {
-    const callee = node.children?.[0];
-    const args = node.children?.[1]?.children || [];
+    const callee = ((node.children || []) as any[])[0];
+    const args = ((node.children || []) as any[])[1]?.children || [];
 
     // Compile arguments in reverse order (for stack)
     for (let i = args.length - 1; i >= 0; i--) {
@@ -452,7 +470,7 @@ export class GsplBytecodeCompiler {
         'generate_game', 'generate_geometry3d'];
 
       if (builtins.includes(callee.value)) {
-        const strIdx = this.state.addString(callee.value);
+        const strIdx = this.state.addString( callee.value);
         this.state.emit(Opcode.CALL_BUILTIN, strIdx, line);
         return;
       }
@@ -465,20 +483,20 @@ export class GsplBytecodeCompiler {
   }
 
   private compileLetDecl(node: ASTNode, line?: number): void {
-    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
-    const value = node.children?.[0];
+    const name = (node as { name?: unknown }).name as string | undefined ?? '';
+    const value = ((node.children || []) as any[])[0];
 
     this.compileNode(value);
 
     const idx = this.state.localVars.size;
-    this.state.localVars.set(name, idx);
+    this.state.localVars.set(name || '', idx);
     this.state.emit(Opcode.STORE_LOCAL, idx, line);
   }
 
   private compileFnDecl(node: ASTNode, line?: number): void {
-    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
-    const params = (node as any /* Phase 0 evasion - review in Phase 1 */).params || [];
-    const body = node.children?.[0];
+    const name = (node as { name?: unknown }).name as string | undefined ?? '';
+    const params = ((node as { params?: unknown }).params as string[] ) || [];
+    const body = ((node.children || []) as any[])[0];
 
     // Save current position
     const jumpIdx = this.state.emit(Opcode.JUMP, 0, line);
@@ -516,21 +534,21 @@ export class GsplBytecodeCompiler {
     this.state.functions.set(name, {
       start: fnStart,
       end: fnEnd,
-      locals: params,
+      locals: params as string[],
     });
 
     // Load function as value
-    const strIdx = this.state.addString(name);
+    const strIdx = this.state.addString( name);
     this.state.emit(Opcode.LOAD_GLOBAL, strIdx, line);
   }
 
   private compileSeedDecl(node: ASTNode, line?: number): void {
-    const name = (node as any /* Phase 0 evasion - review in Phase 1 */).name;
-    const domain = (node as any /* Phase 0 evasion - review in Phase 1 */).domain;
-    const genes = node.children?.[0];
+    const name = (node as { name?: unknown }).name as string | undefined ?? '';
+    const domain = (node as { domain?: unknown }).domain as string | undefined ?? '';
+    const genes = ((node.children || []) as any[])[0];
 
     // Push domain
-    const domainIdx = this.state.addString(domain);
+    const domainIdx = this.state.addString( domain);
     this.state.emit(Opcode.PUSH_CONST, domainIdx, line);
 
     // Push genes (as struct)
@@ -539,11 +557,11 @@ export class GsplBytecodeCompiler {
       this.state.emit(Opcode.STRUCT_CREATE, geneCount, line);
 
       for (const gene of genes.children) {
-        const geneName = (gene as any /* Phase 0 evasion - review in Phase 1 */).name;
+        const geneName = (gene as { name?: unknown }).name as string | undefined ?? '';
         const geneValue = gene.children?.[0];
 
         this.compileNode(geneValue);
-        const nameIdx = this.state.addString(geneName);
+        const nameIdx = this.state.addString( geneName);
         this.state.emit(Opcode.SET_FIELD, nameIdx, line);
       }
     }
@@ -552,18 +570,18 @@ export class GsplBytecodeCompiler {
     this.state.emit(Opcode.SEED_CREATE, 0, line);
 
     // Store in variable
-    const nameIdx = this.state.addString(name);
+    const nameIdx = this.state.addString( name);
     this.state.emit(Opcode.STORE_GLOBAL, nameIdx, line);
   }
 
   private compileGrowOp(node: ASTNode, line?: number): void {
-    const seedExpr = node.children?.[0];
-    const domain = (node as any /* Phase 0 evasion - review in Phase 1 */).domain;
+    const seedExpr = ((node.children || []) as any[])[0];
+    const domain = (node as { domain?: unknown }).domain as string | undefined ?? '';
 
     this.compileNode(seedExpr);
 
     if (domain) {
-      const domainIdx = this.state.addString(domain);
+      const domainIdx = this.state.addString( domain);
       this.state.emit(Opcode.PUSH_CONST, domainIdx, line);
     }
 

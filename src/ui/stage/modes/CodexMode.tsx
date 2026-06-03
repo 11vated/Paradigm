@@ -107,7 +107,7 @@ export const CodexMode: React.FC = () => {
             <div className="p-codex-errors">
               <span className="p-codex-output-label" data-state="error">errors · {output.payload.length}</span>
               {output.payload.map((e: string, i: number) => (
-                <div key={i} className="p-codex-error-line">{e}</div>
+                <div key={`${i}-${e.slice(0,20)}`} className="p-codex-error-line">{e}</div>
               ))}
             </div>
           )}
@@ -123,7 +123,7 @@ export const CodexMode: React.FC = () => {
                 executed · {output.payload.stats?.seeds_created ?? 0} seeds · {output.payload.output?.length ?? 0} ops
               </span>
               {output.payload.seeds && output.payload.seeds.map((s: any, i: number) => (
-                <div key={i} className="p-codex-exec-seed">
+                <div key={`${i}-${s.id || s.hash || i}`} className="p-codex-exec-seed">
                   <span className="p-codex-exec-domain">{s.domain ?? s.$domain ?? 'seed'}</span>
                   <span className="p-codex-exec-name">{s.name ?? s.$name ?? s.id}</span>
                 </div>

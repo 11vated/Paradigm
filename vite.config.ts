@@ -73,8 +73,12 @@ export default defineConfig(({ mode }) => {
         'node:fs/promises': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         path: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         'node:path': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        module: path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
+        'node:module': path.resolve(__dirname, './src/lib/kernel/browser-node-shim.ts'),
         os: path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
         'node:os': path.resolve(__dirname, './src/lib/kernel/browser-os-shim.ts'),
+        process: path.resolve(__dirname, './src/lib/browser/process-shim.ts'),
+        'node:process': path.resolve(__dirname, './src/lib/browser/process-shim.ts'),
         crypto: path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
         'node:crypto': path.resolve(__dirname, './src/lib/kernel/browser-crypto-shim.ts'),
 
@@ -102,6 +106,9 @@ export default defineConfig(({ mode }) => {
       hmr: process.env.DISABLE_HMR !== 'true',
       headers: {
         'X-Frame-Options': 'ALLOWALL',
+        // CSP note (Phase 24+ security audit prep item 9): dev-only permissive for Vite HMR/Three.js; basic 'default-src self' is the prod baseline
+        // (enforced via server middleware in prod; full policy "default-src 'self'; ..." in src/lib/security/middleware.ts).
+        // This dev header is intentionally loose (frame-ancestors *) and does not affect prod builds.
         'Content-Security-Policy': "frame-ancestors *;",
       }
     },

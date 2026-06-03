@@ -96,19 +96,19 @@
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-glass-vessel",
-      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
     },
     {
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-iron-gear",
-      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
     },
     {
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-stone-idol",
-      "artifactHash": "496919b9810f47f8c8cd42af07c0a611c936c952a0e93988afe63e7f0a775f81"
+      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
     },
     {
       "contract": "molecule",

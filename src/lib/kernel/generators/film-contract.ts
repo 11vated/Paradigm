@@ -42,7 +42,7 @@ export const FilmQualityContract: QualityContract<S, A, any> = {
     const len = content.length;
     const hasFADE = /FADE IN|FADE OUT|THE END/.test(content);
     const sceneCount = (content.match(/INT\.|EXT\./g) || []).length;
-    const hasDialogue = /\(quietly/.test(content) || /toUpperCase/.test(content) === false; // rough
+    const _hasDialogue = /\(quietly/.test(content) || /toUpperCase/.test(content) === false; // rough
     const score = len > 5500 && hasFADE && sceneCount >= 10 ? 0.99 : (len > 2200 ? 0.91 : 0.72);
     const axes: Record<string, number> = {
       hasOutput: len > 0 ? 1 : 0,

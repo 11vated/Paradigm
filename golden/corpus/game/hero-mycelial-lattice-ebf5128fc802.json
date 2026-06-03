@@ -1,0 +1,39 @@
+{
+  "seed": "mycelial field lattice where invisible structures self-organize living possibility spaces across all strata",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-94dd14985f90",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_669491234538984",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-94dd14985f90-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active"
+  },
+  "generatedAt": "2026-06-03T00:52:42.753Z"
+}

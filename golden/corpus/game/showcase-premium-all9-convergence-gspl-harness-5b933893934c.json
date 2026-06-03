@@ -1,0 +1,44 @@
+{
+  "seed": "all9 convergence premium with GSPL harness 2/2 econ civ10 fed verified OS inverse",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-3f7b079b5530",
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "artifact": {
+    "id": "game-mech_949129375005624",
+    "playerCount": 4,
+    "formalizedRules": null,
+    "winLossConditions": 3,
+    "deterministic": true,
+    "strataScores": {
+      "Mind": 0.91,
+      "Story": 0.88,
+      "World": 0.84,
+      "Time": 0.79,
+      "Form": 0,
+      "Motion": 0,
+      "Sound": 0,
+      "Field": 0,
+      "Culture": 0
+    },
+    "emittedPath": "/Users/cheyenneayers/Desktop/Paradigm/artifacts/os-shell/os-3f7b079b5530-game.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 1,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-03T03:57:24.696Z"
+}

@@ -30,7 +30,7 @@ function hashArtifact(a: A): string {
 
 async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'procedural-'));
-  const out = path.join(dir, 'procedural.json');
+  const _out = path.join(dir, 'procedural.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
   const r = await withKernelClock(0, () => generateProcedural(seed as any, dir)) as {
     heightmapPath: string; jsonPath: string; htmlPath: string; biomeCount: number;

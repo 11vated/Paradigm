@@ -1,0 +1,20 @@
+{
+  "id": "game-mech_588295802864344",
+  "playerCount": 4,
+  "formalizedRules": null,
+  "winLossConditions": 3,
+  "deterministic": true,
+  "strataScores": {
+    "Mind": 0.91,
+    "Story": 0.88,
+    "World": 0.84,
+    "Time": 0.79,
+    "Form": 0,
+    "Motion": 0,
+    "Sound": 0,
+    "Field": 0,
+    "Culture": 0
+  },
+  "emittedAt": "2026-06-03T02:08:26.259Z",
+  "stableSeedInput": "game:final continue 1m gspl v∞ formal roundtrip harness with econ civ dividend"
+}

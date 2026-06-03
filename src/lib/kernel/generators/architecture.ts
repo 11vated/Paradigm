@@ -210,7 +210,7 @@ function buildArchitectureMesh(floors: Floor[], params: ArchitectureParams, rng:
   return group;
 }
 
-function createArchPBRMaterial(style: string, base: [number, number, number], metal: number, rough: number, rng: Xoshiro256StarStar): THREE.MeshStandardMaterial {
+function createArchPBRMaterial(_style: string, base: [number, number, number], metal: number, rough: number, rng: Xoshiro256StarStar): THREE.MeshStandardMaterial {
   const res = 256;
   const canvas = createCanvas(res, res);
   const ctx = canvas ? canvas.getContext('2d', { willReadFrequently: true } as any /* canvas interop */) : null;

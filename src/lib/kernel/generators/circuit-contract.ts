@@ -30,11 +30,11 @@ export const CircuitQualityContract: QualityContract<S, A, any> = {
   ],
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'circuit-'));
-    const out = path.join(dir, 'circuit.json');
+    const _out = path.join(dir, 'circuit.json');
     const r = await withKernelClock(0, () => generateCircuit(seed, dir));
     const jsonContent = await fsp.readFile(r.jsonPath, 'utf-8').catch(() => '{}');
     const gbrContent = await fsp.readFile(r.gerberPath, 'utf-8').catch(() => 'M02*');
-    const svgContent = await fsp.readFile(r.schematicPath, 'utf-8').catch(() => '<svg/>');
+    const _svgContent = await fsp.readFile(r.schematicPath, 'utf-8').catch(() => '<svg/>');
     const gerberLines = gbrContent.split('\n').length;
     const padCount = (gbrContent.match(/D03\*/g) || []).length;
     return {

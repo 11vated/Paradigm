@@ -5,6 +5,8 @@
 
 import { calculateLineageRoyalties } from './lineage-royalties';
 import { calculateCivilizationalDividends } from './dividends';
+import { createHash } from 'crypto';
+import { kernelNowIso } from '../../kernel/clock'; // for opt-out ts (deterministic metadata; relative from contracts/economics to lib/kernel)
 
 export interface UniverseLicense {
   seedId: string;
@@ -22,15 +24,19 @@ export function issueUniverseLicense(seedId: string, customRate = 0.05): Univers
   };
 }
 
-export function computeFullPayout(sale: number, seedId: string, age: number, derivatives: number, license?: UniverseLicense) {
-  const royalties = calculateLineageRoyalties(sale, 5, license?.royaltyRate);
+export function computeFullPayout(sale: number, seedId: string, age: number, derivatives: number, license?: UniverseLicense, depth = 8) {
+  // econ full: royalties at arbitrary depth + civilizational dividend integrated
+  const royalties = calculateLineageRoyalties(sale, depth, license?.royaltyRate);
   const dividends = calculateCivilizationalDividends(seedId, age, derivatives);
-  const totalToCreator = sale * (1 - (license?.royaltyRate || 0.05) - 0.01);
+  const civ = 0.01; // civilizational dividend slice
+  const totalToCreator = sale * (1 - (license?.royaltyRate || 0.05) - civ);
   return {
     toCreator: totalToCreator,
     royalties,
     dividends: dividends.total,
+    civDividend: civ * sale,
     licenseActive: !!license,
+    depthUsed: depth,
   };
 }
 
@@ -109,10 +115,38 @@ export function prepareSeedNFTMintFlow(params: {
 /** Simulate real on-chain royalty distribution (for agent + future contract call) */
 export function distributeRoyaltiesOnChain(dist: OnChainRoyaltyDistribution) {
   // In a real deployment this would return encoded calldata for a RoyaltyDistributor contract
+  // det id (hash, no Date) for spine
+  const det = Buffer.from(dist.seedId + dist.totalRoyalty + dist.recipients.join('')).toString('hex');
   return {
     ...dist,
     executed: true,
-    txHash: `0x${Buffer.from(dist.seedId + Date.now().toString()).toString('hex').slice(0, 64)}`,
+    txHash: `0x${createHash('sha256').update(det).digest('hex').slice(0, 64)}`,
     message: `Royalties distributed on-chain to ${dist.recipients.length} recipients.`,
   };
+}
+
+/** Phases 17-19: Operator opt-out + surgical takedown protocol (per 13b gates) */
+export interface OptOutRecord {
+  seedId: string;
+  operator: string;
+  timestamp: string; // kernelNowIso
+  reason: string;
+  royaltiesRedirect: string; // e.g. to civ or charity
+}
+
+export function optOutProtocol(seedId: string, operator: string, reason = 'user request'): OptOutRecord {
+  // Deterministic, no wall clock in kernel (use imported)
+  const ts = kernelNowIso();
+  return {
+    seedId,
+    operator,
+    timestamp: ts,
+    reason,
+    royaltiesRedirect: 'civilizational-dividend',
+  };
+}
+
+export function surgicalTakedown(seedId: string, justification: string): { approved: boolean; note: string } {
+  // Stub for legal review; in real: check waiver registry, DAO vote
+  return { approved: justification.length > 10, note: `Takedown for ${seedId} queued for review. Per 17-19 opt-out.` };
 }

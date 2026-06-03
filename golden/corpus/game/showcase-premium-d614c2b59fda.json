@@ -1,0 +1,32 @@
+{
+  "seed": "premium showcase 7: full scope - GSPL v∞ formal roundtrip + recursive OS shell self-host + econ civ dividend onchain + fed p2p exchange + all 9 strata + provenance pack",
+  "domain": "15_ real recursive GSPL closure via import",
+  "reproducibilityHash": "15-os-40698341800b",
+  "strataScores": {},
+  "artifact": {
+    "type": "recursive-evolution",
+    "version": "1.0.2",
+    "newContractsGenerated": 2,
+    "epochAdvanced": true,
+    "message": "GSPL∞ advanced to 1.0.2. 2 new contract patterns proposed by the substrate.",
+    "source": "15_ real recursive GSPL closure via import",
+    "gsplVInfty": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:31:27.549Z"
+    }
+  },
+  "part6": {
+    "gsplVInftySelfHost": {
+      "overallPassed": true,
+      "claim": "Paradigm as .gseed compositions (GSPL∞ recursive via OS per 13_ 22-23 Part6)",
+      "generatedAt": "2026-06-03T03:31:27.549Z"
+    },
+    "perf": {
+      "durationMs": 12,
+      "budgetMs": 100,
+      "path": "os-shell/GSPL_recursive"
+    }
+  },
+  "generatedAt": "2026-06-03T03:31:27.552Z"
+}
