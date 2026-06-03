@@ -1,0 +1,661 @@
+{
+  "$intent": "full playable game: cyberpunk heist with branching choices and multiple endings --verify",
+  "$created": "2026-06-03T19:10:03.920Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "50ad5c96c4c35cf6",
+      "name": "full playable game: cyberpunk heist with",
+      "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 0.94603090907239,
+          "shoulderRatio": 1.190963162996423,
+          "torsoRatio": 1.0532924702335296,
+          "limbRatio": 0.9760156085058562,
+          "muscle": 0.41393326356885896,
+          "softness": 0.2372615945586861,
+          "skinTone": [
+            0.43248253120671054,
+            0.6733017237322763,
+            0.5933583430188498
+          ]
+        },
+        "face": {
+          "roundness": 0.8944237242321227,
+          "eyeHeight": 0.4968185761317627,
+          "eyeSpacing": 0.3696849426363208,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.3759325656433592,
+            0.6603008862890466,
+            0.16938842941283888
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.5886034701835838,
+          "mouthShape": "full",
+          "jawShape": "pointed",
+          "brow": 0.7981687870018359,
+          "cheekbones": 0.12356850664133612,
+          "chin": 0.8960029086210191,
+          "hairStyle": "medium",
+          "hairColor": [
+            0.6864819798281606,
+            0.29994872959088603,
+            0.41602742716269303
+          ]
+        },
+        "voice": {
+          "pitch": 145.24878908178044,
+          "inflection": 0.1460300954537086,
+          "tempo": 144.08318218298047,
+          "breathiness": 0.2697791146821976,
+          "warmth": 0.5356460853454217,
+          "formants": [
+            963.863457210475,
+            1679.8763111382564,
+            3580.0642696389073,
+            4406.232947247886,
+            5507.791184059857
+          ],
+          "accent": "mumbai"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.5627060804742576,
+            "conscientiousness": 0.591321723666181,
+            "extraversion": 0.16121987526715187,
+            "agreeableness": 0.41997652626409265,
+            "neuroticism": 0.09806905450348302
+          },
+          "interests": [
+            "cartography",
+            "music",
+            "electronics",
+            "dance",
+            "origami",
+            "rock-climbing"
+          ],
+          "values": [
+            "wonder",
+            "restraint"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.22812707381962083,
+          "curiosity": 0.29503730504503567
+        },
+        "memory": {
+          "episodicCapacity": 4410,
+          "episodicDecay": 0.007510459212918087,
+          "semanticCapacity": 9713,
+          "reflectionCadenceDays": 4.531330049580472
+        },
+        "bond": {
+          "initialTrust": 0.44281862354240586,
+          "initialWarmth": 0.569802470385441,
+          "bondingDays": 33
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "full playable game: cyberpunk heist with"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "full playable game: cyberpunk heist with"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "50ad5c96c4c35cf6",
+      "name": "Quantum Tidal World",
+      "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "sci-fi",
+          "biome": "desert",
+          "magic": 0.9774079074910573,
+          "tech": 0.6776415674450984,
+          "density": 0.4200520283528544
+        },
+        "physics": {
+          "gravity": 0.0464442118961963,
+          "hostility": 0.11130797279343074,
+          "diurnalRate": 0.1499682385576555,
+          "weatherVolatility": 0.7696394976950478
+        },
+        "society": {
+          "order": 0.7867166860376995,
+          "pluralism": 0.8944237242321227,
+          "prosperity": 0.4681857613176268,
+          "literacy": 0.46456628424213875
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.4598876094055986,
+          "urgency": 0.9338348104817444,
+          "clarity": 0.11564738235473149
+        },
+        "mood": {
+          "brightness": 0.4330040997898821,
+          "warmth": 0.3860347018358381,
+          "pace": 0.02206151384560817,
+          "levity": 0.4108838452911001
+        },
+        "history": {
+          "agesSinceFall": 3990,
+          "ghostliness": 0.12356850664133612,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-03T19:10:03.910Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "full playable game: cyberpunk heist with branching choices and multiple endings --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "1fdbc10574de554a",
+    "seedHash": "1fdbc10574de554a79c23944cfe1e79ffcfbae881d361dc525d8647f35de025b",
+    "genomeVersion": 1,
+    "title": "The Long Road of full playable game: cyberpunk heist with",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.4323753568947876,
+      "antagonist": 0.4616166874331625,
+      "moralComplexity": 0.5221997825585416,
+      "pacing": 0.17670821884089252,
+      "intensity": 0.7323798981348703,
+      "actCount": 4,
+      "targetWordCount": 11332,
+      "hook": "Strangers cross the borders of Quantum Tidal World. full playable game: cyberpunk heist with is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "50ad5c96c4c35cf6",
+        "name": "full playable game: cyberpunk heist with",
+        "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30"
+      },
+      "world": {
+        "id": "50ad5c96c4c35cf6",
+        "name": "Quantum Tidal World",
+        "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30"
+      }
+    },
+    "bornAt": "2026-06-03T19:10:03.915Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "full playable game: cyberpunk heist with branching",
+      "quest": {
+        "id": "1fdbc10574de554a",
+        "seedHash": "1fdbc10574de554a79c23944cfe1e79ffcfbae881d361dc525d8647f35de025b",
+        "genomeVersion": 1,
+        "title": "The Long Road of full playable game: cyberpunk heist with",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.4323753568947876,
+          "antagonist": 0.4616166874331625,
+          "moralComplexity": 0.5221997825585416,
+          "pacing": 0.17670821884089252,
+          "intensity": 0.7323798981348703,
+          "actCount": 4,
+          "targetWordCount": 11332,
+          "hook": "Strangers cross the borders of Quantum Tidal World. full playable game: cyberpunk heist with is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "50ad5c96c4c35cf6",
+            "name": "full playable game: cyberpunk heist with",
+            "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30"
+          },
+          "world": {
+            "id": "50ad5c96c4c35cf6",
+            "name": "Quantum Tidal World",
+            "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30"
+          }
+        },
+        "bornAt": "2026-06-03T19:10:03.915Z"
+      },
+      "friend": {
+        "id": "50ad5c96c4c35cf6",
+        "name": "full playable game: cyberpunk heist with",
+        "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 0.94603090907239,
+            "shoulderRatio": 1.190963162996423,
+            "torsoRatio": 1.0532924702335296,
+            "limbRatio": 0.9760156085058562,
+            "muscle": 0.41393326356885896,
+            "softness": 0.2372615945586861,
+            "skinTone": [
+              0.43248253120671054,
+              0.6733017237322763,
+              0.5933583430188498
+            ]
+          },
+          "face": {
+            "roundness": 0.8944237242321227,
+            "eyeHeight": 0.4968185761317627,
+            "eyeSpacing": 0.3696849426363208,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.3759325656433592,
+              0.6603008862890466,
+              0.16938842941283888
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.5886034701835838,
+            "mouthShape": "full",
+            "jawShape": "pointed",
+            "brow": 0.7981687870018359,
+            "cheekbones": 0.12356850664133612,
+            "chin": 0.8960029086210191,
+            "hairStyle": "medium",
+            "hairColor": [
+              0.6864819798281606,
+              0.29994872959088603,
+              0.41602742716269303
+            ]
+          },
+          "voice": {
+            "pitch": 145.24878908178044,
+            "inflection": 0.1460300954537086,
+            "tempo": 144.08318218298047,
+            "breathiness": 0.2697791146821976,
+            "warmth": 0.5356460853454217,
+            "formants": [
+              963.863457210475,
+              1679.8763111382564,
+              3580.0642696389073,
+              4406.232947247886,
+              5507.791184059857
+            ],
+            "accent": "mumbai"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.5627060804742576,
+              "conscientiousness": 0.591321723666181,
+              "extraversion": 0.16121987526715187,
+              "agreeableness": 0.41997652626409265,
+              "neuroticism": 0.09806905450348302
+            },
+            "interests": [
+              "cartography",
+              "music",
+              "electronics",
+              "dance",
+              "origami",
+              "rock-climbing"
+            ],
+            "values": [
+              "wonder",
+              "restraint"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.22812707381962083,
+            "curiosity": 0.29503730504503567
+          },
+          "memory": {
+            "episodicCapacity": 4410,
+            "episodicDecay": 0.007510459212918087,
+            "semanticCapacity": 9713,
+            "reflectionCadenceDays": 4.531330049580472
+          },
+          "bond": {
+            "initialTrust": 0.44281862354240586,
+            "initialWarmth": 0.569802470385441,
+            "bondingDays": 33
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "50ad5c96c4c35cf6",
+        "name": "Quantum Tidal World",
+        "seedHash": "50ad5c96c4c35cf65bd9604b80d9b7e6a2a8c18cfc6d3d5c7f0038899528da30",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "sci-fi",
+            "biome": "desert",
+            "magic": 0.9774079074910573,
+            "tech": 0.6776415674450984,
+            "density": 0.4200520283528544
+          },
+          "physics": {
+            "gravity": 0.0464442118961963,
+            "hostility": 0.11130797279343074,
+            "diurnalRate": 0.1499682385576555,
+            "weatherVolatility": 0.7696394976950478
+          },
+          "society": {
+            "order": 0.7867166860376995,
+            "pluralism": 0.8944237242321227,
+            "prosperity": 0.4681857613176268,
+            "literacy": 0.46456628424213875
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.4598876094055986,
+            "urgency": 0.9338348104817444,
+            "clarity": 0.11564738235473149
+          },
+          "mood": {
+            "brightness": 0.4330040997898821,
+            "warmth": 0.3860347018358381,
+            "pace": 0.02206151384560817,
+            "levity": 0.4108838452911001
+          },
+          "history": {
+            "agesSinceFall": 3990,
+            "ghostliness": 0.12356850664133612,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-03T19:10:03.910Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "full playable game: cyberpunk heist with branching choices and multiple endings --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "full playable game: cyberpunk heist with branching",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "full playable game: cyberpunk heist with branching"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "full playable game: cyberpunk heist with branching"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

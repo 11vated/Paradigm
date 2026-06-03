@@ -1,0 +1,665 @@
+{
+  "$intent": "3D rigged character: anime canon replica with abilities and particle effects --verify",
+  "$created": "2026-06-03T19:10:15.829Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "552b5ebddf76c115",
+      "name": "3D rigged character: anime canon replica",
+      "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 0.9562267004922524,
+          "shoulderRatio": 0.8604621254285247,
+          "torsoRatio": 1.1023068157262563,
+          "limbRatio": 1.0168263015620196,
+          "muscle": 0.6885536468893632,
+          "softness": 0.31879095420214115,
+          "skinTone": [
+            0.8843624774399635,
+            0.756548088167375,
+            0.4765700401680261
+          ]
+        },
+        "face": {
+          "roundness": 0.6544195438192566,
+          "eyeHeight": 0.4699346918181441,
+          "eyeSpacing": 0.30459269494621105,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.15292292642953248,
+            0.12775608450338707,
+            0.6331196643212944
+          ],
+          "noseShape": "straight",
+          "noseHeight": 0.6001355234255713,
+          "mouthShape": "small",
+          "jawShape": "pointed",
+          "brow": 0.23601863110408883,
+          "cheekbones": 0.36797161271156553,
+          "chin": 0.33870510902645257,
+          "hairStyle": "undercut",
+          "hairColor": [
+            0.3895263579682618,
+            0.2865608818014352,
+            0.4310998740463512
+          ]
+        },
+        "voice": {
+          "pitch": 109.7705695643753,
+          "inflection": 0.49696856300180314,
+          "tempo": 131.42948220109355,
+          "breathiness": 0.1330234790168,
+          "warmth": 0.09603843534743395,
+          "formants": [
+            1275.3873880366136,
+            2222.8180191495267,
+            4737.153155564564,
+            5830.342345310233,
+            7287.9279316377915
+          ],
+          "accent": "mumbai"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.7253082065214134,
+            "conscientiousness": 0.22463142198970654,
+            "extraversion": 0.37991755014491546,
+            "agreeableness": 0.541487693515083,
+            "neuroticism": 0.24546710659427862
+          },
+          "interests": [
+            "mathematics",
+            "rock-climbing",
+            "photography"
+          ],
+          "values": [
+            "directness",
+            "honesty",
+            "rigor"
+          ],
+          "speechStyle": "precise",
+          "humor": 0.2568098928272624,
+          "curiosity": 0.5500102103657656
+        },
+        "memory": {
+          "episodicCapacity": 2622,
+          "episodicDecay": 0.021569892770679097,
+          "semanticCapacity": 18638,
+          "reflectionCadenceDays": 6.729190073724851
+        },
+        "bond": {
+          "initialTrust": 0.5589790122355959,
+          "initialWarmth": 0.3106852737997045,
+          "bondingDays": 42
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "3D rigged character: anime canon replica"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "3D rigged character: anime canon replica"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "552b5ebddf76c115",
+      "name": "Quantum Tidal World",
+      "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "modern",
+          "biome": "ocean",
+          "magic": 0.15115531357131173,
+          "tech": 0.8410227190875215,
+          "density": 0.5560876718733989
+        },
+        "physics": {
+          "gravity": 0.9618454896312103,
+          "hostility": 0.5189547710107061,
+          "diurnalRate": 0.9715681407999337,
+          "weatherVolatility": 0.9209965239406817
+        },
+        "society": {
+          "order": 0.5531400803360522,
+          "pluralism": 0.6544195438192566,
+          "prosperity": 0.1993469181814409,
+          "literacy": 0.030617966308073674
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.08820487738255411,
+          "urgency": 0.04626014083897845,
+          "clarity": 0.888532773868824
+        },
+        "mood": {
+          "brightness": 0.07022142621692629,
+          "warmth": 0.5013552342557126,
+          "pace": 0.8458587242808393,
+          "levity": 0.5281072308678874
+        },
+        "history": {
+          "agesSinceFall": 1180,
+          "ghostliness": 0.36797161271156553,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-03T19:10:15.817Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "3D rigged character: anime canon replica with abilities and particle effects --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "ab4d8015da2f5b2c",
+    "seedHash": "ab4d8015da2f5b2c7e59112fcd485c6748d27453808f9d420275edfe5212ba65",
+    "genomeVersion": 1,
+    "title": "The Quantum Tidal World Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.16578432029215853,
+      "antagonist": 0.34777657554550007,
+      "moralComplexity": 0.09722130658067096,
+      "pacing": 0.8176626657726209,
+      "intensity": 0.30348197498350526,
+      "actCount": 3,
+      "targetWordCount": 7684,
+      "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. 3D rigged character: anime canon replica's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "552b5ebddf76c115",
+        "name": "3D rigged character: anime canon replica",
+        "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526"
+      },
+      "world": {
+        "id": "552b5ebddf76c115",
+        "name": "Quantum Tidal World",
+        "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526"
+      }
+    },
+    "bornAt": "2026-06-03T19:10:15.823Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "3D rigged character: anime canon replica with abil",
+      "quest": {
+        "id": "ab4d8015da2f5b2c",
+        "seedHash": "ab4d8015da2f5b2c7e59112fcd485c6748d27453808f9d420275edfe5212ba65",
+        "genomeVersion": 1,
+        "title": "The Quantum Tidal World Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.16578432029215853,
+          "antagonist": 0.34777657554550007,
+          "moralComplexity": 0.09722130658067096,
+          "pacing": 0.8176626657726209,
+          "intensity": 0.30348197498350526,
+          "actCount": 3,
+          "targetWordCount": 7684,
+          "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. 3D rigged character: anime canon replica's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "552b5ebddf76c115",
+            "name": "3D rigged character: anime canon replica",
+            "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526"
+          },
+          "world": {
+            "id": "552b5ebddf76c115",
+            "name": "Quantum Tidal World",
+            "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526"
+          }
+        },
+        "bornAt": "2026-06-03T19:10:15.823Z"
+      },
+      "friend": {
+        "id": "552b5ebddf76c115",
+        "name": "3D rigged character: anime canon replica",
+        "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 0.9562267004922524,
+            "shoulderRatio": 0.8604621254285247,
+            "torsoRatio": 1.1023068157262563,
+            "limbRatio": 1.0168263015620196,
+            "muscle": 0.6885536468893632,
+            "softness": 0.31879095420214115,
+            "skinTone": [
+              0.8843624774399635,
+              0.756548088167375,
+              0.4765700401680261
+            ]
+          },
+          "face": {
+            "roundness": 0.6544195438192566,
+            "eyeHeight": 0.4699346918181441,
+            "eyeSpacing": 0.30459269494621105,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.15292292642953248,
+              0.12775608450338707,
+              0.6331196643212944
+            ],
+            "noseShape": "straight",
+            "noseHeight": 0.6001355234255713,
+            "mouthShape": "small",
+            "jawShape": "pointed",
+            "brow": 0.23601863110408883,
+            "cheekbones": 0.36797161271156553,
+            "chin": 0.33870510902645257,
+            "hairStyle": "undercut",
+            "hairColor": [
+              0.3895263579682618,
+              0.2865608818014352,
+              0.4310998740463512
+            ]
+          },
+          "voice": {
+            "pitch": 109.7705695643753,
+            "inflection": 0.49696856300180314,
+            "tempo": 131.42948220109355,
+            "breathiness": 0.1330234790168,
+            "warmth": 0.09603843534743395,
+            "formants": [
+              1275.3873880366136,
+              2222.8180191495267,
+              4737.153155564564,
+              5830.342345310233,
+              7287.9279316377915
+            ],
+            "accent": "mumbai"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.7253082065214134,
+              "conscientiousness": 0.22463142198970654,
+              "extraversion": 0.37991755014491546,
+              "agreeableness": 0.541487693515083,
+              "neuroticism": 0.24546710659427862
+            },
+            "interests": [
+              "mathematics",
+              "rock-climbing",
+              "photography"
+            ],
+            "values": [
+              "directness",
+              "honesty",
+              "rigor"
+            ],
+            "speechStyle": "precise",
+            "humor": 0.2568098928272624,
+            "curiosity": 0.5500102103657656
+          },
+          "memory": {
+            "episodicCapacity": 2622,
+            "episodicDecay": 0.021569892770679097,
+            "semanticCapacity": 18638,
+            "reflectionCadenceDays": 6.729190073724851
+          },
+          "bond": {
+            "initialTrust": 0.5589790122355959,
+            "initialWarmth": 0.3106852737997045,
+            "bondingDays": 42
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "552b5ebddf76c115",
+        "name": "Quantum Tidal World",
+        "seedHash": "552b5ebddf76c115f248b927a602c5e81ed6bac1793678a155132e351fd35526",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "modern",
+            "biome": "ocean",
+            "magic": 0.15115531357131173,
+            "tech": 0.8410227190875215,
+            "density": 0.5560876718733989
+          },
+          "physics": {
+            "gravity": 0.9618454896312103,
+            "hostility": 0.5189547710107061,
+            "diurnalRate": 0.9715681407999337,
+            "weatherVolatility": 0.9209965239406817
+          },
+          "society": {
+            "order": 0.5531400803360522,
+            "pluralism": 0.6544195438192566,
+            "prosperity": 0.1993469181814409,
+            "literacy": 0.030617966308073674
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.08820487738255411,
+            "urgency": 0.04626014083897845,
+            "clarity": 0.888532773868824
+          },
+          "mood": {
+            "brightness": 0.07022142621692629,
+            "warmth": 0.5013552342557126,
+            "pace": 0.8458587242808393,
+            "levity": 0.5281072308678874
+          },
+          "history": {
+            "agesSinceFall": 1180,
+            "ghostliness": 0.36797161271156553,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-03T19:10:15.817Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "3D rigged character: anime canon replica with abilities and particle effects --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind",
+        "Form",
+        "Motion"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind",
+        "Form",
+        "Motion"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind",
+          "Form",
+          "Motion"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "3D rigged character: anime canon replica with abil",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "3D rigged character: anime canon replica with abil"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "3D rigged character: anime canon replica with abil"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind",
+    "Form",
+    "Motion"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

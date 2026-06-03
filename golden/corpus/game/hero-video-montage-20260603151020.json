@@ -1,0 +1,657 @@
+{
+  "$intent": "video sequence: epic transformation montage with music sync and 4K PBR --verify",
+  "$created": "2026-06-03T19:10:14.154Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "06b60e450cd00c3c",
+      "name": "video sequence: epic transformation mont",
+      "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 0.9889027350396122,
+          "shoulderRatio": 1.0477829606432145,
+          "torsoRatio": 0.8851146708056993,
+          "limbRatio": 1.1131995777373664,
+          "muscle": 0.4298558836723166,
+          "softness": 0.4135255357614194,
+          "skinTone": [
+            0.6965072423264107,
+            0.29358948202162055,
+            0.5566390005554815
+          ]
+        },
+        "face": {
+          "roundness": 0.23140693406969115,
+          "eyeHeight": 0.5345479466880063,
+          "eyeSpacing": 0.33182993632608315,
+          "eyeShape": "wide",
+          "eyeColor": [
+            0.6455306686007298,
+            0.31869648125453864,
+            0.5210868722737134
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.6267507928973644,
+          "mouthShape": "small",
+          "jawShape": "pointed",
+          "brow": 0.7677192296799469,
+          "cheekbones": 0.9670377934206702,
+          "chin": 0.1760125500662697,
+          "hairStyle": "buzz",
+          "hairColor": [
+            0.22733828624864533,
+            0.47348873391555785,
+            0.43052731939820044
+          ]
+        },
+        "voice": {
+          "pitch": 252.02313602107319,
+          "inflection": 0.20631528097502977,
+          "tempo": 150.62929995194725,
+          "breathiness": 0.4165342041006548,
+          "warmth": 0.7506701615448721,
+          "formants": [
+            555.5045549004427,
+            968.1650813979145,
+            2063.3026324873586,
+            2539.4493938305955,
+            3174.311742288244
+          ],
+          "accent": "midwest"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.6772420048152554,
+            "conscientiousness": 0.6944019965098422,
+            "extraversion": 0.7036676338681547,
+            "agreeableness": 0.9682701264609677,
+            "neuroticism": 0.8419684022737361
+          },
+          "interests": [
+            "poetry",
+            "astronomy",
+            "dance",
+            "astronomy"
+          ],
+          "values": [
+            "loyalty",
+            "irreverence"
+          ],
+          "speechStyle": "casual",
+          "humor": 0.7914132635564055,
+          "curiosity": 0.5897922676816181
+        },
+        "memory": {
+          "episodicCapacity": 940,
+          "episodicDecay": 0.02935831832388131,
+          "semanticCapacity": 6753,
+          "reflectionCadenceDays": 2.5348838739690103
+        },
+        "bond": {
+          "initialTrust": 0.5298777629469916,
+          "initialWarmth": 0.4241432097984377,
+          "bondingDays": 57
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "video sequence: epic transformation mont"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "video sequence: epic transformation mont"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "06b60e450cd00c3c",
+      "name": "Quantum Tidal World",
+      "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "modern",
+          "biome": "tundra",
+          "magic": 0.6194574016080359,
+          "tech": 0.11704890268566448,
+          "density": 0.8773319257912215
+        },
+        "physics": {
+          "gravity": 0.0995196122410551,
+          "hostility": 0.9926276788070973,
+          "diurnalRate": 0.6300131678662013,
+          "weatherVolatility": 0.07925360367567369
+        },
+        "society": {
+          "order": 0.713278001110963,
+          "pluralism": 0.23140693406969115,
+          "prosperity": 0.8454794668800625,
+          "literacy": 0.21219957550722124
+        },
+        "conflict": {
+          "kind": "political",
+          "scale": 0.9092177810012165,
+          "urgency": 0.36449413542423104,
+          "clarity": 0.7018114537895224
+        },
+        "mood": {
+          "brightness": 0.8707782112716511,
+          "warmth": 0.7675079289736426,
+          "pace": 0.8730083997896487,
+          "levity": 0.5407957088794395
+        },
+        "history": {
+          "agesSinceFall": 3838,
+          "ghostliness": 0.9670377934206702,
+          "eraCount": 1
+        }
+      },
+      "bornAt": "2026-06-03T19:10:14.143Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "video sequence: epic transformation montage with music sync and 4K PBR --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "35b23723f690a78f",
+    "seedHash": "35b23723f690a78ffbb0c9b8eeb3a2129d403fbdae2018fc6495f13cb96b7589",
+    "genomeVersion": 1,
+    "title": "The Quiet Throne of Quantum Tidal World",
+    "genes": {
+      "archetype": "political-intrigue",
+      "stake": 0.6509786955339341,
+      "antagonist": 0.8851868102797009,
+      "moralComplexity": 0.6173643995662065,
+      "pacing": 0.6460442412698524,
+      "intensity": 0.44903919733516356,
+      "actCount": 5,
+      "targetWordCount": 17296,
+      "hook": "In Quantum Tidal World, the heir is poisoned and the council is silent. video sequence: epic transformation mont is the only honest voice left."
+    },
+    "parents": {
+      "friend": {
+        "id": "06b60e450cd00c3c",
+        "name": "video sequence: epic transformation mont",
+        "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f"
+      },
+      "world": {
+        "id": "06b60e450cd00c3c",
+        "name": "Quantum Tidal World",
+        "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f"
+      }
+    },
+    "bornAt": "2026-06-03T19:10:14.148Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "video sequence: epic transformation montage with m",
+      "quest": {
+        "id": "35b23723f690a78f",
+        "seedHash": "35b23723f690a78ffbb0c9b8eeb3a2129d403fbdae2018fc6495f13cb96b7589",
+        "genomeVersion": 1,
+        "title": "The Quiet Throne of Quantum Tidal World",
+        "genes": {
+          "archetype": "political-intrigue",
+          "stake": 0.6509786955339341,
+          "antagonist": 0.8851868102797009,
+          "moralComplexity": 0.6173643995662065,
+          "pacing": 0.6460442412698524,
+          "intensity": 0.44903919733516356,
+          "actCount": 5,
+          "targetWordCount": 17296,
+          "hook": "In Quantum Tidal World, the heir is poisoned and the council is silent. video sequence: epic transformation mont is the only honest voice left."
+        },
+        "parents": {
+          "friend": {
+            "id": "06b60e450cd00c3c",
+            "name": "video sequence: epic transformation mont",
+            "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f"
+          },
+          "world": {
+            "id": "06b60e450cd00c3c",
+            "name": "Quantum Tidal World",
+            "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f"
+          }
+        },
+        "bornAt": "2026-06-03T19:10:14.148Z"
+      },
+      "friend": {
+        "id": "06b60e450cd00c3c",
+        "name": "video sequence: epic transformation mont",
+        "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 0.9889027350396122,
+            "shoulderRatio": 1.0477829606432145,
+            "torsoRatio": 0.8851146708056993,
+            "limbRatio": 1.1131995777373664,
+            "muscle": 0.4298558836723166,
+            "softness": 0.4135255357614194,
+            "skinTone": [
+              0.6965072423264107,
+              0.29358948202162055,
+              0.5566390005554815
+            ]
+          },
+          "face": {
+            "roundness": 0.23140693406969115,
+            "eyeHeight": 0.5345479466880063,
+            "eyeSpacing": 0.33182993632608315,
+            "eyeShape": "wide",
+            "eyeColor": [
+              0.6455306686007298,
+              0.31869648125453864,
+              0.5210868722737134
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.6267507928973644,
+            "mouthShape": "small",
+            "jawShape": "pointed",
+            "brow": 0.7677192296799469,
+            "cheekbones": 0.9670377934206702,
+            "chin": 0.1760125500662697,
+            "hairStyle": "buzz",
+            "hairColor": [
+              0.22733828624864533,
+              0.47348873391555785,
+              0.43052731939820044
+            ]
+          },
+          "voice": {
+            "pitch": 252.02313602107319,
+            "inflection": 0.20631528097502977,
+            "tempo": 150.62929995194725,
+            "breathiness": 0.4165342041006548,
+            "warmth": 0.7506701615448721,
+            "formants": [
+              555.5045549004427,
+              968.1650813979145,
+              2063.3026324873586,
+              2539.4493938305955,
+              3174.311742288244
+            ],
+            "accent": "midwest"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.6772420048152554,
+              "conscientiousness": 0.6944019965098422,
+              "extraversion": 0.7036676338681547,
+              "agreeableness": 0.9682701264609677,
+              "neuroticism": 0.8419684022737361
+            },
+            "interests": [
+              "poetry",
+              "astronomy",
+              "dance",
+              "astronomy"
+            ],
+            "values": [
+              "loyalty",
+              "irreverence"
+            ],
+            "speechStyle": "casual",
+            "humor": 0.7914132635564055,
+            "curiosity": 0.5897922676816181
+          },
+          "memory": {
+            "episodicCapacity": 940,
+            "episodicDecay": 0.02935831832388131,
+            "semanticCapacity": 6753,
+            "reflectionCadenceDays": 2.5348838739690103
+          },
+          "bond": {
+            "initialTrust": 0.5298777629469916,
+            "initialWarmth": 0.4241432097984377,
+            "bondingDays": 57
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "06b60e450cd00c3c",
+        "name": "Quantum Tidal World",
+        "seedHash": "06b60e450cd00c3c5bc7da8dc1af7bdf38384300ae315945ef84deb8036fd28f",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "modern",
+            "biome": "tundra",
+            "magic": 0.6194574016080359,
+            "tech": 0.11704890268566448,
+            "density": 0.8773319257912215
+          },
+          "physics": {
+            "gravity": 0.0995196122410551,
+            "hostility": 0.9926276788070973,
+            "diurnalRate": 0.6300131678662013,
+            "weatherVolatility": 0.07925360367567369
+          },
+          "society": {
+            "order": 0.713278001110963,
+            "pluralism": 0.23140693406969115,
+            "prosperity": 0.8454794668800625,
+            "literacy": 0.21219957550722124
+          },
+          "conflict": {
+            "kind": "political",
+            "scale": 0.9092177810012165,
+            "urgency": 0.36449413542423104,
+            "clarity": 0.7018114537895224
+          },
+          "mood": {
+            "brightness": 0.8707782112716511,
+            "warmth": 0.7675079289736426,
+            "pace": 0.8730083997896487,
+            "levity": 0.5407957088794395
+          },
+          "history": {
+            "agesSinceFall": 3838,
+            "ghostliness": 0.9670377934206702,
+            "eraCount": 1
+          }
+        },
+        "bornAt": "2026-06-03T19:10:14.143Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "video sequence: epic transformation montage with music sync and 4K PBR --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Form",
+        "Sound"
+      ],
+      "suggestedStrata": [
+        "Form",
+        "Sound"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Form",
+          "Sound"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "video sequence: epic transformation montage with m",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "video sequence: epic transformation montage with m"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "video sequence: epic transformation montage with m"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Form",
+    "Sound"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

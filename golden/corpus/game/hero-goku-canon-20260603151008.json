@@ -1,0 +1,665 @@
+{
+  "$intent": "canon replica: goku with super saiyan transformation in dragon ball world --verify",
+  "$created": "2026-06-03T19:10:01.995Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "f9f0a6b92989b376",
+      "name": "canon replica: goku with super saiyan tr",
+      "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 0.9102258422432826,
+          "shoulderRatio": 0.8593714398609505,
+          "torsoRatio": 1.0742549058398825,
+          "limbRatio": 0.9678087895141347,
+          "muscle": 0.4795423557279515,
+          "softness": 0.2626650087891611,
+          "skinTone": [
+            0.6155063094011048,
+            0.7141093394441086,
+            0.5764908294126925
+          ]
+        },
+        "face": {
+          "roundness": 0.024897243743298825,
+          "eyeHeight": 0.5443000300863683,
+          "eyeSpacing": 0.3277035946383705,
+          "eyeShape": "wide",
+          "eyeColor": [
+            0.2685832882821523,
+            0.6702488700264216,
+            0.5650584960815479
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.5954379306410532,
+          "mouthShape": "thin",
+          "jawShape": "broad",
+          "brow": 0.17672476155076655,
+          "cheekbones": 0.8338266009051261,
+          "chin": 0.32724394405405577,
+          "hairStyle": "pony",
+          "hairColor": [
+            0.6907168618841371,
+            0.30683306166353336,
+            0.39339155163376216
+          ]
+        },
+        "voice": {
+          "pitch": 159.25317634682574,
+          "inflection": 0.5244932484177388,
+          "tempo": 161.91275302872128,
+          "breathiness": 0.013230056060935969,
+          "warmth": 0.20890559439784462,
+          "formants": [
+            879.1033448218599,
+            1532.1515438323845,
+            3265.2409950526226,
+            4018.758147757074,
+            5023.447684696343
+          ],
+          "accent": "rio"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.31993670289495935,
+            "conscientiousness": 0.5917785376925173,
+            "extraversion": 0.12945415040191444,
+            "agreeableness": 0.8956705675772141,
+            "neuroticism": 0.3601455475032007
+          },
+          "interests": [
+            "cooking",
+            "birdwatching",
+            "electronics",
+            "painting",
+            "chess",
+            "gardening"
+          ],
+          "values": [
+            "kindness",
+            "courage",
+            "curiosity",
+            "devotion"
+          ],
+          "speechStyle": "casual",
+          "humor": 0.1742886805541839,
+          "curiosity": 0.18344223601166654
+        },
+        "memory": {
+          "episodicCapacity": 3175,
+          "episodicDecay": 0.008437815739443518,
+          "semanticCapacity": 4009,
+          "reflectionCadenceDays": 6.952089454985053
+        },
+        "bond": {
+          "initialTrust": 0.5792194689915275,
+          "initialWarmth": 0.33255011349883973,
+          "bondingDays": 65
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "canon replica: goku with super saiyan tr"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "canon replica: goku with super saiyan tr"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "f9f0a6b92989b376",
+      "name": "Quantum Tidal World",
+      "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "sci-fi",
+          "biome": "forest",
+          "magic": 0.1484285996523762,
+          "tech": 0.7475163527996083,
+          "density": 0.3926959650471158
+        },
+        "physics": {
+          "gravity": 0.26514118575983825,
+          "hostility": 0.23832504394580578,
+          "diurnalRate": 0.48273874436564523,
+          "weatherVolatility": 0.843835162625652
+        },
+        "society": {
+          "order": 0.752981658825385,
+          "pluralism": 0.024897243743298825,
+          "prosperity": 0.9430003008636827,
+          "literacy": 0.18469063092247007
+        },
+        "conflict": {
+          "kind": "redemption",
+          "scale": 0.2809721471369204,
+          "urgency": 0.9504147833773695,
+          "clarity": 0.7750974934692465
+        },
+        "mood": {
+          "brightness": 0.42859818372528435,
+          "warmth": 0.4543793064105319,
+          "pace": 0.2169476258655023,
+          "levity": 0.794472056132371
+        },
+        "history": {
+          "agesSinceFall": 883,
+          "ghostliness": 0.8338266009051261,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-03T19:10:01.982Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "canon replica: goku with super saiyan transformation in dragon ball world --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "a4ba27ad947e2aba",
+    "seedHash": "a4ba27ad947e2aba70691ce2c31d14d55f3e42e292d03481b6beec8504e8741e",
+    "genomeVersion": 1,
+    "title": "canon replica: goku with super saiyan tr, Returned",
+    "genes": {
+      "archetype": "redemption-arc",
+      "stake": 0.5962532418528683,
+      "antagonist": 0.6330169004454705,
+      "moralComplexity": 0.5081218208425908,
+      "pacing": 0.2934571604422945,
+      "intensity": 0.8372288246268857,
+      "actCount": 3,
+      "targetWordCount": 7971,
+      "hook": "The exile of Quantum Tidal World returns, carrying a debt only blood can settle. The exile is canon replica: goku with super saiyan tr."
+    },
+    "parents": {
+      "friend": {
+        "id": "f9f0a6b92989b376",
+        "name": "canon replica: goku with super saiyan tr",
+        "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62"
+      },
+      "world": {
+        "id": "f9f0a6b92989b376",
+        "name": "Quantum Tidal World",
+        "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62"
+      }
+    },
+    "bornAt": "2026-06-03T19:10:01.988Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "canon replica: goku with super saiyan transformati",
+      "quest": {
+        "id": "a4ba27ad947e2aba",
+        "seedHash": "a4ba27ad947e2aba70691ce2c31d14d55f3e42e292d03481b6beec8504e8741e",
+        "genomeVersion": 1,
+        "title": "canon replica: goku with super saiyan tr, Returned",
+        "genes": {
+          "archetype": "redemption-arc",
+          "stake": 0.5962532418528683,
+          "antagonist": 0.6330169004454705,
+          "moralComplexity": 0.5081218208425908,
+          "pacing": 0.2934571604422945,
+          "intensity": 0.8372288246268857,
+          "actCount": 3,
+          "targetWordCount": 7971,
+          "hook": "The exile of Quantum Tidal World returns, carrying a debt only blood can settle. The exile is canon replica: goku with super saiyan tr."
+        },
+        "parents": {
+          "friend": {
+            "id": "f9f0a6b92989b376",
+            "name": "canon replica: goku with super saiyan tr",
+            "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62"
+          },
+          "world": {
+            "id": "f9f0a6b92989b376",
+            "name": "Quantum Tidal World",
+            "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62"
+          }
+        },
+        "bornAt": "2026-06-03T19:10:01.988Z"
+      },
+      "friend": {
+        "id": "f9f0a6b92989b376",
+        "name": "canon replica: goku with super saiyan tr",
+        "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 0.9102258422432826,
+            "shoulderRatio": 0.8593714398609505,
+            "torsoRatio": 1.0742549058398825,
+            "limbRatio": 0.9678087895141347,
+            "muscle": 0.4795423557279515,
+            "softness": 0.2626650087891611,
+            "skinTone": [
+              0.6155063094011048,
+              0.7141093394441086,
+              0.5764908294126925
+            ]
+          },
+          "face": {
+            "roundness": 0.024897243743298825,
+            "eyeHeight": 0.5443000300863683,
+            "eyeSpacing": 0.3277035946383705,
+            "eyeShape": "wide",
+            "eyeColor": [
+              0.2685832882821523,
+              0.6702488700264216,
+              0.5650584960815479
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.5954379306410532,
+            "mouthShape": "thin",
+            "jawShape": "broad",
+            "brow": 0.17672476155076655,
+            "cheekbones": 0.8338266009051261,
+            "chin": 0.32724394405405577,
+            "hairStyle": "pony",
+            "hairColor": [
+              0.6907168618841371,
+              0.30683306166353336,
+              0.39339155163376216
+            ]
+          },
+          "voice": {
+            "pitch": 159.25317634682574,
+            "inflection": 0.5244932484177388,
+            "tempo": 161.91275302872128,
+            "breathiness": 0.013230056060935969,
+            "warmth": 0.20890559439784462,
+            "formants": [
+              879.1033448218599,
+              1532.1515438323845,
+              3265.2409950526226,
+              4018.758147757074,
+              5023.447684696343
+            ],
+            "accent": "rio"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.31993670289495935,
+              "conscientiousness": 0.5917785376925173,
+              "extraversion": 0.12945415040191444,
+              "agreeableness": 0.8956705675772141,
+              "neuroticism": 0.3601455475032007
+            },
+            "interests": [
+              "cooking",
+              "birdwatching",
+              "electronics",
+              "painting",
+              "chess",
+              "gardening"
+            ],
+            "values": [
+              "kindness",
+              "courage",
+              "curiosity",
+              "devotion"
+            ],
+            "speechStyle": "casual",
+            "humor": 0.1742886805541839,
+            "curiosity": 0.18344223601166654
+          },
+          "memory": {
+            "episodicCapacity": 3175,
+            "episodicDecay": 0.008437815739443518,
+            "semanticCapacity": 4009,
+            "reflectionCadenceDays": 6.952089454985053
+          },
+          "bond": {
+            "initialTrust": 0.5792194689915275,
+            "initialWarmth": 0.33255011349883973,
+            "bondingDays": 65
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "f9f0a6b92989b376",
+        "name": "Quantum Tidal World",
+        "seedHash": "f9f0a6b92989b376596cb661bf61cc714d36ca80652df0aa10e83f9733064d62",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "sci-fi",
+            "biome": "forest",
+            "magic": 0.1484285996523762,
+            "tech": 0.7475163527996083,
+            "density": 0.3926959650471158
+          },
+          "physics": {
+            "gravity": 0.26514118575983825,
+            "hostility": 0.23832504394580578,
+            "diurnalRate": 0.48273874436564523,
+            "weatherVolatility": 0.843835162625652
+          },
+          "society": {
+            "order": 0.752981658825385,
+            "pluralism": 0.024897243743298825,
+            "prosperity": 0.9430003008636827,
+            "literacy": 0.18469063092247007
+          },
+          "conflict": {
+            "kind": "redemption",
+            "scale": 0.2809721471369204,
+            "urgency": 0.9504147833773695,
+            "clarity": 0.7750974934692465
+          },
+          "mood": {
+            "brightness": 0.42859818372528435,
+            "warmth": 0.4543793064105319,
+            "pace": 0.2169476258655023,
+            "levity": 0.794472056132371
+          },
+          "history": {
+            "agesSinceFall": 883,
+            "ghostliness": 0.8338266009051261,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-03T19:10:01.982Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "canon replica: goku with super saiyan transformation in dragon ball world --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "World",
+        "Form"
+      ],
+      "suggestedStrata": [
+        "World",
+        "Form"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "World",
+          "Form"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "canon replica: goku with super saiyan transformati",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "canon replica: goku with super saiyan transformati"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "canon replica: goku with super saiyan transformati"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "World",
+    "Form"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}
