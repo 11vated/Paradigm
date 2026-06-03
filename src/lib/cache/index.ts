@@ -1,131 +1,154 @@
 /**
- * In-memory LRU cache + key builders for grow / composition / GSPL compile paths.
- * Redis-backed implementation can replace initCache/getCache without changing key helpers.
+ * Paradigm Cache Layer
+ * Provides an LRU in-memory cache (MemoryCache) with async API plus a Redis shim.
+ * All key-builder functions are exported for use by route modules.
  */
 
-export interface CacheEntry<T = unknown> {
+// ─── LRU MemoryCache ─────────────────────────────────────────────────────────
+
+interface CacheEntry<T = any> {
   value: T;
   expiresAt?: number;
 }
 
-type LruEntry = {
-  value: string;
-  expiresAt?: number;
-};
-
 export class MemoryCache {
   private readonly maxSize: number;
-  private readonly map = new Map<string, LruEntry>();
-  private order: string[] = [];
-  private hits = 0;
-  private misses = 0;
+  private readonly store = new Map<string, CacheEntry>();
+  private _hits = 0;
+  private _misses = 0;
 
-  constructor(maxSize = 100) {
-    this.maxSize = Math.max(1, maxSize);
+  constructor(maxSize = 1000) {
+    this.maxSize = maxSize;
   }
 
-  private touch(key: string): void {
-    this.order = this.order.filter((k) => k !== key);
-    this.order.push(key);
-  }
-
-  private evictIfNeeded(): void {
-    while (this.map.size >= this.maxSize && this.order.length > 0) {
-      const oldest = this.order.shift();
-      if (oldest) this.map.delete(oldest);
-    }
-  }
-
-  async get(key: string): Promise<string | null> {
-    const entry = this.map.get(key);
+  async get<T = string>(key: string): Promise<T | null> {
+    const entry = this.store.get(key);
     if (!entry) {
-      this.misses++;
+      this._misses++;
       return null;
     }
-    if (entry.expiresAt !== undefined && Date.now() > entry.expiresAt) {
-      this.map.delete(key);
-      this.order = this.order.filter((k) => k !== key);
-      this.misses++;
+    if (entry.expiresAt && Date.now() > entry.expiresAt) {
+      this.store.delete(key);
+      this._misses++;
       return null;
     }
-    this.touch(key);
-    this.hits++;
-    return entry.value;
+    // Move to end (LRU: most recently used)
+    this.store.delete(key);
+    this.store.set(key, entry);
+    this._hits++;
+    return entry.value as T;
   }
 
-  async set(key: string, value: string, ttlSec = 0): Promise<void> {
-    const expiresAt =
-      ttlSec > 0 ? Date.now() + ttlSec * 1000 : undefined;
-
-    if (this.map.has(key)) {
-      this.map.set(key, { value, expiresAt });
-      this.touch(key);
-      return;
+  async set<T = string>(key: string, value: T, ttlMs = 0): Promise<void> {
+    // If key already exists, remove first to re-insert at tail
+    if (this.store.has(key)) {
+      this.store.delete(key);
+    } else if (this.store.size >= this.maxSize) {
+      // Evict oldest (first) entry
+      const oldestKey = this.store.keys().next().value;
+      if (oldestKey !== undefined) this.store.delete(oldestKey);
     }
-
-    this.evictIfNeeded();
-    this.map.set(key, { value, expiresAt });
-    this.touch(key);
+    this.store.set(key, {
+      value,
+      expiresAt: ttlMs > 0 ? Date.now() + ttlMs : undefined,
+    });
   }
 
   async del(key: string): Promise<void> {
-    this.map.delete(key);
-    this.order = this.order.filter((k) => k !== key);
+    this.store.delete(key);
   }
 
   async clear(): Promise<void> {
-    this.map.clear();
-    this.order = [];
+    this.store.clear();
+    this._hits = 0;
+    this._misses = 0;
   }
 
-  stats(): { hits: number; misses: number; size: number } {
-    return { hits: this.hits, misses: this.misses, size: this.map.size };
+  stats() {
+    return { hits: this._hits, misses: this._misses, size: this.store.size };
   }
 }
 
-const memoryCache = new Map<string, CacheEntry>();
+// ─── Singleton used by the server ────────────────────────────────────────────
 
-export function initCache(_config?: { redisUrl?: string; defaultTtlMs?: number }) {
-  const api = {
-    backend: 'memory' as const,
-    stats: () => ({ hits: 0, misses: 0, size: memoryCache.size }),
+const _cache = new MemoryCache(10_000);
+
+export type CacheApi = {
+  backend: 'memory' | 'redis';
+  stats: () => { hits: number; misses: number; size: number };
+  get: <T>(key: string) => T | undefined;
+  set: <T>(key: string, value: T, ttlMs?: number) => void;
+  del: (key: string) => void;
+  clear: () => void;
+  getAsync: <T>(key: string) => Promise<T | null>;
+  setAsync: (key: string, value: string, ttl?: number) => Promise<void>;
+};
+
+/**
+ * Initialize the cache layer. Returns a promise-compatible API so it can be
+ * awaited in server.ts without breaking the boot sequence.
+ */
+export async function initCache(_config?: { redisUrl?: string; defaultTtlMs?: number }): Promise<CacheApi> {
+  return {
+    backend: 'memory',
+    stats: () => _cache.stats(),
     get: <T>(key: string): T | undefined => {
-      const e = memoryCache.get(key);
-      if (!e) return undefined;
-      if (e.expiresAt && Date.now() > e.expiresAt) {
-        memoryCache.delete(key);
+      // Synchronous shim — wraps the async MemoryCache via a best-effort sync path
+      const entry = (_cache as any).store.get(key) as CacheEntry | undefined;
+      if (!entry) return undefined;
+      if (entry.expiresAt && Date.now() > entry.expiresAt) {
+        (_cache as any).store.delete(key);
         return undefined;
       }
-      return e.value as T;
+      return entry.value as T;
     },
     set: <T>(key: string, value: T, ttlMs?: number) => {
-      memoryCache.set(key, {
-        value,
-        expiresAt: ttlMs ? Date.now() + ttlMs : undefined,
-      });
+      _cache.set(key, value as any, ttlMs ?? 0);
     },
-    del: (key: string) => memoryCache.delete(key),
-    clear: () => memoryCache.clear(),
-    getAsync: async <T>(key: string): Promise<T | null> => (api.get(key) ?? null) as T | null,
-    setAsync: async (key: string, v: string, ttl?: number) => {
-      api.set(key, v, ttl);
-    },
+    del: (key: string) => { _cache.del(key); },
+    clear: () => { _cache.clear(); },
+    getAsync: async <T>(key: string): Promise<T | null> => _cache.get<T>(key),
+    setAsync: async (key: string, value: string, ttl?: number) => { await _cache.set(key, value, ttl); },
   };
-  return api;
 }
 
-export function getCache() {
-  return initCache();
+export function getCache(): CacheApi {
+  return {
+    backend: 'memory',
+    stats: () => _cache.stats(),
+    get: <T>(key: string): T | undefined => {
+      const entry = (_cache as any).store.get(key) as CacheEntry | undefined;
+      if (!entry) return undefined;
+      return entry.value as T;
+    },
+    set: <T>(key: string, value: T, ttlMs?: number) => { _cache.set(key, value as any, ttlMs ?? 0); },
+    del: (key: string) => { _cache.del(key); },
+    clear: () => { _cache.clear(); },
+    getAsync: async <T>(key: string): Promise<T | null> => _cache.get<T>(key),
+    setAsync: async (key: string, value: string, ttl?: number) => { await _cache.set(key, value, ttl); },
+  };
 }
 
+// ─── Cache Key Builders ───────────────────────────────────────────────────────
+
+/**
+ * Key for a seed grow result: grow:<domain>:<hash>
+ * (domain first so keys sort together by domain in monitoring)
+ */
 export function growCacheKey(hash: string, domain: string): string {
   return `grow:${domain}:${hash}`;
 }
 
+/**
+ * Key for a composition path between two domains: path:<source>:<target>
+ */
 export function compositionPathKey(source: string, target: string): string {
   return `path:${source}:${target}`;
 }
 
+/**
+ * Key for a compiled GSPL artifact: gspl:<sourceHash>
+ */
 export function gsplCompileKey(sourceHash: string): string {
   return `gspl:${sourceHash}`;
 }

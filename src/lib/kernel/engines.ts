@@ -109,7 +109,7 @@ export function growSeedSync(seed: Seed): Artifact {
 
 function applyAgentSpecialization(artifact: Artifact, seed: Seed): void {
   if ((seed.$domain ?? '') !== 'agent') return;
-  const a = artifact as Artifact & { config?: unknown };
+  const a = artifact as Artifact & { config?: any };
   // No fallback flag — agent path is always the real sovereign agent pipeline when dispatched.
   a.render_hints = {
     ...(a.render_hints ?? {}),
@@ -118,6 +118,19 @@ function applyAgentSpecialization(artifact: Artifact, seed: Seed): void {
     animated: a.render_hints?.animated ?? false,
     hasFile: a.render_hints?.hasFile ?? false,
   };
+  // Defensive config block for agent artifacts (supports Studio + engines.test expectations)
+  // Derived from seed genes when present; falls back to sensible defaults for determinism.
+  if (!a.config) {
+    const genes: any = (seed as any).genes || {};
+    a.config = {
+      persona: genes.persona?.value ?? genes.persona ?? 'assistant',
+      name: (seed as any).$name ?? 'Agent',
+      temperature: genes.temperature?.value ?? 0.7,
+      reasoningDepth: genes.reasoning_depth?.value ?? genes.reasoningDepth ?? 0.5,
+      explorationRate: genes.exploration_rate?.value ?? genes.explorationRate ?? 0.3,
+      autonomy: genes.autonomy?.value,
+    };
+  }
 }
 
 export async function growSeed(seed: Seed): Promise<Artifact> {

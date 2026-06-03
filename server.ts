@@ -29,6 +29,16 @@
  * composition, and growth operations are handled by the local kernel.
  */
 
+// Load .env if present (non-fatal — allows docker/k8s injection without the file)
+import { config as loadDotenv } from 'dotenv';
+loadDotenv({ override: false });
+// Fail-safe defaults so the server boots in dev without a configured .env
+if (!process.env.JWT_SECRET) {
+  const fallback = 'paradigm-dev-insecure-fallback-00000000-change-in-production';
+  process.env.JWT_SECRET = fallback;
+  console.warn('[BOOT] ⚠️  JWT_SECRET not set — using insecure dev fallback. Set in .env for production!');
+}
+
 // ─── Browser API Polyfills (jsdom for server-side canvas/DOM) ───────────────
 import { initServerPolyfills } from './src/lib/kernel/server-polyfills.ts';
 import { registerHealthRoutes } from './src/server/routes/health.ts';

@@ -26,6 +26,14 @@ export interface AgentArtifact {
   owner?: string;
   lineage?: string[];
   $name?: string;
+  config?: {
+    persona: string;
+    name: string;
+    temperature: number;
+    reasoningDepth: number;
+    explorationRate: number;
+    autonomy?: number;
+  };
 }
 
 export class AgentContract implements QualityContract<AgentGeneSet, AgentArtifact> {
@@ -49,6 +57,13 @@ export class AgentContract implements QualityContract<AgentGeneSet, AgentArtifac
       breedable: true,
       signable: true,
       owner: `agent-owner-${Math.floor(rng.nextF64() * 1e10)}`,
+      config: {
+        persona: 'assistant',
+        name: 'Agent',
+        temperature: 0.7,
+        reasoningDepth: 0.5,
+        explorationRate: 0.3,
+      },
     };
   }
 
