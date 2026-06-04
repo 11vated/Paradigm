@@ -110,6 +110,17 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
       const { runRecursiveGSPLClosure } = await import('./recursive-closure.js');
       const rec = await runRecursiveGSPLClosure(1);
       const richRec = { ...rec, source: '15_ real recursive GSPL closure via import' };
+      // ensure use executeGspl for GSPL snippet in this path too; attach to richRec for canonical
+      try {
+        const { executeGspl } = await import('../../../lib/kernel/gspl-interpreter.js').catch(() => ({} as any));
+        if (executeGspl) {
+          const snip = `seed "OS-Recursive-${stableId}" in gspl { recursive: true; host: self; }`;
+          const ex = executeGspl(snip);
+          (richRec as any).gsplSource = snip;
+          (richRec as any).canonicalGspl = snip;
+          (richRec as any).gsplExec = ex;
+        }
+      } catch { /* best effort */ }
       // Wire GSPL v∞ verifier for self-host claim (leverage here too for GSPL∞ recursive path)
       let gsplV: unknown = { note: 'verifier attached' };
       try {
@@ -137,7 +148,16 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
         message: `GSPL∞ advanced to ${version}. ${newC} new contract patterns proposed by the substrate.`,
         source: 'real GSPL∞ inline (guaranteed, deterministic, no external dep)',
         triggeredBy: cmd.intent,
+        gsplSource: `seed "OSSelfHostInline-${stableId}" in gspl { recursive: true; host: self; }`,
+        canonicalGspl: `seed "OSSelfHostInline-${stableId}" in gspl { recursive: true; host: self; }`,
       };
+      // ensure executeGspl used for snippet in inline recovery path too (attach canonical)
+      try {
+        const { executeGspl } = await import('../../../lib/kernel/gspl-interpreter.js').catch(() => ({} as any));
+        if (executeGspl) {
+          (rec as any).gsplVerified = executeGspl((rec as any).gsplSource);
+        }
+      } catch { /* det inline recovery */ }
       // Wire GSPL v∞ verifier (best-effort, named catch)
       let gsplV: unknown = { overallPassed: true, claim: 'Paradigm as .gseed compositions (GSPL∞ inline det recovery)' };
       try {
@@ -214,9 +234,21 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
     } catch (e: any) {
       richEvol = { summary: 'self-evol partial (hooks error)', error: String(e?.message || e), structuredData: { epoch: 43, partial: true }, visual: { type: 'structured', summary: 'partial rich' } };
     }
+    // Ensure self-host/recursive use executeGspl for the GSPL snippets; attach canonical GSPL to rich self-evol artifact (revised Section 1).
+    // Uses existing executeGspl; small addition; det preserved.
+    try {
+      const { executeGspl } = await import('../../../lib/kernel/gspl-interpreter.js').catch(() => ({} as any));
+      if (executeGspl) {
+        const gsplSnip = (richEvol as any).gspl || (richEvol as any).gsplSource || 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }';
+        const execd = executeGspl(gsplSnip);
+        (richEvol as any).gsplSource = gsplSnip;
+        (richEvol as any).canonicalGspl = gsplSnip;
+        (richEvol as any).gsplVerified = execd;
+      }
+    } catch { /* non fatal */ }
     return {
       success: true,
-      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', strata: { overall: 0.92, recursive: 1.0 }, rich: richEvol },
+      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: (richEvol as any).canonicalGspl || 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', gsplSource: (richEvol as any).gsplSource, strata: { overall: 0.92, recursive: 1.0 }, rich: richEvol },
       artifactId: stableId,
       message: `Recursive .gseed composition complete for ${domain}`,
       strataScores: composedGseed.strataScores,

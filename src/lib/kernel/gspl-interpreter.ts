@@ -375,6 +375,12 @@ export class GsplInterpreter {
   private async evaluateBuiltin(name: string, args: ASTNode[]): Promise<unknown> {
     const evaluatedArgs = await Promise.all(args.map(arg => this.evaluateNode(arg)));
     
+    // Strata constraint support for generate_* builtins (GSPL orchestration layer constraining rich gen execution engines)
+    if (name.startsWith('generate_')) {
+      const domain = name.substring(9);
+      return this.callEngine(domain, evaluatedArgs[0], evaluatedArgs[1]);
+    }
+    
     switch (name) {
       case 'random': {
         if (evaluatedArgs.length === 0) return this.context.rng.nextF64();
@@ -560,7 +566,7 @@ export class GsplInterpreter {
         return this.callKernelDistance(evaluatedArgs[0], evaluatedArgs[1]);
       
       case 'grow':
-        return this.callKernelGrow(evaluatedArgs[0]);
+        return this.callKernelGrow(evaluatedArgs[0], evaluatedArgs[1]);
       
       // ─── Doctrine v2 Strata runtime builtins (Phase 2/3 — strata now *acts*) ───
       case 'strata_of':
@@ -747,44 +753,143 @@ export class GsplInterpreter {
 
   /**
    * Wire grow() to actual engine execution
+   * Enhanced (per task): support strata constraint arg, surface rich top-level for ALL paths (plain + Universal),
+   * always invoke real rich grow for plain seeds too (GSPL orchestration layer, rich gens as execution engines).
+   * Keep det via context.rng + growSeed($hash-derived).
    */
-  private async callKernelGrow(seed: any): Promise<any> {
-    // Handle plain Seed objects
-    if (seed && seed.$hash !== undefined) {
-      return {
-        type: 'artifact',
-        domain: seed.$domain,
-        name: seed.$name,
-        seed_hash: seed.$hash
+  private async callKernelGrow(seed: any, strataConstraint?: any): Promise<any> {
+    if (!seed) throw new Error(`grow expects a Seed as argument`);
+    // strata/ constraint support for the grow builtin
+    if (strataConstraint != null) {
+      const sarr = Array.isArray(strataConstraint) ? strataConstraint : (typeof strataConstraint === 'string' ? [strataConstraint] : []);
+      const v = this.validateStrata(sarr);
+      seed = { ...(seed || {}), strata: v || sarr };
+    }
+
+    // Always attempt rich for plain seeds (was stub-only before)
+    let plain = seed;
+    if (seed && seed.$hash === undefined && !(seed instanceof UniversalSeed)) {
+      plain = {
+        $gst: '1.0',
+        $domain: seed.$domain || seed.domain || 'character',
+        $name: seed.$name || seed.name || 'gspl_grown',
+        $hash: this.context.rng.nextF64().toString(16),
+        $lineage: seed.$lineage || { generation: 0, operation: 'gspl-grow' },
+        genes: seed.genes || (typeof seed === 'object' ? seed : {}),
+        strata: (seed as any).strata,
       };
+    }
+
+    if (plain && plain.$hash !== undefined) {
+      try {
+        const { growSeed } = await import('./engines.js');
+        const artifact: any = await growSeed(plain as any);
+        const rich = artifact || {};
+        // promote top level as required
+        return {
+          type: 'rich_artifact',
+          domain: plain.$domain,
+          name: plain.$name,
+          seed_hash: plain.$hash,
+          strata: plain.strata || (seed as any)?.strata,
+          visual: rich.visual,
+          emergent_assets: rich.emergent_assets,
+          summary: rich.summary,
+          metrics: rich.metrics,
+          pngDataURL: rich.pngDataURL,
+          svgDataURL: rich.svgDataURL,
+          structuredData: rich.structuredData,
+          files: rich.files,
+          c2pa_manifest: rich.c2pa_manifest,
+          artifact,
+          ...rich
+        };
+      } catch (e) {
+        return {
+          type: 'rich_artifact',
+          domain: plain.$domain,
+          name: plain.$name,
+          seed_hash: plain.$hash,
+          strata: plain.strata,
+          error: String(e)
+        };
+      }
     }
     if (seed instanceof UniversalSeed) {
       // Dynamic import (no require) to avoid circular ESM at boot
       const { growSeed } = await import('./engines.js');
-      const artifact = await growSeed(seed as any /* justified: UniversalSeed vs local Seed type (private genes vs loose); real kernel op, det preserved */);
+      const artifact: any = await growSeed(seed as any /* justified: UniversalSeed vs local Seed type (private genes vs loose); real kernel op, det preserved */);
+      // Promote rich fields (visual/emergent/summary/metrics/strata) so GSPL grow produces
+      // UI-consumable + canonical-GSPL-reproducible rich artifacts (orchestration layer).
+      const rich = (artifact as any) || {};
       return {
-        type: 'artifact',
-        domain: seed.$domain,
-        name: seed.$name,
-        seed_hash: seed.id,
-        artifact
+        type: 'rich_artifact',
+        domain: (seed as any).$domain,
+        name: (seed as any).$name,
+        seed_hash: (seed as any).id || (seed as any).$hash,
+        strata: rich.strata || (seed as any).strata,
+        visual: rich.visual,
+        emergent_assets: rich.emergent_assets,
+        summary: rich.summary,
+        metrics: rich.metrics,
+        pngDataURL: rich.pngDataURL,
+        svgDataURL: rich.svgDataURL,
+        structuredData: rich.structuredData,
+        files: rich.files,
+        c2pa_manifest: rich.c2pa_manifest,
+        artifact,
+        ...rich
       };
     }
     throw new Error(`grow expects a Seed as argument`);
   }
   
-  private async callEngine(domain: string, seed: unknown): Promise<unknown> {
-    // Dynamically import and call the engine
+  private async callEngine(domain: string, seedOrParams: unknown, strataConstraint?: unknown): Promise<unknown> {
+    // Elevated: drive real high-fidelity rich generators (they remain the execution engines).
+    // GSPL is the orchestration / descriptive / control layer (per revised Section 1).
+    // Constraints (strata, genes) from GSPL args (including explicit 2nd arg to generate_*) are merged and passed to grow.
+    // Full strata/ support added for generate_* and grow so GSPL can constrain rich gens.
     try {
-      // In production: dynamic import using domain-to-engine map
-      // For now, return structured output with seed
-      return {
-        type: 'engine_call',
+      let s: any = seedOrParams || { $domain: domain, genes: {} };
+      if (typeof s === 'object' && !s.$domain) s.$domain = domain;
+      // Merge strataConstraint (for generate_xxx(params, ["Form","Mind"]) form) + from object
+      let strata: any = undefined;
+      if (strataConstraint != null) {
+        strata = Array.isArray(strataConstraint) ? strataConstraint : (typeof strataConstraint === 'string' ? [strataConstraint] : undefined);
+      }
+      if (seedOrParams && typeof seedOrParams === 'object') {
+        const arg = seedOrParams as any;
+        if (!strata && arg.strata) strata = arg.strata;
+        if (arg.genes) s.genes = { ...(s.genes || {}), ...arg.genes };
+      }
+      if (strata) {
+        s.strata = this.validateStrata(strata) || strata;
+      }
+      // Use the canonical grow path (pipeline + contracts) which attaches rich UI-consumable data
+      // (pngDataURL, visual, emergent_assets, summary, metrics, structuredData etc.)
+      const { growSeed } = await import('./engines.js');
+      const artifact: any = await growSeed(s as any);
+      // Return rich-forward structure + promote top level per spec
+      const promoted = {
+        type: 'rich_artifact',
         domain,
-        seed,
-        outputPath: `data/artifacts/${domain}/test.gltf`,
-        status: 'ready_for_generation'
+        seed: s,
+        artifact,
+        // Promote top level visual, emergent_assets, strata, summary, metrics + png etc.
+        visual: artifact?.visual,
+        emergent_assets: artifact?.emergent_assets,
+        summary: artifact?.summary,
+        metrics: artifact?.metrics,
+        strata: artifact?.strata || s.strata,
+        pngDataURL: artifact?.pngDataURL,
+        svgDataURL: artifact?.svgDataURL,
+        previewData: artifact?.previewData,
+        structuredData: artifact?.structuredData,
+        files: artifact?.files,
+        c2pa_manifest: artifact?.c2pa_manifest,
+        ...artifact
       };
+      return promoted;
     } catch (error) {
       throw new Error(`Engine ${domain} failed: ${error instanceof Error ? error.message : String(error)}`);
     }
@@ -1603,6 +1708,62 @@ export class GsplInterpreter {
     if (typeof value === 'object') return 'struct';
     return 'scalar';
   }
+
+  /**
+   * toGSPL: produce canonical executable GSPL source for a seed (for reproduce / apply-strata / evolve / compose).
+   * Compact form: seed s1 : domain { strata: Form + Mind; gene: val; ... } grow s1
+   * Uses bare-field + -syntax (parser compatible); strata list uses + not array literal.
+   */
+  toGSPL(seed: any): string {
+    if (!seed || typeof seed !== 'object') {
+      return 'seed s1 : character { } grow s1;';
+    }
+    const rawName = seed.$name || seed.name || 's1';
+    const name = String(rawName).replace(/[^a-zA-Z0-9_]/g, '_') || 's1';
+    const domain = String(seed.$domain || seed.domain || 'character');
+    let src = `seed ${name} : ${domain} {`;
+    const strataArr: string[] = Array.isArray(seed.strata) ? seed.strata :
+      (Array.isArray((seed as any).$strata) ? (seed as any).$strata : []);
+    if (strataArr.length > 0) {
+      // valid syntax for parser: ID + ID ;  (not JSON array)
+      src += `\n  strata: ${strataArr.join(' + ')};`;
+    }
+    const genes = seed.genes || {};
+    for (const [k, gv] of Object.entries(genes)) {
+      const val = (gv && typeof gv === 'object' && 'value' in (gv as any)) ? (gv as any).value : gv;
+      let vstr: string;
+      if (typeof val === 'string') vstr = JSON.stringify(val);
+      else if (typeof val === 'number' || typeof val === 'boolean' || val === null) vstr = String(val);
+      else if (Array.isArray(val) || (val && typeof val === 'object')) vstr = JSON.stringify(val);
+      else vstr = String(val ?? '');
+      src += `\n  ${k}: ${vstr};`;
+    }
+    // also surface any top-level non-gene non-meta as genes for roundtrip (e.g. direct fields)
+    for (const [k, v] of Object.entries(seed)) {
+      if (['$gst', '$domain', '$hash', '$name', '$lineage', 'strata', 'genes', 'name', 'domain'].includes(k)) continue;
+      if (Object.prototype.hasOwnProperty.call(genes, k)) continue;
+      let vstr: string;
+      if (typeof v === 'string') vstr = JSON.stringify(v);
+      else if (typeof v === 'number' || typeof v === 'boolean' || v === null) vstr = String(v);
+      else if (Array.isArray(v) || (v && typeof v === 'object')) vstr = JSON.stringify(v);
+      else vstr = String(v ?? '');
+      src += `\n  ${k}: ${vstr};`;
+    }
+    src += `\n} grow ${name};`;
+    return src;
+  }
+
+  /**
+   * fromGSPL: parse/execute source and return the (first) seed. Enables canonical GSPL rep roundtrips.
+   */
+  async fromGSPL(source: string): Promise<any> {
+    await this.execute(source);
+    const seeds = Array.from(this.context.seeds.values());
+    if (seeds.length > 0) return seeds[0];
+    // fallback to lastResult if no seed decl (e.g. pure expr)
+    const last = (await this.execute(source) as any)?.lastResult; // re-exec safe (det)
+    return last || null;
+  }
 }
 
 class GSPLReturn {
@@ -1616,4 +1777,26 @@ export function executeGspl(source: string, seedPhrase?: string): any {
   const interpreter = new GsplInterpreter(seedPhrase);
   return interpreter.execute(source);
 }
+
+/**
+ * toGSPL(seed): string — canonical compact executable GSPL rep of any seed/artifact.
+ * Example output: `seed s1 : character { strata: Form + Mind; strength: 80; } grow s1`
+ * Used for reproduce, apply-strata, evolve, compose, roundtrips, sovereignty export.
+ * (Grounded in GSPL as orchestration layer over rich gens execution engines.)
+ */
+export function toGSPL(seed: any): string {
+  const interp = new GsplInterpreter();
+  return interp.toGSPL(seed);
+}
+
+/**
+ * fromGSPL(source): Promise<seed> — parse + execute GSPL source, return first produced seed.
+ * Enables every artifact to have a canonical GSPL representation.
+ */
+export async function fromGSPL(source: string, seedPhrase?: string): Promise<any> {
+  const interp = new GsplInterpreter(seedPhrase);
+  return await interp.fromGSPL(source);
+}
+
+// (old non-executable toGSPL/fromGSPL tail replaced by the canonical executable versions below for parser-roundtrip + strata support)
 

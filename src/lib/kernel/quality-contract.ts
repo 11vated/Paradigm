@@ -494,79 +494,241 @@ qcLog('[15_spec] All 27 domains + full Part 6 (economics, federation, physical, 
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+export function toGSPLHook(seedOrIntent: any, domainHint?: string): string {
+  try {
+    const { toGSPL } = require('./gspl-interpreter.js');
+    if (toGSPL) return toGSPL(seedOrIntent);
+  } catch {}
+  const s = seedOrIntent || {};
+  const dom = domainHint || s.$domain || s.domain || 'character';
+  const nm = (s.$name || s.name || 's').toString().replace(/[^a-zA-Z0-9_]/g, '_');
+  const desc = (typeof s === 'string' ? s : (s.genes?.description || s.description || JSON.stringify(s).slice(0,80))).replace(/"/g,'\\"');
+  return `seed "${nm}" in ${dom} { description: "${desc}" }`;
+}
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
-// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
 
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
 // 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
+
+// 15_ contracts foundation complete (see bootstrap + integration blocks above)
+
+// ─── toGSPL hook (elevated in GSPL Supremacy Wave per approved revised Section 1) ───
+// Delegates to canonical toGSPL in interpreter when available. Enables GSPL rep for roundtrip + constraints.
+// duplicate toGSPLHook removed (consolidated in GSPL Supremacy Wave)
 
 // 15_ contracts foundation complete (see bootstrap + integration blocks above for details).
 

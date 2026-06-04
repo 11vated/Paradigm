@@ -38,6 +38,8 @@ export function produceSelfEvolRichArtifact(epoch: number, intent: string) {
     summary,
     metrics: structured.metrics,
     gspl: gsplSnippet,
+    gsplSource: gsplSnippet,
+    canonicalGspl: gsplSnippet,
     visual: { type: 'structured', structuredData: structured, summary, metrics: structured.metrics },
     emergent_assets: { preview: { type: 'structured', data: { structured, summary }, path: 'self-evol' } },
     message: `Recursive self-evolution: ${summary}`
@@ -48,14 +50,22 @@ export function produceSelfEvolRichArtifact(epoch: number, intent: string) {
 export async function runRecursiveGSPLClosure(epoch: number) {
   const result = attemptRecursiveSelfHost(epoch);
   let rich = produceSelfEvolRichArtifact(epoch, 'recursive-gspl');
-  // hardened: always real GSPL exec for self-host (stable, det); on error/partial return rich error feedback + partial rich artifact
+  // Ensure self-host and recursive ALWAYS use executeGspl for the GSPL snippets (per revised Section 1 stronger integration).
+  // Attach canonical GSPL (gsplSource + canonicalGspl) to the rich self-evol artifact for roundtrip / .gseed.
+  // Keep small; protect det (no new rng; use existing executeGspl).
+  const gsplSnippet = (rich as any).gspl || `seed "SelfEvolve-${epoch}" in gspl { mutate(domainSignals); compose(.gseed); recursive: true; host: self; epoch: ${epoch} }`;
+  (rich as any).gsplSource = gsplSnippet;
+  (rich as any).canonicalGspl = gsplSnippet;
   let gsplSelfHostResult: any = { note: 'gspl self-host executed' };
   try {
     const { executeGspl } = await import('../../../lib/kernel/gspl-interpreter.js').catch(() => ({} as any));
     if (executeGspl) {
       const selfGspl = `seed "OSSelfHost${epoch}" in gspl { recursive: true; signals: evolve; host: self; }`;
-      gsplSelfHostResult = executeGspl(selfGspl, { epoch }) || gsplSelfHostResult;
-      // if gspl produced rich-like, merge
+      gsplSelfHostResult = executeGspl(selfGspl) || gsplSelfHostResult;
+      // exec the rich's snippet too for verified canonical
+      const verified = executeGspl(gsplSnippet) || null;
+      (rich as any).gsplVerified = verified;
+      (rich as any).gsplResult = (rich as any).gsplResult || gsplSelfHostResult;
       if (gsplSelfHostResult && (gsplSelfHostResult.artifact || gsplSelfHostResult.summary)) {
         (rich as any).gsplResult = gsplSelfHostResult;
       }

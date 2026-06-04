@@ -13,7 +13,7 @@
 
 import { GsplLexer as KernelLexer, TokenType } from '../kernel/gspl-lexer.js';
 import { GsplParser as KernelParser, ASTNode, ASTNodeType } from '../kernel/gspl-parser.js';
-import { executeGspl } from '../kernel/gspl-interpreter.js';
+import { executeGspl, toGSPL, fromGSPL } from '../kernel/gspl-interpreter.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LEXER - Tokenization
@@ -116,7 +116,7 @@ export function executeGSPL(source: string, context?: any): GSPLExecutionResult 
 }
 
 // Also export the kernel interpreter class for advanced usage
-export { GsplInterpreter, executeGspl } from '../kernel/gspl-interpreter.js';
+export { GsplInterpreter, executeGspl, toGSPL, fromGSPL } from '../kernel/gspl-interpreter.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPE CHECKER (Optional)

@@ -219,7 +219,7 @@ export async function getGenerator(domain: string) {
 // Re-export GSPL
 export { GsplLexer, TokenType } from './gspl-lexer';
 export { GsplParser, ASTNodeType } from './gspl-parser';
-export { GsplInterpreter, executeGspl } from './gspl-interpreter';
+export { GsplInterpreter, executeGspl, toGSPL, fromGSPL } from './gspl-interpreter';
 
 // Re-export Phase 4: Binary Format & Sovereignty
 export { encodeGseed, decodeGseed, createGseed, signGseed, verifyGseedSignature, writeGseedFile, readGseedFile, exportGseedToFile, SectionType, OutputType } from './binary-format';

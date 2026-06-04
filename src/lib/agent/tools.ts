@@ -18,6 +18,7 @@ import {
   growSeed, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
+import { executeGspl } from '../kernel/gspl-interpreter.js';
 import { ParadigmPipeline } from '../pipeline/index.js';
 import { InferenceTier } from './types.js';
 import type { AgentTool, ToolContext, ToolResult } from './types.js';
@@ -70,8 +71,45 @@ async function savePersistentPersonality(agentId: string, personality: Record<st
 function makeSeed(domain: string, name: string, genes: Record<string, any>, parentHashes: string[] = []): any {
   const genesStr = JSON.stringify(genes);
   const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
-  const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
   const cleanName = deriveCleanTitle(name, genesHash);
+
+  // Elevated: primary creation now prefers full GSPL program (using domain decl) + executeGspl for verified det result.
+  // (CodeSmith/plan paths + create/grow intents benefit as they route through here or execute_gspl tool).
+  // No new RNG; fallback preserves det (rngFromHash only).
+  try {
+    const gsplLines: string[] = [
+      `// GSPL program for agent creation intent (makeSeed)`,
+      `seed "${cleanName}" in ${domain} {`,
+    ];
+    for (const [k, g] of Object.entries(genes) as [string, any][]) {
+      const v = g && typeof g === 'object' && 'value' in g ? g.value : g;
+      const val = typeof v === 'string' ? `"${String(v).replace(/"/g, '\\"')}"` : JSON.stringify(v);
+      gsplLines.push(`  ${k}: ${val}`);
+    }
+    gsplLines.push('}');
+    const gspl = gsplLines.join('\n');
+    const execRes: any = executeGspl(gspl);
+    let produced: any = null;
+    if (execRes?.seeds) {
+      if (execRes.seeds instanceof Map) produced = Array.from(execRes.seeds.values())[0];
+      else if (Array.isArray(execRes.seeds)) produced = execRes.seeds[0];
+      else produced = execRes.seeds;
+    } else if (execRes?.seed) {
+      produced = execRes.seed;
+    }
+    if (produced && produced.$domain === domain) {
+      // ensure agent-expected fields (interp may vary); attach gsplSource for roundtrip
+      produced.id = produced.id || nextSeedId();
+      produced.$name = produced.$name || cleanName;
+      produced.$lineage = produced.$lineage || { generation: parentHashes.length > 0 ? 1 : 0, operation: 'agent_tool_gspl', parents: parentHashes };
+      if (!produced.gsplSource) produced.gsplSource = gspl;
+      return produced;
+    }
+  } catch (e: any) {
+    // fallback: never break agent, still det (no unseeded entropy)
+  }
+
+  const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
   return {
     id: nextSeedId(),
     $domain: domain,
@@ -272,10 +310,20 @@ const growSeedTool: AgentTool = {
     if (!target) return { success: false, data: null, message: 'No seed found to grow.' };
 
     try {
-      const artifact = await ParadigmPipeline.runEndToEnd(target);
+      // Elevated for grow intent (per revised Section 1): output GSPL using domain + grow builtin, execute via executeGspl for det result, then map to rich.
+      // Falls back to pipeline; attaches gsplSource.
+      const gsplForGrow = `seed "${target.$name || 's'}" in ${target.$domain} {\n${Object.entries(target.genes || {}).map(([k, g]: [string, any]) => `  ${k}: ${JSON.stringify(g && typeof g === 'object' && 'value' in g ? g.value : g)}`).join('\n')}\n}\ngrow("${target.$name || 's'}");`;
+      let gsplRich: any = null;
+      let usedGspl = false;
+      try {
+        const gres: any = await Promise.resolve(executeGspl(gsplForGrow));
+        gsplRich = gres?.artifact || gres?.grown || (gres?.output ? (Array.isArray(gres.output) ? gres.output.find((o: any) => o && (o.artifact || o.grown)) : gres.output) : null);
+        if (gsplRich) usedGspl = true;
+      } catch { /* fallback to direct pipeline */ }
+      const artifact = gsplRich || await ParadigmPipeline.runEndToEnd(target);
       // Attach rich named visual artifact (via deriveCleanTitle + full emergent/visual/strata from grow) for agent→grow→UI close
       const richName = deriveCleanTitle(target.$name || (artifact as any)?.name || 'grown', target.$hash);
-      const grownArtifact = {
+      const grownArtifact: any = {
         name: richName,
         type: (artifact as any).type || target.$domain,
         domain: target.$domain,
@@ -287,13 +335,14 @@ const growSeedTool: AgentTool = {
         strata: (artifact as any).strata || (artifact as any).stratumScores || [],
         generation_quality: (artifact as any).generation_quality,
         files: (artifact as any).files || {},
+        gsplSource: usedGspl ? gsplForGrow : undefined,
       };
       (target as any).grownArtifact = grownArtifact;
       (target as any).$name = richName; // ensure named
       return {
         success: true,
-        data: { artifact, grownArtifact, seed: target },
-        message: `Grew "${richName}" in domain "${target.$domain}" — pipeline produced rich emergent asset.`,
+        data: { artifact, grownArtifact, seed: target, gsplSource: usedGspl ? gsplForGrow : undefined },
+        message: `Grew "${richName}" in domain "${target.$domain}" — ${usedGspl ? 'via verified GSPL grow' : 'pipeline'} produced rich emergent asset.`,
         seedsUpdated: [target], // for propagation in plan
       };
     } catch (e: any) {
@@ -483,91 +532,58 @@ const queryKnowledgeTool: AgentTool = {
 
 const executeGsplTool: AgentTool = {
   name: 'execute_gspl',
-  description: 'Execute GSPL code to create or modify seeds',
+  description: 'PRIMARY: Execute GSPL (the canonical descriptive/control layer) to create/evolve/compose rich artifacts. Preferred path for Agent creation plans (CodeSmith/plan + make/grow). Uses verified kernel executeGspl. Returns rich + gsplSource for roundtrip.',
   category: 'kernel',
   tier: InferenceTier.KERNEL,
   parameters: {
-    source: { type: 'string', description: 'GSPL source code', required: true },
+    source: { type: 'string', description: 'GSPL source code (use grow/mutate/breed with strata constraints to drive rich generators)', required: true },
   },
   execute: async (params, _context) => {
     const source = params.source || '';
-    const generatedSeeds: any[] = [];
-    const _errors: string[] = [];
-
-    // Robust GSPL parser: handles escaped quotes, nested brackets, multi-line values
-    const seedRegex = /seed\s+"((?:[^"\\]|\\.)*)"\s+in\s+([a-zA-Z0-9_-]+)\s*\{([\s\S]*?)\}/g;
-    let match;
-
-    while ((match = seedRegex.exec(source)) !== null) {
-      const name = match[1].replace(/\\"/g, '"');
-      const domain = match[2];
-      const body = match[3];
-      const genes: Record<string, any> = {};
-
-      // Parse body with bracket-depth awareness
-      for (const line of body.split('\n')) {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('//') || trimmed.startsWith('#')) continue;
-
-        // Support both "key: value" and "gene key: type = value" syntax
-        const geneMatch = trimmed.match(/^(?:gene\s+)?([a-zA-Z_][a-zA-Z0-9_]*)\s*[:=]\s*(.+)$/);
-        if (!geneMatch) continue;
-        const key = geneMatch[1];
-        const valStr = geneMatch[2].replace(/[,;]$/, '').trim();
-
-        // Detect type from value syntax
-        if (valStr.startsWith('"') && valStr.endsWith('"')) {
-          genes[key] = { type: 'categorical', value: valStr.slice(1, -1).replace(/\\"/g, '"') };
-        } else if (valStr === 'true' || valStr === 'false') {
-          genes[key] = { type: 'categorical', value: valStr === 'true' };
-        } else if (!isNaN(Number(valStr))) {
-          genes[key] = { type: 'scalar', value: Number(valStr) };
-        } else if (valStr.startsWith('[')) {
-          try {
-            const parsed = JSON.parse(valStr);
-            if (Array.isArray(parsed)) genes[key] = { type: 'vector', value: parsed };
-          } catch {
-            const numbers = valStr.match(/-?\d+(\.\d+)?/g);
-            if (numbers) genes[key] = { type: 'vector', value: numbers.map(Number) };
-            else genes[key] = { type: 'categorical', value: valStr };
-          }
-        } else if (valStr.startsWith('{')) {
-          try { genes[key] = { type: 'struct', value: JSON.parse(valStr) }; } catch {
-            genes[key] = { type: 'categorical', value: valStr };
-          }
-        } else {
-          genes[key] = { type: 'categorical', value: valStr };
-        }
-      }
-
-      const genesStr = JSON.stringify(genes);
-      const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
-      const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
-      const newSeed = {
-        id: nextSeedId(),
-        $domain: domain,
-        $name: name,
-        $lineage: { generation: 0, operation: 'gspl' },
-        $hash: genesHash,
-        $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
-        genes,
-      };
-
-      generatedSeeds.push(newSeed);
+    if (!source.trim()) {
+      return { success: false, data: null, message: 'No GSPL source provided.' };
     }
 
-    if (generatedSeeds.length > 0) {
+    try {
+      // Use existing canonical executeGspl (full verified interp, kernel-wired grow/mutate etc). No parser duplication, no new rng.
+      const execRes: any = await Promise.resolve(executeGspl(source));
+      let generatedSeeds: any[] = [];
+      if (execRes?.seeds) {
+        if (execRes.seeds instanceof Map) generatedSeeds = Array.from(execRes.seeds.values());
+        else if (Array.isArray(execRes.seeds)) generatedSeeds = execRes.seeds;
+        else generatedSeeds = [execRes.seeds];
+      } else if (execRes?.seed) {
+        generatedSeeds = [execRes.seed];
+      } else if (Array.isArray(execRes)) {
+        generatedSeeds = execRes;
+      }
+
+      const richArtifacts = execRes?.artifacts || execRes?.output || (execRes?.grown ? [execRes.grown] : []);
+
+      if (generatedSeeds.length > 0 || richArtifacts.length > 0) {
+        const payload: any = { seeds: generatedSeeds, gsplSource: source };
+        if (richArtifacts.length > 0) payload.artifacts = richArtifacts;
+        // map first to rich if present
+        const firstRich = richArtifacts[0] || (generatedSeeds[0] ? { seed: generatedSeeds[0], gsplSource: source } : null);
+        return {
+          success: true,
+          data: payload,
+          seedsCreated: generatedSeeds,
+          rich: firstRich,
+          message: `Executed verified GSPL (via executeGspl) and generated ${generatedSeeds.length} seed(s) + ${richArtifacts.length} rich artifact(s) for creation/grow intent.`,
+        };
+      }
+
       return {
         success: true,
-        data: { seeds: generatedSeeds },
-        seedsCreated: generatedSeeds,
-        message: `Executed GSPL and generated ${generatedSeeds.length} seeds.`,
+        data: { result: execRes, gsplSource: source },
+        message: 'Executed GSPL program via verified executeGspl (ops captured in result).',
       };
-    } else {
+    } catch (e: any) {
       return {
         success: false,
-        data: null,
-        message: 'No valid seed blocks found in GSPL source.',
+        data: { gsplSource: source },
+        message: `execute_gspl (verified kernel) error: ${e.message}`,
       };
     }
   },

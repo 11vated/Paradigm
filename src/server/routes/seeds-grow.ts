@@ -4,6 +4,7 @@
  */
 import type { Express } from 'express';
 import { deriveCleanTitle } from '../../lib/kernel/types';
+import { executeGspl } from '../../lib/kernel/gspl-interpreter.js';
 
 export interface SeedsGrowDeps {
   seeds: any[];
@@ -26,11 +27,41 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
   app.post('/api/seeds/grow', optionalAuth, validateBody(BodyGrowSeedSchema), async (req: any, res: any) => {
     let result: any;
     try {
-      const { seed: rawSeed, domain: domainOverride } = req.body ?? {};
+      const body = req.body ?? {};
+      const { seed: rawSeedFromBody, domain: domainOverride } = body;
+      let gsplSource: string | undefined;
+      let rawSeed = rawSeedFromBody;
+
+      // Stronger executeGspl integration in grow (per revised Section 1): GSPL-first for programs.
+      // if gsplProgram/gspl in body: await executeGspl(gspl) -> produce seed(s), then grow using existing,
+      // promote rich, return with gsplSource echoed for roundtrip. Makes grow path GSPL-first for programs.
+      if (body.gsplProgram || body.gspl) {
+        gsplSource = String(body.gsplProgram || body.gspl);
+        try {
+          const gsplRes: any = await Promise.resolve(executeGspl(gsplSource));
+          let produced: any[] = [];
+          if (gsplRes?.seeds) {
+            if (gsplRes.seeds instanceof Map) produced = Array.from(gsplRes.seeds.values());
+            else if (Array.isArray(gsplRes.seeds)) produced = gsplRes.seeds;
+            else produced = [gsplRes.seeds];
+          } else if (gsplRes?.seed) {
+            produced = [gsplRes.seed];
+          } else if (Array.isArray(gsplRes)) {
+            produced = gsplRes;
+          }
+          if (produced.length > 0) {
+            rawSeed = produced[0];
+          }
+        } catch (gsplErr: any) {
+          log('WARN', 'GSPL program in grow failed, falling back to seed', { error: gsplErr?.message });
+        }
+      }
+
       if (!rawSeed) return res.status(400).json({ error: 'Missing seed in body' });
       const domain = domainOverride ?? rawSeed.$domain ?? 'visual2d';
-      const seed = { ...rawSeed, $domain: domain };
+      let seed = { ...rawSeed, $domain: domain };
       let result: any;
+
       const NEW_DOMAIN_GENERATORS: Record<string, (s: any, p: string) => Promise<any>> = {
         website:   async (s, p) => { const { generateWebsite }   = await import('../../lib/kernel/generators/website.js');   return generateWebsite(s, p); },
         field:     async (s, p) => { const { generateField }     = await import('../../lib/kernel/generators/field.js');     return generateField(s, p); },
@@ -86,6 +117,10 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
           };
         }
       } catch { /* light only */ }
+
+      if (gsplSource) {
+        result.gsplSource = gsplSource; // echo for roundtrip (GSPL-first grow per revised Section 1)
+      }
 
       res.json(result);
     } catch (e: any) {
