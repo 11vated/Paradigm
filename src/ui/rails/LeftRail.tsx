@@ -254,6 +254,10 @@ export const LeftRail: React.FC<{
                     <div className="p-thumb-inline" dangerouslySetInnerHTML={{ __html: (seed.raw as any).svg }} />
                   ) : seed.raw && (seed.raw as any).pngDataURL ? (
                     <img className="p-thumb-inline" src={(seed.raw as any).pngDataURL} alt="preview" />
+                  ) : seed.raw && (seed.raw as any).audioDataURL ? (
+                    <span className="p-thumb-inline" title="audio preview">🎵</span>
+                  ) : seed.raw && ((seed.raw as any).htmlData || (seed.raw as any).gltf) ? (
+                    <span className="p-thumb-inline" title="interactive preview">▶</span>
                   ) : null}
                 </div>
                 <div className="p-active-seed-pin-meta">

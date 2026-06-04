@@ -16,7 +16,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'animation'; $name?: string; genes: any }
-interface A { filePath: string; meta: { duration?: number; frameCount?: number } }
+interface A {
+  filePath: string;
+  meta: { duration?: number; frameCount?: number };
+  previewData?: string; // base64 or text for UI preview (gltf/html)
+  visual?: {
+    type: 'gltf' | 'html' | 'video' | 'raster';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'gltf' | 'html' | 'video';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath).digest('hex');
@@ -34,11 +49,25 @@ export const AnimationQualityContract: QualityContract<S, A, any> = {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'animation-'));
     try {
       const r = await withKernelClock(0, () => generateAnimation(seed, dir));
-      const primaryPath = r.gltfPath ?? r.fbxPath ?? r.mp4Path;
-      const data = primaryPath
-        ? await fsp.readFile(primaryPath, 'utf-8').catch(async () => (await fsp.readFile(primaryPath)).toString('base64'))
-        : '';
-      return { filePath: data, meta: { ...r } };
+      const primaryPath = r.gltfPath ?? r.fbxPath ?? r.mp4Path ?? r.htmlPath;
+      let data = '';
+      let previewData = '';
+      if (primaryPath) {
+        const buf = await fsp.readFile(primaryPath);
+        data = buf.toString('base64');
+        previewData = buf.toString('base64'); // for UI, base64 works for gltf/html/video in data URLs or players
+      }
+      const type = primaryPath?.endsWith('.gltf') || primaryPath?.endsWith('.glb') ? 'gltf' :
+                   primaryPath?.endsWith('.html') ? 'html' : 'video';
+      return {
+        filePath: data,
+        meta: { ...r },
+        previewData,
+        visual: { type: type as any, previewData },
+        emergent_assets: {
+          preview: { type: type as any, data: previewData, path: primaryPath }
+        }
+      };
     } finally {
       await fsp.rm(dir, { recursive: true, force: true });
     }

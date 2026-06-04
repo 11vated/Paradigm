@@ -251,7 +251,7 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
     genes,
   };
 
-  // Growth attempt
+  // Growth attempt (improved usability: attach grown rich artifact/visual data from QC attachments for better UI feedback)
   let artifact: any = null;
   let iterations = 0;
   let confidence = 0.5;
@@ -259,6 +259,15 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
   try {
     artifact = await growSeed(seed);
     iterations = 1;
+
+    // Attach rich data if grown has visual/emergent (from expanded QC)
+    if (artifact) {
+      (seed as any).grownArtifact = {
+        type: artifact.type,
+        hasVisual: !!(artifact.visual || artifact.emergent_assets || artifact.pngDataURL || artifact.svg || artifact.audioDataURL || artifact.htmlData),
+        preview: artifact.visual || artifact.emergent_assets || null
+      };
+    }
 
     // Iterative refinement: mutate toward better quality
     if (artifact && !artifact.render_hints?.error) {
@@ -288,6 +297,14 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
             Object.assign(seed, refined);
             iterations++;
             confidence = Math.min(1, confidence + 0.15);
+            // Attach rich from refined
+            if (newArtifact) {
+              (seed as any).grownArtifact = {
+                type: newArtifact.type,
+                hasVisual: !!(newArtifact.visual || newArtifact.emergent_assets || newArtifact.pngDataURL || newArtifact.svg || newArtifact.audioDataURL || newArtifact.htmlData),
+                preview: newArtifact.visual || newArtifact.emergent_assets || null
+              };
+            }
           }
         } catch { /* swallow: best-effort inverse probe, no impact on output */ }
       }
@@ -310,6 +327,7 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
 // ─── API RESPONSE HELPER ─────────────────────────────────────────────────
 
 export function formatInverseResult(result: InverseResult): any {
+  const grown = (result.seed as any).grownArtifact || (result as any).grownArtifact;
   return {
     seed: {
       id: result.seed.id,
@@ -326,8 +344,10 @@ export function formatInverseResult(result: InverseResult): any {
           type: result.artifact.type,
           generation_quality: result.artifact.generation_quality,
           render_hints: result.artifact.render_hints,
+          hasVisual: !!(result.artifact.visual || result.artifact.emergent_assets || result.artifact.pngDataURL),
         }
       : null,
+    grownArtifact: grown || null, // rich visual/name feedback from grow for UI
   };
 }
 

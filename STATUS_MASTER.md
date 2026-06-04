@@ -33,13 +33,13 @@
 
 **BLOCKING ISSUES:** 0  
 **WARNINGS:** 0  
-**PARADIGM COMPLETE:** Progress toward full 13_ doctrine (core integration + Phase 1/2 slices): 
-- Visual/audio/story/playable attach (v2d+char primary + sprite (png) + geometry3d (gltf) + music (wav) + narrative (story) + fullgame (html playable) in slices; light norms for more): dataURLs + visual/emergent + audio/story/html in QC + grow (real for 7+ domains, renderer now supports audio player with dataURL, nice story view not raw; no raw dumps in normal for attached).
-- deriveCleanTitle + wiring (create, grow, agent, genesis, universal, CLI, inverse): clean human names from intent.
-- Agent loop closed with dispatch for live updates.
-- Studio: Atelier default, renderer clean (no full JSON dump), thumbs from data, status visible.
-- Verifs green (type0, det0, QC13/13 incl expanded, golden with env notes).
-Lived UX for attached domains + core flows: intent → named + beautiful live visual <60s. More breadth needed for full 27/universal. See session for honest gaps vs 13_ vision. Kernel never lies. COMPLETE for current slices. See reports.
+**PARADIGM COMPLETE:** Progress toward full 13_ doctrine (core integration + Phase 1/2/3 slices): 
+- Visual/audio/story/playable/anim attach (v2d+char primary + sprite (png) + geometry3d (gltf) + music (wav) + narrative (story) + fullgame (html) + animation (gltf/html preview) in slices; light norms): data + visual/emergent/audio in QC + grow (real for 8+ domains; renderer audio player + nice story/anim views not raw; thumbs expanded; better loading/errors).
+- deriveCleanTitle + wiring everywhere.
+- Agent loop closed + inverse improved (attaches grown rich visual/artifact for UX feedback).
+- Studio: Atelier default, renderer clean (better loading/errors, no full raw JSON), thumbs/status visible.
+- Verifs green post-slice (type0, det0, QC13/13 incl animation, golden env notes).
+Lived UX for attached + core: intent → named + beautiful live visual <60s. Breadth for full 27/universal + advanced (OS/fed/heroes) still needed per 13_ SCOPE/24phases. Honest: ~8/27 domains rich consistent. Kernel never lies. See reports for gaps vs vision. COMPLETE for slices.
 
 ---
 

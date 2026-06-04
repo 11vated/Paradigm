@@ -95,6 +95,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     return (
       <div className="p-artifact-empty">
         <span className="p-artifact-empty-label">no artifact yet</span>
+        <div className="p-artifact-loading-hint">Generating rich visual... (Atelier for tools)</div>
       </div>
     );
   }
