@@ -1,0 +1,29 @@
+{
+  "intent": "ancient floating islands with dragon riders and sky battles --domain game",
+  "memoryHash": "direct-pipeline-v1-strata-724830871ff6e747",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Mind",
+    "Story"
+  ],
+  "strataSummary": [
+    "Mind",
+    "Story"
+  ],
+  "strataHash": "724830871ff6e747",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Mind",
+        "Story"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:44:54.284Z"
+}

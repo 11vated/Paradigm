@@ -1,0 +1,705 @@
+{
+  "$intent": "quantum entangled AI hive mind in a crystalline matrix world --domain game",
+  "$created": "2026-06-04T05:45:01.343Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "a47e1cd9a5e243ec",
+      "name": "Quantum Entangled Ai Hive Mind In a47e1c",
+      "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 1.0162750661271074,
+          "shoulderRatio": 1.0392671771954727,
+          "torsoRatio": 1.0706724970966839,
+          "limbRatio": 0.8652580739789502,
+          "muscle": 0.5337188521975774,
+          "softness": 0.301154280564758,
+          "skinTone": [
+            0.6991102930752582,
+            0.49197063340111274,
+            0.42127129694492643
+          ]
+        },
+        "face": {
+          "roundness": 0.9202753297668349,
+          "eyeHeight": 0.4685394925069808,
+          "eyeSpacing": 0.4286740516307134,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.21264985224524016,
+            0.13650457855842757,
+            0.6848898413680746
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.6463486120702912,
+          "mouthShape": "wide",
+          "jawShape": "broad",
+          "brow": 0.6518938186564407,
+          "cheekbones": 0.6763367283322241,
+          "chin": 0.5430726096328458,
+          "hairStyle": "pixie",
+          "hairColor": [
+            0.7300058758477662,
+            0.331300003874299,
+            0.5019284285631873
+          ]
+        },
+        "voice": {
+          "pitch": 175.3003474981318,
+          "inflection": 0.5902684513758537,
+          "tempo": 100.94203074862344,
+          "breathiness": 0.4245050127426141,
+          "warmth": 0.9156110073977322,
+          "formants": [
+            798.6293352983342,
+            1391.896841519954,
+            2966.3375311080986,
+            3650.8769613638137,
+            4563.596201704767
+          ],
+          "accent": "berlin"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.49915163789961237,
+            "conscientiousness": 0.5230305662295849,
+            "extraversion": 0.4764274725544049,
+            "agreeableness": 0.24914514737924054,
+            "neuroticism": 0.054451865845918324
+          },
+          "interests": [
+            "woodworking",
+            "cooking",
+            "chess"
+          ],
+          "values": [
+            "devotion",
+            "curiosity",
+            "restraint",
+            "directness"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.09400744431667296,
+          "curiosity": 0.5277521869654485
+        },
+        "memory": {
+          "episodicCapacity": 2876,
+          "episodicDecay": 0.01104518666809884,
+          "semanticCapacity": 3744,
+          "reflectionCadenceDays": 2.672474080959112
+        },
+        "bond": {
+          "initialTrust": 0.3998779060124285,
+          "initialWarmth": 0.7576235051060116,
+          "bondingDays": 71
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Entangled Ai Hive Mind In a47e1c"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Entangled Ai Hive Mind In a47e1c"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "a47e1cd9a5e243ec",
+      "name": "Quantum Entangled Ai Hive Mind In",
+      "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "modern",
+          "biome": "urban",
+          "magic": 0.5981679429886815,
+          "tech": 0.7355749903222797,
+          "density": 0.05086024659650046
+        },
+        "physics": {
+          "gravity": 0.44572950732525785,
+          "hostility": 0.43077140282379034,
+          "diurnalRate": 0.6347459874095602,
+          "weatherVolatility": 0.4399466061838413
+        },
+        "society": {
+          "order": 0.44254259388985284,
+          "pluralism": 0.9202753297668349,
+          "prosperity": 0.18539492506980793,
+          "literacy": 0.857827010871423
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.18774975374206693,
+          "urgency": 0.06084096426404595,
+          "clarity": 0.9748164022801244
+        },
+        "mood": {
+          "brightness": 0.4489424305599288,
+          "warmth": 0.9634861207029106,
+          "pace": 0.7397557555072976,
+          "levity": 0.6217493895311332
+        },
+        "history": {
+          "agesSinceFall": 3259,
+          "ghostliness": 0.6763367283322241,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-04T05:45:01.319Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "quantum entangled AI hive mind in a crystalline matrix world --domain game",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Entangled Ai Hive Mind In"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Entangled Ai Hive Mind In"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "e874a77bb9596a5d",
+    "seedHash": "e874a77bb9596a5de863c1ac22b873b8b18d00db6a8d7f336cce14cb4d264b8b",
+    "genomeVersion": 1,
+    "title": "The Quantum Entangled Ai Hive Mind In Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.05700750521316937,
+      "antagonist": 0.31779227794098297,
+      "moralComplexity": 0.26344665148069724,
+      "pacing": 0.6346412268125445,
+      "intensity": 0.13345517651602293,
+      "actCount": 3,
+      "targetWordCount": 7748,
+      "hook": "A door in Quantum Entangled Ai Hive Mind In has opened that has been sealed for ages. Quantum Entangled Ai Hive Mind In a47e1c's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "a47e1cd9a5e243ec",
+        "name": "Quantum Entangled Ai Hive Mind In a47e1c",
+        "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5"
+      },
+      "world": {
+        "id": "a47e1cd9a5e243ec",
+        "name": "Quantum Entangled Ai Hive Mind In",
+        "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5"
+      }
+    },
+    "bornAt": "2026-06-04T05:45:01.330Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Quantum Entangled Ai Hive Mind In",
+      "quest": {
+        "id": "e874a77bb9596a5d",
+        "seedHash": "e874a77bb9596a5de863c1ac22b873b8b18d00db6a8d7f336cce14cb4d264b8b",
+        "genomeVersion": 1,
+        "title": "The Quantum Entangled Ai Hive Mind In Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.05700750521316937,
+          "antagonist": 0.31779227794098297,
+          "moralComplexity": 0.26344665148069724,
+          "pacing": 0.6346412268125445,
+          "intensity": 0.13345517651602293,
+          "actCount": 3,
+          "targetWordCount": 7748,
+          "hook": "A door in Quantum Entangled Ai Hive Mind In has opened that has been sealed for ages. Quantum Entangled Ai Hive Mind In a47e1c's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "a47e1cd9a5e243ec",
+            "name": "Quantum Entangled Ai Hive Mind In a47e1c",
+            "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5"
+          },
+          "world": {
+            "id": "a47e1cd9a5e243ec",
+            "name": "Quantum Entangled Ai Hive Mind In",
+            "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5"
+          }
+        },
+        "bornAt": "2026-06-04T05:45:01.330Z"
+      },
+      "friend": {
+        "id": "a47e1cd9a5e243ec",
+        "name": "Quantum Entangled Ai Hive Mind In a47e1c",
+        "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 1.0162750661271074,
+            "shoulderRatio": 1.0392671771954727,
+            "torsoRatio": 1.0706724970966839,
+            "limbRatio": 0.8652580739789502,
+            "muscle": 0.5337188521975774,
+            "softness": 0.301154280564758,
+            "skinTone": [
+              0.6991102930752582,
+              0.49197063340111274,
+              0.42127129694492643
+            ]
+          },
+          "face": {
+            "roundness": 0.9202753297668349,
+            "eyeHeight": 0.4685394925069808,
+            "eyeSpacing": 0.4286740516307134,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.21264985224524016,
+              0.13650457855842757,
+              0.6848898413680746
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.6463486120702912,
+            "mouthShape": "wide",
+            "jawShape": "broad",
+            "brow": 0.6518938186564407,
+            "cheekbones": 0.6763367283322241,
+            "chin": 0.5430726096328458,
+            "hairStyle": "pixie",
+            "hairColor": [
+              0.7300058758477662,
+              0.331300003874299,
+              0.5019284285631873
+            ]
+          },
+          "voice": {
+            "pitch": 175.3003474981318,
+            "inflection": 0.5902684513758537,
+            "tempo": 100.94203074862344,
+            "breathiness": 0.4245050127426141,
+            "warmth": 0.9156110073977322,
+            "formants": [
+              798.6293352983342,
+              1391.896841519954,
+              2966.3375311080986,
+              3650.8769613638137,
+              4563.596201704767
+            ],
+            "accent": "berlin"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.49915163789961237,
+              "conscientiousness": 0.5230305662295849,
+              "extraversion": 0.4764274725544049,
+              "agreeableness": 0.24914514737924054,
+              "neuroticism": 0.054451865845918324
+            },
+            "interests": [
+              "woodworking",
+              "cooking",
+              "chess"
+            ],
+            "values": [
+              "devotion",
+              "curiosity",
+              "restraint",
+              "directness"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.09400744431667296,
+            "curiosity": 0.5277521869654485
+          },
+          "memory": {
+            "episodicCapacity": 2876,
+            "episodicDecay": 0.01104518666809884,
+            "semanticCapacity": 3744,
+            "reflectionCadenceDays": 2.672474080959112
+          },
+          "bond": {
+            "initialTrust": 0.3998779060124285,
+            "initialWarmth": 0.7576235051060116,
+            "bondingDays": 71
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "a47e1cd9a5e243ec",
+        "name": "Quantum Entangled Ai Hive Mind In",
+        "seedHash": "a47e1cd9a5e243ecf101109c383450423a761d3f7ac8fd69e461f9bd2bfc6ba5",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "modern",
+            "biome": "urban",
+            "magic": 0.5981679429886815,
+            "tech": 0.7355749903222797,
+            "density": 0.05086024659650046
+          },
+          "physics": {
+            "gravity": 0.44572950732525785,
+            "hostility": 0.43077140282379034,
+            "diurnalRate": 0.6347459874095602,
+            "weatherVolatility": 0.4399466061838413
+          },
+          "society": {
+            "order": 0.44254259388985284,
+            "pluralism": 0.9202753297668349,
+            "prosperity": 0.18539492506980793,
+            "literacy": 0.857827010871423
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.18774975374206693,
+            "urgency": 0.06084096426404595,
+            "clarity": 0.9748164022801244
+          },
+          "mood": {
+            "brightness": 0.4489424305599288,
+            "warmth": 0.9634861207029106,
+            "pace": 0.7397557555072976,
+            "levity": 0.6217493895311332
+          },
+          "history": {
+            "agesSinceFall": 3259,
+            "ghostliness": 0.6763367283322241,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-04T05:45:01.319Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "quantum entangled AI hive mind in a crystalline matrix world --domain game",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind",
+        "World"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind",
+        "World"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind",
+          "World"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Quantum Entangled Ai Hive Mind In",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Entangled Ai Hive Mind In"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Entangled Ai Hive Mind In"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Quantum Entangled Ai Hive Mind In",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind",
+    "World"
+  ],
+  "richOutputs": {
+    "name": "Quantum Entangled Ai Hive Mind In",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "Mind",
+      "World"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

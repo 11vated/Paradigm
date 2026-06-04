@@ -76,6 +76,7 @@ Curated high-quality examples (from 12 heroes + batches) that stress the full sy
 - Final-Continue-1M-GSPL-Econ (24phases push, GSPL roundtrip + econ): hero-final-continue-1m-gspl-econ-ffb90827e483.json.
 - Ultimate Platform Showcase (GSPL v∞ + recursive OS + full econ + fed p2p + all strata): showcase-full-platform-15-os-cc7f050a77eb.json + hero-meta-showcase-full-platform.json (best crafted for full 24-phase potential demo).
 - Plus the other 12 flagships + ~100 quality foundation seeds (total ~112 heroes / 114 game files as of 24-phase completion).
+- Fidelity Completion Sprint additions: 3+ new high-fidelity game heroes (cyberpunk megacity, floating islands dragon riders, quantum AI hive mind) saved as hero-*.gseed.json + hero-meta-*.json with rich strata, Part6, provenance, SCOPE fidelity notes for playable game targets.
 
 These are the "best crafted" to demo everything working: deterministic, sovereign, Part6 live, GSPL formal, full provenance, etc. See individual metas for exact makeCmd + 13_ refs. 1M scaling remains the long-term target (harness ready).
 

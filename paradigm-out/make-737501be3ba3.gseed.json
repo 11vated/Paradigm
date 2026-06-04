@@ -1,0 +1,706 @@
+{
+  "$intent": "ancient floating islands with dragon riders and sky battles --domain game",
+  "$created": "2026-06-04T05:44:54.105Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "737501be3ba36c46",
+      "name": "Ancient Floating Islands With Dragon Riders 737501",
+      "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "slender",
+          "heightScale": 1.0410554415620605,
+          "shoulderRatio": 0.8694914485345254,
+          "torsoRatio": 0.960940983178826,
+          "limbRatio": 1.0806815703775328,
+          "muscle": 0.32652052102426404,
+          "softness": 0.31755837443875384,
+          "skinTone": [
+            0.6296810475762761,
+            0.39404598183448614,
+            0.2938393184876497
+          ]
+        },
+        "face": {
+          "roundness": 0.7885904582112895,
+          "eyeHeight": 0.48729324056487355,
+          "eyeSpacing": 0.3370310177360793,
+          "eyeShape": "hooded",
+          "eyeColor": [
+            0.6183166082238923,
+            0.4384923248203333,
+            0.12441660687129318
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5604484116610283,
+          "mouthShape": "full",
+          "jawShape": "square",
+          "brow": 0.33818537433194384,
+          "cheekbones": 0.21464529122818976,
+          "chin": 0.15166369800517154,
+          "hairStyle": "pixie",
+          "hairColor": [
+            0.237437668686092,
+            0.16353606793361705,
+            0.05584615872011153
+          ]
+        },
+        "voice": {
+          "pitch": 219.15839063010017,
+          "inflection": 0.47122447650875976,
+          "tempo": 124.4414592373854,
+          "breathiness": 0.42295229004227464,
+          "warmth": 0.475478427555174,
+          "formants": [
+            638.807392212944,
+            1113.3500264282738,
+            2372.7131710766494,
+            2920.26236440203,
+            3650.3279555025374
+          ],
+          "accent": "berlin"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.34975202317050647,
+            "conscientiousness": 0.7718833131566254,
+            "extraversion": 0.1008821820138941,
+            "agreeableness": 0.8783166896284562,
+            "neuroticism": 0.09231734039961581
+          },
+          "interests": [
+            "history",
+            "astronomy",
+            "origami",
+            "theatre",
+            "music",
+            "painting"
+          ],
+          "values": [
+            "kindness",
+            "generosity",
+            "honesty",
+            "directness"
+          ],
+          "speechStyle": "playful",
+          "humor": 0.9818243833868523,
+          "curiosity": 0.30681489473681967
+        },
+        "memory": {
+          "episodicCapacity": 2685,
+          "episodicDecay": 0.013014305092670903,
+          "semanticCapacity": 12720,
+          "reflectionCadenceDays": 4.37720704906262
+        },
+        "bond": {
+          "initialTrust": 0.4893384217151729,
+          "initialWarmth": 0.3096595645085259,
+          "bondingDays": 35
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ancient Floating Islands With Dragon Riders 737501"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ancient Floating Islands With Dragon Riders 737501"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "737501be3ba36c46",
+      "name": "Ancient Floating Islands With Dragon Riders",
+      "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "medieval",
+          "biome": "tundra",
+          "magic": 0.1737286213363134,
+          "tech": 0.3698032772627535,
+          "density": 0.7689385679251091
+        },
+        "physics": {
+          "gravity": 0.0884017367475467,
+          "hostility": 0.16279187219376912,
+          "diurnalRate": 0.5085109955932292,
+          "weatherVolatility": 0.2619017851536112
+        },
+        "society": {
+          "order": 0.1876786369752994,
+          "pluralism": 0.7885904582112895,
+          "prosperity": 0.3729324056487353,
+          "literacy": 0.2468734515738622
+        },
+        "conflict": {
+          "kind": "redemption",
+          "scale": 0.8638610137064873,
+          "urgency": 0.5641538747005554,
+          "clarity": 0.04069434478548861
+        },
+        "mood": {
+          "brightness": 0.6492205755135387,
+          "warmth": 0.10448411661028278,
+          "pace": 0.05611239910362875,
+          "levity": 0.0553314908370659
+        },
+        "history": {
+          "agesSinceFall": 1690,
+          "ghostliness": 0.21464529122818976,
+          "eraCount": 1
+        }
+      },
+      "bornAt": "2026-06-04T05:44:54.085Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "ancient floating islands with dragon riders and sky battles --domain game",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ancient Floating Islands With Dragon Riders"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ancient Floating Islands With Dragon Riders"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "e797fb719940399c",
+    "seedHash": "e797fb719940399c0099e0b99ae38ebcf9c2b42f9b715fc34a91d505ab7c8412",
+    "genomeVersion": 1,
+    "title": "Ancient Floating Islands With Dragon Riders 737501, Returned",
+    "genes": {
+      "archetype": "redemption-arc",
+      "stake": 0.2810519541199917,
+      "antagonist": 0.6953533693898568,
+      "moralComplexity": 0.8579695172357119,
+      "pacing": 0.1249141141995271,
+      "intensity": 0.614628499016923,
+      "actCount": 5,
+      "targetWordCount": 15115,
+      "hook": "The exile of Ancient Floating Islands With Dragon Riders returns, carrying a debt only blood can settle. The exile is Ancient Floating Islands With Dragon Riders 737501."
+    },
+    "parents": {
+      "friend": {
+        "id": "737501be3ba36c46",
+        "name": "Ancient Floating Islands With Dragon Riders 737501",
+        "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096"
+      },
+      "world": {
+        "id": "737501be3ba36c46",
+        "name": "Ancient Floating Islands With Dragon Riders",
+        "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096"
+      }
+    },
+    "bornAt": "2026-06-04T05:44:54.095Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Ancient Floating Islands With Dragon Riders",
+      "quest": {
+        "id": "e797fb719940399c",
+        "seedHash": "e797fb719940399c0099e0b99ae38ebcf9c2b42f9b715fc34a91d505ab7c8412",
+        "genomeVersion": 1,
+        "title": "Ancient Floating Islands With Dragon Riders 737501, Returned",
+        "genes": {
+          "archetype": "redemption-arc",
+          "stake": 0.2810519541199917,
+          "antagonist": 0.6953533693898568,
+          "moralComplexity": 0.8579695172357119,
+          "pacing": 0.1249141141995271,
+          "intensity": 0.614628499016923,
+          "actCount": 5,
+          "targetWordCount": 15115,
+          "hook": "The exile of Ancient Floating Islands With Dragon Riders returns, carrying a debt only blood can settle. The exile is Ancient Floating Islands With Dragon Riders 737501."
+        },
+        "parents": {
+          "friend": {
+            "id": "737501be3ba36c46",
+            "name": "Ancient Floating Islands With Dragon Riders 737501",
+            "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096"
+          },
+          "world": {
+            "id": "737501be3ba36c46",
+            "name": "Ancient Floating Islands With Dragon Riders",
+            "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096"
+          }
+        },
+        "bornAt": "2026-06-04T05:44:54.095Z"
+      },
+      "friend": {
+        "id": "737501be3ba36c46",
+        "name": "Ancient Floating Islands With Dragon Riders 737501",
+        "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "slender",
+            "heightScale": 1.0410554415620605,
+            "shoulderRatio": 0.8694914485345254,
+            "torsoRatio": 0.960940983178826,
+            "limbRatio": 1.0806815703775328,
+            "muscle": 0.32652052102426404,
+            "softness": 0.31755837443875384,
+            "skinTone": [
+              0.6296810475762761,
+              0.39404598183448614,
+              0.2938393184876497
+            ]
+          },
+          "face": {
+            "roundness": 0.7885904582112895,
+            "eyeHeight": 0.48729324056487355,
+            "eyeSpacing": 0.3370310177360793,
+            "eyeShape": "hooded",
+            "eyeColor": [
+              0.6183166082238923,
+              0.4384923248203333,
+              0.12441660687129318
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5604484116610283,
+            "mouthShape": "full",
+            "jawShape": "square",
+            "brow": 0.33818537433194384,
+            "cheekbones": 0.21464529122818976,
+            "chin": 0.15166369800517154,
+            "hairStyle": "pixie",
+            "hairColor": [
+              0.237437668686092,
+              0.16353606793361705,
+              0.05584615872011153
+            ]
+          },
+          "voice": {
+            "pitch": 219.15839063010017,
+            "inflection": 0.47122447650875976,
+            "tempo": 124.4414592373854,
+            "breathiness": 0.42295229004227464,
+            "warmth": 0.475478427555174,
+            "formants": [
+              638.807392212944,
+              1113.3500264282738,
+              2372.7131710766494,
+              2920.26236440203,
+              3650.3279555025374
+            ],
+            "accent": "berlin"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.34975202317050647,
+              "conscientiousness": 0.7718833131566254,
+              "extraversion": 0.1008821820138941,
+              "agreeableness": 0.8783166896284562,
+              "neuroticism": 0.09231734039961581
+            },
+            "interests": [
+              "history",
+              "astronomy",
+              "origami",
+              "theatre",
+              "music",
+              "painting"
+            ],
+            "values": [
+              "kindness",
+              "generosity",
+              "honesty",
+              "directness"
+            ],
+            "speechStyle": "playful",
+            "humor": 0.9818243833868523,
+            "curiosity": 0.30681489473681967
+          },
+          "memory": {
+            "episodicCapacity": 2685,
+            "episodicDecay": 0.013014305092670903,
+            "semanticCapacity": 12720,
+            "reflectionCadenceDays": 4.37720704906262
+          },
+          "bond": {
+            "initialTrust": 0.4893384217151729,
+            "initialWarmth": 0.3096595645085259,
+            "bondingDays": 35
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "737501be3ba36c46",
+        "name": "Ancient Floating Islands With Dragon Riders",
+        "seedHash": "737501be3ba36c466bc30e3c2478535a60ce784847371fcf0b8c7bd2553ec096",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "medieval",
+            "biome": "tundra",
+            "magic": 0.1737286213363134,
+            "tech": 0.3698032772627535,
+            "density": 0.7689385679251091
+          },
+          "physics": {
+            "gravity": 0.0884017367475467,
+            "hostility": 0.16279187219376912,
+            "diurnalRate": 0.5085109955932292,
+            "weatherVolatility": 0.2619017851536112
+          },
+          "society": {
+            "order": 0.1876786369752994,
+            "pluralism": 0.7885904582112895,
+            "prosperity": 0.3729324056487353,
+            "literacy": 0.2468734515738622
+          },
+          "conflict": {
+            "kind": "redemption",
+            "scale": 0.8638610137064873,
+            "urgency": 0.5641538747005554,
+            "clarity": 0.04069434478548861
+          },
+          "mood": {
+            "brightness": 0.6492205755135387,
+            "warmth": 0.10448411661028278,
+            "pace": 0.05611239910362875,
+            "levity": 0.0553314908370659
+          },
+          "history": {
+            "agesSinceFall": 1690,
+            "ghostliness": 0.21464529122818976,
+            "eraCount": 1
+          }
+        },
+        "bornAt": "2026-06-04T05:44:54.085Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "ancient floating islands with dragon riders and sky battles --domain game",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Ancient Floating Islands With Dragon Riders",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ancient Floating Islands With Dragon Riders"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ancient Floating Islands With Dragon Riders"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Ancient Floating Islands With Dragon Riders",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Ancient Floating Islands With Dragon Riders",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

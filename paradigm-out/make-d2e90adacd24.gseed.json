@@ -1,0 +1,697 @@
+{
+  "$intent": "bustling cyberpunk city with vertical farms and drone traffic --domain city",
+  "$created": "2026-06-04T05:48:00.887Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "d2e90adacd245da4",
+      "name": "Bustling Cyberpunk City With Vertical Farms d2e90a",
+      "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "tall",
+          "heightScale": 1.2639158687464076,
+          "shoulderRatio": 0.8595489842636801,
+          "torsoRatio": 0.916072001519542,
+          "limbRatio": 1.0727057944060203,
+          "muscle": 0.3459748658555629,
+          "softness": 0.41110421606755165,
+          "skinTone": [
+            0.6212300173861632,
+            0.46769356630862013,
+            0.5086276474417222
+          ]
+        },
+        "face": {
+          "roundness": 0.18827878713918889,
+          "eyeHeight": 0.5438857734953726,
+          "eyeSpacing": 0.3295752387110516,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.2035335189028134,
+            0.5512954599809122,
+            0.3018168661523067
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.6332755218194522,
+          "mouthShape": "thin",
+          "jawShape": "tapered",
+          "brow": 0.29393511503415715,
+          "cheekbones": 0.682549198728208,
+          "chin": 0.619872788681576,
+          "hairStyle": "wavy",
+          "hairColor": [
+            0.6173050009607354,
+            0.2503844868732479,
+            0.4207038896586909
+          ]
+        },
+        "voice": {
+          "pitch": 215.90613903983032,
+          "inflection": 0.772420947547427,
+          "tempo": 131.22361309059045,
+          "breathiness": 0.2741652962838478,
+          "warmth": 0.09326368279718289,
+          "formants": [
+            648.4299178457951,
+            1130.1207139598143,
+            2408.453980570096,
+            2964.251053009349,
+            3705.3138162616865
+          ],
+          "accent": "edinburgh"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.5241095481089009,
+            "conscientiousness": 0.9267398459163119,
+            "extraversion": 0.04279181508230101,
+            "agreeableness": 0.5042883756910228,
+            "neuroticism": 0.2416013935032082
+          },
+          "interests": [
+            "tea",
+            "astronomy",
+            "birdwatching",
+            "cartography"
+          ],
+          "values": [
+            "play",
+            "restraint",
+            "kindness",
+            "irreverence"
+          ],
+          "speechStyle": "casual",
+          "humor": 0.34167006905458086,
+          "curiosity": 0.7479152181575031
+        },
+        "memory": {
+          "episodicCapacity": 4734,
+          "episodicDecay": 0.009267582414022825,
+          "semanticCapacity": 7637,
+          "reflectionCadenceDays": 5.574415290945138
+        },
+        "bond": {
+          "initialTrust": 0.4430085706286226,
+          "initialWarmth": 0.6721773903550115,
+          "bondingDays": 62
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Bustling Cyberpunk City With Vertical Farms d2e90a"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Bustling Cyberpunk City With Vertical Farms d2e90a"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "d2e90adacd245da4",
+      "name": "Bustling Cyberpunk City With Vertical Farms",
+      "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "mythic",
+          "biome": "sky",
+          "magic": 0.1488724606592,
+          "tech": 0.2202400050651403,
+          "density": 0.7423526480200675
+        },
+        "physics": {
+          "gravity": 0.15324955285187647,
+          "hostility": 0.6305210803377581,
+          "diurnalRate": 0.49314548615666043,
+          "weatherVolatility": 0.3958064841974911
+        },
+        "society": {
+          "order": 0.6172552948834442,
+          "pluralism": 0.18827878713918889,
+          "prosperity": 0.9388577349537253,
+          "literacy": 0.19716825807367733
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.17255586483802232,
+          "urgency": 0.7521590999681871,
+          "clarity": 0.3363614435871778
+        },
+        "mood": {
+          "brightness": 0.9534482080881699,
+          "warmth": 0.8327552181945215,
+          "pace": 0.2251367361562131,
+          "levity": 0.9604504133101417
+        },
+        "history": {
+          "agesSinceFall": 1469,
+          "ghostliness": 0.682549198728208,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-04T05:48:00.868Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "bustling cyberpunk city with vertical farms and drone traffic --domain city",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Bustling Cyberpunk City With Vertical Farms"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Bustling Cyberpunk City With Vertical Farms"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "4eed459667b07801",
+    "seedHash": "4eed459667b07801dafbeef9e4b318c10e5803b5c1c231864e34f9ea542a75c6",
+    "genomeVersion": 1,
+    "title": "The Bustling Cyberpunk City With Vertical Farms Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.44582447608919973,
+      "antagonist": 0.5297942962772545,
+      "moralComplexity": 0.3361076538974339,
+      "pacing": 0.16438610332720313,
+      "intensity": 0.5824245038389076,
+      "actCount": 3,
+      "targetWordCount": 7691,
+      "hook": "A door in Bustling Cyberpunk City With Vertical Farms has opened that has been sealed for ages. Bustling Cyberpunk City With Vertical Farms d2e90a's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "d2e90adacd245da4",
+        "name": "Bustling Cyberpunk City With Vertical Farms d2e90a",
+        "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d"
+      },
+      "world": {
+        "id": "d2e90adacd245da4",
+        "name": "Bustling Cyberpunk City With Vertical Farms",
+        "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d"
+      }
+    },
+    "bornAt": "2026-06-04T05:48:00.877Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Bustling Cyberpunk City With Vertical Farms",
+      "quest": {
+        "id": "4eed459667b07801",
+        "seedHash": "4eed459667b07801dafbeef9e4b318c10e5803b5c1c231864e34f9ea542a75c6",
+        "genomeVersion": 1,
+        "title": "The Bustling Cyberpunk City With Vertical Farms Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.44582447608919973,
+          "antagonist": 0.5297942962772545,
+          "moralComplexity": 0.3361076538974339,
+          "pacing": 0.16438610332720313,
+          "intensity": 0.5824245038389076,
+          "actCount": 3,
+          "targetWordCount": 7691,
+          "hook": "A door in Bustling Cyberpunk City With Vertical Farms has opened that has been sealed for ages. Bustling Cyberpunk City With Vertical Farms d2e90a's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "d2e90adacd245da4",
+            "name": "Bustling Cyberpunk City With Vertical Farms d2e90a",
+            "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d"
+          },
+          "world": {
+            "id": "d2e90adacd245da4",
+            "name": "Bustling Cyberpunk City With Vertical Farms",
+            "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d"
+          }
+        },
+        "bornAt": "2026-06-04T05:48:00.877Z"
+      },
+      "friend": {
+        "id": "d2e90adacd245da4",
+        "name": "Bustling Cyberpunk City With Vertical Farms d2e90a",
+        "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "tall",
+            "heightScale": 1.2639158687464076,
+            "shoulderRatio": 0.8595489842636801,
+            "torsoRatio": 0.916072001519542,
+            "limbRatio": 1.0727057944060203,
+            "muscle": 0.3459748658555629,
+            "softness": 0.41110421606755165,
+            "skinTone": [
+              0.6212300173861632,
+              0.46769356630862013,
+              0.5086276474417222
+            ]
+          },
+          "face": {
+            "roundness": 0.18827878713918889,
+            "eyeHeight": 0.5438857734953726,
+            "eyeSpacing": 0.3295752387110516,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.2035335189028134,
+              0.5512954599809122,
+              0.3018168661523067
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.6332755218194522,
+            "mouthShape": "thin",
+            "jawShape": "tapered",
+            "brow": 0.29393511503415715,
+            "cheekbones": 0.682549198728208,
+            "chin": 0.619872788681576,
+            "hairStyle": "wavy",
+            "hairColor": [
+              0.6173050009607354,
+              0.2503844868732479,
+              0.4207038896586909
+            ]
+          },
+          "voice": {
+            "pitch": 215.90613903983032,
+            "inflection": 0.772420947547427,
+            "tempo": 131.22361309059045,
+            "breathiness": 0.2741652962838478,
+            "warmth": 0.09326368279718289,
+            "formants": [
+              648.4299178457951,
+              1130.1207139598143,
+              2408.453980570096,
+              2964.251053009349,
+              3705.3138162616865
+            ],
+            "accent": "edinburgh"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.5241095481089009,
+              "conscientiousness": 0.9267398459163119,
+              "extraversion": 0.04279181508230101,
+              "agreeableness": 0.5042883756910228,
+              "neuroticism": 0.2416013935032082
+            },
+            "interests": [
+              "tea",
+              "astronomy",
+              "birdwatching",
+              "cartography"
+            ],
+            "values": [
+              "play",
+              "restraint",
+              "kindness",
+              "irreverence"
+            ],
+            "speechStyle": "casual",
+            "humor": 0.34167006905458086,
+            "curiosity": 0.7479152181575031
+          },
+          "memory": {
+            "episodicCapacity": 4734,
+            "episodicDecay": 0.009267582414022825,
+            "semanticCapacity": 7637,
+            "reflectionCadenceDays": 5.574415290945138
+          },
+          "bond": {
+            "initialTrust": 0.4430085706286226,
+            "initialWarmth": 0.6721773903550115,
+            "bondingDays": 62
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "d2e90adacd245da4",
+        "name": "Bustling Cyberpunk City With Vertical Farms",
+        "seedHash": "d2e90adacd245da4938a3743b7390b2e7c581710a869325d74b9bc567356db5d",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "mythic",
+            "biome": "sky",
+            "magic": 0.1488724606592,
+            "tech": 0.2202400050651403,
+            "density": 0.7423526480200675
+          },
+          "physics": {
+            "gravity": 0.15324955285187647,
+            "hostility": 0.6305210803377581,
+            "diurnalRate": 0.49314548615666043,
+            "weatherVolatility": 0.3958064841974911
+          },
+          "society": {
+            "order": 0.6172552948834442,
+            "pluralism": 0.18827878713918889,
+            "prosperity": 0.9388577349537253,
+            "literacy": 0.19716825807367733
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.17255586483802232,
+            "urgency": 0.7521590999681871,
+            "clarity": 0.3363614435871778
+          },
+          "mood": {
+            "brightness": 0.9534482080881699,
+            "warmth": 0.8327552181945215,
+            "pace": 0.2251367361562131,
+            "levity": 0.9604504133101417
+          },
+          "history": {
+            "agesSinceFall": 1469,
+            "ghostliness": 0.682549198728208,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-04T05:48:00.868Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "bustling cyberpunk city with vertical farms and drone traffic --domain city",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "World"
+      ],
+      "suggestedStrata": [
+        "World"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "World"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Bustling Cyberpunk City With Vertical Farms",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Bustling Cyberpunk City With Vertical Farms"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Bustling Cyberpunk City With Vertical Farms"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Bustling Cyberpunk City With Vertical Farms",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "World"
+  ],
+  "richOutputs": {
+    "name": "Bustling Cyberpunk City With Vertical Farms",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "World"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

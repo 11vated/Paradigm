@@ -1,0 +1,705 @@
+{
+  "$intent": "vast cyberpunk megacity with flying cars and neon underworld --domain game",
+  "$created": "2026-06-04T05:44:45.531Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "12dcd5beeed8bc97",
+      "name": "Vast Cyberpunk Megacity With Flying Cars 12dcd5",
+      "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "soft",
+          "heightScale": 0.9720017860858551,
+          "shoulderRatio": 1.1943306055581275,
+          "torsoRatio": 0.9571816758432824,
+          "limbRatio": 1.10143404126825,
+          "muscle": 0.2368268463064255,
+          "softness": 0.48416566410406536,
+          "skinTone": [
+            0.7325566704288697,
+            0.26567579014922216,
+            0.2595387461086202
+          ]
+        },
+        "face": {
+          "roundness": 0.5310979083066321,
+          "eyeHeight": 0.5257554247481093,
+          "eyeSpacing": 0.33972509628651165,
+          "eyeShape": "narrow",
+          "eyeColor": [
+            0.6960888963970668,
+            0.5349470292001732,
+            0.5408242547588371
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.6408306392951008,
+          "mouthShape": "wide",
+          "jawShape": "square",
+          "brow": 0.40122352762719227,
+          "cheekbones": 0.619539885995702,
+          "chin": 0.5312901045078582,
+          "hairStyle": "braided",
+          "hairColor": [
+            0.6277698130667615,
+            0.4463742476354093,
+            0.08326763393016476
+          ]
+        },
+        "voice": {
+          "pitch": 106.85375755642873,
+          "inflection": 0.28530372479642985,
+          "tempo": 94.2460708797974,
+          "breathiness": 0.11654592001214459,
+          "warmth": 0.6967360855237952,
+          "formants": [
+            1310.2019358193086,
+            2283.494802427938,
+            4866.464333043146,
+            5989.494563745411,
+            7486.868204681763
+          ],
+          "accent": "paris"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.5764277318320932,
+            "conscientiousness": 0.6213578372866233,
+            "extraversion": 0.507506445924442,
+            "agreeableness": 0.1965052549013817,
+            "neuroticism": 0.8260525096810265
+          },
+          "interests": [
+            "woodworking",
+            "theatre",
+            "poetry",
+            "astronomy"
+          ],
+          "values": [
+            "play",
+            "craft",
+            "kindness"
+          ],
+          "speechStyle": "precise",
+          "humor": 0.46845409514037883,
+          "curiosity": 0.909001091053192
+        },
+        "memory": {
+          "episodicCapacity": 1405,
+          "episodicDecay": 0.026368598404050196,
+          "semanticCapacity": 11277,
+          "reflectionCadenceDays": 3.083821025306835
+        },
+        "bond": {
+          "initialTrust": 0.4150772399735382,
+          "initialWarmth": 0.7135741153814188,
+          "bondingDays": 89
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Vast Cyberpunk Megacity With Flying Cars 12dcd5"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Vast Cyberpunk Megacity With Flying Cars 12dcd5"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "12dcd5beeed8bc97",
+      "name": "Vast Cyberpunk Megacity With Flying Cars",
+      "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "mythic",
+          "biome": "ocean",
+          "magic": 0.9858265138953186,
+          "tech": 0.35727225281094155,
+          "density": 0.8381134708941667
+        },
+        "physics": {
+          "gravity": 0.456089487688085,
+          "hostility": 0.29582832052032715,
+          "diurnalRate": 0.695557582597945,
+          "weatherVolatility": 0.028501436634949417
+        },
+        "society": {
+          "order": 0.1190774922172404,
+          "pluralism": 0.5310979083066321,
+          "prosperity": 0.757554247481093,
+          "literacy": 0.264833975243411
+        },
+        "conflict": {
+          "kind": "survival",
+          "scale": 0.9934814939951115,
+          "urgency": 0.724911715333622,
+          "clarity": 0.7347070912647284
+        },
+        "mood": {
+          "brightness": 0.548361589047377,
+          "warmth": 0.9083063929510067,
+          "pace": 0.799584200290995,
+          "levity": 0.022684268590573264
+        },
+        "history": {
+          "agesSinceFall": 2006,
+          "ghostliness": 0.619539885995702,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-04T05:44:45.511Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "vast cyberpunk megacity with flying cars and neon underworld --domain game",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Vast Cyberpunk Megacity With Flying Cars"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Vast Cyberpunk Megacity With Flying Cars"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "d21ccc44b7d3bccb",
+    "seedHash": "d21ccc44b7d3bccb27b88d8f05b294b9cb02e16cd50c333223b62a540836cb68",
+    "genomeVersion": 1,
+    "title": "What Vast Cyberpunk Megacity With Flying Cars 12dcd5 Carried Out of Vast Cyberpunk Megacity With Flying Cars",
+    "genes": {
+      "archetype": "survival-crawl",
+      "stake": 0.7855961919420646,
+      "antagonist": 0.8374113745055662,
+      "moralComplexity": 0.43614119946625407,
+      "pacing": 0.6312073852599477,
+      "intensity": 0.5495173830476057,
+      "actCount": 5,
+      "targetWordCount": 17803,
+      "hook": "Winter has come to Vast Cyberpunk Megacity With Flying Cars. Vast Cyberpunk Megacity With Flying Cars 12dcd5 will not last it alone."
+    },
+    "parents": {
+      "friend": {
+        "id": "12dcd5beeed8bc97",
+        "name": "Vast Cyberpunk Megacity With Flying Cars 12dcd5",
+        "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa"
+      },
+      "world": {
+        "id": "12dcd5beeed8bc97",
+        "name": "Vast Cyberpunk Megacity With Flying Cars",
+        "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa"
+      }
+    },
+    "bornAt": "2026-06-04T05:44:45.520Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Vast Cyberpunk Megacity With Flying Cars",
+      "quest": {
+        "id": "d21ccc44b7d3bccb",
+        "seedHash": "d21ccc44b7d3bccb27b88d8f05b294b9cb02e16cd50c333223b62a540836cb68",
+        "genomeVersion": 1,
+        "title": "What Vast Cyberpunk Megacity With Flying Cars 12dcd5 Carried Out of Vast Cyberpunk Megacity With Flying Cars",
+        "genes": {
+          "archetype": "survival-crawl",
+          "stake": 0.7855961919420646,
+          "antagonist": 0.8374113745055662,
+          "moralComplexity": 0.43614119946625407,
+          "pacing": 0.6312073852599477,
+          "intensity": 0.5495173830476057,
+          "actCount": 5,
+          "targetWordCount": 17803,
+          "hook": "Winter has come to Vast Cyberpunk Megacity With Flying Cars. Vast Cyberpunk Megacity With Flying Cars 12dcd5 will not last it alone."
+        },
+        "parents": {
+          "friend": {
+            "id": "12dcd5beeed8bc97",
+            "name": "Vast Cyberpunk Megacity With Flying Cars 12dcd5",
+            "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa"
+          },
+          "world": {
+            "id": "12dcd5beeed8bc97",
+            "name": "Vast Cyberpunk Megacity With Flying Cars",
+            "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa"
+          }
+        },
+        "bornAt": "2026-06-04T05:44:45.520Z"
+      },
+      "friend": {
+        "id": "12dcd5beeed8bc97",
+        "name": "Vast Cyberpunk Megacity With Flying Cars 12dcd5",
+        "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "soft",
+            "heightScale": 0.9720017860858551,
+            "shoulderRatio": 1.1943306055581275,
+            "torsoRatio": 0.9571816758432824,
+            "limbRatio": 1.10143404126825,
+            "muscle": 0.2368268463064255,
+            "softness": 0.48416566410406536,
+            "skinTone": [
+              0.7325566704288697,
+              0.26567579014922216,
+              0.2595387461086202
+            ]
+          },
+          "face": {
+            "roundness": 0.5310979083066321,
+            "eyeHeight": 0.5257554247481093,
+            "eyeSpacing": 0.33972509628651165,
+            "eyeShape": "narrow",
+            "eyeColor": [
+              0.6960888963970668,
+              0.5349470292001732,
+              0.5408242547588371
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.6408306392951008,
+            "mouthShape": "wide",
+            "jawShape": "square",
+            "brow": 0.40122352762719227,
+            "cheekbones": 0.619539885995702,
+            "chin": 0.5312901045078582,
+            "hairStyle": "braided",
+            "hairColor": [
+              0.6277698130667615,
+              0.4463742476354093,
+              0.08326763393016476
+            ]
+          },
+          "voice": {
+            "pitch": 106.85375755642873,
+            "inflection": 0.28530372479642985,
+            "tempo": 94.2460708797974,
+            "breathiness": 0.11654592001214459,
+            "warmth": 0.6967360855237952,
+            "formants": [
+              1310.2019358193086,
+              2283.494802427938,
+              4866.464333043146,
+              5989.494563745411,
+              7486.868204681763
+            ],
+            "accent": "paris"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.5764277318320932,
+              "conscientiousness": 0.6213578372866233,
+              "extraversion": 0.507506445924442,
+              "agreeableness": 0.1965052549013817,
+              "neuroticism": 0.8260525096810265
+            },
+            "interests": [
+              "woodworking",
+              "theatre",
+              "poetry",
+              "astronomy"
+            ],
+            "values": [
+              "play",
+              "craft",
+              "kindness"
+            ],
+            "speechStyle": "precise",
+            "humor": 0.46845409514037883,
+            "curiosity": 0.909001091053192
+          },
+          "memory": {
+            "episodicCapacity": 1405,
+            "episodicDecay": 0.026368598404050196,
+            "semanticCapacity": 11277,
+            "reflectionCadenceDays": 3.083821025306835
+          },
+          "bond": {
+            "initialTrust": 0.4150772399735382,
+            "initialWarmth": 0.7135741153814188,
+            "bondingDays": 89
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "12dcd5beeed8bc97",
+        "name": "Vast Cyberpunk Megacity With Flying Cars",
+        "seedHash": "12dcd5beeed8bc972c7b12348df972e26ec682b1ba671f103695a3cc48b980aa",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "mythic",
+            "biome": "ocean",
+            "magic": 0.9858265138953186,
+            "tech": 0.35727225281094155,
+            "density": 0.8381134708941667
+          },
+          "physics": {
+            "gravity": 0.456089487688085,
+            "hostility": 0.29582832052032715,
+            "diurnalRate": 0.695557582597945,
+            "weatherVolatility": 0.028501436634949417
+          },
+          "society": {
+            "order": 0.1190774922172404,
+            "pluralism": 0.5310979083066321,
+            "prosperity": 0.757554247481093,
+            "literacy": 0.264833975243411
+          },
+          "conflict": {
+            "kind": "survival",
+            "scale": 0.9934814939951115,
+            "urgency": 0.724911715333622,
+            "clarity": 0.7347070912647284
+          },
+          "mood": {
+            "brightness": 0.548361589047377,
+            "warmth": 0.9083063929510067,
+            "pace": 0.799584200290995,
+            "levity": 0.022684268590573264
+          },
+          "history": {
+            "agesSinceFall": 2006,
+            "ghostliness": 0.619539885995702,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-04T05:44:45.511Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "vast cyberpunk megacity with flying cars and neon underworld --domain game",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind",
+        "World"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind",
+        "World"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind",
+          "World"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Vast Cyberpunk Megacity With Flying Cars",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Vast Cyberpunk Megacity With Flying Cars"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Vast Cyberpunk Megacity With Flying Cars"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Vast Cyberpunk Megacity With Flying Cars",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind",
+    "World"
+  ],
+  "richOutputs": {
+    "name": "Vast Cyberpunk Megacity With Flying Cars",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "Mind",
+      "World"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

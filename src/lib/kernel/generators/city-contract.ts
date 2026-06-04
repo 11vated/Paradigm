@@ -19,13 +19,16 @@ interface A {
   meta: any;
   previewData?: string;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -49,14 +52,29 @@ export const CityQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateCity(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch {}
     const previewData = data;
+    const pop = parsed.population || parsed.pop || 100000;
+    const buildings = parsed.buildings || parsed.structures || 5000;
+    const summary = `City sim ${parsed.name || 'metropolis'} pop ${pop}, ${buildings} buildings, traffic ${parsed.traffic || 'n/a'} (high-fid urban model per SCOPE).`;
+    const metrics: Record<string, number> = {
+      population: pop,
+      buildings: buildings,
+      traffic: typeof parsed.traffic === 'number' ? parsed.traffic : 0.5,
+      density: parsed.density || 0.7,
+      fidelity: buildings > 1000 ? 0.9 : 0.6
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

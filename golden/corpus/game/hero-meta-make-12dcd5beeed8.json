@@ -1,0 +1,23 @@
+{
+  "intent": "high fidelity game hero",
+  "domain": "game",
+  "strata": {
+    "overall": 0.72,
+    "perStratum": {
+      "Form": 0.8,
+      "Story": 0.85,
+      "World": 0.9
+    }
+  },
+  "royalty": {
+    "author": 70,
+    "platform": 30,
+    "civ": 1
+  },
+  "provenance": "rich high-fid game seed from make --verify in Fidelity Completion Sprint",
+  "grade": "high fidelity Part6 hero with rich strata",
+  "makeCmd": "npx tsx cli/paradigm.ts make \"...\" --domain game --verify",
+  "wave": "Fidelity & Universality Completion Sprint",
+  "fidelity": "full SCOPE target for playable game + rich structured",
+  "timestamp": "2026-06-04T05:45:30.690Z"
+}

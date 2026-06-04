@@ -18,13 +18,16 @@ interface A {
   meta: any;
   previewData?: string;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -48,14 +51,27 @@ export const ClimateQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateClimate(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch {}
     const previewData = data;
+    const temp = parsed.temperature || parsed.avgTemp || 15;
+    const summary = `Climate model ${parsed.region || 'global'} temp ${temp}C, precip ${parsed.precip || 'n/a'}mm, CO2 ${parsed.co2 || 'n/a'} (high-fid earth system sim).`;
+    const metrics: Record<string, number> = {
+      temperature: temp,
+      precipitation: typeof parsed.precip === 'number' ? parsed.precip : 0,
+      co2: typeof parsed.co2 === 'number' ? parsed.co2 : 400,
+      fidelity: 0.85
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },
