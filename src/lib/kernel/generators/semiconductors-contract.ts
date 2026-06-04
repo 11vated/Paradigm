@@ -14,7 +14,28 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'semiconductors'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -28,7 +49,27 @@ async function synthesize(seed: S): Promise<A> {
   const r = await withKernelClock(0, () => generateSemiconductors(seed as any, out)) as { filePath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Semiconductor ${parsed.semiconductor?.material || 'chip'} node ${parsed.semiconductor?.processNode || '?'}. Yield: ${parsed.performance?.yield?.toFixed?.(2) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    processNode: parsed.semiconductor?.processNode || 0,
+    yield: parsed.performance?.yield || 0,
+    cost: parsed.economics?.cost || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: {},
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
+    }
+  };
 }
 
 function invert(a: A): I {

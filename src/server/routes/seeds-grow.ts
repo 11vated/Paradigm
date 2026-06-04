@@ -70,6 +70,12 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
         if (!result.visual) result.visual = {};
         if (result.pngDataURL) result.visual.pngDataURL = result.pngDataURL;
         if (result.svgDataURL) result.visual.svgDataURL = result.svgDataURL;
+        if (result.structuredData || result.visual?.structuredData || result.summary || result.metrics) {
+          result.visual.type = result.visual?.type || 'structured';
+          if (result.structuredData) result.visual.structuredData = result.structuredData;
+          if (result.summary) result.visual.summary = result.summary;
+          if (result.metrics) result.visual.metrics = result.metrics;
+        }
         if ((result.pngDataURL || result.svgDataURL) && !result.emergent_assets?.visual) {
           if (!result.emergent_assets) result.emergent_assets = {};
           result.emergent_assets.visual = {

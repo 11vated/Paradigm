@@ -121,7 +121,7 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
       return {
         success: true,
         message: rec.message,
-        artifact: { type: 'recursive-evolution', ...richRec, gsplVInfty: gsplV },
+        artifact: { type: 'recursive-evolution', ...richRec, richSelfEvol: (rec as any).richSelfEvol, gsplVInfty: gsplV },
         reproducibilityHash: `15-${stableId}`,
         part6: { gsplVInftySelfHost: gsplV, perf: { durationMs: recDur, budgetMs: 100, path: 'os-shell/GSPL_recursive' } },
       };
@@ -149,7 +149,7 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
       return {
         success: true,
         message: rec.message,
-        artifact: { type: 'recursive-evolution', ...rec, gsplVInfty: gsplV },
+        artifact: { type: 'recursive-evolution', ...rec, richSelfEvol: (rec as any).richSelfEvol, gsplVInfty: gsplV },
         reproducibilityHash: `15-${stableId}`,
         part6: { gsplVInftySelfHost: gsplV, perf: { durationMs: recDur2, budgetMs: 100, path: 'os-shell/GSPL_recursive_inline' } },
       };
@@ -206,10 +206,12 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
     }
 
     const gseedDur = kernelNow() - osStart;
+    // ambitious functional self-evol: rich artifact + .gseed for demonstrable recursion (per 13_ OS/Part6)
+    const { produceSelfEvolRichArtifact } = await import('./recursive-closure.js').catch(() => ({ produceSelfEvolRichArtifact: null }));
+    const richEvol = produceSelfEvolRichArtifact ? produceSelfEvolRichArtifact(42, cmd.intent) : { summary: 'self-evol', structuredData: { epoch: 43 }, visual: { type: 'structured' } };
     return {
       success: true,
-      // smallest strengthening for self-evolution: example of shell recursively evolving its own signal set into new .gseed (per 13_ OS recursion)
-      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', strata: { overall: 0.92, recursive: 1.0 } },
+      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', strata: { overall: 0.92, recursive: 1.0 }, rich: richEvol },
       artifactId: stableId,
       message: `Recursive .gseed composition complete for ${domain}`,
       strataScores: composedGseed.strataScores,

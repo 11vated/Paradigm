@@ -13,7 +13,29 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'drug'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    sdfPath?: string;
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -35,15 +57,22 @@ export const DrugQualityContract: QualityContract<S, A, any> = {
     const sdfContent = await fsp.readFile(r.sdfPath, 'utf-8').catch(() => 'M  END');
     const atomCount = (sdfContent.match(/^[ ]*[0-9.-]+[ ]+[0-9.-]+[ ]+[0-9.-]+[ ]+[A-Za-z]/gm) || []).length;
     const bondCount = (sdfContent.match(/^[ ]*[0-9]+[ ]+[0-9]+[ ]+[0-9]/gm) || []).length;
+    let parsed: any = {};
+    try { parsed = JSON.parse(jsonContent); } catch { parsed = { atoms: atomCount, bonds: bondCount }; }
+    const summary = `Drug ${parsed.drug?.name || 'compound'} (atoms: ${atomCount}, bonds: ${bondCount}). Affinity: ${parsed.properties?.bindingAffinity?.toFixed?.(2) || 'n/a'}`;
+    const metrics: Record<string, number> = { atomCount, bondCount, bindingAffinity: parsed.properties?.bindingAffinity || 0, toxicity: parsed.properties?.toxicity || 0 };
+    const previewData = jsonContent;
     return {
       filePath: jsonContent,
-      meta: {
-        sdfPath: r.sdfPath,
-        sdfSize: sdfContent.length,
-        atomCount,
-        bondCount,
-        drugType: r.drugType,
-        sdfHead: sdfContent.slice(0, 96)
+      meta: { sdfPath: r.sdfPath, atomCount, bondCount },
+      previewData,
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+      emergent_assets: {
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: r.filePath },
+        sdfPath: r.sdfPath
       }
     };
   },

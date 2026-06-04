@@ -14,7 +14,28 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'electronics'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -34,7 +55,27 @@ export const ElectronicsQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateElectronics(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
+    const summary = `Electronics ${parsed.electronics?.componentType || 'device'} with ${parsed.electronics?.powerRating || '?'}W. Efficiency: ${parsed.performance?.efficiency?.toFixed?.(2) || 'n/a'}`;
+    const metrics: Record<string, number> = {
+      powerRating: parsed.electronics?.powerRating || 0,
+      efficiency: parsed.performance?.efficiency || 0,
+      cost: parsed.economics?.cost || 0
+    };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: {},
+      previewData,
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+      emergent_assets: {
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

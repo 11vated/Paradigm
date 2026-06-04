@@ -35,6 +35,7 @@ interface SeedOffer {
   senderPublicKey: string;
   timestamp: number;
   offerHash: string;
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }; // rich prop for lived fed
 }
 
 interface FederationState {
@@ -245,7 +246,8 @@ export function registerFederationRoutes(app: any) {
     res.json({
       accepted: true,
       lineage,
-      message: 'Offer accepted and lineage recorded',
+      richPreview: offer.richPreview || null,
+      message: 'Offer accepted and lineage recorded. Rich preview propagated if present.',
     });
   });
 

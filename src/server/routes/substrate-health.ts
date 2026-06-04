@@ -182,10 +182,10 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
             const part6EconDur = kernelNow() - part6EconStart;
             const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = await import('../../lib/sovereignty/index.js');
             // Real 2-node (beyond sim): use the new performRealTwoNodeFedExchange (full ECDSA, protocol steps) + still call det* for merge/fork coverage
-            const realFed = performRealTwoNodeFedExchange('health-fed-sample-real', ['anc-0', 'health-real'], 'node-alpha', 'node-beta');
+            const realFed = performRealTwoNodeFedExchange('health-fed-sample-real', ['anc-0', 'health-real'], 'node-alpha', 'node-beta', { name: 'health-2node-rich', summary: 'Rich data in real 2-node fed', visualType: 'structured', strata: 0.555 });
             // smallest extension: demo multi-node (3-node) for more robust behavior
             const multiMod = await import('../../lib/sovereignty/index.js');
-            const multiFed = typeof multiMod.simulateMultiNodeFedExchange === 'function' ? multiMod.simulateMultiNodeFedExchange('health-fed-multi', ['anc-0', 'health-multi'], 'alpha', 'beta', 'gamma') : null;
+            const multiFed = typeof multiMod.simulateMultiNodeFedExchange === 'function' ? multiMod.simulateMultiNodeFedExchange('health-fed-multi', ['anc-0', 'health-multi'], 'alpha', 'beta', 'gamma', { name: 'health-rich-demo', summary: 'Rich preview propagated in multi-node fed', visualType: 'structured', strata: 0.555 }) : null;
             const vReal = verifyFedV1Exchange(realFed.exchange, realFed.exchange.publicKey);
             const mergeRes = detMergeFed(realFed.exchange, 'health-local-real', ['local-anc-real'], ''); // priv optional in some paths
             const forkRes = detForkFed('health-fed-sample-real', ['anc-0'], ''); 
@@ -194,7 +194,7 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
               economics: `computeFullPayout (real): toCreator=${payout.toCreator.toFixed(2)} civDividend=${payout.civDividend} depth=${payout.depthUsed}; onchainPrep recipients=${onchain.recipients.length} (PARA/SeedNFT ready); Econ onchain payout: author ${payout.toCreator.toFixed(2)} platform ${(1000-payout.toCreator-payout.civDividend).toFixed(2)} civ ${payout.civDividend} (PARA/SeedNFT prep called); Onchain tx simulated/verified: PARA royalty to ${onchain.recipients.length} recipients + civ dividend (dist executed); civilizational dividend operational per 17-19`,
               physicalBridge: 'completePhysicalBridge + advanced + materials DB',
               osShell: 'paradigmOSShell + recursive .gseed + router + physical (Part6 hooks) + GSPL v∞ formal verifier self-host wired + self-evolution',
-              federation: `Fed v1 REAL 2-node + multi-node (3-node demo) (beyond sim, no central per 13_ Phase 16): ${realFed.claim}; multi=${multiFed?.claim || 'n/a'}; verified=${vReal.sigOk && vReal.merkleOk} roundtrip=${(multiFed as any)?.roundtripVerified || false} merge=${!!mergeRes} fork=${!!forkRes.forkedSeedId} lineageLen=${realFed.lineage.length}; sovereignty/index canonical + federation routes (real ECDSA offer/accept)`,
+              federation: `Fed v1 REAL 2-node + multi-node (3-node demo) (beyond sim, no central per 13_ Phase 16): ${realFed.claim}; multi=${multiFed?.claim || 'n/a'}; verified=${vReal.sigOk && vReal.merkleOk} roundtrip=${(multiFed as any)?.roundtripVerified || false} merge=${!!mergeRes} fork=${!!forkRes.forkedSeedId} lineageLen=${realFed.lineage.length}${(multiFed as any)?.exchangeAB?.richPreview ? ' +richPreview' : ''}; sovereignty/index canonical + federation routes (real ECDSA offer/accept)`,
               governance: 'canon-stewardship + hooks + waiver registry',
               status: 'LIVE (real calls + exercised by 15-contracts-verify + paradigm verify-15 + real fed 2-node + actual econ payouts)',
               econSample: { toCreator: payout.toCreator, civDividend: payout.civDividend, onchainRecips: onchain.recipients.length, durationMs: part6EconDur, realFedVerified: realFed.verified },

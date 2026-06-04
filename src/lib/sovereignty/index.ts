@@ -112,6 +112,7 @@ export interface FedV1Exchange {
   publicKey: string;
   timestamp: string;
   merkleRoot: string;
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }; // ambitious: rich data propagation for lived fed exchanges (no entropy, derived)
 }
 
 export function createFedV1SignedExchange(
@@ -119,10 +120,12 @@ export function createFedV1SignedExchange(
   toNode: string,
   seedHash: string,
   lineage: string[],
-  privateKeyPem: string
+  privateKeyPem: string,
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
 ): FedV1Exchange {
   // canonical data for sign (no wall time in signed payload)
-  const dataToSign = JSON.stringify({ fromNode, toNode, seedHash, lineage }, Object.keys({ fromNode, toNode, seedHash, lineage }).sort());
+  const base = { fromNode, toNode, seedHash, lineage };
+  const dataToSign = JSON.stringify(richPreview ? { ...base, richPreview } : base, Object.keys(richPreview ? { ...base, richPreview } : base).sort());
   const sign = crypto.createSign('SHA256');
   sign.update(dataToSign);
   sign.end();
@@ -134,7 +137,7 @@ export function createFedV1SignedExchange(
   const tree = new MerkleTree(leafHashes);
   const merkleRoot = tree.root;
 
-  return {
+  const ex: FedV1Exchange = {
     fromNode,
     toNode,
     seedHash,
@@ -144,11 +147,14 @@ export function createFedV1SignedExchange(
     timestamp: kernelNowIso(),
     merkleRoot,
   };
+  if (richPreview) ex.richPreview = richPreview;
+  return ex;
 }
 
 export function verifyFedV1Exchange(ex: FedV1Exchange, publicKeyPem: string): { sigOk: boolean; merkleOk: boolean; proof?: InclusionProof } {
   try {
-    const dataToSign = JSON.stringify({ fromNode: ex.fromNode, toNode: ex.toNode, seedHash: ex.seedHash, lineage: ex.lineage }, Object.keys({ fromNode: ex.fromNode, toNode: ex.toNode, seedHash: ex.seedHash, lineage: ex.lineage }).sort());
+    const base = { fromNode: ex.fromNode, toNode: ex.toNode, seedHash: ex.seedHash, lineage: ex.lineage };
+    const dataToSign = JSON.stringify(ex.richPreview ? { ...base, richPreview: ex.richPreview } : base, Object.keys(ex.richPreview ? { ...base, richPreview: ex.richPreview } : base).sort());
     const verify = crypto.createVerify('SHA256');
     verify.update(dataToSign);
     verify.end();
@@ -251,13 +257,14 @@ export function performRealTwoNodeFedExchange(
   seedHash: string,
   initialLineage: string[],
   nodeAName = 'node-alpha',
-  nodeBName = 'node-beta'
+  nodeBName = 'node-beta',
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
 ): { exchange: FedV1Exchange; verified: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
   // Use real key gen (ECDSA P-256 via SovereigntyLayer) for each "node"
   const ka = SovereigntyLayer.generateKeys();
   const kb = SovereigntyLayer.generateKeys();
 
-  const ex = createFedV1SignedExchange(nodeAName, nodeBName, seedHash, initialLineage, ka.private_key);
+  const ex = createFedV1SignedExchange(nodeAName, nodeBName, seedHash, initialLineage, ka.private_key, richPreview);
   const v = verifyFedV1Exchange(ex, ex.publicKey);
   const verified = !!v.sigOk && !!v.merkleOk;
 
@@ -272,7 +279,7 @@ export function performRealTwoNodeFedExchange(
     verified,
     merged,
     lineage: finalLineage,
-    claim: `real fed v1 2-node exchange (no central): verified=${verified} merge=${!!merged} lineageLen=${finalLineage.length} (ECDSA-P256 + merkle; sovereignty canonical per 13_ Phase 16)`,
+    claim: `real fed v1 2-node exchange (no central): verified=${verified} merge=${!!merged} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''} (ECDSA-P256 + merkle; sovereignty canonical per 13_ Phase 16)`,
   };
 }
 
@@ -282,13 +289,14 @@ export function simulateMultiNodeFedExchange(
   initialLineage: string[],
   nodeAName = 'node-alpha',
   nodeBName = 'node-beta',
-  nodeCName = 'node-gamma'
+  nodeCName = 'node-gamma',
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
 ): { exchangeAB: FedV1Exchange; exchangeBC: FedV1Exchange; verified: boolean; roundtripVerified?: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
   const ka = SovereigntyLayer.generateKeys();
   const kb = SovereigntyLayer.generateKeys();
   const kc = SovereigntyLayer.generateKeys();
 
-  const exAB = createFedV1SignedExchange(nodeAName, nodeBName, seedHash, initialLineage, ka.private_key);
+  const exAB = createFedV1SignedExchange(nodeAName, nodeBName, seedHash, initialLineage, ka.private_key, richPreview);
   const vAB = verifyFedV1Exchange(exAB, exAB.publicKey);
   const verifiedAB = !!vAB.sigOk && !!vAB.merkleOk;
 
@@ -297,7 +305,7 @@ export function simulateMultiNodeFedExchange(
   let merged: ReturnType<typeof detMergeFed> | undefined;
 
   if (verifiedAB) {
-    exBC = createFedV1SignedExchange(nodeBName, nodeCName, seedHash, [...initialLineage, nodeBName], kb.private_key);
+    exBC = createFedV1SignedExchange(nodeBName, nodeCName, seedHash, [...initialLineage, nodeBName], kb.private_key, richPreview);
     const vBC = verifyFedV1Exchange(exBC, exBC.publicKey);
     verified = verified && !!vBC.sigOk && !!vBC.merkleOk;
     if (verified) {
@@ -321,6 +329,6 @@ export function simulateMultiNodeFedExchange(
     roundtripVerified,
     merged,
     lineage: finalLineage,
-    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} roundtrip=${roundtripVerified} lineageLen=${finalLineage.length} (ECDSA + chained merkle + final verify per 13_ advanced surfaces)`,
+    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} roundtrip=${roundtripVerified} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''} (ECDSA + chained merkle + final verify per 13_ advanced surfaces)`,
   };
 }

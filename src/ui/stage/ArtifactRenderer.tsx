@@ -60,6 +60,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     if (artifact.jsonPath || artifact.json) return 'json';
     if (artifact.storyData || artifact.manuscript) return 'story';
     if (artifact.previewData && (artifact.visual?.type === 'code' || artifact.visual?.type === 'glsl' || artifact.visual?.type === 'wgsl')) return 'code';
+    if (artifact.structuredData || artifact.visual?.type === 'structured' || artifact.visual?.structuredData) return 'structured';
     if (artifact.outputPath) {
       const ext = artifact.outputPath.split('.').pop()?.toLowerCase();
       if (ext === 'svg')  return 'svg';
@@ -238,6 +239,30 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     return (
       <div className="p-artifact p-artifact-json">
         <pre>{content ?? '// fetch deferred'}</pre>
+      </div>
+    );
+  }
+
+  // ─── STRUCTURED (ambitious rich for data domains): summary + metrics pills + collapsible data (lived quality) ─
+  if (kind === 'structured') {
+    const s = artifact.structuredData || artifact.visual?.structuredData || {};
+    const sum = artifact.summary || artifact.visual?.summary || '';
+    const m = artifact.metrics || artifact.visual?.metrics || {};
+    return (
+      <div className="p-artifact p-artifact-structured">
+        {sum && <div className="p-artifact-structured-summary">{sum}</div>}
+        {Object.keys(m).length > 0 && (
+          <div className="p-artifact-metrics">
+            {Object.entries(m).map(([k, v]) => (
+              <span key={k} className="p-metric-pill" title={k}>{k}: {typeof v === 'number' ? v.toFixed(2) : String(v)}</span>
+            ))}
+          </div>
+        )}
+        <details className="p-artifact-structured-details">
+          <summary>Full structured data (for export/inspect)</summary>
+          <pre>{JSON.stringify(s, null, 2).slice(0, 2000)}{JSON.stringify(s).length > 2000 ? '...' : ''}</pre>
+        </details>
+        <div className="p-artifact-structured-hint">Rich structured preview from QC synthesize. Full in .gseed/export. Strata live in HUD.</div>
       </div>
     );
   }

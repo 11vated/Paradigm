@@ -13,7 +13,28 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'media'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -27,7 +48,27 @@ async function synthesize(seed: S): Promise<A> {
   const r = await withKernelClock(0, () => generateMedia(seed as any, out)) as { filePath?: string; planPath?: string };
   const richPath = r.planPath ?? r.filePath ?? out;
   const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
-  return { filePath: data, meta: { planPath: richPath, mediaType: (seed as any).genes?.mediaType } };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Media ${parsed.media?.type || 'content'} ${parsed.media?.format || ''}. Reach: ${parsed.performance?.reach?.toFixed?.(0) || '?'}`;
+  const metrics: Record<string, number> = {
+    reach: parsed.performance?.reach || 0,
+    engagement: parsed.performance?.engagement || 0,
+    virality: parsed.performance?.virality || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { planPath: richPath, mediaType: (seed as any).genes?.mediaType },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: richPath }
+    }
+  };
 }
 
 function invert(a: A): I {
