@@ -1,0 +1,51 @@
+{
+  "seed": "living website that renders the entire Paradigm substrate as interactive sovereign .gseed browser with live econ dividends and 2-node fed",
+  "domain": "os-shell recursive .gseed composition (det, no central)",
+  "reproducibilityHash": "gseed-rec-os-a5624ad5bd6c",
+  "strataScores": {
+    "overall": 0.91,
+    "recursive": 1
+  },
+  "artifact": {
+    "$type": ".gseed",
+    "$version": "recursive-v1",
+    "root": "os-a5624ad5bd6c",
+    "intent": "living website that renders the entire Paradigm substrate as interactive sovereign .gseed browser with live econ dividends and 2-node fed",
+    "domain": "website",
+    "subCompositions": [
+      "gseed-sub-d9",
+      "gseed-sub-27e"
+    ],
+    "lineage": [
+      "os-a5624ad5bd6c",
+      "gseed-sub-d9",
+      "gseed-sub-27e"
+    ],
+    "strataScores": {
+      "overall": 0.91,
+      "recursive": 1
+    },
+    "determinismLocked": true,
+    "reproducibilityHash": "gseed-rec-os-a5624ad5bd6c",
+    "source": "os-shell recursive .gseed composition (det, no central)",
+    "emittedAt": "2026-06-04T02:10:08.500Z",
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-a5624ad5bd6c-recursive.gseed.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active (recursive depth)",
+    "isRecursiveGseed": true,
+    "gsplVInftySelfHost": {
+      "overallPassed": true,
+      "determinismChecks": 1,
+      "geneDeclsChecked": 2,
+      "claim": "Paradigm as .gseed compositions (recursively self-hosting via OS Shell per 13_ Phases 22-23 Part 6; GSPL v∞ formal verifier wired for det + 17-gene type soundness)",
+      "generatedAt": "2026-06-04T02:10:08.529Z"
+    },
+    "perf": {
+      "durationMs": 29,
+      "budgetMs": 150,
+      "path": "os-shell/recursive_gseed"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:08.534Z"
+}

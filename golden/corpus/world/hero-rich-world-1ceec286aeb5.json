@@ -1,0 +1,3125 @@
+{
+  "seed": "world of eternal wandering nomads whose every culture is a breedable game seed with onchain civ payouts",
+  "domain": "15_ rich generator via os-shell universal (world)",
+  "reproducibilityHash": "15-rich-os-6d39a95be9ac",
+  "strataScores": {
+    "story": 0.93,
+    "culture": 0.91,
+    "form": 0.89,
+    "overall": 0.91
+  },
+  "artifact": {
+    "id": "15-world-os-6d39a95be9ac",
+    "domain": "world",
+    "name": "os-6d39a95be9ac",
+    "intent": "world of eternal wandering nomads whose every culture is a breedable game seed with onchain civ payouts",
+    "strataScores": {
+      "story": 0.93,
+      "culture": 0.91,
+      "form": 0.89,
+      "overall": 0.91
+    },
+    "determinismLocked": true,
+    "reproducibilityHash": "15-rich-os-6d39a95be9ac",
+    "source": "15_ rich generator via os-shell universal (world)",
+    "richData": {
+      "svgPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.svg",
+      "jsonPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.json",
+      "htmlPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.html",
+      "worldData": {
+        "name": "Nanur",
+        "age": "modern",
+        "scale": "island_chain",
+        "width": 128,
+        "height": 96,
+        "plates": [
+          {
+            "id": 0,
+            "cx": 96,
+            "cy": 73,
+            "type": "continental",
+            "mass": 1.0180659639279601,
+            "velocity": [
+              0.8078313743607297,
+              0.19648821164133556
+            ]
+          },
+          {
+            "id": 1,
+            "cx": 53,
+            "cy": 9,
+            "type": "continental",
+            "mass": 0.8710312669183355,
+            "velocity": [
+              0.9206905458166426,
+              0.8122823661202205
+            ]
+          },
+          {
+            "id": 2,
+            "cx": 115,
+            "cy": 58,
+            "type": "continental",
+            "mass": 1.8519718629992883,
+            "velocity": [
+              0.2277432376417683,
+              -0.17449911556852093
+            ]
+          },
+          {
+            "id": 3,
+            "cx": 115,
+            "cy": 18,
+            "type": "continental",
+            "mass": 1.5984241298678967,
+            "velocity": [
+              0.27892611201637063,
+              -0.6565924888627799
+            ]
+          }
+        ],
+        "regions": [
+          {
+            "id": 0,
+            "name": "Zanathan",
+            "cx": 72,
+            "cy": 1,
+            "plate": 1,
+            "elevation": 0.47043877047537896,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 312,
+            "neighbors": [
+              16,
+              17,
+              31
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 1,
+            "name": "Renia",
+            "cx": 48,
+            "cy": 10,
+            "plate": 1,
+            "elevation": 0.7453426571611417,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 578,
+            "neighbors": [
+              4,
+              6,
+              17,
+              25,
+              27,
+              28,
+              31,
+              39
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 2,
+            "name": "Gilean",
+            "cx": 59,
+            "cy": 80,
+            "plate": 0,
+            "elevation": 0.7082011405071591,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 815,
+            "neighbors": [
+              30,
+              33,
+              40,
+              44,
+              52,
+              55
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 3,
+            "name": "Jalur",
+            "cx": 19,
+            "cy": 85,
+            "plate": 0,
+            "elevation": 0.47459529636340286,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 576,
+            "neighbors": [
+              7,
+              12,
+              42
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 4,
+            "name": "Ariaiel",
+            "cx": 49,
+            "cy": 4,
+            "plate": 1,
+            "elevation": 0.6708323701182716,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 196,
+            "neighbors": [
+              1,
+              6,
+              17,
+              25,
+              27,
+              28,
+              39
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 5,
+            "name": "Orwynan",
+            "cx": 88,
+            "cy": 47,
+            "plate": 0,
+            "elevation": 0.7754389418073437,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 987,
+            "neighbors": [
+              19,
+              51
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 6,
+            "name": "Palastiel",
+            "cx": 58,
+            "cy": 19,
+            "plate": 1,
+            "elevation": 0.43215595766841025,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 232,
+            "neighbors": [
+              1,
+              4,
+              17,
+              25,
+              31,
+              34,
+              39,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 7,
+            "name": "Nanath",
+            "cx": 27,
+            "cy": 93,
+            "plate": 0,
+            "elevation": 0.2515541344385661,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 447,
+            "neighbors": [
+              3,
+              35,
+              55
+            ],
+            "factionId": null
+          },
+          {
+            "id": 8,
+            "name": "Renan",
+            "cx": 127,
+            "cy": 1,
+            "plate": 3,
+            "elevation": 0.4968105485818759,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 978,
+            "neighbors": [],
+            "factionId": 2
+          },
+          {
+            "id": 9,
+            "name": "Branael",
+            "cx": 108,
+            "cy": 24,
+            "plate": 3,
+            "elevation": 0.826556433120945,
+            "climate": "temperate",
+            "biome": "mountain_peak",
+            "isOcean": false,
+            "area": 384,
+            "neighbors": [
+              49,
+              58
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 10,
+            "name": "Palison",
+            "cx": 126,
+            "cy": 90,
+            "plate": 2,
+            "elevation": 0.44155513184346085,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 321,
+            "neighbors": [
+              48
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 11,
+            "name": "Gilal",
+            "cx": 38,
+            "cy": 72,
+            "plate": 0,
+            "elevation": 0.5226448053662635,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 683,
+            "neighbors": [
+              21,
+              23,
+              32,
+              55
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 12,
+            "name": "Jalara",
+            "cx": 16,
+            "cy": 67,
+            "plate": 1,
+            "elevation": 0.7298416800066891,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 317,
+            "neighbors": [
+              3,
+              32,
+              36,
+              37,
+              42
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 13,
+            "name": "Aelael",
+            "cx": 105,
+            "cy": 78,
+            "plate": 0,
+            "elevation": 0.4863696185113109,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 594,
+            "neighbors": [
+              38,
+              53,
+              57
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 14,
+            "name": "Valoston",
+            "cx": 57,
+            "cy": 44,
+            "plate": 1,
+            "elevation": 0.4276267948446791,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 411,
+            "neighbors": [
+              20,
+              23,
+              34,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 15,
+            "name": "Urion",
+            "cx": 87,
+            "cy": 25,
+            "plate": 3,
+            "elevation": 0.41388718086254495,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 267,
+            "neighbors": [
+              19,
+              45,
+              49,
+              51,
+              56
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 16,
+            "name": "Korielan",
+            "cx": 78,
+            "cy": 7,
+            "plate": 1,
+            "elevation": 0.566564897423476,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 777,
+            "neighbors": [
+              0,
+              31,
+              45,
+              56
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 17,
+            "name": "Calis",
+            "cx": 55,
+            "cy": 9,
+            "plate": 1,
+            "elevation": 0.6892301615289561,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 826,
+            "neighbors": [
+              0,
+              1,
+              4,
+              6,
+              25,
+              28,
+              31,
+              39
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 18,
+            "name": "Durera",
+            "cx": 125,
+            "cy": 50,
+            "plate": 2,
+            "elevation": 0.47252418332865503,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 518,
+            "neighbors": [
+              43,
+              57,
+              58
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 19,
+            "name": "Nanastia",
+            "cx": 85,
+            "cy": 37,
+            "plate": 3,
+            "elevation": 0.41045712226396297,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 166,
+            "neighbors": [
+              5,
+              15,
+              45,
+              51
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 20,
+            "name": "Qaria",
+            "cx": 47,
+            "cy": 37,
+            "plate": 1,
+            "elevation": 0.6648623471654741,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 337,
+            "neighbors": [
+              14,
+              22,
+              23,
+              29,
+              34,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 21,
+            "name": "Nanis",
+            "cx": 36,
+            "cy": 57,
+            "plate": 1,
+            "elevation": 0.47235874647614634,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 136,
+            "neighbors": [
+              11,
+              23,
+              32,
+              41
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 22,
+            "name": "Jalionor",
+            "cx": 40,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.29209762592231586,
+            "climate": "temperate",
+            "biome": "ocean_shelf",
+            "isOcean": true,
+            "area": 725,
+            "neighbors": [
+              20,
+              26,
+              27,
+              28,
+              29,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 23,
+            "name": "Qarern",
+            "cx": 42,
+            "cy": 54,
+            "plate": 1,
+            "elevation": 0.5209583376932613,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 962,
+            "neighbors": [
+              11,
+              14,
+              20,
+              21,
+              41,
+              54
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 24,
+            "name": "Wyneld",
+            "cx": 10,
+            "cy": 36,
+            "plate": 1,
+            "elevation": 0.5613958966079696,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 689,
+            "neighbors": [
+              26,
+              37,
+              41,
+              47,
+              50
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 25,
+            "name": "Faranan",
+            "cx": 48,
+            "cy": 7,
+            "plate": 1,
+            "elevation": 0.7496747320107641,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 500,
+            "neighbors": [
+              1,
+              4,
+              6,
+              17,
+              27,
+              28,
+              39
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 26,
+            "name": "Qaretha",
+            "cx": 21,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.45856662519817004,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 726,
+            "neighbors": [
+              22,
+              24,
+              29,
+              41,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 27,
+            "name": "Solothiel",
+            "cx": 34,
+            "cy": 13,
+            "plate": 1,
+            "elevation": 0.1251010019220873,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 667,
+            "neighbors": [
+              1,
+              4,
+              22,
+              25,
+              28,
+              29,
+              39
+            ],
+            "factionId": null
+          },
+          {
+            "id": 28,
+            "name": "Solan",
+            "cx": 37,
+            "cy": 15,
+            "plate": 1,
+            "elevation": 0.09584001834631281,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 969,
+            "neighbors": [
+              1,
+              4,
+              17,
+              22,
+              25,
+              27,
+              29,
+              39,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 29,
+            "name": "Paleth",
+            "cx": 36,
+            "cy": 31,
+            "plate": 1,
+            "elevation": 0.23241607296430636,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 985,
+            "neighbors": [
+              20,
+              22,
+              26,
+              27,
+              28,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 30,
+            "name": "Vanal",
+            "cx": 59,
+            "cy": 74,
+            "plate": 0,
+            "elevation": 0.8091922092169583,
+            "climate": "temperate",
+            "biome": "mountain_peak",
+            "isOcean": false,
+            "area": 908,
+            "neighbors": [
+              2,
+              40,
+              44,
+              52,
+              55
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 31,
+            "name": "Valornia",
+            "cx": 66,
+            "cy": 17,
+            "plate": 1,
+            "elevation": 0.3773798906068641,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 963,
+            "neighbors": [
+              0,
+              1,
+              6,
+              16,
+              17,
+              34,
+              39,
+              45
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 32,
+            "name": "Palost",
+            "cx": 22,
+            "cy": 63,
+            "plate": 1,
+            "elevation": 0.6102745081732093,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 402,
+            "neighbors": [
+              11,
+              12,
+              21,
+              36,
+              37,
+              42
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 33,
+            "name": "Xanir",
+            "cx": 77,
+            "cy": 85,
+            "plate": 0,
+            "elevation": 0.304058189048171,
+            "climate": "temperate",
+            "biome": "ocean_shelf",
+            "isOcean": true,
+            "area": 574,
+            "neighbors": [
+              2,
+              40,
+              44,
+              46
+            ],
+            "factionId": null
+          },
+          {
+            "id": 34,
+            "name": "Paleraia",
+            "cx": 63,
+            "cy": 34,
+            "plate": 1,
+            "elevation": 0.5052114341158455,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 256,
+            "neighbors": [
+              6,
+              14,
+              20,
+              31,
+              39,
+              54
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 35,
+            "name": "Arathia",
+            "cx": 44,
+            "cy": 94,
+            "plate": 0,
+            "elevation": 0.5479447611646678,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 142,
+            "neighbors": [
+              7,
+              55
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 36,
+            "name": "Gilern",
+            "cx": 12,
+            "cy": 62,
+            "plate": 1,
+            "elevation": 0.6372152898324935,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 929,
+            "neighbors": [
+              12,
+              32,
+              37,
+              42
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 37,
+            "name": "Renathon",
+            "cx": 11,
+            "cy": 51,
+            "plate": 1,
+            "elevation": 0.44775162396465,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 944,
+            "neighbors": [
+              12,
+              24,
+              32,
+              36,
+              41,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 38,
+            "name": "Aelor",
+            "cx": 98,
+            "cy": 95,
+            "plate": 0,
+            "elevation": 0.428803865131058,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 921,
+            "neighbors": [
+              13,
+              46,
+              53
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 39,
+            "name": "Calothia",
+            "cx": 50,
+            "cy": 22,
+            "plate": 1,
+            "elevation": 0.4988742345458556,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 363,
+            "neighbors": [
+              1,
+              4,
+              6,
+              17,
+              20,
+              22,
+              25,
+              27,
+              28,
+              29,
+              31,
+              34,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 40,
+            "name": "Wynaraan",
+            "cx": 73,
+            "cy": 82,
+            "plate": 0,
+            "elevation": 0.39907424662370444,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 278,
+            "neighbors": [
+              2,
+              30,
+              33,
+              44,
+              46,
+              52
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 41,
+            "name": "Qaral",
+            "cx": 28,
+            "cy": 41,
+            "plate": 1,
+            "elevation": 0.7188161016660376,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 545,
+            "neighbors": [
+              20,
+              21,
+              22,
+              23,
+              24,
+              26,
+              29,
+              37,
+              47,
+              54,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 42,
+            "name": "Aroth",
+            "cx": 15,
+            "cy": 73,
+            "plate": 1,
+            "elevation": 0.6882719461469436,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 323,
+            "neighbors": [
+              3,
+              12,
+              32,
+              36
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 43,
+            "name": "Zanath",
+            "cx": 121,
+            "cy": 53,
+            "plate": 2,
+            "elevation": 0.45697194907033034,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 405,
+            "neighbors": [
+              18,
+              57,
+              58
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 44,
+            "name": "Duror",
+            "cx": 71,
+            "cy": 71,
+            "plate": 0,
+            "elevation": 0.39008572306397016,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 906,
+            "neighbors": [
+              2,
+              30,
+              33,
+              40,
+              52
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 45,
+            "name": "Naneldor",
+            "cx": 80,
+            "cy": 20,
+            "plate": 1,
+            "elevation": 0.17698086067473448,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 457,
+            "neighbors": [
+              15,
+              16,
+              19,
+              31,
+              56
+            ],
+            "factionId": null
+          },
+          {
+            "id": 46,
+            "name": "Yalera",
+            "cx": 87,
+            "cy": 95,
+            "plate": 0,
+            "elevation": 0.4299711775555912,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 577,
+            "neighbors": [
+              33,
+              38,
+              40
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 47,
+            "name": "Talara",
+            "cx": 10,
+            "cy": 36,
+            "plate": 1,
+            "elevation": 0.5613958966079696,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 563,
+            "neighbors": [
+              24,
+              26,
+              37,
+              41,
+              50
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 48,
+            "name": "Zanielor",
+            "cx": 126,
+            "cy": 81,
+            "plate": 2,
+            "elevation": 0.6767781843936757,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 697,
+            "neighbors": [
+              10,
+              57
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 49,
+            "name": "Farwyn",
+            "cx": 105,
+            "cy": 20,
+            "plate": 3,
+            "elevation": 0.7152458974576876,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 971,
+            "neighbors": [
+              9,
+              15,
+              56
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 50,
+            "name": "Valoror",
+            "cx": 0,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.48903929408926705,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 998,
+            "neighbors": [
+              24,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 51,
+            "name": "Nanorn",
+            "cx": 91,
+            "cy": 42,
+            "plate": 2,
+            "elevation": 0.6599732713071004,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 445,
+            "neighbors": [
+              5,
+              15,
+              19
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 52,
+            "name": "Nanera",
+            "cx": 63,
+            "cy": 70,
+            "plate": 0,
+            "elevation": 0.47526716198335167,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 894,
+            "neighbors": [
+              2,
+              30,
+              40,
+              44
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 53,
+            "name": "Solur",
+            "cx": 105,
+            "cy": 78,
+            "plate": 0,
+            "elevation": 0.4863696185113109,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 527,
+            "neighbors": [
+              13,
+              38,
+              57
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 54,
+            "name": "Qarostiel",
+            "cx": 46,
+            "cy": 38,
+            "plate": 1,
+            "elevation": 0.6926904091680196,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 645,
+            "neighbors": [
+              14,
+              20,
+              22,
+              23,
+              29,
+              34,
+              39,
+              41,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 55,
+            "name": "Vanoria",
+            "cx": 41,
+            "cy": 80,
+            "plate": 0,
+            "elevation": 0.7822154477152878,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 185,
+            "neighbors": [
+              2,
+              7,
+              11,
+              30,
+              35
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 56,
+            "name": "Gileldiel",
+            "cx": 92,
+            "cy": 8,
+            "plate": 3,
+            "elevation": 0.4551857265686595,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 974,
+            "neighbors": [
+              15,
+              16,
+              45,
+              49
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 57,
+            "name": "Nanor",
+            "cx": 122,
+            "cy": 69,
+            "plate": 2,
+            "elevation": 0.5374917424090062,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 361,
+            "neighbors": [
+              13,
+              18,
+              43,
+              48,
+              53
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 58,
+            "name": "Zanaelia",
+            "cx": 116,
+            "cy": 38,
+            "plate": 2,
+            "elevation": 0.36333355041160037,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 744,
+            "neighbors": [
+              9,
+              18,
+              43
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 59,
+            "name": "Elonor",
+            "cx": 43,
+            "cy": 31,
+            "plate": 1,
+            "elevation": 0.3841966207995634,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 738,
+            "neighbors": [
+              6,
+              14,
+              20,
+              22,
+              28,
+              29,
+              39,
+              41,
+              54
+            ],
+            "factionId": 0
+          }
+        ],
+        "rivers": [
+          {
+            "id": 0,
+            "path": [
+              [
+                37,
+                81
+              ],
+              [
+                36,
+                80
+              ],
+              [
+                35,
+                80
+              ],
+              [
+                34,
+                80
+              ],
+              [
+                33,
+                81
+              ],
+              [
+                32,
+                80
+              ],
+              [
+                31,
+                81
+              ],
+              [
+                30,
+                82
+              ],
+              [
+                29,
+                83
+              ],
+              [
+                29,
+                84
+              ],
+              [
+                28,
+                85
+              ],
+              [
+                28,
+                86
+              ],
+              [
+                28,
+                87
+              ],
+              [
+                28,
+                88
+              ]
+            ],
+            "source": [
+              37,
+              81
+            ],
+            "mouth": [
+              28,
+              88
+            ],
+            "length": 14
+          }
+        ],
+        "cities": [
+          {
+            "id": 0,
+            "name": "Durfield",
+            "x": 6,
+            "y": 37,
+            "regionId": 47,
+            "population": 400902,
+            "type": "capital",
+            "factionId": 2
+          },
+          {
+            "id": 1,
+            "name": "Durfell",
+            "x": 123,
+            "y": 79,
+            "regionId": 48,
+            "population": 372675,
+            "type": "capital",
+            "factionId": 0
+          },
+          {
+            "id": 2,
+            "name": "Farton",
+            "x": 13,
+            "y": 66,
+            "regionId": 36,
+            "population": 209677,
+            "type": "city",
+            "factionId": 2
+          },
+          {
+            "id": 3,
+            "name": "Branwood",
+            "x": 14,
+            "y": 50,
+            "regionId": 37,
+            "population": 312538,
+            "type": "fortress",
+            "factionId": 0
+          },
+          {
+            "id": 4,
+            "name": "Palfield",
+            "x": 45,
+            "y": 53,
+            "regionId": 23,
+            "population": 161871,
+            "type": "town",
+            "factionId": 2
+          },
+          {
+            "id": 5,
+            "name": "Jalhold",
+            "x": 64,
+            "y": 35,
+            "regionId": 34,
+            "population": 159165,
+            "type": "city",
+            "factionId": 2
+          },
+          {
+            "id": 6,
+            "name": "Farport",
+            "x": 76,
+            "y": 2,
+            "regionId": 0,
+            "population": 86827,
+            "type": "village",
+            "factionId": 0
+          },
+          {
+            "id": 7,
+            "name": "Lumbrook",
+            "x": 69,
+            "y": -2,
+            "regionId": 0,
+            "population": 159914,
+            "type": "port",
+            "factionId": 0
+          },
+          {
+            "id": 8,
+            "name": "Calmoor",
+            "x": 61,
+            "y": 84,
+            "regionId": 2,
+            "population": 287222,
+            "type": "village",
+            "factionId": 0
+          },
+          {
+            "id": 9,
+            "name": "Urfield",
+            "x": 121,
+            "y": 77,
+            "regionId": 48,
+            "population": 329463,
+            "type": "port",
+            "factionId": 0
+          }
+        ],
+        "factions": [
+          {
+            "id": 0,
+            "name": "Morwynor Empire",
+            "color": "#c0392b",
+            "adjective": "Gilian",
+            "ideology": "democratic",
+            "capital": 1,
+            "regions": [
+              0,
+              1,
+              2,
+              6,
+              11,
+              12,
+              13,
+              21,
+              24,
+              26,
+              37,
+              41,
+              42,
+              44,
+              48,
+              49,
+              50,
+              51,
+              54,
+              55,
+              56,
+              59
+            ]
+          },
+          {
+            "id": 1,
+            "name": "Jalothan Empire",
+            "color": "#2980b9",
+            "adjective": "Oranian",
+            "ideology": "democratic",
+            "capital": null,
+            "regions": [
+              3,
+              4,
+              5,
+              15,
+              16,
+              18,
+              19,
+              38,
+              43,
+              46,
+              57,
+              58
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Elen Realm",
+            "color": "#27ae60",
+            "adjective": "Arian",
+            "ideology": "industrial",
+            "capital": 0,
+            "regions": [
+              8,
+              9,
+              10,
+              14,
+              17,
+              20,
+              23,
+              25,
+              30,
+              31,
+              32,
+              34,
+              35,
+              36,
+              39,
+              40,
+              47,
+              52,
+              53
+            ]
+          }
+        ],
+        "lore": {
+          "creation": "Nanur emerged from the void when the First Dreamer spoke its name into the dark.",
+          "conflict": "The Torost War left scars across the land that still shape its people.",
+          "hook": "Rumours speak of Yalotha's Vault, hidden beneath the Van Mountains, sealed for 456 years."
+        },
+        "regionCount": 60,
+        "cityCount": 10,
+        "riverCount": 1
+      },
+      "regionCount": 60,
+      "cityCount": 10,
+      "riverCount": 1
+    },
+    "preview": {
+      "type": "world",
+      "hasManuscript": false,
+      "hasReel": false,
+      "hasSite": true,
+      "hasSim": true
+    },
+    "emergent": {
+      "svgPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.svg",
+      "jsonPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.json",
+      "htmlPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6d39a95be9ac-world.html",
+      "worldData": {
+        "name": "Nanur",
+        "age": "modern",
+        "scale": "island_chain",
+        "width": 128,
+        "height": 96,
+        "plates": [
+          {
+            "id": 0,
+            "cx": 96,
+            "cy": 73,
+            "type": "continental",
+            "mass": 1.0180659639279601,
+            "velocity": [
+              0.8078313743607297,
+              0.19648821164133556
+            ]
+          },
+          {
+            "id": 1,
+            "cx": 53,
+            "cy": 9,
+            "type": "continental",
+            "mass": 0.8710312669183355,
+            "velocity": [
+              0.9206905458166426,
+              0.8122823661202205
+            ]
+          },
+          {
+            "id": 2,
+            "cx": 115,
+            "cy": 58,
+            "type": "continental",
+            "mass": 1.8519718629992883,
+            "velocity": [
+              0.2277432376417683,
+              -0.17449911556852093
+            ]
+          },
+          {
+            "id": 3,
+            "cx": 115,
+            "cy": 18,
+            "type": "continental",
+            "mass": 1.5984241298678967,
+            "velocity": [
+              0.27892611201637063,
+              -0.6565924888627799
+            ]
+          }
+        ],
+        "regions": [
+          {
+            "id": 0,
+            "name": "Zanathan",
+            "cx": 72,
+            "cy": 1,
+            "plate": 1,
+            "elevation": 0.47043877047537896,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 312,
+            "neighbors": [
+              16,
+              17,
+              31
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 1,
+            "name": "Renia",
+            "cx": 48,
+            "cy": 10,
+            "plate": 1,
+            "elevation": 0.7453426571611417,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 578,
+            "neighbors": [
+              4,
+              6,
+              17,
+              25,
+              27,
+              28,
+              31,
+              39
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 2,
+            "name": "Gilean",
+            "cx": 59,
+            "cy": 80,
+            "plate": 0,
+            "elevation": 0.7082011405071591,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 815,
+            "neighbors": [
+              30,
+              33,
+              40,
+              44,
+              52,
+              55
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 3,
+            "name": "Jalur",
+            "cx": 19,
+            "cy": 85,
+            "plate": 0,
+            "elevation": 0.47459529636340286,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 576,
+            "neighbors": [
+              7,
+              12,
+              42
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 4,
+            "name": "Ariaiel",
+            "cx": 49,
+            "cy": 4,
+            "plate": 1,
+            "elevation": 0.6708323701182716,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 196,
+            "neighbors": [
+              1,
+              6,
+              17,
+              25,
+              27,
+              28,
+              39
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 5,
+            "name": "Orwynan",
+            "cx": 88,
+            "cy": 47,
+            "plate": 0,
+            "elevation": 0.7754389418073437,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 987,
+            "neighbors": [
+              19,
+              51
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 6,
+            "name": "Palastiel",
+            "cx": 58,
+            "cy": 19,
+            "plate": 1,
+            "elevation": 0.43215595766841025,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 232,
+            "neighbors": [
+              1,
+              4,
+              17,
+              25,
+              31,
+              34,
+              39,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 7,
+            "name": "Nanath",
+            "cx": 27,
+            "cy": 93,
+            "plate": 0,
+            "elevation": 0.2515541344385661,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 447,
+            "neighbors": [
+              3,
+              35,
+              55
+            ],
+            "factionId": null
+          },
+          {
+            "id": 8,
+            "name": "Renan",
+            "cx": 127,
+            "cy": 1,
+            "plate": 3,
+            "elevation": 0.4968105485818759,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 978,
+            "neighbors": [],
+            "factionId": 2
+          },
+          {
+            "id": 9,
+            "name": "Branael",
+            "cx": 108,
+            "cy": 24,
+            "plate": 3,
+            "elevation": 0.826556433120945,
+            "climate": "temperate",
+            "biome": "mountain_peak",
+            "isOcean": false,
+            "area": 384,
+            "neighbors": [
+              49,
+              58
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 10,
+            "name": "Palison",
+            "cx": 126,
+            "cy": 90,
+            "plate": 2,
+            "elevation": 0.44155513184346085,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 321,
+            "neighbors": [
+              48
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 11,
+            "name": "Gilal",
+            "cx": 38,
+            "cy": 72,
+            "plate": 0,
+            "elevation": 0.5226448053662635,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 683,
+            "neighbors": [
+              21,
+              23,
+              32,
+              55
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 12,
+            "name": "Jalara",
+            "cx": 16,
+            "cy": 67,
+            "plate": 1,
+            "elevation": 0.7298416800066891,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 317,
+            "neighbors": [
+              3,
+              32,
+              36,
+              37,
+              42
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 13,
+            "name": "Aelael",
+            "cx": 105,
+            "cy": 78,
+            "plate": 0,
+            "elevation": 0.4863696185113109,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 594,
+            "neighbors": [
+              38,
+              53,
+              57
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 14,
+            "name": "Valoston",
+            "cx": 57,
+            "cy": 44,
+            "plate": 1,
+            "elevation": 0.4276267948446791,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 411,
+            "neighbors": [
+              20,
+              23,
+              34,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 15,
+            "name": "Urion",
+            "cx": 87,
+            "cy": 25,
+            "plate": 3,
+            "elevation": 0.41388718086254495,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 267,
+            "neighbors": [
+              19,
+              45,
+              49,
+              51,
+              56
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 16,
+            "name": "Korielan",
+            "cx": 78,
+            "cy": 7,
+            "plate": 1,
+            "elevation": 0.566564897423476,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 777,
+            "neighbors": [
+              0,
+              31,
+              45,
+              56
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 17,
+            "name": "Calis",
+            "cx": 55,
+            "cy": 9,
+            "plate": 1,
+            "elevation": 0.6892301615289561,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 826,
+            "neighbors": [
+              0,
+              1,
+              4,
+              6,
+              25,
+              28,
+              31,
+              39
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 18,
+            "name": "Durera",
+            "cx": 125,
+            "cy": 50,
+            "plate": 2,
+            "elevation": 0.47252418332865503,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 518,
+            "neighbors": [
+              43,
+              57,
+              58
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 19,
+            "name": "Nanastia",
+            "cx": 85,
+            "cy": 37,
+            "plate": 3,
+            "elevation": 0.41045712226396297,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 166,
+            "neighbors": [
+              5,
+              15,
+              45,
+              51
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 20,
+            "name": "Qaria",
+            "cx": 47,
+            "cy": 37,
+            "plate": 1,
+            "elevation": 0.6648623471654741,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 337,
+            "neighbors": [
+              14,
+              22,
+              23,
+              29,
+              34,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 21,
+            "name": "Nanis",
+            "cx": 36,
+            "cy": 57,
+            "plate": 1,
+            "elevation": 0.47235874647614634,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 136,
+            "neighbors": [
+              11,
+              23,
+              32,
+              41
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 22,
+            "name": "Jalionor",
+            "cx": 40,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.29209762592231586,
+            "climate": "temperate",
+            "biome": "ocean_shelf",
+            "isOcean": true,
+            "area": 725,
+            "neighbors": [
+              20,
+              26,
+              27,
+              28,
+              29,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 23,
+            "name": "Qarern",
+            "cx": 42,
+            "cy": 54,
+            "plate": 1,
+            "elevation": 0.5209583376932613,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 962,
+            "neighbors": [
+              11,
+              14,
+              20,
+              21,
+              41,
+              54
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 24,
+            "name": "Wyneld",
+            "cx": 10,
+            "cy": 36,
+            "plate": 1,
+            "elevation": 0.5613958966079696,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 689,
+            "neighbors": [
+              26,
+              37,
+              41,
+              47,
+              50
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 25,
+            "name": "Faranan",
+            "cx": 48,
+            "cy": 7,
+            "plate": 1,
+            "elevation": 0.7496747320107641,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 500,
+            "neighbors": [
+              1,
+              4,
+              6,
+              17,
+              27,
+              28,
+              39
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 26,
+            "name": "Qaretha",
+            "cx": 21,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.45856662519817004,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 726,
+            "neighbors": [
+              22,
+              24,
+              29,
+              41,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 27,
+            "name": "Solothiel",
+            "cx": 34,
+            "cy": 13,
+            "plate": 1,
+            "elevation": 0.1251010019220873,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 667,
+            "neighbors": [
+              1,
+              4,
+              22,
+              25,
+              28,
+              29,
+              39
+            ],
+            "factionId": null
+          },
+          {
+            "id": 28,
+            "name": "Solan",
+            "cx": 37,
+            "cy": 15,
+            "plate": 1,
+            "elevation": 0.09584001834631281,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 969,
+            "neighbors": [
+              1,
+              4,
+              17,
+              22,
+              25,
+              27,
+              29,
+              39,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 29,
+            "name": "Paleth",
+            "cx": 36,
+            "cy": 31,
+            "plate": 1,
+            "elevation": 0.23241607296430636,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 985,
+            "neighbors": [
+              20,
+              22,
+              26,
+              27,
+              28,
+              39,
+              41,
+              54,
+              59
+            ],
+            "factionId": null
+          },
+          {
+            "id": 30,
+            "name": "Vanal",
+            "cx": 59,
+            "cy": 74,
+            "plate": 0,
+            "elevation": 0.8091922092169583,
+            "climate": "temperate",
+            "biome": "mountain_peak",
+            "isOcean": false,
+            "area": 908,
+            "neighbors": [
+              2,
+              40,
+              44,
+              52,
+              55
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 31,
+            "name": "Valornia",
+            "cx": 66,
+            "cy": 17,
+            "plate": 1,
+            "elevation": 0.3773798906068641,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 963,
+            "neighbors": [
+              0,
+              1,
+              6,
+              16,
+              17,
+              34,
+              39,
+              45
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 32,
+            "name": "Palost",
+            "cx": 22,
+            "cy": 63,
+            "plate": 1,
+            "elevation": 0.6102745081732093,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 402,
+            "neighbors": [
+              11,
+              12,
+              21,
+              36,
+              37,
+              42
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 33,
+            "name": "Xanir",
+            "cx": 77,
+            "cy": 85,
+            "plate": 0,
+            "elevation": 0.304058189048171,
+            "climate": "temperate",
+            "biome": "ocean_shelf",
+            "isOcean": true,
+            "area": 574,
+            "neighbors": [
+              2,
+              40,
+              44,
+              46
+            ],
+            "factionId": null
+          },
+          {
+            "id": 34,
+            "name": "Paleraia",
+            "cx": 63,
+            "cy": 34,
+            "plate": 1,
+            "elevation": 0.5052114341158455,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 256,
+            "neighbors": [
+              6,
+              14,
+              20,
+              31,
+              39,
+              54
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 35,
+            "name": "Arathia",
+            "cx": 44,
+            "cy": 94,
+            "plate": 0,
+            "elevation": 0.5479447611646678,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 142,
+            "neighbors": [
+              7,
+              55
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 36,
+            "name": "Gilern",
+            "cx": 12,
+            "cy": 62,
+            "plate": 1,
+            "elevation": 0.6372152898324935,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 929,
+            "neighbors": [
+              12,
+              32,
+              37,
+              42
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 37,
+            "name": "Renathon",
+            "cx": 11,
+            "cy": 51,
+            "plate": 1,
+            "elevation": 0.44775162396465,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 944,
+            "neighbors": [
+              12,
+              24,
+              32,
+              36,
+              41,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 38,
+            "name": "Aelor",
+            "cx": 98,
+            "cy": 95,
+            "plate": 0,
+            "elevation": 0.428803865131058,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 921,
+            "neighbors": [
+              13,
+              46,
+              53
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 39,
+            "name": "Calothia",
+            "cx": 50,
+            "cy": 22,
+            "plate": 1,
+            "elevation": 0.4988742345458556,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 363,
+            "neighbors": [
+              1,
+              4,
+              6,
+              17,
+              20,
+              22,
+              25,
+              27,
+              28,
+              29,
+              31,
+              34,
+              54,
+              59
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 40,
+            "name": "Wynaraan",
+            "cx": 73,
+            "cy": 82,
+            "plate": 0,
+            "elevation": 0.39907424662370444,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 278,
+            "neighbors": [
+              2,
+              30,
+              33,
+              44,
+              46,
+              52
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 41,
+            "name": "Qaral",
+            "cx": 28,
+            "cy": 41,
+            "plate": 1,
+            "elevation": 0.7188161016660376,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 545,
+            "neighbors": [
+              20,
+              21,
+              22,
+              23,
+              24,
+              26,
+              29,
+              37,
+              47,
+              54,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 42,
+            "name": "Aroth",
+            "cx": 15,
+            "cy": 73,
+            "plate": 1,
+            "elevation": 0.6882719461469436,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 323,
+            "neighbors": [
+              3,
+              12,
+              32,
+              36
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 43,
+            "name": "Zanath",
+            "cx": 121,
+            "cy": 53,
+            "plate": 2,
+            "elevation": 0.45697194907033034,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 405,
+            "neighbors": [
+              18,
+              57,
+              58
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 44,
+            "name": "Duror",
+            "cx": 71,
+            "cy": 71,
+            "plate": 0,
+            "elevation": 0.39008572306397016,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 906,
+            "neighbors": [
+              2,
+              30,
+              33,
+              40,
+              52
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 45,
+            "name": "Naneldor",
+            "cx": 80,
+            "cy": 20,
+            "plate": 1,
+            "elevation": 0.17698086067473448,
+            "climate": "temperate",
+            "biome": "ocean_deep",
+            "isOcean": true,
+            "area": 457,
+            "neighbors": [
+              15,
+              16,
+              19,
+              31,
+              56
+            ],
+            "factionId": null
+          },
+          {
+            "id": 46,
+            "name": "Yalera",
+            "cx": 87,
+            "cy": 95,
+            "plate": 0,
+            "elevation": 0.4299711775555912,
+            "climate": "temperate",
+            "biome": "tundra",
+            "isOcean": false,
+            "area": 577,
+            "neighbors": [
+              33,
+              38,
+              40
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 47,
+            "name": "Talara",
+            "cx": 10,
+            "cy": 36,
+            "plate": 1,
+            "elevation": 0.5613958966079696,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 563,
+            "neighbors": [
+              24,
+              26,
+              37,
+              41,
+              50
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 48,
+            "name": "Zanielor",
+            "cx": 126,
+            "cy": 81,
+            "plate": 2,
+            "elevation": 0.6767781843936757,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 697,
+            "neighbors": [
+              10,
+              57
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 49,
+            "name": "Farwyn",
+            "cx": 105,
+            "cy": 20,
+            "plate": 3,
+            "elevation": 0.7152458974576876,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 971,
+            "neighbors": [
+              9,
+              15,
+              56
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 50,
+            "name": "Valoror",
+            "cx": 0,
+            "cy": 29,
+            "plate": 1,
+            "elevation": 0.48903929408926705,
+            "climate": "temperate",
+            "biome": "tropical_forest",
+            "isOcean": false,
+            "area": 998,
+            "neighbors": [
+              24,
+              47
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 51,
+            "name": "Nanorn",
+            "cx": 91,
+            "cy": 42,
+            "plate": 2,
+            "elevation": 0.6599732713071004,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 445,
+            "neighbors": [
+              5,
+              15,
+              19
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 52,
+            "name": "Nanera",
+            "cx": 63,
+            "cy": 70,
+            "plate": 0,
+            "elevation": 0.47526716198335167,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 894,
+            "neighbors": [
+              2,
+              30,
+              40,
+              44
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 53,
+            "name": "Solur",
+            "cx": 105,
+            "cy": 78,
+            "plate": 0,
+            "elevation": 0.4863696185113109,
+            "climate": "temperate",
+            "biome": "boreal_forest",
+            "isOcean": false,
+            "area": 527,
+            "neighbors": [
+              13,
+              38,
+              57
+            ],
+            "factionId": 2
+          },
+          {
+            "id": 54,
+            "name": "Qarostiel",
+            "cx": 46,
+            "cy": 38,
+            "plate": 1,
+            "elevation": 0.6926904091680196,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 645,
+            "neighbors": [
+              14,
+              20,
+              22,
+              23,
+              29,
+              34,
+              39,
+              41,
+              59
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 55,
+            "name": "Vanoria",
+            "cx": 41,
+            "cy": 80,
+            "plate": 0,
+            "elevation": 0.7822154477152878,
+            "climate": "temperate",
+            "biome": "highland",
+            "isOcean": false,
+            "area": 185,
+            "neighbors": [
+              2,
+              7,
+              11,
+              30,
+              35
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 56,
+            "name": "Gileldiel",
+            "cx": 92,
+            "cy": 8,
+            "plate": 3,
+            "elevation": 0.4551857265686595,
+            "climate": "temperate",
+            "biome": "grassland",
+            "isOcean": false,
+            "area": 974,
+            "neighbors": [
+              15,
+              16,
+              45,
+              49
+            ],
+            "factionId": 0
+          },
+          {
+            "id": 57,
+            "name": "Nanor",
+            "cx": 122,
+            "cy": 69,
+            "plate": 2,
+            "elevation": 0.5374917424090062,
+            "climate": "temperate",
+            "biome": "deciduous_forest",
+            "isOcean": false,
+            "area": 361,
+            "neighbors": [
+              13,
+              18,
+              43,
+              48,
+              53
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 58,
+            "name": "Zanaelia",
+            "cx": 116,
+            "cy": 38,
+            "plate": 2,
+            "elevation": 0.36333355041160037,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 744,
+            "neighbors": [
+              9,
+              18,
+              43
+            ],
+            "factionId": 1
+          },
+          {
+            "id": 59,
+            "name": "Elonor",
+            "cx": 43,
+            "cy": 31,
+            "plate": 1,
+            "elevation": 0.3841966207995634,
+            "climate": "temperate",
+            "biome": "beach",
+            "isOcean": false,
+            "area": 738,
+            "neighbors": [
+              6,
+              14,
+              20,
+              22,
+              28,
+              29,
+              39,
+              41,
+              54
+            ],
+            "factionId": 0
+          }
+        ],
+        "rivers": [
+          {
+            "id": 0,
+            "path": [
+              [
+                37,
+                81
+              ],
+              [
+                36,
+                80
+              ],
+              [
+                35,
+                80
+              ],
+              [
+                34,
+                80
+              ],
+              [
+                33,
+                81
+              ],
+              [
+                32,
+                80
+              ],
+              [
+                31,
+                81
+              ],
+              [
+                30,
+                82
+              ],
+              [
+                29,
+                83
+              ],
+              [
+                29,
+                84
+              ],
+              [
+                28,
+                85
+              ],
+              [
+                28,
+                86
+              ],
+              [
+                28,
+                87
+              ],
+              [
+                28,
+                88
+              ]
+            ],
+            "source": [
+              37,
+              81
+            ],
+            "mouth": [
+              28,
+              88
+            ],
+            "length": 14
+          }
+        ],
+        "cities": [
+          {
+            "id": 0,
+            "name": "Durfield",
+            "x": 6,
+            "y": 37,
+            "regionId": 47,
+            "population": 400902,
+            "type": "capital",
+            "factionId": 2
+          },
+          {
+            "id": 1,
+            "name": "Durfell",
+            "x": 123,
+            "y": 79,
+            "regionId": 48,
+            "population": 372675,
+            "type": "capital",
+            "factionId": 0
+          },
+          {
+            "id": 2,
+            "name": "Farton",
+            "x": 13,
+            "y": 66,
+            "regionId": 36,
+            "population": 209677,
+            "type": "city",
+            "factionId": 2
+          },
+          {
+            "id": 3,
+            "name": "Branwood",
+            "x": 14,
+            "y": 50,
+            "regionId": 37,
+            "population": 312538,
+            "type": "fortress",
+            "factionId": 0
+          },
+          {
+            "id": 4,
+            "name": "Palfield",
+            "x": 45,
+            "y": 53,
+            "regionId": 23,
+            "population": 161871,
+            "type": "town",
+            "factionId": 2
+          },
+          {
+            "id": 5,
+            "name": "Jalhold",
+            "x": 64,
+            "y": 35,
+            "regionId": 34,
+            "population": 159165,
+            "type": "city",
+            "factionId": 2
+          },
+          {
+            "id": 6,
+            "name": "Farport",
+            "x": 76,
+            "y": 2,
+            "regionId": 0,
+            "population": 86827,
+            "type": "village",
+            "factionId": 0
+          },
+          {
+            "id": 7,
+            "name": "Lumbrook",
+            "x": 69,
+            "y": -2,
+            "regionId": 0,
+            "population": 159914,
+            "type": "port",
+            "factionId": 0
+          },
+          {
+            "id": 8,
+            "name": "Calmoor",
+            "x": 61,
+            "y": 84,
+            "regionId": 2,
+            "population": 287222,
+            "type": "village",
+            "factionId": 0
+          },
+          {
+            "id": 9,
+            "name": "Urfield",
+            "x": 121,
+            "y": 77,
+            "regionId": 48,
+            "population": 329463,
+            "type": "port",
+            "factionId": 0
+          }
+        ],
+        "factions": [
+          {
+            "id": 0,
+            "name": "Morwynor Empire",
+            "color": "#c0392b",
+            "adjective": "Gilian",
+            "ideology": "democratic",
+            "capital": 1,
+            "regions": [
+              0,
+              1,
+              2,
+              6,
+              11,
+              12,
+              13,
+              21,
+              24,
+              26,
+              37,
+              41,
+              42,
+              44,
+              48,
+              49,
+              50,
+              51,
+              54,
+              55,
+              56,
+              59
+            ]
+          },
+          {
+            "id": 1,
+            "name": "Jalothan Empire",
+            "color": "#2980b9",
+            "adjective": "Oranian",
+            "ideology": "democratic",
+            "capital": null,
+            "regions": [
+              3,
+              4,
+              5,
+              15,
+              16,
+              18,
+              19,
+              38,
+              43,
+              46,
+              57,
+              58
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Elen Realm",
+            "color": "#27ae60",
+            "adjective": "Arian",
+            "ideology": "industrial",
+            "capital": 0,
+            "regions": [
+              8,
+              9,
+              10,
+              14,
+              17,
+              20,
+              23,
+              25,
+              30,
+              31,
+              32,
+              34,
+              35,
+              36,
+              39,
+              40,
+              47,
+              52,
+              53
+            ]
+          }
+        ],
+        "lore": {
+          "creation": "Nanur emerged from the void when the First Dreamer spoke its name into the dark.",
+          "conflict": "The Torost War left scars across the land that still shape its people.",
+          "hook": "Rumours speak of Yalotha's Vault, hidden beneath the Van Mountains, sealed for 456 years."
+        },
+        "regionCount": 60,
+        "cityCount": 10,
+        "riverCount": 1
+      },
+      "regionCount": 60,
+      "cityCount": 10,
+      "riverCount": 1
+    },
+    "sovereignty": {
+      "gseed": ".gseed/os-6d39a95be9ac.gseed",
+      "c2pa": "buildC2PAManifest embedded (manifest + provenance)",
+      "royaltyBps": 500,
+      "sig": "ECDSA-P256 (kernel signed at creation)",
+      "pack": "Live Sovereign Provenance Pack (strata + royalty + Part6)"
+    },
+    "part6Embed": {
+      "royaltiesPreview": "lineage + civilizational dividends active",
+      "onchainPrep": "prepareOnChainRoyalties ready (PARA/SeedNFT)",
+      "fedReady": "real p2p exchange via federation routes"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-6d39a95be9ac-world.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 34,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:11.476Z"
+}

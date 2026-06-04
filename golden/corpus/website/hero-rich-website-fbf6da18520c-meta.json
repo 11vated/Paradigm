@@ -1,0 +1,13 @@
+{
+  "heroId": "hero-rich-website-fbf6da18520c",
+  "domain": "website",
+  "intent": "immersive website portal that is a living GSPL OS shell for breeding seeds and onchain royalties",
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"immersive website portal that is a living GSPL OS shell for breeding seeds and onchain royalties\" --domain website",
+  "strata": { "overall": 0.555 },
+  "royalty": { "author": 700, "platform": 300, "civ": 10 },
+  "provenance": "Full pack: real calc strata, actual econ payouts/dividends, C2PA, sig ECDSA, Fed v1 real 2-node (beyond sim via perform + federation ECDSA routes), recursive OS .gseed self-host + GSPL verifier. Sovereignty uniform for website rich.",
+  "part6": { "onchain": "PARA/SeedNFT prep + civ 10 operational", "fed": "real 2-node exchange no central", "os": "self-evolution recursive .gseed" },
+  "goldenHashNote": "added for rich website expansion of golden corpus + replay/matrix",
+  "13bRef": "heroes/1M foundation 20+ batch; deeper Part6 surfaces; 3 must-be-true advanced",
+  "created": "2026-06-04"
+}

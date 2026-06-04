@@ -1,0 +1,39 @@
+{
+  "seed": "spectral physics of collapsing wavefunctions birthing sovereign literature that is itself a playable film",
+  "domain": "15_ rich physics (recovery path, det)",
+  "reproducibilityHash": "15-rich-os-a960cc0ecbe7",
+  "strataScores": {
+    "overall": 0.9,
+    "story": 0.92,
+    "culture": 0.88
+  },
+  "artifact": {
+    "id": "15-physics-os-a960cc0ecbe7",
+    "domain": "physics",
+    "name": "os-a960cc0ecbe7",
+    "intent": "spectral physics of collapsing wavefunctions birthing sovereign literature that is itself a playable film",
+    "strataScores": {
+      "overall": 0.9,
+      "story": 0.92,
+      "culture": 0.88
+    },
+    "determinismLocked": true,
+    "source": "15_ rich physics (recovery path, det)",
+    "sovereignty": {
+      "gseed": ".gseed/os-a960cc0ecbe7",
+      "c2pa": true,
+      "royalty": "5%+civ",
+      "sig": "ECDSA"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-a960cc0ecbe7-physics.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 46,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:25.808Z"
+}

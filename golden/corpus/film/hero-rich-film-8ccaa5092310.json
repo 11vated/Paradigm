@@ -1,0 +1,69 @@
+{
+  "seed": "avant-garde film visualizing real fed 2-node exchange where lineages merge across sovereign nodes without center",
+  "domain": "15_ rich generator via os-shell universal (film)",
+  "reproducibilityHash": "15-rich-os-a454bda37942",
+  "strataScores": {
+    "story": 0.93,
+    "culture": 0.91,
+    "form": 0.89,
+    "overall": 0.91
+  },
+  "artifact": {
+    "id": "15-film-os-a454bda37942",
+    "domain": "film",
+    "name": "os-a454bda37942",
+    "intent": "avant-garde film visualizing real fed 2-node exchange where lineages merge across sovereign nodes without center",
+    "strataScores": {
+      "story": 0.93,
+      "culture": 0.91,
+      "form": 0.89,
+      "overall": 0.91
+    },
+    "determinismLocked": true,
+    "reproducibilityHash": "15-rich-os-a454bda37942",
+    "source": "15_ rich generator via os-shell universal (film)",
+    "richData": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_film.json",
+      "scriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_script.txt",
+      "screenplayPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_script.txt",
+      "genre": "documentary",
+      "duration": 31
+    },
+    "preview": {
+      "type": "film",
+      "hasManuscript": false,
+      "hasReel": false,
+      "hasSite": false,
+      "hasSim": false
+    },
+    "emergent": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_film.json",
+      "scriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_script.txt",
+      "screenplayPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-a454bda37942-film_script.txt",
+      "genre": "documentary",
+      "duration": 31
+    },
+    "sovereignty": {
+      "gseed": ".gseed/os-a454bda37942.gseed",
+      "c2pa": "buildC2PAManifest embedded (manifest + provenance)",
+      "royaltyBps": 500,
+      "sig": "ECDSA-P256 (kernel signed at creation)",
+      "pack": "Live Sovereign Provenance Pack (strata + royalty + Part6)"
+    },
+    "part6Embed": {
+      "royaltiesPreview": "lineage + civilizational dividends active",
+      "onchainPrep": "prepareOnChainRoyalties ready (PARA/SeedNFT)",
+      "fedReady": "real p2p exchange via federation routes"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-a454bda37942-film.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 20,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:15.891Z"
+}

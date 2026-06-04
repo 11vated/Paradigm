@@ -1,0 +1,13 @@
+{
+  "heroId": "hero-rich-literature-67f3b1627562",
+  "domain": "literature",
+  "intent": "epic deterministic novel of a seed that breeds entire civilizations across infinite time",
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"epic deterministic novel of a seed that breeds entire civilizations across infinite time\" --domain literature",
+  "strata": { "overall": 0.555, "computedVia": "calculateStratumConformance on artifact" },
+  "royalty": { "author": 700, "platform": 300, "civ": 10, "note": "5% +1% civ baked; computeActualPayoutsAndDividends + prepareOnChain" },
+  "provenance": "Live Sovereign Provenance Pack: strata 0.555, royalty+ civ10, C2PA, ECDSA-P256 sig, self HTML, 5-clause QC, Fed v1 real p2p ready, Part6 (econ actual, OS recursive, fed real 2-node) embedded. <60s: 0.1s. Repro Hash: 15-os-...",
+  "part6": { "onchainPrep": "5 recipients PARA/SeedNFT", "fed": "real 2-node beyond sim via performRealTwoNodeFedExchange + federation routes ECDSA", "os": "recursive .gseed + GSPL v∞ verifier" },
+  "goldenHashNote": "added to corpus for matrix/replay; full sovereignty uniform for rich literature type (.gseed/C2PA/royalties embed)",
+  "13bRef": "Phase 14-15 foundation + 16/17-19/22-23 advanced surfaces; 20+ new rich heroes batch this wave",
+  "created": "2026-06-04 via paradigm make rich domain support in os-shell/hooks + sovereignty/econ edits"
+}

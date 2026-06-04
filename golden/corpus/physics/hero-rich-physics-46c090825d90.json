@@ -1,0 +1,43 @@
+{
+  "seed": "rigid body physics simulation with gravity and collisions --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-32ae526c679f",
+  "strataScores": {
+    "Field": 0.94,
+    "Motion": 0.91,
+    "Form": 0.87,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "World": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "phys_611385810739854",
+    "activeBodies": 1240,
+    "stableAt60fps": true,
+    "constraintCount": null,
+    "strataScores": {
+      "Field": 0.94,
+      "Motion": 0.91,
+      "Form": 0.87,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "World": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-32ae526c679f-physics.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 54,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T01:34:21.954Z"
+}

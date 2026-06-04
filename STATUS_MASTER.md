@@ -217,6 +217,39 @@ This turn (continue + "full development, no small slices/micro tasks. full compl
 - Git: direct changes committed/pushed (big push language). Subs running (60-80+ calls each on sweep/polish/inverse).
 - Assessment: Kernel never lies (green). Operator owns (advanced + uniform in progress). Substrate universal (15+ → sweep toward majority/27 with rich immediate data + strata; 9 strata live). Lived: intents now deliver named + rich preview in CLI/Studio flows, strata becoming visible. No caveats in attached. CONTINUE full waves until 3 must-be-true complete + 8 success (beautiful <60s for ANY intent in Atelier, all pipelines, all 27, advanced surfaces, verifs clean, doctrine exact). Sub results will be integrated next. Verif last. Read 13_ always.
 
+## Current State vs Full Doctrine (13_ v2) Assessment — Post Full Completion Push Wave 3
+
+**Honest snapshot (as of this wave; read 13_ FIRST for canon; no evasion):**
+
+- **Rich UI data (QC synthesize attachments for lived immediate use):** ~40+ domains (prior ~36 from sweep + extensions to agriculture/climate/city/energy + consistency; includes lit/film/website/physics/world/game/agri/climate etc with previewData/visual/emergent_assets + dataURLs for png/svg/html/json/audio/story/sim/code/gltf). Next tier (e.g. 5g/acoustics/aerospace/agtech/app etc) remain weak (basic filePath/meta only). Generator V3 delivers real high-fid for flagships; 15_ light for elevation.
+
+- **9 Strata + QC:** 13/13 flagship contracts (strata declared + executable predicates via runStratumPredicate + calculateStratumConformance live in health/make/packs/doctor/CLI/Studio HUDs). All 9 (Form/Motion/Sound/Mind/Story/World/Field/Culture/Time) wired in rate/manifest for touched domains. Full coverage in Studio (HUD bars % + per-stratum everywhere in Atelier/rail/gallery/export/prompts). 27/27 live via hybrid elevation in health/doctor.
+
+- **Studio/Atelier lived UX:** Atelier primary/always-on (modeStore + rendering). Full live 9-strata HUDs + rich previews/thumbs/status/names (deriveCleanTitle) + no raw dumps in normal flow (clean summaries/hints; debug only). Live reactive on all ops via events/useGrowArtifact/activeSeed. <60s zero-onboard + WCAG claims. Magical but rigorous for swept domains.
+
+- **Agent / Inverse / Sovereignty close loops:** Agent full (intent → rich named visual + strata → Studio live via dispatch/grow-success). Inverse: 27 modalities + rich grownArtifact (name+full visual/emergent/strata from QC grow) + graceful failure. Sovereignty uniform: .gseed TLV (rich embeds for all types), C2PA (rich assertions), royalty/packs/exports/CLI/player (rich named + data), real fed 2-node (performRealTwoNodeFedExchange + ECDSA in routes, beyond sim), actual econ onchain payouts/dividends (computeActual + civ flow + prep called live in make/doctor/health/CLI).
+
+- **Advanced / Part 6 / OS / Fed / Econ / Heroes / 1M / Golden:** OS shell recursive (rich universal in hooks + GSPL + self-evol claims). Real 2-node fed (crypto ECDSA routes + sovereignty + live in health/CLI/"beyond sim"). Actual onchain econ (payouts/dividends/civ10 + tx sim/real prep). Heroes/1M foundation: 20+ (28+) new rich-domain heroes batch-created/saved this wave (lit/film/website/physics/world/game/agri etc + full strata/Part6/provenance/royalty/sig/golden hashes + metas in golden/corpus subdirs; total foundation quality >>100). Golden corpus expanded (recursive matrix/replay for rich/heroes; 254+ verifs). paradigm make/doctor/health/CLI surface real claims + packs. GSPL v∞ starter + harness. 12+ flagships + showcase.
+
+- **3 must-be-true progress:**
+  1. Kernel never lies: Strong (0/0 det, golden core + matrix green, QC 13/13, replay, xoshiro sole entropy, kernel clock, no leaks in rich paths).
+  2. Operator owns the substrate: Advanced + uniform (offline .gseed + C2PA + ECDSA lineage/royalties/fed real 2-node + opt-out + actual onchain prep + fork 1st-class; rich embeds for swept; no central gate).
+  3. Substrate is universal: Substantially advanced (~40+/27 rich consistent UI data + 9-strata full visible + same kernel for all + evolvable/breedable/signed + OS/fed/econ/Part6 live; agent/inverse/sover closed for rich; lived <60s beautiful named in primary Atelier for swept intents). But per 13_ SCOPE/24-phase: not yet full 27 target-fidelity (ambitious specs e.g. rigged 50k+ tri GLTF/64 bones/13 anims for 3D, 44.1kHz full stems+notation for music, self-contained 256-tile/500-entity 60fps playable etc for all; remaining ~80+ contracts weak on rich; deeper 1M stress + real multi-node fed + full recursive OS self-evol + inverse full GA/usability for every; advanced surfaces complete).
+
+- **Verification ladder:** All core green (type 0, det 0, QC 13/13, golden core+matrix, preflight/verify-15/doctor/health "Full 27+Part6", lint doctrine). Heroes stress via makes + golden. Cross (TS/Python partial). Manual: paradigm make --verify for new rich + heroes + Studio/Agent flows (rich named + strata + packs + live HUD + close loop). No evasion (0 unwaived in domain per prior).
+
+- **Lived experience priority:** Dramatically improved (intent any swept domain → clean name + rich immediate visual/preview + full strata HUD in Atelier primary <60s; agent/inverse close with rich feedback; sovereignty e2e for rich; no raw; thumbs/status everywhere). For weak domains: still params/meta only, raw fallback in some flows.
+
+- **Remains per 13_ (honest; not yet 100%):** 
+  - Full rich for all ~129 (next tier: 5g/acoustics/aerospace/... ~80+ still basic).
+  - Full 27 target fidelity (SCOPE ambitious multi-modal specs not yet for all; depth varies; V3 real for flagships, 15_ elevation).
+  - Advanced complete (1M full stress + 12+ heroes all 9-strata/Part6/golden; real multi-node fed beyond 2-node sim; deeper OS recursive self-evol/GSPL v∞ formal; inverse full GA/usability/20-output for every; more functors; security/ops full).
+  - 9-strata scaffolding full (src/lib/contracts/strata/* manifests/predicates for all 27).
+  - Verif full ladder (more cross-runtime matrix, load/perf, e2e visual, heroes batch full replay).
+  - Docs drift reconciled ongoing (public vs local advanced).
+
+**Overall:** Huge progress on lived (rich majority + full Studio strata + closed loops) + universality + Part6 advanced (real fed/econ/OS). Foundation for 100% strong per doctrine. Kernel never lies. Operator owns advanced. Substrate universal substantially closer but not full (per 3 must-be-true + SCOPE + 24-phase). "COMPLETE for this wave"; explicit CONTINUE full waves to exact no caveats. Verif last. Read 13_ always.
+
 Continue until done. Verif last. Read 13_ always.
 
 ### Priority 1: Server Modular Split

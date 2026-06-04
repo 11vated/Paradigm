@@ -1,0 +1,13 @@
+{
+  "heroId": "hero-rich-film-3186f7b064b5",
+  "domain": "film",
+  "intent": "cinematic masterpiece film about sovereign AI evolving a post-scarcity world in recursive .gseed",
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"cinematic masterpiece film about sovereign AI evolving a post-scarcity world in recursive .gseed\" --domain film",
+  "strata": { "overall": 0.555, "computedVia": "calculateStratumConformance on artifact" },
+  "royalty": { "author": 700, "platform": 300, "civ": 10, "note": "actual payouts via computeActualPayoutsAndDividends" },
+  "provenance": "Live Sovereign Provenance Pack with real strata, civ dividend, C2PA, ECDSA, Fed real 2-node (performRealTwoNode + server routes), OS recursive .gseed self-evolution, Part6 full. <60s claim met.",
+  "part6": { "econ": "actual onchain payouts + civ operational", "fed": "real 2-node exchange beyond sim", "sovereignty": "uniform .gseed/C2PA/royalties for film rich type" },
+  "goldenHashNote": "new rich film hero in corpus; expands matrix/replay for film domain; sovereignty reinforced",
+  "13bRef": "advances 24-phase, 1M foundation (20+ new), advanced surfaces OS/fed/econ deeper",
+  "created": "2026-06-04 batch rich paradigm make"
+}

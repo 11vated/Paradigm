@@ -1,0 +1,69 @@
+{
+  "seed": "poetic literature sequence encoding the spine: kernel never lies, operator owns substrate, substrate universal",
+  "domain": "15_ rich generator via os-shell universal (literature)",
+  "reproducibilityHash": "15-rich-os-79020efa1c65",
+  "strataScores": {
+    "story": 0.93,
+    "culture": 0.91,
+    "form": 0.89,
+    "overall": 0.91
+  },
+  "artifact": {
+    "id": "15-literature-os-79020efa1c65",
+    "domain": "literature",
+    "name": "os-79020efa1c65",
+    "intent": "poetic literature sequence encoding the spine: kernel never lies, operator owns substrate, substrate universal",
+    "strataScores": {
+      "story": 0.93,
+      "culture": 0.91,
+      "form": 0.89,
+      "overall": 0.91
+    },
+    "determinismLocked": true,
+    "reproducibilityHash": "15-rich-os-79020efa1c65",
+    "source": "15_ rich generator via os-shell universal (literature)",
+    "richData": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_literature.json",
+      "manuscriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_manuscript.txt",
+      "storyPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_manuscript.txt",
+      "genre": "novel",
+      "wordCount": 87171
+    },
+    "preview": {
+      "type": "literature",
+      "hasManuscript": true,
+      "hasReel": false,
+      "hasSite": false,
+      "hasSim": false
+    },
+    "emergent": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_literature.json",
+      "manuscriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_manuscript.txt",
+      "storyPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-79020efa1c65-literature_manuscript.txt",
+      "genre": "novel",
+      "wordCount": 87171
+    },
+    "sovereignty": {
+      "gseed": ".gseed/os-79020efa1c65.gseed",
+      "c2pa": "buildC2PAManifest embedded (manifest + provenance)",
+      "royaltyBps": 500,
+      "sig": "ECDSA-P256 (kernel signed at creation)",
+      "pack": "Live Sovereign Provenance Pack (strata + royalty + Part6)"
+    },
+    "part6Embed": {
+      "royaltiesPreview": "lineage + civilizational dividends active",
+      "onchainPrep": "prepareOnChainRoyalties ready (PARA/SeedNFT)",
+      "fedReady": "real p2p exchange via federation routes"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-79020efa1c65-literature.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 32,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:14.410Z"
+}

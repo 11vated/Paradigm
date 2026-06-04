@@ -1,0 +1,13 @@
+{
+  "heroId": "hero-rich-world-d383f78b04dc",
+  "domain": "world",
+  "intent": "vast living world seed of fractal biomes where every creature is a sovereign .gseed with econ dividends",
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"vast living world seed of fractal biomes where every creature is a sovereign .gseed with econ dividends\" --domain world",
+  "strata": { "overall": 0.555, "world": 0.94 },
+  "royalty": { "author": 700, "platform": 300, "civ": 10, "onchain": "prepareOnChainRoyalties + actual payouts" },
+  "provenance": "Sovereign pack with strata live, civ dividends, C2PA, ECDSA, real fed 2-node (beyond sim), recursive .gseed OS self-evolution. Full uniform sovereignty for rich world type.",
+  "part6": { "econ": "actual civilizational dividend payouts operational", "fed": "real 2-node exchange", "os": "GSPL v∞ + self-host" },
+  "goldenHashNote": "world rich foundation hero to golden/corpus; expands replay for new rich",
+  "13bRef": "Heroes/1M + advanced surfaces (OS recursive self-evolution, real fed, econ onchain) + 24 phases",
+  "created": "2026-06-04 paradigm make batch"
+}

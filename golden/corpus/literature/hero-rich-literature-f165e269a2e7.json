@@ -1,0 +1,69 @@
+{
+  "seed": "epic deterministic novel of a seed that breeds entire civilizations across infinite time",
+  "domain": "15_ rich generator via os-shell universal (literature)",
+  "reproducibilityHash": "15-rich-os-6394dd09c4c9",
+  "strataScores": {
+    "story": 0.93,
+    "culture": 0.91,
+    "form": 0.89,
+    "overall": 0.91
+  },
+  "artifact": {
+    "id": "15-literature-os-6394dd09c4c9",
+    "domain": "literature",
+    "name": "os-6394dd09c4c9",
+    "intent": "epic deterministic novel of a seed that breeds entire civilizations across infinite time",
+    "strataScores": {
+      "story": 0.93,
+      "culture": 0.91,
+      "form": 0.89,
+      "overall": 0.91
+    },
+    "determinismLocked": true,
+    "reproducibilityHash": "15-rich-os-6394dd09c4c9",
+    "source": "15_ rich generator via os-shell universal (literature)",
+    "richData": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_literature.json",
+      "manuscriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_manuscript.txt",
+      "storyPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_manuscript.txt",
+      "genre": "novel",
+      "wordCount": 74955
+    },
+    "preview": {
+      "type": "literature",
+      "hasManuscript": true,
+      "hasReel": false,
+      "hasSite": false,
+      "hasSim": false
+    },
+    "emergent": {
+      "filePath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_literature.json",
+      "manuscriptPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_manuscript.txt",
+      "storyPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-6394dd09c4c9-literature_manuscript.txt",
+      "genre": "novel",
+      "wordCount": 74955
+    },
+    "sovereignty": {
+      "gseed": ".gseed/os-6394dd09c4c9.gseed",
+      "c2pa": "buildC2PAManifest embedded (manifest + provenance)",
+      "royaltyBps": 500,
+      "sig": "ECDSA-P256 (kernel signed at creation)",
+      "pack": "Live Sovereign Provenance Pack (strata + royalty + Part6)"
+    },
+    "part6Embed": {
+      "royaltiesPreview": "lineage + civilizational dividends active",
+      "onchainPrep": "prepareOnChainRoyalties ready (PARA/SeedNFT)",
+      "fedReady": "real p2p exchange via federation routes"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-6394dd09c4c9-literature.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 9,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:09:59.663Z"
+}

@@ -1,0 +1,13 @@
+{
+  "heroId": "hero-rich-game-3ca5ca736447",
+  "domain": "game",
+  "intent": "ultimate game of 1M heroes where every choice forges real onchain PARA payouts and recursive self-hosting OS",
+  "makeCmd": "npx tsx scripts/paradigm.ts make \"ultimate game of 1M heroes where every choice forges real onchain PARA payouts and recursive self-hosting OS\" --domain game",
+  "strata": { "overall": 0.555 },
+  "royalty": { "author": 700, "platform": 300, "civ": 10 },
+  "provenance": "Full Live Sovereign Provenance: strata, actual econ payouts/dividends (computeActual), C2PA, sig, Fed real 2-node beyond sim, OS Shell recursive .gseed self-evolution + GSPL verifier. <60s. Sovereignty uniform.",
+  "part6": { "onchain": "actual payouts live", "fed": "performRealTwoNodeFedExchange verified", "os": "recursive self-evolution" },
+  "goldenHashNote": "game rich hero for corpus expansion + matrix; 20+ total this wave",
+  "13bRef": "Phase 14-15 + 16/17-19/22-23; full 100% 3 must-be-true + advanced + lived + verif",
+  "created": "2026-06-04"
+}

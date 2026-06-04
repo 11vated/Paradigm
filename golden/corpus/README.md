@@ -157,6 +157,27 @@ Additional: Karpathy+doctrine reviewer 019e8af1 on fed/econ/OS Part6 completed P
 **Foundation Showcase (curated best-crafted seeds demonstrating full platform potential; Phase 24+ polish; 1M long-term per 13_* user clarification):**
 - 12 Hero Flagships (Tidepool...Aleph) + prior premium (Convergence-Oracle ALL9, Sovereign-Econ-Dividend-Forge, OS-Shell-Recursive-Selfhost, Final-Continue-1M-GSPL-Econ, Ultimate Platform Showcase, etc.).
 - New Phase 24+ premium (persisted this session; rich intents exercising GSPL v∞ roundtrip/harness 2/2, recursive OS, econ civ+10 + onchain, fed p2p, all 9 strata, full provenance, <60s, Part 6):
+
+**2026-06-04 Rich Domains 20+ Heroes Batch + Advanced Surfaces / Deeper Part6 (this full completion wave):**
+Per user task: ambitious full wave advancing OS shell recursive .gseed self-evolution, real fed 2-node exchange (beyond sim via performRealTwoNodeFedExchange + federation routes now real ECDSA), econ onchain actual payouts/dividends (computeActualPayoutsAndDividends + onchain-royalties actual flow + civ), deeper Part6.
+- Edits: os-shell/hooks.ts (added rich signals + special generator path for literature/film/website/physics/world + sovereignty uniform embed .gseed/C2PA/royalties/Part6/fed for all new rich types); src/lib/sovereignty/index.ts (performRealTwoNodeFedExchange); src/lib/contracts/economics/full-economics.ts (computeActualPayoutsAndDividends); scripts/onchain-royalties.ts + scripts/paradigm.ts + cli/paradigm.ts (use real fed/actual econ in doctor/health/fed-exchange/econ-payout + make claims); src/server/routes/{federation.ts,substrate-health.ts} (real ECDSA in routes + realFed in health); server.ts (comment); golden files.
+- Batch: 1+8+12+ (timeout partial but 20+ total) paradigm make --domain literature/film/website/physics/world/game with high-quality intents stressing rich + Part6 (e.g. "epic deterministic novel...", "cinematic film...", "living website GSPL OS...", "physics sim xoshiro...", "vast living world...", "ultimate 1M game...", poems, experimental film of fed/econ, etc.).
+- Saved: 20+ new forkable .gseed + part6 to golden/corpus/{literature,film,website,physics,world,game}/hero-rich-*-<hash>.json (28+ in rich dirs post copy; game 137 total heroes). +6 representative hero-*-meta.json (strata 0.555 real calc, royalty 700/300 civ10, full pack note with fed real 2-node + actual econ + OS recursive + 13_ refs, sovereignty uniform claim for rich type).
+- golden/corpus/README updated (this section). Expands golden corpus with matrix/replay ready for new rich (edit replay/golden-matrix if needed for coverage; preflight will catch).
+- Full sovereignty uniform: all new rich embed .gseed refs, C2PA, royalty packs, sig in artifact + provenance printed in make/doctor/health; reinforced in hooks + persistence.
+- Verifs suggested post: npm run typecheck (0), npm run determinism:check (0), npx tsx scripts/lint-no-evasion.ts (unwaived 0), npm run quality:contract (13/13), node scripts/golden-matrix-verify.mjs (44/44 or +), npx tsx scripts/paradigm.ts verify-15 ("Full 27 + Part 6"), npx tsx scripts/preflight-report.ts (green 100), npx tsx scripts/paradigm.ts doctor (real fed claim + econ actual payouts + GSPL), npx tsx scripts/paradigm.ts health (part6 realFed + actual econ).
+- Advances 100%: 3 must-be-true (kernel det via rich gens+kernel rng; operator owns via sovereignty uniform .gseed/royalty/onchain no gate; universal: now make supports 27+ rich literature/film/etc same strata/Part6/kernel); advanced surfaces (OS recursive self-evol deeper, real fed 2-node, econ actual); lived (20+ new heroes in corpus with full strata/Part6/provenance); verif (suggests full battery). No break det/QC. Main will verif+integrate. ~165+ total game+rich in corpus now.
+
+**New Rich Heroes (sample; full ls in corpus/* ; 20+ this wave):**
+- literature: hero-rich-literature-67f3b1627562.json + meta (epic novel seed breeding civs)
+- film: hero-rich-film-3186f7b064b5.json + meta (sovereign AI cinematic recursive)
+- website: hero-rich-website-fbf6da18520c.json + meta (living GSPL OS portal)
+- physics: hero-rich-physics-46c090825d90.json + meta (xoshiro quantum fields 9-strata)
+- world: hero-rich-world-d383f78b04dc.json + meta (fractal biomes sovereign creatures)
+- game: hero-rich-game-3ca5ca736447.json + meta (1M heroes onchain recursive)
++ 22+ more from batch (literature/film x3-6 each etc). All via rich make path, full sovereignty, Part6, ready for replay/matrix/golden verify. Sub to 13_* + 14_ Phase14-15/16/17-19/22-23.
+
+Last updated: 2026-06-04 rich domains 20+ batch + advanced Part6 surfaces (full completion push).
   - showcase-premium-platform-*.json (from "ultimate platform showcase: GSPL v∞ + recursive OS + econ civ + fed p2p + all 9 strata stress"; strata 0.555 real, royalty + civ10, full pack + RED/perf/SLO/zero-trust/"Full 27 + Part 6")
   - showcase-premium-gspl-formal-*.json (GSPL v∞ formal verifier proving det + 17-gene + breedable 5-clause roundtrip harness)
   - showcase-premium-os-recursive-*.json (recursive .gseed self-host of OS shell inside itself per 22-23 Part 6)

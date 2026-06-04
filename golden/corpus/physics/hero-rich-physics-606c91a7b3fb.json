@@ -1,0 +1,39 @@
+{
+  "seed": "high-fidelity physics sim of 9-strata field collapse birthing a civilization seed with full provenance and Part6 royalties",
+  "domain": "15_ rich physics (recovery path, det)",
+  "reproducibilityHash": "15-rich-os-f123b8a0f2a7",
+  "strataScores": {
+    "overall": 0.9,
+    "story": 0.92,
+    "culture": 0.88
+  },
+  "artifact": {
+    "id": "15-physics-os-f123b8a0f2a7",
+    "domain": "physics",
+    "name": "os-f123b8a0f2a7",
+    "intent": "high-fidelity physics sim of 9-strata field collapse birthing a civilization seed with full provenance and Part6 royalties",
+    "strataScores": {
+      "overall": 0.9,
+      "story": 0.92,
+      "culture": 0.88
+    },
+    "determinismLocked": true,
+    "source": "15_ rich physics (recovery path, det)",
+    "sovereignty": {
+      "gseed": ".gseed/os-f123b8a0f2a7",
+      "c2pa": true,
+      "royalty": "5%+civ",
+      "sig": "ECDSA"
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-f123b8a0f2a7-physics.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 17,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T02:10:09.993Z"
+}
