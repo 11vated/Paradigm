@@ -37,6 +37,7 @@
 - Visual/audio/story/playable/anim attach (v2d+char primary + sprite (png) + geometry3d (gltf) + music (wav) + narrative (story) + fullgame (html) + animation (gltf/html preview) in slices; light norms): data + visual/emergent/audio in QC + grow (real for 8+ domains; renderer audio player + nice story/anim views not raw; thumbs expanded; better loading/errors).
 - deriveCleanTitle + wiring everywhere.
 - Agent loop closed + inverse improved (attaches grown rich visual/artifact for UX feedback).
+- Sovereign exports strengthened (include rich visual/audio/story/html in artifact/outputs).
 - Studio: Atelier default, renderer clean (better loading/errors, no full raw JSON), thumbs/status visible.
 - Verifs green post-slice (type0, det0, QC13/13 incl animation, golden env notes).
 Lived UX for attached + core: intent → named + beautiful live visual <60s. Breadth for full 27/universal + advanced (OS/fed/heroes) still needed per 13_ SCOPE/24phases. Honest: ~8/27 domains rich consistent. Kernel never lies. See reports for gaps vs vision. COMPLETE for slices.

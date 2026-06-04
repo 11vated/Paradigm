@@ -216,7 +216,7 @@ export function registerSeedsExportRoutes(app: Express, deps: SeedsOutputDeps): 
     if (!seed) return res.status(404).json({ detail: 'Seed not found' });
     try {
       const { generatePreviewMesh } = require('../../lib/asset_pipeline/preview_generator.js');
-      const artifact = { type: seed.$domain || 'default', id: seed.id, seed_id: seed.id, name: seed.$name || 'Paradigm Seed', visual: seed.visual, mesh: seed.mesh, building: seed.building, particles: seed.particles };
+      const artifact = { type: seed.$domain || 'default', id: seed.id, seed_id: seed.id, name: seed.$name || 'Paradigm Seed', visual: seed.visual || seed.emergent_assets?.visual || null, mesh: seed.mesh, building: seed.building, particles: seed.particles, audio: seed.audioDataURL || null, story: seed.storyData || null, html: seed.htmlData || null };
       const mesh = generatePreviewMesh(artifact);
       if (!mesh) return res.status(422).json({ detail: 'Unable to generate preview mesh' });
       res.json({ seedId: seed.id, vertexCount: mesh.vertices.length / 3, triangleCount: mesh.indices.length / 3, mesh });
