@@ -1,0 +1,44 @@
+{
+  "seed": "health wearable with mind form field and part6 royalties --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-5df5d5a0278f",
+  "strataScores": {
+    "World": 0.93,
+    "Form": 0.89,
+    "Field": 0.85,
+    "Motion": 0,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "proc_913217017540088",
+    "width": 4096,
+    "height": 4096,
+    "biomeCount": 8,
+    "hasRivers": true,
+    "strataScores": {
+      "World": 0.93,
+      "Form": 0.89,
+      "Field": 0.85,
+      "Motion": 0,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-5df5d5a0278f-procedural.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 31,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T04:52:50.030Z"
+}

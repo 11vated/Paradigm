@@ -13,7 +13,29 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'reactor'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    designPath?: string;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -24,10 +46,31 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'reactor-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateReactor(seed as any, out)) as { filePath?: string };
+  const r = await withKernelClock(0, () => generateReactor(seed as any, out)) as { filePath?: string; designPath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Reactor ${parsed.reactor?.type || '?'} capacity ${parsed.reactor?.capacity || '?'}MW. Safety: ${parsed.safety?.score?.toFixed?.(2) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    capacity: parsed.reactor?.capacity || 0,
+    safety: parsed.safety?.score || 0,
+    efficiency: parsed.performance?.efficiency || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { designPath: r.designPath },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+      designPath: r.designPath
+    }
+  };
 }
 
 function invert(a: A): I {

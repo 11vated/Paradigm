@@ -14,7 +14,29 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'beer'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    labelPath?: string;
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -34,7 +56,28 @@ export const BeerQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateBeer(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
+    const summary = `${parsed.beer?.style || r.style || 'Beer'} ABV ${parsed.beer?.abv?.toFixed?.(1) || '?'}% IBU ${parsed.beer?.ibu || '?'}.`;
+    const metrics: Record<string, number> = {
+      abv: parsed.beer?.abv || 0,
+      ibu: parsed.beer?.ibu || 0,
+      efficiency: 0.8 + (parsed.beer?.abv || 5)/20
+    };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: { labelPath: r.labelPath, style: r.style },
+      previewData,
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+      emergent_assets: {
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+        labelPath: r.labelPath
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

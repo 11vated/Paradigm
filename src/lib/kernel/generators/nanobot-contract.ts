@@ -18,6 +18,25 @@ interface A {
   stlPath: string;
   botCount: number;
   meta: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    stlPath?: string;
+  };
 }
 interface I { size: number; botCount: number; facets?: number }
 
@@ -34,6 +53,16 @@ async function synthesize(seed: S): Promise<A> {
   const stlContent = await fsp.readFile(r.stlPath, 'utf-8').catch(() => 'solid empty\nendsolid empty');
   // Count facets for rich report (real detailed geometry)
   const facetCount = (stlContent.match(/facet normal/g) || []).length;
+  let parsed: any = {};
+  try { parsed = JSON.parse(jsonContent); } catch { /* fallback */ }
+  const summary = `Nanobot swarm of ${r.botCount} bots with ${facetCount} facets. Efficiency: ${parsed.swarm?.taskAllocation?.efficiency?.toFixed?.(2) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    botCount: r.botCount,
+    facetCount,
+    efficiency: parsed.swarm?.taskAllocation?.efficiency || 0,
+    resolution: parsed.design?.components?.find((c: any) => c.name === 'sensor')?.resolution || 0
+  };
+  const previewData = jsonContent;
   return {
     filePath: jsonContent,
     stlPath: r.stlPath,
@@ -43,6 +72,15 @@ async function synthesize(seed: S): Promise<A> {
       facetCount,
       botCount: r.botCount,
       stlHead: stlContent.slice(0, 64)
+    },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: r.filePath },
+      stlPath: r.stlPath
     }
   };
 }

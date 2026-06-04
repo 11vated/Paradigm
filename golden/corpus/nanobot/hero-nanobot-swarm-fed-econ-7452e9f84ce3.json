@@ -1,0 +1,44 @@
+{
+  "seed": "swarm of nanobots for targeted delivery with multi strata fed econ os --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-b27ea4c2d46e",
+  "strataScores": {
+    "World": 0.93,
+    "Form": 0.89,
+    "Field": 0.85,
+    "Motion": 0,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "proc_886653936046704",
+    "width": 4096,
+    "height": 4096,
+    "biomeCount": 8,
+    "hasRivers": true,
+    "strataScores": {
+      "World": 0.93,
+      "Form": 0.89,
+      "Field": 0.85,
+      "Motion": 0,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-b27ea4c2d46e-procedural.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 35,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T04:52:44.576Z"
+}

@@ -14,7 +14,29 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'optics'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    diagramPath?: string;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -25,10 +47,32 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'optics-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateOptics(seed as any, out)) as { filePath?: string; lensType?: string };
+  const r = await withKernelClock(0, () => generateOptics(seed as any, out)) as { filePath?: string; lensType?: string; diagramPath?: string };
   const filePath = r.filePath ?? out;
   const data = await fs.readFile(filePath, 'utf-8').catch(async () => (await fs.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: { lensType: r.lensType } };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `${parsed.optics?.lensType || r.lensType || 'Lens'} f=${parsed.optics?.focalLength || '?'}mm aperture=${parsed.optics?.aperture || '?'}. Yield: ${parsed.economics?.yield?.toFixed?.(2) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    focalLength: parsed.optics?.focalLength || 0,
+    aperture: parsed.optics?.aperture || 0,
+    yield: parsed.economics?.yield || 0,
+    transmission: parsed.coating?.transmission || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { lensType: r.lensType, diagramPath: r.diagramPath },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+      diagramPath: r.diagramPath
+    }
+  };
 }
 
 function invert(a: A): I {

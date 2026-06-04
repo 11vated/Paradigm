@@ -14,7 +14,29 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'jewelry'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    modelPath?: string;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -25,10 +47,31 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'jewelry-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateJewelry(seed as any, out)) as { filePath?: string };
+  const r = await withKernelClock(0, () => generateJewelry(seed as any, out)) as { filePath?: string; modelPath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Jewelry ${parsed.jewelry?.type || '?'} ${parsed.jewelry?.material || ''} carats ${parsed.jewelry?.carats || '?'}. Value: ${parsed.economics?.value?.toFixed?.(0) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    carats: parsed.jewelry?.carats || 0,
+    value: parsed.economics?.value || 0,
+    purity: parsed.jewelry?.purity || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { modelPath: r.modelPath },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+      modelPath: r.modelPath
+    }
+  };
 }
 
 function invert(a: A): I {

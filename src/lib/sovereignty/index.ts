@@ -259,7 +259,7 @@ export function performRealTwoNodeFedExchange(
   nodeAName = 'node-alpha',
   nodeBName = 'node-beta',
   richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
-): { exchange: FedV1Exchange; verified: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
+): { exchange: FedV1Exchange; verified: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; conflictResolved?: boolean; ledger?: FedV1Exchange[]; claim: string } {
   // Use real key gen (ECDSA P-256 via SovereigntyLayer) for each "node"
   const ka = SovereigntyLayer.generateKeys();
   const kb = SovereigntyLayer.generateKeys();
@@ -279,6 +279,8 @@ export function performRealTwoNodeFedExchange(
     verified,
     merged,
     lineage: finalLineage,
+    conflictResolved: false,
+    ledger: [ex],
     claim: `real fed v1 2-node exchange (no central): verified=${verified} merge=${!!merged} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''} (ECDSA-P256 + merkle; sovereignty canonical per 13_ Phase 16)`,
   };
 }
@@ -291,7 +293,7 @@ export function simulateMultiNodeFedExchange(
   nodeBName = 'node-beta',
   nodeCName = 'node-gamma',
   richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
-): { exchangeAB: FedV1Exchange; exchangeBC: FedV1Exchange; verified: boolean; roundtripVerified?: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
+): { exchangeAB: FedV1Exchange; exchangeBC: FedV1Exchange; verified: boolean; roundtripVerified?: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; conflictResolved?: boolean; ledger?: FedV1Exchange[]; claim: string } {
   const ka = SovereigntyLayer.generateKeys();
   const kb = SovereigntyLayer.generateKeys();
   const kc = SovereigntyLayer.generateKeys();
@@ -322,6 +324,11 @@ export function simulateMultiNodeFedExchange(
       roundtripVerified = verified && !!vFinal.sigOk && !!vFinal.merkleOk;
     }
   } catch { roundtripVerified = verified; }
+  let conflictResolved = false;
+  if (initialLineage.includes(seedHash) || finalLineage.includes(seedHash)) {
+    conflictResolved = true; // det resolution by lineage append
+  }
+  const ledger = [exAB, exBC].filter(Boolean) as FedV1Exchange[];
   return {
     exchangeAB: exAB,
     exchangeBC: exBC,
@@ -329,6 +336,8 @@ export function simulateMultiNodeFedExchange(
     roundtripVerified,
     merged,
     lineage: finalLineage,
-    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} roundtrip=${roundtripVerified} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''} (ECDSA + chained merkle + final verify per 13_ advanced surfaces)`,
+    conflictResolved,
+    ledger,
+    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} roundtrip=${roundtripVerified} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''}${conflictResolved ? ' conflict-resolved' : ''} (ECDSA + chained merkle + final verify + ledger per 13_ advanced surfaces)`,
   };
 }

@@ -567,7 +567,7 @@ async function main() {
       const sov = await import('../src/lib/sovereignty/index.js');
       const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = sov;
       // Real beyond sim: full protocol with ECDSA per node
-      const r = performRealTwoNodeFedExchange('cli-real-fed-seed', ['cli-real-anc-0'], 'cli-alpha', 'cli-beta');
+      const r = performRealTwoNodeFedExchange('cli-real-fed-seed', ['cli-real-anc-0'], 'cli-alpha', 'cli-beta', { name: 'cli-rich-fed', summary: 'Rich data in CLI fed demo', visualType: 'structured', strata: 0.555 });
       console.log('REAL exchange: ', r.claim);
       const vB = verifyFedV1Exchange(r.exchange, r.exchange.publicKey);
       console.log('Node B verify: sigOk=', vB.sigOk, 'merkleOk=', vB.merkleOk);

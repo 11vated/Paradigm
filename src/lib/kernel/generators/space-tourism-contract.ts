@@ -13,7 +13,29 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'space-tourism'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    itineraryPath?: string;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -24,10 +46,31 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'space-tourism-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generateSpaceTourism(seed as any, out)) as { filePath?: string };
+  const r = await withKernelClock(0, () => generateSpaceTourism(seed as any, out)) as { filePath?: string; itineraryPath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Space tourism ${parsed.spaceTourism?.vehicle || '?'} for ${parsed.spaceTourism?.passengers || '?'} passengers. Duration: ${parsed.itinerary?.duration || '?'} days.`;
+  const metrics: Record<string, number> = {
+    passengers: parsed.spaceTourism?.passengers || 0,
+    duration: parsed.itinerary?.duration || 0,
+    safety: parsed.safety?.score || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { itineraryPath: r.itineraryPath },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+      itineraryPath: r.itineraryPath
+    }
+  };
 }
 
 function invert(a: A): I {

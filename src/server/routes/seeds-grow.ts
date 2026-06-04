@@ -24,11 +24,13 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
   const { seeds, optionalAuth, validateBody, BodyGrowSeedSchema, GrowSeedSchema, getAllDomains, growSeed, buildC2PAManifest, growCacheKey, cache, log } = deps;
 
   app.post('/api/seeds/grow', optionalAuth, validateBody(BodyGrowSeedSchema), async (req: any, res: any) => {
+    let result: any;
     try {
       const { seed: rawSeed, domain: domainOverride } = req.body ?? {};
       if (!rawSeed) return res.status(400).json({ error: 'Missing seed in body' });
       const domain = domainOverride ?? rawSeed.$domain ?? 'visual2d';
       const seed = { ...rawSeed, $domain: domain };
+      let result: any;
       const NEW_DOMAIN_GENERATORS: Record<string, (s: any, p: string) => Promise<any>> = {
         website:   async (s, p) => { const { generateWebsite }   = await import('../../lib/kernel/generators/website.js');   return generateWebsite(s, p); },
         field:     async (s, p) => { const { generateField }     = await import('../../lib/kernel/generators/field.js');     return generateField(s, p); },
@@ -38,7 +40,6 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
       };
       const outputDir = `data/artifacts/${domain}`;
       const outputPath = `${outputDir}/${seed.$hash ?? 'seed'}-${Date.now()}.out`;
-      let result: any;
       if (NEW_DOMAIN_GENERATORS[domain]) {
         result = await NEW_DOMAIN_GENERATORS[domain](seed, outputPath);
         result.c2pa_manifest = buildC2PAManifest(seed, domain, '2.0', result);
@@ -89,7 +90,15 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
       res.json(result);
     } catch (e: any) {
       log('ERROR', 'Body-grow failed', { error: e.message });
-      res.status(500).json({ error: 'Growth failed', message: e.message });
+      const errBody: any = { error: 'Growth failed', message: e.message };
+      if (typeof result !== 'undefined' && result && (result.previewData || result.structuredData || result.visual || result.emergent_assets)) {
+        errBody.richPartial = {
+          preview: result.previewData || result.visual,
+          structured: result.structuredData,
+          emergent: result.emergent_assets
+        };
+      }
+      res.status(500).json(errBody);
     }
   });
 

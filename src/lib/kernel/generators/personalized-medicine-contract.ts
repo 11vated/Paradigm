@@ -13,7 +13,29 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'personalized-medicine'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
+    previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
+      path?: string;
+    };
+    reportPath?: string;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -24,10 +46,32 @@ async function synthesize(seed: S): Promise<A> {
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'personalized-medicine-'));
   const out = path.join(dir, 'a.json');
   // Generator boundary cast (legacy untyped generator interop) — narrow, isolated
-  const r = await withKernelClock(0, () => generatePersonalizedMedicine(seed as any, out)) as { filePath?: string };
+  const r = await withKernelClock(0, () => generatePersonalizedMedicine(seed as any, out)) as { filePath?: string; reportPath?: string; treatmentType?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  let parsed: any = {};
+  try { parsed = JSON.parse(data); } catch { /* fallback */ }
+  const summary = `Personalized ${parsed.personalizedMedicine?.treatmentType || r.treatmentType || 'medicine'} with ${parsed.personalizedMedicine?.biomarkers || '?'} biomarkers. Efficacy: ${parsed.personalizedMedicine?.efficacy?.toFixed?.(2) || 'n/a'}`;
+  const metrics: Record<string, number> = {
+    biomarkers: parsed.personalizedMedicine?.biomarkers || 0,
+    efficacy: parsed.personalizedMedicine?.efficacy || 0,
+    responseRate: parsed.outcomes?.responseRate || 0,
+    adverse: parsed.outcomes?.adverseEvents || 0
+  };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { reportPath: r.reportPath, treatmentType: r.treatmentType },
+    previewData,
+    structuredData: parsed,
+    summary,
+    metrics,
+    visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
+    emergent_assets: {
+      preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath },
+      reportPath: r.reportPath
+    }
+  };
 }
 
 function invert(a: A): I {
