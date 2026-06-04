@@ -14,7 +14,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'ecosystem'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'raster';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -30,7 +45,16 @@ async function synthesize(seed: S): Promise<A> {
     const data = primaryPath
       ? await fsp.readFile(primaryPath, 'utf-8').catch(async () => (await fsp.readFile(primaryPath)).toString('base64'))
       : '';
-    return { filePath: data, meta: { ...r } };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: { ...r },
+      previewData,
+      visual: { type: primaryPath?.endsWith('.html') ? 'html' : 'json', previewData },
+      emergent_assets: {
+        preview: { type: primaryPath?.endsWith('.html') ? 'html' : 'json', data: previewData, path: primaryPath }
+      }
+    };
   } finally {
     await fsp.rm(dir, { recursive: true, force: true });
   }
