@@ -1,0 +1,698 @@
+{
+  "$intent": "consolidation test rich structured data for hardening wave --domain physics",
+  "$created": "2026-06-04T05:02:28.809Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "c5565d5234073cf6",
+      "name": "Consolidation Test Rich Structured Data For c5565d",
+      "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "petite",
+          "heightScale": 0.8455543039029826,
+          "shoulderRatio": 0.9428974289218623,
+          "torsoRatio": 0.951642076012189,
+          "limbRatio": 0.9576347855001224,
+          "muscle": 0.3669903274025834,
+          "softness": 0.4178650670809792,
+          "skinTone": [
+            0.6924420275449309,
+            0.4232570119693315,
+            0.613505360048723
+          ]
+        },
+        "face": {
+          "roundness": 0.22305656817470165,
+          "eyeHeight": 0.45948531905385975,
+          "eyeSpacing": 0.38760657361441847,
+          "eyeShape": "narrow",
+          "eyeColor": [
+            0.684583344215534,
+            0.1774726993007895,
+            0.6589954490459737
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.6044448782442526,
+          "mouthShape": "wide",
+          "jawShape": "tapered",
+          "brow": 0.6900035322213849,
+          "cheekbones": 0.32903178400706845,
+          "chin": 0.6069126917520902,
+          "hairStyle": "buzz",
+          "hairColor": [
+            0.6843139964024441,
+            0.39991843801774096,
+            0.08425840863185571
+          ]
+        },
+        "voice": {
+          "pitch": 217.0000383987964,
+          "inflection": 0.2609591633582934,
+          "tempo": 147.36548531760906,
+          "breathiness": 0.4580017624848661,
+          "warmth": 0.9046303733462577,
+          "formants": [
+            645.1611761593887,
+            1124.4237641635061,
+            2396.3129400205867,
+            2949.308233871491,
+            3686.6352923393642
+          ],
+          "accent": "midwest"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.29918653410586105,
+            "conscientiousness": 0.884030651639681,
+            "extraversion": 0.06390536483754294,
+            "agreeableness": 0.9228074025415502,
+            "neuroticism": 0.1889689592345063
+          },
+          "interests": [
+            "poetry",
+            "music",
+            "cooking"
+          ],
+          "values": [
+            "honesty",
+            "rigor",
+            "play"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.19579991857957935,
+          "curiosity": 0.7643026787638476
+        },
+        "memory": {
+          "episodicCapacity": 915,
+          "episodicDecay": 0.02326253979264414,
+          "semanticCapacity": 15359,
+          "reflectionCadenceDays": 5.497661152932311
+        },
+        "bond": {
+          "initialTrust": 0.3324223814948269,
+          "initialWarmth": 0.35440353324613444,
+          "bondingDays": 85
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Test Rich Structured Data For c5565d"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Test Rich Structured Data For c5565d"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "c5565d5234073cf6",
+      "name": "Consolidation Test Rich Structured Data For",
+      "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "post-apocalyptic",
+          "biome": "tundra",
+          "magic": 0.35724357230465587,
+          "tech": 0.33880692004063007,
+          "density": 0.3587826183337415
+        },
+        "physics": {
+          "gravity": 0.22330109134194465,
+          "hostility": 0.6643253354048959,
+          "diurnalRate": 0.6226218682635107,
+          "weatherVolatility": 0.3150127490351482
+        },
+        "society": {
+          "order": 0.8270107200974459,
+          "pluralism": 0.22305656817470165,
+          "prosperity": 0.09485319053859764,
+          "literacy": 0.5840438240961232
+        },
+        "conflict": {
+          "kind": "survival",
+          "scale": 0.9743055736925568,
+          "urgency": 0.1291211655013158,
+          "clarity": 0.9316590817432897
+        },
+        "mood": {
+          "brightness": 0.4657091439709071,
+          "warmth": 0.5444487824425259,
+          "pace": 0.7720815065676216,
+          "levity": 0.9273916799068211
+        },
+        "history": {
+          "agesSinceFall": 3450,
+          "ghostliness": 0.32903178400706845,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-04T05:02:28.790Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "consolidation test rich structured data for hardening wave --domain physics",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Test Rich Structured Data For"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Test Rich Structured Data For"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "f39cdb7790cfbbc3",
+    "seedHash": "f39cdb7790cfbbc3f74cbab0c2bd78a885c9c17acfd23702087c75c4576359ff",
+    "genomeVersion": 1,
+    "title": "What Consolidation Test Rich Structured Data For c5565d Carried Out of Consolidation Test Rich Structured Data For",
+    "genes": {
+      "archetype": "survival-crawl",
+      "stake": 0.1650298417412301,
+      "antagonist": 0.920235816393868,
+      "moralComplexity": 0.4569778616699054,
+      "pacing": 0.5096366432847006,
+      "intensity": 0.33571128600233574,
+      "actCount": 5,
+      "targetWordCount": 16187,
+      "hook": "Winter has come to Consolidation Test Rich Structured Data For. Consolidation Test Rich Structured Data For c5565d will not last it alone."
+    },
+    "parents": {
+      "friend": {
+        "id": "c5565d5234073cf6",
+        "name": "Consolidation Test Rich Structured Data For c5565d",
+        "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c"
+      },
+      "world": {
+        "id": "c5565d5234073cf6",
+        "name": "Consolidation Test Rich Structured Data For",
+        "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c"
+      }
+    },
+    "bornAt": "2026-06-04T05:02:28.801Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Consolidation Test Rich Structured Data For",
+      "quest": {
+        "id": "f39cdb7790cfbbc3",
+        "seedHash": "f39cdb7790cfbbc3f74cbab0c2bd78a885c9c17acfd23702087c75c4576359ff",
+        "genomeVersion": 1,
+        "title": "What Consolidation Test Rich Structured Data For c5565d Carried Out of Consolidation Test Rich Structured Data For",
+        "genes": {
+          "archetype": "survival-crawl",
+          "stake": 0.1650298417412301,
+          "antagonist": 0.920235816393868,
+          "moralComplexity": 0.4569778616699054,
+          "pacing": 0.5096366432847006,
+          "intensity": 0.33571128600233574,
+          "actCount": 5,
+          "targetWordCount": 16187,
+          "hook": "Winter has come to Consolidation Test Rich Structured Data For. Consolidation Test Rich Structured Data For c5565d will not last it alone."
+        },
+        "parents": {
+          "friend": {
+            "id": "c5565d5234073cf6",
+            "name": "Consolidation Test Rich Structured Data For c5565d",
+            "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c"
+          },
+          "world": {
+            "id": "c5565d5234073cf6",
+            "name": "Consolidation Test Rich Structured Data For",
+            "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c"
+          }
+        },
+        "bornAt": "2026-06-04T05:02:28.801Z"
+      },
+      "friend": {
+        "id": "c5565d5234073cf6",
+        "name": "Consolidation Test Rich Structured Data For c5565d",
+        "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "petite",
+            "heightScale": 0.8455543039029826,
+            "shoulderRatio": 0.9428974289218623,
+            "torsoRatio": 0.951642076012189,
+            "limbRatio": 0.9576347855001224,
+            "muscle": 0.3669903274025834,
+            "softness": 0.4178650670809792,
+            "skinTone": [
+              0.6924420275449309,
+              0.4232570119693315,
+              0.613505360048723
+            ]
+          },
+          "face": {
+            "roundness": 0.22305656817470165,
+            "eyeHeight": 0.45948531905385975,
+            "eyeSpacing": 0.38760657361441847,
+            "eyeShape": "narrow",
+            "eyeColor": [
+              0.684583344215534,
+              0.1774726993007895,
+              0.6589954490459737
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.6044448782442526,
+            "mouthShape": "wide",
+            "jawShape": "tapered",
+            "brow": 0.6900035322213849,
+            "cheekbones": 0.32903178400706845,
+            "chin": 0.6069126917520902,
+            "hairStyle": "buzz",
+            "hairColor": [
+              0.6843139964024441,
+              0.39991843801774096,
+              0.08425840863185571
+            ]
+          },
+          "voice": {
+            "pitch": 217.0000383987964,
+            "inflection": 0.2609591633582934,
+            "tempo": 147.36548531760906,
+            "breathiness": 0.4580017624848661,
+            "warmth": 0.9046303733462577,
+            "formants": [
+              645.1611761593887,
+              1124.4237641635061,
+              2396.3129400205867,
+              2949.308233871491,
+              3686.6352923393642
+            ],
+            "accent": "midwest"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.29918653410586105,
+              "conscientiousness": 0.884030651639681,
+              "extraversion": 0.06390536483754294,
+              "agreeableness": 0.9228074025415502,
+              "neuroticism": 0.1889689592345063
+            },
+            "interests": [
+              "poetry",
+              "music",
+              "cooking"
+            ],
+            "values": [
+              "honesty",
+              "rigor",
+              "play"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.19579991857957935,
+            "curiosity": 0.7643026787638476
+          },
+          "memory": {
+            "episodicCapacity": 915,
+            "episodicDecay": 0.02326253979264414,
+            "semanticCapacity": 15359,
+            "reflectionCadenceDays": 5.497661152932311
+          },
+          "bond": {
+            "initialTrust": 0.3324223814948269,
+            "initialWarmth": 0.35440353324613444,
+            "bondingDays": 85
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "c5565d5234073cf6",
+        "name": "Consolidation Test Rich Structured Data For",
+        "seedHash": "c5565d5234073cf66abafc5a4bc8523f669040cb6f4ac236dacc86955a54d71c",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "post-apocalyptic",
+            "biome": "tundra",
+            "magic": 0.35724357230465587,
+            "tech": 0.33880692004063007,
+            "density": 0.3587826183337415
+          },
+          "physics": {
+            "gravity": 0.22330109134194465,
+            "hostility": 0.6643253354048959,
+            "diurnalRate": 0.6226218682635107,
+            "weatherVolatility": 0.3150127490351482
+          },
+          "society": {
+            "order": 0.8270107200974459,
+            "pluralism": 0.22305656817470165,
+            "prosperity": 0.09485319053859764,
+            "literacy": 0.5840438240961232
+          },
+          "conflict": {
+            "kind": "survival",
+            "scale": 0.9743055736925568,
+            "urgency": 0.1291211655013158,
+            "clarity": 0.9316590817432897
+          },
+          "mood": {
+            "brightness": 0.4657091439709071,
+            "warmth": 0.5444487824425259,
+            "pace": 0.7720815065676216,
+            "levity": 0.9273916799068211
+          },
+          "history": {
+            "agesSinceFall": 3450,
+            "ghostliness": 0.32903178400706845,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-04T05:02:28.790Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "consolidation test rich structured data for hardening wave --domain physics",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Motion",
+        "Field"
+      ],
+      "suggestedStrata": [
+        "Motion",
+        "Field"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Motion",
+          "Field"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Consolidation Test Rich Structured Data For",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Test Rich Structured Data For"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Test Rich Structured Data For"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Consolidation Test Rich Structured Data For",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Motion",
+    "Field"
+  ],
+  "richOutputs": {
+    "name": "Consolidation Test Rich Structured Data For",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Motion",
+      "Field"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

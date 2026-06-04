@@ -1,0 +1,32 @@
+{
+  "intent": "test acoustics rich summary metrics --domain acoustics",
+  "memoryHash": "direct-pipeline-v1-strata-69d1d9b9a1b4e819",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Mind",
+    "Story",
+    "World"
+  ],
+  "strataSummary": [
+    "Mind",
+    "Story",
+    "World"
+  ],
+  "strataHash": "69d1d9b9a1b4e819",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Mind",
+        "Story",
+        "World"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:09:34.222Z"
+}

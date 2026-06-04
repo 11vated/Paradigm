@@ -1,0 +1,711 @@
+{
+  "$intent": "5g network slice optimization --domain 5g",
+  "$created": "2026-06-04T05:02:34.185Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "34c2073c1725467f",
+      "name": "5g Network Slice Optimization --domain 5g 34c207",
+      "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "tall",
+          "heightScale": 1.1395054438271173,
+          "shoulderRatio": 1.0445547167848548,
+          "torsoRatio": 0.9185517419316008,
+          "limbRatio": 0.9468571241594039,
+          "muscle": 0.437143863068636,
+          "softness": 0.48110281212220984,
+          "skinTone": [
+            0.5771204161561532,
+            0.6708715582774376,
+            0.46029382740173325
+          ]
+        },
+        "face": {
+          "roundness": 0.9944327003225015,
+          "eyeHeight": 0.541668736280702,
+          "eyeSpacing": 0.4490530525088896,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.3675388357152438,
+            0.5072689605338268,
+            0.2627103640272943
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.5900936624261213,
+          "mouthShape": "thin",
+          "jawShape": "pointed",
+          "brow": 0.7110981462989505,
+          "cheekbones": 0.7506263609040487,
+          "chin": 0.09130982403499188,
+          "hairStyle": "short",
+          "hairColor": [
+            0.26009794712662987,
+            0.5064006612141456,
+            0.13583260374958148
+          ]
+        },
+        "voice": {
+          "pitch": 128.50437526886924,
+          "inflection": 0.8145373089573722,
+          "tempo": 143.27200912449456,
+          "breathiness": 0.1310319508107124,
+          "warmth": 0.9810844353782953,
+          "formants": [
+            1089.4570687346522,
+            1898.7680340803938,
+            4046.554826728708,
+            4980.37517135841,
+            6225.468964198012
+          ],
+          "accent": "paris"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.4750871613126,
+            "conscientiousness": 0.8251393554418942,
+            "extraversion": 0.802304978318809,
+            "agreeableness": 0.6543796758935458,
+            "neuroticism": 0.8882280442877764
+          },
+          "interests": [
+            "mathematics",
+            "cinema",
+            "philosophy",
+            "fermentation",
+            "gardening",
+            "rock-climbing"
+          ],
+          "values": [
+            "restraint",
+            "directness",
+            "irreverence",
+            "generosity"
+          ],
+          "speechStyle": "poetic",
+          "humor": 0.9506881828056863,
+          "curiosity": 0.4939390844670102
+        },
+        "memory": {
+          "episodicCapacity": 1777,
+          "episodicDecay": 0.025575304431603742,
+          "semanticCapacity": 11011,
+          "reflectionCadenceDays": 3.944271561754984
+        },
+        "bond": {
+          "initialTrust": 0.32004507222876827,
+          "initialWarmth": 0.5795691597659809,
+          "bondingDays": 77
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "5g Network Slice Optimization --domain 5g 34c207"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "5g Network Slice Optimization --domain 5g 34c207"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "34c2073c1725467f",
+      "name": "5g Network Slice Optimization --domain 5g",
+      "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "mythic",
+          "biome": "desert",
+          "magic": 0.611386791962137,
+          "tech": 0.22850580643866958,
+          "density": 0.32285708053134665
+        },
+        "physics": {
+          "gravity": 0.45714621022878665,
+          "hostility": 0.9805140606110492,
+          "diurnalRate": 0.4129462111930058,
+          "weatherVolatility": 0.7652210150498866
+        },
+        "society": {
+          "order": 0.5205876548034665,
+          "pluralism": 0.9944327003225015,
+          "prosperity": 0.9166873628070202,
+          "literacy": 0.9936870167259306
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.4458980595254063,
+          "urgency": 0.6787816008897112,
+          "clarity": 0.2711839400454905
+        },
+        "mood": {
+          "brightness": 0.8634304658814338,
+          "warmth": 0.4009366242612118,
+          "pace": 0.36213744924460145,
+          "levity": 0.5899351786050238
+        },
+        "history": {
+          "agesSinceFall": 3555,
+          "ghostliness": 0.7506263609040487,
+          "eraCount": 1
+        }
+      },
+      "bornAt": "2026-06-04T05:02:34.170Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "5g network slice optimization --domain 5g",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "5g Network Slice Optimization --domain 5g"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "5g Network Slice Optimization --domain 5g"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "91062aa4172c1fc7",
+    "seedHash": "91062aa4172c1fc7d940a2cb02d6d69b93a0efb939b4a5352596e6fd8c81a39d",
+    "genomeVersion": 1,
+    "title": "The Long Road of 5g Network Slice Optimization --domain 5g 34c207",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.8044494669285502,
+      "antagonist": 0.42461921966595273,
+      "moralComplexity": 0.5187877058708006,
+      "pacing": 0.2872267273700032,
+      "intensity": 0.5754412966274344,
+      "actCount": 4,
+      "targetWordCount": 10726,
+      "hook": "Strangers cross the borders of 5g Network Slice Optimization --domain 5g. 5g Network Slice Optimization --domain 5g 34c207 is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "34c2073c1725467f",
+        "name": "5g Network Slice Optimization --domain 5g 34c207",
+        "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e"
+      },
+      "world": {
+        "id": "34c2073c1725467f",
+        "name": "5g Network Slice Optimization --domain 5g",
+        "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e"
+      }
+    },
+    "bornAt": "2026-06-04T05:02:34.177Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "5g Network Slice Optimization --domain 5g",
+      "quest": {
+        "id": "91062aa4172c1fc7",
+        "seedHash": "91062aa4172c1fc7d940a2cb02d6d69b93a0efb939b4a5352596e6fd8c81a39d",
+        "genomeVersion": 1,
+        "title": "The Long Road of 5g Network Slice Optimization --domain 5g 34c207",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.8044494669285502,
+          "antagonist": 0.42461921966595273,
+          "moralComplexity": 0.5187877058708006,
+          "pacing": 0.2872267273700032,
+          "intensity": 0.5754412966274344,
+          "actCount": 4,
+          "targetWordCount": 10726,
+          "hook": "Strangers cross the borders of 5g Network Slice Optimization --domain 5g. 5g Network Slice Optimization --domain 5g 34c207 is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "34c2073c1725467f",
+            "name": "5g Network Slice Optimization --domain 5g 34c207",
+            "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e"
+          },
+          "world": {
+            "id": "34c2073c1725467f",
+            "name": "5g Network Slice Optimization --domain 5g",
+            "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e"
+          }
+        },
+        "bornAt": "2026-06-04T05:02:34.177Z"
+      },
+      "friend": {
+        "id": "34c2073c1725467f",
+        "name": "5g Network Slice Optimization --domain 5g 34c207",
+        "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "tall",
+            "heightScale": 1.1395054438271173,
+            "shoulderRatio": 1.0445547167848548,
+            "torsoRatio": 0.9185517419316008,
+            "limbRatio": 0.9468571241594039,
+            "muscle": 0.437143863068636,
+            "softness": 0.48110281212220984,
+            "skinTone": [
+              0.5771204161561532,
+              0.6708715582774376,
+              0.46029382740173325
+            ]
+          },
+          "face": {
+            "roundness": 0.9944327003225015,
+            "eyeHeight": 0.541668736280702,
+            "eyeSpacing": 0.4490530525088896,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.3675388357152438,
+              0.5072689605338268,
+              0.2627103640272943
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.5900936624261213,
+            "mouthShape": "thin",
+            "jawShape": "pointed",
+            "brow": 0.7110981462989505,
+            "cheekbones": 0.7506263609040487,
+            "chin": 0.09130982403499188,
+            "hairStyle": "short",
+            "hairColor": [
+              0.26009794712662987,
+              0.5064006612141456,
+              0.13583260374958148
+            ]
+          },
+          "voice": {
+            "pitch": 128.50437526886924,
+            "inflection": 0.8145373089573722,
+            "tempo": 143.27200912449456,
+            "breathiness": 0.1310319508107124,
+            "warmth": 0.9810844353782953,
+            "formants": [
+              1089.4570687346522,
+              1898.7680340803938,
+              4046.554826728708,
+              4980.37517135841,
+              6225.468964198012
+            ],
+            "accent": "paris"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.4750871613126,
+              "conscientiousness": 0.8251393554418942,
+              "extraversion": 0.802304978318809,
+              "agreeableness": 0.6543796758935458,
+              "neuroticism": 0.8882280442877764
+            },
+            "interests": [
+              "mathematics",
+              "cinema",
+              "philosophy",
+              "fermentation",
+              "gardening",
+              "rock-climbing"
+            ],
+            "values": [
+              "restraint",
+              "directness",
+              "irreverence",
+              "generosity"
+            ],
+            "speechStyle": "poetic",
+            "humor": 0.9506881828056863,
+            "curiosity": 0.4939390844670102
+          },
+          "memory": {
+            "episodicCapacity": 1777,
+            "episodicDecay": 0.025575304431603742,
+            "semanticCapacity": 11011,
+            "reflectionCadenceDays": 3.944271561754984
+          },
+          "bond": {
+            "initialTrust": 0.32004507222876827,
+            "initialWarmth": 0.5795691597659809,
+            "bondingDays": 77
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "34c2073c1725467f",
+        "name": "5g Network Slice Optimization --domain 5g",
+        "seedHash": "34c2073c1725467f7034cf71498c41691d3b997858299292d41e1d89756e8c0e",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "mythic",
+            "biome": "desert",
+            "magic": 0.611386791962137,
+            "tech": 0.22850580643866958,
+            "density": 0.32285708053134665
+          },
+          "physics": {
+            "gravity": 0.45714621022878665,
+            "hostility": 0.9805140606110492,
+            "diurnalRate": 0.4129462111930058,
+            "weatherVolatility": 0.7652210150498866
+          },
+          "society": {
+            "order": 0.5205876548034665,
+            "pluralism": 0.9944327003225015,
+            "prosperity": 0.9166873628070202,
+            "literacy": 0.9936870167259306
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.4458980595254063,
+            "urgency": 0.6787816008897112,
+            "clarity": 0.2711839400454905
+          },
+          "mood": {
+            "brightness": 0.8634304658814338,
+            "warmth": 0.4009366242612118,
+            "pace": 0.36213744924460145,
+            "levity": 0.5899351786050238
+          },
+          "history": {
+            "agesSinceFall": 3555,
+            "ghostliness": 0.7506263609040487,
+            "eraCount": 1
+          }
+        },
+        "bornAt": "2026-06-04T05:02:34.170Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "5g network slice optimization --domain 5g",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "5g Network Slice Optimization --domain 5g",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "5g Network Slice Optimization --domain 5g"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "5g Network Slice Optimization --domain 5g"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "5g Network Slice Optimization --domain 5g",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "5g Network Slice Optimization --domain 5g",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

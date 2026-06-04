@@ -18,14 +18,20 @@ interface A {
   filePath: string;
   meta: any;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -49,14 +55,26 @@ export const AdvertisingQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateAdvertising(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
     const previewData = data;
+    const summary = `Advertising ${parsed.campaign || parsed.type || 'campaign'} reach ${parsed.reach || parsed.audience || 'n/a'} ctr:${parsed.ctr || parsed.clickRate || 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      reach: typeof (parsed.reach || parsed.audience) === 'number' ? (parsed.reach || parsed.audience) : 0,
+      ctr: typeof (parsed.ctr || parsed.clickRate) === 'number' ? (parsed.ctr || parsed.clickRate) : 0,
+      conversion: typeof parsed.conversion === 'number' ? parsed.conversion : 0,
+      hasTargeting: /target|segment|demograph/i.test(data) ? 1 : 0
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

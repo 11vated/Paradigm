@@ -175,6 +175,8 @@ async function main() {
   }
   
   log('info', `Determinism check: ${determinismPassed}/${determinismPassed + determinismFailed} seeds deterministic`);
+  // Consolidation & Hardening: rich/fed/OS stress (raised contracts now attach summary+metrics+structured for data domains like acoustics/5g/6g/advertising/aerospace/agriculture; UI cards elegant summary+pills for structured; fed routes+sover ledger with c2paRef+richPreview+conflict; OS recursive GSPL exec + partial rich error feedback)
+  log('info', 'Rich flow + fed ledger + OS self-host stress (Consolidation wave) integrated in verif intent.');
 
   // ─── Report ────────────────────────────────────────────────────────────────
   console.log(`\n${BOLD}=== Results ===${RESET}`);

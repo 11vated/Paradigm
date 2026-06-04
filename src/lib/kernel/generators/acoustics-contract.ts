@@ -17,14 +17,20 @@ interface A {
   filePath: string;
   meta: any;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -48,14 +54,26 @@ export const AcousticsQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateAcoustics(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback to raw */ }
     const previewData = data;
+    const summary = `Acoustics ${parsed.reverb !== undefined ? 'reverb ' + parsed.reverb : ''}${parsed.resonance !== undefined ? ' resonance ' + parsed.resonance : ''} frequencies:${Array.isArray(parsed.frequencies) ? parsed.frequencies.length : 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      reverb: typeof parsed.reverb === 'number' ? parsed.reverb : 0,
+      resonance: typeof parsed.resonance === 'number' ? parsed.resonance : 0,
+      freqCount: Array.isArray(parsed.frequencies) ? parsed.frequencies.length : 0,
+      hasIR: (Array.isArray(parsed.impulseResponse) || Array.isArray(parsed.ir)) ? 1 : 0
+    };
     return {
       filePath: data,
-      meta: {},
+      meta: r || {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

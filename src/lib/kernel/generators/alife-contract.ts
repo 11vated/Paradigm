@@ -18,14 +18,20 @@ interface A {
   filePath: string;
   meta: any;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'text' | 'svg';
+    type: 'json' | 'html' | 'text' | 'svg' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'html' | 'text' | 'svg';
-      data?: string;
+      type: 'json' | 'html' | 'text' | 'svg' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -49,14 +55,26 @@ export const AlifeQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateAlife(seed, out));
     const filePath = r.jsonPath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
     const previewData = data;
+    const summary = `ALife ${parsed.organism || parsed.species || 'sim'} population ${parsed.population || 'n/a'} fitness:${parsed.fitness || parsed.avgFitness || 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      population: typeof parsed.population === 'number' ? parsed.population : 0,
+      fitness: typeof (parsed.fitness || parsed.avgFitness) === 'number' ? (parsed.fitness || parsed.avgFitness) : 0,
+      generations: typeof parsed.generations === 'number' ? parsed.generations : 0,
+      hasEmergence: /emerg|pattern|diversity/i.test(data) ? 1 : 0
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

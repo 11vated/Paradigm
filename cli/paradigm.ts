@@ -140,6 +140,20 @@ async function cmdGrow(args: string[]) {
 
   try {
     const result = await growSeed(seed as any); // any: growSeed expects legacy Seed shape from this CLI path; justified carveout for interop, not new evasion
+    // Consolidation & Hardening: light promote for rich data flow consistency (structured/summary/metrics/visual/emergent from contract synthesize or generator)
+    if (result) {
+      if (!result.visual) result.visual = {};
+      if (result.pngDataURL) result.visual.pngDataURL = result.pngDataURL;
+      if (result.svgDataURL) result.visual.svgDataURL = result.svgDataURL;
+      if (result.structuredData || result.visual?.structuredData || result.summary || result.metrics) {
+        result.visual.type = result.visual?.type || 'structured';
+        if (result.structuredData) result.visual.structuredData = result.structuredData;
+        if (result.summary) result.visual.summary = result.summary;
+        if (result.metrics) result.visual.metrics = result.metrics;
+      }
+      if (result.emergent_assets) result.emergent = result.emergent_assets; // alias for pack/UI
+      if (result.previewData && !result.visual?.previewData) result.visual.previewData = result.previewData;
+    }
     const elapsed = Date.now() - t0;
     log('success', `Grown in ${elapsed}ms`);
     const outFile = join(resolve(outDir), `${domain}-${hash.slice(0, 8)}.json`);
@@ -408,7 +422,13 @@ async function cmdMake(args: string[]) {
         emergent: (gameArtifact as any).emergent_assets || null,
         strata: (gameArtifact as any).strata || gameSeed.strata || [],
         html: (gameArtifact as any).htmlData || (gameArtifact as any).files?.html || null,
-      } : null,
+      } : (gameArtifact ? {
+        // Consolidation: improve rich data flow for direct/hybrid domain artifacts (structured summary/metrics/visual now promoted even if not game wrapper)
+        name: deriveCleanTitle((gameSeed as any).$name || (gameSeed as any).$intent || intent, (gameSeed as any).$hash),
+        visual: (gameArtifact as any).visual || (gameArtifact as any).structuredData ? { type: 'structured', structuredData: (gameArtifact as any).structuredData, summary: (gameArtifact as any).summary, metrics: (gameArtifact as any).metrics } : null,
+        emergent: (gameArtifact as any).emergent_assets || null,
+        strata: (gameArtifact as any).strata || (gameSeed as any).strata || [],
+      } : null),
       meta: { recursiveGseed: isRecursiveMake }, // enhanced make for recursive .gseed compositions (OS shell hooks)
     };
     if (isRecursiveMake) {

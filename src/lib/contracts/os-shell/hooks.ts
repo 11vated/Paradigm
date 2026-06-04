@@ -206,9 +206,14 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
     }
 
     const gseedDur = kernelNow() - osStart;
-    // ambitious functional self-evol: rich artifact + .gseed for demonstrable recursion (per 13_ OS/Part6)
+    // hardened: rich artifact + .gseed for demonstrable recursion (per 13_ OS/Part6); partial rich on error for feedback quality
     const { produceSelfEvolRichArtifact } = await import('./recursive-closure.js').catch(() => ({ produceSelfEvolRichArtifact: null }));
-    const richEvol = produceSelfEvolRichArtifact ? produceSelfEvolRichArtifact(42, cmd.intent) : { summary: 'self-evol', structuredData: { epoch: 43 }, visual: { type: 'structured' } };
+    let richEvol: any;
+    try {
+      richEvol = produceSelfEvolRichArtifact ? produceSelfEvolRichArtifact(42, cmd.intent) : { summary: 'self-evol', structuredData: { epoch: 43 }, visual: { type: 'structured' } };
+    } catch (e: any) {
+      richEvol = { summary: 'self-evol partial (hooks error)', error: String(e?.message || e), structuredData: { epoch: 43, partial: true }, visual: { type: 'structured', summary: 'partial rich' } };
+    }
     return {
       success: true,
       selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', strata: { overall: 0.92, recursive: 1.0 }, rich: richEvol },

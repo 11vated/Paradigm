@@ -18,14 +18,20 @@ interface A {
   filePath: string;
   meta: any;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -49,14 +55,26 @@ export const AgricultureQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateAgriculture(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
     const previewData = data;
+    const summary = `Agriculture ${parsed.crop || parsed.cropType || 'yield'} yield ${parsed.yield || parsed.production || 'n/a'} soil:${parsed.soilHealth || 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      yield: typeof (parsed.yield || parsed.production) === 'number' ? (parsed.yield || parsed.production) : 0,
+      soilHealth: typeof parsed.soilHealth === 'number' ? parsed.soilHealth : 0,
+      waterUse: typeof parsed.waterUse === 'number' ? parsed.waterUse : 0,
+      hasSustainability: /sustain|organic|regen/i.test(data) ? 1 : 0
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

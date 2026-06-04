@@ -1,0 +1,709 @@
+{
+  "$intent": "test acoustics rich summary metrics --domain acoustics",
+  "$created": "2026-06-04T05:09:34.107Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "2d12e9f5800a15f3",
+      "name": "Test Acoustics Rich Summary Metrics --domain 2d12e9",
+      "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "slender",
+          "heightScale": 1.084251168085813,
+          "shoulderRatio": 0.8353054746863152,
+          "torsoRatio": 1.0417198640479663,
+          "limbRatio": 0.9558749346122253,
+          "muscle": 0.5714441385567207,
+          "softness": 0.3885806457197533,
+          "skinTone": [
+            0.6186542566210946,
+            0.27044378198605806,
+            0.6117716801700073
+          ]
+        },
+        "face": {
+          "roundness": 0.6988017384203371,
+          "eyeHeight": 0.4690310366818722,
+          "eyeSpacing": 0.44985565113477977,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.6764061830191845,
+            0.6880984482201067,
+            0.5038866185017516
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.6215750980036754,
+          "mouthShape": "bow",
+          "jawShape": "broad",
+          "brow": 0.7301960061980148,
+          "cheekbones": 0.9621344887509313,
+          "chin": 0.5727968051057848,
+          "hairStyle": "undercut",
+          "hairColor": [
+            0.22390810725778582,
+            0.4162553724444797,
+            0.2154652056125513
+          ]
+        },
+        "voice": {
+          "pitch": 132.27794223380718,
+          "inflection": 0.845567074541142,
+          "tempo": 163.75271476261423,
+          "breathiness": 0.15136398050572097,
+          "warmth": 0.19496667229201137,
+          "formants": [
+            1058.3775165820446,
+            1844.6008146144206,
+            3931.11649016188,
+            4838.297218660775,
+            6047.871523325969
+          ],
+          "accent": "rp"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.572311511607928,
+            "conscientiousness": 0.608497968894546,
+            "extraversion": 0.8709655495069262,
+            "agreeableness": 0.40521784364545943,
+            "neuroticism": 0.15556851116295523
+          },
+          "interests": [
+            "cooking",
+            "history",
+            "mathematics",
+            "theatre",
+            "biology"
+          ],
+          "values": [
+            "humility",
+            "rigor",
+            "wonder",
+            "courage"
+          ],
+          "speechStyle": "theatrical",
+          "humor": 0.7694304199753412,
+          "curiosity": 0.40476570381706733
+        },
+        "memory": {
+          "episodicCapacity": 4968,
+          "episodicDecay": 0.022302070564985812,
+          "semanticCapacity": 12372,
+          "reflectionCadenceDays": 1.037396328415983
+        },
+        "bond": {
+          "initialTrust": 0.311166582114261,
+          "initialWarmth": 0.4987857021143252,
+          "bondingDays": 65
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Acoustics Rich Summary Metrics --domain 2d12e9"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Acoustics Rich Summary Metrics --domain 2d12e9"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "2d12e9f5800a15f3",
+      "name": "Test Acoustics Rich Summary Metrics --domain",
+      "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "medieval",
+          "biome": "underground",
+          "magic": 0.08826368671578799,
+          "tech": 0.6390662134932212,
+          "density": 0.3529164487074177
+        },
+        "physics": {
+          "gravity": 0.9048137951890689,
+          "hostility": 0.5179032285987666,
+          "diurnalRate": 0.4884622847656266,
+          "weatherVolatility": 0.03717051270192373
+        },
+        "society": {
+          "order": 0.8235433603400144,
+          "pluralism": 0.6988017384203371,
+          "prosperity": 0.1903103668187216,
+          "literacy": 0.9990376742318652
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.960676971698641,
+          "urgency": 0.9801640803668445,
+          "clarity": 0.673144364169586
+        },
+        "mood": {
+          "brightness": 0.956017563039141,
+          "warmth": 0.715750980036753,
+          "pace": 0.4855727250876525,
+          "levity": 0.7271184012461576
+        },
+        "history": {
+          "agesSinceFall": 3650,
+          "ghostliness": 0.9621344887509313,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-04T05:09:34.089Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "test acoustics rich summary metrics --domain acoustics",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Acoustics Rich Summary Metrics --domain"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Acoustics Rich Summary Metrics --domain"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "1c75ae244bd89a98",
+    "seedHash": "1c75ae244bd89a98077d0d146fe111781b087f5c3e561258319d712635fa26d3",
+    "genomeVersion": 1,
+    "title": "The Long Road of Test Acoustics Rich Summary Metrics --domain 2d12e9",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.48540673884451097,
+      "antagonist": 0.7706979643232195,
+      "moralComplexity": 0.25820997426974757,
+      "pacing": 0.4479444474947731,
+      "intensity": 0.7885841673743766,
+      "actCount": 5,
+      "targetWordCount": 17389,
+      "hook": "Strangers cross the borders of Test Acoustics Rich Summary Metrics --domain. Test Acoustics Rich Summary Metrics --domain 2d12e9 is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "2d12e9f5800a15f3",
+        "name": "Test Acoustics Rich Summary Metrics --domain 2d12e9",
+        "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a"
+      },
+      "world": {
+        "id": "2d12e9f5800a15f3",
+        "name": "Test Acoustics Rich Summary Metrics --domain",
+        "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a"
+      }
+    },
+    "bornAt": "2026-06-04T05:09:34.095Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Test Acoustics Rich Summary Metrics --domain",
+      "quest": {
+        "id": "1c75ae244bd89a98",
+        "seedHash": "1c75ae244bd89a98077d0d146fe111781b087f5c3e561258319d712635fa26d3",
+        "genomeVersion": 1,
+        "title": "The Long Road of Test Acoustics Rich Summary Metrics --domain 2d12e9",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.48540673884451097,
+          "antagonist": 0.7706979643232195,
+          "moralComplexity": 0.25820997426974757,
+          "pacing": 0.4479444474947731,
+          "intensity": 0.7885841673743766,
+          "actCount": 5,
+          "targetWordCount": 17389,
+          "hook": "Strangers cross the borders of Test Acoustics Rich Summary Metrics --domain. Test Acoustics Rich Summary Metrics --domain 2d12e9 is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "2d12e9f5800a15f3",
+            "name": "Test Acoustics Rich Summary Metrics --domain 2d12e9",
+            "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a"
+          },
+          "world": {
+            "id": "2d12e9f5800a15f3",
+            "name": "Test Acoustics Rich Summary Metrics --domain",
+            "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a"
+          }
+        },
+        "bornAt": "2026-06-04T05:09:34.095Z"
+      },
+      "friend": {
+        "id": "2d12e9f5800a15f3",
+        "name": "Test Acoustics Rich Summary Metrics --domain 2d12e9",
+        "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "slender",
+            "heightScale": 1.084251168085813,
+            "shoulderRatio": 0.8353054746863152,
+            "torsoRatio": 1.0417198640479663,
+            "limbRatio": 0.9558749346122253,
+            "muscle": 0.5714441385567207,
+            "softness": 0.3885806457197533,
+            "skinTone": [
+              0.6186542566210946,
+              0.27044378198605806,
+              0.6117716801700073
+            ]
+          },
+          "face": {
+            "roundness": 0.6988017384203371,
+            "eyeHeight": 0.4690310366818722,
+            "eyeSpacing": 0.44985565113477977,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.6764061830191845,
+              0.6880984482201067,
+              0.5038866185017516
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.6215750980036754,
+            "mouthShape": "bow",
+            "jawShape": "broad",
+            "brow": 0.7301960061980148,
+            "cheekbones": 0.9621344887509313,
+            "chin": 0.5727968051057848,
+            "hairStyle": "undercut",
+            "hairColor": [
+              0.22390810725778582,
+              0.4162553724444797,
+              0.2154652056125513
+            ]
+          },
+          "voice": {
+            "pitch": 132.27794223380718,
+            "inflection": 0.845567074541142,
+            "tempo": 163.75271476261423,
+            "breathiness": 0.15136398050572097,
+            "warmth": 0.19496667229201137,
+            "formants": [
+              1058.3775165820446,
+              1844.6008146144206,
+              3931.11649016188,
+              4838.297218660775,
+              6047.871523325969
+            ],
+            "accent": "rp"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.572311511607928,
+              "conscientiousness": 0.608497968894546,
+              "extraversion": 0.8709655495069262,
+              "agreeableness": 0.40521784364545943,
+              "neuroticism": 0.15556851116295523
+            },
+            "interests": [
+              "cooking",
+              "history",
+              "mathematics",
+              "theatre",
+              "biology"
+            ],
+            "values": [
+              "humility",
+              "rigor",
+              "wonder",
+              "courage"
+            ],
+            "speechStyle": "theatrical",
+            "humor": 0.7694304199753412,
+            "curiosity": 0.40476570381706733
+          },
+          "memory": {
+            "episodicCapacity": 4968,
+            "episodicDecay": 0.022302070564985812,
+            "semanticCapacity": 12372,
+            "reflectionCadenceDays": 1.037396328415983
+          },
+          "bond": {
+            "initialTrust": 0.311166582114261,
+            "initialWarmth": 0.4987857021143252,
+            "bondingDays": 65
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "2d12e9f5800a15f3",
+        "name": "Test Acoustics Rich Summary Metrics --domain",
+        "seedHash": "2d12e9f5800a15f3744ff4b626c56199298b431bb6688fc2ee6fe02b169f050a",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "medieval",
+            "biome": "underground",
+            "magic": 0.08826368671578799,
+            "tech": 0.6390662134932212,
+            "density": 0.3529164487074177
+          },
+          "physics": {
+            "gravity": 0.9048137951890689,
+            "hostility": 0.5179032285987666,
+            "diurnalRate": 0.4884622847656266,
+            "weatherVolatility": 0.03717051270192373
+          },
+          "society": {
+            "order": 0.8235433603400144,
+            "pluralism": 0.6988017384203371,
+            "prosperity": 0.1903103668187216,
+            "literacy": 0.9990376742318652
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.960676971698641,
+            "urgency": 0.9801640803668445,
+            "clarity": 0.673144364169586
+          },
+          "mood": {
+            "brightness": 0.956017563039141,
+            "warmth": 0.715750980036753,
+            "pace": 0.4855727250876525,
+            "levity": 0.7271184012461576
+          },
+          "history": {
+            "agesSinceFall": 3650,
+            "ghostliness": 0.9621344887509313,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-04T05:09:34.089Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "test acoustics rich summary metrics --domain acoustics",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Test Acoustics Rich Summary Metrics --domain",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Acoustics Rich Summary Metrics --domain"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Acoustics Rich Summary Metrics --domain"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Test Acoustics Rich Summary Metrics --domain",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Test Acoustics Rich Summary Metrics --domain",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

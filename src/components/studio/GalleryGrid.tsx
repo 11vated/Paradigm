@@ -50,8 +50,17 @@ const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedI
               try {
                 const raw = seed.raw || seed; const sc = raw.strataCompliance || (raw.strata && raw.strata.overall);
                 const pct = typeof sc==='number' ? Math.round(sc*100) : Math.round(calculateStratumConformance([raw]).overall * 100);
-                const t = raw.svg ? '🖼' : raw.audioDataURL ? '♫' : raw.gltf ? '⬢' : raw.storyData ? '📖' : raw.previewData ? '</>' : '';
-                return <div style={{fontSize:9, color:'#888', marginBottom:2}}>{t} strata {pct}% · gen{seed.$lineage?.generation||0}</div>;
+                const hasStructured = !!(raw?.visual?.type === 'structured' || raw?.structuredData || raw?.summary || raw?.visual?.summary);
+                const t = raw.svg ? '🖼' : raw.audioDataURL ? '♫' : raw.gltf ? '⬢' : raw.storyData ? '📖' : raw.previewData ? '</>' : hasStructured ? '📊' : '';
+                const richSummary = raw.summary || raw.visual?.summary;
+                const richMetrics = raw.metrics || raw.visual?.metrics;
+                return (
+                  <div style={{fontSize:9, color:'#888', marginBottom:2}}>
+                    {t} strata {pct}% · gen{seed.$lineage?.generation||0}
+                    {richSummary && <div style={{fontSize:8, color:'#aaa', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}} title={richSummary}>{richSummary.slice(0,55)}</div>}
+                    {richMetrics && <div style={{fontSize:7, color:'#666'}}>{Object.keys(richMetrics).slice(0,2).map(k => `${k}:${(richMetrics as any)[k]}`).join(' ')}</div>}
+                  </div>
+                );
               } catch { return null; }
             })()}
             

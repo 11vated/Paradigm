@@ -1,0 +1,712 @@
+{
+  "$intent": "test os recursive self host rich --recursive",
+  "$created": "2026-06-04T05:16:59.030Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "7293f8e847dae7d1",
+      "name": "Test Os Recursive Self Host Rich 7293f8",
+      "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "petite",
+          "heightScale": 0.8467697830426661,
+          "shoulderRatio": 0.8541896841823119,
+          "torsoRatio": 1.1122345096519535,
+          "limbRatio": 1.0395898327726063,
+          "muscle": 0.48668836966997286,
+          "softness": 0.4601490799438388,
+          "skinTone": [
+            0.5037827456932825,
+            0.7593025617116331,
+            0.6124756409736922
+          ]
+        },
+        "face": {
+          "roundness": 0.9961262414691192,
+          "eyeHeight": 0.5182154382753713,
+          "eyeSpacing": 0.3893969862622705,
+          "eyeShape": "narrow",
+          "eyeColor": [
+            0.515024249298424,
+            0.6467328689560898,
+            0.3711713686613045
+          ],
+          "noseShape": "aquiline",
+          "noseHeight": 0.6034702632124357,
+          "mouthShape": "small",
+          "jawShape": "broad",
+          "brow": 0.2227794189215626,
+          "cheekbones": 0.49456180800563954,
+          "chin": 0.9993835074318376,
+          "hairStyle": "medium",
+          "hairColor": [
+            0.7262302185035322,
+            0.13333722107604687,
+            0.3458381300708465
+          ]
+        },
+        "voice": {
+          "pitch": 85.17880944134735,
+          "inflection": 0.13833177598828483,
+          "tempo": 103.01188106559434,
+          "breathiness": 0.47080276604326643,
+          "warmth": 0.8252816145012214,
+          "formants": [
+            1643.6012773388381,
+            2864.562226219118,
+            6104.804744401399,
+            7513.60583926326,
+            9392.007299079076
+          ],
+          "accent": "southern"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.1903117859452581,
+            "conscientiousness": 0.30615367818359407,
+            "extraversion": 0.8669169052431467,
+            "agreeableness": 0.5749528081166408,
+            "neuroticism": 0.9411470848131192
+          },
+          "interests": [
+            "photography",
+            "astronomy",
+            "dance",
+            "mathematics",
+            "cinema"
+          ],
+          "values": [
+            "humility",
+            "loyalty"
+          ],
+          "speechStyle": "playful",
+          "humor": 0.6497170932772229,
+          "curiosity": 0.4511488245071864
+        },
+        "memory": {
+          "episodicCapacity": 2849,
+          "episodicDecay": 0.005436710814090385,
+          "semanticCapacity": 7978,
+          "reflectionCadenceDays": 6.787072344134767
+        },
+        "bond": {
+          "initialTrust": 0.4571064907156524,
+          "initialWarmth": 0.301551904696519,
+          "bondingDays": 55
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Os Recursive Self Host Rich 7293f8"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Os Recursive Self Host Rich 7293f8"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "7293f8e847dae7d1",
+      "name": "Test Os Recursive Self Host Rich",
+      "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "post-apocalyptic",
+          "biome": "tundra",
+          "magic": 0.13547421045577956,
+          "tech": 0.8741150321731785,
+          "density": 0.6319661092420215
+        },
+        "physics": {
+          "gravity": 0.6222945655665761,
+          "hostility": 0.8757453997191937,
+          "diurnalRate": 0.27960499216960466,
+          "weatherVolatility": 0.9260046576575147
+        },
+        "society": {
+          "order": 0.8249512819473845,
+          "pluralism": 0.9961262414691192,
+          "prosperity": 0.6821543827537133,
+          "literacy": 0.5959799084151367
+        },
+        "conflict": {
+          "kind": "survival",
+          "scale": 0.6917070821640401,
+          "urgency": 0.9112214482601497,
+          "clarity": 0.4519522811021741
+        },
+        "mood": {
+          "brightness": 0.22574365009282715,
+          "warmth": 0.5347026321243562,
+          "pace": 0.9131643616476381,
+          "levity": 0.7146982908624269
+        },
+        "history": {
+          "agesSinceFall": 1113,
+          "ghostliness": 0.49456180800563954,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-04T05:16:59.016Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "test os recursive self host rich --recursive",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Os Recursive Self Host Rich"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Os Recursive Self Host Rich"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "abd1ddc3a383f1cd",
+    "seedHash": "abd1ddc3a383f1cdeb8a1d21476917722cef010a9712cc85ccaf57bbe6b23382",
+    "genomeVersion": 1,
+    "title": "What Test Os Recursive Self Host Rich 7293f8 Carried Out of Test Os Recursive Self Host Rich",
+    "genes": {
+      "archetype": "survival-crawl",
+      "stake": 0.9291768301919314,
+      "antagonist": 0.5470156686412844,
+      "moralComplexity": 0.3489766675655538,
+      "pacing": 0.8254371457151453,
+      "intensity": 0.8261121070774823,
+      "actCount": 4,
+      "targetWordCount": 12252,
+      "hook": "Winter has come to Test Os Recursive Self Host Rich. Test Os Recursive Self Host Rich 7293f8 will not last it alone."
+    },
+    "parents": {
+      "friend": {
+        "id": "7293f8e847dae7d1",
+        "name": "Test Os Recursive Self Host Rich 7293f8",
+        "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73"
+      },
+      "world": {
+        "id": "7293f8e847dae7d1",
+        "name": "Test Os Recursive Self Host Rich",
+        "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73"
+      }
+    },
+    "bornAt": "2026-06-04T05:16:59.023Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Test Os Recursive Self Host Rich",
+      "quest": {
+        "id": "abd1ddc3a383f1cd",
+        "seedHash": "abd1ddc3a383f1cdeb8a1d21476917722cef010a9712cc85ccaf57bbe6b23382",
+        "genomeVersion": 1,
+        "title": "What Test Os Recursive Self Host Rich 7293f8 Carried Out of Test Os Recursive Self Host Rich",
+        "genes": {
+          "archetype": "survival-crawl",
+          "stake": 0.9291768301919314,
+          "antagonist": 0.5470156686412844,
+          "moralComplexity": 0.3489766675655538,
+          "pacing": 0.8254371457151453,
+          "intensity": 0.8261121070774823,
+          "actCount": 4,
+          "targetWordCount": 12252,
+          "hook": "Winter has come to Test Os Recursive Self Host Rich. Test Os Recursive Self Host Rich 7293f8 will not last it alone."
+        },
+        "parents": {
+          "friend": {
+            "id": "7293f8e847dae7d1",
+            "name": "Test Os Recursive Self Host Rich 7293f8",
+            "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73"
+          },
+          "world": {
+            "id": "7293f8e847dae7d1",
+            "name": "Test Os Recursive Self Host Rich",
+            "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73"
+          }
+        },
+        "bornAt": "2026-06-04T05:16:59.023Z"
+      },
+      "friend": {
+        "id": "7293f8e847dae7d1",
+        "name": "Test Os Recursive Self Host Rich 7293f8",
+        "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "petite",
+            "heightScale": 0.8467697830426661,
+            "shoulderRatio": 0.8541896841823119,
+            "torsoRatio": 1.1122345096519535,
+            "limbRatio": 1.0395898327726063,
+            "muscle": 0.48668836966997286,
+            "softness": 0.4601490799438388,
+            "skinTone": [
+              0.5037827456932825,
+              0.7593025617116331,
+              0.6124756409736922
+            ]
+          },
+          "face": {
+            "roundness": 0.9961262414691192,
+            "eyeHeight": 0.5182154382753713,
+            "eyeSpacing": 0.3893969862622705,
+            "eyeShape": "narrow",
+            "eyeColor": [
+              0.515024249298424,
+              0.6467328689560898,
+              0.3711713686613045
+            ],
+            "noseShape": "aquiline",
+            "noseHeight": 0.6034702632124357,
+            "mouthShape": "small",
+            "jawShape": "broad",
+            "brow": 0.2227794189215626,
+            "cheekbones": 0.49456180800563954,
+            "chin": 0.9993835074318376,
+            "hairStyle": "medium",
+            "hairColor": [
+              0.7262302185035322,
+              0.13333722107604687,
+              0.3458381300708465
+            ]
+          },
+          "voice": {
+            "pitch": 85.17880944134735,
+            "inflection": 0.13833177598828483,
+            "tempo": 103.01188106559434,
+            "breathiness": 0.47080276604326643,
+            "warmth": 0.8252816145012214,
+            "formants": [
+              1643.6012773388381,
+              2864.562226219118,
+              6104.804744401399,
+              7513.60583926326,
+              9392.007299079076
+            ],
+            "accent": "southern"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.1903117859452581,
+              "conscientiousness": 0.30615367818359407,
+              "extraversion": 0.8669169052431467,
+              "agreeableness": 0.5749528081166408,
+              "neuroticism": 0.9411470848131192
+            },
+            "interests": [
+              "photography",
+              "astronomy",
+              "dance",
+              "mathematics",
+              "cinema"
+            ],
+            "values": [
+              "humility",
+              "loyalty"
+            ],
+            "speechStyle": "playful",
+            "humor": 0.6497170932772229,
+            "curiosity": 0.4511488245071864
+          },
+          "memory": {
+            "episodicCapacity": 2849,
+            "episodicDecay": 0.005436710814090385,
+            "semanticCapacity": 7978,
+            "reflectionCadenceDays": 6.787072344134767
+          },
+          "bond": {
+            "initialTrust": 0.4571064907156524,
+            "initialWarmth": 0.301551904696519,
+            "bondingDays": 55
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "7293f8e847dae7d1",
+        "name": "Test Os Recursive Self Host Rich",
+        "seedHash": "7293f8e847dae7d1f37dc20f5ed8fb3ab740b15fd20bd5ace6ff07637a1e8c73",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "post-apocalyptic",
+            "biome": "tundra",
+            "magic": 0.13547421045577956,
+            "tech": 0.8741150321731785,
+            "density": 0.6319661092420215
+          },
+          "physics": {
+            "gravity": 0.6222945655665761,
+            "hostility": 0.8757453997191937,
+            "diurnalRate": 0.27960499216960466,
+            "weatherVolatility": 0.9260046576575147
+          },
+          "society": {
+            "order": 0.8249512819473845,
+            "pluralism": 0.9961262414691192,
+            "prosperity": 0.6821543827537133,
+            "literacy": 0.5959799084151367
+          },
+          "conflict": {
+            "kind": "survival",
+            "scale": 0.6917070821640401,
+            "urgency": 0.9112214482601497,
+            "clarity": 0.4519522811021741
+          },
+          "mood": {
+            "brightness": 0.22574365009282715,
+            "warmth": 0.5347026321243562,
+            "pace": 0.9131643616476381,
+            "levity": 0.7146982908624269
+          },
+          "history": {
+            "agesSinceFall": 1113,
+            "ghostliness": 0.49456180800563954,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-04T05:16:59.016Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "test os recursive self host rich --recursive",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Test Os Recursive Self Host Rich",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test Os Recursive Self Host Rich"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test Os Recursive Self Host Rich"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Test Os Recursive Self Host Rich",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Test Os Recursive Self Host Rich",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": true
+  },
+  "recursiveComposition": {
+    "subs": [
+      "sub1",
+      "sub2"
+    ],
+    "source": "cli-make-recursive"
+  }
+}

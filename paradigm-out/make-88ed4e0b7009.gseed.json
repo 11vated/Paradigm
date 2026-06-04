@@ -1,0 +1,705 @@
+{
+  "$intent": "test 5g rich consolidation --domain 5g",
+  "$created": "2026-06-04T05:10:55.618Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "88ed4e0b7009b322",
+      "name": "Test 5g Rich Consolidation --domain 5g 88ed4e",
+      "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 0.9145237386239944,
+          "shoulderRatio": 1.0646808909239582,
+          "torsoRatio": 0.9094787148457102,
+          "limbRatio": 1.0608559173593526,
+          "muscle": 0.5678891054589806,
+          "softness": 0.31993638587883155,
+          "skinTone": [
+            0.7703739583480512,
+            0.3099732926186508,
+            0.25718179364632837
+          ]
+        },
+        "face": {
+          "roundness": 0.013084534591863761,
+          "eyeHeight": 0.5171609327419139,
+          "eyeSpacing": 0.368954975716969,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.49536890742721784,
+            0.5176726374023795,
+            0.3978317137388475
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.6441957862592352,
+          "mouthShape": "wide",
+          "jawShape": "tapered",
+          "brow": 0.49635360205736956,
+          "cheekbones": 0.6183441752382375,
+          "chin": 0.4408669954064033,
+          "hairStyle": "flowing",
+          "hairColor": [
+            0.4925977724603844,
+            0.08253101822561015,
+            0.15425262756364252
+          ]
+        },
+        "voice": {
+          "pitch": 135.68285335794724,
+          "inflection": 0.8980812222387229,
+          "tempo": 110.0514386216026,
+          "breathiness": 0.15201469542337698,
+          "warmth": 0.39530503739789324,
+          "formants": [
+            1031.8179234531842,
+            1798.3112380184066,
+            3832.4665728261125,
+            4716.881935785985,
+            5896.1024197324805
+          ],
+          "accent": "seoul"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.21986341659280662,
+            "conscientiousness": 0.3984016807249906,
+            "extraversion": 0.6854324541223604,
+            "agreeableness": 0.09322145252192238,
+            "neuroticism": 0.9292354206664177
+          },
+          "interests": [
+            "sailing",
+            "electronics",
+            "woodworking",
+            "astronomy"
+          ],
+          "values": [
+            "humility",
+            "devotion",
+            "directness"
+          ],
+          "speechStyle": "casual",
+          "humor": 0.6566370247667497,
+          "curiosity": 0.6422105008927177
+        },
+        "memory": {
+          "episodicCapacity": 3083,
+          "episodicDecay": 0.025672490461116176,
+          "semanticCapacity": 7701,
+          "reflectionCadenceDays": 1.1262115638653567
+        },
+        "bond": {
+          "initialTrust": 0.508440961436029,
+          "initialWarmth": 0.5968150470902382,
+          "bondingDays": 41
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test 5g Rich Consolidation --domain 5g 88ed4e"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test 5g Rich Consolidation --domain 5g 88ed4e"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "88ed4e0b7009b322",
+      "name": "Test 5g Rich Consolidation --domain 5g",
+      "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "sci-fi",
+          "biome": "forest",
+          "magic": 0.6617022273098951,
+          "tech": 0.1982623828190342,
+          "density": 0.7028530578645089
+        },
+        "physics": {
+          "gravity": 0.5596303515299352,
+          "hostility": 0.524681929394158,
+          "diurnalRate": 0.7643162879055476,
+          "weatherVolatility": 0.10904235021572872
+        },
+        "society": {
+          "order": 0.11436358729265672,
+          "pluralism": 0.013084534591863761,
+          "prosperity": 0.6716093274191388,
+          "literacy": 0.45969983811312676
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.6589481790453631,
+          "urgency": 0.6961210623372991,
+          "clarity": 0.4963861895647459
+        },
+        "mood": {
+          "brightness": 0.4308160295849708,
+          "warmth": 0.9419578625923519,
+          "pace": 0.6512450613386465,
+          "levity": 0.9324019491931685
+        },
+        "history": {
+          "agesSinceFall": 2481,
+          "ghostliness": 0.6183441752382375,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-04T05:10:55.604Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "test 5g rich consolidation --domain 5g",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test 5g Rich Consolidation --domain 5g"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test 5g Rich Consolidation --domain 5g"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "5af07c2bef33a4b7",
+    "seedHash": "5af07c2bef33a4b7b7175dfa7c930881bb1ccaab4859e8e1de83539a775179f9",
+    "genomeVersion": 1,
+    "title": "The Test 5g Rich Consolidation --domain 5g 88ed4e Rising",
+    "genes": {
+      "archetype": "underdog-rebellion",
+      "stake": 0.8359896773347704,
+      "antagonist": 0.8255487291451225,
+      "moralComplexity": 0.6585854526957047,
+      "pacing": 0.6313863645131916,
+      "intensity": 0.5789466185662842,
+      "actCount": 4,
+      "targetWordCount": 12006,
+      "hook": "Strangers cross the borders of Test 5g Rich Consolidation --domain 5g. Test 5g Rich Consolidation --domain 5g 88ed4e is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "88ed4e0b7009b322",
+        "name": "Test 5g Rich Consolidation --domain 5g 88ed4e",
+        "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f"
+      },
+      "world": {
+        "id": "88ed4e0b7009b322",
+        "name": "Test 5g Rich Consolidation --domain 5g",
+        "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f"
+      }
+    },
+    "bornAt": "2026-06-04T05:10:55.610Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Test 5g Rich Consolidation --domain 5g",
+      "quest": {
+        "id": "5af07c2bef33a4b7",
+        "seedHash": "5af07c2bef33a4b7b7175dfa7c930881bb1ccaab4859e8e1de83539a775179f9",
+        "genomeVersion": 1,
+        "title": "The Test 5g Rich Consolidation --domain 5g 88ed4e Rising",
+        "genes": {
+          "archetype": "underdog-rebellion",
+          "stake": 0.8359896773347704,
+          "antagonist": 0.8255487291451225,
+          "moralComplexity": 0.6585854526957047,
+          "pacing": 0.6313863645131916,
+          "intensity": 0.5789466185662842,
+          "actCount": 4,
+          "targetWordCount": 12006,
+          "hook": "Strangers cross the borders of Test 5g Rich Consolidation --domain 5g. Test 5g Rich Consolidation --domain 5g 88ed4e is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "88ed4e0b7009b322",
+            "name": "Test 5g Rich Consolidation --domain 5g 88ed4e",
+            "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f"
+          },
+          "world": {
+            "id": "88ed4e0b7009b322",
+            "name": "Test 5g Rich Consolidation --domain 5g",
+            "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f"
+          }
+        },
+        "bornAt": "2026-06-04T05:10:55.610Z"
+      },
+      "friend": {
+        "id": "88ed4e0b7009b322",
+        "name": "Test 5g Rich Consolidation --domain 5g 88ed4e",
+        "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 0.9145237386239944,
+            "shoulderRatio": 1.0646808909239582,
+            "torsoRatio": 0.9094787148457102,
+            "limbRatio": 1.0608559173593526,
+            "muscle": 0.5678891054589806,
+            "softness": 0.31993638587883155,
+            "skinTone": [
+              0.7703739583480512,
+              0.3099732926186508,
+              0.25718179364632837
+            ]
+          },
+          "face": {
+            "roundness": 0.013084534591863761,
+            "eyeHeight": 0.5171609327419139,
+            "eyeSpacing": 0.368954975716969,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.49536890742721784,
+              0.5176726374023795,
+              0.3978317137388475
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.6441957862592352,
+            "mouthShape": "wide",
+            "jawShape": "tapered",
+            "brow": 0.49635360205736956,
+            "cheekbones": 0.6183441752382375,
+            "chin": 0.4408669954064033,
+            "hairStyle": "flowing",
+            "hairColor": [
+              0.4925977724603844,
+              0.08253101822561015,
+              0.15425262756364252
+            ]
+          },
+          "voice": {
+            "pitch": 135.68285335794724,
+            "inflection": 0.8980812222387229,
+            "tempo": 110.0514386216026,
+            "breathiness": 0.15201469542337698,
+            "warmth": 0.39530503739789324,
+            "formants": [
+              1031.8179234531842,
+              1798.3112380184066,
+              3832.4665728261125,
+              4716.881935785985,
+              5896.1024197324805
+            ],
+            "accent": "seoul"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.21986341659280662,
+              "conscientiousness": 0.3984016807249906,
+              "extraversion": 0.6854324541223604,
+              "agreeableness": 0.09322145252192238,
+              "neuroticism": 0.9292354206664177
+            },
+            "interests": [
+              "sailing",
+              "electronics",
+              "woodworking",
+              "astronomy"
+            ],
+            "values": [
+              "humility",
+              "devotion",
+              "directness"
+            ],
+            "speechStyle": "casual",
+            "humor": 0.6566370247667497,
+            "curiosity": 0.6422105008927177
+          },
+          "memory": {
+            "episodicCapacity": 3083,
+            "episodicDecay": 0.025672490461116176,
+            "semanticCapacity": 7701,
+            "reflectionCadenceDays": 1.1262115638653567
+          },
+          "bond": {
+            "initialTrust": 0.508440961436029,
+            "initialWarmth": 0.5968150470902382,
+            "bondingDays": 41
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "88ed4e0b7009b322",
+        "name": "Test 5g Rich Consolidation --domain 5g",
+        "seedHash": "88ed4e0b7009b3221e14c494aa150f80c915e904ab36f3088e1887812705896f",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "sci-fi",
+            "biome": "forest",
+            "magic": 0.6617022273098951,
+            "tech": 0.1982623828190342,
+            "density": 0.7028530578645089
+          },
+          "physics": {
+            "gravity": 0.5596303515299352,
+            "hostility": 0.524681929394158,
+            "diurnalRate": 0.7643162879055476,
+            "weatherVolatility": 0.10904235021572872
+          },
+          "society": {
+            "order": 0.11436358729265672,
+            "pluralism": 0.013084534591863761,
+            "prosperity": 0.6716093274191388,
+            "literacy": 0.45969983811312676
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.6589481790453631,
+            "urgency": 0.6961210623372991,
+            "clarity": 0.4963861895647459
+          },
+          "mood": {
+            "brightness": 0.4308160295849708,
+            "warmth": 0.9419578625923519,
+            "pace": 0.6512450613386465,
+            "levity": 0.9324019491931685
+          },
+          "history": {
+            "agesSinceFall": 2481,
+            "ghostliness": 0.6183441752382375,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-04T05:10:55.604Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "test 5g rich consolidation --domain 5g",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Test 5g Rich Consolidation --domain 5g",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Test 5g Rich Consolidation --domain 5g"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Test 5g Rich Consolidation --domain 5g"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Test 5g Rich Consolidation --domain 5g",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Test 5g Rich Consolidation --domain 5g",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

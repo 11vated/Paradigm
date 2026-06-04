@@ -1,0 +1,716 @@
+{
+  "$intent": "consolidation 5g rich + recursive os test --domain 5g --recursive",
+  "$created": "2026-06-04T05:21:26.979Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "c51dfecfd4f38c0a",
+      "name": "Consolidation 5g Rich Recursive Os Test c51dfe",
+      "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "tall",
+          "heightScale": 1.1856554555683996,
+          "shoulderRatio": 1.1845177122322155,
+          "torsoRatio": 1.1462844761195237,
+          "limbRatio": 1.1208631743635429,
+          "muscle": 0.39923120908042875,
+          "softness": 0.3515118186258221,
+          "skinTone": [
+            0.8080894115539566,
+            0.6507581659367592,
+            0.5355388744050968
+          ]
+        },
+        "face": {
+          "roundness": 0.564804358868634,
+          "eyeHeight": 0.4986731226537424,
+          "eyeSpacing": 0.4280895504481206,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.3802506878482461,
+            0.5170441949229758,
+            0.36070733455300763
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5965702100564927,
+          "mouthShape": "full",
+          "jawShape": "pointed",
+          "brow": 0.5677197530049489,
+          "cheekbones": 0.6822585090552202,
+          "chin": 0.4183300793917244,
+          "hairStyle": "flowing",
+          "hairColor": [
+            0.734991561565507,
+            0.41344737401038967,
+            0.41946890660502656
+          ]
+        },
+        "voice": {
+          "pitch": 133.0578769605185,
+          "inflection": 0.2952521764610758,
+          "tempo": 156.2503488035864,
+          "breathiness": 0.10164157202003121,
+          "warmth": 0.16138101934492965,
+          "formants": [
+            1052.1737096522393,
+            1833.788465393903,
+            3908.0737787083176,
+            4809.936958410237,
+            6012.421198012797
+          ],
+          "accent": "paris"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.41549790533425046,
+            "conscientiousness": 0.8301938161222648,
+            "extraversion": 0.43840879581041214,
+            "agreeableness": 0.5805097974238447,
+            "neuroticism": 0.9082882047726692
+          },
+          "interests": [
+            "history",
+            "tea",
+            "cartography",
+            "theatre",
+            "photography"
+          ],
+          "values": [
+            "play",
+            "humility",
+            "honesty",
+            "rigor"
+          ],
+          "speechStyle": "theatrical",
+          "humor": 0.3592725311736107,
+          "curiosity": 0.5564204038068563
+        },
+        "memory": {
+          "episodicCapacity": 1196,
+          "episodicDecay": 0.025184499340262855,
+          "semanticCapacity": 3678,
+          "reflectionCadenceDays": 6.268745451990602
+        },
+        "bond": {
+          "initialTrust": 0.5728967636773363,
+          "initialWarmth": 0.4840814996173421,
+          "bondingDays": 26
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation 5g Rich Recursive Os Test c51dfe"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation 5g Rich Recursive Os Test c51dfe"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "c51dfecfd4f38c0a",
+      "name": "Consolidation 5g Rich Recursive Os Test",
+      "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "mythic",
+          "biome": "tundra",
+          "magic": 0.9612942805805387,
+          "tech": 0.9876149203984124,
+          "density": 0.9028772478784763
+        },
+        "physics": {
+          "gravity": 0.33077069693476235,
+          "hostility": 0.3325590931291105,
+          "diurnalRate": 0.832889839189012,
+          "weatherVolatility": 0.7286512107941077
+        },
+        "society": {
+          "order": 0.6710777488101936,
+          "pluralism": 0.564804358868634,
+          "prosperity": 0.48673122653742373,
+          "literacy": 0.8539303363208037
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.4670844797470768,
+          "urgency": 0.6950736582049597,
+          "clarity": 0.4345122242550128
+        },
+        "mood": {
+          "brightness": 0.765656347670606,
+          "warmth": 0.4657021005649262,
+          "pace": 0.07105524951003184,
+          "levity": 0.5397857104590618
+        },
+        "history": {
+          "agesSinceFall": 2838,
+          "ghostliness": 0.6822585090552202,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-04T05:21:26.963Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "consolidation 5g rich + recursive os test --domain 5g --recursive",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation 5g Rich Recursive Os Test"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation 5g Rich Recursive Os Test"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "89e58a9a534c737c",
+    "seedHash": "89e58a9a534c737ccbd9dc9addf4675e7e04973fd17b2d86f7331c76e56c3f97",
+    "genomeVersion": 1,
+    "title": "The Consolidation 5g Rich Recursive Os Test Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.8230023861455855,
+      "antagonist": 0.5641009322129482,
+      "moralComplexity": 0.3632536852963383,
+      "pacing": 0.11055562325711317,
+      "intensity": 0.6234115950760389,
+      "actCount": 4,
+      "targetWordCount": 10682,
+      "hook": "A door in Consolidation 5g Rich Recursive Os Test has opened that has been sealed for ages. Consolidation 5g Rich Recursive Os Test c51dfe's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "c51dfecfd4f38c0a",
+        "name": "Consolidation 5g Rich Recursive Os Test c51dfe",
+        "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697"
+      },
+      "world": {
+        "id": "c51dfecfd4f38c0a",
+        "name": "Consolidation 5g Rich Recursive Os Test",
+        "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697"
+      }
+    },
+    "bornAt": "2026-06-04T05:21:26.970Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Consolidation 5g Rich Recursive Os Test",
+      "quest": {
+        "id": "89e58a9a534c737c",
+        "seedHash": "89e58a9a534c737ccbd9dc9addf4675e7e04973fd17b2d86f7331c76e56c3f97",
+        "genomeVersion": 1,
+        "title": "The Consolidation 5g Rich Recursive Os Test Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.8230023861455855,
+          "antagonist": 0.5641009322129482,
+          "moralComplexity": 0.3632536852963383,
+          "pacing": 0.11055562325711317,
+          "intensity": 0.6234115950760389,
+          "actCount": 4,
+          "targetWordCount": 10682,
+          "hook": "A door in Consolidation 5g Rich Recursive Os Test has opened that has been sealed for ages. Consolidation 5g Rich Recursive Os Test c51dfe's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "c51dfecfd4f38c0a",
+            "name": "Consolidation 5g Rich Recursive Os Test c51dfe",
+            "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697"
+          },
+          "world": {
+            "id": "c51dfecfd4f38c0a",
+            "name": "Consolidation 5g Rich Recursive Os Test",
+            "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697"
+          }
+        },
+        "bornAt": "2026-06-04T05:21:26.970Z"
+      },
+      "friend": {
+        "id": "c51dfecfd4f38c0a",
+        "name": "Consolidation 5g Rich Recursive Os Test c51dfe",
+        "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "tall",
+            "heightScale": 1.1856554555683996,
+            "shoulderRatio": 1.1845177122322155,
+            "torsoRatio": 1.1462844761195237,
+            "limbRatio": 1.1208631743635429,
+            "muscle": 0.39923120908042875,
+            "softness": 0.3515118186258221,
+            "skinTone": [
+              0.8080894115539566,
+              0.6507581659367592,
+              0.5355388744050968
+            ]
+          },
+          "face": {
+            "roundness": 0.564804358868634,
+            "eyeHeight": 0.4986731226537424,
+            "eyeSpacing": 0.4280895504481206,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.3802506878482461,
+              0.5170441949229758,
+              0.36070733455300763
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5965702100564927,
+            "mouthShape": "full",
+            "jawShape": "pointed",
+            "brow": 0.5677197530049489,
+            "cheekbones": 0.6822585090552202,
+            "chin": 0.4183300793917244,
+            "hairStyle": "flowing",
+            "hairColor": [
+              0.734991561565507,
+              0.41344737401038967,
+              0.41946890660502656
+            ]
+          },
+          "voice": {
+            "pitch": 133.0578769605185,
+            "inflection": 0.2952521764610758,
+            "tempo": 156.2503488035864,
+            "breathiness": 0.10164157202003121,
+            "warmth": 0.16138101934492965,
+            "formants": [
+              1052.1737096522393,
+              1833.788465393903,
+              3908.0737787083176,
+              4809.936958410237,
+              6012.421198012797
+            ],
+            "accent": "paris"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.41549790533425046,
+              "conscientiousness": 0.8301938161222648,
+              "extraversion": 0.43840879581041214,
+              "agreeableness": 0.5805097974238447,
+              "neuroticism": 0.9082882047726692
+            },
+            "interests": [
+              "history",
+              "tea",
+              "cartography",
+              "theatre",
+              "photography"
+            ],
+            "values": [
+              "play",
+              "humility",
+              "honesty",
+              "rigor"
+            ],
+            "speechStyle": "theatrical",
+            "humor": 0.3592725311736107,
+            "curiosity": 0.5564204038068563
+          },
+          "memory": {
+            "episodicCapacity": 1196,
+            "episodicDecay": 0.025184499340262855,
+            "semanticCapacity": 3678,
+            "reflectionCadenceDays": 6.268745451990602
+          },
+          "bond": {
+            "initialTrust": 0.5728967636773363,
+            "initialWarmth": 0.4840814996173421,
+            "bondingDays": 26
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "c51dfecfd4f38c0a",
+        "name": "Consolidation 5g Rich Recursive Os Test",
+        "seedHash": "c51dfecfd4f38c0a6c0269cb51b279b2195656be88adaaf9547f90d0ebcbc697",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "mythic",
+            "biome": "tundra",
+            "magic": 0.9612942805805387,
+            "tech": 0.9876149203984124,
+            "density": 0.9028772478784763
+          },
+          "physics": {
+            "gravity": 0.33077069693476235,
+            "hostility": 0.3325590931291105,
+            "diurnalRate": 0.832889839189012,
+            "weatherVolatility": 0.7286512107941077
+          },
+          "society": {
+            "order": 0.6710777488101936,
+            "pluralism": 0.564804358868634,
+            "prosperity": 0.48673122653742373,
+            "literacy": 0.8539303363208037
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.4670844797470768,
+            "urgency": 0.6950736582049597,
+            "clarity": 0.4345122242550128
+          },
+          "mood": {
+            "brightness": 0.765656347670606,
+            "warmth": 0.4657021005649262,
+            "pace": 0.07105524951003184,
+            "levity": 0.5397857104590618
+          },
+          "history": {
+            "agesSinceFall": 2838,
+            "ghostliness": 0.6822585090552202,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-04T05:21:26.963Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "consolidation 5g rich + recursive os test --domain 5g --recursive",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Consolidation 5g Rich Recursive Os Test",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation 5g Rich Recursive Os Test"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation 5g Rich Recursive Os Test"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Consolidation 5g Rich Recursive Os Test",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Consolidation 5g Rich Recursive Os Test",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": true
+  },
+  "recursiveComposition": {
+    "subs": [
+      "sub1",
+      "sub2"
+    ],
+    "source": "cli-make-recursive"
+  }
+}

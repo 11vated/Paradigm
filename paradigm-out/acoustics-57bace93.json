@@ -1,0 +1,95 @@
+{
+  "seed": {
+    "$domain": "acoustics",
+    "$hash": "57bace930b59aa620ae01d6e1864bdb371a81293842bced5a3868184c1bd90b2",
+    "genes": {
+      "energy": {
+        "value": 0.5
+      }
+    }
+  },
+  "result": {
+    "type": "acoustics",
+    "name": "Artifact",
+    "domain": "acoustics",
+    "seed_hash": "57bace930b59aa620ae01d6e1864bdb371a81293842bced5a3868184c1bd90b2",
+    "generation": 0,
+    "generation_quality": "metadata-only",
+    "gene_summary": {
+      "energy": {
+        "value_preview": "0.5"
+      }
+    },
+    "render_hints": {
+      "mode": "generic",
+      "description_only": true
+    },
+    "filePath": "data\\artifacts\\acoustics\\57bace930b59aa62.metadata.json",
+    "c2pa_manifest": {
+      "claim_generator": "Paradigm/1.0",
+      "recipes": [
+        {
+          "ingredients": [
+            {
+              "title": "Seed Input",
+              "format": "application/x-gseed-seed",
+              "documentID": "57bace930b59aa620ae01d6e1864bdb371a81293842bced5a3868184c1bd90b2",
+              "relationship": "input"
+            },
+            {
+              "title": "Generator",
+              "format": "application/x-paradigm-generator",
+              "documentID": "acoustics",
+              "relationship": "tool"
+            }
+          ],
+          "actions": [
+            {
+              "action": "generative_create",
+              "parameters": {
+                "algorithm": "acoustics",
+                "seed_hash": "57bace930b59aa620ae01d6e1864bdb371a81293842bced5a3868184c1bd90b2",
+                "seed_phrase": "Seed"
+              }
+            }
+          ]
+        }
+      ],
+      "assertions": [
+        {
+          "label": "paradigm.seed",
+          "data": {
+            "hash": "57bace930b59aa620ae01d6e1864bdb371a81293842bced5a3868184c1bd90b2",
+            "algorithm": "SHA-512/256",
+            "phrase": "Seed"
+          }
+        },
+        {
+          "label": "paradigm.generator",
+          "data": {
+            "name": "acoustics",
+            "version": "2.0"
+          }
+        },
+        {
+          "label": "paradigm.timestamp",
+          "data": {
+            "created": "2026-05-26T23:08:45.000Z",
+            "unix_ms": 1779059325000
+          }
+        },
+        {
+          "label": "paradigm.artifact.rich",
+          "data": {
+            "name": "Artifact",
+            "hasRich": false,
+            "modalities": [],
+            "strata": [],
+            "c2pa_embedded": true
+          }
+        }
+      ]
+    },
+    "visual": {}
+  }
+}

@@ -112,7 +112,7 @@ export interface FedV1Exchange {
   publicKey: string;
   timestamp: string;
   merkleRoot: string;
-  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }; // ambitious: rich data propagation for lived fed exchanges (no entropy, derived)
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number; c2paRef?: string; provenanceHash?: string }; // hardened: richer provenance/C2PA refs for sov integration (Consolidation wave)
 }
 
 export function createFedV1SignedExchange(
@@ -121,7 +121,7 @@ export function createFedV1SignedExchange(
   seedHash: string,
   lineage: string[],
   privateKeyPem: string,
-  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number }
+  richPreview?: { name?: string; summary?: string; visualType?: string; strata?: number; c2paRef?: string; provenanceHash?: string }
 ): FedV1Exchange {
   // canonical data for sign (no wall time in signed payload)
   const base = { fromNode, toNode, seedHash, lineage };
@@ -203,9 +203,10 @@ export function detMergeFed(
     mergedSeedId: mergedId,
     lineage: sortedLineage,
     conflicts: fork ? ['lineage-divergence'] : [],
+    conflictsDetail: fork ? [{ reason: 'lineage-divergence', incomingRich: incoming.richPreview, localSeed: localSeedHash }] : [],
     fork,
     newExchange: newEx,
-  };
+  } as any;
 }
 
 /**
@@ -279,10 +280,11 @@ export function performRealTwoNodeFedExchange(
     verified,
     merged,
     lineage: finalLineage,
-    conflictResolved: false,
-    ledger: [ex],
-    claim: `real fed v1 2-node exchange (no central): verified=${verified} merge=${!!merged} lineageLen=${finalLineage.length}${richPreview ? ' +rich' : ''} (ECDSA-P256 + merkle; sovereignty canonical per 13_ Phase 16)`,
-  };
+    conflictResolved: !(merged && (merged as any).fork), // hardened: if no fork, considered resolved with rich sov
+    ledger: [ex, ...(merged?.newExchange ? [merged.newExchange] : [])],
+    richPreview: richPreview || ex.richPreview,
+    claim: `real fed v1 2-node exchange (no central, hardened): verified=${verified} merge=${!!merged} lineageLen=${finalLineage.length}${richPreview ? ' +richPreview+C2PA' : ''} (ECDSA-P256 + merkle + provenance; sovereignty canonical per 13_ Phase 16)`,
+  } as any;
 }
 
 /** Smallest extension for more robust multi-node (3-node demo chain): performs two sequential real exchanges for demo of multi-node behavior (no central, lineage preserved across hops). */

@@ -133,7 +133,9 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
     } catch { return { pct: 72 }; }
   })();
   const qc = seed.$fitness?.qc ?? seed.contractScore;
-  const thumb = seed.raw?.svg ? <span dangerouslySetInnerHTML={{__html: seed.raw.svg.slice(0,120)}} style={{fontSize:8,opacity:0.6}} /> : seed.raw?.pngDataURL ? <img src={seed.raw.pngDataURL} style={{maxHeight:22}} alt="thumb"/> : seed.raw?.audioDataURL ? '♫' : seed.raw?.gltf ? '⬢' : seed.raw?.htmlData ? '◫' : seed.raw?.previewData ? '</>' : seed.raw?.storyData ? '📖' : seed.raw?.particle ? '✧' : seed.raw?.simData ? '◌' : null;
+  const raw = seed.raw || seed;
+  const hasStructured = !!(raw?.visual?.type === 'structured' || raw?.structuredData || raw?.summary || raw?.visual?.summary);
+  const thumb = seed.raw?.svg ? <span dangerouslySetInnerHTML={{__html: seed.raw.svg.slice(0,120)}} style={{fontSize:8,opacity:0.6}} /> : seed.raw?.pngDataURL ? <img src={seed.raw.pngDataURL} style={{maxHeight:22}} alt="thumb"/> : seed.raw?.audioDataURL ? '♫' : seed.raw?.gltf ? '⬢' : seed.raw?.htmlData ? '◫' : seed.raw?.previewData ? '</>' : seed.raw?.storyData ? '📖' : seed.raw?.particle ? '✧' : seed.raw?.simData ? '◌' : hasStructured ? '📊' : null;
 
   return (
     <div
@@ -160,6 +162,18 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
       <div style={{ fontSize: 13, fontWeight: 500, color: '#fff', marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {name} {thumb}
       </div>
+      {/* Elegant rich summary for structured/data domains (Consolidation wave: better handling of summary+metrics from rich visual/artifact) */}
+      {(raw.summary || raw.visual?.summary) && (
+        <div style={{ fontSize: 8, color: '#aaa', marginBottom: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={raw.summary || raw.visual?.summary}>
+          {(raw.summary || raw.visual.summary).slice(0, 70)}
+        </div>
+      )}
+      {/* Mini metrics pills for rich structured (elegant, aria, no raw) */}
+      {(raw.metrics || raw.visual?.metrics) && (
+        <div style={{ fontSize: 7, color: '#666', display: 'flex', gap: 3, marginBottom: 2 }} aria-label="metrics">
+          {Object.entries(raw.metrics || raw.visual?.metrics || {}).slice(0,3).map(([k,v]:any) => <span key={k} style={{background:'#222', padding:'0 2px', borderRadius:2}}>{k}:{typeof v==='number'?v.toFixed(1):v}</span>)}
+        </div>
+      )}
       {/* Status: domain/gen/QC/strata% for 100% */}
       <div style={{ fontSize: 9, color: '#888', marginBottom: 2, display: 'flex', gap: 4, alignItems: 'center' }}>
         {qc != null && <span>qc{(qc*100|0)}</span>}

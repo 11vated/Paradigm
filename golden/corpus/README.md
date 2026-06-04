@@ -87,6 +87,16 @@ These are the "best crafted" to demo everything working: deterministic, sovereig
 - All 24-phase foundation complete (see 13b "24 Phases Full Completion Push (satisfied complete this run)" and preflight `phase24Completion` + `oneMProgress`).
 - Verifs: type 0, det 0/0, unwaived 0, QC 13/13, golden 44/44, preflight green/100 with 24phase gate, verify-15 "Full 27 + Part 6 system operational."
 
+**Consolidation & Hardening Wave (current):** 
+- Rich data quality standardized: raised floor for partial/inconsistent data domains (acoustics/5g/6g/advertising/aerospace/agriculture/alife + targeted others now attach consistent summary + metrics + structuredData + visual/emergent with them, per ambitious pattern from neuroscience/physics etc; ~7+ in batch, UI cards now elegantly render summary text + metric pills for structured rich, no raw in normal flow).
+- Advanced surfaces hardened: Federation (sovereignty FedV1 richer richPreview + c2paRef/provenance, detMerge conflictsDetail, federation routes ledger append on accept with rich + c2pa + sov, health/CLI richer claims + conflict/ledger; more robust multi + rich sov integration).
+- OS Shell (recursive-closure + hooks: real GSPL interpreter exec for self-host demo + stable, partial rich + error feedback on fail for quality; rich self-evol always, demonstrable .gseed self-host signal + rich).
+- Rich data flow improved (cli grow promote + server norm + pack builder more inclusive for direct/structured).
+- Verif/golden: matrix + scripts include rich/fed/OS stress probes (summary/metrics for raised, ledger rich, GSPL self-host); hero corpus doc improved with wave categorization note.
+- Heroes/1M: doc categorization by rich tier/strata/Part6/fed/os (no large breadth add per wave rules).
+- Full verifs green post each; lived: raised domains + elegant card previews/summaries/pills in galleries.
+- Honest: quality/consistency/robustness focus (not new domains); 3 must-be-true advanced (kernel 0/0, operator fed/os more robust + rich uniform, universal closer via consistent rich floor + UI for more data domains). COMPLETE for wave; CONTINUE per 13_ for full 27 high-fid SCOPE etc. See STATUS_MASTER.md "Current State vs Full Doctrine — Post Consolidation & Hardening Wave".
+
 **1M Expansion (post 12 heroes, 2026-06-03 keep going):** 
 - Prior fractal ruins explorer + 3 new batch makes (all <0.1s, strata 0.555 real calc, royalty 940 author:700/platform:300, full Live Sovereign Provenance Pack with C2PA/ECDSA/self-HTML/5-clause/Part6 active):
   1. "ultimate all-strata oracle seed of convergence and infinite recursion" → hero-convergence-oracle-04415b962070.json + -part6 + hero-meta-*.json (ALL 9 stress)

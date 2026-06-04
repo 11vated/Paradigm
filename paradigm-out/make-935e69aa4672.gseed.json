@@ -1,0 +1,707 @@
+{
+  "$intent": "consolidation acoustics rich elegant --domain acoustics",
+  "$created": "2026-06-04T05:21:21.176Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "935e69aa46728fd6",
+      "name": "Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+      "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "slender",
+          "heightScale": 0.9775220831110952,
+          "shoulderRatio": 0.87818897283789,
+          "torsoRatio": 0.9127229168265939,
+          "limbRatio": 0.8731594874866941,
+          "muscle": 0.3474265253882565,
+          "softness": 0.41103998381435947,
+          "skinTone": [
+            0.8509051342610772,
+            0.6579119739404604,
+            0.32293795709831935
+          ]
+        },
+        "face": {
+          "roundness": 0.09144825307795812,
+          "eyeHeight": 0.5081943260566882,
+          "eyeSpacing": 0.43337955942866924,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.25164992250666984,
+            0.4474957796526561,
+            0.6835041168938507
+          ],
+          "noseShape": "snub",
+          "noseHeight": 0.5980468331666068,
+          "mouthShape": "thin",
+          "jawShape": "square",
+          "brow": 0.9235463197098583,
+          "cheekbones": 0.1634744777624384,
+          "chin": 0.1158182081172281,
+          "hairStyle": "pony",
+          "hairColor": [
+            0.3560814884579037,
+            0.5763752900090348,
+            0.4293887544650675
+          ]
+        },
+        "voice": {
+          "pitch": 123.93975267472322,
+          "inflection": 0.45307544197752847,
+          "tempo": 120.26493084300206,
+          "breathiness": 0.24468120731834675,
+          "warmth": 0.5875126792380267,
+          "formants": [
+            1129.5810825718404,
+            1968.698458196636,
+            4195.586878123979,
+            5163.799234614127,
+            6454.7490432676595
+          ],
+          "accent": "berlin"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.546259833692722,
+            "conscientiousness": 0.8367608148120171,
+            "extraversion": 0.7212407997601156,
+            "agreeableness": 0.5993898501015353,
+            "neuroticism": 0.6169450655176536
+          },
+          "interests": [
+            "cartography",
+            "cooking",
+            "chess",
+            "woodworking"
+          ],
+          "values": [
+            "directness",
+            "devotion",
+            "kindness",
+            "courage"
+          ],
+          "speechStyle": "playful",
+          "humor": 0.8090604349348374,
+          "curiosity": 0.42216525542527816
+        },
+        "memory": {
+          "episodicCapacity": 3910,
+          "episodicDecay": 0.007782392134277723,
+          "semanticCapacity": 14403,
+          "reflectionCadenceDays": 6.624317862154216
+        },
+        "bond": {
+          "initialTrust": 0.38895041563608845,
+          "initialWarmth": 0.7644630298399924,
+          "bondingDays": 63
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics 9..."
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics 9..."
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "935e69aa46728fd6",
+      "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+      "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "medieval",
+          "biome": "desert",
+          "magic": 0.19547243209472476,
+          "tech": 0.2090763894219798,
+          "density": 0.07719829162231373
+        },
+        "physics": {
+          "gravity": 0.15808841796085504,
+          "hostility": 0.6301999190717973,
+          "diurnalRate": 0.910736607747413,
+          "weatherVolatility": 0.7416581344372006
+        },
+        "society": {
+          "order": 0.24587591419663868,
+          "pluralism": 0.09144825307795812,
+          "prosperity": 0.5819432605668826,
+          "literacy": 0.8891970628577948
+        },
+        "conflict": {
+          "kind": "exploration",
+          "scale": 0.2527498708444498,
+          "urgency": 0.5791596327544268,
+          "clarity": 0.9725068614897512
+        },
+        "mood": {
+          "brightness": 0.4032626497965799,
+          "warmth": 0.48046833166606784,
+          "pace": 0.21033432722354184,
+          "levity": 0.18046483358841736
+        },
+        "history": {
+          "agesSinceFall": 4617,
+          "ghostliness": 0.1634744777624384,
+          "eraCount": 1
+        }
+      },
+      "bornAt": "2026-06-04T05:21:21.159Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "consolidation acoustics rich elegant --domain acoustics",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "80f820393cdf7f11",
+    "seedHash": "80f820393cdf7f119ce241b5e793a05d27a35ae098bbe8ff662e98441b28cd55",
+    "genomeVersion": 1,
+    "title": "The Long Road of Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.6018308924123629,
+      "antagonist": 0.5989404594988375,
+      "moralComplexity": 0.11313641935665975,
+      "pacing": 0.19149627040931821,
+      "intensity": 0.4417105677166592,
+      "actCount": 3,
+      "targetWordCount": 8764,
+      "hook": "Maps drawn last winter no longer match the land around Consolidation Acoustics Rich Elegant --domain Acoustics. Consolidation Acoustics Rich Elegant --domain Acoustics 9... can still navigate."
+    },
+    "parents": {
+      "friend": {
+        "id": "935e69aa46728fd6",
+        "name": "Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+        "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225"
+      },
+      "world": {
+        "id": "935e69aa46728fd6",
+        "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+        "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225"
+      }
+    },
+    "bornAt": "2026-06-04T05:21:21.167Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+      "quest": {
+        "id": "80f820393cdf7f11",
+        "seedHash": "80f820393cdf7f119ce241b5e793a05d27a35ae098bbe8ff662e98441b28cd55",
+        "genomeVersion": 1,
+        "title": "The Long Road of Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.6018308924123629,
+          "antagonist": 0.5989404594988375,
+          "moralComplexity": 0.11313641935665975,
+          "pacing": 0.19149627040931821,
+          "intensity": 0.4417105677166592,
+          "actCount": 3,
+          "targetWordCount": 8764,
+          "hook": "Maps drawn last winter no longer match the land around Consolidation Acoustics Rich Elegant --domain Acoustics. Consolidation Acoustics Rich Elegant --domain Acoustics 9... can still navigate."
+        },
+        "parents": {
+          "friend": {
+            "id": "935e69aa46728fd6",
+            "name": "Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+            "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225"
+          },
+          "world": {
+            "id": "935e69aa46728fd6",
+            "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+            "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225"
+          }
+        },
+        "bornAt": "2026-06-04T05:21:21.167Z"
+      },
+      "friend": {
+        "id": "935e69aa46728fd6",
+        "name": "Consolidation Acoustics Rich Elegant --domain Acoustics 9...",
+        "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "slender",
+            "heightScale": 0.9775220831110952,
+            "shoulderRatio": 0.87818897283789,
+            "torsoRatio": 0.9127229168265939,
+            "limbRatio": 0.8731594874866941,
+            "muscle": 0.3474265253882565,
+            "softness": 0.41103998381435947,
+            "skinTone": [
+              0.8509051342610772,
+              0.6579119739404604,
+              0.32293795709831935
+            ]
+          },
+          "face": {
+            "roundness": 0.09144825307795812,
+            "eyeHeight": 0.5081943260566882,
+            "eyeSpacing": 0.43337955942866924,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.25164992250666984,
+              0.4474957796526561,
+              0.6835041168938507
+            ],
+            "noseShape": "snub",
+            "noseHeight": 0.5980468331666068,
+            "mouthShape": "thin",
+            "jawShape": "square",
+            "brow": 0.9235463197098583,
+            "cheekbones": 0.1634744777624384,
+            "chin": 0.1158182081172281,
+            "hairStyle": "pony",
+            "hairColor": [
+              0.3560814884579037,
+              0.5763752900090348,
+              0.4293887544650675
+            ]
+          },
+          "voice": {
+            "pitch": 123.93975267472322,
+            "inflection": 0.45307544197752847,
+            "tempo": 120.26493084300206,
+            "breathiness": 0.24468120731834675,
+            "warmth": 0.5875126792380267,
+            "formants": [
+              1129.5810825718404,
+              1968.698458196636,
+              4195.586878123979,
+              5163.799234614127,
+              6454.7490432676595
+            ],
+            "accent": "berlin"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.546259833692722,
+              "conscientiousness": 0.8367608148120171,
+              "extraversion": 0.7212407997601156,
+              "agreeableness": 0.5993898501015353,
+              "neuroticism": 0.6169450655176536
+            },
+            "interests": [
+              "cartography",
+              "cooking",
+              "chess",
+              "woodworking"
+            ],
+            "values": [
+              "directness",
+              "devotion",
+              "kindness",
+              "courage"
+            ],
+            "speechStyle": "playful",
+            "humor": 0.8090604349348374,
+            "curiosity": 0.42216525542527816
+          },
+          "memory": {
+            "episodicCapacity": 3910,
+            "episodicDecay": 0.007782392134277723,
+            "semanticCapacity": 14403,
+            "reflectionCadenceDays": 6.624317862154216
+          },
+          "bond": {
+            "initialTrust": 0.38895041563608845,
+            "initialWarmth": 0.7644630298399924,
+            "bondingDays": 63
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "935e69aa46728fd6",
+        "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+        "seedHash": "935e69aa46728fd6367393f8d0a10ef944c27f9bfef2646cbb317785d1ccb225",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "medieval",
+            "biome": "desert",
+            "magic": 0.19547243209472476,
+            "tech": 0.2090763894219798,
+            "density": 0.07719829162231373
+          },
+          "physics": {
+            "gravity": 0.15808841796085504,
+            "hostility": 0.6301999190717973,
+            "diurnalRate": 0.910736607747413,
+            "weatherVolatility": 0.7416581344372006
+          },
+          "society": {
+            "order": 0.24587591419663868,
+            "pluralism": 0.09144825307795812,
+            "prosperity": 0.5819432605668826,
+            "literacy": 0.8891970628577948
+          },
+          "conflict": {
+            "kind": "exploration",
+            "scale": 0.2527498708444498,
+            "urgency": 0.5791596327544268,
+            "clarity": 0.9725068614897512
+          },
+          "mood": {
+            "brightness": 0.4032626497965799,
+            "warmth": 0.48046833166606784,
+            "pace": 0.21033432722354184,
+            "levity": 0.18046483358841736
+          },
+          "history": {
+            "agesSinceFall": 4617,
+            "ghostliness": 0.1634744777624384,
+            "eraCount": 1
+          }
+        },
+        "bornAt": "2026-06-04T05:21:21.159Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "consolidation acoustics rich elegant --domain acoustics",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Consolidation Acoustics Rich Elegant --domain Acoustics"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "richOutputs": {
+    "name": "Consolidation Acoustics Rich Elegant --domain Acoustics",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "World",
+      "Mind"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

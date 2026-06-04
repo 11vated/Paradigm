@@ -21,14 +21,20 @@ interface A {
   filePath: string;
   meta: Record<string, unknown>;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -52,14 +58,26 @@ export const Gen5gQualityContract: QualityContract<S, A, Record<string, unknown>
     const r = await withKernelClock(0, () => generate5G(seed as never, out)) as { filePath?: string };
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
     const previewData = data;
+    const summary = `5G ${parsed.slice || parsed.networkSlice ? 'slice ' + (parsed.slice || parsed.networkSlice) : ''} latency ${parsed.latency || parsed.latencyMs || 'n/a'}ms beams:${parsed.beams || parsed.beamCount || 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      latency: typeof (parsed.latency || parsed.latencyMs) === 'number' ? (parsed.latency || parsed.latencyMs) : 0,
+      beams: typeof (parsed.beams || parsed.beamCount) === 'number' ? (parsed.beams || parsed.beamCount) : 0,
+      throughput: typeof parsed.throughput === 'number' ? parsed.throughput : 0,
+      hasOrchestration: /orchestrat|beam|slice/i.test(data) ? 1 : 0
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

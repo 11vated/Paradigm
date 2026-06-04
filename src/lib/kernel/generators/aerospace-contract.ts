@@ -18,14 +18,20 @@ interface A {
   filePath: string;
   meta: any;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'json' | 'html' | 'svg' | 'text';
+    type: 'json' | 'html' | 'svg' | 'text' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'svg' | 'text';
-      data?: string;
+      type: 'json' | 'svg' | 'text' | 'structured';
+      data?: any;
       path?: string;
     };
   };
@@ -49,14 +55,26 @@ export const AerospaceQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateAerospace(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch { /* fallback */ }
     const previewData = data;
+    const summary = `Aerospace ${parsed.vehicle || parsed.mission || 'craft'} altitude ${parsed.altitude || parsed.apogee || 'n/a'}km thrust:${parsed.thrust || 'n/a'}.`;
+    const metrics: Record<string, number> = {
+      altitude: typeof (parsed.altitude || parsed.apogee) === 'number' ? (parsed.altitude || parsed.apogee) : 0,
+      thrust: typeof parsed.thrust === 'number' ? parsed.thrust : 0,
+      payload: typeof parsed.payload === 'number' ? parsed.payload : 0,
+      hasOrbit: /orbit|trajectory|deltaV/i.test(data) ? 1 : 0
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

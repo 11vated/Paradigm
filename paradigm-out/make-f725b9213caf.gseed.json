@@ -1,0 +1,698 @@
+{
+  "$intent": "ethereal structured physics simulation for consolidation --domain physics",
+  "$created": "2026-06-04T05:06:51.822Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "f725b9213caf595f",
+      "name": "Ethereal Structured Physics Simulation For Consolidation ...",
+      "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "slender",
+          "heightScale": 1.1106429928847497,
+          "shoulderRatio": 1.0857782344603875,
+          "torsoRatio": 0.8642218566225692,
+          "limbRatio": 0.9578035342109972,
+          "muscle": 0.5339414600857565,
+          "softness": 0.43217047499757544,
+          "skinTone": [
+            0.5040686086074693,
+            0.712709304529509,
+            0.31073799690639387
+          ]
+        },
+        "face": {
+          "roundness": 0.962906925382637,
+          "eyeHeight": 0.505138645494809,
+          "eyeSpacing": 0.4433874561159781,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.36936581534828217,
+            0.5145905728684174,
+            0.10548348434914848
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.5549726885765326,
+          "mouthShape": "bow",
+          "jawShape": "tapered",
+          "brow": 0.2703844197950498,
+          "cheekbones": 0.6723229501545056,
+          "chin": 0.8013565940629392,
+          "hairStyle": "wavy",
+          "hairColor": [
+            0.12503288689338765,
+            0.3272917079701398,
+            0.47502816460570574
+          ]
+        },
+        "voice": {
+          "pitch": 286.64227025872776,
+          "inflection": 0.14232653766569092,
+          "tempo": 113.11549161608221,
+          "breathiness": 0.034845705114990855,
+          "warmth": 0.7285950387836446,
+          "formants": [
+            488.41365885650373,
+            851.2352340070494,
+            1814.1078757527282,
+            2232.7481547725884,
+            2790.9351934657357
+          ],
+          "accent": "neutral"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.7855442901607392,
+            "conscientiousness": 0.0013271158134797734,
+            "extraversion": 0.5962206540530977,
+            "agreeableness": 0.5803808155600141,
+            "neuroticism": 0.41756146843384445
+          },
+          "interests": [
+            "cooking",
+            "gardening",
+            "cycling"
+          ],
+          "values": [
+            "patience",
+            "generosity",
+            "rigor"
+          ],
+          "speechStyle": "reserved",
+          "humor": 0.33638731313572223,
+          "curiosity": 0.26941421179874814
+        },
+        "memory": {
+          "episodicCapacity": 514,
+          "episodicDecay": 0.00508042147037401,
+          "semanticCapacity": 9746,
+          "reflectionCadenceDays": 6.122886105401346
+        },
+        "bond": {
+          "initialTrust": 0.38477753619419086,
+          "initialWarmth": 0.3116674263418419,
+          "bondingDays": 37
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Structured Physics Simulation For Consolidation ..."
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Structured Physics Simulation For Consolidation ..."
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "f725b9213caf595f",
+      "name": "Ethereal Structured Physics Simulation For Consolidation",
+      "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "medieval",
+          "biome": "sky",
+          "magic": 0.7144455861509684,
+          "tech": 0.047406188741897504,
+          "density": 0.3593451140366575
+        },
+        "physics": {
+          "gravity": 0.7798048669525215,
+          "hostility": 0.7358523749878771,
+          "diurnalRate": 0.2801247429226714,
+          "weatherVolatility": 0.8412896445991072
+        },
+        "society": {
+          "order": 0.2214759938127877,
+          "pluralism": 0.962906925382637,
+          "prosperity": 0.55138645494809,
+          "literacy": 0.9559163741065206
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.4489430255804703,
+          "urgency": 0.6909842881140289,
+          "clarity": 0.009139140581914118
+        },
+        "mood": {
+          "brightness": 0.9157339137008751,
+          "warmth": 0.049726885765325246,
+          "pace": 0.49590806477924954,
+          "levity": 0.841125371181688
+        },
+        "history": {
+          "agesSinceFall": 1351,
+          "ghostliness": 0.6723229501545056,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-04T05:06:51.806Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "ethereal structured physics simulation for consolidation --domain physics",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Structured Physics Simulation For Consolidation"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Structured Physics Simulation For Consolidation"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "8ff9edbb1227e727",
+    "seedHash": "8ff9edbb1227e7271145027917acea6438678e0084a02dfa75035979ae92d2be",
+    "genomeVersion": 1,
+    "title": "The Long Road of Ethereal Structured Physics Simulation For Consolidation ...",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.5269305963059182,
+      "antagonist": 0.4355994351754441,
+      "moralComplexity": 0.575811245269057,
+      "pacing": 0.6970139925421579,
+      "intensity": 0.6899236023316806,
+      "actCount": 4,
+      "targetWordCount": 12315,
+      "hook": "Strangers cross the borders of Ethereal Structured Physics Simulation For Consolidation. Ethereal Structured Physics Simulation For Consolidation ... is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "f725b9213caf595f",
+        "name": "Ethereal Structured Physics Simulation For Consolidation ...",
+        "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c"
+      },
+      "world": {
+        "id": "f725b9213caf595f",
+        "name": "Ethereal Structured Physics Simulation For Consolidation",
+        "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c"
+      }
+    },
+    "bornAt": "2026-06-04T05:06:51.814Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Ethereal Structured Physics Simulation For Consolidation",
+      "quest": {
+        "id": "8ff9edbb1227e727",
+        "seedHash": "8ff9edbb1227e7271145027917acea6438678e0084a02dfa75035979ae92d2be",
+        "genomeVersion": 1,
+        "title": "The Long Road of Ethereal Structured Physics Simulation For Consolidation ...",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.5269305963059182,
+          "antagonist": 0.4355994351754441,
+          "moralComplexity": 0.575811245269057,
+          "pacing": 0.6970139925421579,
+          "intensity": 0.6899236023316806,
+          "actCount": 4,
+          "targetWordCount": 12315,
+          "hook": "Strangers cross the borders of Ethereal Structured Physics Simulation For Consolidation. Ethereal Structured Physics Simulation For Consolidation ... is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "f725b9213caf595f",
+            "name": "Ethereal Structured Physics Simulation For Consolidation ...",
+            "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c"
+          },
+          "world": {
+            "id": "f725b9213caf595f",
+            "name": "Ethereal Structured Physics Simulation For Consolidation",
+            "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c"
+          }
+        },
+        "bornAt": "2026-06-04T05:06:51.814Z"
+      },
+      "friend": {
+        "id": "f725b9213caf595f",
+        "name": "Ethereal Structured Physics Simulation For Consolidation ...",
+        "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "slender",
+            "heightScale": 1.1106429928847497,
+            "shoulderRatio": 1.0857782344603875,
+            "torsoRatio": 0.8642218566225692,
+            "limbRatio": 0.9578035342109972,
+            "muscle": 0.5339414600857565,
+            "softness": 0.43217047499757544,
+            "skinTone": [
+              0.5040686086074693,
+              0.712709304529509,
+              0.31073799690639387
+            ]
+          },
+          "face": {
+            "roundness": 0.962906925382637,
+            "eyeHeight": 0.505138645494809,
+            "eyeSpacing": 0.4433874561159781,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.36936581534828217,
+              0.5145905728684174,
+              0.10548348434914848
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.5549726885765326,
+            "mouthShape": "bow",
+            "jawShape": "tapered",
+            "brow": 0.2703844197950498,
+            "cheekbones": 0.6723229501545056,
+            "chin": 0.8013565940629392,
+            "hairStyle": "wavy",
+            "hairColor": [
+              0.12503288689338765,
+              0.3272917079701398,
+              0.47502816460570574
+            ]
+          },
+          "voice": {
+            "pitch": 286.64227025872776,
+            "inflection": 0.14232653766569092,
+            "tempo": 113.11549161608221,
+            "breathiness": 0.034845705114990855,
+            "warmth": 0.7285950387836446,
+            "formants": [
+              488.41365885650373,
+              851.2352340070494,
+              1814.1078757527282,
+              2232.7481547725884,
+              2790.9351934657357
+            ],
+            "accent": "neutral"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.7855442901607392,
+              "conscientiousness": 0.0013271158134797734,
+              "extraversion": 0.5962206540530977,
+              "agreeableness": 0.5803808155600141,
+              "neuroticism": 0.41756146843384445
+            },
+            "interests": [
+              "cooking",
+              "gardening",
+              "cycling"
+            ],
+            "values": [
+              "patience",
+              "generosity",
+              "rigor"
+            ],
+            "speechStyle": "reserved",
+            "humor": 0.33638731313572223,
+            "curiosity": 0.26941421179874814
+          },
+          "memory": {
+            "episodicCapacity": 514,
+            "episodicDecay": 0.00508042147037401,
+            "semanticCapacity": 9746,
+            "reflectionCadenceDays": 6.122886105401346
+          },
+          "bond": {
+            "initialTrust": 0.38477753619419086,
+            "initialWarmth": 0.3116674263418419,
+            "bondingDays": 37
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "f725b9213caf595f",
+        "name": "Ethereal Structured Physics Simulation For Consolidation",
+        "seedHash": "f725b9213caf595fa2dacd889ceab34139105e2f77945464a318549f140a9a9c",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "medieval",
+            "biome": "sky",
+            "magic": 0.7144455861509684,
+            "tech": 0.047406188741897504,
+            "density": 0.3593451140366575
+          },
+          "physics": {
+            "gravity": 0.7798048669525215,
+            "hostility": 0.7358523749878771,
+            "diurnalRate": 0.2801247429226714,
+            "weatherVolatility": 0.8412896445991072
+          },
+          "society": {
+            "order": 0.2214759938127877,
+            "pluralism": 0.962906925382637,
+            "prosperity": 0.55138645494809,
+            "literacy": 0.9559163741065206
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.4489430255804703,
+            "urgency": 0.6909842881140289,
+            "clarity": 0.009139140581914118
+          },
+          "mood": {
+            "brightness": 0.9157339137008751,
+            "warmth": 0.049726885765325246,
+            "pace": 0.49590806477924954,
+            "levity": 0.841125371181688
+          },
+          "history": {
+            "agesSinceFall": 1351,
+            "ghostliness": 0.6723229501545056,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-04T05:06:51.806Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "ethereal structured physics simulation for consolidation --domain physics",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Motion",
+        "Field"
+      ],
+      "suggestedStrata": [
+        "Motion",
+        "Field"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Motion",
+          "Field"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Ethereal Structured Physics Simulation For Consolidation",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Structured Physics Simulation For Consolidation"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Structured Physics Simulation For Consolidation"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Ethereal Structured Physics Simulation For Consolidation",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Motion",
+    "Field"
+  ],
+  "richOutputs": {
+    "name": "Ethereal Structured Physics Simulation For Consolidation",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Motion",
+      "Field"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

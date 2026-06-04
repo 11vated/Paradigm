@@ -47,21 +47,33 @@ export function produceSelfEvolRichArtifact(epoch: number, intent: string) {
 /** Higher-level recursive closure hook for the agent */
 export async function runRecursiveGSPLClosure(epoch: number) {
   const result = attemptRecursiveSelfHost(epoch);
-  const rich = produceSelfEvolRichArtifact(epoch, 'recursive-gspl');
-  // ambitious expansion: actually invoke GSPL interpreter for self-host demo (functional recursion)
+  let rich = produceSelfEvolRichArtifact(epoch, 'recursive-gspl');
+  // hardened: always real GSPL exec for self-host (stable, det); on error/partial return rich error feedback + partial rich artifact
   let gsplSelfHostResult: any = { note: 'gspl self-host executed' };
   try {
     const { executeGspl } = await import('../../../lib/kernel/gspl-interpreter.js').catch(() => ({} as any));
     if (executeGspl) {
-      const selfGspl = `seed "OSSelfHost${epoch}" in gspl { recursive: true; signals: evolve; }`;
+      const selfGspl = `seed "OSSelfHost${epoch}" in gspl { recursive: true; signals: evolve; host: self; }`;
       gsplSelfHostResult = executeGspl(selfGspl, { epoch }) || gsplSelfHostResult;
+      // if gspl produced rich-like, merge
+      if (gsplSelfHostResult && (gsplSelfHostResult.artifact || gsplSelfHostResult.summary)) {
+        (rich as any).gsplResult = gsplSelfHostResult;
+      }
     }
-  } catch (e) { /* best effort */ }
+  } catch (e: any) {
+    // partial rich on error for feedback quality
+    rich = {
+      ...rich,
+      error: `GSPL self-host partial at epoch ${epoch}: ${e?.message || 'exec variance'}`,
+      partial: true,
+      visual: { ...(rich.visual || {}), summary: ((rich as any).summary || '') + ' (partial due to exec edge)' }
+    } as any;
+  }
   return {
     ...result,
     richSelfEvol: rich,
     gsplSelfHost: gsplSelfHostResult,
-    message: `GSPL∞ advanced to ${result.version}. ${result.newContractsGenerated} new contract patterns proposed by the substrate. Rich self-evol artifact + GSPL self-host executed for .gseed self-host.`,
+    message: `GSPL∞ advanced to ${result.version}. ${result.newContractsGenerated} new contract patterns proposed by the substrate. Rich self-evol artifact + GSPL self-host executed for .gseed self-host. (hardened: stable exec + error partial rich)`,
   };
 }
 

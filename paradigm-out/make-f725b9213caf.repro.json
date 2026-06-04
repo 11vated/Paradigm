@@ -1,0 +1,29 @@
+{
+  "intent": "ethereal structured physics simulation for consolidation --domain physics",
+  "memoryHash": "direct-pipeline-v1-strata-8041942dbc359e26",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Field",
+    "Motion"
+  ],
+  "strataSummary": [
+    "Field",
+    "Motion"
+  ],
+  "strataHash": "8041942dbc359e26",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Field",
+        "Motion"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:06:51.935Z"
+}
