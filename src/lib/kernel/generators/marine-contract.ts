@@ -13,7 +13,22 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'marine'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -27,7 +42,16 @@ async function synthesize(seed: S): Promise<A> {
   const r = await withKernelClock(0, () => generateMarine(seed as any, out)) as { filePath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: {},
+    previewData,
+    visual: { type: 'json', previewData },
+    emergent_assets: {
+      preview: { type: 'json', data: previewData, path: filePath }
+    }
+  };
 }
 
 function invert(a: A): I {

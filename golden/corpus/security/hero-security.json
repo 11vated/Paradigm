@@ -1,0 +1,81 @@
+{
+  "royalties": {
+    "toCreator": 940,
+    "royalties": [
+      {
+        "depth": 0,
+        "percentage": 0.025,
+        "cumulative": 25
+      },
+      {
+        "depth": 1,
+        "percentage": 0.008333333333333333,
+        "cumulative": 8.333333333333334
+      },
+      {
+        "depth": 2,
+        "percentage": 0.0041666666666666675,
+        "cumulative": 4.166666666666668
+      },
+      {
+        "depth": 3,
+        "percentage": 0.0025000000000000005,
+        "cumulative": 2.5000000000000004
+      },
+      {
+        "depth": 4,
+        "percentage": 0.001666666666666667,
+        "cumulative": 1.666666666666667
+      },
+      {
+        "depth": 5,
+        "percentage": 0.0011904761904761906,
+        "cumulative": 1.1904761904761907
+      },
+      {
+        "depth": 6,
+        "percentage": 0.000892857142857143,
+        "cumulative": 0.892857142857143
+      },
+      {
+        "depth": 7,
+        "percentage": 0.0006944444444444446,
+        "cumulative": 0.6944444444444445
+      }
+    ],
+    "dividends": 6.28,
+    "civDividend": 10,
+    "licenseActive": false,
+    "depthUsed": 8
+  },
+  "onchain": {
+    "seedId": "real-cybersecurity-c4195b3877c9",
+    "recipients": [
+      "0x0000000000000000000000000000000000000001",
+      "0x0000000000000000000000000000000000000002",
+      "0x0000000000000000000000000000000000000003",
+      "0x0000000000000000000000000000000000000004",
+      "0x0000000000000000000000000000000000000005"
+    ],
+    "amounts": [
+      "10000000000000000",
+      "10000000000000000",
+      "10000000000000000",
+      "10000000000000000",
+      "10000000000000000"
+    ],
+    "totalRoyalty": "50000000000000000",
+    "txData": "0x64697374726962757465526f79616c74696573287265616c2d637962657273656375726974792d6334313935623338373763392c3078303030303030303030303030303030303030303030303030303030303030303030303030303030312c3078303030303030303030303030303030303030303030303030303030303030303030303030303030322c3078303030303030303030303030303030303030303030303030303030303030303030303030303030332c3078303030303030303030303030303030303030303030303030303030303030303030303030303030342c3078303030303030303030303030303030303030303030303030303030303030303030303030303030352c31303030303030303030303030303030302c31303030303030303030303030303030302c31303030303030303030303030303030302c31303030303030303030303030303030302c313030303030303030303030303030303029",
+    "rich": false
+  },
+  "physical": {
+    "instructions": "================================================================================\nPARADIGM INFINITE — 15_ CONTRACT PHYSICAL REALIZATION PROTOCOL (PRODUCTION GRADE)\nSeed: real-cybersecurity-c4195b3877c9\nModality: 3dprint\nEffective Domain: universal\nMaterial: titanium-alloy\nComplexity: 1.20\nEstimated Production Hours: 8\nReproducibility Guarantee: Xoshiro256** kernel hash derived. Same seed + same RNG state = bit-identical physical spec across all fabricators and decades.\nSource: 15_ QualityContract elevation + strata synthesis (Form/Motion/Sound/Mind/Story/World/Field/Culture/Time)\n--------------------------------------------------------------------------------\nPRE-PRODUCTION CERTIFICATION\n1. Acquire certified titanium-alloy from Paradigm Sovereign Supply Chain (batch traceable to seed real-cybersecurity-c4195b3877c9).\n2. Perform spectral / gene assay against the originating contract's golden hash. Reject if deviation > 0.001.\n3. Log provenance via ECDSA signature on material cert (sovereignty layer).\n\nSUBSTRATE-ALIGNED FABRICATION STEPS (9 STRATA)\n- FORM: Generate master geometry from seed genes. Tolerances: ±0.01 mm for 3dprint. Use 5-axis or higher for organic curvature.\n- MOTION: If modality supports kinematics (robotics/vehicle/choreography/animation), embed micro-actuators or flexures at loci determined by elevation strata Motion score.\n- SOUND: For music/audio/character/narrative, integrate resonant chambers or piezo elements tuned to seed-derived frequencies. Material titanium-alloy damping factor pre-computed.\n- MIND: Embed neuromorphic or sensor telemetry nodes for runtime adaptation (agent/alife/physics domains).\n- STORY: Etch or print full .gseed hash + royalty lineage URI into every part (visible + machine readable). C2PA manifest embedded.\n- WORLD/FIELD/CULTURE/TIME: Multi-scale: macro for architecture/vehicle, meso for furniture/fashion, micro for food/molecular/circuit. Time layer governs cure/aging/sinter schedule.\n\nDETAILED 3DPRINT PRODUCTION WORKFLOW\n\n  - Slice with variable layer height (0.05-0.2mm) driven by local curvature from Form stratum.\n  - Supports: tree-type auto-generated from seed topology. Material titanium-alloy profile loaded.\n  - Print orientation chosen for minimal anisotropy on high-motion axes.\n  - Post: ultrasonic clean, UV/thermal cure per spec, HIP if titanium, bead blast + passivation.\n\n\n\n\n\n\n\n\nPOST-PROCESSING, VALIDATION & SIGN-OFF\n- Dimensional + surface metrology (CMM / optical). Compare to synthesized golden mesh.\n- Functional test: actuate / resonate / grow / compute / render per modality using the exact kernel seed.\n- Sovereign sign: ECDSA-P256 over (seedId + final hash + material cert + test log).\n- Package with printed .gseed QR + full instructions sidecar.\n- All deviations require new elevation (no ad-hoc repair).\n\nThis document is executable. Re-run completePhysicalBridge(\"real-cybersecurity-c4195b3877c9\", \"3dprint\", 1.2) on any machine with identical kernel to reproduce identical instructions and material spec.\n================================================================================\n\n[Paradigm Physical v2 — 15_ COMPLETE] Seed: real-cybersecurity-c4195b3877c9 | Modality: 3dprint | Domain: universal | Material: titanium-alloy | Complexity: 1.20 | Reproducible via kernel hash.",
+    "material": "titanium-alloy",
+    "estimatedHours": 8,
+    "validation": {
+      "valid": true,
+      "issues": []
+    },
+    "sidecarPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\physical\\real-cybersecurity-c4195b3877c9-3dprint-instructions.txt"
+  }
+}

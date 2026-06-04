@@ -12,7 +12,25 @@ import type { QualityContract, QualityReport, Stratum } from '../quality-contrac
 import { runStratumPredicate } from '../quality/predicates';
 
 interface AppSeed { $hash: string; genes?: Record<string, any>; }
-interface AppQualityArtifact { files: Record<string, string>; archetype: string; componentCount: number; routeCount: number; byteSize: number; }
+interface AppQualityArtifact {
+  files: Record<string, string>;
+  archetype: string;
+  componentCount: number;
+  routeCount: number;
+  byteSize: number;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface AppQualityInverted { archetype: string; componentCount: number; routeCount: number; fileCount: number; }
 
 async function synthesize(seed: AppSeed): Promise<AppQualityArtifact> {
@@ -25,8 +43,19 @@ async function synthesize(seed: AppSeed): Promise<AppQualityArtifact> {
       contents[path.basename(f)] = await fs.readFile(f, 'utf8').catch(() => '');
     }
     const totalSize = Object.values(contents).reduce((s, c) => s + c.length, 0);
-    return { files: contents, archetype: 'app', componentCount: r.componentCount ?? 0,
-      routeCount: r.routeCount ?? 0, byteSize: totalSize };
+    const previewData = JSON.stringify({ files: Object.keys(contents), archetype: 'app' }, null, 2);
+    return {
+      files: contents,
+      archetype: 'app',
+      componentCount: r.componentCount ?? 0,
+      routeCount: r.routeCount ?? 0,
+      byteSize: totalSize,
+      previewData,
+      visual: { type: 'json', previewData },
+      emergent_assets: {
+        preview: { type: 'json', data: previewData, path: dir }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

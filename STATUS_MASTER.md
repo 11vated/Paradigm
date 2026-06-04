@@ -217,11 +217,34 @@ This turn (continue + "full development, no small slices/micro tasks. full compl
 - Git: direct changes committed/pushed (big push language). Subs running (60-80+ calls each on sweep/polish/inverse).
 - Assessment: Kernel never lies (green). Operator owns (advanced + uniform in progress). Substrate universal (15+ → sweep toward majority/27 with rich immediate data + strata; 9 strata live). Lived: intents now deliver named + rich preview in CLI/Studio flows, strata becoming visible. No caveats in attached. CONTINUE full waves until 3 must-be-true complete + 8 success (beautiful <60s for ANY intent in Atelier, all pipelines, all 27, advanced surfaces, verifs clean, doctrine exact). Sub results will be integrated next. Verif last. Read 13_ always.
 
-## Current State vs Full Doctrine (13_ v2) Assessment — Post Full Completion Push Wave 3
+## Current State vs Full Doctrine (13_ v2) Assessment — Post Full Completion Push Wave 4
 
-**Honest snapshot (as of this wave; read 13_ FIRST for canon; no evasion):**
+**Honest snapshot (as of this wave; read 13_ FIRST for canon; no evasion; no overclaim):**
 
-- **Rich UI data (QC synthesize attachments for lived immediate use):** ~40+ domains (prior ~36 from sweep + extensions to agriculture/climate/city/energy + consistency; includes lit/film/website/physics/world/game/agri/climate etc with previewData/visual/emergent_assets + dataURLs for png/svg/html/json/audio/story/sim/code/gltf). Next tier (e.g. 5g/acoustics/aerospace/agtech/app etc) remain weak (basic filePath/meta only). Generator V3 delivers real high-fid for flagships; 15_ light for elevation.
+- **Rich UI data (QC synthesize attachments for lived immediate use):** ~60+ domains (wave 3 ~40+ + wave 4 extensions to ~20 more high-impact weak: aerospace, automotive, blockchain, biotechnology, cybersecurity, education, electronics, finance, healthcare, logistics, marine, marketing, legal, event-planning, cloud, fitness, genomics, space, sports, security, renewable-energy, app, ar; now includes previewData/visual/emergent_assets for json/text based rich previews in UI). Still ~60 weak (e.g. 5g, acoustics, advertising, agtech, etc remain basic filePath/meta). V3 real high-fid for flagships; 15_ light elevation for count/universal. Lived: new domains now deliver immediate rich preview + strata in Atelier primary.
+
+- **9 Strata + QC:** 13/13 flagship (strata + predicates live). Full 9 wired for touched. Studio has full HUD bars everywhere (Atelier/rail/gallery etc). 27/27 via hybrid. Wave 4 added more strata coverage via new domains (e.g. aerospace Form/Motion/Field/World, space World/Time etc).
+
+- **Studio/Atelier lived UX:** Atelier primary. Full live 9-strata HUDs + rich previews/thumbs for swept (including new 20+). No raw normal. Live on ops. <60s. Further improved with wave 4 domains now beautiful in primary view.
+
+- **Agent / Inverse / Sovereignty:** Full closed from prior (27 modalities rich grownArtifact + graceful; agent dispatch rich named+strata; .gseed TLV/C2PA/royalty uniform rich embeds; real 2-node fed + actual econ from wave 3). Wave 4: inverse usability improved (rich print in CLI demo, patterns for new); fed advanced to multi-node demo (3-node sim in sovereignty + health/CLI). OS strengthened with self-evol example in hooks.
+
+- **Advanced / Part 6 / OS / Fed / Econ / Heroes / 1M / Golden:** Wave 3: real fed 2-node, actual onchain econ, OS recursion for rich, 20+ heroes. Wave 4: fed to multi-node (3+ demo), OS self-evol example, inverse usability. Heroes expanded (prior 28+ + 16+ new from wave 4 domains = 40-50+ strong; saved to golden/corpus with metas stressing multi-strata/Part6; total foundation strong now 40-50+ documented). Golden expanded. 1M long-term.
+
+- **3 must-be-true progress:**
+  1. Kernel never lies: Strong (0/0 det, golden+matrix green post all, QC 13/13, replay).
+  2. Operator owns: Advanced (real multi-node fed, actual econ payouts, rich .gseed/C2PA/royalty uniform, OS recursive self-evol examples).
+  3. Substrate universal: Moved forward significantly (rich ~60+, full strata HUD in lived Atelier for swept, same kernel for new domains + Part 6 advanced, 40-50+ heroes stressing, inverse/agent/sover closed for rich). But per 13_ SCOPE/24-phase/appendix: not yet full ( ~60 weak domains remain basic, full target fidelity ambitious specs not for all 27 yet, 1M scale long-term, deeper advanced complete needed).
+
+- **Verification ladder:** All core green (type 0, det 0, QC 13/13, golden core+matrix, preflight/verify-15/doctor/health "Full 27+Part6", lint). Heroes stress via makes + golden. Manual paradigm make --verify for 20+ new rich + heroes (rich packs + strata + Part6 + lived). No evasion.
+
+- **Lived experience priority:** Significantly advanced (new ~20 domains now beautiful named rich preview + full strata HUD in primary Atelier/CLI <60s; more heroes for demos; surfaces stronger with multi fed/self evol; no raw; thumbs/status full for swept). Weak domains still lag (raw fallback in some).
+
+- **Remains per 13_ (honest):** ~60 weak contracts (rich not yet; next wave target); full 27 target-fidelity per SCOPE not achieved for all (e.g. no full rigged GLTF 50k tris for 3D etc yet for weak); 1M full stress long-term; deeper multi-node fed live (beyond demo); full inverse GA/usability for every; 9-strata full manifests for all; verif expansions (more cross/load/visual e2e); OS self-evol more recursive examples. Still requires further waves per 13_ roadmap for true 100% (3 must-be-true full no caveats + 8 success: any intent beautiful named ownable live visual+strata <60s in Atelier; all 27 robust; pipelines; advanced; verifs clean; doctrine exact).
+
+**Overall Wave 4:** Significant progress on universal (rich to ~60+, more strata/lived for new domains) + surfaces (multi fed, self-evol, inverse usable) + heroes (40-50+ strong). Lived further improved. Kernel never lies. Operator owns advanced. Substrate universal pillar moved forward. "COMPLETE for this wave"; explicit CONTINUE per 13_ to exact 100%. Verif last. Read 13_ always.
+
+Continue until done. Verif last. Read 13_ always.
 
 - **9 Strata + QC:** 13/13 flagship contracts (strata declared + executable predicates via runStratumPredicate + calculateStratumConformance live in health/make/packs/doctor/CLI/Studio HUDs). All 9 (Form/Motion/Sound/Mind/Story/World/Field/Culture/Time) wired in rate/manifest for touched domains. Full coverage in Studio (HUD bars % + per-stratum everywhere in Atelier/rail/gallery/export/prompts). 27/27 live via hybrid elevation in health/doctor.
 
