@@ -8,6 +8,8 @@ import {
   agentQuery as agentQueryApi,
   parseGSPL, executeGSPL,
 } from '@/services/api';
+import { toGSPL } from '../lib/kernel/gspl-interpreter';
+import { calculateStratumConformance } from '../lib/kernel/quality/predicates';
 
 export const useSeedStore = create((set: any, get: any) => ({
   currentSeed: null,
@@ -16,6 +18,12 @@ export const useSeedStore = create((set: any, get: any) => ({
   loading: false,
   keys: null,
   error: null,
+  // GSPL supremacy live hybrid state for Atelier seamlessness (strata constraints <-> GSPL fragments <-> live conformance preview)
+  strataConstraints: {
+    Form: 0.75, Motion: 0.70, Sound: 0.60, Mind: 0.85, Story: 0.75,
+    World: 0.65, Field: 0.70, Culture: 0.80, Time: 0.55,
+  },
+  gsplDraft: '',
 
   // ─── Gallery / Seeds ─────────────────────────────────────────────────────
   fetchSeeds: async (params: any) => {
@@ -280,4 +288,44 @@ export const useSeedStore = create((set: any, get: any) => ({
   setError: (error: any) => set({ error }),
   clearCurrentSeed: () => set({ currentSeed: null, artifact: null, error: null }),
   clearError: () => set({ error: null }),
+
+  // ─── GSPL + Strata Live Hybrid (Atelier seamlessness, post-supremacy wave: toGSPL/fromGSPL + executeGspl + calculateStratumConformance for live strata controls <-> GSPL fragments <-> preview impact)
+  setStrataConstraint: (stratum: string, value: number) => {
+    set((state: any) => ({
+      strataConstraints: {
+        ...state.strataConstraints,
+        [stratum]: Math.max(0, Math.min(1, value)),
+      },
+    }));
+  },
+  getStrataPreviewConformance: () => {
+    const state = get();
+    const seed = state.currentSeed;
+    if (!seed) return { overall: 0.5, perStratum: {}, conformancePercent: '50.0%' };
+    const activeStrata = Object.entries(state.strataConstraints || {})
+      .filter(([, v]: any) => (v as number) > 0.1)
+      .map(([k]) => k);
+    const mock = { ...seed, strata: activeStrata };
+    try {
+      return calculateStratumConformance([mock]);
+    } catch {
+      return { overall: 0.5, perStratum: {}, conformancePercent: '50.0%' };
+    }
+  },
+  getStrataGsplFragment: () => {
+    const state = get();
+    const seed = state.currentSeed;
+    if (!seed) return 'seed s1 : character { strata: Form + Mind } grow s1;';
+    const activeStrata = Object.entries(state.strataConstraints || {})
+      .filter(([, v]: any) => (v as number) > 0.1)
+      .map(([k]) => k);
+    const mock = { ...seed, strata: activeStrata };
+    try {
+      return toGSPL(mock);
+    } catch {
+      return toGSPL(seed);
+    }
+  },
+  setGsplDraft: (code: string) => set({ gsplDraft: code }),
+  getGsplDraft: () => (get() as any).gsplDraft || '',
 }));

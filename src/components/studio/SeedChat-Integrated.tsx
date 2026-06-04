@@ -37,7 +37,7 @@ export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArt
   const [apiKey, setApiKey] = useState('');
 
   // Use the store which calls backend API
-  const { generateNewSeed, growCurrentSeed } = useSeedStore() as any;
+  const { generateNewSeed, growCurrentSeed, setGsplDraft } = useSeedStore() as any;
 
   const sendMessage = async () => {
     if (!input.trim() || loadingStep !== 'idle') return;
@@ -194,8 +194,17 @@ export const SeedChatIntegrated = React.memo(function SeedChatIntegrated({ onArt
             )}
             {msg.gspl && !msg.error && (
               <details style={styles.gsplDetails}>
-                <summary style={styles.gsplSummary}>View GSPL Code</summary>
+                <summary style={styles.gsplSummary}>View GSPL Code (multi-step plan)</summary>
                 <pre style={styles.gsplCode}>{msg.gspl}</pre>
+                <button
+                  onClick={() => {
+                    if (setGsplDraft) setGsplDraft(msg.gspl);
+                    // seamless: user can switch to editor panel to inspect/edit
+                  }}
+                  style={{ fontSize: 10, marginTop: 4, padding: '2px 6px', background: '#112211', border: '1px solid #334433', color: '#4ade80' }}
+                >
+                  Load / Edit in GSPL Editor (hybrid seamlessness)
+                </button>
               </details>
             )}
           </div>

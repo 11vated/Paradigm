@@ -124,6 +124,11 @@ function GenericWidget({ value, onChange }: { value: any; onChange: any }) {
 const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { seed: any; onSeedUpdated: any }) {
   const [updating, setUpdating] = useState<any>(null);
   const updateGeneInStore = useSeedStore((s: any) => s.updateGene);
+  const setStrataConstraint = useSeedStore((s: any) => s.setStrataConstraint);
+  const strataConstraints = useSeedStore((s: any) => s.strataConstraints || {});
+  const preview = useSeedStore((s: any) => (s.getStrataPreviewConformance ? s.getStrataPreviewConformance() : { overall: 0.5, perStratum: {} }));
+  const getFragment = useSeedStore((s: any) => s.getStrataGsplFragment);
+  const setGsplDraft = useSeedStore((s: any) => s.setGsplDraft);
 
   if (!seed) {
     return (
@@ -177,6 +182,45 @@ const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { see
           </div>
         );
       })}
+
+      {/* Live Strata Constraints controls (hybrid visual <-> GSPL seamlessness). Builds on supremacy toGSPL + calculateStratumConformance. Adjust to see live preview impact + generate loadable GSPL fragment for direct editing in GSPLEditor. */}
+      <div className="px-4 py-2 bg-[#050505] border-t border-[#1a1a1a]">
+        <div className="font-mono text-[9px] text-[#666] mb-1 uppercase tracking-widest flex justify-between items-center">
+          <span>Strata Constraints (live GSPL orchestration preview)</span>
+          <span className="text-emerald-400 font-bold">{Math.round(preview.overall * 100)}% live</span>
+        </div>
+        {Object.keys(strataConstraints).map((stratum: string) => {
+          const v = (strataConstraints as any)[stratum] || 0.5;
+          return (
+            <div key={stratum} className="flex items-center gap-2 text-[9px] font-mono py-0.5">
+              <span className="w-14 text-[#888] shrink-0">{stratum}</span>
+              <input
+                type="range"
+                min={0}
+                max={1}
+                step={0.01}
+                value={v}
+                onChange={(e) => setStrataConstraint(stratum, parseFloat(e.target.value))}
+                className="flex-1 accent-emerald-500"
+                aria-label={`Stratum ${stratum} constraint`}
+              />
+              <span className="w-8 text-right tabular-nums text-emerald-400 shrink-0">{(v * 100).toFixed(0)}%</span>
+            </div>
+          );
+        })}
+        <button
+          onClick={() => {
+            const frag = getFragment();
+            const currentDraft = (useSeedStore.getState() as any).getGsplDraft ? (useSeedStore.getState() as any).getGsplDraft() : '';
+            const updated = currentDraft + `\n\n// live strata constraints from visual controls (Atelier hybrid seamlessness)\n${frag}`;
+            setGsplDraft(updated);
+          }}
+          className="mt-1 w-full text-[8px] py-1 border border-[#333] hover:bg-[#111] hover:border-emerald-600 text-[#aaa] uppercase tracking-widest"
+        >
+          Generate GSPL Fragment &amp; Load to GSPLEditor
+        </button>
+        <div className="text-[7px] text-[#555] mt-0.5">Visual strata update live conformance preview (no full grow). Loads fragment to GSPL for inspect/edit/execute (uses toGSPL from supremacy wave).</div>
+      </div>
     </div>
   );
 })

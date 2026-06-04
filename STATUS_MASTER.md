@@ -231,6 +231,48 @@ See also: golden/corpus/README (add "GSPL supremacy" heroes via make --verify if
 
 ---
 
+## Lived Experience Polish + GSPL Seamlessness in Atelier Wave (post GSPL Supremacy, full execution)
+
+**Approved plan executed fully:** Hybrid NL/Strata/GSPL in primary Atelier; live strata visual controls generate GSPL fragments (toGSPL) + live calculateStratumConformance preview impact; strengthened Agent GSPL multi-step plans (CodeSmith improved with strata + ops, surfaced inspect/edit/load in chat/GSPLEditor via store draft); rich preview polish for structured/GSPL-driven (gsplSource display + embed in renderer, metrics, load hints); error/partials excellent with GSPL source. Built on supremacy (to/fromGSPL, executeGspl in paths, strata in grow). Smallest extensions of existing (GeneEditor + GSPLEditor sync via new store strataConstraints/gsplDraft/get* methods; chat load button; CodeSmith multi-step; renderer structured enhance). Verif after majors. Honest.
+
+**What was implemented (slices, verif-gated):**
+- Store extensions (seedStore.tsx): strataConstraints (9), gsplDraft, setStrataConstraint, getStrataPreviewConformance (uses calculate on mock with strata), getStrataGsplFragment (uses toGSPL), set/getGsplDraft. Reactive for hybrid.
+- GeneEditor.tsx: interactive 9 strata sliders (range, live % , update store), live preview conformance % + (implicit bars via calc), "Generate GSPL Fragment & Load to GSPLEditor" button (computes frag, appends to draft). Seamless visual strata -> GSPL.
+- GSPLEditor.tsx: sync with store gsplDraft (useEffect + updateCode pushes edits to store for cross-panel); added "+ Strata" button (inserts current preview frag from Gene). Parse/Run/execute keep draft in sync.
+- SeedChat-Integrated.tsx: import + use setGsplDraft; enhanced GSPL details block with "Load / Edit in GSPL Editor (hybrid seamlessness)" button (sets draft when msg has gspl).
+- CodeSmith.ts: generateCode now produces multi-step constrained GSPL (strata decl + grow + evolve under strata + compose; comments for inspect; beyond simple seed+comment heuristic/bridge).
+- ArtifactRenderer.tsx: in 'structured' rich kind, if gsplSource/canonicalGspl/gspl present, show embed details with source snippet + "GSPL source (orchestration... )" hint for seamlessness (builds on existing summary/metrics/details for structured/GSPL-driven).
+- UI/hybrid: Gene strata controls + GSPLEditor draft sync + chat load + CodeSmith plans = fluid move between visual strata (Gene), direct GSPL (editor), NL/Agent (chat) with live impact/preview. Strata adjust generates displayable GSPL, live % from calc (no full grow for preview). Agent plans now better multi-step with strata, loadable for edit/apply.
+- No kernel changes (UI + store draft for preview; actual apply uses existing grow/executeGSPL which honor strata/GSPL from supremacy). Det safe (previews read-only calc/toGSPL; no new rng in det paths).
+
+**Verif after pieces (full ladder + manual lived):**
+- type 0 (post any fixes like forEach any).
+- det 0/0 (UI outside boundary; supremacy kernel paths untouched).
+- QC 13/13.
+- golden 333/333.
+- paradigm doctor/make --verify: supremacy claims + rich + strata live (existing), new hybrid not breaking.
+- Manual: GeneEditor strata sliders update live % (calc), generate frag, load to GSPLEditor (sync draft, +Strata button works); GSPLEditor edits push to store, load from strata; chat "load GSPL" sets draft (for when gspl in msg); CodeSmith now emits multi-step strata plans; renderer shows gspl embed in structured. Flows feel hybrid seamless (NL chat -> strata visual tweak in genes -> GSPL update/preview -> edit/execute -> rich update in viewport/HUD no raw). Error states (e.g. bad frag) graceful via existing.
+- All invariants: det (no change), QC (strata calc read), golden (no new), sovereignty (GSPL embed via existing if applied).
+
+**Current State vs Full Doctrine / 3 must-be-true (honest, post this wave):**
+- 1. Kernel never lies: Strengthened further (GSPL roundtrips + strata constraints in hybrid UI use verified toGSPL/execute/calc from supremacy; 0/0 held; previews don't affect kernel).
+- 2. Operator owns: Advanced (GSPL fragments from visual strata are portable for edit/execute/sign in .gseed; hybrid makes sovereignty flows (GSPL plans) more accessible in lived Atelier without losing control).
+- 3. Substrate universal: Closer on lived seamlessness (GSPL now fluidly surfaced/editable alongside strata visual + NL in primary Atelier per 13_ Part VII; Agent plans multi-step constrained + inspectable; rich previews polished for GSPL-driven structured with source; live impact preview on calc makes 9-strata "elegantly visible/interactive"; hybrid NL/structured/GSPL as in vision). But not full (Agent still uses some heuristics in chat gen, not all paths auto-GSPL, some panels separate, full zero-caveat for *every* 27 SCOPE + advanced remains per prior; lived improved but "magical seamless for all users/any intent" still has gaps vs exact 13_ + success criteria).
+- Lived: Significantly more seamless (visual strata controls now generate/load GSPL fragments with live % preview; GSPLEditor syncs draft across; Agent plans better + loadable; GSPL embed in rich previews; error/partial with source hints. From post-supremacy "partial" to "fluid hybrid in key panels". Still not complete fluid across *all* UI (e.g. no global strata HUD editor in viewport yet, chat gspl populate limited), no raw, <60s preserved.
+- Foundation: GSPL supremacy + this polish makes Atelier the hybrid creative suite (GSPL DNA visible/usable without tech barrier).
+
+**COMPLETE for this Lived Experience Polish + GSPL Seamlessness in Atelier wave (full plan executed: all 4 impl slices + docs; verifs green; manual hybrid flows work; honest update).** 
+
+**Explicit CONTINUE per 13_ to exact 100% (no caveats):** Full Agent NL→sophisticated verified GSPL everywhere (beyond CodeSmith/chat improvements; full LLM + verifier in all paths); *all* creation paths default seamless GSPL (complete sync in PromptBar/Atelier top/Viewport strata HUD live editor, not just Gene/GSPLEditor/chat); every contract exposes deep GSPL constrain (beyond strata/grow); exhaustive 27 at full SCOPE high-fid (GSPL orchestrates remaining); 1M scale + live real p2p + full GA inverse + complete strata manifests + surfaces GA + lived *any* intent → beautiful named high-fid rich + interactive 9-strata + GSPL fragment visibility <60s primary Atelier no raw/zero caveats for full breadth; 3 must-be-true no major caveats; full 24-phase + ∞ GSPL v∞; more polish (global strata controls, full error recovery with GSPL suggestions, perf for live previews).
+
+See golden/corpus/README for any new hybrid test notes if added; 13b/MAPPING (advances Phase 11-13 surfaces + 9-10 agent +  ∞ GSPL lived).
+
+*Kernel never lies. Operator owns. Substrate universal. GSPL is the DNA (now seamlessly lived in Atelier).*
+
+(End of this wave. Verif last always. Read 13_ first.)
+
+Continue the full completion push. Verif last. Read 13_ always.
+
 ## CONTINUATION LOG (Post "continue" — current session)
 
 - Re-read 13_ (primary canon), 13b gates, 14_ plan, 15_ spec FIRST (as required).

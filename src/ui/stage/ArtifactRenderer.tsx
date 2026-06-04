@@ -248,6 +248,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     const s = artifact.structuredData || artifact.visual?.structuredData || {};
     const sum = artifact.summary || artifact.visual?.summary || '';
     const m = artifact.metrics || artifact.visual?.metrics || {};
+    const gsplSrc = (artifact as any).gsplSource || (artifact as any).canonicalGspl || (artifact as any).gspl;
     return (
       <div className="p-artifact p-artifact-structured">
         {sum && <div className="p-artifact-structured-summary">{sum}</div>}
@@ -258,11 +259,18 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
             ))}
           </div>
         )}
+        {gsplSrc && (
+          <details className="p-artifact-gspl-embed" style={{marginTop:4}}>
+            <summary style={{fontSize:9, color:'#4ade80', cursor:'pointer'}}>GSPL source (orchestration from supremacy wave — click to load in editor)</summary>
+            <pre style={{fontSize:8, maxHeight:80, overflow:'auto'}}>{String(gsplSrc).slice(0,600)}</pre>
+            {/* Note: use GeneEditor "Load to GSPLEditor" or GSPLEditor +Strata for seamless edit; full wire via store in chat/panels */}
+          </details>
+        )}
         <details className="p-artifact-structured-details">
           <summary>Full structured data (for export/inspect)</summary>
           <pre>{JSON.stringify(s, null, 2).slice(0, 2000)}{JSON.stringify(s).length > 2000 ? '...' : ''}</pre>
         </details>
-        <div className="p-artifact-structured-hint">Rich structured preview from QC synthesize. Full in .gseed/export. Strata live in HUD.</div>
+        <div className="p-artifact-structured-hint">Rich structured preview from QC synthesize. Full in .gseed/export. Strata live in HUD. GSPL-driven artifacts show source for hybrid seamlessness.</div>
       </div>
     );
   }

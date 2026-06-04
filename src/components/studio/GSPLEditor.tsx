@@ -19,12 +19,26 @@ let theme = compose(hero, to: "music")
 `;
 
 const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFromGSPL?: any }) {
-  const [code, setCode] = useState(DEFAULT_CODE);
+  const gsplDraftFromStore = useSeedStore((s: any) => s.gsplDraft);
+  const setGsplDraftInStore = useSeedStore((s: any) => s.setGsplDraft);
+  const [code, setCode] = useState(gsplDraftFromStore || DEFAULT_CODE);
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef(null);
   const parseGSPLInStore = useSeedStore((s: any) => s.parseGSPL);
   const executeGSPLInStore = useSeedStore((s: any) => s.executeGSPL);
+
+  // Hybrid sync: when store draft changes (e.g. from GeneEditor strata controls), update editor. On local edit, push to store for seamlessness.
+  React.useEffect(() => {
+    if (gsplDraftFromStore && gsplDraftFromStore !== code) {
+      setCode(gsplDraftFromStore);
+    }
+  }, [gsplDraftFromStore]);
+
+  const updateCode = (newCode: string) => {
+    setCode(newCode);
+    setGsplDraftInStore(newCode);
+  };
 
   const handleParse = async () => {
     setLoading(true);
@@ -43,6 +57,7 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
       if (res?.seeds?.length > 0 && onSeedFromGSPL) {
         onSeedFromGSPL(res.seeds[0]);
       }
+      setGsplDraftInStore(code); // keep hybrid draft in sync for seamlessness across panels
     } catch (e) { console.error(e); }
     setLoading(false);
   };
@@ -59,12 +74,24 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
           className="px-3 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 hover:border-primary/40 font-mono font-bold text-[9px] uppercase tracking-widest transition-colors flex items-center gap-1.5 rounded-sm">
           <Play className="w-2.5 h-2.5" aria-hidden="true" /> RUN
         </button>
+        <button
+          onClick={() => {
+            const frag = (useSeedStore.getState() as any).getStrataGsplFragment ? (useSeedStore.getState() as any).getStrataGsplFragment() : '';
+            if (frag) {
+              updateCode(code + '\n\n// inserted live strata constraints from GeneEditor preview\n' + frag);
+            }
+          }}
+          className="px-2 py-1 text-[8px] border border-emerald-900/50 text-emerald-400 hover:bg-emerald-950 uppercase tracking-widest"
+          title="Insert current strata preview GSPL fragment (from GeneEditor visual controls) for hybrid seamlessness"
+        >
+          + Strata
+        </button>
       </div>
       <textarea
         ref={textareaRef}
         data-testid="gspl-code-input"
         value={code}
-        onChange={(e) => setCode(e.target.value)}
+        onChange={(e) => updateCode(e.target.value)}
         className="flex-1 bg-[#080808] p-4 text-[11px] font-mono text-[#ddd] resize-none outline-none leading-relaxed min-h-[200px]"
         spellCheck={false}
         placeholder="// Write GSPL code..."
@@ -100,7 +127,7 @@ const GSPLEditor = React.memo(function GSPLEditor({ onSeedFromGSPL }: { onSeedFr
                   }
                   // Scan user code for simple gene: value
                   const codeLines = code.split('\n');
-                  codeLines.forEach(line => {
+                  codeLines.forEach((line: string) => {
                     const assign = line.match(/(\w+)\s*[:=]\s*([^\s,]+)/);
                     if (assign) {
                       const [_, nm, valStr] = assign;
