@@ -54,3 +54,7 @@ playwright-report/
 
 artifacts/
 cache/
+
+# Paradigm make --verify outputs (reproducible artifacts, never commit)
+paradigm-out/
+

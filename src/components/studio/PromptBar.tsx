@@ -7,7 +7,11 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
   const [internalPrompt, setInternalPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const generateNewSeed = useSeedStore((s: unknown) => (s as any).generateNewSeed); // any: zustand store internal; justified same-line (no global, matches prior store usage)
+  const generateNewSeed = useSeedStore((s: unknown) => (s as any).generateNewSeed);
+  const executeGSPL = useSeedStore((s: unknown) => (s as any).executeGSPL);
+  const setGsplDraft = useSeedStore((s: unknown) => (s as any).setGsplDraft);
+  const loadArtifactToGsplDraft = useSeedStore((s: unknown) => (s as any).loadArtifactToGsplDraft);
+  const getHybridStatus = useSeedStore((s: unknown) => (s as any).getHybridStatus);
 
   const isControlled = externalValue !== undefined;
   const prompt = isControlled ? externalValue : internalPrompt;
@@ -17,15 +21,25 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
     e.preventDefault();
     if (!prompt.trim() || loading) return;
     if (typeof performance !== 'undefined') {
-      performance.mark('studio-prompt-submit'); // measurable timing start for studio prompt -> artifact (<60s claim)
+      performance.mark('studio-prompt-submit');
     }
     setLoading(true);
     setError(null);
     try {
-      if (onSeedCreated) {
-        const seed = await generateNewSeed(prompt.trim());
-        onSeedCreated(seed);
+      const p = prompt.trim();
+      const looksGspl = /seed\s|grow\s|mutate\s|breed\s|strata:/i.test(p);
+      let result: any;
+      if (looksGspl && executeGSPL) {
+        // Wave 1: direct GSPL path for seamlessness (execute then load to hybrid editor)
+        result = await executeGSPL(p);
+        setGsplDraft(p);
+        if (result && loadArtifactToGsplDraft) loadArtifactToGsplDraft(result);
+      } else {
+        result = await generateNewSeed(p);
+        // post-gen: auto-load any gsplSource/canonical for hybrid (supremacy + lived)
+        if (result && loadArtifactToGsplDraft) loadArtifactToGsplDraft(result);
       }
+      if (onSeedCreated) onSeedCreated(result);
       if (!isControlled) setPrompt('');
     } catch (err: unknown) {
       console.error('Generation failed:', err);
@@ -59,6 +73,11 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
             maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap'
           }} className="text-rose-400">
             {error}
+            <button onClick={() => {
+              const gsplFix = `seed s1 in character { strata: Form + Mind; } grow s1; // suggested GSPL fix for error: ${error}`;
+              const store = (window as any).useSeedStore?.getState?.();
+              if (store?.setGsplDraft) store.setGsplDraft(gsplFix);
+            }} className="ml-1 text-[8px] underline">Try GSPL</button>
           </span>
         )}
         <button
@@ -82,6 +101,23 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
         </button>
         {/* small surgical OS exposure per task: note for recursive .gseed + paradigmOSShell (Part 6 / Phases 22-23); option via CLI --recursive too */}
         <div role="note" aria-label="Recursive .gseed compose option for OS shell" className="text-[9px] text-zinc-500 mt-1 font-mono">Tip: prefix intent with "recursive .gseed compose of ..." (or --recursive in CLI) to invoke paradigmOSShell recursive .gseed (Fed/Econ/OS Part6)</div>
+
+        {/* Wave 1/2 extension: full quick strata (all 9) for global live hybrid seamlessness + GSPL frag in PromptBar (any intent primary) */}
+        <div className="flex gap-1 text-[7px] font-mono mt-1 flex-wrap" aria-label="Quick strata constraints (all 9) for hybrid GSPL seamlessness — sets live preview % + frag ready">
+          {['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'].map(s => (
+            <button key={s} onClick={() => {
+              const store = (window as any).useSeedStore?.getState?.();
+              if (store?.setStrataConstraint) store.setStrataConstraint(s, 0.85);
+            }} className="px-0.5 border border-emerald-900/50 text-emerald-400 hover:bg-emerald-950/60" title={`Boost ${s} stratum (live % preview + GSPL frag)`}>+{s}</button>
+          ))}
+          <button onClick={() => {
+            const store = (window as any).useSeedStore?.getState?.();
+            if (store?.getStrataGsplFragment && store?.setGsplDraft) {
+              const frag = store.getStrataGsplFragment();
+              store.setGsplDraft((store.gsplDraft || '') + '\n\n' + frag);
+            }
+          }} className="px-1 border border-primary/40 text-primary hover:bg-primary/10" title="Insert current strata as GSPL fragment (hybrid seamlessness)">+GSPL frag</button>
+        </div>
       </form>
     </>
   );

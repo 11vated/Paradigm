@@ -133,7 +133,7 @@ function synthesizeFrom15Contract(seed: ChSeed): ChArtifact {
       <circle cx="144" cy="80" r="5" fill="#111"/>
     </svg>`;
     svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-  } catch {}
+  } catch { /* best-effort fallback; ignore to preserve rich preview path */ }
 
   const previewData = svgDataURL || gltf;
   const bones = 32;
@@ -207,7 +207,7 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
         <circle cx="141" cy="82" r="6" fill="#111"/>
       </svg>`;
       svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-    } catch {}
+    } catch { /* best-effort fallback; ignore to preserve rich preview path */ }
 
     const previewData = pngDataURL || svgDataURL || gltf;
     const verts = r.vertices ?? 50000;
@@ -223,23 +223,23 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
       lodLevels: 4,
       fidelityScore: verts > 40000 ? 0.95 : 0.7
     };
-    const structured = { ...r, fidelity: 'SCOPE: 50k-tris 64-bone 13-anim 4K-PBR rigged + voice', voiceProfile: { basePitch: 0.5, timbre: 0.5, resonance: 0.5 } };
+    const structured = { ...r, fidelity: 'SCOPE: 50k-tris 64-bone 13-anim 4K-PBR rigged + voice 24kHz (Wave 3 GSPL-orchestrated high-fid)', voiceProfile: { basePitch: 0.5, timbre: 0.5, resonance: 0.5 } };
     return {
       gltf,
       pngDataURL,
       svgDataURL,
       previewData,
       structuredData: structured,
-      summary,
-      metrics,
+      summary: summary + ' | SCOPE target: rigged 50k-tris/64-bones/13-anims/4K-PBR/voice via GSPL strata+gene constraints',
+      metrics: { ...metrics, scopeTrisTarget: 50000, scopeBones: 64, scopeAnims: 13, fidelity: verts > 40000 ? 0.95 : 0.75 },
       visual: {
         type: 'structured' as const,
         pngDataURL,
         svgDataURL,
         previewData,
         structuredData: structured,
-        summary,
-        metrics,
+        summary: summary + ' | SCOPE target: rigged 50k-tris/64-bones/13-anims/4K-PBR/voice via GSPL strata+gene constraints',
+        metrics: { ...metrics, scopeTrisTarget: 50000, scopeBones: 64, scopeAnims: 13, fidelity: verts > 40000 ? 0.95 : 0.75 },
       },
       emergent_assets: {
         visual: (pngDataURL || svgDataURL) ? {

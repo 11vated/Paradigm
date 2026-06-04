@@ -298,16 +298,28 @@ export const useSeedStore = create((set: any, get: any) => ({
       },
     }));
   },
+  // Perf: simple last-result cache for live preview conformance (called in renders/HUDs; strata-driven, no full grow)
+  _lastStrataKey: '',
+  _lastPreview: { overall: 0.5, perStratum: {}, conformancePercent: '50.0%' } as any,
   getStrataPreviewConformance: () => {
     const state = get();
     const seed = state.currentSeed;
     if (!seed) return { overall: 0.5, perStratum: {}, conformancePercent: '50.0%' };
-    const activeStrata = Object.entries(state.strataConstraints || {})
+    const strata = state.strataConstraints || {};
+    const key = Object.entries(strata).map(([k,v]) => `${k}:${(v as number).toFixed(2)}`).join('|') + '|' + (seed.id || seed.$hash || 'no-seed');
+    if (key === state._lastStrataKey && state._lastPreview) return state._lastPreview;
+    const activeStrata = Object.entries(strata)
       .filter(([, v]: any) => (v as number) > 0.1)
       .map(([k]) => k);
     const mock = { ...seed, strata: activeStrata };
     try {
-      return calculateStratumConformance([mock]);
+      const res = calculateStratumConformance([mock]);
+      // update cache (zustand set minimal to avoid loop)
+      // @ts-ignore - internal perf cache
+      (get() as any)._lastStrataKey = key;
+      // @ts-ignore
+      (get() as any)._lastPreview = res;
+      return res;
     } catch {
       return { overall: 0.5, perStratum: {}, conformancePercent: '50.0%' };
     }
@@ -328,4 +340,36 @@ export const useSeedStore = create((set: any, get: any) => ({
   },
   setGsplDraft: (code: string) => set({ gsplDraft: code }),
   getGsplDraft: () => (get() as any).gsplDraft || '',
+
+  // Wave 1: Zero-caveat lived extensions - full hybrid for ANY intent in primary Atelier
+  loadArtifactToGsplDraft: (artifact: any) => {
+    const gspl = artifact?.gsplSource || artifact?.canonicalGspl || artifact?.gspl || (artifact?.seed ? toGSPL(artifact.seed) : '');
+    if (gspl) {
+      set({ gsplDraft: gspl });
+    }
+    // also sync strata if present
+    if (artifact?.strata && Array.isArray(artifact.strata)) {
+      const newConstraints: any = { ...(get() as any).strataConstraints };
+      artifact.strata.forEach((s: string) => { if (newConstraints[s] !== undefined) newConstraints[s] = 0.85; });
+      set({ strataConstraints: newConstraints });
+    }
+  },
+  applyCurrentStrataToActive: () => {
+    const state = get() as any;
+    const seed = state.currentSeed;
+    if (!seed) return null;
+    const active = Object.entries(state.strataConstraints || {}).filter(([,v]:any)=> (v as number)>0.1).map(([k])=>k);
+    const updated = { ...seed, strata: active };
+    set({ currentSeed: updated });
+    return updated;
+  },
+  getHybridStatus: () => {
+    const state = get() as any;
+    return {
+      hasDraft: !!(state.gsplDraft && state.gsplDraft.length > 10),
+      strataCount: Object.values(state.strataConstraints || {}).filter((v:any)=> (v as number)>0.1).length,
+      previewOverall: state.getStrataPreviewConformance ? state.getStrataPreviewConformance().overall : 0.5,
+    };
+  },
+  clearHybrid: () => set({ gsplDraft: '', strataConstraints: { Form:0.75, Motion:0.70, Sound:0.60, Mind:0.85, Story:0.75, World:0.65, Field:0.70, Culture:0.80, Time:0.55 } }),
 }));

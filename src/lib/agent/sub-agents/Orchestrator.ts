@@ -263,18 +263,28 @@ export class Orchestrator {
     let quality = 0.7;
 
     try {
+      // Wave 2: primary GSPL path for all agent flows - execute the CodeSmith GSPL via verified executeGspl (deep strata/gene from plan)
+      const { executeGspl } = await import('../../kernel/gspl-interpreter');
+      const gsplToExec = code.gsplCode || `seed s in ${intent.domain} { } grow s`;
+      const execRes: any = await Promise.resolve(executeGspl(gsplToExec));
+      artifact = execRes?.rich || execRes?.artifact || execRes?.seeds?.[0] || execRes;
+      if (artifact && !artifact.gsplSource) artifact.gsplSource = gsplToExec;
+      quality = artifact?.quality ? parseFloat(String(artifact.quality)) : 0.85;
+    } catch {
+      // fallback to direct grow
       const { growSeed } = await import('../../kernel/engines');
       artifact = await growSeed(seed);
       quality = artifact?.quality ? parseFloat(String(artifact.quality)) : 0.8;
-    } catch {
-      artifact = {
-        format: 'json',
-        domain: intent.domain,
-        hash,
-        description: intent.description,
-        style: intent.style,
-      };
-      quality = 0.65;
+      if (!artifact) {
+        artifact = {
+          format: 'json',
+          domain: intent.domain,
+          hash,
+          description: intent.description,
+          style: intent.style,
+        };
+        quality = 0.65;
+      }
     }
 
     return {

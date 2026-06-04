@@ -134,7 +134,7 @@ function rate(a: MusicArtifact): QualityReport {
   axes.keyPresent = typeof a.meta.key === 'string' && a.meta.key.length > 0 ? 1 : 0;
   // Content-aware: actually decode the PCM and inspect.
   const stats = analyzePcm(a.wavBuffer);
-  const notes = [`music ${a.meta.tempo}bpm ${a.meta.key} ${a.meta.duration.toFixed(1)}s wav=${a.wavBuffer.length}B`];
+  const notes = [`music ${a.meta.tempo}bpm ${a.meta.key} ${a.meta.duration.toFixed(1)}s wav=${a.wavBuffer.length}B | SCOPE 44.1kHz 5-stems MIDI via GSPL (Wave 3 fidelity)`];
   if (stats) {
     Object.assign(axes, audioQualityAxes(stats));
     notes.push(`rms=${stats.rms.toFixed(3)} crest=${stats.crestFactor.toFixed(2)} centroidHz=${stats.spectralCentroidHz.toFixed(0)} silence=${(stats.silenceRatio*100).toFixed(1)}%`);

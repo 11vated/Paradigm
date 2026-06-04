@@ -500,7 +500,7 @@ export function toGSPLHook(seedOrIntent: any, domainHint?: string): string {
   try {
     const { toGSPL } = require('./gspl-interpreter.js');
     if (toGSPL) return toGSPL(seedOrIntent);
-  } catch {}
+  } catch { /* best-effort toGSPL hook; fallback to heuristic if interpreter unavailable */ }
   const s = seedOrIntent || {};
   const dom = domainHint || s.$domain || s.domain || 'character';
   const nm = (s.$name || s.name || 's').toString().replace(/[^a-zA-Z0-9_]/g, '_');

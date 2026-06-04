@@ -192,6 +192,9 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
       <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
         <button onClick={(e) => { e.stopPropagation(); onGrow?.(); }} style={btnStyle}>Grow</button>
         <button onClick={(e) => { e.stopPropagation(); onEvolve?.(); }} style={btnStyle}>Evolve</button>
+        {(raw.gsplSource || raw.canonicalGspl) && (
+          <button onClick={(e) => { e.stopPropagation(); const store = (window as any).useSeedStore?.getState?.(); if (store?.setGsplDraft) store.setGsplDraft(raw.gsplSource || raw.canonicalGspl); if (store?.loadArtifactToGsplDraft) store.loadArtifactToGsplDraft(raw); }} style={{...btnStyle, fontSize:7, padding:'0 3px'}} title="Load GSPL to editor (hybrid seamlessness)">GSPL</button>
+        )}
       </div>
     </div>
   );

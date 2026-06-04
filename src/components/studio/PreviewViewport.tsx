@@ -7,10 +7,16 @@ import {
   CodeViewport, SimViewport, AnimViewport, TwoDViewport, ArtifactInfo, DomainIcon,
   getViewportType, AVAILABLE_VIEWS,
 } from './viewports';
+import { useSeedStore } from '@/stores/seedStore';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 export default function PreviewViewport({ artifact, loading, seed, promptText = '' }: { artifact: any /* justified carveout: artifact from store/parent is dynamic (multi-domain Seed+Artifact union + runtime loaded); full branded types in strata sweep; no silent */; loading: boolean; seed: any /* justified: seed loose from caller */; promptText?: string }) {
   const defaultView = artifact ? getViewportType((artifact as any).domain) : '3d'; // any cast: artifact unknown from prop (loose from store); justified same-line
   const [view, setView] = useState(defaultView);
+
+  // Wave 1: global live strata from store for hybrid seamlessness (top level hook)
+  const storeStrata = useSeedStore((s: any) => s.strataConstraints || {});
+  const previewConformance = useSeedStore((s: any) => s.getStrataPreviewConformance ? s.getStrataPreviewConformance() : { overall: 0.5, perStratum: {} });
 
   useEffect(() => {
     const art = artifact as Record<string, unknown> | null;
@@ -55,6 +61,43 @@ export default function PreviewViewport({ artifact, loading, seed, promptText = 
               <div className="font-mono text-[8px] text-neutral-800">{artifact.seed_hash?.slice(0, 24)}</div>
             </div>
           </div>
+
+          {/* Wave 1 global live strata HUD for zero-caveat hybrid (always visible in primary preview, sync with store for seamlessness across panels) */}
+          {(() => {
+            const activeStrata = Object.entries(storeStrata).filter(([,v]:any) => (v as number) > 0.1).map(([k]) => k);
+            return (
+              <div className="absolute top-2 right-2 z-20 text-[7px] font-mono bg-black/70 border border-emerald-900/50 rounded px-1 py-0.5 pointer-events-auto" role="region" aria-label="Global live strata HUD (hybrid seamlessness)">
+                <div className="text-emerald-400">LIVE STRATA {Math.round(previewConformance.overall*100)}% ({activeStrata.join('+') || 'none'})</div>
+                <div className="flex gap-0.5 mt-0.5">
+                  {Object.keys(storeStrata).slice(0,5).map((k: string) => {
+                    const v = (storeStrata as any)[k] || 0;
+                    return <span key={k} className="text-[6px] text-[#888]">{k.slice(0,1)}:{Math.round(v*100)}</span>;
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* Wave 1 Lived: live strata + GSPL source for zero-caveat hybrid seamlessness (no raw in normal flow) */}
+          {(artifact.strata || artifact.gsplSource || artifact.canonicalGspl) && (
+            <div className="absolute top-10 left-2 z-20 max-w-[60%] text-[8px] font-mono bg-black/60 border border-neutral-800 rounded px-2 py-0.5 pointer-events-auto" role="region" aria-label="Live strata and GSPL orchestration source (from supremacy + lived)">
+              {artifact.strata && <span className="text-emerald-400">strata: {Array.isArray(artifact.strata) ? artifact.strata.join('+') : artifact.strata}</span>}
+              {(artifact.gsplSource || artifact.canonicalGspl) && (
+                <details className="mt-0.5">
+                  <summary className="cursor-pointer text-primary/80 hover:text-primary">GSPL (edit in editor)</summary>
+                  <pre className="text-[7px] max-h-20 overflow-auto mt-0.5 text-neutral-400 whitespace-pre-wrap">{(artifact.gsplSource || artifact.canonicalGspl || '').slice(0, 280)}</pre>
+                  <button
+                    onClick={() => {
+                      const store = (window as any).__paradigmSeedStore || (window as any).useSeedStore?.getState?.();
+                      if (store?.setGsplDraft) store.setGsplDraft(artifact.gsplSource || artifact.canonicalGspl);
+                      if (store?.loadArtifactToGsplDraft) store.loadArtifactToGsplDraft(artifact);
+                    }}
+                    className="text-[7px] mt-0.5 px-1 border border-primary/40 text-primary hover:bg-primary/10"
+                  >Load to GSPLEditor</button>
+                </details>
+              )}
+            </div>
+          )}
 
           {/* Sovereign one-click "Export to Deployable App" for flagship domains (character rig + narrative player) */}
           {(artifact.domain === 'character' || artifact.domain === 'narrative') && (

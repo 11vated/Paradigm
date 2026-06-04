@@ -850,7 +850,7 @@ export class GsplInterpreter {
     // Constraints (strata, genes) from GSPL args (including explicit 2nd arg to generate_*) are merged and passed to grow.
     // Full strata/ support added for generate_* and grow so GSPL can constrain rich gens.
     try {
-      let s: any = seedOrParams || { $domain: domain, genes: {} };
+      const s: any = seedOrParams || { $domain: domain, genes: {} };
       if (typeof s === 'object' && !s.$domain) s.$domain = domain;
       // Merge strataConstraint (for generate_xxx(params, ["Form","Mind"]) form) + from object
       let strata: any = undefined;

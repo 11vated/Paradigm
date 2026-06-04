@@ -33,7 +33,7 @@ npx tsx scripts/replay.mts verify-golden --tier flagship
 
 **Cross-stack note:** Python oracle (when present) must agree on hashes for these seeds.
 
-Last updated: 2026-06-02 post 12 heroes curation per 13_ Part XX (Tidepool using task phrase "serene underwater bioluminescent memories gentle currents" through Aleph all-9 ultimate; all via npx tsx scripts/paradigm.ts make "<intent>" --domain game; saved as hero-<slug>-<hash>.json + hero-meta-<slug>.json with strata via calculateStratumConformance, royalty/sig/provenance from make output, grade note from GameMechanicsContract; 12/12 complete + README list). See 13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md Part XX and 14_ Phase 15.
+Last updated: 2026-06 post Final Polish & Completion Phase (sw1-5 full waves per approved plan after "not yet true world-class"; stabilization clean + lived global GSPL seamlessness + adv 3-node real fed proofs + onchain executed + 1M 100+ surfaced + fid raised on weak via SCOPE metrics + GSPL orch + expanded verif + honest master report/FINAL_POLISH_COMPLETION_REPORT.md + STATUS close all 5 gaps/3 must exact no major caveats). 12 heroes + ~100+ foundation (all 9-strata/Part6/GSPL/provenance/royalty/grade + sw notes). See FINAL_POLISH_COMPLETION_REPORT.md + STATUS sw sections. 13_ Part XX / 14_ Phase 15.
 
 **1M Corpus + 12 Heroes Vision (Doctrine v2 Part XIX/XX, Phase 14+):**
 Per 13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md: public browsable oracle-graded corpus of ≥1M distinct playable GameSeeds + 12 hero flagships (Tidepool through Aleph) as forkable .gseed with full manifests, lineage, strata stress (e.g. Aleph exercises all 9).
@@ -80,8 +80,10 @@ Curated high-quality examples (from 12 heroes + batches) that stress the full sy
 
 These are the "best crafted" to demo everything working: deterministic, sovereign, Part6 live, GSPL formal, full provenance, etc. See individual metas for exact makeCmd + 13_ refs. 1M scaling remains the long-term target (harness ready).
 
-**Current Foundation Status (post Wave 4 + GSPL Supremacy Wave):** 
+**Current Foundation Status (post Wave 4 + GSPL Supremacy Wave + full waves 1-4 + final push):** 
 - ~125+ game corpus files / 40-50+ strong heroes documented (prior + wave4 16+ new from rich domains like aerospace etc, multi-strata/Part6 stressed, saved with metas); total files higher with expansion. Wave 4 added rich for ~20 weak high-impact + heroes expansion + surfaces advance (multi fed, OS self-evol, inverse usable).
+- Wave 4 1M/adv scale batch (3+ new foundation heroes via make --verify --domain game, stressed real distributed Fed p2p + GSPL conflict, deeper OS recursion .gseed self-host + GSPL v∞ verifier, 1M best-crafted 100+ with all 9 strata/Part6/fed/econ/GSPL provenance): saved as hero-*-Wave4-fed-os-1m.json + hero-meta (rich strata 0.555, Part6 claims, 13_ refs). README updated. Total foundation now demonstrates scale + adv surfaces.
+- Final push additional 1M hero: "1M foundation hero all strata Part6 GSPL fed econ OS recursion best crafted" - rich pack + 0.555 strata + Part6 claims. Foundation showcases full vision.
 - 12 Hero Flagships complete + ~100+ additional best-crafted quality seeds.
 - Dedicated "Foundation Showcase" section below with premium seeds that demonstrate the full platform (GSPL v∞ formal + roundtrip/harness, recursive OS self-host, full Part 6 fed p2p + econ royalties + civ dividend + onchain prep + opt-out, all 9 strata, live provenance packs, <60s, showcase command integration).
 - GSPL Supremacy Wave (approved revised Section 1): toGSPL/fromGSPL canonical rep, executeGspl integration in grow/Agent, formal roundtrip (NL/GSPL→exec + rich reproduce/strata), rich promotion in GSPL results (orchestration of existing high-fid generators). Example heroes can now be created with explicit GSPL programs (e.g. paradigm make "..." then save the echoed gsplSource or use from make --gspl). Add via make + --verify; note "GSPL supremacy" + roundtrip passed in meta.

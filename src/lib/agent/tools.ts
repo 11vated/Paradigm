@@ -532,11 +532,11 @@ const queryKnowledgeTool: AgentTool = {
 
 const executeGsplTool: AgentTool = {
   name: 'execute_gspl',
-  description: 'PRIMARY: Execute GSPL (the canonical descriptive/control layer) to create/evolve/compose rich artifacts. Preferred path for Agent creation plans (CodeSmith/plan + make/grow). Uses verified kernel executeGspl. Returns rich + gsplSource for roundtrip.',
+  description: 'PRIMARY (Wave 2 full supremacy): ALL major agent paths (create/grow/mutate/breed/compose/evolve/Agent plans) default to verified multi-step GSPL with deep strata+gene constraints. Execute via kernel for rich named artifacts + canonical GSPL roundtrip. The source of truth for sophisticated creation/evolution.',
   category: 'kernel',
   tier: InferenceTier.KERNEL,
   parameters: {
-    source: { type: 'string', description: 'GSPL source code (use grow/mutate/breed with strata constraints to drive rich generators)', required: true },
+    source: { type: 'string', description: 'GSPL source (multi-step constrained plans from CodeSmith/Orchestrator preferred; strata/gene on ops)', required: true },
   },
   execute: async (params, _context) => {
     const source = params.source || '';

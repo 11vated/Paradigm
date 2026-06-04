@@ -59,6 +59,12 @@ const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedI
                     {t} strata {pct}% · gen{seed.$lineage?.generation||0}
                     {richSummary && <div style={{fontSize:8, color:'#aaa', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap'}} title={richSummary}>{richSummary.slice(0,55)}</div>}
                     {richMetrics && <div style={{fontSize:7, color:'#666'}}>{Object.keys(richMetrics).slice(0,2).map(k => `${k}:${(richMetrics as any)[k]}`).join(' ')}</div>}
+                    {(raw.gsplSource || raw.canonicalGspl) && (
+                      <span style={{fontSize:7, color:'#0a0'}} title="GSPL orchestration source present (load via editor)">
+                        GSPL
+                        <button onClick={(e) => { e.stopPropagation(); const store = (window as any).useSeedStore?.getState?.(); if (store?.setGsplDraft) store.setGsplDraft(raw.gsplSource || raw.canonicalGspl); if (store?.loadArtifactToGsplDraft) store.loadArtifactToGsplDraft(raw); }} className="ml-1 underline text-[6px]">load</button>
+                      </span>
+                    )}
                   </div>
                 );
               } catch { return null; }
