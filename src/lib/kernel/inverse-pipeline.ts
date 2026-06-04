@@ -26,6 +26,7 @@ export interface InverseResult {
   domain: string;
   iterations: number;
   artifact: any;
+  grownArtifact?: any; // rich visual/emergent from QC grow for UI preview/feedback (inverse close-loop)
 }
 
 // ─── DOMAIN DETECTION ──────────────────────────────────────────────────────
@@ -321,6 +322,7 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
     domain,
     iterations,
     artifact,
+    grownArtifact: (seed as any).grownArtifact || (artifact ? { visual: artifact.visual, emergent_assets: artifact.emergent_assets, pngDataURL: artifact.pngDataURL, htmlData: artifact.htmlData, previewData: artifact.previewData } : null),
   };
 }
 
@@ -344,10 +346,12 @@ export function formatInverseResult(result: InverseResult): any {
           type: result.artifact.type,
           generation_quality: result.artifact.generation_quality,
           render_hints: result.artifact.render_hints,
-          hasVisual: !!(result.artifact.visual || result.artifact.emergent_assets || result.artifact.pngDataURL),
+          hasVisual: !!(result.artifact.visual || result.artifact.emergent_assets || result.artifact.pngDataURL || result.artifact.htmlData),
+          visual: result.artifact.visual || null,
+          emergent: result.artifact.emergent_assets || null,
         }
       : null,
-    grownArtifact: grown || null, // rich visual/name feedback from grow for UI
+    grownArtifact: grown || null, // rich visual/name feedback from grow for UI (inverse UX close)
   };
 }
 

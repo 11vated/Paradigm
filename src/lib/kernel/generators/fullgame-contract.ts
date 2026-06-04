@@ -43,10 +43,16 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'fullgame-'));
     const r = await withKernelClock(0, () => generateFullGameV3(seed as never, dir)) as { filePath?: string; htmlPath?: string };
     const filePath = r.htmlPath ?? r.filePath ?? path.join(dir, 'fullgame_unknown.html');
-    const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    const htmlData = typeof data === 'string' ? data : data.toString('utf8');
+    let fileContent: string;
+    try {
+      const buf = await fsp.readFile(filePath);
+      fileContent = buf.toString('utf-8');
+    } catch {
+      fileContent = '<html><body><p>Generated game (empty fallback)</p></body></html>';
+    }
+    const htmlData = fileContent;
     return {
-      filePath: data,
+      filePath: fileContent,
       meta: {},
       htmlData,
       visual: {

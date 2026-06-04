@@ -18,7 +18,7 @@ import { runStratumPredicate } from '../quality/predicates';
 interface S { $domain: 'animation'; $name?: string; genes: any }
 interface A {
   filePath: string;
-  meta: { duration?: number; frameCount?: number };
+  meta: Record<string, unknown>;
   previewData?: string; // base64 or text for UI preview (gltf/html)
   visual?: {
     type: 'gltf' | 'html' | 'video' | 'raster';
@@ -48,7 +48,7 @@ export const AnimationQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'animation-'));
     try {
-      const r = await withKernelClock(0, () => generateAnimation(seed, dir));
+      const r = await withKernelClock(0, () => generateAnimation(seed, dir)) as { gltfPath?: string; fbxPath?: string; mp4Path?: string; htmlPath?: string; [k: string]: unknown };
       const primaryPath = r.gltfPath ?? r.fbxPath ?? r.mp4Path ?? r.htmlPath;
       let data = '';
       let previewData = '';

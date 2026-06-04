@@ -44,6 +44,7 @@ interface SpriteArtifact {
   metaJson: any;
   meta: { frames: number; resolution: number; paletteSize: number };
   pngDataURL?: string;
+  pngPath?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster';
     pngDataURL?: string;
