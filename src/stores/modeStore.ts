@@ -80,7 +80,7 @@ interface ModeState {
 export const useMode = create<ModeState>()(
   persist(
     (set) => ({
-      mode: 'crucible',
+      mode: 'atelier',  // Primary per doctrine UX: beautiful live visual + tools as default workspace
       setMode: (mode) => set({ mode }),
     }),
     { name: 'paradigm.mode' },

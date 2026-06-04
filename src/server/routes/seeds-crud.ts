@@ -4,6 +4,7 @@
  */
 /* eslint-disable @typescript-eslint/no-require-imports -- Server-side route uses require() for pipeline/domain-config and auth/ownership dynamic resolution. */
 import type { Express } from 'express';
+import { deriveCleanTitle } from '../../lib/kernel/types';
 
 export interface SeedsCrudDeps {
   seeds: any[];
@@ -95,7 +96,7 @@ export function registerSeedsCrudRoutes(app: Express, deps: SeedsCrudDeps): void
     const newSeed: any = {
       id: deterministicSeedId(seedHash),
       $domain: domain,
-      $name: req.body.name || 'Untitled Seed',
+      $name: deriveCleanTitle(req.body.name || req.body.intent || req.body.prompt, seedHash),
       $lineage: { generation: 1, operation: 'primordial', timestamp: 0 },
       $hash: seedHash,
       $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
@@ -183,7 +184,7 @@ export function registerSeedsGenerateRoutes(app: Express, deps: SeedsCrudDeps): 
     const newSeed: any = {
       id: crypto.randomUUID(),
       $domain: domain,
-      $name: `${promptStr.substring(0, 40)}`,
+      $name: deriveCleanTitle(promptStr, crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex')),
       $lineage: { generation: 1, operation: 'generate' },
       $hash: crypto.createHash('sha256').update(JSON.stringify(genes)).digest('hex'),
       $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },

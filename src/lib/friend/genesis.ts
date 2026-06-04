@@ -8,6 +8,7 @@
 
 import { createHash } from 'crypto';
 import { rngFromHash, type Xoshiro256StarStar } from '../kernel/rng';
+import { deriveCleanTitle } from '../kernel/types';
 import {
   type FriendSeedData,
   type FriendGenerationOptions,
@@ -254,7 +255,7 @@ export function createFriendSeed(
 
   // Name is picked AFTER all genes so adding/removing gene categories
   // doesn't cascade through name selection.
-  const sampledName = options.name ?? pickName(rng);
+  const sampledName = deriveCleanTitle(options.name ?? pickName(rng), seedHash);
 
   return {
     id: shortId(seedHash),

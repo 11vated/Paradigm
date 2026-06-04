@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { deriveCleanTitle } from './types';
 import { Xoshiro256StarStar, rngFromHash } from './rng';
 import { growSeed } from './engines';
 import { DOMAIN_ALIASES, resolveDomain } from './domain-constants';
@@ -242,7 +243,7 @@ export async function inversePipeline(input: InverseInput): Promise<InverseResul
   const seed = {
     id: `inverse-${seedHash.slice(0, 12)}`,
     $domain: domain,
-    $name: phrase.substring(0, 40),
+    $name: deriveCleanTitle(phrase, undefined),
     $lineage: { generation: 1, operation: 'inverse_pipeline' },
     $hash: seedHash,
     $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },

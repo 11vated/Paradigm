@@ -22,14 +22,69 @@ import { runStratumPredicate } from '../quality/predicates';
 
 interface V2Seed { $hash: string; genes?: Record<string, any>; }
 interface V2Inverted { resolution: number; layers: number; svgChars: number; svgHash: string; }
-interface V2Artifact { svg: string; meta: { pngPath: string; resolution: number; layers: number; ssim: number } }
+interface V2Artifact {
+  svg: string;
+  pngDataURL?: string;
+  svgDataURL?: string;
+  visual?: {
+    type: 'png' | 'svg' | 'raster';
+    pngDataURL?: string;
+    svgDataURL?: string;
+    resolution?: number;
+    layers?: number;
+  };
+  emergent_assets?: {
+    visual?: {
+      type: 'png' | 'svg';
+      data?: string;
+      path?: string;
+      resolution?: number;
+    };
+    mesh?: any;
+  };
+  meta: { pngPath: string; resolution: number; layers: number; ssim: number };
+}
 
 async function synthesize(seed: V2Seed): Promise<V2Artifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-v2-'));
   try {
     const r = await generateVisual2DV3(seed as any, dir);
     const svg = await fs.readFile(r.svgPath, 'utf8');
-    return { svg, meta: { pngPath: r.pngPath, resolution: r.resolution, layers: r.layers, ssim: r.ssim } };
+
+    // Attach UI-consumable visual data (approved data shape for Priority 1).
+    // Read the PNG already written by the generator (deterministic) and make dataURL for immediate Studio use.
+    let pngDataURL: string | undefined;
+    try {
+      const pngBuf = await fs.readFile(r.pngPath);
+      pngDataURL = `data:image/png;base64,${pngBuf.toString('base64')}`;
+    } catch { /* no png or read fail (env); svg still provided */ }
+
+    let svgDataURL: string | undefined;
+    try {
+      svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+    } catch { /* rare */ }
+
+    return {
+      svg,
+      pngDataURL,
+      svgDataURL,
+      visual: {
+        type: pngDataURL ? 'png' : 'svg',
+        pngDataURL,
+        svgDataURL,
+        resolution: r.resolution,
+        layers: r.layers,
+      },
+      emergent_assets: {
+        visual: (pngDataURL || svgDataURL) ? {
+          type: pngDataURL ? 'png' : 'svg',
+          data: pngDataURL || svgDataURL,
+          path: pngDataURL ? r.pngPath : r.svgPath,
+          resolution: r.resolution,
+        } : undefined,
+      },
+      meta: { pngPath: r.pngPath, resolution: r.resolution, layers: r.layers, ssim: r.ssim },
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true }).catch(() => {});
   }

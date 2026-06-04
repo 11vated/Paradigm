@@ -93,6 +93,10 @@ export function useAgent() {
     (raw: Record<string, unknown> | null | undefined) => {
       const active = kernelSeedToActive(raw);
       if (active) setSeed(active);
+      // Close the agent->grow->visual loop: fire the event so useGrowArtifact + viewports (Atelier/Crucible) update live with rich data (name+visual from prior slices).
+      if (raw) {
+        window.dispatchEvent(new CustomEvent('paradigm:grow-success', { detail: { seed: raw, artifact: raw } }));
+      }
     },
     [setSeed],
   );

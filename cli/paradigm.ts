@@ -30,6 +30,7 @@ import { join, resolve } from 'path';
 import { createHash }  from 'crypto';
 import { Xoshiro256StarStar, rngFromHash } from '../src/lib/kernel/rng';
 import { growSeed, ENGINES } from '../src/lib/kernel/engines';
+import { deriveCleanTitle } from '../src/lib/kernel/types';
 import { GsplLexer }        from '../src/lib/kernel/gspl-lexer';
 import { GsplParser }        from '../src/lib/kernel/gspl-parser';
 import { GsplInterpreter }   from '../src/lib/kernel/gspl-interpreter';
@@ -316,7 +317,7 @@ async function cmdMake(args: string[]) {
     const agentWorldHint = agentReport?.resolved?.entities?.find((e: any) => e.type === 'location' || e.type === 'world')?.description || null;
 
     const { createFriendSeed } = await import('../src/lib/friend/genesis');
-    const friendSeed = createFriendSeed(intent || agentPersona, { name: intent.slice(0, 40) });
+    const friendSeed = createFriendSeed(intent || agentPersona, { name: deriveCleanTitle(intent || agentPersona, undefined) });
 
     const { growSeed } = await import('../src/lib/kernel/engines');
     const friendArtifact = await growSeed(friendSeed);
@@ -324,7 +325,7 @@ async function cmdMake(args: string[]) {
     // 2. World from intent using canonical genesis (full genes for conflict/mood/society etc.).
     // When --agent used, incorporate agent-resolved world hints.
     const { createWorldSeed } = await import('../src/lib/world/genesis');
-    const worldSeed = createWorldSeed(agentWorldHint || intent || 'quantum tidal liminal realm', { name: agentWorldHint ? agentWorldHint.slice(0, 40) : 'Quantum Tidal World' });
+    const worldSeed = createWorldSeed(agentWorldHint || intent || 'quantum tidal liminal realm', { name: deriveCleanTitle(agentWorldHint || intent || 'quantum tidal liminal realm', undefined) });
     const worldArtifact = await growSeed(worldSeed);
 
     // 3. Compose Quest (the sovereign loop) — now with proper full FriendSeedData + WorldSeedData (persona.bigFive etc. populated det)
@@ -345,7 +346,7 @@ async function cmdMake(args: string[]) {
       const suggestedStrata = inferStrataFromIntent(intent);
       gameSeed = {
         $domain: 'game',
-        $name: intent.slice(0, 50),
+        $name: deriveCleanTitle(intent, undefined),
         quest: questSeed,
         friend: friendSeed,
         world: worldSeed,

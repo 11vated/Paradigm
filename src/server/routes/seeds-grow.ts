@@ -3,6 +3,7 @@
  * Slice 12 of the modular router split.
  */
 import type { Express } from 'express';
+import { deriveCleanTitle } from '../../lib/kernel/types';
 
 export interface SeedsGrowDeps {
   seeds: any[];
@@ -48,6 +49,31 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
         try { const { readFileSync } = await import('fs'); result.svgContent = readFileSync(result.svgPath, 'utf-8'); } catch { /* swallow: best-effort seeds-grow route cleanup */ }
       }
       if (result?.indexHtml || result?.htmlContent) { result.htmlContent = result.htmlContent ?? result.indexHtml; }
+
+      // Light safety net for body-grow direct paths (visual2d/character etc) - promote data fields if contract/generate supplied them.
+      // Extremely minimal; main enrichment lives in the QC contracts.
+      try {
+        if (result?.meta?.pngPath && !result.pngDataURL) {
+          const fsMod = await import('fs');
+          const buf = await fsMod.promises.readFile(result.meta.pngPath);
+          result.pngDataURL = `data:image/png;base64,${buf.toString('base64')}`;
+        }
+        if (result?.svg && !result.svgDataURL) {
+          result.svgDataURL = `data:image/svg+xml;base64,${Buffer.from(String(result.svg)).toString('base64')}`;
+        }
+        if (!result.visual) result.visual = {};
+        if (result.pngDataURL) result.visual.pngDataURL = result.pngDataURL;
+        if (result.svgDataURL) result.visual.svgDataURL = result.svgDataURL;
+        if ((result.pngDataURL || result.svgDataURL) && !result.emergent_assets?.visual) {
+          if (!result.emergent_assets) result.emergent_assets = {};
+          result.emergent_assets.visual = {
+            type: result.pngDataURL ? 'png' : 'svg',
+            data: result.pngDataURL || result.svgDataURL,
+            path: result.meta?.pngPath || result.svgPath,
+          };
+        }
+      } catch { /* light only */ }
+
       res.json(result);
     } catch (e: any) {
       log('ERROR', 'Body-grow failed', { error: e.message });
@@ -134,6 +160,42 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
       const grown = await growSeed(seed);
       await cache.set(cacheKey, JSON.stringify(grown), 300);
       log('INFO', 'Seed grown', { id: seed.id, domain: seed.$domain });
+
+      // Light safety-net normalization (approved): if contract/grow produced rich visual data
+      // (pngDataURL etc), ensure top-level + visual/emergent_assets for renderer paths.
+      // No heavy logic, no duplication of synthesis. Pure pass-through / promote.
+      try {
+        const g: any = grown || {};
+        if (g.meta?.pngPath && !g.pngDataURL) {
+          const fsMod = await import('fs');
+          const buf = await fsMod.promises.readFile(g.meta.pngPath);
+          g.pngDataURL = `data:image/png;base64,${buf.toString('base64')}`;
+        }
+        if (g.svg && !g.svgDataURL) {
+          g.svgDataURL = `data:image/svg+xml;base64,${Buffer.from(String(g.svg)).toString('base64')}`;
+        }
+        if (!g.visual) g.visual = {};
+        if (g.pngDataURL) g.visual.pngDataURL = g.pngDataURL;
+        if (g.svgDataURL) g.visual.svgDataURL = g.svgDataURL;
+        if ((g.pngDataURL || g.svgDataURL) && !g.emergent_assets?.visual) {
+          if (!g.emergent_assets) g.emergent_assets = {};
+          g.emergent_assets.visual = {
+            type: g.pngDataURL ? 'png' : 'svg',
+            data: g.pngDataURL || g.svgDataURL,
+            path: g.meta?.pngPath || g.svgPath,
+            resolution: g.meta?.resolution,
+          };
+        }
+        // Light name normalization (Priority 2)
+        const currentName = g.$name || g.name || g.display_name;
+        if (!currentName || currentName === 'Untitled Seed' || currentName.length < 4 || currentName.includes(seed.$hash?.slice(0,8) || '')) {
+          const nice = deriveCleanTitle(seed.$name || seed.$intent || seed.originalPrompt || currentName, seed.$hash || g.seed_hash);
+          g.name = nice;
+          g.$name = nice;
+          g.display_name = nice;
+        }
+      } catch { /* best-effort light norm only; never break grow */ }
+
       res.json(grown);
     } catch (e: any) {
       log('ERROR', 'Grow failed', { id: seed.id, error: e.message });
@@ -141,7 +203,7 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
       let suggestion = 'Try again or contact support if the issue persists';
       if (e.message.includes('document is not defined')) { errorMessage = 'Server configuration error - browser APIs not available'; suggestion = 'This is a server configuration issue. Please contact support.'; }
       else if (e.message.includes('generator')) { errorMessage = `Domain generator error for '${seed.$domain}'`; suggestion = `The ${seed.$domain} generator encountered an issue. Try a different seed.`; }
-      const artifact: any = { id: `artifact-${seed.id}`, name: seed.$name, domain: seed.$domain, generation: seed.$lineage?.generation || 0, seed_hash: seed.$hash, type: seed.$domain, visual: {}, stats: {}, error: { message: errorMessage, suggestion, originalError: e.message } };
+      const artifact: any = { id: `artifact-${seed.id}`, name: deriveCleanTitle(seed.$name || seed.$intent || seed.originalPrompt, seed.$hash), domain: seed.$domain, generation: seed.$lineage?.generation || 0, seed_hash: seed.$hash, type: seed.$domain, visual: {}, stats: {}, error: { message: errorMessage, suggestion, originalError: e.message } };
       if (seed.genes) {
         for (const [key, gene] of Object.entries(seed.genes) as [string, any][]) {
           if (gene.type === 'scalar') artifact.stats[key] = gene.value;

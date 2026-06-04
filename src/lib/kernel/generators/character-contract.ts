@@ -49,7 +49,27 @@ if (typeof globalThis.FileReader === 'undefined') {
 
 interface ChSeed { $hash: string; genes?: Record<string, any>; }
 interface ChInverted { vertices: number; faces: number; animations: number; textures: number; gltfChars: number; }
-interface ChArtifact { gltf: string; meta: { filePath: string; vertices: number; faces: number; animations: number; textures: string[] } }
+interface ChArtifact {
+  gltf: string;
+  pngDataURL?: string;
+  svgDataURL?: string;
+  visual?: {
+    type: 'png' | 'svg' | 'raster';
+    pngDataURL?: string;
+    svgDataURL?: string;
+    resolution?: number;
+  };
+  emergent_assets?: {
+    visual?: {
+      type: 'png' | 'svg';
+      data?: string;
+      path?: string;
+      resolution?: number;
+    };
+    mesh?: any;
+  };
+  meta: { filePath: string; vertices: number; faces: number; animations: number; textures: string[] };
+}
 
 async function withGltfExporterNoiseSuppressed<T>(fn: () => Promise<T>): Promise<T> {
   const originalWarn = console.warn;
@@ -91,8 +111,35 @@ function synthesizeFrom15Contract(seed: ChSeed): ChArtifact {
     bufferViews: [{ byteLength: verts * 12 }, { byteLength: faces * 6 }],
     buffers: [{ byteLength: verts * 12 + faces * 6 }],
   });
+  // Fallback also provides figurative SVG for UI visual (semantic warrior-like silhouette, det from hash).
+  let svgDataURL: string | undefined;
+  try {
+    const rng = rngFromHash(seed.$hash ?? 'character-fb');
+    const hue = Math.floor(rng.nextF64() * 360);
+    const skin = `hsl(${hue}, 40%, 60%)`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+      <rect width="256" height="256" fill="#111"/>
+      <ellipse cx="128" cy="90" rx="36" ry="40" fill="${skin}"/>
+      <rect x="92" y="118" width="72" height="86" rx="6" fill="#444"/>
+      <circle cx="112" cy="80" r="5" fill="#111"/>
+      <circle cx="144" cy="80" r="5" fill="#111"/>
+    </svg>`;
+    svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+  } catch {}
+
   return {
     gltf,
+    svgDataURL,
+    visual: {
+      type: 'svg',
+      svgDataURL,
+    },
+    emergent_assets: {
+      visual: svgDataURL ? {
+        type: 'svg',
+        data: svgDataURL,
+      } : undefined,
+    },
     meta: {
       filePath: `${art.id}.gltf`,
       vertices: verts,
@@ -109,8 +156,53 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
     const out = path.join(dir, 'character.gltf');
     const r = await withGltfExporterNoiseSuppressed(() => generateCharacterV3(seed as any, out));
     const gltf = await fs.readFile(r.filePath, 'utf8');
+
+    // Attach UI-consumable visual for immediate Studio preview (figurative via texture albedo or appearance).
+    // Use a produced texture PNG if available (deterministic from generator canvas).
+    let pngDataURL: string | undefined;
+    const texPaths: string[] = (r.textures ?? []).filter((p: string) => typeof p === 'string' && p.endsWith('.png'));
+    if (texPaths.length > 0) {
+      try {
+        const buf = await fs.readFile(texPaths[0]);
+        pngDataURL = `data:image/png;base64,${buf.toString('base64')}`;
+      } catch { /* best effort */ }
+    }
+
+    let svgDataURL: string | undefined;
+    // Provide a minimal deterministic figurative SVG silhouette for warrior-style / no-texture cases (semantic over pure abstract).
+    // This ensures 2D viewport has something nice even in fallback or low-tex runs.
+    try {
+      const rng = rngFromHash(seed.$hash ?? 'character-svg');
+      const hue = Math.floor(rng.nextF64() * 360);
+      const skin = `hsl(${hue}, 45%, 65%)`;
+      const armor = `hsl(${(hue + 40) % 360}, 30%, 40%)`;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+        <rect width="256" height="256" fill="#111"/>
+        <ellipse cx="128" cy="90" rx="38" ry="42" fill="${skin}"/>
+        <rect x="90" y="120" width="76" height="90" rx="8" fill="${armor}"/>
+        <rect x="100" y="135" width="56" height="12" fill="#222"/>
+        <circle cx="115" cy="82" r="6" fill="#111"/>
+        <circle cx="141" cy="82" r="6" fill="#111"/>
+      </svg>`;
+      svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+    } catch {}
+
     return {
       gltf,
+      pngDataURL,
+      svgDataURL,
+      visual: {
+        type: pngDataURL ? 'raster' : (svgDataURL ? 'svg' : 'raster'),
+        pngDataURL,
+        svgDataURL,
+      },
+      emergent_assets: {
+        visual: (pngDataURL || svgDataURL) ? {
+          type: pngDataURL ? 'png' : 'svg',
+          data: pngDataURL || svgDataURL,
+          path: texPaths[0] || undefined,
+        } : undefined,
+      },
       meta: { filePath: r.filePath, vertices: r.vertices, faces: r.faces, animations: r.animations ?? 0, textures: r.textures ?? [] },
     };
   } catch (e: unknown) {

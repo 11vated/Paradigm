@@ -14,6 +14,7 @@ export {
 export {
   ENGINES, growSeed, growSeedSync, getAllDomains
 } from './engines.js';
+export { deriveCleanTitle } from './types';
 export { buildC2PAManifest, verifyC2PAManifest, encodeC2PAManifest } from './c2pa-manifest.js';
 export type { C2PAClaim } from './c2pa-manifest.js';
 export {

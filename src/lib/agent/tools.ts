@@ -11,6 +11,7 @@
  */
 
 import crypto from 'crypto';
+import { deriveCleanTitle } from '../kernel/types';
 import {
   Xoshiro256Star as Xoshiro256StarStar, rngFromHash,
   GENE_TYPES, validateGene, mutateGene, crossoverGene, distanceGene, getGeneTypeInfo,
@@ -70,10 +71,11 @@ function makeSeed(domain: string, name: string, genes: Record<string, any>, pare
   const genesStr = JSON.stringify(genes);
   const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
   const rng = rngFromHash(deterministicSalt(name, domain, genesHash));
+  const cleanName = deriveCleanTitle(name, genesHash);
   return {
     id: nextSeedId(),
     $domain: domain,
-    $name: name,
+    $name: cleanName,
     $lineage: { generation: parentHashes.length > 0 ? 1 : 0, operation: 'agent_tool', parents: parentHashes },
     $hash: genesHash,
     $fitness: { overall: 0.3 + rng.nextF64() * 0.4 },
@@ -95,7 +97,7 @@ const createSeedTool: AgentTool = {
   },
   execute: async (params, ctx) => {
     const domain = params.domain || 'character';
-    const name = params.name || `New ${domain} seed`;
+    const name = deriveCleanTitle(params.name || `New ${domain} seed`, undefined);
     const genes = params.genes || {};
 
     // Validate all genes

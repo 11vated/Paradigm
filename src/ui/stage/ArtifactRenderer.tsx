@@ -212,7 +212,8 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     );
   }
 
-  // ─── METADATA: minimal info card for engines that return only metadata ──
+  // ─── METADATA: clean summary (no raw JSON dump in normal flow; debug only via toggle if needed)
+  // Per UX doctrine: hide raw dumps from normal users; show beautiful/ loading state.
   return (
     <div className="p-artifact p-artifact-metadata">
       <div className="p-artifact-metadata-glyph">◇</div>
@@ -221,15 +222,10 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
         {artifact.type ?? artifact.domain ?? 'metadata'}
         {typeof artifact.generation === 'number' ? ` · gen ${artifact.generation}` : ''}
       </div>
-      <pre className="p-artifact-metadata-json">
-        {JSON.stringify(
-          Object.fromEntries(
-            Object.entries(artifact).filter(([k]) => !k.startsWith('_') && k !== 'render_hints'),
-          ),
-          null,
-          2,
-        )}
-      </pre>
+      <div className="p-artifact-metadata-hint">
+        Rich visual data not attached for this domain (or still generating). Use Atelier for gene tools or switch modes. Advanced raw view available in debug.
+      </div>
+      {/* No full JSON pre by default - prevents "raw Crucible dumps" in normal UX */}
     </div>
   );
 };

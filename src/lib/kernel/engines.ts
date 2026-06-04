@@ -17,6 +17,7 @@ import { createPipeline, getDomainConfig } from './pipeline';
 import { getGenerationQuality, type GenerationQuality } from './generation-quality';
 import { dispatch as dispatchSeed, DOMAIN_MAP } from './engine-dispatcher';
 import { buildC2PAManifest } from './c2pa-manifest';
+import { deriveCleanTitle } from './types';
 
 export type { Seed, Artifact, GeneratorOutput };
 
@@ -149,7 +150,7 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
     const artifact: Artifact = {
       ...generatorOutput,
       type: domain,
-      name: seed.$name ?? 'Artifact',
+      name: deriveCleanTitle(seed.$name || seed.$intent || (generatorOutput as any)?.name, seed.$hash ?? seed.hash),
       domain,
       seed_hash: seed.$hash ?? '',
       generation: seed.$lineage?.generation ?? 0,

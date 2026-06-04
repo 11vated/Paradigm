@@ -1,6 +1,7 @@
 import { GeneType, GeneSchema, GeneMetadata, GeneValue, GENE_TYPE_DEFINITIONS } from './types';
 import { nextDeterministicFloat, type LegacyFloatRng } from '../lib/kernel/rng-contract.js';
 import { distanceGene } from '../lib/kernel/gene_system.js';
+import { deriveCleanTitle } from '../lib/kernel/types';
 import crypto from 'crypto';
 import { signData, verifySignature } from '../lib/sovereignty/signing.js';
 
@@ -96,7 +97,7 @@ export class UniversalSeed {
   private createDefaultMetadata(): SeedMetadata {
     return {
       id: this.id,
-      name: 'Untitled Seed',
+      name: deriveCleanTitle((this as any).intent || (this as any).$intent || undefined, this.hash || this.id),
       version: '1.0.0',
       created: DEFAULT_SEED_TIMESTAMP,
       updated: DEFAULT_SEED_TIMESTAMP,

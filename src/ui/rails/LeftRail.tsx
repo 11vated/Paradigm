@@ -249,6 +249,12 @@ export const LeftRail: React.FC<{
               <div className="p-active-seed-pin-body">
                 <div className="p-glyph-frame" data-breathing="true">
                   <SeedGlyph hash={seed.hash} domain={seed.domain} size={56} />
+                  {/* Small live thumbnail if rich visual data attached (from QC attachment slices) */}
+                  {seed.raw && (seed.raw as any).svg ? (
+                    <div className="p-thumb-inline" dangerouslySetInnerHTML={{ __html: (seed.raw as any).svg }} />
+                  ) : seed.raw && (seed.raw as any).pngDataURL ? (
+                    <img className="p-thumb-inline" src={(seed.raw as any).pngDataURL} alt="preview" />
+                  ) : null}
                 </div>
                 <div className="p-active-seed-pin-meta">
                   <div className="p-active-seed-pin-name">{seed.name}</div>
