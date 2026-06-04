@@ -13,15 +13,42 @@ import { registerContract, type QualityContract, type Stratum } from '../quality
 import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 
 interface PhysicsSeed { $hash?: string; $name?: string; genes?: any; }
-interface PhysicsArtifact { config: string; size: number; }
+interface PhysicsArtifact {
+  config: string;
+  size: number;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'sim';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface PhysicsInverted { kind: string; bytes: number; }
 
 async function synth(seed: PhysicsSeed): Promise<PhysicsArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'physics-q-'));
   try {
-    const r = await withKernelClock(0, () => generatePhysics(seed as any, dir));
-    const config = await fs.readFile(r.jsonPath, 'utf8');
-    return { config, size: 0 /* configSize removed */ };
+    const r = await withKernelClock(0, () => generatePhysics(seed as any, dir)) as { jsonPath?: string; htmlPath?: string; [k: string]: unknown };
+    const jsonPath = r.jsonPath;
+    const htmlPath = r.htmlPath;
+    const config = jsonPath ? await fs.readFile(jsonPath, 'utf8') : '';
+    const previewData = htmlPath ? await fs.readFile(htmlPath, 'utf8').catch(() => config) : config;
+    const primaryPath = htmlPath || jsonPath;
+    return {
+      config,
+      size: config.length,
+      previewData,
+      visual: { type: htmlPath ? 'html' : 'json', previewData },
+      emergent_assets: primaryPath ? {
+        preview: { type: htmlPath ? 'html' : 'json', data: previewData, path: primaryPath }
+      } : undefined
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

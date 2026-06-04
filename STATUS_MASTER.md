@@ -198,6 +198,15 @@ Per master prompt + plan + 13_:
 - Next highest-leverage (to keep going until true 100% no caveats): more breadth (ecosystem/physics/narrative full rich dataURL if missing + more functors), inverse full GA/usability + 20-output routing + graceful, Studio more (strata bars/HUD visible everywhere, error/loading for all edges, library thumbs for 27), sovereign uniform .gseed embed for all, advanced Phase4 (OS shell recursive verified, fed 2-node real, heroes batch +1M foundation stress, golden expansion, GSPL v∞). After each: 4 verifs + manual make/Studio/Agent + doc update + push.
 - Success when: new user any intent (incl shader/particle/ecosystem etc) → beautiful named ownable live visual/preview <60s in primary Atelier; all 27 robust; all pipelines; advanced surfaces; 3 must-be-true full; verifs clean; matches 13_ vision exactly (no major caveats).
 
+This turn (continue/connue): 
+- Re-read 13_ FIRST.
+- Extended physics-contract with rich previewData/visual/emergent (html interactive sim + json config, using generator's htmlPath/jsonPath; smallest pattern match to particle/ecosystem).
+- Studio polish: added visible strata % pills/badges (p-strata-pill in active seed pin + p-strata-mini in library cards) using live strataCompliance from QC artifacts (makes 9-strata more visible in normal flow per doctrine UX + lived).
+- Verifs: type 0, det 0, QC 13/13 (physics now richer); manual `paradigm make "rigid body physics..." --domain physics --verify` executed with strata conf, full pack claims, <60s.
+- Rich count: now 15+ (physics + prior 14).
+- Docs + git: updated continuation log here + README; committed/pushed (pure language).
+- Assessment same: kernel never lies (green), operator owns (advanced), universal ~15/27 progress (more sims now have immediate UI preview data for Atelier/CLI). Strata now more visible in rail. CONTINUE.
+
 Continue until done. Verif last. Read 13_ always.
 
 ### Priority 1: Server Modular Split

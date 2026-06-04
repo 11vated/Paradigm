@@ -258,6 +258,8 @@ export const LeftRail: React.FC<{
                     <span className="p-thumb-inline" title="audio preview">🎵</span>
                   ) : seed.raw && ((seed.raw as any).htmlData || (seed.raw as any).gltf) ? (
                     <span className="p-thumb-inline" title="interactive preview">▶</span>
+                  ) : seed.raw && (seed.raw as any).previewData && ((seed.raw as any).visual?.type === 'code' || (seed.raw as any).visual?.type === 'glsl') ? (
+                    <span className="p-thumb-inline" title="code preview">{'</>'}</span>
                   ) : null}
                 </div>
                 <div className="p-active-seed-pin-meta">
@@ -271,6 +273,11 @@ export const LeftRail: React.FC<{
                         title="Contract conformance score"
                       >
                         {seed.contractScore.toFixed(2)}
+                      </span>
+                    )}
+                    {typeof (seed as any)?.raw?.strataCompliance === 'number' && (
+                      <span className="p-strata-pill" title="9-strata conformance (live from QC rate/manifest)">
+                        strata { (Number( (seed as any).raw.strataCompliance ) * 100).toFixed(0) }%
                       </span>
                     )}
                   </div>
@@ -404,6 +411,9 @@ export const LeftRail: React.FC<{
                         {s.domain}
                       </span>
                       <span>{shortHash(s.hash)}</span>
+                      {typeof ((s as any)?.raw?.strataCompliance) === 'number' && (
+                        <span className="p-strata-mini" title="strata">{(Number((s as any).raw.strataCompliance) * 100).toFixed(0)}%</span>
+                      )}
                     </span>
                   </div>
                 </button>
