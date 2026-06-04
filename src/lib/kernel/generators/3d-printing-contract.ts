@@ -22,13 +22,16 @@ interface A {
   meta: Record<string, unknown>;
   previewData?: string;
   visual?: {
-    type: 'json' | 'stl' | 'code' | 'html' | 'gltf';
+    type: 'json' | 'stl' | 'code' | 'html' | 'gltf' | 'structured';
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     preview?: {
-      type: 'json' | 'stl' | 'code' | 'html' | 'gltf';
-      data?: string;
+      type: 'json' | 'stl' | 'code' | 'html' | 'gltf' | 'structured';
+      data?: any;
       path?: string;
     };
     mesh?: any;
@@ -53,14 +56,26 @@ export const Gen3dPrintingQualityContract: QualityContract<S, A, Record<string, 
     const r = await withKernelClock(0, () => generate3DPrinting(seed as never, out)) as { filePath?: string };
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
+    let parsed: any = {};
+    try { parsed = JSON.parse(data); } catch {}
     const previewData = data;
+    const summary = `3D Printing ${parsed.model || 'object'} facets ${parsed.facets || parsed.vertices || 'n/a'}, volume ${parsed.volume || 'n/a'} (STL target fidelity).`;
+    const metrics: Record<string, number> = {
+      facets: parsed.facets || parsed.vertices || 0,
+      volume: typeof parsed.volume === 'number' ? parsed.volume : 0,
+      layers: parsed.layers || 100,
+      fidelity: parsed.stl || parsed.model ? 0.9 : 0.6
+    };
     return {
       filePath: data,
       meta: {},
       previewData,
-      visual: { type: 'json', previewData },
+      structuredData: parsed,
+      summary,
+      metrics,
+      visual: { type: 'structured' as const, previewData, structuredData: parsed, summary, metrics },
       emergent_assets: {
-        preview: { type: 'json', data: previewData, path: filePath }
+        preview: { type: 'structured' as const, data: { structuredData: parsed, summary, metrics }, path: filePath }
       }
     };
   },

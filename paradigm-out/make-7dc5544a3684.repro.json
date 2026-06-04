@@ -1,0 +1,32 @@
+{
+  "intent": "ethereal glsl particle field with high fidelity structured data --domain particle",
+  "memoryHash": "direct-pipeline-v1-strata-2aa0e55cf4a10f4e",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Field",
+    "Form",
+    "Motion"
+  ],
+  "strataSummary": [
+    "Field",
+    "Form",
+    "Motion"
+  ],
+  "strataHash": "2aa0e55cf4a10f4e",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Field",
+        "Form",
+        "Motion"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:39:55.428Z"
+}

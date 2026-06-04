@@ -1,0 +1,29 @@
+{
+  "intent": "fierce warrior with transformation abilities in a tidal quantum world",
+  "memoryHash": "direct-pipeline-v1-strata-c4efd2bbd3b0800c",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Form",
+    "World"
+  ],
+  "strataSummary": [
+    "Form",
+    "World"
+  ],
+  "strataHash": "c4efd2bbd3b0800c",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Form",
+        "World"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:32:19.585Z"
+}

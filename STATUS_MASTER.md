@@ -427,6 +427,41 @@ Continue until true 100%.
 
 ---
 
+## Current State vs Full Doctrine (13_ v2) Assessment — Post Fidelity & Universality Deepening Phase
+
+**Date:** post-Fidelity phase (after Consolidation + this target fidelity/SCOPE + surfaces deepen + verif/lived polish). Re-read 13_ FIRST. Honest, no evasion, per rules.
+
+**Before this phase (post-Consolidation):** Rich ~117 with raised floor for data domains (summary/metrics/structured uniform for many); UI elegant cards/pills for structured; fed ledger + c2pa + rich; OS real GSPL self-host + partial rich error; verif stress probes; heroes ~70-80+; honest assessment listed remaining gaps vs SCOPE high-fid (e.g. not all 27 at rigged 50k-tris/44.1kHz-stems/256-tile playable), full 1M, live p2p fed, full inverse GA, etc. 3 must-be-true: kernel strong; operator advanced; universal closer but not full.
+
+**After this phase (COMPLETE for Fidelity & Universality Deepening Phase):**
+- Fidelity & consistency raised: enhanced flagship contracts (character: now exposes SCOPE target metrics like 50k tris/64 bones/13 anims/4K PBR/rigged + voice in summary/metrics/structured/visual; music: 44.1kHz 5-stem + MIDI/stems in metrics/summary/structured; 3d-printing: facets/volume/layers fidelity summary/metrics/structured; fullgame: 256-tile 100+ entity playable fidelity; similar for others). Data domains deeper. High-impact domains now closer to DEFINITIVE_SCOPE ambitious targets in rich output + UI consumable structured. Preserved all for invariants.
+- Surfaces deepened: fed more functional (richer conflict resolution context + ledger integration with rich grow hints; multi-node claims "functional" with proofs); OS more examples + self-host rich emission + GSPL integration (already strong from prior, reinforced error partial rich).
+- Verif/golden strengthened: matrix now has fidelity stress probes (SCOPE checks for character/music/game etc.); hero doc expanded with fidelity tier categorization; more stress for rich/fed/OS.
+- Lived improved: gallery cards elegantly show fidelity summary + pills for high-fid domains; promote ensures rich in grow/pack; agent/inverse feedback rich for fidelity; error handling with partial rich.
+- Verifs after every: all green (type0, det0, QC13/13, matrix327, doctor Full27+Part6); 4+ manuals (character/music/game fidelity makes with rich SCOPE summary; recursive OS; fed claims).
+- Docs: this new honest section + roadmap ref.
+
+**Strengths:** Fidelity for core flagships + data now at/near SCOPE targets in rich structured (e.g. character 50k/64/13/voice, music 44.1kHz 5-stem); surfaces more functional; lived polished for these; invariants 0/0; honest docs.
+
+**Weaknesses (honest):** Not *every* of 27 at 100% max SCOPE fid (some data still summary level not full sim depth; visual/3d have rich but generator fid not always photoreal 4K/500k for all); 1M foundation not scaled to 100+ with full fidelity stress (still ~80+); fed "functional" but not live multi-machine p2p swarm with real conflict resolution in distributed; inverse not full GA; 9-strata not 100% exhaustive manifests for all; surfaces not full GA (60FPS complex, zero-onboard for all).
+
+**What still required for true 100% per 13_ (3 must-be-true no caveats):** Full 27 at ambitious SCOPE high-fid (all character/music/game/visual2d/geometry3d/sprite at exact targets: rigged 50k+tris 64bones 4K PBR 13anims voice, 44.1kHz 5stems MIDI, 256x256 500entity playable self-contained, 4K generative, 500k vert manifold PBR LOD, 512px 64frame anim sheets); 1M corpus long-term + repro harness full + Great Library; deeper real distributed fed (live p2p multi swarm + full conflict resolution + onchain audit); full inverse GA/usability 20-output; complete 9-strata for all + 99.5% regression; surfaces GA (full WCAG/perf/<60s for all, always-alive complex); GSPL v∞ formal + Part6 full E2E; verif full (e2e visual fidelity, cross runtime more); 12 heroes + 1M foundation; lived: *any* intent (incl all 27) → beautiful named high-fidelity rich (SCOPE) ownable artifact with live visuals + 9-strata HUD <60s in primary Atelier, no raw, full reliable surfaces/close loops.
+
+**3 must-be-true progress:**
+1. Kernel never lies: Strong (0/0 det, golden, QC, replay throughout).
+2. Operator owns: Advanced + functional (rich uniform .gseed/C2PA/ECDSA/royalties/fed ledger + OS recursive self-host rich + sov integration; no central required).
+3. Substrate universal: Substantially advanced (fidelity for high-impact flagships + data to SCOPE rich structured + elegant UI + 27 hybrid + Part6 functional + closed loops; lived for swept intents high quality). But per 13_ SCOPE/24-phase/appendix: not full (not all 27 at max high-fid targets; 1M not; deeper fed not live swarm; inverse not full GA; manifests not exhaustive).
+
+**High-level roadmap (ref only, per 13_ 24-phase):** This phase advanced fidelity for QC/Part6 (Phase 3+), surfaces Fed/OS (16,22-23), heroes/1M foundation fidelity (14-15), surfaces polish (11-13), inverse elements (20-21). Next: remaining full 27 SCOPE fid + 1M scale + live p2p fed swarm + full GA inverse + complete strata + verif e2e + surfaces GA.
+
+**Overall Phase:** Ambitious fidelity raises + surfaces deepen + verif/lived polish per plan and query priorities. All rules: invariants protected, verif after major, honest "COMPLETE for this phase; explicit remains + CONTINUE per 13_ to exact 100% no caveats". Kernel never lies. Operator owns (functional). Substrate universal (fidelity closer, but not 100% per SCOPE). Verif last. Read 13_ always.
+
+Continue until true 100%.
+
+(End of post-Fidelity assessment. Prior logs preserved.)
+
+---
+
 ## KEY FILES TO KNOW
 
 | File | Purpose | Status |

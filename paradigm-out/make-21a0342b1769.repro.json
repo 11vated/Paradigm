@@ -1,0 +1,32 @@
+{
+  "intent": "fierce warrior with transformation abilities --domain character",
+  "memoryHash": "direct-pipeline-v1-strata-c4c6f9843a25c156",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Form",
+    "Mind",
+    "Story"
+  ],
+  "strataSummary": [
+    "Form",
+    "Mind",
+    "Story"
+  ],
+  "strataHash": "c4c6f9843a25c156",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Form",
+        "Mind",
+        "Story"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-04T05:37:34.170Z"
+}

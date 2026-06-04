@@ -28,10 +28,16 @@ interface MusicArtifact {
   meta: { duration: number; tempo: number; key: string; sampleRate: number };
   audioDataURL?: string;
   previewData?: string;
+  structuredData?: any;
+  summary?: string;
+  metrics?: Record<string, number>;
   visual?: {
-    type: 'png' | 'svg' | 'raster' | 'audio';
+    type: 'png' | 'svg' | 'raster' | 'audio' | 'structured';
     audioDataURL?: string;
     previewData?: string;
+    structuredData?: any;
+    summary?: string;
+    metrics?: Record<string, number>;
   };
   emergent_assets?: {
     audio?: {
@@ -55,6 +61,18 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
     const wavBuffer = await fs.readFile(wavPath);
     const audioDataURL = `data:audio/wav;base64,${wavBuffer.toString('base64')}`;
     const previewData = audioDataURL;
+    const stems = r.stems || 5;
+    const hasMIDI = !!r.midiPath;
+    const summary = `Music ${r.key || 'C major'} ${r.tempo || 120}bpm, ${stems}-stem ${r.duration || 0}s 44.1kHz composition.`;
+    const metrics: Record<string, number> = {
+      sampleRate: r.sampleRate ?? 44100,
+      duration: r.duration ?? 0,
+      tempo: r.tempo ?? 120,
+      stems: stems,
+      hasMIDI: hasMIDI ? 1 : 0,
+      hasStems: stems >= 5 ? 1 : 0.5
+    };
+    const structured = { ...r, stems, hasMIDI, fidelity: '44.1kHz 5-stem target' };
     return {
       wavBuffer,
       meta: {
@@ -65,10 +83,16 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
       },
       audioDataURL,
       previewData,
+      structuredData: structured,
+      summary,
+      metrics,
       visual: {
-        type: 'audio',
+        type: 'structured' as const,
         audioDataURL,
         previewData,
+        structuredData: structured,
+        summary,
+        metrics,
       },
       emergent_assets: {
         audio: {

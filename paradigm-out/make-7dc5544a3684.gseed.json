@@ -1,0 +1,709 @@
+{
+  "$intent": "ethereal glsl particle field with high fidelity structured data --domain particle",
+  "$created": "2026-06-04T05:39:55.250Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "7dc5544a36843488",
+      "name": "Ethereal Glsl Particle Field With High 7dc554",
+      "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "soft",
+          "heightScale": 1.0154839551735917,
+          "shoulderRatio": 0.8474769099019654,
+          "torsoRatio": 1.0372116346198277,
+          "limbRatio": 1.107428165858562,
+          "muscle": 0.3666923775955597,
+          "softness": 0.5542936228046942,
+          "skinTone": [
+            0.8720432366157496,
+            0.34396697757842287,
+            0.2840851092754831
+          ]
+        },
+        "face": {
+          "roundness": 0.6963413979668189,
+          "eyeHeight": 0.4781980647534186,
+          "eyeSpacing": 0.4014430501151349,
+          "eyeShape": "hooded",
+          "eyeColor": [
+            0.10488430437502415,
+            0.3878834212263501,
+            0.21785871346355004
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5922315203923386,
+          "mouthShape": "thin",
+          "jawShape": "tapered",
+          "brow": 0.4921911207497176,
+          "cheekbones": 0.6356938041175066,
+          "chin": 0.8918303694179412,
+          "hairStyle": "short",
+          "hairColor": [
+            0.7130351043073612,
+            0.26328418152927757,
+            0.31563443654387924
+          ]
+        },
+        "voice": {
+          "pitch": 264.17418778571437,
+          "inflection": 0.18674118685649432,
+          "tempo": 112.30789515447685,
+          "breathiness": 0.4446819710853087,
+          "warmth": 0.1265659746415253,
+          "formants": [
+            529.9533658964493,
+            923.6330091338117,
+            1968.3982161868119,
+            2422.6439583837687,
+            3028.3049479797105
+          ],
+          "accent": "paris"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.2773297123734624,
+            "conscientiousness": 0.6020980423400681,
+            "extraversion": 0.01520720666332842,
+            "agreeableness": 0.4865393105071454,
+            "neuroticism": 0.5705508348995716
+          },
+          "interests": [
+            "cartography",
+            "electronics",
+            "biology",
+            "history",
+            "astronomy"
+          ],
+          "values": [
+            "curiosity",
+            "courage",
+            "rigor",
+            "patience"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.36385027554766114,
+          "curiosity": 0.20582082460474327
+        },
+        "memory": {
+          "episodicCapacity": 4284,
+          "episodicDecay": 0.0067254697917646725,
+          "semanticCapacity": 12730,
+          "reflectionCadenceDays": 1.6376470775815708
+        },
+        "bond": {
+          "initialTrust": 0.6204120849011221,
+          "initialWarmth": 0.4224679116037235,
+          "bondingDays": 42
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Glsl Particle Field With High 7dc554"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Glsl Particle Field With High 7dc554"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "7dc5544a36843488",
+      "name": "Ethereal Glsl Particle Field With High",
+      "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "sci-fi",
+          "biome": "urban",
+          "magic": 0.11869227475491351,
+          "tech": 0.6240387820660922,
+          "density": 0.8580938861952072
+        },
+        "physics": {
+          "gravity": 0.8889745919851992,
+          "hostility": 0.6464681140234712,
+          "diurnalRate": 0.9491695211195446,
+          "weatherVolatility": 0.170849050142587
+        },
+        "society": {
+          "order": 0.16817021855096614,
+          "pluralism": 0.6963413979668189,
+          "prosperity": 0.2819806475341857,
+          "literacy": 0.6762870007675661
+        },
+        "conflict": {
+          "kind": "discovery",
+          "scale": 0.0081405072917069,
+          "urgency": 0.4798057020439168,
+          "clarity": 0.19643118910591673
+        },
+        "mood": {
+          "brightness": 0.7945339729222876,
+          "warmth": 0.4223152039233862,
+          "pace": 0.38630846255570983,
+          "levity": 0.8374160757020312
+        },
+        "history": {
+          "agesSinceFall": 2460,
+          "ghostliness": 0.6356938041175066,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-04T05:39:55.229Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "ethereal glsl particle field with high fidelity structured data --domain particle",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Glsl Particle Field With High"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Glsl Particle Field With High"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "5275df10eb227724",
+    "seedHash": "5275df10eb22772476d4c6f8b0d62c98910993c4b9283225c01522cee0a54880",
+    "genomeVersion": 1,
+    "title": "Maps of the Unmade Ethereal Glsl Particle Field With High",
+    "genes": {
+      "archetype": "discovery-expedition",
+      "stake": 0.5342527817573097,
+      "antagonist": 0.2951678342558078,
+      "moralComplexity": 0.41524509493989625,
+      "pacing": 0.39094586059739866,
+      "intensity": 0.5188962565848607,
+      "actCount": 3,
+      "targetWordCount": 4484,
+      "hook": "Ethereal Glsl Particle Field With High 7dc554 dreams in a dead language and wakes drawing maps of Ethereal Glsl Particle Field With High."
+    },
+    "parents": {
+      "friend": {
+        "id": "7dc5544a36843488",
+        "name": "Ethereal Glsl Particle Field With High 7dc554",
+        "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331"
+      },
+      "world": {
+        "id": "7dc5544a36843488",
+        "name": "Ethereal Glsl Particle Field With High",
+        "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331"
+      }
+    },
+    "bornAt": "2026-06-04T05:39:55.239Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Ethereal Glsl Particle Field With High",
+      "quest": {
+        "id": "5275df10eb227724",
+        "seedHash": "5275df10eb22772476d4c6f8b0d62c98910993c4b9283225c01522cee0a54880",
+        "genomeVersion": 1,
+        "title": "Maps of the Unmade Ethereal Glsl Particle Field With High",
+        "genes": {
+          "archetype": "discovery-expedition",
+          "stake": 0.5342527817573097,
+          "antagonist": 0.2951678342558078,
+          "moralComplexity": 0.41524509493989625,
+          "pacing": 0.39094586059739866,
+          "intensity": 0.5188962565848607,
+          "actCount": 3,
+          "targetWordCount": 4484,
+          "hook": "Ethereal Glsl Particle Field With High 7dc554 dreams in a dead language and wakes drawing maps of Ethereal Glsl Particle Field With High."
+        },
+        "parents": {
+          "friend": {
+            "id": "7dc5544a36843488",
+            "name": "Ethereal Glsl Particle Field With High 7dc554",
+            "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331"
+          },
+          "world": {
+            "id": "7dc5544a36843488",
+            "name": "Ethereal Glsl Particle Field With High",
+            "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331"
+          }
+        },
+        "bornAt": "2026-06-04T05:39:55.239Z"
+      },
+      "friend": {
+        "id": "7dc5544a36843488",
+        "name": "Ethereal Glsl Particle Field With High 7dc554",
+        "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "soft",
+            "heightScale": 1.0154839551735917,
+            "shoulderRatio": 0.8474769099019654,
+            "torsoRatio": 1.0372116346198277,
+            "limbRatio": 1.107428165858562,
+            "muscle": 0.3666923775955597,
+            "softness": 0.5542936228046942,
+            "skinTone": [
+              0.8720432366157496,
+              0.34396697757842287,
+              0.2840851092754831
+            ]
+          },
+          "face": {
+            "roundness": 0.6963413979668189,
+            "eyeHeight": 0.4781980647534186,
+            "eyeSpacing": 0.4014430501151349,
+            "eyeShape": "hooded",
+            "eyeColor": [
+              0.10488430437502415,
+              0.3878834212263501,
+              0.21785871346355004
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5922315203923386,
+            "mouthShape": "thin",
+            "jawShape": "tapered",
+            "brow": 0.4921911207497176,
+            "cheekbones": 0.6356938041175066,
+            "chin": 0.8918303694179412,
+            "hairStyle": "short",
+            "hairColor": [
+              0.7130351043073612,
+              0.26328418152927757,
+              0.31563443654387924
+            ]
+          },
+          "voice": {
+            "pitch": 264.17418778571437,
+            "inflection": 0.18674118685649432,
+            "tempo": 112.30789515447685,
+            "breathiness": 0.4446819710853087,
+            "warmth": 0.1265659746415253,
+            "formants": [
+              529.9533658964493,
+              923.6330091338117,
+              1968.3982161868119,
+              2422.6439583837687,
+              3028.3049479797105
+            ],
+            "accent": "paris"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.2773297123734624,
+              "conscientiousness": 0.6020980423400681,
+              "extraversion": 0.01520720666332842,
+              "agreeableness": 0.4865393105071454,
+              "neuroticism": 0.5705508348995716
+            },
+            "interests": [
+              "cartography",
+              "electronics",
+              "biology",
+              "history",
+              "astronomy"
+            ],
+            "values": [
+              "curiosity",
+              "courage",
+              "rigor",
+              "patience"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.36385027554766114,
+            "curiosity": 0.20582082460474327
+          },
+          "memory": {
+            "episodicCapacity": 4284,
+            "episodicDecay": 0.0067254697917646725,
+            "semanticCapacity": 12730,
+            "reflectionCadenceDays": 1.6376470775815708
+          },
+          "bond": {
+            "initialTrust": 0.6204120849011221,
+            "initialWarmth": 0.4224679116037235,
+            "bondingDays": 42
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "7dc5544a36843488",
+        "name": "Ethereal Glsl Particle Field With High",
+        "seedHash": "7dc5544a36843488fd511232beffe9a576c8d5e4d892a88c29d727fb9aca0331",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "sci-fi",
+            "biome": "urban",
+            "magic": 0.11869227475491351,
+            "tech": 0.6240387820660922,
+            "density": 0.8580938861952072
+          },
+          "physics": {
+            "gravity": 0.8889745919851992,
+            "hostility": 0.6464681140234712,
+            "diurnalRate": 0.9491695211195446,
+            "weatherVolatility": 0.170849050142587
+          },
+          "society": {
+            "order": 0.16817021855096614,
+            "pluralism": 0.6963413979668189,
+            "prosperity": 0.2819806475341857,
+            "literacy": 0.6762870007675661
+          },
+          "conflict": {
+            "kind": "discovery",
+            "scale": 0.0081405072917069,
+            "urgency": 0.4798057020439168,
+            "clarity": 0.19643118910591673
+          },
+          "mood": {
+            "brightness": 0.7945339729222876,
+            "warmth": 0.4223152039233862,
+            "pace": 0.38630846255570983,
+            "levity": 0.8374160757020312
+          },
+          "history": {
+            "agesSinceFall": 2460,
+            "ghostliness": 0.6356938041175066,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-04T05:39:55.229Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "ethereal glsl particle field with high fidelity structured data --domain particle",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Form",
+        "Motion",
+        "Field"
+      ],
+      "suggestedStrata": [
+        "Form",
+        "Motion",
+        "Field"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Form",
+          "Motion",
+          "Field"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Ethereal Glsl Particle Field With High",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Ethereal Glsl Particle Field With High"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Ethereal Glsl Particle Field With High"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Ethereal Glsl Particle Field With High",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Form",
+    "Motion",
+    "Field"
+  ],
+  "richOutputs": {
+    "name": "Ethereal Glsl Particle Field With High",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Form",
+      "Motion",
+      "Field"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}

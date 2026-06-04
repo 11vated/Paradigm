@@ -1,0 +1,705 @@
+{
+  "$intent": "fierce warrior with transformation abilities --domain character",
+  "$created": "2026-06-04T05:37:33.963Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "21a0342b1769bb93",
+      "name": "Fierce Warrior With Transformation Abilities --domain 21a034",
+      "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "tall",
+          "heightScale": 1.218112944717781,
+          "shoulderRatio": 0.9036148125562025,
+          "torsoRatio": 0.9283163200328142,
+          "limbRatio": 0.9911811479666899,
+          "muscle": 0.5434530889914958,
+          "softness": 0.320570364552771,
+          "skinTone": [
+            0.4571115915894633,
+            0.7145224962261412,
+            0.4671125410191514
+          ]
+        },
+        "face": {
+          "roundness": 0.048743317615573156,
+          "eyeHeight": 0.5177742847978996,
+          "eyeSpacing": 0.44619486229428873,
+          "eyeShape": "hooded",
+          "eyeColor": [
+            0.5546753482093362,
+            0.14379478922604752,
+            0.6042724684531091
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5857842146656099,
+          "mouthShape": "wide",
+          "jawShape": "pointed",
+          "brow": 0.9898095899384616,
+          "cheekbones": 0.7756478673576674,
+          "chin": 0.40448725470978353,
+          "hairStyle": "curly",
+          "hairColor": [
+            0.7050120618155604,
+            0.04406061806708463,
+            0.1932905635816827
+          ]
+        },
+        "voice": {
+          "pitch": 208.35094777495848,
+          "inflection": 0.46085302953946083,
+          "tempo": 131.98235505782554,
+          "breathiness": 0.12746368297585475,
+          "warmth": 0.3468948087467163,
+          "formants": [
+            671.9431876605386,
+            1171.1009842083672,
+            2495.788982739143,
+            3071.7402864481764,
+            3839.6753580602203
+          ],
+          "accent": "midwest"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.9964700851583732,
+            "conscientiousness": 0.6963576866532055,
+            "extraversion": 0.8223815406835611,
+            "agreeableness": 0.3065544577119703,
+            "neuroticism": 0.21633398789870606
+          },
+          "interests": [
+            "tea",
+            "dance",
+            "fermentation",
+            "architecture"
+          ],
+          "values": [
+            "restraint",
+            "directness",
+            "irreverence"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.6857728697673635,
+          "curiosity": 0.5825590635133009
+        },
+        "memory": {
+          "episodicCapacity": 4722,
+          "episodicDecay": 0.023712822528554337,
+          "semanticCapacity": 6821,
+          "reflectionCadenceDays": 3.705245735957499
+        },
+        "bond": {
+          "initialTrust": 0.35391368561413616,
+          "initialWarmth": 0.5149077660693671,
+          "bondingDays": 46
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior With Transformation Abilities --domain 21a034"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior With Transformation Abilities --domain 21a034"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "21a0342b1769bb93",
+      "name": "Fierce Warrior With Transformation Abilities --domain",
+      "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "mythic",
+          "biome": "urban",
+          "magic": 0.25903703139050593,
+          "tech": 0.26105440010938064,
+          "density": 0.47060382655563315
+        },
+        "physics": {
+          "gravity": 0.8115102966383194,
+          "hostility": 0.1778518227638548,
+          "diurnalRate": 0.19474834834447874,
+          "weatherVolatility": 0.8445863567748022
+        },
+        "society": {
+          "order": 0.5342250820383028,
+          "pluralism": 0.048743317615573156,
+          "prosperity": 0.6777428479789955,
+          "literacy": 0.9746324152952581
+        },
+        "conflict": {
+          "kind": "discovery",
+          "scale": 0.7577922470155602,
+          "urgency": 0.07299131537674586,
+          "clarity": 0.8404541140885153
+        },
+        "mood": {
+          "brightness": 0.6532987567726223,
+          "warmth": 0.3578421466560988,
+          "pace": 0.7639338650704124,
+          "levity": 0.4848934779715939
+        },
+        "history": {
+          "agesSinceFall": 4949,
+          "ghostliness": 0.7756478673576674,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-04T05:37:33.940Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "fierce warrior with transformation abilities --domain character",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior With Transformation Abilities --domain"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior With Transformation Abilities --domain"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Artifact",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "69fabb83d370e4fb",
+    "seedHash": "69fabb83d370e4fbe3a8f074c3f720e011d01a7108c762cb2051e82b972012ea",
+    "genomeVersion": 1,
+    "title": "Maps of the Unmade Fierce Warrior With Transformation Abilities --domain",
+    "genes": {
+      "archetype": "discovery-expedition",
+      "stake": 0.15899691888992198,
+      "antagonist": 0.8642731282231082,
+      "moralComplexity": 0.273218485243772,
+      "pacing": 0.5798172443809652,
+      "intensity": 0.2378316827983007,
+      "actCount": 5,
+      "targetWordCount": 17075,
+      "hook": "Fierce Warrior With Transformation Abilities --domain 21a034 dreams in a dead language and wakes drawing maps of Fierce Warrior With Transformation Abilities --domain."
+    },
+    "parents": {
+      "friend": {
+        "id": "21a0342b1769bb93",
+        "name": "Fierce Warrior With Transformation Abilities --domain 21a034",
+        "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d"
+      },
+      "world": {
+        "id": "21a0342b1769bb93",
+        "name": "Fierce Warrior With Transformation Abilities --domain",
+        "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d"
+      }
+    },
+    "bornAt": "2026-06-04T05:37:33.950Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Fierce Warrior With Transformation Abilities --domain",
+      "quest": {
+        "id": "69fabb83d370e4fb",
+        "seedHash": "69fabb83d370e4fbe3a8f074c3f720e011d01a7108c762cb2051e82b972012ea",
+        "genomeVersion": 1,
+        "title": "Maps of the Unmade Fierce Warrior With Transformation Abilities --domain",
+        "genes": {
+          "archetype": "discovery-expedition",
+          "stake": 0.15899691888992198,
+          "antagonist": 0.8642731282231082,
+          "moralComplexity": 0.273218485243772,
+          "pacing": 0.5798172443809652,
+          "intensity": 0.2378316827983007,
+          "actCount": 5,
+          "targetWordCount": 17075,
+          "hook": "Fierce Warrior With Transformation Abilities --domain 21a034 dreams in a dead language and wakes drawing maps of Fierce Warrior With Transformation Abilities --domain."
+        },
+        "parents": {
+          "friend": {
+            "id": "21a0342b1769bb93",
+            "name": "Fierce Warrior With Transformation Abilities --domain 21a034",
+            "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d"
+          },
+          "world": {
+            "id": "21a0342b1769bb93",
+            "name": "Fierce Warrior With Transformation Abilities --domain",
+            "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d"
+          }
+        },
+        "bornAt": "2026-06-04T05:37:33.950Z"
+      },
+      "friend": {
+        "id": "21a0342b1769bb93",
+        "name": "Fierce Warrior With Transformation Abilities --domain 21a034",
+        "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "tall",
+            "heightScale": 1.218112944717781,
+            "shoulderRatio": 0.9036148125562025,
+            "torsoRatio": 0.9283163200328142,
+            "limbRatio": 0.9911811479666899,
+            "muscle": 0.5434530889914958,
+            "softness": 0.320570364552771,
+            "skinTone": [
+              0.4571115915894633,
+              0.7145224962261412,
+              0.4671125410191514
+            ]
+          },
+          "face": {
+            "roundness": 0.048743317615573156,
+            "eyeHeight": 0.5177742847978996,
+            "eyeSpacing": 0.44619486229428873,
+            "eyeShape": "hooded",
+            "eyeColor": [
+              0.5546753482093362,
+              0.14379478922604752,
+              0.6042724684531091
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5857842146656099,
+            "mouthShape": "wide",
+            "jawShape": "pointed",
+            "brow": 0.9898095899384616,
+            "cheekbones": 0.7756478673576674,
+            "chin": 0.40448725470978353,
+            "hairStyle": "curly",
+            "hairColor": [
+              0.7050120618155604,
+              0.04406061806708463,
+              0.1932905635816827
+            ]
+          },
+          "voice": {
+            "pitch": 208.35094777495848,
+            "inflection": 0.46085302953946083,
+            "tempo": 131.98235505782554,
+            "breathiness": 0.12746368297585475,
+            "warmth": 0.3468948087467163,
+            "formants": [
+              671.9431876605386,
+              1171.1009842083672,
+              2495.788982739143,
+              3071.7402864481764,
+              3839.6753580602203
+            ],
+            "accent": "midwest"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.9964700851583732,
+              "conscientiousness": 0.6963576866532055,
+              "extraversion": 0.8223815406835611,
+              "agreeableness": 0.3065544577119703,
+              "neuroticism": 0.21633398789870606
+            },
+            "interests": [
+              "tea",
+              "dance",
+              "fermentation",
+              "architecture"
+            ],
+            "values": [
+              "restraint",
+              "directness",
+              "irreverence"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.6857728697673635,
+            "curiosity": 0.5825590635133009
+          },
+          "memory": {
+            "episodicCapacity": 4722,
+            "episodicDecay": 0.023712822528554337,
+            "semanticCapacity": 6821,
+            "reflectionCadenceDays": 3.705245735957499
+          },
+          "bond": {
+            "initialTrust": 0.35391368561413616,
+            "initialWarmth": 0.5149077660693671,
+            "bondingDays": 46
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "21a0342b1769bb93",
+        "name": "Fierce Warrior With Transformation Abilities --domain",
+        "seedHash": "21a0342b1769bb9381e744caa2c555fbcde3726c11dd5425c92bf2a6e91cba0d",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "mythic",
+            "biome": "urban",
+            "magic": 0.25903703139050593,
+            "tech": 0.26105440010938064,
+            "density": 0.47060382655563315
+          },
+          "physics": {
+            "gravity": 0.8115102966383194,
+            "hostility": 0.1778518227638548,
+            "diurnalRate": 0.19474834834447874,
+            "weatherVolatility": 0.8445863567748022
+          },
+          "society": {
+            "order": 0.5342250820383028,
+            "pluralism": 0.048743317615573156,
+            "prosperity": 0.6777428479789955,
+            "literacy": 0.9746324152952581
+          },
+          "conflict": {
+            "kind": "discovery",
+            "scale": 0.7577922470155602,
+            "urgency": 0.07299131537674586,
+            "clarity": 0.8404541140885153
+          },
+          "mood": {
+            "brightness": 0.6532987567726223,
+            "warmth": 0.3578421466560988,
+            "pace": 0.7639338650704124,
+            "levity": 0.4848934779715939
+          },
+          "history": {
+            "agesSinceFall": 4949,
+            "ghostliness": 0.7756478673576674,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-04T05:37:33.940Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "fierce warrior with transformation abilities --domain character",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind",
+        "Form"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind",
+        "Form"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind",
+          "Form"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Fierce Warrior With Transformation Abilities --domain",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior With Transformation Abilities --domain"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior With Transformation Abilities --domain"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          },
+          {
+            "label": "paradigm.artifact.rich",
+            "data": {
+              "name": "Fierce Warrior With Transformation Abilities --domain",
+              "hasRich": false,
+              "modalities": [],
+              "strata": [],
+              "c2pa_embedded": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind",
+    "Form"
+  ],
+  "richOutputs": {
+    "name": "Fierce Warrior With Transformation Abilities --domain",
+    "files": {},
+    "visual": null,
+    "emergent": null,
+    "strata": [
+      "Story",
+      "Mind",
+      "Form"
+    ],
+    "html": null
+  },
+  "meta": {
+    "recursiveGseed": false
+  }
+}
