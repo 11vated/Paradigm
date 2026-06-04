@@ -18,6 +18,12 @@ export interface ActiveSeed {
   generation?: number;
   /** Free-form blob for the kernel; UI never inspects this. */
   raw?: unknown;
+  /** Live 9-strata conformance (0-1 overall + per-stratum) promoted from QC rate / manifest / calculateStratumConformance in grow + ops. Always visible in HUDs. */
+  strata?: {
+    overall: number;
+    perStratum?: Record<string, number>;
+    compliance?: number; // alias for overall
+  };
 }
 
 interface ActiveSeedState {

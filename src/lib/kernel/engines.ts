@@ -176,6 +176,8 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
     if (pick('jsonPath') || pick('json')) richFiles.json = pick('jsonPath') || pick('json');
     if (pick('stlPath') || pick('stl')) richFiles.stl = pick('stlPath') || pick('stl');
     if (pick('gerberPath') || pick('gerber')) richFiles.gerber = pick('gerberPath') || pick('gerber');
+    if (pick('previewData') || pick('codePath')) richFiles.preview = pick('previewData') || pick('codePath');
+    if (pick('storyData') || pick('manuscript')) richFiles.story = pick('storyData') || pick('manuscript');
     if (pick('sdfPath') || pick('sdf')) richFiles.sdf = pick('sdfPath') || pick('sdf');
     if (pick('wasmPath') || pick('wasm')) richFiles.wasm = pick('wasmPath') || pick('wasm');
     (artifact as any).files = richFiles;

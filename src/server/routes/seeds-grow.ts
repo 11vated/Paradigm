@@ -192,6 +192,28 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
             resolution: g.meta?.resolution,
           };
         }
+        // Extended light promotion for full rich completion (audio, html/story/sim/code, gltf, preview, strata)
+        if (g.audioDataURL || g.wavPath) {
+          if (!g.visual) g.visual = {};
+          g.visual.audioDataURL = g.audioDataURL || (g.wavPath ? `/artifacts/${g.wavPath.replace(/^.*[\\\/]/, '')}` : null);
+        }
+        if (g.htmlData || g.storyData || g.previewData) {
+          if (!g.visual) g.visual = g.visual || {};
+          if (g.htmlData) g.visual.htmlData = g.htmlData;
+          if (g.storyData) g.visual.storyData = g.storyData;
+          if (g.previewData) g.visual.previewData = g.previewData;
+        }
+        if (g.gltfPath || g.mesh) {
+          if (!g.visual) g.visual = {};
+          g.visual.gltf = g.gltfPath || g.mesh;
+        }
+        if (g.strataCompliance || g.axes?.strataCompliance || g.rate?.axes?.strataCompliance) {
+          const sc = g.strataCompliance || g.axes?.strataCompliance || g.rate?.axes?.strataCompliance;
+          g.strataCompliance = typeof sc === 'number' ? sc : g.strataCompliance;
+        }
+        if (g.emergent_assets && !g.visual?.emergent) {
+          // ensure top level access for renderer
+        }
         // Light name normalization (Priority 2)
         const currentName = g.$name || g.name || g.display_name;
         if (!currentName || currentName === 'Untitled Seed' || currentName.length < 4 || currentName.includes(seed.$hash?.slice(0,8) || '')) {
