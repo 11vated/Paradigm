@@ -1,0 +1,35 @@
+{
+  "intent": "3D rigged character: anime canon replica with abilities and particle effects --verify",
+  "memoryHash": "direct-pipeline-v1-strata-ec9c8cbb0f3fa988",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Form",
+    "Mind",
+    "Motion",
+    "Story"
+  ],
+  "strataSummary": [
+    "Form",
+    "Mind",
+    "Motion",
+    "Story"
+  ],
+  "strataHash": "ec9c8cbb0f3fa988",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Form",
+        "Mind",
+        "Motion",
+        "Story"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-03T19:10:15.923Z"
+}

@@ -1,0 +1,44 @@
+{
+  "seed": "swarm of autonomous drones for reforestation and biodiversity monitoring in fragile ecosystems --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-737acc4814c6",
+  "strataScores": {
+    "World": 0.93,
+    "Form": 0.89,
+    "Field": 0.85,
+    "Motion": 0,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "proc_676788025634367",
+    "width": 4096,
+    "height": 4096,
+    "biomeCount": 8,
+    "hasRivers": true,
+    "strataScores": {
+      "World": 0.93,
+      "Form": 0.89,
+      "Field": 0.85,
+      "Motion": 0,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-737acc4814c6-procedural.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 2,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T03:05:11.990Z"
+}

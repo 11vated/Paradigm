@@ -4,6 +4,7 @@
  * Slice 17 of the modular router split.
  */
 import type { Express } from 'express';
+import { deriveCleanTitle } from '../../lib/kernel/types.js'; // for rich named .gseed exports uniform
 
 export interface SeedsSovereigntyDeps {
   seeds: any[];
@@ -49,8 +50,15 @@ export function registerSeedsSovereigntyRoutes(app: Express, deps: SeedsSovereig
     const { seed } = req.body;
     if (!seed) return res.status(400).json({ error: 'seed required' });
     try {
-      const { encodeGseed, CURRENT_VERSION, canCompressSections } = await import('../../lib/kernel/binary-format.js');
-      const pkg = { version: CURRENT_VERSION, timestamp: Date.now(), flags: { hasC2PA: false, hasOutputs: false, encryptedSeed: false, royaltyEnabled: false, compressed: canCompressSections() }, seedHash: seed.$hash ?? '000000000000000000000000000000000000000000000000000000000000000', metadata: { schema: 'https://paradigm.ai/schema/gseed-metadata/v1', author: 'Anonymous', title: `Exported ${seed.$domain ?? 'unknown'}`, generator: seed.$domain ?? 'unknown', license: 'CC0' }, params: seed, outputs: [] };
+      const { encodeGseed, createGseed, CURRENT_VERSION, canCompressSections } = await import('../../lib/kernel/binary-format.js');
+      // Use createGseed for rich uniform (embeds actual data/refs for png/svg/audio/story/html/gltf etc from grown artifact if provided in body.artifact)
+      const art = req.body?.artifact || null;
+      let pkg: any;
+      try {
+        pkg = createGseed(seed, seed.$domain || 'unknown', art || { name: seed.$name }, { title: seed.$name || `Exported ${seed.$domain}` });
+      } catch {
+        pkg = { version: CURRENT_VERSION, timestamp: Date.now(), flags: { hasC2PA: false, hasOutputs: !!art, encryptedSeed: false, royaltyEnabled: false, compressed: canCompressSections() }, seedHash: seed.$hash ?? '000000000000000000000000000000000000000000000000000000000000000', metadata: { schema: 'https://paradigm.ai/schema/gseed-metadata/v1', author: 'Anonymous', title: deriveCleanTitle(seed.$name || seed.$domain, seed.$hash), generator: seed.$domain ?? 'unknown', license: 'CC0' }, params: seed, outputs: [] };
+      }
       const buf = encodeGseed(pkg);
       res.setHeader('Content-Disposition', `attachment; filename="seed-${(seed.$hash||'x').slice(0,8)}.gseed"`);
       res.type('application/octet-stream').send(Buffer.from(buf));

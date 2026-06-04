@@ -23,9 +23,11 @@ interface NarrativeArtifact {
   manuscript: any;
   meta: { chapters: number; wordCount: number };
   storyData?: string;
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster' | 'text';
     storyData?: string;
+    previewData?: string;
   };
   emergent_assets?: {
     story?: {
@@ -45,13 +47,16 @@ async function synthesize(seed: NarrativeSeed): Promise<NarrativeArtifact> {
     const r = await generateNarrativeV3(seed as any, out);
     const manuscript = JSON.parse(await fs.readFile(r.jsonPath, 'utf8'));
     const storyData = JSON.stringify(manuscript);
+    const previewData = storyData;
     return {
       manuscript,
       meta: { chapters: r.chapters, wordCount: r.wordCount },
       storyData,
+      previewData,
       visual: {
         type: 'text',
         storyData,
+        previewData,
       },
       emergent_assets: {
         story: {

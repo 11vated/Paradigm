@@ -1,0 +1,29 @@
+{
+  "intent": "canon replica goku super saiyan full game with video export --verify",
+  "memoryHash": "direct-pipeline-v1-strata-724830871ff6e747",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Mind",
+    "Story"
+  ],
+  "strataSummary": [
+    "Mind",
+    "Story"
+  ],
+  "strataHash": "724830871ff6e747",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Mind",
+        "Story"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-03T19:12:53.060Z"
+}

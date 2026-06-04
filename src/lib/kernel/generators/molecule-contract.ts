@@ -11,7 +11,27 @@ import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface MSeed { $hash: string; genes?: Record<string, any>; }
-interface MArtifact { svg: string; pdb: string; smiles: string; formula: string; mw: number; atomCount: number; bondCount: number; }
+interface MArtifact {
+  svg: string;
+  pdb: string;
+  smiles: string;
+  formula: string;
+  mw: number;
+  atomCount: number;
+  bondCount: number;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'json' | 'html' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'json' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface MInverted { formula: string; mw: number; atomCount: number; smiles: string; }
 
 async function synthesize(seed: MSeed): Promise<MArtifact> {
@@ -23,8 +43,17 @@ async function synthesize(seed: MSeed): Promise<MArtifact> {
       fs.readFile(r.pdbPath, 'utf8').catch(() => ''),
     ]);
     const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
-    return { svg, pdb, smiles: meta.smiles ?? '', formula: meta.formula ?? '', mw: meta.mw ?? 0,
-      atomCount: meta.atomCount ?? 0, bondCount: meta.bondCount ?? 0 };
+    const previewData = svg || pdb;
+    return {
+      svg, pdb,
+      smiles: meta.smiles ?? '', formula: meta.formula ?? '', mw: meta.mw ?? 0,
+      atomCount: meta.atomCount ?? 0, bondCount: meta.bondCount ?? 0,
+      previewData,
+      visual: { type: 'svg', previewData },
+      emergent_assets: {
+        preview: { type: 'svg', data: previewData, path: r.svgPath }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

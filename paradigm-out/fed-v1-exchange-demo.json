@@ -1,0 +1,57 @@
+{
+  "exchange": {
+    "fromNode": "nodeA",
+    "toNode": "nodeB",
+    "seedHash": "cli-seed",
+    "lineage": [
+      "anc-l0"
+    ],
+    "signature": "MEYCIQDZUrot+E4zqpYtN0HvlOvZXnftWBOT0Nhe1Avech0WGAIhALD84ik8ejsY/j4+33QuF+tILoKLZM9wSyrdpADMIfsf",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEy+ZNB2ILSFuiFSheNFvAvjjY8pvG\nOZsWkihPbKnexqqbLv03WYEkvRTWMJqP4u0iWGzjdcsqBcfdcos+9S8kyw==\n-----END PUBLIC KEY-----\n",
+    "timestamp": "2026-06-03T18:34:14.844Z",
+    "merkleRoot": "636265808fd0409e4736a1a3c0200b5e3991c5ce83e20eae5b68e5b2a9d68071"
+  },
+  "merge": {
+    "success": true,
+    "mergedSeedId": "merge-fb8c54b5e04d",
+    "lineage": [
+      "anc-l0",
+      "cli-seed",
+      "cli-seed-local",
+      "local-anc"
+    ],
+    "conflicts": [
+      "lineage-divergence"
+    ],
+    "fork": true,
+    "newExchange": {
+      "fromNode": "merged-node",
+      "toNode": "local-node",
+      "seedHash": "merge-fb8c54b5e04d",
+      "lineage": [
+        "anc-l0",
+        "cli-seed",
+        "cli-seed-local",
+        "local-anc"
+      ],
+      "signature": "MEUCIB808kDvmbUrSKuxJLEvz78hjy0q9lAMugBY5N0ermYgAiEA8s2px3nxTQTyqskn6j14af0wH7F9wvqv7XAuEyWLUKQ=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEXJbZ+a+RAbvIcB4ROh5jUI1CBISV\n7UN7wCE4wle/j9bm0Ay2ArZbCxTXG6L+QbwnPfXLOJPMBL+3aq7WXERz3w==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "2026-06-03T18:34:14.846Z",
+      "merkleRoot": "2de8b421948f50406a9beef76f2ef8e4beb2bcf8c1066760e6659d58a9772e87"
+    }
+  },
+  "fork": {
+    "fromNode": "system",
+    "toNode": "fork-operator",
+    "seedHash": "fork-676aaa55c84b",
+    "lineage": [
+      "anc-l0",
+      "cli-seed"
+    ],
+    "signature": "MEYCIQDrduofEfTvKtmgBt5b21aG/UHczoKS+fxD0n5wsRrAvgIhANWoLZm5ZxSbCPltMeCIA7J2oo1jv8PSv2HQFQGhHaR8",
+    "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEy+ZNB2ILSFuiFSheNFvAvjjY8pvG\nOZsWkihPbKnexqqbLv03WYEkvRTWMJqP4u0iWGzjdcsqBcfdcos+9S8kyw==\n-----END PUBLIC KEY-----\n",
+    "timestamp": "2026-06-03T18:34:14.847Z",
+    "merkleRoot": "85d6838cde4bd9c2fee3437f6c7f5df9f257450b2ad824a46bae98f012f4daf1"
+  },
+  "verified": true
+}

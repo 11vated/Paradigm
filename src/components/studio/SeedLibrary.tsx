@@ -3,6 +3,8 @@ import { Library, Download, Loader2, Sparkles } from 'lucide-react';
 import { useSeedStore } from '@/stores/seedStore';
 import { getSimilarSeeds, getLibrary } from '@/services/api';
 import { DOMAIN_COLORS } from '@/lib/constants';
+import { deriveCleanTitle } from '@/lib/kernel/types';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { onImport: any; activeSeed: any }) {
   const [library, setLibrary] = useState<any>(null);
@@ -85,7 +87,7 @@ const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { 
       <div className="space-y-px max-h-[400px] overflow-y-auto">
         {isSearching ? (
           <div className="flex items-center justify-center h-24">
-            <Loader2 className="w-4 h-4 text-primary animate-spin" />
+            <Loader2 className="w-4 h-4 text-primary animate-spin" /> <span className="text-[10px] ml-1">Loading rich previews…</span>
           </div>
         ) : seedsToDisplay.length === 0 ? (
           <div className="text-center py-8 font-mono text-[10px] text-neutral-600">
@@ -98,7 +100,7 @@ const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { 
               <div key={i} className="flex items-center gap-2 p-2 bg-black/20 hover:bg-black/40 transition-colors group" data-testid={`library-seed-${i}`}>
                 <div className="w-2 h-2 rounded-full shrink-0" style={{ background: color }} />
                 <div className="flex-1 min-w-0">
-                  <div className="font-heading text-[11px] text-neutral-300 truncate">{seed.$name}</div>
+                  <div className="font-heading text-[11px] text-neutral-300 truncate">{deriveCleanTitle(seed.$name, seed.$hash)}</div>
                   <div className="font-mono text-[8px] text-neutral-600">
                     {seed.$domain} / {Object.keys(seed.genes || {}).length} genes
                     {seed._similarityScore !== undefined && (
@@ -106,6 +108,8 @@ const SeedLibrary = React.memo(function SeedLibrary({ onImport, activeSeed }: { 
                         Match: {(seed._similarityScore * 100).toFixed(1)}%
                       </span>
                     )}
+                    {/* strata + status for library items */}
+                    {(() => { try { const pct = Math.round(calculateStratumConformance([seed.raw||seed]).overall*100); return <span className="ml-1 text-emerald-400/80">strata{pct}%</span>; } catch {return null;} })()}
                   </div>
                 </div>
                 <button onClick={() => handleImport(seed)} disabled={importing === seed.$name}

@@ -21,7 +21,27 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'vehicle'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'gltf' | 'json' | 'html' | 'obj';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'gltf' | 'json' | 'html' | 'obj';
+      data?: string;
+      path?: string;
+    };
+    mesh?: {
+      type: 'gltf';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -50,6 +70,8 @@ async function synthesize(seed: S): Promise<A> {
     data = '';
   }
 
+  const previewData = data;
+  const isGltf = !!r.gltfPath || primary.endsWith('.gltf') || primary.endsWith('.glb');
   return {
     filePath: data,
     meta: {
@@ -59,6 +81,12 @@ async function synthesize(seed: S): Promise<A> {
       htmlPath: r.htmlPath,
       specs: r.specs,
     },
+    previewData,
+    visual: { type: isGltf ? 'gltf' : 'json', previewData },
+    emergent_assets: {
+      preview: { type: isGltf ? 'gltf' : 'json', data: previewData, path: primary },
+      mesh: isGltf ? { type: 'gltf', data: previewData, path: primary } : undefined
+    }
   };
 }
 

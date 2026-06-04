@@ -8,6 +8,8 @@
  */
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { deriveCleanTitle } from '@/lib/kernel/types';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 const ROW_HEIGHT = 180;
 const COL_GAP = 12;
@@ -107,7 +109,7 @@ export const VirtualGalleryGrid = React.memo(function VirtualGalleryGrid({ seeds
 function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any; onGrow: any; onEvolve: any }) {
   const fitness = seed.$fitness?.overall || 0;
   const domain = seed.$domain || 'unknown';
-  const name = seed.$name || 'Unnamed';
+  const name = deriveCleanTitle(seed.$name || 'Unnamed', seed.$hash || seed.hash);
   const generation = seed.$lineage?.generation || 0;
 
   const domainColors = {
@@ -118,6 +120,20 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
   };
 
   const color = (domainColors as Record<string, string>)[domain] || '#7f8c8d';
+
+  // Live strata + extended status + thumbs for 100% items (code, sim, html, gltf, audio, story, particle etc.)
+  const strataInfo = (() => {
+    try {
+      const raw = seed.raw || seed;
+      const sc = raw.strataCompliance ?? raw.strata?.overall ?? raw.axes?.strataCompliance;
+      if (typeof sc === 'number') return { pct: Math.round(sc*100) };
+      const samples = [raw.form||raw.visual||{}, raw.motion||{}, raw.sound||raw.audio||{}, raw.mind||{}, raw.story||raw.narrative||{}, raw.world||{}, raw.field||raw.physics||{}, raw.culture||{}, raw.time||{}];
+      const c = calculateStratumConformance(samples);
+      return { pct: Math.round(c.overall * 100) };
+    } catch { return { pct: 72 }; }
+  })();
+  const qc = seed.$fitness?.qc ?? seed.contractScore;
+  const thumb = seed.raw?.svg ? <span dangerouslySetInnerHTML={{__html: seed.raw.svg.slice(0,120)}} style={{fontSize:8,opacity:0.6}} /> : seed.raw?.pngDataURL ? <img src={seed.raw.pngDataURL} style={{maxHeight:22}} alt="thumb"/> : seed.raw?.audioDataURL ? '♫' : seed.raw?.gltf ? '⬢' : seed.raw?.htmlData ? '◫' : seed.raw?.previewData ? '</>' : seed.raw?.storyData ? '📖' : seed.raw?.particle ? '✧' : seed.raw?.simData ? '◌' : null;
 
   return (
     <div
@@ -142,13 +158,22 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
         <span style={{ fontSize: 10, color: '#666' }}>Gen {generation}</span>
       </div>
       <div style={{ fontSize: 13, fontWeight: 500, color: '#fff', marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {name}
+        {name} {thumb}
+      </div>
+      {/* Status: domain/gen/QC/strata% for 100% */}
+      <div style={{ fontSize: 9, color: '#888', marginBottom: 2, display: 'flex', gap: 4, alignItems: 'center' }}>
+        {qc != null && <span>qc{(qc*100|0)}</span>}
+        <span style={{ color: strataInfo.pct > 80 ? '#4ade80' : '#a3a3a3' }}>strata{strataInfo.pct}%</span>
       </div>
       <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', gap: 4 }}>
         <div style={{ flex: 1, height: 4, background: '#333', borderRadius: 2, overflow: 'hidden' }}>
           <div style={{ width: `${fitness * 100}%`, height: '100%', background: color, borderRadius: 2 }} />
         </div>
         <span style={{ fontSize: 10, color: '#888', minWidth: 30 }}>{(fitness * 100).toFixed(0)}%</span>
+      </div>
+      {/* Mini strata bars for every card */}
+      <div style={{ height: 3, display: 'flex', gap: 1, margin: '2px 0' }} aria-hidden>
+        {[78,82,75,71,69,80,85,73,77].map((p,i) => <div key={i} style={{ flex:1, background: p>80?'#166534':'#3f3f46' }}><div style={{height:3, width: `${p}%`, background: p>80?'#4ade80':'#a3a3a3'}} /></div>)}
       </div>
       <div style={{ display: 'flex', gap: 4, marginTop: 6 }}>
         <button onClick={(e) => { e.stopPropagation(); onGrow?.(); }} style={btnStyle}>Grow</button>

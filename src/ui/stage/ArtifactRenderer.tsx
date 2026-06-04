@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 const ARTIFACT_BASE = '/artifacts';
 
@@ -58,6 +59,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     if (artifact.pngPath)  return 'png';
     if (artifact.jsonPath || artifact.json) return 'json';
     if (artifact.storyData || artifact.manuscript) return 'story';
+    if (artifact.previewData && (artifact.visual?.type === 'code' || artifact.visual?.type === 'glsl' || artifact.visual?.type === 'wgsl')) return 'code';
     if (artifact.outputPath) {
       const ext = artifact.outputPath.split('.').pop()?.toLowerCase();
       if (ext === 'svg')  return 'svg';
@@ -95,7 +97,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     return (
       <div className="p-artifact-empty">
         <span className="p-artifact-empty-label">no artifact yet</span>
-        <div className="p-artifact-loading-hint">Generating rich visual... (Atelier for tools)</div>
+        <div className="p-artifact-loading-hint">Generating rich visual… (Atelier primary workspace for gene tools + strata)</div>
       </div>
     );
   }
@@ -116,7 +118,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
         </div>
       );
     }
-    return <div className="p-artifact-loading">loading svg…</div>;
+    return <div className="p-artifact-loading">Generating rich visual…</div>;
   }
 
   // ─── HTML: sandboxed iframe ───────────────────────────────────────────────
@@ -149,7 +151,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     return (
       <div className="p-artifact p-artifact-audio">
         <div className="p-artifact-audio-glyph">≋</div>
-        <div className="p-artifact-audio-name">{artifact.name ?? seed?.name ?? 'audio'}</div>
+        <div className="p-artifact-audio-name">{deriveCleanTitle(artifact.name ?? seed?.name ?? 'audio', (artifact as any).seed_hash)}</div>
         {wav ? <audio controls src={wav} preload="metadata" /> : null}
         {mid ? (
           <a className="p-artifact-audio-midi" href={mid} download>
@@ -165,7 +167,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     const url = toUrl(artifact.pngPath || artifact.outputPath);
     return url ? (
       <div className="p-artifact p-artifact-png">
-        <img src={url} alt={artifact.name ?? seed?.name ?? 'image'} />
+        <img src={url} alt={deriveCleanTitle(artifact.name ?? seed?.name ?? 'image', (artifact as any).seed_hash)} />
       </div>
     ) : null;
   }
@@ -213,6 +215,19 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     );
   }
 
+  // ─── CODE / SHADER: syntax view (not raw dump) ────────────────────────────
+  if (kind === 'code') {
+    const code = artifact.previewData || artifact.filePath || '';
+    const content = typeof code === 'string' ? code : code.toString();
+    return (
+      <div className="p-artifact p-artifact-code">
+        <div className="p-artifact-code-header">Shader / Code</div>
+        <pre className="p-artifact-code-content">{content.slice(0, 1500)}{content.length > 1500 ? '...' : ''}</pre>
+        <div className="p-artifact-code-hint">Full code in export / .gseed. (Live preview in future.)</div>
+      </div>
+    );
+  }
+
   // ─── JSON: syntax-highlighted tree ────────────────────────────────────────
   if (kind === 'json') {
     const content = artifact.json
@@ -228,19 +243,23 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
   }
 
   // ─── METADATA: clean summary (no raw JSON dump in normal flow; debug only via toggle if needed)
-  // Per UX doctrine: hide raw dumps from normal users; show beautiful/ loading state.
+  // Per UX doctrine: hide raw dumps from normal users; show beautiful/ loading state. Always surface strata + clean title.
+  const metaName = deriveCleanTitle(artifact.name ?? seed?.name ?? 'Artifact', (artifact as any).seed_hash ?? seed?.hash);
+  const artStrataPct = typeof (artifact as any)?.strataCompliance === 'number' ? Math.round((artifact as any).strataCompliance * 100) : typeof (artifact as any)?.strata?.overall === 'number' ? Math.round((artifact as any).strata.overall * 100) : null;
   return (
     <div className="p-artifact p-artifact-metadata">
       <div className="p-artifact-metadata-glyph">◇</div>
-      <div className="p-artifact-metadata-name">{artifact.name ?? seed?.name ?? 'artifact'}</div>
+      <div className="p-artifact-metadata-name">{metaName}</div>
       <div className="p-artifact-metadata-type">
         {artifact.type ?? artifact.domain ?? 'metadata'}
         {typeof artifact.generation === 'number' ? ` · gen ${artifact.generation}` : ''}
+        {artStrataPct != null && ` · strata ${artStrataPct}%`}
       </div>
       <div className="p-artifact-metadata-hint">
-        Rich visual data not attached for this domain (or still generating). Use Atelier for gene tools or switch modes. Advanced raw view available in debug.
+        Rich visual data not attached for this domain (or still generating). Use Atelier primary for gene tools + live 9-strata. Advanced raw view available in debug only.
       </div>
       {/* No full JSON pre by default - prevents "raw Crucible dumps" in normal UX */}
+      {artStrataPct != null && <div className="p-strata-mini" style={{ marginTop: 4 }}>live 9-strata {artStrataPct}% (QC)</div>}
     </div>
   );
 };

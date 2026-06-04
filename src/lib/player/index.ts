@@ -12,7 +12,7 @@
  * .gseed sections (from binary-format.ts):
  *   METADATA  → domain, hash, genes JSON
  *   PARAMS    → grow params JSON
- *   OUTPUTS   → output artifacts (PNG, WAV, OBJ, GLTF, MIDI bytes)
+ *   OUTPUTS   → output artifacts (PNG, WAV, OBJ, GLTF, MIDI, SVG, HTML, JSON, TEXT/STORY, CODE, SIM bytes for rich uniform)
  *   C2PA_MANIFEST → provenance claim
  *   ROYALTY   → royalty config
  *   SIGNATURE → ECDSA P-256 over header+sections
@@ -189,6 +189,7 @@ export class ParadigmPlayer {
     const map: Record<string, string> = {
       PNG: 'image/png', WAV: 'audio/wav', OBJ: 'model/obj',
       GLTF: 'model/gltf+json', MIDI: 'audio/midi',
+      SVG: 'image/svg+xml', HTML: 'text/html', JSON: 'application/json', TEXT: 'text/plain', CODE: 'text/plain', STORY: 'text/plain', SIM: 'application/json', PREVIEW: 'application/json',
     };
     return map[type] ?? 'application/octet-stream';
   }

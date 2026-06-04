@@ -23,7 +23,22 @@ import { particleContract as _particle15 } from '../../contracts/domains/particl
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'particle'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'gltf' | 'html' | 'json' | 'raster';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html' | 'gltf';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -39,7 +54,16 @@ async function synthesize(seed: S): Promise<A> {
     const data = primaryPath
       ? await fs.readFile(primaryPath, 'utf-8').catch(async () => (await fs.readFile(primaryPath)).toString('base64'))
       : '';
-    return { filePath: data, meta: { ...r, filePath: undefined } };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: { ...r, filePath: undefined },
+      previewData,
+      visual: { type: primaryPath?.endsWith('.html') ? 'html' : 'json', previewData },
+      emergent_assets: {
+        preview: { type: primaryPath?.endsWith('.html') ? 'html' : 'json', data: previewData, path: primaryPath }
+      }
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

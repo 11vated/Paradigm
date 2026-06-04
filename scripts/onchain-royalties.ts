@@ -50,6 +50,12 @@ export async function runOnChainRoyalties(seedId?: string, totalWei?: bigint, de
   let executed: any;
   let claim: string;
   const n = prep.recipients.length;
+  // Deeper actual dividends: use computeActual for full payout + civ flow (advances econ onchain actual)
+  try {
+    const { computeActualPayoutsAndDividends } = await import('../src/lib/contracts/economics/full-economics.js');
+    const actual = computeActualPayoutsAndDividends(1000, seedId || 'onchain-demo', 5, 2, depth || 5);
+    console.log('[actual-dividends]', actual.claim);
+  } catch { /* non fatal */ }
   if (options.real) {
     console.warn('*** REAL ON-CHAIN TX MODE *** This will broadcast signed transactions and spend real gas + token/ETH balances on the configured RPC (mainnet or testnet).');
     const env = RealOnchainEnv.parse(process.env);

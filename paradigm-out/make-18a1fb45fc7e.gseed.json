@@ -1,0 +1,661 @@
+{
+  "$intent": "sovereign explorer with transformation abilities in a quantum tidal world --verify",
+  "$created": "2026-06-03T18:11:43.607Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "18a1fb45fc7e5e1e",
+      "name": "sovereign explorer with transformation a",
+      "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "petite",
+          "heightScale": 0.8590722252166099,
+          "shoulderRatio": 1.1131575757819925,
+          "torsoRatio": 0.9147937532108944,
+          "limbRatio": 0.8992216782524174,
+          "muscle": 0.40174528519831265,
+          "softness": 0.4048166005418397,
+          "skinTone": [
+            0.6847270800486852,
+            0.6622227168160434,
+            0.2162389046218151
+          ]
+        },
+        "face": {
+          "roundness": 0.17982210752797778,
+          "eyeHeight": 0.4516733398414565,
+          "eyeSpacing": 0.3013478684552447,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.1118729279738532,
+            0.6795547096457009,
+            0.21654656049123103
+          ],
+          "noseShape": "aquiline",
+          "noseHeight": 0.6176742559204517,
+          "mouthShape": "full",
+          "jawShape": "pointed",
+          "brow": 0.9936803452693641,
+          "cheekbones": 0.2652032200484311,
+          "chin": 0.9377597119068231,
+          "hairStyle": "long",
+          "hairColor": [
+            0.2368398128192401,
+            0.5201032968907381,
+            0.18708529044269204
+          ]
+        },
+        "voice": {
+          "pitch": 281.6974567006581,
+          "inflection": 0.5412544876960151,
+          "tempo": 161.26930549536408,
+          "breathiness": 0.06031833019078803,
+          "warmth": 0.6833264748531007,
+          "formants": [
+            496.9870926054155,
+            866.1775042551527,
+            1845.9520582486862,
+            2271.9409947676136,
+            2839.926243459517
+          ],
+          "accent": "mumbai"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.29639576900039066,
+            "conscientiousness": 0.5072318124119346,
+            "extraversion": 0.4359368390212828,
+            "agreeableness": 0.9171989371144624,
+            "neuroticism": 0.14303700407780395
+          },
+          "interests": [
+            "birdwatching",
+            "fermentation",
+            "dance",
+            "cooking"
+          ],
+          "values": [
+            "patience",
+            "directness",
+            "humility",
+            "craft"
+          ],
+          "speechStyle": "precise",
+          "humor": 0.4073563345678808,
+          "curiosity": 0.6611953435132587
+        },
+        "memory": {
+          "episodicCapacity": 3652,
+          "episodicDecay": 0.015217203806216113,
+          "semanticCapacity": 4180,
+          "reflectionCadenceDays": 5.1245852035052355
+        },
+        "bond": {
+          "initialTrust": 0.555375914070816,
+          "initialWarmth": 0.7886264227340858,
+          "bondingDays": 78
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "sovereign explorer with transformation a"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "sovereign explorer with transformation a"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "18a1fb45fc7e5e1e",
+      "name": "Quantum Tidal World",
+      "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "post-apocalyptic",
+          "biome": "urban",
+          "magic": 0.7828939394549812,
+          "tech": 0.215979177369648,
+          "density": 0.16407226084139137
+        },
+        "physics": {
+          "gravity": 0.33915095066104217,
+          "hostility": 0.5990830027091985,
+          "diurnalRate": 0.6085946909976094,
+          "weatherVolatility": 0.7494958487564425
+        },
+        "society": {
+          "order": 0.032477809243630196,
+          "pluralism": 0.17982210752797778,
+          "prosperity": 0.016733398414565004,
+          "literacy": 0.008985789701631441
+        },
+        "conflict": {
+          "kind": "exploration",
+          "scale": 0.01978821328975533,
+          "urgency": 0.9659245160761682,
+          "clarity": 0.19424426748538504
+        },
+        "mood": {
+          "brightness": 0.3728785958359364,
+          "warmth": 0.676742559204516,
+          "pace": 0.18401691999865077,
+          "levity": 0.5246936380661644
+        },
+        "history": {
+          "agesSinceFall": 4968,
+          "ghostliness": 0.2652032200484311,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-03T18:11:43.579Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "sovereign explorer with transformation abilities in a quantum tidal world --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "fb83f2e7891e59fe",
+    "seedHash": "fb83f2e7891e59febd93afcb526b3e7f736495b1a7929540b85a427b52f05009",
+    "genomeVersion": 1,
+    "title": "The Long Road of sovereign explorer with transformation a",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.4721920088771497,
+      "antagonist": 0.45594747438648436,
+      "moralComplexity": 0.8200768033717699,
+      "pacing": 0.30751742703441665,
+      "intensity": 0.6641041405520666,
+      "actCount": 3,
+      "targetWordCount": 4719,
+      "hook": "Maps drawn last winter no longer match the land around Quantum Tidal World. sovereign explorer with transformation a can still navigate."
+    },
+    "parents": {
+      "friend": {
+        "id": "18a1fb45fc7e5e1e",
+        "name": "sovereign explorer with transformation a",
+        "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985"
+      },
+      "world": {
+        "id": "18a1fb45fc7e5e1e",
+        "name": "Quantum Tidal World",
+        "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985"
+      }
+    },
+    "bornAt": "2026-06-03T18:11:43.593Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "sovereign explorer with transformation abilities i",
+      "quest": {
+        "id": "fb83f2e7891e59fe",
+        "seedHash": "fb83f2e7891e59febd93afcb526b3e7f736495b1a7929540b85a427b52f05009",
+        "genomeVersion": 1,
+        "title": "The Long Road of sovereign explorer with transformation a",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.4721920088771497,
+          "antagonist": 0.45594747438648436,
+          "moralComplexity": 0.8200768033717699,
+          "pacing": 0.30751742703441665,
+          "intensity": 0.6641041405520666,
+          "actCount": 3,
+          "targetWordCount": 4719,
+          "hook": "Maps drawn last winter no longer match the land around Quantum Tidal World. sovereign explorer with transformation a can still navigate."
+        },
+        "parents": {
+          "friend": {
+            "id": "18a1fb45fc7e5e1e",
+            "name": "sovereign explorer with transformation a",
+            "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985"
+          },
+          "world": {
+            "id": "18a1fb45fc7e5e1e",
+            "name": "Quantum Tidal World",
+            "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985"
+          }
+        },
+        "bornAt": "2026-06-03T18:11:43.593Z"
+      },
+      "friend": {
+        "id": "18a1fb45fc7e5e1e",
+        "name": "sovereign explorer with transformation a",
+        "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "petite",
+            "heightScale": 0.8590722252166099,
+            "shoulderRatio": 1.1131575757819925,
+            "torsoRatio": 0.9147937532108944,
+            "limbRatio": 0.8992216782524174,
+            "muscle": 0.40174528519831265,
+            "softness": 0.4048166005418397,
+            "skinTone": [
+              0.6847270800486852,
+              0.6622227168160434,
+              0.2162389046218151
+            ]
+          },
+          "face": {
+            "roundness": 0.17982210752797778,
+            "eyeHeight": 0.4516733398414565,
+            "eyeSpacing": 0.3013478684552447,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.1118729279738532,
+              0.6795547096457009,
+              0.21654656049123103
+            ],
+            "noseShape": "aquiline",
+            "noseHeight": 0.6176742559204517,
+            "mouthShape": "full",
+            "jawShape": "pointed",
+            "brow": 0.9936803452693641,
+            "cheekbones": 0.2652032200484311,
+            "chin": 0.9377597119068231,
+            "hairStyle": "long",
+            "hairColor": [
+              0.2368398128192401,
+              0.5201032968907381,
+              0.18708529044269204
+            ]
+          },
+          "voice": {
+            "pitch": 281.6974567006581,
+            "inflection": 0.5412544876960151,
+            "tempo": 161.26930549536408,
+            "breathiness": 0.06031833019078803,
+            "warmth": 0.6833264748531007,
+            "formants": [
+              496.9870926054155,
+              866.1775042551527,
+              1845.9520582486862,
+              2271.9409947676136,
+              2839.926243459517
+            ],
+            "accent": "mumbai"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.29639576900039066,
+              "conscientiousness": 0.5072318124119346,
+              "extraversion": 0.4359368390212828,
+              "agreeableness": 0.9171989371144624,
+              "neuroticism": 0.14303700407780395
+            },
+            "interests": [
+              "birdwatching",
+              "fermentation",
+              "dance",
+              "cooking"
+            ],
+            "values": [
+              "patience",
+              "directness",
+              "humility",
+              "craft"
+            ],
+            "speechStyle": "precise",
+            "humor": 0.4073563345678808,
+            "curiosity": 0.6611953435132587
+          },
+          "memory": {
+            "episodicCapacity": 3652,
+            "episodicDecay": 0.015217203806216113,
+            "semanticCapacity": 4180,
+            "reflectionCadenceDays": 5.1245852035052355
+          },
+          "bond": {
+            "initialTrust": 0.555375914070816,
+            "initialWarmth": 0.7886264227340858,
+            "bondingDays": 78
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "18a1fb45fc7e5e1e",
+        "name": "Quantum Tidal World",
+        "seedHash": "18a1fb45fc7e5e1eb22470fbdeef5f65e6434a717cfc1605b428355afa07e985",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "post-apocalyptic",
+            "biome": "urban",
+            "magic": 0.7828939394549812,
+            "tech": 0.215979177369648,
+            "density": 0.16407226084139137
+          },
+          "physics": {
+            "gravity": 0.33915095066104217,
+            "hostility": 0.5990830027091985,
+            "diurnalRate": 0.6085946909976094,
+            "weatherVolatility": 0.7494958487564425
+          },
+          "society": {
+            "order": 0.032477809243630196,
+            "pluralism": 0.17982210752797778,
+            "prosperity": 0.016733398414565004,
+            "literacy": 0.008985789701631441
+          },
+          "conflict": {
+            "kind": "exploration",
+            "scale": 0.01978821328975533,
+            "urgency": 0.9659245160761682,
+            "clarity": 0.19424426748538504
+          },
+          "mood": {
+            "brightness": 0.3728785958359364,
+            "warmth": 0.676742559204516,
+            "pace": 0.18401691999865077,
+            "levity": 0.5246936380661644
+          },
+          "history": {
+            "agesSinceFall": 4968,
+            "ghostliness": 0.2652032200484311,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-03T18:11:43.579Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "sovereign explorer with transformation abilities in a quantum tidal world --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "World",
+        "Form"
+      ],
+      "suggestedStrata": [
+        "World",
+        "Form"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "World",
+          "Form"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "sovereign explorer with transformation abilities i",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "sovereign explorer with transformation abilities i"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "sovereign explorer with transformation abilities i"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "World",
+    "Form"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

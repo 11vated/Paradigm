@@ -428,7 +428,7 @@ export interface Inverse20Input extends InverseInput {
 export async function inversePipeline20(input: Inverse20Input): Promise<InverseResult[]> {
   // Phase 20 functional: base inverse (now rich+graceful), then real projection to targets using composeSeed (cross-domain functors)
   const base = await Promise.resolve(inversePipeline(input));
-  const modalities = input.targetModalities || ['visual2d','music','narrative','geometry3d','sprite','character','fullgame','procedural','physics','audio','ecosystem','animation','agent','shader','particle','typography','architecture','vehicle','fashion','robotics','circuit','food','choreography','alife','website','ui','app'];
+  const modalities = input.targetModalities || ['visual2d','music','narrative','geometry3d','sprite','character','fullgame','procedural','physics','audio','ecosystem','animation','agent','shader','particle','typography','architecture','vehicle','fashion','robotics','circuit','food','choreography','alife','website','ui','app','finance','acoustics','edtech','5g','agtech','battery','biomedical','cosmetics','gardening','drones'];
   const results: InverseResult[] = [];
   for (const mod of modalities) {
     try {

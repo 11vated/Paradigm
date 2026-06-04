@@ -1,0 +1,44 @@
+{
+  "seed": "adaptive learning platform using AR for teaching complex systems thinking to diverse students --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-325b8b5ad6bc",
+  "strataScores": {
+    "World": 0.93,
+    "Form": 0.89,
+    "Field": 0.85,
+    "Motion": 0,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "proc_700453708069650",
+    "width": 4096,
+    "height": 4096,
+    "biomeCount": 8,
+    "hasRivers": true,
+    "strataScores": {
+      "World": 0.93,
+      "Form": 0.89,
+      "Field": 0.85,
+      "Motion": 0,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-325b8b5ad6bc-procedural.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 2,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T03:05:06.513Z"
+}

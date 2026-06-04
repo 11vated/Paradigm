@@ -11,7 +11,25 @@ import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface QSeed { $hash: string; genes?: Record<string, any>; }
-interface QArtifact { densitySvg: string; phaseSvg: string; expectation: any; potentialType: string; normError: number; }
+interface QArtifact {
+  densitySvg: string;
+  phaseSvg: string;
+  expectation: any;
+  potentialType: string;
+  normError: number;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'json' | 'html';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'json';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface QInverted { potentialType: string; normError: number; svgHash: string; expectationX: number; }
 
 async function synthesize(seed: QSeed): Promise<QArtifact> {
@@ -21,8 +39,19 @@ async function synthesize(seed: QSeed): Promise<QArtifact> {
     const dens = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
     const phase = dens;
     const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
-    return { densitySvg: dens, phaseSvg: phase, expectation: meta.expectation ?? {},
-      potentialType: meta.potential ?? '', normError: Math.abs(1 - (meta.normalization ?? 0)) };
+    const previewData = dens;
+    return {
+      densitySvg: dens,
+      phaseSvg: phase,
+      expectation: meta.expectation ?? {},
+      potentialType: meta.potential ?? '',
+      normError: Math.abs(1 - (meta.normalization ?? 0)),
+      previewData,
+      visual: { type: 'svg', previewData },
+      emergent_assets: {
+        preview: { type: 'svg', data: previewData, path: r.svgPath }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

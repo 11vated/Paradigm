@@ -20,6 +20,24 @@ interface A {
   biomeCount: number;
   filePath: string; // legacy interop: holds json content for hash compat in some runners
   meta: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'png' | 'raster' | 'html' | 'json';
+    previewData?: string;
+    pngDataURL?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'png' | 'raster' | 'html' | 'json';
+      data?: string;
+      path?: string;
+    };
+    visual?: {
+      type: 'png' | 'raster';
+      data?: string;
+      path?: string;
+    };
+  };
 }
 interface I { size: number; biomeCount: number }
 
@@ -39,6 +57,9 @@ async function synthesize(seed: S): Promise<A> {
   // Read PNG as base64 for rich manifest (real valid image bytes)
   const pngBytes = await fsp.readFile(r.heightmapPath).catch(() => Buffer.alloc(0));
   const pngB64 = pngBytes.toString('base64');
+  const pngDataURL = pngB64 ? `data:image/png;base64,${pngB64}` : undefined;
+  const previewData = pngDataURL || jsonContent;
+  const htmlContent = await fsp.readFile(r.htmlPath, 'utf-8').catch(() => '');
   return {
     heightmapPath: r.heightmapPath,
     jsonPath: r.jsonPath,
@@ -50,7 +71,13 @@ async function synthesize(seed: S): Promise<A> {
       pngBase64Head: pngB64.slice(0, 128), // evidence of real PNG (starts with iVBORw0KGgo= for valid)
       pngSize: pngBytes.length,
       jsonSize: jsonContent.length,
-      htmlSize: (await fsp.readFile(r.htmlPath, 'utf-8').catch(() => '')).length
+      htmlSize: htmlContent.length
+    },
+    previewData,
+    visual: { type: pngDataURL ? 'png' : 'json', previewData, pngDataURL },
+    emergent_assets: {
+      preview: { type: pngDataURL ? 'png' : 'json', data: previewData, path: pngDataURL ? r.heightmapPath : r.jsonPath },
+      visual: pngDataURL ? { type: 'png', data: pngDataURL, path: r.heightmapPath } : undefined
     }
   };
 }

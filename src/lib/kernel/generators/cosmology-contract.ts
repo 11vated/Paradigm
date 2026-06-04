@@ -11,7 +11,26 @@ import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 
 interface CoSeed { $hash: string; genes?: Record<string, any>; }
-interface CoArtifact { svg: string; bodyCount: number; scenario: string; finalEnergy: number; conserved: boolean; steps: number; }
+interface CoArtifact {
+  svg: string;
+  bodyCount: number;
+  scenario: string;
+  finalEnergy: number;
+  conserved: boolean;
+  steps: number;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'json' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'json' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface CoInverted { bodyCount: number; scenario: string; conserved: boolean; }
 
 async function synthesize(seed: CoSeed): Promise<CoArtifact> {
@@ -20,8 +39,20 @@ async function synthesize(seed: CoSeed): Promise<CoArtifact> {
     const r = await generateCosmology(seed as any, dir) as any;
     const svg  = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
     const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).cosmology ?? {};
-    return { svg, bodyCount: r.bodyCount ?? 0, scenario: r.scenario ?? '', finalEnergy: meta.totalEnergy ?? 0,
-      conserved: meta.energyConserved ?? false, steps: meta.steps ?? 0 };
+    const previewData = svg || JSON.stringify({ bodyCount: r.bodyCount, scenario: r.scenario });
+    return {
+      svg,
+      bodyCount: r.bodyCount ?? 0,
+      scenario: r.scenario ?? '',
+      finalEnergy: meta.totalEnergy ?? 0,
+      conserved: meta.energyConserved ?? false,
+      steps: meta.steps ?? 0,
+      previewData,
+      visual: { type: 'svg', previewData },
+      emergent_assets: {
+        preview: { type: 'svg', data: previewData, path: r.svgPath }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

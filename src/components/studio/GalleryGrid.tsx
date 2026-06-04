@@ -3,6 +3,8 @@
 // Removed unused Dna import
 import React from 'react';
 import { DOMAIN_COLORS } from '@/lib/constants';
+import { deriveCleanTitle } from '@/lib/kernel/types';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedId }: { seeds: any; onSelect: any; selectedId: any }) {
   if (!Array.isArray(seeds) || seeds.length === 0) {
@@ -41,8 +43,17 @@ const GalleryGrid = React.memo(function GalleryGrid({ seeds, onSelect, selectedI
             </div>
             
             <div className="font-mono text-[11px] text-[#d4d4d4] truncate mb-3 w-full">
-              {seed.$name || 'Untitled'}
+              {deriveCleanTitle(seed.$name || 'Untitled', seed.$hash)}
             </div>
+            {/* Thumbs/status + strata for 100% library items */}
+            {(() => {
+              try {
+                const raw = seed.raw || seed; const sc = raw.strataCompliance || (raw.strata && raw.strata.overall);
+                const pct = typeof sc==='number' ? Math.round(sc*100) : Math.round(calculateStratumConformance([raw]).overall * 100);
+                const t = raw.svg ? '🖼' : raw.audioDataURL ? '♫' : raw.gltf ? '⬢' : raw.storyData ? '📖' : raw.previewData ? '</>' : '';
+                return <div style={{fontSize:9, color:'#888', marginBottom:2}}>{t} strata {pct}% · gen{seed.$lineage?.generation||0}</div>;
+              } catch { return null; }
+            })()}
             
             <div className="flex items-center gap-2 w-full">
               <span className="font-mono text-[8px] text-[#888]">FIT</span>

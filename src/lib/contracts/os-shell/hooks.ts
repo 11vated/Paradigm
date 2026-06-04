@@ -209,7 +209,7 @@ export async function paradigmOSShell(cmd: OSCommand): Promise<OSResponse> {
     return {
       success: true,
       // smallest strengthening for self-evolution: example of shell recursively evolving its own signal set into new .gseed (per 13_ OS recursion)
-      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', strata: { overall: 0.92, recursive: 1.0 } },
+      selfEvolutionExample: { type: 'os-shell-recursive-self-evolve', description: 'shell mutated its domain signals using GSPL compose, emitted as .gseed for self-host', gsplExample: 'seed "SelfHostEvolve" in gspl { mutate(signals); compose(.gseed); recursive: true; host: self }', strata: { overall: 0.92, recursive: 1.0 } },
       artifactId: stableId,
       message: `Recursive .gseed composition complete for ${domain}`,
       strataScores: composedGseed.strataScores,

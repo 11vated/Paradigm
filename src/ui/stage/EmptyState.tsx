@@ -58,7 +58,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ suggestions, onPick }) =
         <p className="p-empty-sub">
           Speak a creation into existence. Describe a world, a molecule, a website,
           a piece of music — anything digital. GSPL grows it deterministically from
-          a single sovereign seed.
+          a single sovereign seed. Atelier is primary. Live 9-strata HUDs + provenance on every surface.
         </p>
 
         <div className="p-empty-prompts">

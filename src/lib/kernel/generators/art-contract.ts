@@ -14,7 +14,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'art'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'png' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html' | 'svg' | 'png' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -34,7 +49,16 @@ export const ArtQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateArt(seed, out));
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: {},
+      previewData,
+      visual: { type: 'json', previewData },
+      emergent_assets: {
+        preview: { type: 'json', data: previewData, path: filePath }
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

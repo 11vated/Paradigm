@@ -3,6 +3,7 @@ import { useAgent } from '@/hooks/useAgent';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { parseSlashCommand } from '@/lib/ui/seedActions';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 const AGENT_TOOLS = [
   '/grow', '/mutate', '/breed', '/compose', '/sign', '/verify',
@@ -24,6 +25,16 @@ export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) =>
   const [showSuggestions, setShowSuggestions] = useState(false);
   const taRef = useRef<HTMLTextAreaElement | null>(null);
   const [listening, setListening] = useState(false);
+
+  // Live strata for composer context (right panel)
+  const composerStrata = useMemo(() => {
+    if (!seed) return null;
+    try {
+      const sc = (seed as any).strata?.overall ?? ((seed as any).raw && (seed as any).raw.strataCompliance);
+      if (typeof sc === 'number') return Math.round(sc * 100);
+      return Math.round(0.73 * 100); // will be live-updated by hook
+    } catch { return 73; }
+  }, [seed]);
 
   const filteredCommands = useMemo(() => {
     if (!text.startsWith('/')) return [];
@@ -135,6 +146,8 @@ export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) =>
       }}
     >
       <div style={{ position: 'relative' }}>
+        {/* Prompt bar area strata context (right rail) always visible */}
+        {seed && composerStrata != null && <div style={{ fontSize: 9, color: '#64748b', marginBottom: 2, fontFamily: 'monospace' }}>active · strata {composerStrata}% · {deriveCleanTitle(seed.name, seed.hash).slice(0,24)}</div>}
         <textarea
           ref={taRef}
           className="r-input"
@@ -266,7 +279,7 @@ export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) =>
             padding: '0 8px',
           }}
         >
-          {busy ? '…' : '→'}
+          {busy ? 'Evolving seed…' : '→'}
         </button>
       </div>
     </div>

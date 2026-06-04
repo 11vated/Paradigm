@@ -53,10 +53,12 @@ interface ChArtifact {
   gltf: string;
   pngDataURL?: string;
   svgDataURL?: string;
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster';
     pngDataURL?: string;
     svgDataURL?: string;
+    previewData?: string;
     resolution?: number;
   };
   emergent_assets?: {
@@ -127,12 +129,15 @@ function synthesizeFrom15Contract(seed: ChSeed): ChArtifact {
     svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
   } catch {}
 
+  const previewData = svgDataURL || gltf;
   return {
     gltf,
     svgDataURL,
+    previewData,
     visual: {
       type: 'svg',
       svgDataURL,
+      previewData,
     },
     emergent_assets: {
       visual: svgDataURL ? {
@@ -187,14 +192,17 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
       svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
     } catch {}
 
+    const previewData = pngDataURL || svgDataURL || gltf;
     return {
       gltf,
       pngDataURL,
       svgDataURL,
+      previewData,
       visual: {
         type: pngDataURL ? 'raster' : (svgDataURL ? 'svg' : 'raster'),
         pngDataURL,
         svgDataURL,
+        previewData,
       },
       emergent_assets: {
         visual: (pngDataURL || svgDataURL) ? {

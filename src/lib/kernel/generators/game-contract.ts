@@ -15,7 +15,23 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $hash?: string; $domain: 'game'; $name?: string; genes: Record<string, unknown> }
-interface A { html: string; levelCount: number; fileSize: number }
+interface A {
+  html: string;
+  levelCount: number;
+  fileSize: number;
+  previewData?: string;
+  visual?: {
+    type: 'html' | 'code';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'html' | 'code';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.html).digest('hex');
@@ -59,7 +75,17 @@ export const GameQualityContract: QualityContract<S, A, Record<string, unknown>>
     const out = path.join(dir, 'game.html');
     const result = await generateGameV2(seed as never, out);
     const html = await fsp.readFile(result.htmlPath, 'utf-8');
-    return { html, levelCount: result.levelCount, fileSize: result.fileSize };
+    const previewData = html;
+    return {
+      html,
+      levelCount: result.levelCount,
+      fileSize: result.fileSize,
+      previewData,
+      visual: { type: 'html', previewData },
+      emergent_assets: {
+        preview: { type: 'html', data: previewData, path: result.htmlPath }
+      }
+    };
   },
   invert: (a) => ({ size: a.html.length, levels: a.levelCount }),
   rate,

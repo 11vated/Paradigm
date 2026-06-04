@@ -63,8 +63,11 @@ export async function actGrow(seedId?: string): Promise<ActionResult> {
   const id = seedId ?? useActiveSeed.getState().seed?.id;
   if (!id) return { ok: false, message: 'no active seed' };
   try {
-    await growSeed(id);
-    dispatch(EVENTS.GROW_SUCCESS, { id });
+    const artifact: any = await growSeed(id);
+    const richName = artifact?.name || artifact?.$name || 'Artifact';
+    const richStrata = artifact?.strata || artifact?.stratumScores || [];
+    // dispatch rich named visual + strata so Studio live preview + name + strata update perfectly (uniform rich)
+    dispatch(EVENTS.GROW_SUCCESS, { id, artifact, name: richName, strata: richStrata });
     return { ok: true, message: `grown · ${id}`, seedId: id };
   } catch (e) {
     dispatch(EVENTS.GROW_FAILED, { id, error: String(e) });

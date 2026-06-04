@@ -9,6 +9,8 @@ import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
+import { deriveCleanTitle } from '@/lib/kernel/types';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 export interface TopBarProps {
   onCosmos?: () => void;
@@ -73,12 +75,14 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
             <span className="p-active-seed-glyph">
               <SeedGlyph hash={seed.hash} domain={seed.domain} size={20} />
             </span>
-            <span className="p-active-seed-name">{seed.name}</span>
+            <span className="p-active-seed-name">{deriveCleanTitle(seed.name, seed.hash)}</span>
             <span className="p-domain-pill">{seed.domain}</span>
             <span className="p-hash-tail">{shortHash(seed.hash)}</span>
             {typeof seed.generation === 'number' && (
               <span className="p-hash-tail">· gen {seed.generation}</span>
             )}
+            {/* Global TopBar strata HUD (always visible) */}
+            {(() => { const st = seed.strata?.overall ?? (seed.raw && (seed.raw as any).strataCompliance); if (typeof st==='number') return <span className="p-strata-mini" title="9-strata global">{Math.round(st*100)}%</span>; try { return <span className="p-strata-mini" title="9-strata computed">{Math.round(calculateStratumConformance([seed.raw||seed]).overall*100)}%</span>; } catch {return null;} })()}
           </div>
         ) : (
           <button

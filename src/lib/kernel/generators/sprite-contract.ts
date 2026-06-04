@@ -45,9 +45,11 @@ interface SpriteArtifact {
   meta: { frames: number; resolution: number; paletteSize: number };
   pngDataURL?: string;
   pngPath?: string;
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster';
     pngDataURL?: string;
+    previewData?: string;
     resolution?: number;
   };
   emergent_assets?: {
@@ -71,6 +73,7 @@ async function synthesize(seed: SpriteSeed): Promise<SpriteArtifact> {
 
     // Attach UI-consumable rich data (Phase 1 consistency with visual2d/character pattern).
     const pngDataURL = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+    const previewData = pngDataURL;
 
     return {
       pngBuffer,
@@ -78,9 +81,11 @@ async function synthesize(seed: SpriteSeed): Promise<SpriteArtifact> {
       meta: { frames: r.frames, resolution: r.resolution, paletteSize: r.paletteSize },
       pngPath: r.filePath,
       pngDataURL,
+      previewData,
       visual: {
         type: 'raster',
         pngDataURL,
+        previewData,
         resolution: r.resolution,
       },
       emergent_assets: {

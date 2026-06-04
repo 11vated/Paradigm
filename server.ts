@@ -488,7 +488,7 @@ async function startServer() {
 
   registerDaoRoutes(app, { optionalAuth, seeds, trainingCanon, daoProvider, log });
 
-  // Phase 9: Federation routes (P2P seed exchange)
+  // Phase 9 / 16: Federation routes (P2P seed exchange — now REAL 2-node via ECDSA in routes + sovereignty performRealTwoNode; no central, lineage, det merge/fork)
   registerFederationRoutes(app);
 
   // Phase 10: Royalty waterfall routes

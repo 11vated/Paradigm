@@ -58,7 +58,7 @@ async function main(): Promise<void> {
       if (pkg.outputs) {
         console.log(`\nOutputs (${pkg.outputs.length}):`);
         for (const out of pkg.outputs) {
-          const typeName = ['', 'OBJ', 'WAV', 'PNG', 'GLTF', 'MIDI'][out.type] || `TYPE_${out.type}`;
+          const typeName = ['', 'OBJ', 'WAV', 'PNG', 'GLTF', 'MIDI', 'SVG', 'HTML', 'JSON', 'TEXT', 'CODE', 'STORY', 'SIM', 'PREVIEW', 'STATS'][out.type] || `TYPE_${out.type}`;
           console.log(`  [${out.index}] ${typeName} — ${out.data.length} bytes`);
         }
       }

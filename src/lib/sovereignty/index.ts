@@ -283,7 +283,7 @@ export function simulateMultiNodeFedExchange(
   nodeAName = 'node-alpha',
   nodeBName = 'node-beta',
   nodeCName = 'node-gamma'
-): { exchangeAB: FedV1Exchange; exchangeBC: FedV1Exchange; verified: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
+): { exchangeAB: FedV1Exchange; exchangeBC: FedV1Exchange; verified: boolean; roundtripVerified?: boolean; merged: ReturnType<typeof detMergeFed> | undefined; lineage: string[]; claim: string } {
   const ka = SovereigntyLayer.generateKeys();
   const kb = SovereigntyLayer.generateKeys();
   const kc = SovereigntyLayer.generateKeys();
@@ -306,12 +306,21 @@ export function simulateMultiNodeFedExchange(
   }
 
   const finalLineage = merged ? merged.lineage : [...initialLineage, seedHash];
+  // smallest strengthening for robustness: final roundtrip re-verify on last exchange (better integration with sovereignty verify flows)
+  let roundtripVerified = verified;
+  try {
+    if (exBC && exBC.publicKey) {
+      const vFinal = verifyFedV1Exchange(exBC, exBC.publicKey);
+      roundtripVerified = verified && !!vFinal.sigOk && !!vFinal.merkleOk;
+    }
+  } catch { roundtripVerified = verified; }
   return {
     exchangeAB: exAB,
     exchangeBC: exBC,
     verified,
+    roundtripVerified,
     merged,
     lineage: finalLineage,
-    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} lineageLen=${finalLineage.length} (ECDSA + chained merkle per 13_ advanced surfaces)`,
+    claim: `multi-node (3-node demo) fed v1 (no central): verified=${verified} roundtrip=${roundtripVerified} lineageLen=${finalLineage.length} (ECDSA + chained merkle + final verify per 13_ advanced surfaces)`,
   };
 }

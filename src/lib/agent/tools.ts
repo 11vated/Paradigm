@@ -273,13 +273,34 @@ const growSeedTool: AgentTool = {
 
     try {
       const artifact = await ParadigmPipeline.runEndToEnd(target);
+      // Attach rich named visual artifact (via deriveCleanTitle + full emergent/visual/strata from grow) for agent→grow→UI close
+      const richName = deriveCleanTitle(target.$name || (artifact as any)?.name || 'grown', target.$hash);
+      const grownArtifact = {
+        name: richName,
+        type: (artifact as any).type || target.$domain,
+        domain: target.$domain,
+        visual: (artifact as any).visual || (artifact as any).pngDataURL || ((artifact as any).files && ((artifact as any).files.png || (artifact as any).files.svg)) || null,
+        emergent: (artifact as any).emergent_assets || (artifact as any).files || null,
+        preview: (artifact as any).visual || (artifact as any).emergent_assets || null,
+        html: (artifact as any).htmlData || (artifact as any).htmlContent || ((artifact as any).files && (artifact as any).files.html) || null,
+        audio: (artifact as any).audioDataURL || ((artifact as any).files && (artifact as any).files.wav) || null,
+        strata: (artifact as any).strata || (artifact as any).stratumScores || [],
+        generation_quality: (artifact as any).generation_quality,
+        files: (artifact as any).files || {},
+      };
+      (target as any).grownArtifact = grownArtifact;
+      (target as any).$name = richName; // ensure named
       return {
         success: true,
-        data: { artifact },
-        message: `Grew "${target.$name}" in domain "${target.$domain}" — pipeline produced emergent asset.`,
+        data: { artifact, grownArtifact, seed: target },
+        message: `Grew "${richName}" in domain "${target.$domain}" — pipeline produced rich emergent asset.`,
+        seedsUpdated: [target], // for propagation in plan
       };
     } catch (e: any) {
-      return { success: false, data: null, message: `Grow failed: ${e.message}` };
+      const richName = deriveCleanTitle(target.$name || 'grown', target.$hash);
+      const failGrown = { name: richName, type: target.$domain, error: true, message: e.message, hasVisual: false };
+      (target as any).grownArtifact = failGrown;
+      return { success: false, data: { grownArtifact: failGrown }, message: `Grow failed: ${e.message}` };
     }
   },
 };

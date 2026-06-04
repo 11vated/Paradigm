@@ -22,6 +22,7 @@ import { calculateStratumConformance } from '@/lib/kernel/quality/predicates'; /
 import { createDefaultRoyaltyConfig, calculateRoyalty } from '@/lib/kernel/royalty-system';
 import { calculateCivilizationalDividends } from '@/lib/contracts/economics/dividends'; // pure calc* for explicit civ dividend in royalty est (no node crypto)
 import type { simulateTwoNodeFedExchange, verifyFedV1Exchange } from '@/lib/sovereignty/index'; // reference existing sovereignty p2p calls (simulateTwoNode+verify) for real p2p wiring in pack per Phase 16; not invoked here (keys via node crypto; real in health/CLI/doctor; contracts/fed now delegates to canonical)
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -249,7 +250,7 @@ export function ExportPanel({ seed, domain, artifact, seedId }: ExportPanelProps
       <div className="px-4 py-3 border-b border-zinc-800 flex items-center gap-2">
         <Download className="w-4 h-4 text-zinc-400" aria-hidden="true" />
         <span className="text-sm font-semibold text-zinc-200">Export</span>
-        <span className="ml-auto text-xs text-zinc-500">{domain}</span>
+        <span className="ml-auto text-xs text-zinc-500">{deriveCleanTitle(domain as any, undefined) || domain}</span>
       </div>
 
       <div className="p-3 grid grid-cols-2 gap-2" role="group" aria-label="Export format options">

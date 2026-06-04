@@ -19,10 +19,12 @@ interface G3Inverted { vertices: number; faces: number; meshes: number; lodCount
 interface G3Artifact {
   gltf: string;
   meta: { gltfPath: string; vertices: number; faces: number; lodCount: number };
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster' | 'gltf';
     gltfPath?: string;
     resolution?: number;
+    previewData?: string;
   };
   emergent_assets?: {
     visual?: {
@@ -43,13 +45,16 @@ async function synthesize(seed: G3Seed): Promise<G3Artifact> {
     const gltf = await fs.readFile(r.filePath, 'utf8');
 
     // Attach rich asset data for UI (Phase 1 consistency; gltf is the primary 'visual' for 3D).
+    const previewData = gltf;
     return {
       gltf,
       meta: { gltfPath: r.filePath, vertices: r.vertices ?? 0, faces: r.faces ?? 0, lodCount: r.lodPaths?.length ?? 0 },
+      previewData,
       visual: {
         type: 'gltf',
         gltfPath: r.filePath,
         resolution: r.vertices ?? 0, // proxy for complexity
+        previewData,
       },
       emergent_assets: {
         visual: {

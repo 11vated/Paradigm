@@ -11,7 +11,31 @@ import type { QualityContract, QualityReport, Stratum } from '../quality-contrac
 import { runStratumPredicate } from '../quality/predicates';
 
 interface WdSeed { $hash: string; genes?: Record<string, any>; }
-interface WdArtifact { svg: string; biomeCount: number; cityCount: number; riverCount: number; plateCount: number; byteSize: number; }
+interface WdArtifact {
+  svg: string;
+  biomeCount: number;
+  cityCount: number;
+  riverCount: number;
+  plateCount: number;
+  byteSize: number;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'html' | 'json';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'html' | 'json';
+      data?: string;
+      path?: string;
+    };
+    visual?: {
+      type: 'svg' | 'html';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface WdInverted { biomeCount: number; cityCount: number; riverCount: number; svgHash: string; }
 
 async function synthesize(seed: WdSeed): Promise<WdArtifact> {
@@ -20,8 +44,21 @@ async function synthesize(seed: WdSeed): Promise<WdArtifact> {
     const r = await generateWorld(seed as any, dir) as any;
     const svg = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
     const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).world ?? {};
-    return { svg, biomeCount: meta.regions ?? r.regionCount ?? 0, cityCount: meta.cities ?? r.cityCount ?? 0,
-      riverCount: meta.rivers ?? r.riverCount ?? 0, plateCount: meta.plates ?? 0, byteSize: svg.length };
+    const previewData = svg;
+    return {
+      svg,
+      biomeCount: meta.regions ?? r.regionCount ?? 0,
+      cityCount: meta.cities ?? r.cityCount ?? 0,
+      riverCount: meta.rivers ?? r.riverCount ?? 0,
+      plateCount: meta.plates ?? 0,
+      byteSize: svg.length,
+      previewData,
+      visual: { type: 'svg', previewData },
+      emergent_assets: {
+        preview: { type: 'svg', data: previewData, path: r.svgPath },
+        visual: { type: 'svg', data: previewData, path: r.svgPath }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

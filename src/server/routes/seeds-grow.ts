@@ -14,7 +14,7 @@ export interface SeedsGrowDeps {
   GrowSeedSchema: any;
   getAllDomains: () => string[];
   growSeed: (seed: any) => Promise<any>;
-  buildC2PAManifest: (seed: any, domain: string) => any;
+  buildC2PAManifest: (seed: any, domain: string, version?: string, artifact?: any) => any;
   growCacheKey: (hash: string, domain: string) => string;
   cache: { get: (k: string) => Promise<string | null>; set: (k: string, v: string, ttl?: number) => Promise<void> };
   log: (level: string, msg: string, meta?: any) => void;
@@ -41,7 +41,7 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
       let result: any;
       if (NEW_DOMAIN_GENERATORS[domain]) {
         result = await NEW_DOMAIN_GENERATORS[domain](seed, outputPath);
-        result.c2pa_manifest = buildC2PAManifest(seed, domain);
+        result.c2pa_manifest = buildC2PAManifest(seed, domain, '2.0', result);
       } else {
         result = await growSeed(seed);
       }

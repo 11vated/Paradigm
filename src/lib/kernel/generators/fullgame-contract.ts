@@ -23,7 +23,8 @@ interface A {
   filePath: string;
   meta: Record<string, unknown>;
   htmlData?: string;
-  visual?: { type: 'html'; htmlData?: string };
+  previewData?: string;
+  visual?: { type: 'html'; htmlData?: string; previewData?: string };
   emergent_assets?: { html?: { type: 'html'; data?: string; path?: string } };
 }
 
@@ -51,13 +52,16 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
       fileContent = '<html><body><p>Generated game (empty fallback)</p></body></html>';
     }
     const htmlData = fileContent;
+    const previewData = htmlData;
     return {
       filePath: fileContent,
       meta: {},
       htmlData,
+      previewData,
       visual: {
         type: 'html' as any,
         htmlData,
+        previewData,
       },
       emergent_assets: {
         html: {

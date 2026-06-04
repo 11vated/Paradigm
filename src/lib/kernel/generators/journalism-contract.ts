@@ -13,7 +13,22 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'journalism'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'text' | 'html' | 'json';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'text' | 'html' | 'json';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -27,7 +42,16 @@ async function synthesize(seed: S): Promise<A> {
   const r = await withKernelClock(0, () => generateJournalism(seed as any, out)) as { filePath?: string; storyPath?: string; articlePath?: string };
   const richPath = r.storyPath ?? r.articlePath ?? r.filePath ?? out;
   const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
-  return { filePath: data, meta: { storyPath: richPath } };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { storyPath: richPath },
+    previewData,
+    visual: { type: 'text', previewData },
+    emergent_assets: {
+      preview: { type: 'text', data: previewData, path: richPath }
+    }
+  };
 }
 
 function invert(a: A): I {

@@ -647,8 +647,9 @@ async function main() {
       // Phase 20-21 demo: inverse + 20-output (functional via compose, failure UX, 15/20 gates)
       try {
         const inv = await import('../src/lib/kernel/inverse-pipeline.js');
-        const inv20 = await inv.inversePipeline20({ artifact: { type: 'text', text: 'hero in tidal world' }, domain: 'narrative', targetModalities: ['visual2d', 'geometry3d', 'music'] });
-        console.log('inverse20 demo: modalities=', inv20.length, 'firstConf=', inv20[0]?.confidence, 'firstGrownRich=', !!inv20[0]?.grownArtifact?.visual);
+        const inv20 = await inv.inversePipeline20({ artifact: { type: 'text', text: 'hero in tidal world' }, domain: 'narrative', targetModalities: ['visual2d', 'geometry3d', 'music', 'finance', 'acoustics', 'edtech'] });
+        const g0 = inv20[0] || {}; const ga = g0.grownArtifact || {}; const gName = ga.name || ga.display_name || 'n/a'; const gVis = ga.visual ? (ga.visual.type || 'data') : 'none'; const gStr = ga.strata ? Object.keys(ga.strata||{}).length : (ga.strataScores?Object.keys(ga.strataScores).length:0);
+        console.log('inverse20 demo: modalities=', inv20.length, 'firstConf=', g0.confidence?.toFixed?.(2)||g0.confidence, 'firstGrownRich=', !!ga.visual, 'name=', gName, 'visualType=', gVis, 'strataCovered=', gStr);
         const out20 = await inv.output20Matrix({ $hash: 'demo', genes: {} });
         console.log('output20 demo: outputs=', out20.outputs.length, 'firstMod=', out20.outputs[0]?.modality);
         const g20 = inv.phase20Gate(); const g21 = inv.phase21Gate();

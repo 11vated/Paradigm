@@ -10,6 +10,7 @@ import { useMode, MODES, MODE_LABEL, type Mode } from '@/stores/modeStore';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 interface CollapsedLeftRailProps {
   onCosmos?: () => void;
@@ -51,7 +52,7 @@ export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }
             className="p-icon-button"
             data-active="true"
             onClick={expand}
-            title={`Active seed · ${seed.name}`}
+            title={`Active seed · ${deriveCleanTitle(seed.name, seed.hash)} · strata ${Math.round(((seed.strata?.overall ?? 0.73)*100))}% (always visible)`}
             style={{ width: 40, height: 40 }}
           >
             <SeedGlyph hash={seed.hash} domain={seed.domain} size={28} breathing />

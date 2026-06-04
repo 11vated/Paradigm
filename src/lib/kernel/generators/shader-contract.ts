@@ -19,7 +19,22 @@ import { shaderContract as _shader15 } from '../../contracts/domains/shader';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'shader'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'glsl' | 'wgsl' | 'code';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'code';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -35,7 +50,16 @@ async function synthesize(seed: S): Promise<A> {
     const data = primaryPath
       ? await fs.readFile(primaryPath, 'utf-8').catch(async () => (await fs.readFile(primaryPath)).toString('base64'))
       : '';
-    return { filePath: data, meta: { ...r, filePath: undefined } };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: { ...r, filePath: undefined },
+      previewData,
+      visual: { type: 'code', previewData },
+      emergent_assets: {
+        preview: { type: 'code', data: previewData, path: primaryPath }
+      }
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { growSeed } from '@/services/api';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 export function useGrowArtifact() {
   const seed = useActiveSeed((s) => s.seed);
@@ -29,6 +30,20 @@ export function useGrowArtifact() {
       const a = await growSeed(seed.id);
       if (signal?.cancelled) return;
       setArtifact(a as Record<string, unknown>);
+      // Promote live strata to activeSeed for HUDs everywhere (from server or compute)
+      try {
+        const aa: any = a || {};
+        const sc = aa.strataCompliance ?? aa.axes?.strataCompliance ?? aa.strata?.overall;
+        const per = aa.strata?.perStratum || aa.perStratum;
+        if (typeof sc === 'number' || per) {
+          const overall = typeof sc === 'number' ? sc : (per ? Object.values(per).reduce((x:number,y:any)=>x+(y.score||y||0),0)/9 : 0.7);
+          useActiveSeed.getState().patchSeed({ strata: { overall, perStratum: per || {}, compliance: overall } });
+        } else {
+          // compute to ensure every grow has strata
+          const conf = calculateStratumConformance([aa]);
+          useActiveSeed.getState().patchSeed({ strata: { overall: conf.overall, perStratum: Object.fromEntries(Object.entries(conf.perStratum).map(([k,v]:any)=>[k,v.score||0.5])), compliance: conf.overall } });
+        }
+      } catch {}
     } catch (e: any) {
       if (signal?.cancelled) return;
       const msg = String(e?.message ?? e);
@@ -57,8 +72,16 @@ export function useGrowArtifact() {
     const onGrowSuccess = (ev: Event) => {
       const detail = (ev as CustomEvent).detail;
       if (detail?.artifact) {
-        setArtifact(detail.artifact as Record<string, unknown>);
+        const det: any = detail.artifact;
+        setArtifact(det as Record<string, unknown>);
         setError(null);
+        // promote strata on event too for live all-ops
+        try {
+          const sc = det.strataCompliance ?? det.strata?.overall;
+          if (typeof sc === 'number') {
+            useActiveSeed.getState().patchSeed({ strata: { overall: sc, perStratum: det.strata?.perStratum, compliance: sc } });
+          }
+        } catch {}
       } else {
         // Fallback — re-run grow
         grow();

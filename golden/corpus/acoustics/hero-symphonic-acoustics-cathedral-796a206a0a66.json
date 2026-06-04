@@ -1,0 +1,44 @@
+{
+  "seed": "symphonic acoustic architecture for resonant cathedrals and living sound sculptures --verify",
+  "domain": "15_ contract",
+  "reproducibilityHash": "15-os-5834d083ae7b",
+  "strataScores": {
+    "World": 0.93,
+    "Form": 0.89,
+    "Field": 0.85,
+    "Motion": 0,
+    "Sound": 0,
+    "Mind": 0,
+    "Story": 0,
+    "Culture": 0,
+    "Time": 0
+  },
+  "artifact": {
+    "id": "proc_133699749145235",
+    "width": 4096,
+    "height": 4096,
+    "biomeCount": 8,
+    "hasRivers": true,
+    "strataScores": {
+      "World": 0.93,
+      "Form": 0.89,
+      "Field": 0.85,
+      "Motion": 0,
+      "Sound": 0,
+      "Mind": 0,
+      "Story": 0,
+      "Culture": 0,
+      "Time": 0
+    },
+    "emittedPath": "C:\\Users\\11vat\\Desktop\\Paradigm\\artifacts\\os-shell\\os-5834d083ae7b-procedural.json"
+  },
+  "part6": {
+    "royaltiesPreview": "lineage + civilizational dividends active",
+    "perf": {
+      "durationMs": 2,
+      "budgetMs": 200,
+      "path": "os-shell/15_elevate_synth"
+    }
+  },
+  "generatedAt": "2026-06-04T03:04:54.612Z"
+}

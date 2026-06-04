@@ -15,6 +15,7 @@ import fs from 'fs';
 import type { Seed, GeneratorOutput } from './engines';
 import { rngFromHash } from './rng';
 import { kernelNow, kernelNowIso } from './clock';
+import { deriveCleanTitle } from './types'; // for rich artifact naming in .gseed packs/outputs for uniform sovereignty
 
 // Section types
 export enum SectionType {
@@ -26,13 +27,22 @@ export enum SectionType {
   SIGNATURE = 6,
 }
 
-// Output types
+// Output types — extended for uniform rich artifacts (visual png/svg, audio, story/manuscript, html fullgame, gltf, preview/code, sim json/html, etc.)
 export enum OutputType {
   OBJ = 1,
   WAV = 2,
   PNG = 3,
   GLTF = 4,
   MIDI = 5,
+  SVG = 6,
+  HTML = 7,
+  JSON = 8,
+  TEXT = 9,
+  CODE = 10,
+  STORY = 11,
+  SIM = 12,
+  PREVIEW = 13,
+  STATS = 14,
 }
 
 // Flags
@@ -494,7 +504,7 @@ export function createGseed(
       royaltyEnabled: false,
       compressed: canCompressSections(),
     },
-    seedHash: String(seed.hash),
+    seedHash: String((seed as any).hash || (seed as any).$hash || '0'.repeat(64)),
     metadata: {
       schema: 'https://paradigm.ai/schema/gseed-metadata/v1',
       author: metadata.author || 'Anonymous',
@@ -507,7 +517,10 @@ export function createGseed(
     outputs: [],
   };
 
-  // Add outputs based on generator type
+  // Add outputs based on generator type — extended for ANY rich artifact (png/svg/audio/story/html/gltf/preview/code/sim/json etc) embed data or ref + TLV OUTPUTS for packs/.gseed
+  const richTitle = deriveCleanTitle((seed as any).$name || (seed as any).name || generatorName, (seed as any).$hash || String(seed.hash));
+  if (pkg.metadata) (pkg.metadata as any).title = richTitle;
+
   if (output.mesh && output.format === 'obj') {
     pkg.outputs!.push({
       type: OutputType.OBJ,
@@ -530,6 +543,50 @@ export function createGseed(
       index: 0,
       data: output.sprite,
     });
+  }
+
+  // Rich extensions (smallest: check common rich fields emitted by grow/engines/generators/contracts for visual/audio/story/html/gltf etc)
+  const o: any = output || {};
+  const gOut: any = o.result || o;
+  const files = o.files || gOut.files || {};
+  const pickStr = (k: string) => gOut[k] || o[k] || files[k] || (typeof gOut[k]==='string' ? gOut[k] : null);
+  const pickBin = (k: string) => gOut[k] || o[k] || files[k];
+  if (pickStr('svg') || pickStr('svgPath') || pickStr('svgContent') || files.svg) {
+    const s = pickStr('svg') || pickStr('svgContent') || files.svg || '';
+    pkg.outputs!.push({ type: OutputType.SVG, index: 0, data: new TextEncoder().encode(String(s)) });
+  }
+  if (pickStr('html') || pickStr('htmlPath') || pickStr('htmlContent') || pickStr('storyPlayerPath') || pickStr('indexHtml') || files.html) {
+    const h = pickStr('html') || pickStr('htmlContent') || pickStr('indexHtml') || files.html || '';
+    pkg.outputs!.push({ type: OutputType.HTML, index: 0, data: new TextEncoder().encode(String(h)) });
+  }
+  if (pickStr('gltf') || pickStr('gltfPath') || files.gltf) {
+    const g = pickStr('gltf') || files.gltf || '';
+    pkg.outputs!.push({ type: OutputType.GLTF, index: 0, data: typeof g === 'string' ? new TextEncoder().encode(g) : (g as Uint8Array) });
+  }
+  if (pickStr('json') || pickStr('jsonPath') || pickStr('sim') || pickStr('simData') || files.json) {
+    const j = pickStr('json') || pickStr('simData') || files.json || JSON.stringify(gOut.json || gOut.sim || {});
+    pkg.outputs!.push({ type: OutputType.JSON, index: 0, data: new TextEncoder().encode(String(j)) });
+  }
+  if (pickStr('story') || pickStr('storyData') || pickStr('manuscript') || pickStr('text') || files.story) {
+    const t = pickStr('story') || pickStr('storyData') || pickStr('manuscript') || pickStr('text') || files.story || '';
+    pkg.outputs!.push({ type: OutputType.STORY, index: 0, data: new TextEncoder().encode(String(t)) });
+  }
+  if (pickStr('code') || pickStr('codePath') || pickStr('previewData') || pickStr('source') || files.preview) {
+    const c = pickStr('code') || pickStr('previewData') || pickStr('source') || files.preview || '';
+    pkg.outputs!.push({ type: OutputType.CODE, index: 0, data: new TextEncoder().encode(String(c)) });
+  }
+  if (pickBin('png') || pickBin('pngData') || pickBin('pngBuffer') || files.png) {
+    const p = pickBin('png') || pickBin('pngData') || pickBin('pngBuffer') || files.png;
+    pkg.outputs!.push({ type: OutputType.PNG, index: 0, data: p instanceof Uint8Array ? p : new TextEncoder().encode(String(p)) });
+  }
+  if (pickBin('wav') || pickBin('wavBuffer') || files.wav) {
+    const w = pickBin('wav') || pickBin('wavBuffer') || files.wav;
+    pkg.outputs!.push({ type: OutputType.WAV, index: 0, data: w instanceof Uint8Array ? w : new TextEncoder().encode(String(w)) });
+  }
+  // always ensure at least metadata rich name for UI/exports even if no binary outputs
+  if ((!pkg.outputs || pkg.outputs.length === 0) && (o.files || o.visual || o.emergent_assets)) {
+    const metaRich = JSON.stringify({ files: o.files || {}, visual: o.visual || null, name: richTitle, strata: o.strata || [] });
+    pkg.outputs!.push({ type: OutputType.PREVIEW, index: 0, data: new TextEncoder().encode(metaRich) });
   }
 
   return pkg;

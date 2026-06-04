@@ -13,7 +13,22 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'literature'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'text' | 'json' | 'html';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'text' | 'json';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -28,7 +43,16 @@ async function synthesize(seed: S): Promise<A> {
   const richPath = r.storyPath ?? r.manuscriptPath ?? r.filePath ?? out;
   const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
   const jsonData = await fsp.readFile(r.filePath ?? out, 'utf-8').catch(() => '{}');
-  return { filePath: data, meta: { richPath, json: jsonData.substring(0, 512), wordCount: data.length } };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: { richPath, json: jsonData.substring(0, 512), wordCount: data.length },
+    previewData,
+    visual: { type: 'text', previewData },
+    emergent_assets: {
+      preview: { type: 'text', data: previewData, path: richPath }
+    }
+  };
 }
 
 function invert(a: A): I {

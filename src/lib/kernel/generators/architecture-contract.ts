@@ -15,7 +15,27 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'architecture'; $name?: string; genes: any }
-interface A { filePath: string; meta: { floorCount?: number; roomCount?: number } }
+interface A {
+  filePath: string;
+  meta: { floorCount?: number; roomCount?: number };
+  previewData?: string;
+  visual?: {
+    type: 'gltf' | 'json' | 'html' | 'png' | 'svg';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'gltf' | 'json' | 'html' | 'png' | 'svg';
+      data?: string;
+      path?: string;
+    };
+    mesh?: {
+      type: 'gltf';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath).digest('hex');
@@ -36,7 +56,18 @@ export const ArchitectureQualityContract: QualityContract<S, A, any> = {
       const primaryPath = r.gltfPath || r.jsonPath || r.floorplanPath;
       let data = '';
       if (primaryPath) { try { const b = await fsp.readFile(primaryPath); data = b.toString('base64'); } catch { data = ''; } }
-      return { filePath: data, meta: { ...r } };
+      const previewData = data;
+      const isGltf = !!r.gltfPath;
+      return {
+        filePath: data,
+        meta: { ...r },
+        previewData,
+        visual: { type: isGltf ? 'gltf' : (r.floorplanPath?.endsWith?.('.svg') ? 'svg' : 'json'), previewData },
+        emergent_assets: {
+          preview: { type: isGltf ? 'gltf' : (r.floorplanPath?.endsWith?.('.svg') ? 'svg' : 'json'), data: previewData, path: primaryPath },
+          mesh: isGltf ? { type: 'gltf', data: previewData, path: r.gltfPath } : undefined
+        }
+      };
     } finally {
       await fsp.rm(dir, { recursive: true, force: true });
     }

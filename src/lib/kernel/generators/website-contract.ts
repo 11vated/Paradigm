@@ -12,7 +12,26 @@ import type { QualityContract, QualityReport, Stratum } from '../quality-contrac
 import { runStratumPredicate } from '../quality/predicates';
 
 interface WSSeed { $hash: string; genes?: Record<string, any>; }
-interface WSArtifact { html: string; css: string; js: string; sections: number; colorPalette: string[]; byteSize: number; }
+interface WSArtifact {
+  html: string;
+  css: string;
+  js: string;
+  sections: number;
+  colorPalette: string[];
+  byteSize: number;
+  previewData?: string;
+  visual?: {
+    type: 'html' | 'code';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'html' | 'code';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface WSInverted { sections: number; byteSize: number; palette: string[]; htmlHash: string; }
 
 async function synthesize(seed: WSSeed): Promise<WSArtifact> {
@@ -22,7 +41,18 @@ async function synthesize(seed: WSSeed): Promise<WSArtifact> {
     const html = r.indexHtml ?? await fs.readFile(r.filePath, 'utf8').catch(() => '');
     const css = r.styleCss ?? '';
     const js = r.appJs ?? '';
-    return { html, css, js, sections: r.sectionCount ?? 0, colorPalette: r.colorPalette ?? [], byteSize: html.length + css.length + js.length };
+    const previewData = html;
+    return {
+      html, css, js,
+      sections: r.sectionCount ?? 0,
+      colorPalette: r.colorPalette ?? [],
+      byteSize: html.length + css.length + js.length,
+      previewData,
+      visual: { type: 'html', previewData },
+      emergent_assets: {
+        preview: { type: 'html', data: previewData, path: r.filePath }
+      }
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 

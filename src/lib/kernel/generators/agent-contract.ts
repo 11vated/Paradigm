@@ -17,7 +17,22 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'agent'; $name?: string; genes: Record<string, unknown> }
-interface A { filePath: string; meta: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'text' | 'code';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'text' | 'code';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -37,7 +52,16 @@ export const AgentQualityContract: QualityContract<S, A, Record<string, unknown>
     const r = await withKernelClock(0, () => generateAgentV3(seed as never, out)) as { filePath?: string };
     const filePath = r.filePath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: {},
+      previewData,
+      visual: { type: 'json', previewData },
+      emergent_assets: {
+        preview: { type: 'json', data: previewData, path: filePath }
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

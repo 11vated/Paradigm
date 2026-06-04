@@ -1,0 +1,29 @@
+{
+  "intent": "sovereign explorer with transformation abilities in a quantum tidal world --verify",
+  "memoryHash": "direct-pipeline-v1-strata-c4efd2bbd3b0800c",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Form",
+    "World"
+  ],
+  "strataSummary": [
+    "Form",
+    "World"
+  ],
+  "strataHash": "c4efd2bbd3b0800c",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Form",
+        "World"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-03T18:11:43.919Z"
+}

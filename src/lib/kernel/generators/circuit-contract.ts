@@ -14,7 +14,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'circuit'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'json' | 'code' | 'html';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'json' | 'code' | 'html';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -37,6 +52,7 @@ export const CircuitQualityContract: QualityContract<S, A, any> = {
     const _svgContent = await fsp.readFile(r.schematicPath, 'utf-8').catch(() => '<svg/>');
     const gerberLines = gbrContent.split('\n').length;
     const padCount = (gbrContent.match(/D03\*/g) || []).length;
+    const previewData = _svgContent || jsonContent;
     return {
       filePath: jsonContent,
       meta: {
@@ -48,6 +64,11 @@ export const CircuitQualityContract: QualityContract<S, A, any> = {
         padFlashes: padCount,
         componentCount: r.componentCount,
         connectionCount: r.connectionCount
+      },
+      previewData,
+      visual: { type: r.schematicPath ? 'svg' : 'json', previewData },
+      emergent_assets: {
+        preview: { type: r.schematicPath ? 'svg' : 'json', data: previewData, path: r.schematicPath || r.jsonPath }
       }
     };
   },

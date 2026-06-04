@@ -1,0 +1,663 @@
+{
+  "$intent": "baseline perf test seed for final sweep --verify",
+  "$created": "2026-06-03T18:37:42.838Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "cac243201d31f3c0",
+      "name": "baseline perf test seed for final sweep ",
+      "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "sturdy",
+          "heightScale": 1.087208004297897,
+          "shoulderRatio": 0.96305983494688,
+          "torsoRatio": 1.0647135093208364,
+          "limbRatio": 1.024311050211478,
+          "muscle": 0.47626198334150116,
+          "softness": 0.3527760445285616,
+          "skinTone": [
+            0.6244584467852148,
+            0.7803378148420793,
+            0.649257944659438
+          ]
+        },
+        "face": {
+          "roundness": 0.614416420985292,
+          "eyeHeight": 0.4574685818796265,
+          "eyeSpacing": 0.34168755359398634,
+          "eyeShape": "wide",
+          "eyeColor": [
+            0.4561067156408367,
+            0.6792886347779262,
+            0.41392825995835913
+          ],
+          "noseShape": "aquiline",
+          "noseHeight": 0.5772607598834653,
+          "mouthShape": "full",
+          "jawShape": "broad",
+          "brow": 0.7290931282987787,
+          "cheekbones": 0.29804365733541704,
+          "chin": 0.4760457297346685,
+          "hairStyle": "long",
+          "hairColor": [
+            0.3119888499974177,
+            0.2565871704826555,
+            0.09268351754777834
+          ]
+        },
+        "voice": {
+          "pitch": 275.427287814724,
+          "inflection": 0.798018592264666,
+          "tempo": 135.3172809822891,
+          "breathiness": 0.31209879465961965,
+          "warmth": 0.16507838710554323,
+          "formants": [
+            508.3011240853375,
+            885.8962448344454,
+            1887.9756037455393,
+            2323.6622815329715,
+            2904.577851916214
+          ],
+          "accent": "tokyo"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.6241510417358263,
+            "conscientiousness": 0.9241281745114429,
+            "extraversion": 0.9379221282050427,
+            "agreeableness": 0.2084902032218403,
+            "neuroticism": 0.005571002842700734
+          },
+          "interests": [
+            "gardening",
+            "history",
+            "architecture"
+          ],
+          "values": [
+            "generosity",
+            "honesty",
+            "devotion",
+            "irreverence"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.6059950466512505,
+          "curiosity": 0.23929565532626507
+        },
+        "memory": {
+          "episodicCapacity": 2422,
+          "episodicDecay": 0.017350284917726208,
+          "semanticCapacity": 12801,
+          "reflectionCadenceDays": 3.3874910090128454
+        },
+        "bond": {
+          "initialTrust": 0.4661806787063405,
+          "initialWarmth": 0.6502682266882931,
+          "bondingDays": 57
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "baseline perf test seed for final sweep "
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "baseline perf test seed for final sweep "
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "cac243201d31f3c0",
+      "name": "Quantum Tidal World",
+      "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "modern",
+          "biome": "volcanic",
+          "magic": 0.4076495873671999,
+          "tech": 0.7157116977361218,
+          "density": 0.5810368340382599
+        },
+        "physics": {
+          "gravity": 0.254206611138337,
+          "hostility": 0.6888802226428081,
+          "diurnalRate": 0.49901535779129946,
+          "weatherVolatility": 0.9642505724401442
+        },
+        "society": {
+          "order": 0.8985158893188758,
+          "pluralism": 0.614416420985292,
+          "prosperity": 0.07468581879626535,
+          "literacy": 0.2779170239599089
+        },
+        "conflict": {
+          "kind": "political",
+          "scale": 0.5935111927347279,
+          "urgency": 0.9654810579632105,
+          "clarity": 0.5232137665972652
+        },
+        "mood": {
+          "brightness": 0.2931993046752046,
+          "warmth": 0.27260759883465235,
+          "pace": 0.16254671259955722,
+          "levity": 0.6838411520637968
+        },
+        "history": {
+          "agesSinceFall": 3645,
+          "ghostliness": 0.29804365733541704,
+          "eraCount": 2
+        }
+      },
+      "bornAt": "2026-06-03T18:37:42.827Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "baseline perf test seed for final sweep --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "5a2ef3ff8b159e3b",
+    "seedHash": "5a2ef3ff8b159e3bfa8e03cfe7170eba2d8af8a364162924a2e5baf07de3a212",
+    "genomeVersion": 1,
+    "title": "The Quiet Throne of Quantum Tidal World",
+    "genes": {
+      "archetype": "political-intrigue",
+      "stake": 0.3895350248909047,
+      "antagonist": 0.6124306700717763,
+      "moralComplexity": 0.5299029134795271,
+      "pacing": 0.12787675775515717,
+      "intensity": 0.719181344102609,
+      "actCount": 4,
+      "targetWordCount": 13242,
+      "hook": "In Quantum Tidal World, the heir is poisoned and the council is silent. baseline perf test seed for final sweep  is the only honest voice left."
+    },
+    "parents": {
+      "friend": {
+        "id": "cac243201d31f3c0",
+        "name": "baseline perf test seed for final sweep ",
+        "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8"
+      },
+      "world": {
+        "id": "cac243201d31f3c0",
+        "name": "Quantum Tidal World",
+        "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8"
+      }
+    },
+    "bornAt": "2026-06-03T18:37:42.832Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "baseline perf test seed for final sweep --verify",
+      "quest": {
+        "id": "5a2ef3ff8b159e3b",
+        "seedHash": "5a2ef3ff8b159e3bfa8e03cfe7170eba2d8af8a364162924a2e5baf07de3a212",
+        "genomeVersion": 1,
+        "title": "The Quiet Throne of Quantum Tidal World",
+        "genes": {
+          "archetype": "political-intrigue",
+          "stake": 0.3895350248909047,
+          "antagonist": 0.6124306700717763,
+          "moralComplexity": 0.5299029134795271,
+          "pacing": 0.12787675775515717,
+          "intensity": 0.719181344102609,
+          "actCount": 4,
+          "targetWordCount": 13242,
+          "hook": "In Quantum Tidal World, the heir is poisoned and the council is silent. baseline perf test seed for final sweep  is the only honest voice left."
+        },
+        "parents": {
+          "friend": {
+            "id": "cac243201d31f3c0",
+            "name": "baseline perf test seed for final sweep ",
+            "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8"
+          },
+          "world": {
+            "id": "cac243201d31f3c0",
+            "name": "Quantum Tidal World",
+            "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8"
+          }
+        },
+        "bornAt": "2026-06-03T18:37:42.832Z"
+      },
+      "friend": {
+        "id": "cac243201d31f3c0",
+        "name": "baseline perf test seed for final sweep ",
+        "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "sturdy",
+            "heightScale": 1.087208004297897,
+            "shoulderRatio": 0.96305983494688,
+            "torsoRatio": 1.0647135093208364,
+            "limbRatio": 1.024311050211478,
+            "muscle": 0.47626198334150116,
+            "softness": 0.3527760445285616,
+            "skinTone": [
+              0.6244584467852148,
+              0.7803378148420793,
+              0.649257944659438
+            ]
+          },
+          "face": {
+            "roundness": 0.614416420985292,
+            "eyeHeight": 0.4574685818796265,
+            "eyeSpacing": 0.34168755359398634,
+            "eyeShape": "wide",
+            "eyeColor": [
+              0.4561067156408367,
+              0.6792886347779262,
+              0.41392825995835913
+            ],
+            "noseShape": "aquiline",
+            "noseHeight": 0.5772607598834653,
+            "mouthShape": "full",
+            "jawShape": "broad",
+            "brow": 0.7290931282987787,
+            "cheekbones": 0.29804365733541704,
+            "chin": 0.4760457297346685,
+            "hairStyle": "long",
+            "hairColor": [
+              0.3119888499974177,
+              0.2565871704826555,
+              0.09268351754777834
+            ]
+          },
+          "voice": {
+            "pitch": 275.427287814724,
+            "inflection": 0.798018592264666,
+            "tempo": 135.3172809822891,
+            "breathiness": 0.31209879465961965,
+            "warmth": 0.16507838710554323,
+            "formants": [
+              508.3011240853375,
+              885.8962448344454,
+              1887.9756037455393,
+              2323.6622815329715,
+              2904.577851916214
+            ],
+            "accent": "tokyo"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.6241510417358263,
+              "conscientiousness": 0.9241281745114429,
+              "extraversion": 0.9379221282050427,
+              "agreeableness": 0.2084902032218403,
+              "neuroticism": 0.005571002842700734
+            },
+            "interests": [
+              "gardening",
+              "history",
+              "architecture"
+            ],
+            "values": [
+              "generosity",
+              "honesty",
+              "devotion",
+              "irreverence"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.6059950466512505,
+            "curiosity": 0.23929565532626507
+          },
+          "memory": {
+            "episodicCapacity": 2422,
+            "episodicDecay": 0.017350284917726208,
+            "semanticCapacity": 12801,
+            "reflectionCadenceDays": 3.3874910090128454
+          },
+          "bond": {
+            "initialTrust": 0.4661806787063405,
+            "initialWarmth": 0.6502682266882931,
+            "bondingDays": 57
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "cac243201d31f3c0",
+        "name": "Quantum Tidal World",
+        "seedHash": "cac243201d31f3c0debb01ad065bd96d0cacc6b584ee2aa5894b7149b0fc6be8",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "modern",
+            "biome": "volcanic",
+            "magic": 0.4076495873671999,
+            "tech": 0.7157116977361218,
+            "density": 0.5810368340382599
+          },
+          "physics": {
+            "gravity": 0.254206611138337,
+            "hostility": 0.6888802226428081,
+            "diurnalRate": 0.49901535779129946,
+            "weatherVolatility": 0.9642505724401442
+          },
+          "society": {
+            "order": 0.8985158893188758,
+            "pluralism": 0.614416420985292,
+            "prosperity": 0.07468581879626535,
+            "literacy": 0.2779170239599089
+          },
+          "conflict": {
+            "kind": "political",
+            "scale": 0.5935111927347279,
+            "urgency": 0.9654810579632105,
+            "clarity": 0.5232137665972652
+          },
+          "mood": {
+            "brightness": 0.2931993046752046,
+            "warmth": 0.27260759883465235,
+            "pace": 0.16254671259955722,
+            "levity": 0.6838411520637968
+          },
+          "history": {
+            "agesSinceFall": 3645,
+            "ghostliness": 0.29804365733541704,
+            "eraCount": 2
+          }
+        },
+        "bornAt": "2026-06-03T18:37:42.827Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "baseline perf test seed for final sweep --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "World",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "World",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "baseline perf test seed for final sweep --verify",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "baseline perf test seed for final sweep --verify"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "baseline perf test seed for final sweep --verify"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "World",
+    "Mind"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

@@ -35,6 +35,8 @@ import { HealthPulse } from '@/components/shell/HealthPulse';
 import { HashPill } from '@/components/shell/HashPill';
 import { CommandPalette } from '@/components/shell/CommandPalette';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 // GA polish: WCAG roles/labels, aria for accessibility, mobile responsive classes.
 
 type PanelTab = 'chat' | 'editor' | 'genes' | 'gallery' | 'library' | 'lineage' | 'topology';
@@ -296,7 +298,7 @@ export function StudioPage() {
 
         {/* Visible zero-onboard / studio timing claim (surfaced; marks for health + proof) */}
         <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-900/60 text-emerald-200 font-mono border border-emerald-800/80" aria-live="polite" title="Zero-onboard timer claim: first artifact &lt;60s from Onboarding or prompt submit. See /api/substrate/health">
-          &lt;60s zero-onboard
+          &lt;60s zero-onboard · full strata HUDs
         </span>
 
         <button
@@ -436,7 +438,7 @@ export function StudioPage() {
                         }}
                       >
                         <span style={{ fontWeight: 600, fontSize: 13, color: 'var(--p-text)' }}>
-                          {currentArtifact.seed?.$name || currentArtifact.seed?.name || 'Artifact'}
+                          {deriveCleanTitle(currentArtifact.seed?.$name || currentArtifact.seed?.name || 'Artifact', currentArtifact.seed?.$hash)}
                         </span>
                         {currentArtifact.seed?.$domain && (
                           <span
@@ -450,6 +452,14 @@ export function StudioPage() {
                             {currentArtifact.seed.$domain}
                           </span>
                         )}
+                        {/* Always-visible strata HUD in StudioPage preview header (live from artifact or compute) */}
+                        {(() => {
+                          const art: any = currentArtifact.output || {};
+                          const sc = art.strataCompliance ?? art.strata?.overall ?? (currentArtifact.seed as any)?.strataCompliance;
+                          let pct = typeof sc === 'number' ? Math.round(sc*100) : null;
+                          if (pct == null) { try { const c = calculateStratumConformance([art]); pct = Math.round(c.overall*100); } catch{} }
+                          return pct != null ? <span className="p-strata-pill" title="9-strata live">{pct}% strata</span> : null;
+                        })()}
                       </div>
                     )}
                     <div style={{ flex: 1, overflow: 'hidden', position: 'relative' }}>

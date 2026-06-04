@@ -13,7 +13,22 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface S { $domain: 'drone-delivery'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'svg' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'svg' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');

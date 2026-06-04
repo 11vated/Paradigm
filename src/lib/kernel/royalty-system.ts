@@ -75,21 +75,29 @@ export function validateRoyaltyConfig(config: RoyaltyConfig): boolean {
 
 /**
  * Calculate royalty payment
+ * Works uniformly with rich artifacts (png/svg/audio/html/gltf/story/sim full embeds): optional artifact for future rich-premium or strata-based but calc remains det from config+price.
  */
 export function calculateRoyalty(
   config: RoyaltyConfig,
   salePrice: number,
-  isResale: boolean = false
+  isResale: boolean = false,
+  artifact?: any // rich support: visual/emergent/files etc passed through from grow/make/sovereignty
 ): Array<{ address: string; amount: number; role: string }> {
   const splits = isResale && config.resaleSplits
     ? config.resaleSplits
     : config.primarySplits;
 
-  return splits.map(split => ({
+  const base = splits.map(split => ({
     address: split.address,
     amount: (salePrice * split.percentage) / 100,
     role: split.role,
   }));
+  if (artifact && (artifact.files || artifact.visual || artifact.htmlData)) {
+    // rich artifact present — amounts unchanged (det), but caller (CLI/pack/onchain) can premium price
+    (base as any)._richArtifact = true;
+    (base as any)._richName = artifact.name || 'rich';
+  }
+  return base;
 }
 
 /**

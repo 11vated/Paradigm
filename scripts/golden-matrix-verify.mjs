@@ -63,14 +63,19 @@ function loadGoldenCorpus() {
     log('warn', 'No golden/corpus/ directory found.');
     return [];
   }
-  const files = readdirSync(corpusPath).filter(f => f.endsWith('.json'));
-  return files.map(f => {
-    try {
-      return JSON.parse(readFileSync(join(corpusPath, f), 'utf-8'));
-    } catch {
-      return null;
+  // Recursive for subdirs (game/ + rich literature/film/website/physics/world/game per 20+ batch 2026-06-04); expands matrix/replay for new rich
+  function walk(dir) {
+    let out = [];
+    for (const ent of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, ent.name);
+      if (ent.isDirectory()) out = out.concat(walk(p));
+      else if (ent.name.endsWith('.json') && (ent.name.includes('hero-') || /(-v1|real-)/.test(ent.name))) {
+        try { out.push(JSON.parse(readFileSync(p, 'utf-8'))); } catch {}
+      }
     }
-  }).filter(Boolean);
+    return out;
+  }
+  return walk(corpusPath);
 }
 
 // ─── Runtime Verification ────────────────────────────────────────────────────

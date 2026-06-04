@@ -1,0 +1,657 @@
+{
+  "$intent": "a fierce warrior with transformation abilities in a tidal quantum world --verify",
+  "$created": "2026-06-03T18:44:23.418Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "132dbabbb0327ce3",
+      "name": "a fierce warrior with transformation abi",
+      "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "slender",
+          "heightScale": 1.0605746252750161,
+          "shoulderRatio": 1.1883544865937714,
+          "torsoRatio": 1.0512845380981861,
+          "limbRatio": 0.8857718883258604,
+          "muscle": 0.5335207007348183,
+          "softness": 0.40473727724388814,
+          "skinTone": [
+            0.5455774968571268,
+            0.503790566795155,
+            0.6735703115645097
+          ]
+        },
+        "face": {
+          "roundness": 0.2708369264363515,
+          "eyeHeight": 0.4649390677063904,
+          "eyeSpacing": 0.30816006822773767,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.6781758506946616,
+            0.47641591250116566,
+            0.5250659075895949
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5556684589674807,
+          "mouthShape": "thin",
+          "jawShape": "soft",
+          "brow": 0.5769057161479199,
+          "cheekbones": 0.17589559648119368,
+          "chin": 0.9932514733135875,
+          "hairStyle": "medium",
+          "hairColor": [
+            0.11016097492709145,
+            0.16640252018985888,
+            0.33575375843017097
+          ]
+        },
+        "voice": {
+          "pitch": 241.04979390970354,
+          "inflection": 0.6854485376248463,
+          "tempo": 127.99498892295762,
+          "breathiness": 0.49250981588248544,
+          "warmth": 0.8472029393149505,
+          "formants": [
+            580.7928632888337,
+            1012.2389903033959,
+            2157.230635072811,
+            2655.0530893203827,
+            3318.8163616504785
+          ],
+          "accent": "mumbai"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.41566534770462704,
+            "conscientiousness": 0.6837545764803128,
+            "extraversion": 0.13678425630006674,
+            "agreeableness": 0.22005447606801676,
+            "neuroticism": 0.5888797753466297
+          },
+          "interests": [
+            "architecture",
+            "astronomy",
+            "poetry",
+            "dance"
+          ],
+          "values": [
+            "honesty",
+            "loyalty"
+          ],
+          "speechStyle": "formal",
+          "humor": 0.846813618371038,
+          "curiosity": 0.7271234703039888
+        },
+        "memory": {
+          "episodicCapacity": 2387,
+          "episodicDecay": 0.012351419057996256,
+          "semanticCapacity": 17180,
+          "reflectionCadenceDays": 6.939944631687073
+        },
+        "bond": {
+          "initialTrust": 0.49353159531744034,
+          "initialWarmth": 0.76191266428141,
+          "bondingDays": 44
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "a fierce warrior with transformation abi"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "a fierce warrior with transformation abi"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "132dbabbb0327ce3",
+      "name": "Quantum Tidal World",
+      "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "medieval",
+          "biome": "urban",
+          "magic": 0.9708862164844285,
+          "tech": 0.6709484603272868,
+          "density": 0.11923962775286823
+        },
+        "physics": {
+          "gravity": 0.7784023357827277,
+          "hostility": 0.5986863862194407,
+          "diurnalRate": 0.35559544883113947,
+          "weatherVolatility": 0.461437394173009
+        },
+        "society": {
+          "order": 0.9471406231290194,
+          "pluralism": 0.2708369264363515,
+          "prosperity": 0.14939067706390352,
+          "literacy": 0.0544004548515844
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.963626417824436,
+          "urgency": 0.6273598541686094,
+          "clarity": 0.7084431793159915
+        },
+        "mood": {
+          "brightness": 0.6217753653613909,
+          "warmth": 0.05668458967480672,
+          "pace": 0.2726471098463943,
+          "levity": 0.2642902256739401
+        },
+        "history": {
+          "agesSinceFall": 2884,
+          "ghostliness": 0.17589559648119368,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-03T18:44:23.404Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "a fierce warrior with transformation abilities in a tidal quantum world --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "34d822856c1263f5",
+    "seedHash": "34d822856c1263f54c35cb6950a1098e119fee086d4b5d61e7a52b22d1cc6eeb",
+    "genomeVersion": 1,
+    "title": "The Quantum Tidal World Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.6042718068754216,
+      "antagonist": 0.9005621309813125,
+      "moralComplexity": 0.42572393427398747,
+      "pacing": 0.29008643531571143,
+      "intensity": 0.47165084678860164,
+      "actCount": 5,
+      "targetWordCount": 16641,
+      "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. a fierce warrior with transformation abi's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "132dbabbb0327ce3",
+        "name": "a fierce warrior with transformation abi",
+        "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55"
+      },
+      "world": {
+        "id": "132dbabbb0327ce3",
+        "name": "Quantum Tidal World",
+        "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55"
+      }
+    },
+    "bornAt": "2026-06-03T18:44:23.411Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "a fierce warrior with transformation abilities in ",
+      "quest": {
+        "id": "34d822856c1263f5",
+        "seedHash": "34d822856c1263f54c35cb6950a1098e119fee086d4b5d61e7a52b22d1cc6eeb",
+        "genomeVersion": 1,
+        "title": "The Quantum Tidal World Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.6042718068754216,
+          "antagonist": 0.9005621309813125,
+          "moralComplexity": 0.42572393427398747,
+          "pacing": 0.29008643531571143,
+          "intensity": 0.47165084678860164,
+          "actCount": 5,
+          "targetWordCount": 16641,
+          "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. a fierce warrior with transformation abi's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "132dbabbb0327ce3",
+            "name": "a fierce warrior with transformation abi",
+            "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55"
+          },
+          "world": {
+            "id": "132dbabbb0327ce3",
+            "name": "Quantum Tidal World",
+            "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55"
+          }
+        },
+        "bornAt": "2026-06-03T18:44:23.411Z"
+      },
+      "friend": {
+        "id": "132dbabbb0327ce3",
+        "name": "a fierce warrior with transformation abi",
+        "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "slender",
+            "heightScale": 1.0605746252750161,
+            "shoulderRatio": 1.1883544865937714,
+            "torsoRatio": 1.0512845380981861,
+            "limbRatio": 0.8857718883258604,
+            "muscle": 0.5335207007348183,
+            "softness": 0.40473727724388814,
+            "skinTone": [
+              0.5455774968571268,
+              0.503790566795155,
+              0.6735703115645097
+            ]
+          },
+          "face": {
+            "roundness": 0.2708369264363515,
+            "eyeHeight": 0.4649390677063904,
+            "eyeSpacing": 0.30816006822773767,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.6781758506946616,
+              0.47641591250116566,
+              0.5250659075895949
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5556684589674807,
+            "mouthShape": "thin",
+            "jawShape": "soft",
+            "brow": 0.5769057161479199,
+            "cheekbones": 0.17589559648119368,
+            "chin": 0.9932514733135875,
+            "hairStyle": "medium",
+            "hairColor": [
+              0.11016097492709145,
+              0.16640252018985888,
+              0.33575375843017097
+            ]
+          },
+          "voice": {
+            "pitch": 241.04979390970354,
+            "inflection": 0.6854485376248463,
+            "tempo": 127.99498892295762,
+            "breathiness": 0.49250981588248544,
+            "warmth": 0.8472029393149505,
+            "formants": [
+              580.7928632888337,
+              1012.2389903033959,
+              2157.230635072811,
+              2655.0530893203827,
+              3318.8163616504785
+            ],
+            "accent": "mumbai"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.41566534770462704,
+              "conscientiousness": 0.6837545764803128,
+              "extraversion": 0.13678425630006674,
+              "agreeableness": 0.22005447606801676,
+              "neuroticism": 0.5888797753466297
+            },
+            "interests": [
+              "architecture",
+              "astronomy",
+              "poetry",
+              "dance"
+            ],
+            "values": [
+              "honesty",
+              "loyalty"
+            ],
+            "speechStyle": "formal",
+            "humor": 0.846813618371038,
+            "curiosity": 0.7271234703039888
+          },
+          "memory": {
+            "episodicCapacity": 2387,
+            "episodicDecay": 0.012351419057996256,
+            "semanticCapacity": 17180,
+            "reflectionCadenceDays": 6.939944631687073
+          },
+          "bond": {
+            "initialTrust": 0.49353159531744034,
+            "initialWarmth": 0.76191266428141,
+            "bondingDays": 44
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "132dbabbb0327ce3",
+        "name": "Quantum Tidal World",
+        "seedHash": "132dbabbb0327ce33bb98fb94cdcb7ddda63c7293eddd134ea18808a339eea55",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "medieval",
+            "biome": "urban",
+            "magic": 0.9708862164844285,
+            "tech": 0.6709484603272868,
+            "density": 0.11923962775286823
+          },
+          "physics": {
+            "gravity": 0.7784023357827277,
+            "hostility": 0.5986863862194407,
+            "diurnalRate": 0.35559544883113947,
+            "weatherVolatility": 0.461437394173009
+          },
+          "society": {
+            "order": 0.9471406231290194,
+            "pluralism": 0.2708369264363515,
+            "prosperity": 0.14939067706390352,
+            "literacy": 0.0544004548515844
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.963626417824436,
+            "urgency": 0.6273598541686094,
+            "clarity": 0.7084431793159915
+          },
+          "mood": {
+            "brightness": 0.6217753653613909,
+            "warmth": 0.05668458967480672,
+            "pace": 0.2726471098463943,
+            "levity": 0.2642902256739401
+          },
+          "history": {
+            "agesSinceFall": 2884,
+            "ghostliness": 0.17589559648119368,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-03T18:44:23.404Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "a fierce warrior with transformation abilities in a tidal quantum world --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "World",
+        "Form"
+      ],
+      "suggestedStrata": [
+        "World",
+        "Form"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "World",
+          "Form"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "a fierce warrior with transformation abilities in ",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "a fierce warrior with transformation abilities in "
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "a fierce warrior with transformation abilities in "
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "World",
+    "Form"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

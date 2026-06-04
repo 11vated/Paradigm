@@ -13,7 +13,23 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 
 interface DanceSeed { $hash?: string; $name?: string; genes?: any; }
-interface DanceArtifact { choreo: string; style: string; size: number; }
+interface DanceArtifact {
+  choreo: string;
+  style: string;
+  size: number;
+  previewData?: string;
+  visual?: {
+    type: 'text' | 'json' | 'html';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'text' | 'json';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface DanceInverted { style: string; lines: number; bytes: number; }
 
 async function synth(seed: DanceSeed): Promise<DanceArtifact> {
@@ -21,7 +37,17 @@ async function synth(seed: DanceSeed): Promise<DanceArtifact> {
   try {
     const r = await generateDance(seed, path.join(dir, "dance.json"));
     const choreo = await fs.readFile(r.choreoPath, 'utf8');
-    return { choreo, style: r.style, size: choreo.length };
+    const previewData = choreo;
+    return {
+      choreo,
+      style: r.style,
+      size: choreo.length,
+      previewData,
+      visual: { type: 'text', previewData },
+      emergent_assets: {
+        preview: { type: 'text', data: previewData, path: r.choreoPath }
+      }
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

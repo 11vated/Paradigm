@@ -16,7 +16,27 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'furniture'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'gltf' | 'json' | 'html' | 'png' | 'svg';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'gltf' | 'json' | 'html' | 'png' | 'svg';
+      data?: string;
+      path?: string;
+    };
+    mesh?: {
+      type: 'gltf';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -37,7 +57,18 @@ export const FurnitureQualityContract: QualityContract<S, A, any> = {
     const primary = r.gltfPath || r.jsonPath || out;
     let data = '';
     try { const b = await fsp.readFile(primary); data = b.toString('base64'); } catch { data = ''; }
-    return { filePath: data, meta: { ...r } };
+    const previewData = data;
+    const isGltf = !!r.gltfPath;
+    return {
+      filePath: data,
+      meta: { ...r },
+      previewData,
+      visual: { type: isGltf ? 'gltf' : 'json', previewData },
+      emergent_assets: {
+        preview: { type: isGltf ? 'gltf' : 'json', data: previewData, path: primary },
+        mesh: isGltf ? { type: 'gltf', data: previewData, path: r.gltfPath } : undefined
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

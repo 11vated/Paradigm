@@ -1,0 +1,29 @@
+{
+  "intent": "video sequence: epic transformation montage with music sync and 4K PBR --verify",
+  "memoryHash": "direct-pipeline-v1-strata-2474fe0c1f2cf85f",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Form",
+    "Sound"
+  ],
+  "strataSummary": [
+    "Form",
+    "Sound"
+  ],
+  "strataHash": "2474fe0c1f2cf85f",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Form",
+        "Sound"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-03T19:10:14.233Z"
+}

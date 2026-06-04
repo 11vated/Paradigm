@@ -14,7 +14,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'film'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'text' | 'html';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'text' | 'html';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -34,7 +49,16 @@ export const FilmQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateFilm(seed, out));
     const richPath = r.screenplayPath ?? r.scriptPath ?? r.filePath ?? out;
     const data = await fsp.readFile(richPath, 'utf-8').catch(async () => (await fsp.readFile(richPath)).toString('base64'));
-    return { filePath: data, meta: { screenplayPath: richPath, duration: r.duration } };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: { screenplayPath: richPath, duration: r.duration },
+      previewData,
+      visual: { type: 'text', previewData },
+      emergent_assets: {
+        preview: { type: 'text', data: previewData, path: richPath }
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

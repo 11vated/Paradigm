@@ -26,10 +26,12 @@ interface V2Artifact {
   svg: string;
   pngDataURL?: string;
   svgDataURL?: string;
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster';
     pngDataURL?: string;
     svgDataURL?: string;
+    previewData?: string;
     resolution?: number;
     layers?: number;
   };
@@ -64,14 +66,17 @@ async function synthesize(seed: V2Seed): Promise<V2Artifact> {
       svgDataURL = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
     } catch { /* rare */ }
 
+    const previewData = pngDataURL || svgDataURL || svg;
     return {
       svg,
       pngDataURL,
       svgDataURL,
+      previewData,
       visual: {
         type: pngDataURL ? 'png' : 'svg',
         pngDataURL,
         svgDataURL,
+        previewData,
         resolution: r.resolution,
         layers: r.layers,
       },

@@ -1,0 +1,661 @@
+{
+  "$intent": "canon replica goku super saiyan full game with video export --verify",
+  "$created": "2026-06-03T19:12:52.977Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "276c0f0237c93c8b",
+      "name": "canon replica goku super saiyan full gam",
+      "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "soft",
+          "heightScale": 0.9667911826133667,
+          "shoulderRatio": 0.9019471704076863,
+          "torsoRatio": 0.9801692414019127,
+          "limbRatio": 0.9770654042562904,
+          "muscle": 0.24220485822323204,
+          "softness": 0.5950088966180018,
+          "skinTone": [
+            0.8003531390414197,
+            0.600719417912476,
+            0.5899923115937322
+          ]
+        },
+        "face": {
+          "roundness": 0.9246646473633107,
+          "eyeHeight": 0.5048803163858449,
+          "eyeSpacing": 0.41979572564089873,
+          "eyeShape": "round",
+          "eyeColor": [
+            0.4456143668221805,
+            0.205352439955316,
+            0.10583006711142878
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5879979079594844,
+          "mouthShape": "full",
+          "jawShape": "square",
+          "brow": 0.7668734524651106,
+          "cheekbones": 0.5825893459147555,
+          "chin": 0.8148680304281861,
+          "hairStyle": "wavy",
+          "hairColor": [
+            0.5158892333418724,
+            0.26185317768909216,
+            0.03996661432190149
+          ]
+        },
+        "voice": {
+          "pitch": 246.7712548252257,
+          "inflection": 0.23946824353100668,
+          "tempo": 119.68449625767632,
+          "breathiness": 0.11581612511255235,
+          "warmth": 0.7259914990072602,
+          "formants": [
+            567.3270174808414,
+            988.7699447523236,
+            2107.214636357411,
+            2593.494937055275,
+            3241.8686713190937
+          ],
+          "accent": "rio"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.2937437080996932,
+            "conscientiousness": 0.41921531654199495,
+            "extraversion": 0.5312615137835484,
+            "agreeableness": 0.41526205409809136,
+            "neuroticism": 0.538836050222222
+          },
+          "interests": [
+            "birdwatching",
+            "astronomy",
+            "photography",
+            "theatre"
+          ],
+          "values": [
+            "directness",
+            "honesty",
+            "courage",
+            "loyalty"
+          ],
+          "speechStyle": "theatrical",
+          "humor": 0.3114574613151915,
+          "curiosity": 0.18529684966119908
+        },
+        "memory": {
+          "episodicCapacity": 535,
+          "episodicDecay": 0.01427533125218346,
+          "semanticCapacity": 17131,
+          "reflectionCadenceDays": 3.958194057234987
+        },
+        "bond": {
+          "initialTrust": 0.4887150286296366,
+          "initialWarmth": 0.6185642553815276,
+          "bondingDays": 43
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "canon replica goku super saiyan full gam"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "canon replica goku super saiyan full gam"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "276c0f0237c93c8b",
+      "name": "Quantum Tidal World",
+      "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "sci-fi",
+          "biome": "ocean",
+          "magic": 0.2548679260192157,
+          "tech": 0.43389747133970924,
+          "density": 0.42355134752096824
+        },
+        "physics": {
+          "gravity": 0.4740161940774401,
+          "hostility": 0.8500444830900094,
+          "diurnalRate": 0.8188238891662176,
+          "weatherVolatility": 0.6376716689317745
+        },
+        "society": {
+          "order": 0.7799846231874645,
+          "pluralism": 0.9246646473633107,
+          "prosperity": 0.5488031638584479,
+          "literacy": 0.7986381709393249
+        },
+        "conflict": {
+          "kind": "mystery",
+          "scale": 0.5760239447036342,
+          "urgency": 0.17558739992552663,
+          "clarity": 0.009716778519047953
+        },
+        "mood": {
+          "brightness": 0.6816791942734017,
+          "warmth": 0.37997907959484345,
+          "pace": 0.17298153901228797,
+          "levity": 0.13310549664908322
+        },
+        "history": {
+          "agesSinceFall": 3834,
+          "ghostliness": 0.5825893459147555,
+          "eraCount": 4
+        }
+      },
+      "bornAt": "2026-06-03T19:12:52.961Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "canon replica goku super saiyan full game with video export --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "b2d6f70b1ccb11b8",
+    "seedHash": "b2d6f70b1ccb11b80527eb066d0b56a6309a1741fca3a2ecfe66875acd6fa1d5",
+    "genomeVersion": 1,
+    "title": "The Quantum Tidal World Inquiry",
+    "genes": {
+      "archetype": "mystery-investigation",
+      "stake": 0.39353659010354386,
+      "antagonist": 0.5106125781428239,
+      "moralComplexity": 0.5798795566423847,
+      "pacing": 0.3361027967905748,
+      "intensity": 0.2579267378027049,
+      "actCount": 4,
+      "targetWordCount": 11381,
+      "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. canon replica goku super saiyan full gam's name is carved above it."
+    },
+    "parents": {
+      "friend": {
+        "id": "276c0f0237c93c8b",
+        "name": "canon replica goku super saiyan full gam",
+        "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f"
+      },
+      "world": {
+        "id": "276c0f0237c93c8b",
+        "name": "Quantum Tidal World",
+        "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f"
+      }
+    },
+    "bornAt": "2026-06-03T19:12:52.968Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "canon replica goku super saiyan full game with vid",
+      "quest": {
+        "id": "b2d6f70b1ccb11b8",
+        "seedHash": "b2d6f70b1ccb11b80527eb066d0b56a6309a1741fca3a2ecfe66875acd6fa1d5",
+        "genomeVersion": 1,
+        "title": "The Quantum Tidal World Inquiry",
+        "genes": {
+          "archetype": "mystery-investigation",
+          "stake": 0.39353659010354386,
+          "antagonist": 0.5106125781428239,
+          "moralComplexity": 0.5798795566423847,
+          "pacing": 0.3361027967905748,
+          "intensity": 0.2579267378027049,
+          "actCount": 4,
+          "targetWordCount": 11381,
+          "hook": "A door in Quantum Tidal World has opened that has been sealed for ages. canon replica goku super saiyan full gam's name is carved above it."
+        },
+        "parents": {
+          "friend": {
+            "id": "276c0f0237c93c8b",
+            "name": "canon replica goku super saiyan full gam",
+            "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f"
+          },
+          "world": {
+            "id": "276c0f0237c93c8b",
+            "name": "Quantum Tidal World",
+            "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f"
+          }
+        },
+        "bornAt": "2026-06-03T19:12:52.968Z"
+      },
+      "friend": {
+        "id": "276c0f0237c93c8b",
+        "name": "canon replica goku super saiyan full gam",
+        "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "soft",
+            "heightScale": 0.9667911826133667,
+            "shoulderRatio": 0.9019471704076863,
+            "torsoRatio": 0.9801692414019127,
+            "limbRatio": 0.9770654042562904,
+            "muscle": 0.24220485822323204,
+            "softness": 0.5950088966180018,
+            "skinTone": [
+              0.8003531390414197,
+              0.600719417912476,
+              0.5899923115937322
+            ]
+          },
+          "face": {
+            "roundness": 0.9246646473633107,
+            "eyeHeight": 0.5048803163858449,
+            "eyeSpacing": 0.41979572564089873,
+            "eyeShape": "round",
+            "eyeColor": [
+              0.4456143668221805,
+              0.205352439955316,
+              0.10583006711142878
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5879979079594844,
+            "mouthShape": "full",
+            "jawShape": "square",
+            "brow": 0.7668734524651106,
+            "cheekbones": 0.5825893459147555,
+            "chin": 0.8148680304281861,
+            "hairStyle": "wavy",
+            "hairColor": [
+              0.5158892333418724,
+              0.26185317768909216,
+              0.03996661432190149
+            ]
+          },
+          "voice": {
+            "pitch": 246.7712548252257,
+            "inflection": 0.23946824353100668,
+            "tempo": 119.68449625767632,
+            "breathiness": 0.11581612511255235,
+            "warmth": 0.7259914990072602,
+            "formants": [
+              567.3270174808414,
+              988.7699447523236,
+              2107.214636357411,
+              2593.494937055275,
+              3241.8686713190937
+            ],
+            "accent": "rio"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.2937437080996932,
+              "conscientiousness": 0.41921531654199495,
+              "extraversion": 0.5312615137835484,
+              "agreeableness": 0.41526205409809136,
+              "neuroticism": 0.538836050222222
+            },
+            "interests": [
+              "birdwatching",
+              "astronomy",
+              "photography",
+              "theatre"
+            ],
+            "values": [
+              "directness",
+              "honesty",
+              "courage",
+              "loyalty"
+            ],
+            "speechStyle": "theatrical",
+            "humor": 0.3114574613151915,
+            "curiosity": 0.18529684966119908
+          },
+          "memory": {
+            "episodicCapacity": 535,
+            "episodicDecay": 0.01427533125218346,
+            "semanticCapacity": 17131,
+            "reflectionCadenceDays": 3.958194057234987
+          },
+          "bond": {
+            "initialTrust": 0.4887150286296366,
+            "initialWarmth": 0.6185642553815276,
+            "bondingDays": 43
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "276c0f0237c93c8b",
+        "name": "Quantum Tidal World",
+        "seedHash": "276c0f0237c93c8b9087ad36dad353c31236a497dcc5cd8361b453c869d1363f",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "sci-fi",
+            "biome": "ocean",
+            "magic": 0.2548679260192157,
+            "tech": 0.43389747133970924,
+            "density": 0.42355134752096824
+          },
+          "physics": {
+            "gravity": 0.4740161940774401,
+            "hostility": 0.8500444830900094,
+            "diurnalRate": 0.8188238891662176,
+            "weatherVolatility": 0.6376716689317745
+          },
+          "society": {
+            "order": 0.7799846231874645,
+            "pluralism": 0.9246646473633107,
+            "prosperity": 0.5488031638584479,
+            "literacy": 0.7986381709393249
+          },
+          "conflict": {
+            "kind": "mystery",
+            "scale": 0.5760239447036342,
+            "urgency": 0.17558739992552663,
+            "clarity": 0.009716778519047953
+          },
+          "mood": {
+            "brightness": 0.6816791942734017,
+            "warmth": 0.37997907959484345,
+            "pace": 0.17298153901228797,
+            "levity": 0.13310549664908322
+          },
+          "history": {
+            "agesSinceFall": 3834,
+            "ghostliness": 0.5825893459147555,
+            "eraCount": 4
+          }
+        },
+        "bornAt": "2026-06-03T19:12:52.961Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "canon replica goku super saiyan full game with video export --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "canon replica goku super saiyan full game with vid",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "canon replica goku super saiyan full game with vid"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "canon replica goku super saiyan full game with vid"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

@@ -52,7 +52,7 @@ export default function PromptBar({ onSeedCreated, value: externalValue, onChang
           }}
           className="placeholder:text-zinc-600 min-h-[44px] touch-manipulation focus-visible:outline focus-visible:outline-1 focus-visible:outline-amber-400"
         />
-        {loading && <Loader2 size={14} aria-hidden="true" style={{ color: 'var(--p-cyan)', animation: 'spin 1s linear infinite' }} className="motion-reduce:animate-none" />}
+        {loading && <><Loader2 size={14} aria-hidden="true" style={{ color: 'var(--p-cyan)', animation: 'spin 1s linear infinite' }} className="motion-reduce:animate-none" /> <span style={{fontSize:10,color:'var(--p-cyan)'}}>Evolving seed…</span></>}
         {error && (
           <span role="alert" aria-live="assertive" style={{ 
             color: 'var(--p-rose)', fontSize: 11, fontFamily: 'var(--p-font-mono)',

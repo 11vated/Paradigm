@@ -25,6 +25,7 @@ import {
   growSeed, growSeedSync, getAllDomains,
   getFunctor, findCompositionPath, composeSeed, getCompositionGraph,
 } from '../kernel/index.js';
+import { deriveCleanTitle } from '../kernel/types.js';
 
 import { InferenceTier } from './types.js';
 import type {
@@ -593,7 +594,10 @@ export class ParadigmAgent {
         if (!gtarget) return { success: false, message: 'No seed to grow.', data: null };
         try {
           const artifact = growSeedSync(gtarget);
-          return { success: true, message: `Grew "${gtarget.$name}" in domain "${gtarget.$domain}".`, data: { artifact } };
+          // Attach rich for uniform agent loop (small ext of tools pattern)
+          const richName = deriveCleanTitle(gtarget.$name || (artifact as any)?.name, gtarget.$hash);
+          (gtarget as any).grownArtifact = { name: richName, type: gtarget.$domain, visual: (artifact as any).visual || null, strata: (artifact as any).strata || [], files: (artifact as any).files || {} };
+          return { success: true, message: `Grew "${richName}" in domain "${gtarget.$domain}".`, data: { artifact, grownArtifact: (gtarget as any).grownArtifact } };
         } catch (e: any) {
           return { success: false, message: `Grow failed: ${e.message}`, data: null };
         }

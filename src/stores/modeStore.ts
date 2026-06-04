@@ -80,7 +80,7 @@ interface ModeState {
 export const useMode = create<ModeState>()(
   persist(
     (set) => ({
-      mode: 'atelier',  // Primary per doctrine UX: beautiful live visual + tools as default workspace
+      mode: 'atelier',  // PRIMARY / DEFAULT / ALWAYS-ON per 13_ doctrine v2: Atelier (unified main creative workspace) for normal users. Not Crucible. Crucible is internal lens only. All normal flows surface in Atelier + live 9-strata HUD + provenance everywhere.
       setMode: (mode) => set({ mode }),
     }),
     { name: 'paradigm.mode' },

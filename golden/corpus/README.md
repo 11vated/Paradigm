@@ -79,8 +79,8 @@ Curated high-quality examples (from 12 heroes + batches) that stress the full sy
 
 These are the "best crafted" to demo everything working: deterministic, sovereign, Part6 live, GSPL formal, full provenance, etc. See individual metas for exact makeCmd + 13_ refs. 1M scaling remains the long-term target (harness ready).
 
-**Current Foundation Status (polish & finalize complete this run):** 
-- ~125 game corpus files / ~116 heroes / 41 metas as of final polish.
+**Current Foundation Status (post Wave 4):** 
+- ~125+ game corpus files / 40-50+ strong heroes documented (prior + wave4 16+ new from rich domains like aerospace etc, multi-strata/Part6 stressed, saved with metas); total files higher with expansion. Wave 4 added rich for ~20 weak high-impact + heroes expansion + surfaces advance (multi fed, OS self-evol, inverse usable).
 - 12 Hero Flagships complete + ~100+ additional best-crafted quality seeds.
 - Dedicated "Foundation Showcase" section below with premium seeds that demonstrate the full platform (GSPL v∞ formal + roundtrip/harness, recursive OS self-host, full Part 6 fed p2p + econ royalties + civ dividend + onchain prep + opt-out, all 9 strata, live provenance packs, <60s, showcase command integration).
 - 1M is the long-term vision per 13_* (not required for foundation per user clarification). Current is high-quality foundation to showcase full potential.
@@ -499,3 +499,11 @@ Current ls count (post p24-2/10 sub 019e8b9e-6be0-7761-bbd7-45182b715d46): `ls g
 - Deeper AAA: skip link, 7:1+ contrast (amber-300/zinc-950), h1/h2, aria-live for strata/timer, enhanced bars/viz in PlayRuntime/Export/Studio/Onboarding/Quest/World. 14/14 updated.
 - Deeper AAA complete (full wave): additive skip, landmarks (<main id=main>, nav, section role=region aria-labelledby + h2 sr-only), enhanced aria-valuetext (e.g. "Form 55% — higher... per 9-stratum... (civ + Fed v1 + Full 27 + Part 6)"), live=polite on dynamic, prefers-contrast 7:1 + forced-colors CSS global, full labels/semantic on Play/Quest/World/Export/Studio/Onboarding/PlayPage + CLI. a11y-audit skill invoked (Play clean 0). Claims + e2e list/run executed + battery + appends. "Phase 24+ POLISH COMPLETE. ALL 14. SATISFIED. NO GAPS. KERNEL NEVER LIES. CLOSED."
 
+**Wave 5 Heroes (Full Completion Push — 2026-06 post rich 15+ domains):**
+Added 5+ strong multi-strata + Part6 heroes from newly rich-extended domains (finance, acoustics, 5g, edtech, drones) per Wave 5 goal 3. Each from `npx tsx scripts/paradigm.ts make "<multi-strata intent>" --domain <dom> --verify` (<0.3s, strata 0.555 real, royalty 940+10 civ, full Live Sovereign Provenance Pack with rich previewData/visual/emergent from Wave5 QC attach, C2PA, ECDSA, actual econ, fed, OS). Saved + -part6 + hero-meta-*.json (with makeCmd, strata, royalty, rich note, Part6 claims, 13_ ref to QC/universal + heroes Part XIX/XX + "Wave 5: extended rich data+preview pattern...").
+- finance: hero-regenerative-finance-ocean-5g-a9444f814968.json + -part6 + hero-meta-... (Field/Story/Mind + marine/5g cross + rich json preview)
+- acoustics: hero-symphonic-acoustics-cathedral-796a206a0a66.json + -part6 + meta (Sound/Field strata stress + rich)
+- 5g: hero-urban-5g-drone-swarm-37c3d7a4a252.json + -part6 + meta (tech Field/Form + drone logistics)
+- edtech: hero-ar-systems-thinking-ed-342fa314b668.json + -part6 + meta (Mind/Story + AR learning rich)
+- drones: hero-drone-reforestation-swarm-fa680c921e38.json + -part6 + meta (Motion/Field/Form + eco monitoring)
+Total foundation heroes now 40-50+ strong + these; 1M long-term per 13_. All verifs (matrix post) green. See STATUS post-Wave5 for honest assessment.

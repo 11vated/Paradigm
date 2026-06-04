@@ -1,0 +1,666 @@
+{
+  "$intent": "ultimate platform hero flagship with all 9 strata Part6 econ fed os recursive GSPL --verify",
+  "$created": "2026-06-03T18:36:22.012Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "2a7ff42ee967d05e",
+      "name": "ultimate platform hero flagship with all",
+      "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "petite",
+          "heightScale": 0.8495560356267611,
+          "shoulderRatio": 1.028438952228483,
+          "torsoRatio": 0.942783110184206,
+          "limbRatio": 0.918293368100533,
+          "muscle": 0.5502037331899949,
+          "softness": 0.39961216804842037,
+          "skinTone": [
+            0.7827418783977796,
+            0.3048870286221333,
+            0.4852348922089695
+          ]
+        },
+        "face": {
+          "roundness": 0.461364020411843,
+          "eyeHeight": 0.49285730942209827,
+          "eyeSpacing": 0.31354395208467617,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.18389941264840515,
+            0.23762876427885588,
+            0.685403806727974
+          ],
+          "noseShape": "broad",
+          "noseHeight": 0.5682399448947386,
+          "mouthShape": "full",
+          "jawShape": "pointed",
+          "brow": 0.6896824259110337,
+          "cheekbones": 0.47149119399537653,
+          "chin": 0.06172957315840044,
+          "hairStyle": "long",
+          "hairColor": [
+            0.7058183390318559,
+            0.5773485226663124,
+            0.15562467174647573
+          ]
+        },
+        "voice": {
+          "pitch": 202.01271111074715,
+          "inflection": 0.25502457838247583,
+          "tempo": 103.73874491391419,
+          "breathiness": 0.44589139604097416,
+          "warmth": 0.9614432309037004,
+          "formants": [
+            693.025697394108,
+            1207.8447868868739,
+            2574.0954474638297,
+            3168.117473801636,
+            3960.146842252045
+          ],
+          "accent": "midwest"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.3005821740181831,
+            "conscientiousness": 0.30700525441844784,
+            "extraversion": 0.8368221675226339,
+            "agreeableness": 0.9209423115639104,
+            "neuroticism": 0.7306868960443458
+          },
+          "interests": [
+            "sailing",
+            "cooking",
+            "birdwatching",
+            "biology",
+            "fermentation"
+          ],
+          "values": [
+            "generosity",
+            "curiosity",
+            "play",
+            "rigor"
+          ],
+          "speechStyle": "playful",
+          "humor": 0.38688473595667405,
+          "curiosity": 0.9883523948250552
+        },
+        "memory": {
+          "episodicCapacity": 2868,
+          "episodicDecay": 0.018930975636061335,
+          "semanticCapacity": 11184,
+          "reflectionCadenceDays": 3.1529370380289445
+        },
+        "bond": {
+          "initialTrust": 0.5323286037139111,
+          "initialWarmth": 0.4455233245745536,
+          "bondingDays": 26
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "ultimate platform hero flagship with all"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "ultimate platform hero flagship with all"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "2a7ff42ee967d05e",
+      "name": "Quantum Tidal World",
+      "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "post-apocalyptic",
+          "biome": "tundra",
+          "magic": 0.571097380571207,
+          "tech": 0.3092770339473536,
+          "density": 0.22764456033510982
+        },
+        "physics": {
+          "gravity": 0.8340124439666496,
+          "hostility": 0.5730608402421018,
+          "diurnalRate": 0.7868034152686902,
+          "weatherVolatility": 0.0997945974947878
+        },
+        "society": {
+          "order": 0.5704697844179389,
+          "pluralism": 0.461364020411843,
+          "prosperity": 0.4285730942209822,
+          "literacy": 0.09029301389784128
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.13983235441400854,
+          "urgency": 0.22938127379809314,
+          "clarity": 0.9756730112132901
+        },
+        "mood": {
+          "brightness": 0.6160928944344637,
+          "warmth": 0.18239944894738547,
+          "pace": 0.17638286185196894,
+          "levity": 0.4092070621543775
+        },
+        "history": {
+          "agesSinceFall": 3448,
+          "ghostliness": 0.47149119399537653,
+          "eraCount": 1
+        }
+      },
+      "bornAt": "2026-06-03T18:36:21.996Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "ultimate platform hero flagship with all 9 strata Part6 econ fed os recursive GSPL --verify",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Quantum Tidal World"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Quantum Tidal World"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "bb5f4114e0b75520",
+    "seedHash": "bb5f4114e0b75520b95526e37bb63dad5f8d3f501e9eb08bf657d5932f7cbc2c",
+    "genomeVersion": 1,
+    "title": "The Long Road of ultimate platform hero flagship with all",
+    "genes": {
+      "archetype": "heros-journey",
+      "stake": 0.5301646471458448,
+      "antagonist": 0.4315069710834514,
+      "moralComplexity": 0.43310580595726533,
+      "pacing": 0.38302761534380225,
+      "intensity": 0.35941943444903446,
+      "actCount": 3,
+      "targetWordCount": 6180,
+      "hook": "Strangers cross the borders of Quantum Tidal World. ultimate platform hero flagship with all is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "2a7ff42ee967d05e",
+        "name": "ultimate platform hero flagship with all",
+        "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec"
+      },
+      "world": {
+        "id": "2a7ff42ee967d05e",
+        "name": "Quantum Tidal World",
+        "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec"
+      }
+    },
+    "bornAt": "2026-06-03T18:36:22.003Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "ultimate platform hero flagship with all 9 strata ",
+      "quest": {
+        "id": "bb5f4114e0b75520",
+        "seedHash": "bb5f4114e0b75520b95526e37bb63dad5f8d3f501e9eb08bf657d5932f7cbc2c",
+        "genomeVersion": 1,
+        "title": "The Long Road of ultimate platform hero flagship with all",
+        "genes": {
+          "archetype": "heros-journey",
+          "stake": 0.5301646471458448,
+          "antagonist": 0.4315069710834514,
+          "moralComplexity": 0.43310580595726533,
+          "pacing": 0.38302761534380225,
+          "intensity": 0.35941943444903446,
+          "actCount": 3,
+          "targetWordCount": 6180,
+          "hook": "Strangers cross the borders of Quantum Tidal World. ultimate platform hero flagship with all is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "2a7ff42ee967d05e",
+            "name": "ultimate platform hero flagship with all",
+            "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec"
+          },
+          "world": {
+            "id": "2a7ff42ee967d05e",
+            "name": "Quantum Tidal World",
+            "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec"
+          }
+        },
+        "bornAt": "2026-06-03T18:36:22.003Z"
+      },
+      "friend": {
+        "id": "2a7ff42ee967d05e",
+        "name": "ultimate platform hero flagship with all",
+        "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "petite",
+            "heightScale": 0.8495560356267611,
+            "shoulderRatio": 1.028438952228483,
+            "torsoRatio": 0.942783110184206,
+            "limbRatio": 0.918293368100533,
+            "muscle": 0.5502037331899949,
+            "softness": 0.39961216804842037,
+            "skinTone": [
+              0.7827418783977796,
+              0.3048870286221333,
+              0.4852348922089695
+            ]
+          },
+          "face": {
+            "roundness": 0.461364020411843,
+            "eyeHeight": 0.49285730942209827,
+            "eyeSpacing": 0.31354395208467617,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.18389941264840515,
+              0.23762876427885588,
+              0.685403806727974
+            ],
+            "noseShape": "broad",
+            "noseHeight": 0.5682399448947386,
+            "mouthShape": "full",
+            "jawShape": "pointed",
+            "brow": 0.6896824259110337,
+            "cheekbones": 0.47149119399537653,
+            "chin": 0.06172957315840044,
+            "hairStyle": "long",
+            "hairColor": [
+              0.7058183390318559,
+              0.5773485226663124,
+              0.15562467174647573
+            ]
+          },
+          "voice": {
+            "pitch": 202.01271111074715,
+            "inflection": 0.25502457838247583,
+            "tempo": 103.73874491391419,
+            "breathiness": 0.44589139604097416,
+            "warmth": 0.9614432309037004,
+            "formants": [
+              693.025697394108,
+              1207.8447868868739,
+              2574.0954474638297,
+              3168.117473801636,
+              3960.146842252045
+            ],
+            "accent": "midwest"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.3005821740181831,
+              "conscientiousness": 0.30700525441844784,
+              "extraversion": 0.8368221675226339,
+              "agreeableness": 0.9209423115639104,
+              "neuroticism": 0.7306868960443458
+            },
+            "interests": [
+              "sailing",
+              "cooking",
+              "birdwatching",
+              "biology",
+              "fermentation"
+            ],
+            "values": [
+              "generosity",
+              "curiosity",
+              "play",
+              "rigor"
+            ],
+            "speechStyle": "playful",
+            "humor": 0.38688473595667405,
+            "curiosity": 0.9883523948250552
+          },
+          "memory": {
+            "episodicCapacity": 2868,
+            "episodicDecay": 0.018930975636061335,
+            "semanticCapacity": 11184,
+            "reflectionCadenceDays": 3.1529370380289445
+          },
+          "bond": {
+            "initialTrust": 0.5323286037139111,
+            "initialWarmth": 0.4455233245745536,
+            "bondingDays": 26
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "2a7ff42ee967d05e",
+        "name": "Quantum Tidal World",
+        "seedHash": "2a7ff42ee967d05ecdc66664e658f5e0f7c1548b0b9c1a78ab781f1b6a7f91ec",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "post-apocalyptic",
+            "biome": "tundra",
+            "magic": 0.571097380571207,
+            "tech": 0.3092770339473536,
+            "density": 0.22764456033510982
+          },
+          "physics": {
+            "gravity": 0.8340124439666496,
+            "hostility": 0.5730608402421018,
+            "diurnalRate": 0.7868034152686902,
+            "weatherVolatility": 0.0997945974947878
+          },
+          "society": {
+            "order": 0.5704697844179389,
+            "pluralism": 0.461364020411843,
+            "prosperity": 0.4285730942209822,
+            "literacy": 0.09029301389784128
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.13983235441400854,
+            "urgency": 0.22938127379809314,
+            "clarity": 0.9756730112132901
+          },
+          "mood": {
+            "brightness": 0.6160928944344637,
+            "warmth": 0.18239944894738547,
+            "pace": 0.17638286185196894,
+            "levity": 0.4092070621543775
+          },
+          "history": {
+            "agesSinceFall": 3448,
+            "ghostliness": 0.47149119399537653,
+            "eraCount": 1
+          }
+        },
+        "bornAt": "2026-06-03T18:36:21.996Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "ultimate platform hero flagship with all 9 strata Part6 econ fed os recursive GSPL --verify",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Form"
+      ],
+      "suggestedStrata": [
+        "Form"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Form"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "ultimate platform hero flagship with all 9 strata ",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "ultimate platform hero flagship with all 9 strata "
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "ultimate platform hero flagship with all 9 strata "
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Form"
+  ],
+  "meta": {
+    "recursiveGseed": true
+  },
+  "recursiveComposition": {
+    "subs": [
+      "sub1",
+      "sub2"
+    ],
+    "source": "cli-make-recursive"
+  }
+}

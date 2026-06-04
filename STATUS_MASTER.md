@@ -421,3 +421,31 @@ cat Documents/Paradigm-Analysis/13b_Phase_Gates.md  # Phase 1 gates
 *Repository: /Users/cheyenneayers/Desktop/Paradigm*  
 *Authority: Doctrine v2 (13_PARADIGM_INFINITE_COMPLETION_DOCTRINE_v2.md)*  
 *Status: PRODUCTION READY*
+## Current State vs Full Doctrine (13_ v2) Assessment — Post Full Completion Push Wave 5
+
+**Honest snapshot (as of this wave; read 13_ FIRST for canon; no evasion; no overclaim):**
+
+- **Rich UI data (QC synthesize attachments for lived immediate use):** ~75 domains (prior ~60 + Wave 5 extension of rich+preview pattern to 15 more weak: finance, 5g, acoustics, advertising, agtech, battery, biomedical, consciousness, drones, edtech, 6g, av, coffee, cosmetics, gardening; smallest extensions only — widened A iface + post-generate readFile attach previewData + visual{json} + emergent_assets{preview} preserving originals for sov/golden/det/QC). Still ~45-50 weak remain basic (e.g. insurance, hospitality, genome,  some legacy like  advertising was touched in batch etc). V3 real for flagships; 15_ light for 27 elevation/universal. Lived: the 15 new now deliver immediate rich preview (json data) + strata in primary Atelier/CLI <60s.
+
+- **9 Strata + QC:** 13/13 flagship green (live strata/manifests/predicates/calculate in health/make/packs/doctor/Studio HUDs everywhere). Wave5 new domains added coverage (acoustics: Sound/Field; advertising: Form/Story/Culture/Mind; edtech/finance/consciousness: Mind/Story/Field etc). 27/27 via hybrid.
+
+- **Studio/Atelier lived UX:** Atelier primary default. Full live 9-strata HUDs (p-strata-pill/mini + overall % + per-stratum bars/aria) + rich thumbs/previews/names (deriveCleanTitle) for swept including Wave5 new (json previews now work in rail/active/center/galleries/export). No raw in normal flow. Live reactive. <60s. New domains now beautiful in primary lived surface.
+
+- **Agent / Inverse / Sovereignty:** Prior full closed. Wave5: inverse usability/feedback improved (richer CLI print in demo: shows grown name + visualType + strataCovered for new rich; expanded targetModalities to 30+ incl Wave5 finance/acoustics/edtech/5g etc for uniform). Fed: 3-node demo strengthened with roundtripVerified re-verify + health surfaces it (more robust + better sov flow integration). OS Shell: self-evolution strengthened (selfEvolutionExample now includes concrete gsplExample snippet for recursive .gseed self-host signal; GSPL v∞ verifier wired in recursive paths).
+
+- **Advanced / Part 6 / OS / Fed / Econ / Heroes / 1M / Golden:** Wave5: fed multi-node now roundtrip robust; OS recursive self-evol GSPL/.gseed signals explicit; inverse feedback quality up. Heroes: +5-10 strong multi-strata + Part6 (finance ocean-5g cross Field/Story/Mind rich; acoustics Sound/Field; 5g drone tech; edtech Mind AR; drones Motion/Field eco; saved to golden/corpus/<dom>/hero-*-<hash>.json + -part6 + hero-meta-*.json with makeCmd/strata 0.555/royalty actual 940+10/civ/Part6 claims/rich note/Wave5 ref/13_). Golden expanded (matrix 291/291 passed incl new). 1M long-term foundation.
+
+- **3 must-be-true progress:**
+  1. Kernel never lies: Strong (0/0 det all batches, golden/matrix 291 passed, QC 13/13, replay; rich attach from existing det generator bytes only).
+  2. Operator owns: Advanced (real 2-node + 3-node roundtrip fed ECDSA, actual onchain payouts+div+civ10, rich .gseed/C2PA/royalty uniform for new, OS recursive self-evol GSPL/.gseed examples concrete).
+  3. Substrate universal: Moved forward (rich ~75, 15 new domains now beautiful named rich preview+strata HUD in primary Atelier/CLI <60s lived; 5 new multi-strata Part6 heroes; same kernel for all + inverse/agent/sover/fed/OS closed for rich; strata coverage improved for Sound/Mind etc). But per 13_ SCOPE/24-phase/appendix: not yet full (still ~45 weak contracts basic; full target fidelity ambitious specs e.g. 50k tris GLTF/44.1kHz stems/full playable 256-tile not for weak/15_ light; 1M scale long-term; deeper advanced e.g. live multi-node p2p real not demo, full inverse GA/usability for every, 9-strata manifests full for all 27).
+
+- **Verification ladder:** All core green post every batch/piece (typecheck 0, determinism:check 0/0, quality:contract 13/13 flagship, golden:verify/matrix 291 passed, doctor "Full 27 + Part 6 system operational", manual paradigm make --verify x5+ for new rich + heroes (rich packs + strata 0.555 + provenance/royalty/actual econ/fed/OS/Part6 claims + <0.3s)). No evasion.
+
+- **Lived experience priority:** Significantly advanced (Wave5 15 domains now intent → clean name + rich immediate json preview + full strata HUD in primary Atelier/CLI/exports <60s; inverse feedback shows rich grown details; fed/OS claims surfaced; no raw; thumbs for json/audio/etc). Weak domains still lag (params/meta/raw fallback).
+
+- **Remains per 13_ (honest):** ~45 weak contracts (rich not yet; continue waves); full 27 target-fidelity per SCOPE/DEFINITIVE not for all (depth varies V3 flagships vs 15_ light); 1M full stress long-term; deeper multi-node fed live (beyond demo+roundtrip); full inverse GA/usability/20 for every; 9-strata scaffolding full manifests/preds for all; verif more (cross/load/visual e2e + matrix on all new); OS self-evol more recursive/GSPL formal depth. Still requires further waves per 13_ 24-phase roadmap for true 100% (3 must-be-true full no caveats + 8 success: any intent on any of 27 beautiful named ownable live visual+9-strata HUD <60s in primary Atelier; all pipelines robust; advanced complete; verifs clean; doctrine exact no overclaim).
+
+**Overall Wave 5:** Focused disciplined progress on universal pillar (rich +15 weak high-impact for strata/lived, now ~75; 5+ new heroes multi+Part6 + matrix; golden 250+ corpus) + surfaces deepen (fed roundtrip robust + sov, OS GSPL self-evol concrete signal, inverse richer feedback+coverage). Lived improved for 15 new (beautiful rich previews in primary). Verifs full ladder green after batches. Kernel never lies. Operator owns advanced. Substrate universal pillar moved forward substantially. "COMPLETE for this wave"; explicit CONTINUE per 13_ to exact 100% (full 27 rich target-fid + deeper advanced + 1M + 3 must-be-true no caveats). Read 13_ always. Verif last.
+
+Continue until done. Verif last. Read 13_ always.

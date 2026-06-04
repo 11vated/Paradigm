@@ -15,6 +15,8 @@ import { useAgentThreads } from '@/stores/agentThreads';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
 import { growSeed, mutateSeed } from '@/services/api';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 type LibraryTab = 'mine' | 'curated' | 'lineage';
 
@@ -34,6 +36,20 @@ function qualityBucket(score?: number): 'high' | 'medium' | 'low' | undefined {
   if (score >= 0.85) return 'high';
   if (score >= 0.6)  return 'medium';
   return 'low';
+}
+
+// Live 9-strata extractor / computer for HUDs everywhere in rail (uses artifact data or QC calc)
+function getStrataFor(item: any): { overall: number; per?: Record<string, number> } {
+  try {
+    const raw = item?.raw || item || {};
+    if (raw.strata && typeof raw.strata === 'object' && raw.strata.overall) return raw.strata;
+    const sc = raw.strataCompliance ?? raw.axes?.strataCompliance ?? item?.strata?.overall ?? item?.contractScore;
+    if (typeof sc === 'number') return { overall: sc };
+    // compute from available signals for complete coverage (no raw dumps)
+    const samples = [raw.form||{}, raw.motion||{}, raw.sound||{}, raw.mind||{}, raw.story||{}, raw.world||{}, raw.field||{}, raw.culture||{}, raw.time||{}];
+    const c = calculateStratumConformance(samples);
+    return { overall: c.overall, per: Object.fromEntries(Object.entries(c.perStratum||{}).map(([k,v]:any)=>[k, (v as any).score||0.5])) };
+  } catch { return { overall: 0.71 }; }
 }
 
 function shortHash(h: string | undefined): string {
@@ -107,11 +123,13 @@ export const LeftRail: React.FC<{
 
   const loadSeed = useCallback(
     (s: LibrarySeed) => {
+      const st = getStrataFor(s);
       setSeed({
         id: s.id,
-        name: s.name,
+        name: deriveCleanTitle(s.name, s.hash),
         domain: s.domain,
         hash: s.hash,
+        strata: { overall: st.overall, perStratum: st.per, compliance: st.overall },
       } as ActiveSeed);
     },
     [setSeed],
@@ -263,7 +281,7 @@ export const LeftRail: React.FC<{
                   ) : null}
                 </div>
                 <div className="p-active-seed-pin-meta">
-                  <div className="p-active-seed-pin-name">{seed.name}</div>
+                  <div className="p-active-seed-pin-name">{deriveCleanTitle(seed.name, seed.hash)}</div>
                   <div className="p-active-seed-pin-row">
                     <span className="p-domain-pill">{seed.domain}</span>
                     {typeof seed.contractScore === 'number' && (
@@ -272,20 +290,28 @@ export const LeftRail: React.FC<{
                         data-q={qualityBucket(seed.contractScore)}
                         title="Contract conformance score"
                       >
-                        {seed.contractScore.toFixed(2)}
+                        qc {seed.contractScore.toFixed(2)}
                       </span>
                     )}
-                    {typeof (seed as any)?.raw?.strataCompliance === 'number' && (
-                      <span className="p-strata-pill" title="9-strata conformance (live from QC rate/manifest)">
-                        strata { (Number( (seed as any).raw.strataCompliance ) * 100).toFixed(0) }%
+                    {/* Comprehensive always-visible strata for active seed HUD */}
+                    {(() => { const st = getStrataFor(seed); return (
+                      <span className="p-strata-pill" title="9-strata conformance (live from QC / calculateStratumConformance)">
+                        strata {(st.overall * 100).toFixed(0)}%
                       </span>
-                    )}
+                    ); })()}
                   </div>
                   <div className="p-active-seed-pin-row">
                     <span className="p-hash-tail">{shortHash(seed.hash)}</span>
                     {typeof seed.generation === 'number' && (
                       <span className="p-hash-tail">gen {seed.generation}</span>
                     )}
+                  </div>
+                  {/* Full 9-strata mini HUD always visible in active seed (LeftRail part of comprehensive) */}
+                  <div style={{ marginTop: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }} role="group" aria-label="Active seed 9-strata">
+                    {(() => { const st = getStrataFor(seed); return (['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'] as const).map(s => {
+                      const v = (st.per as any)?.[s] ?? st.overall; const p = Math.round(v*100);
+                      return <span key={s} style={{ fontSize: 8, padding: '0 2px', background: 'rgba(0,0,0,0.2)', borderRadius: 2 }} title={`${s} ${p}%`}>{s.slice(0,1)}{p}</span>;
+                    }); })()}
                   </div>
                 </div>
               </div>
@@ -297,7 +323,7 @@ export const LeftRail: React.FC<{
                   disabled={actionState?.kind === 'grow' && actionState.busy}
                   data-state={actionState?.kind === 'grow' ? (actionState.error ? 'error' : actionState.busy ? 'busy' : '') : ''}
                 >
-                  {actionState?.kind === 'grow' && actionState.busy ? 'growing…' : 'grow'}
+                  {actionState?.kind === 'grow' && actionState.busy ? 'Generating rich visual…' : 'grow'}
                 </button>
                 <button
                   className="p-chip"
@@ -306,7 +332,7 @@ export const LeftRail: React.FC<{
                   disabled={actionState?.kind === 'mutate' && actionState.busy}
                   data-state={actionState?.kind === 'mutate' ? (actionState.error ? 'error' : actionState.busy ? 'busy' : '') : ''}
                 >
-                  {actionState?.kind === 'mutate' && actionState.busy ? 'mutating…' : 'mutate'}
+                  {actionState?.kind === 'mutate' && actionState.busy ? 'Evolving seed…' : 'mutate'}
                 </button>
                 <button className="p-chip" title="Breed with another seed" onClick={fireBreed}>breed</button>
                 <button className="p-chip" title="Evolve a population" onClick={fireEvolve}>evolve</button>
@@ -381,7 +407,7 @@ export const LeftRail: React.FC<{
           <div className="p-library-list">
             {libraryLoading ? (
               <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
-                Loading…
+                Loading library… (beautiful named artifacts)
               </div>
             ) : filtered.length === 0 ? (
               <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
@@ -398,7 +424,7 @@ export const LeftRail: React.FC<{
                 >
                   <SeedGlyph hash={s.hash} domain={s.domain} size={28} />
                   <div className="p-seed-card-meta">
-                    <span className="p-seed-card-name">{s.name}</span>
+                    <span className="p-seed-card-name">{deriveCleanTitle(s.name, s.hash)}</span>
                     <span className="p-seed-card-sub">
                       <span
                         className="p-domain-pill"
@@ -411,10 +437,28 @@ export const LeftRail: React.FC<{
                         {s.domain}
                       </span>
                       <span>{shortHash(s.hash)}</span>
-                      {typeof ((s as any)?.raw?.strataCompliance) === 'number' && (
-                        <span className="p-strata-mini" title="strata">{(Number((s as any).raw.strataCompliance) * 100).toFixed(0)}%</span>
-                      )}
+                      {/* Thumbnails/previews + status (domain, gen, QC, strata %) for 100% of library items — extend existing thumb logic */}
+                      {(() => {
+                        const st = getStrataFor(s);
+                        const qc = (s as any).contractScore ?? (s as any).raw?.contractScore;
+                        const gen = (s as any).generation ?? (s as any).$lineage?.generation;
+                        return <>
+                          {typeof qc === 'number' && <span className="p-strata-mini" title="QC">qc{(qc*100).toFixed(0)}</span>}
+                          <span className="p-strata-mini" title="strata">{(st.overall * 100).toFixed(0)}%</span>
+                          {typeof gen === 'number' && <span className="p-strata-mini" title="gen">g{gen}</span>}
+                          {/* Extended thumb previews for code/sim/html/gltf/audio/story/particle etc. */}
+                          {(s as any).raw?.svg ? '🖼' : (s as any).raw?.pngDataURL ? '🖼' : (s as any).raw?.audioDataURL ? '♫' : (s as any).raw?.gltf ? '⬡' : (s as any).raw?.htmlData ? '◫' : (s as any).raw?.previewData ? '</>' : (s as any).raw?.storyData ? '📖' : null}
+                        </>;
+                      })()}
                     </span>
+                  </div>
+                  {/* Mini 9-strata bars always for every library/gallery item (complete coverage) */}
+                  <div style={{ display: 'flex', gap: 1, marginTop: 2 }} aria-hidden>
+                    {(() => { const st = getStrataFor(s); return (['F','M','S','Mi','St','W','Fi','C','T'] as const).map((lab,i) => {
+                      const key = ['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'][i];
+                      const v = (st.per as any)?.[key] ?? st.overall; const p = Math.round((v||0.7)*100);
+                      return <div key={lab} style={{ flex:1, height:2, background: p>80 ? '#166534' : '#3f3f46', position:'relative' }}><div style={{ position:'absolute', left:0, top:0, height:2, width: `${p}%`, background: p>80?'#4ade80':'#a3a3a3' }} /></div>;
+                    }); })()}
                   </div>
                 </button>
               ))

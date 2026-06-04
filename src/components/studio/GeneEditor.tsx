@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { TYPE_COLORS } from '@/lib/constants';
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 const ARCHETYPE_CHOICES = ['warrior', 'mage', 'rogue', 'paladin', 'ranger', 'bard', 'cleric', 'dark_knight', 'monk', 'necromancer'];
 const SCALE_CHOICES = ['major', 'minor', 'pentatonic', 'blues', 'dorian', 'mixolydian', 'chromatic'];
@@ -148,8 +150,10 @@ const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { see
   return (
     <div data-testid="gene-editor" className="divide-y divide-[#1a1a1a]">
       <div className="px-4 py-2 flex items-center justify-between bg-[#050505]">
-        <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">Gene Map</span>
+        <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">Gene Map · {deriveCleanTitle(seed.name || seed.id, seed.hash)}</span>
         <span className="font-mono text-[9px] text-[#444]">{geneEntries.length} locus points</span>
+        {/* Right gene panel strata HUD */}
+        {(() => { try { const c=calculateStratumConformance([seed.raw||seed]); return <span className="p-strata-mini" title="live strata in genes panel">{Math.round(c.overall*100)}%</span>; } catch{return null;} })()}
       </div>
       {geneEntries.map(([name, gene]: [any, any]) => {
         const gtype = gene.type;

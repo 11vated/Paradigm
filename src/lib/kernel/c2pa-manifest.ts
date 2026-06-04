@@ -59,11 +59,13 @@ function deterministicTimestamp(seedHash: string): { created: string; unix_ms: n
 
 /**
  * Build a C2PA manifest for a generative asset
+ * Extended: accepts optional rich artifact for embedding refs to actual data (png/svg/html/audio/story/gltf etc) + provenance in manifests/exports/packs
  */
 export function buildC2PAManifest(
   seed: Seed,
   generatorName: string,
-  generatorVersion: string = '2.0'
+  generatorVersion: string = '2.0',
+  artifact?: any
 ): C2PAClaim {
   const seedHash = seed.$hash || seed.hash || 'unknown';
   const seedName = seed.$name || seed.name || seed.phrase || 'Seed';
@@ -115,6 +117,40 @@ export function buildC2PAManifest(
       },
     ],
   };
+
+  // Rich artifact provenance (small ext): embed refs or indicators for actual data in .gseed TLV / packs / exports / manifests so sovereignty uniform for visual/audio/fullgame/html/gltf/story/sim etc.
+  if (artifact) {
+    const files = (artifact as any).files || {};
+    const hasRich = !!(artifact.visual || artifact.emergent_assets || artifact.pngDataURL || artifact.svg || artifact.htmlData || artifact.audioDataURL || Object.keys(files).length || artifact.gltf || artifact.story);
+    manifest.assertions.push({
+      label: 'paradigm.artifact.rich',
+      data: {
+        name: artifact.name || (seed as any).$name || 'rich-artifact',
+        hasRich,
+        modalities: Object.keys(files).concat([
+          artifact.visual ? 'visual' : null,
+          artifact.pngDataURL || files.png ? 'png' : null,
+          artifact.svg || files.svg ? 'svg' : null,
+          artifact.htmlData || files.html ? 'html' : null,
+          artifact.audioDataURL || files.wav ? 'audio' : null,
+          artifact.gltf || files.gltf ? 'gltf' : null,
+          artifact.story || files.story ? 'story' : null,
+        ].filter(Boolean) as string[]),
+        strata: (artifact as any).strata || [],
+        c2pa_embedded: true,
+      },
+    });
+    // also promote key files as ingredients for full chain
+    if (files.png || artifact.pngDataURL) {
+      manifest.recipes[0].ingredients.push({ title: 'Rich PNG', format: 'image/png', documentID: seedHash + ':png', relationship: 'output' });
+    }
+    if (files.svg || artifact.svg) {
+      manifest.recipes[0].ingredients.push({ title: 'Rich SVG', format: 'image/svg+xml', documentID: seedHash + ':svg', relationship: 'output' });
+    }
+    if (files.html || artifact.htmlData) {
+      manifest.recipes[0].ingredients.push({ title: 'Rich HTML', format: 'text/html', documentID: seedHash + ':html', relationship: 'output' });
+    }
+  }
 
   return manifest;
 }

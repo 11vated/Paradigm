@@ -15,7 +15,22 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'food'; $name?: string; genes: any }
-interface A { filePath: string; meta: any }
+interface A {
+  filePath: string;
+  meta: any;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'text' | 'png';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html' | 'text' | 'png';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -35,7 +50,16 @@ export const FoodQualityContract: QualityContract<S, A, any> = {
     const r = await withKernelClock(0, () => generateFood(seed, out));
     const filePath = r.jsonPath ?? r.htmlPath ?? out;
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    const previewData = data;
+    return {
+      filePath: data,
+      meta: {},
+      previewData,
+      visual: { type: (r.htmlPath ? 'html' : 'json'), previewData },
+      emergent_assets: {
+        preview: { type: (r.htmlPath ? 'html' : 'json'), data: previewData, path: filePath }
+      }
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

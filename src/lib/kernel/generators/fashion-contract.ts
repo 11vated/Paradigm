@@ -17,7 +17,27 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'fashion'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'gltf' | 'json' | 'html' | 'png' | 'raster';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'gltf' | 'json' | 'html' | 'png' | 'raster';
+      data?: string;
+      path?: string;
+    };
+    mesh?: {
+      type: 'gltf';
+      data?: string;
+      path?: string;
+    };
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -34,7 +54,18 @@ async function synthesize(seed: S): Promise<A> {
     if (primaryPath) {
       try { const b = await fsp.readFile(primaryPath); data = b.toString('base64'); } catch { data = ''; }
     }
-    return { filePath: data, meta: { ...r } };
+    const previewData = data;
+    const isGltf = !!r.gltfPath;
+    return {
+      filePath: data,
+      meta: { ...r },
+      previewData,
+      visual: { type: isGltf ? 'gltf' : (r.htmlPath ? 'html' : 'json'), previewData },
+      emergent_assets: {
+        preview: { type: isGltf ? 'gltf' : (r.htmlPath ? 'html' : 'json'), data: previewData, path: primaryPath },
+        mesh: isGltf ? { type: 'gltf', data: previewData, path: r.gltfPath } : undefined
+      }
+    };
   } finally {
     await fsp.rm(dir, { recursive: true, force: true });
   }

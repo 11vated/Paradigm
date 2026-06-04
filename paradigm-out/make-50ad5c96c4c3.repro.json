@@ -1,0 +1,29 @@
+{
+  "intent": "full playable game: cyberpunk heist with branching choices and multiple endings --verify",
+  "memoryHash": "direct-pipeline-v1-strata-724830871ff6e747",
+  "seedCorpusHash": "unknown",
+  "strata": [
+    "Mind",
+    "Story"
+  ],
+  "strataSummary": [
+    "Mind",
+    "Story"
+  ],
+  "strataHash": "724830871ff6e747",
+  "decision": {
+    "planHash": "direct-sovereign-loop",
+    "seedHash": "unknown",
+    "domain": "game",
+    "summary": {
+      "method": "direct-friend-world-quest-game",
+      "reproducible": true,
+      "strata": [
+        "Mind",
+        "Story"
+      ]
+    }
+  },
+  "agentVersion": "paradigm-make-basic-v1",
+  "capturedAt": "2026-06-03T19:10:04.000Z"
+}

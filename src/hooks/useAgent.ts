@@ -93,9 +93,20 @@ export function useAgent() {
     (raw: Record<string, unknown> | null | undefined) => {
       const active = kernelSeedToActive(raw);
       if (active) setSeed(active);
-      // Close the agent->grow->visual loop: fire the event so useGrowArtifact + viewports (Atelier/Crucible) update live with rich data (name+visual from prior slices).
+      // Close the agent->grow->visual loop PERFECTLY: every intent→grow→rich named visual artifact (name via derive pattern + full visual/emergent/strata) → dispatch grow-success → Studio updates live with beautiful preview + name + strata.
       if (raw) {
-        window.dispatchEvent(new CustomEvent('paradigm:grow-success', { detail: { seed: raw, artifact: raw } }));
+        const grown = (raw as any).grownArtifact || (raw as any).artifact || raw;
+        const richName = (grown as any).name || (raw as any).$name || (raw as any).name || 'Artifact';
+        const richStrata = (grown as any).strata || (raw as any).strata || (raw as any).suggestedStrata || [];
+        const richArtifact = {
+          ...grown,
+          name: richName,
+          strata: richStrata,
+          // ensure UI consumable preview fields
+          visual: (grown as any).visual || (grown as any).preview || (grown as any).pngDataURL || (grown as any).svgDataURL || null,
+          preview: (grown as any).preview || (grown as any).visual || null,
+        };
+        window.dispatchEvent(new CustomEvent('paradigm:grow-success', { detail: { seed: raw, artifact: richArtifact, name: richName, strata: richStrata } }));
       }
     },
     [setSeed],

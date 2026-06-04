@@ -1,0 +1,657 @@
+{
+  "$intent": "fierce warrior constellation shield in desert realm --domain game",
+  "$created": "2026-06-03T23:58:11.041Z",
+  "$kernel": "paradigm-make-v1",
+  "friend": {
+    "seed": {
+      "id": "981aa4c1b7a2322c",
+      "name": "Fierce Warrior Constellation Shield In Desert 981aa4",
+      "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286",
+      "bornAt": "1970-01-01T00:00:00.000Z",
+      "genomeVersion": 1,
+      "genes": {
+        "body": {
+          "archetype": "athletic",
+          "heightScale": 0.9345076120329789,
+          "shoulderRatio": 0.8534088255311,
+          "torsoRatio": 1.0633716016759371,
+          "limbRatio": 1.0378481627704848,
+          "muscle": 0.637772786802054,
+          "softness": 0.19388485617012519,
+          "skinTone": [
+            0.6076891633095776,
+            0.6632340892873747,
+            0.40914975010526095
+          ]
+        },
+        "face": {
+          "roundness": 0.13775831799664662,
+          "eyeHeight": 0.5057868866596895,
+          "eyeSpacing": 0.36611122777701466,
+          "eyeShape": "almond",
+          "eyeColor": [
+            0.23270560410229613,
+            0.3907472299960688,
+            0.3250072427182764
+          ],
+          "noseShape": "narrow",
+          "noseHeight": 0.6007519583772976,
+          "mouthShape": "small",
+          "jawShape": "pointed",
+          "brow": 0.3865897406723251,
+          "cheekbones": 0.1780995798250924,
+          "chin": 0.6477410497527367,
+          "hairStyle": "medium",
+          "hairColor": [
+            0.2829156936957424,
+            0.5020784997472366,
+            0.13499388966476475
+          ]
+        },
+        "voice": {
+          "pitch": 210.02665989719245,
+          "inflection": 0.2918717659096759,
+          "tempo": 164.87049911945206,
+          "breathiness": 0.15039625196333395,
+          "warmth": 0.24427921257154606,
+          "formants": [
+            666.5820428155629,
+            1161.7572746214096,
+            2475.876159029234,
+            3047.2321957282875,
+            3809.0402446603593
+          ],
+          "accent": "paris"
+        },
+        "persona": {
+          "bigFive": {
+            "openness": 0.9563797219266712,
+            "conscientiousness": 0.8165286080074308,
+            "extraversion": 0.9584616787508928,
+            "agreeableness": 0.17240650975079763,
+            "neuroticism": 0.023746107485293155
+          },
+          "interests": [
+            "architecture",
+            "woodworking",
+            "biology"
+          ],
+          "values": [
+            "patience",
+            "wonder",
+            "humility"
+          ],
+          "speechStyle": "theatrical",
+          "humor": 0.43419359050441786,
+          "curiosity": 0.28060120380641407
+        },
+        "memory": {
+          "episodicCapacity": 774,
+          "episodicDecay": 0.020916623929655362,
+          "semanticCapacity": 12454,
+          "reflectionCadenceDays": 5.424833274096166
+        },
+        "bond": {
+          "initialTrust": 0.6468065642948821,
+          "initialWarmth": 0.3229414728206263,
+          "bondingDays": 69
+        }
+      },
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "body": {
+          "value_preview": ""
+        },
+        "face": {
+          "value_preview": ""
+        },
+        "voice": {
+          "value_preview": ""
+        },
+        "persona": {
+          "value_preview": ""
+        },
+        "memory": {
+          "value_preview": ""
+        },
+        "bond": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior Constellation Shield In Desert 981aa4"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior Constellation Shield In Desert 981aa4"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "world": {
+    "seed": {
+      "id": "981aa4c1b7a2322c",
+      "name": "Fierce Warrior Constellation Shield In Desert",
+      "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286",
+      "genomeVersion": 1,
+      "genes": {
+        "setting": {
+          "era": "modern",
+          "biome": "desert",
+          "magic": 0.1335220638277499,
+          "tech": 0.7112386722531239,
+          "density": 0.6261605425682824
+        },
+        "physics": {
+          "gravity": 0.2925759560068466,
+          "hostility": 0.4194242808506259,
+          "diurnalRate": 0.4685257514719592,
+          "weatherVolatility": 0.7513347077952266
+        },
+        "society": {
+          "order": 0.41829950021052187,
+          "pluralism": 0.13775831799664662,
+          "prosperity": 0.5578688665968945,
+          "literacy": 0.44074151851343135
+        },
+        "conflict": {
+          "kind": "invasion",
+          "scale": 0.2211760068371602,
+          "urgency": 0.48457871666011476,
+          "clarity": 0.37501207119712743
+        },
+        "mood": {
+          "brightness": 0.9707221389517475,
+          "warmth": 0.5075195837729751,
+          "pace": 0.8859163653782189,
+          "levity": 0.5935775580435021
+        },
+        "history": {
+          "agesSinceFall": 1932,
+          "ghostliness": 0.1780995798250924,
+          "eraCount": 3
+        }
+      },
+      "bornAt": "2026-06-03T23:58:11.024Z",
+      "derivation": {
+        "operator": "genesis",
+        "parents": [],
+        "salt": "fierce warrior constellation shield in desert realm --domain game",
+        "generation": 0
+      }
+    },
+    "artifact": {
+      "type": "unknown",
+      "name": "Artifact",
+      "domain": "unknown",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "metadata-only",
+      "gene_summary": {
+        "setting": {
+          "value_preview": ""
+        },
+        "physics": {
+          "value_preview": ""
+        },
+        "society": {
+          "value_preview": ""
+        },
+        "conflict": {
+          "value_preview": ""
+        },
+        "mood": {
+          "value_preview": ""
+        },
+        "history": {
+          "value_preview": ""
+        }
+      },
+      "render_hints": {
+        "mode": "generic",
+        "description_only": true
+      },
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "character",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "character",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior Constellation Shield In Desert"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior Constellation Shield In Desert"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "character",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "quest": {
+    "id": "6f0d2f5b484b0050",
+    "seedHash": "6f0d2f5b484b00505c671b20c4bba0c51a693cadcd2630514c3ffb6d0fb584bb",
+    "genomeVersion": 1,
+    "title": "The Fierce Warrior Constellation Shield In Desert 981aa4 Rising",
+    "genes": {
+      "archetype": "underdog-rebellion",
+      "stake": 0.20807915115522183,
+      "antagonist": 0.569260508019586,
+      "moralComplexity": 0.6400874546506387,
+      "pacing": 0.6049383760239591,
+      "intensity": 0.5615706408678183,
+      "actCount": 3,
+      "targetWordCount": 10436,
+      "hook": "Strangers cross the borders of Fierce Warrior Constellation Shield In Desert. Fierce Warrior Constellation Shield In Desert 981aa4 is the only one who recognizes the language."
+    },
+    "parents": {
+      "friend": {
+        "id": "981aa4c1b7a2322c",
+        "name": "Fierce Warrior Constellation Shield In Desert 981aa4",
+        "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286"
+      },
+      "world": {
+        "id": "981aa4c1b7a2322c",
+        "name": "Fierce Warrior Constellation Shield In Desert",
+        "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286"
+      }
+    },
+    "bornAt": "2026-06-03T23:58:11.032Z"
+  },
+  "game": {
+    "seed": {
+      "$domain": "game",
+      "$name": "Fierce Warrior Constellation Shield In Desert",
+      "quest": {
+        "id": "6f0d2f5b484b0050",
+        "seedHash": "6f0d2f5b484b00505c671b20c4bba0c51a693cadcd2630514c3ffb6d0fb584bb",
+        "genomeVersion": 1,
+        "title": "The Fierce Warrior Constellation Shield In Desert 981aa4 Rising",
+        "genes": {
+          "archetype": "underdog-rebellion",
+          "stake": 0.20807915115522183,
+          "antagonist": 0.569260508019586,
+          "moralComplexity": 0.6400874546506387,
+          "pacing": 0.6049383760239591,
+          "intensity": 0.5615706408678183,
+          "actCount": 3,
+          "targetWordCount": 10436,
+          "hook": "Strangers cross the borders of Fierce Warrior Constellation Shield In Desert. Fierce Warrior Constellation Shield In Desert 981aa4 is the only one who recognizes the language."
+        },
+        "parents": {
+          "friend": {
+            "id": "981aa4c1b7a2322c",
+            "name": "Fierce Warrior Constellation Shield In Desert 981aa4",
+            "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286"
+          },
+          "world": {
+            "id": "981aa4c1b7a2322c",
+            "name": "Fierce Warrior Constellation Shield In Desert",
+            "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286"
+          }
+        },
+        "bornAt": "2026-06-03T23:58:11.032Z"
+      },
+      "friend": {
+        "id": "981aa4c1b7a2322c",
+        "name": "Fierce Warrior Constellation Shield In Desert 981aa4",
+        "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286",
+        "bornAt": "1970-01-01T00:00:00.000Z",
+        "genomeVersion": 1,
+        "genes": {
+          "body": {
+            "archetype": "athletic",
+            "heightScale": 0.9345076120329789,
+            "shoulderRatio": 0.8534088255311,
+            "torsoRatio": 1.0633716016759371,
+            "limbRatio": 1.0378481627704848,
+            "muscle": 0.637772786802054,
+            "softness": 0.19388485617012519,
+            "skinTone": [
+              0.6076891633095776,
+              0.6632340892873747,
+              0.40914975010526095
+            ]
+          },
+          "face": {
+            "roundness": 0.13775831799664662,
+            "eyeHeight": 0.5057868866596895,
+            "eyeSpacing": 0.36611122777701466,
+            "eyeShape": "almond",
+            "eyeColor": [
+              0.23270560410229613,
+              0.3907472299960688,
+              0.3250072427182764
+            ],
+            "noseShape": "narrow",
+            "noseHeight": 0.6007519583772976,
+            "mouthShape": "small",
+            "jawShape": "pointed",
+            "brow": 0.3865897406723251,
+            "cheekbones": 0.1780995798250924,
+            "chin": 0.6477410497527367,
+            "hairStyle": "medium",
+            "hairColor": [
+              0.2829156936957424,
+              0.5020784997472366,
+              0.13499388966476475
+            ]
+          },
+          "voice": {
+            "pitch": 210.02665989719245,
+            "inflection": 0.2918717659096759,
+            "tempo": 164.87049911945206,
+            "breathiness": 0.15039625196333395,
+            "warmth": 0.24427921257154606,
+            "formants": [
+              666.5820428155629,
+              1161.7572746214096,
+              2475.876159029234,
+              3047.2321957282875,
+              3809.0402446603593
+            ],
+            "accent": "paris"
+          },
+          "persona": {
+            "bigFive": {
+              "openness": 0.9563797219266712,
+              "conscientiousness": 0.8165286080074308,
+              "extraversion": 0.9584616787508928,
+              "agreeableness": 0.17240650975079763,
+              "neuroticism": 0.023746107485293155
+            },
+            "interests": [
+              "architecture",
+              "woodworking",
+              "biology"
+            ],
+            "values": [
+              "patience",
+              "wonder",
+              "humility"
+            ],
+            "speechStyle": "theatrical",
+            "humor": 0.43419359050441786,
+            "curiosity": 0.28060120380641407
+          },
+          "memory": {
+            "episodicCapacity": 774,
+            "episodicDecay": 0.020916623929655362,
+            "semanticCapacity": 12454,
+            "reflectionCadenceDays": 5.424833274096166
+          },
+          "bond": {
+            "initialTrust": 0.6468065642948821,
+            "initialWarmth": 0.3229414728206263,
+            "bondingDays": 69
+          }
+        },
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "generation": 0
+        }
+      },
+      "world": {
+        "id": "981aa4c1b7a2322c",
+        "name": "Fierce Warrior Constellation Shield In Desert",
+        "seedHash": "981aa4c1b7a2322c84d69f80f53ba6a7dbdd2b3b2c1203702dded89555a66286",
+        "genomeVersion": 1,
+        "genes": {
+          "setting": {
+            "era": "modern",
+            "biome": "desert",
+            "magic": 0.1335220638277499,
+            "tech": 0.7112386722531239,
+            "density": 0.6261605425682824
+          },
+          "physics": {
+            "gravity": 0.2925759560068466,
+            "hostility": 0.4194242808506259,
+            "diurnalRate": 0.4685257514719592,
+            "weatherVolatility": 0.7513347077952266
+          },
+          "society": {
+            "order": 0.41829950021052187,
+            "pluralism": 0.13775831799664662,
+            "prosperity": 0.5578688665968945,
+            "literacy": 0.44074151851343135
+          },
+          "conflict": {
+            "kind": "invasion",
+            "scale": 0.2211760068371602,
+            "urgency": 0.48457871666011476,
+            "clarity": 0.37501207119712743
+          },
+          "mood": {
+            "brightness": 0.9707221389517475,
+            "warmth": 0.5075195837729751,
+            "pace": 0.8859163653782189,
+            "levity": 0.5935775580435021
+          },
+          "history": {
+            "agesSinceFall": 1932,
+            "ghostliness": 0.1780995798250924,
+            "eraCount": 3
+          }
+        },
+        "bornAt": "2026-06-03T23:58:11.024Z",
+        "derivation": {
+          "operator": "genesis",
+          "parents": [],
+          "salt": "fierce warrior constellation shield in desert realm --domain game",
+          "generation": 0
+        }
+      },
+      "strata": [
+        "Story",
+        "Mind"
+      ],
+      "suggestedStrata": [
+        "Story",
+        "Mind"
+      ],
+      "$intentAnalysis": {
+        "suggestedStrata": [
+          "Story",
+          "Mind"
+        ],
+        "source": "direct-sovereign-heuristics"
+      }
+    },
+    "artifact": {
+      "id": "game-mech_315259345363054",
+      "playerCount": 4,
+      "formalizedRules": null,
+      "winLossConditions": 3,
+      "deterministic": true,
+      "strataScores": {
+        "Mind": 0.91,
+        "Story": 0.88,
+        "World": 0.84,
+        "Time": 0.79,
+        "Form": 0,
+        "Motion": 0,
+        "Sound": 0,
+        "Field": 0,
+        "Culture": 0
+      },
+      "type": "game",
+      "name": "Fierce Warrior Constellation Shield In Desert",
+      "domain": "game",
+      "seed_hash": "",
+      "generation": 0,
+      "generation_quality": "full",
+      "render_hints": {
+        "mode": "game",
+        "hasFile": true
+      },
+      "files": {},
+      "c2pa_manifest": {
+        "claim_generator": "Paradigm/1.0",
+        "recipes": [
+          {
+            "ingredients": [
+              {
+                "title": "Seed Input",
+                "format": "application/x-gseed-seed",
+                "documentID": "unknown",
+                "relationship": "input"
+              },
+              {
+                "title": "Generator",
+                "format": "application/x-paradigm-generator",
+                "documentID": "game",
+                "relationship": "tool"
+              }
+            ],
+            "actions": [
+              {
+                "action": "generative_create",
+                "parameters": {
+                  "algorithm": "game",
+                  "seed_hash": "unknown",
+                  "seed_phrase": "Fierce Warrior Constellation Shield In Desert"
+                }
+              }
+            ]
+          }
+        ],
+        "assertions": [
+          {
+            "label": "paradigm.seed",
+            "data": {
+              "hash": "unknown",
+              "algorithm": "SHA-512/256",
+              "phrase": "Fierce Warrior Constellation Shield In Desert"
+            }
+          },
+          {
+            "label": "paradigm.generator",
+            "data": {
+              "name": "game",
+              "version": "2.0"
+            }
+          },
+          {
+            "label": "paradigm.timestamp",
+            "data": {
+              "created": "2026-05-26T19:20:26.000Z",
+              "unix_ms": 1779045626000
+            }
+          }
+        ]
+      }
+    }
+  },
+  "strataSummary": [
+    "Story",
+    "Mind"
+  ],
+  "meta": {
+    "recursiveGseed": false
+  }
+}

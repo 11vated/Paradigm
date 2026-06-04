@@ -14,7 +14,23 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface S { $domain: 'metaverse'; $name?: string; genes?: Record<string, unknown> }
-interface A { filePath: string; meta?: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta?: Record<string, unknown>;
+  previewData?: string;
+  visual?: {
+    type: 'json' | 'html' | 'gltf' | 'svg' | 'code';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'json' | 'html' | 'gltf' | 'svg' | 'code';
+      data?: string;
+      path?: string;
+    };
+    mesh?: any;
+  };
+}
 interface I { size: number }
 
 function hashArtifact(a: A): string {
@@ -28,7 +44,16 @@ async function synthesize(seed: S): Promise<A> {
   const r = await withKernelClock(0, () => generateMetaverse(seed as any, out)) as { filePath?: string };
   const filePath = r.filePath ?? out;
   const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-  return { filePath: data, meta: {} };
+  const previewData = data;
+  return {
+    filePath: data,
+    meta: {},
+    previewData,
+    visual: { type: 'json', previewData },
+    emergent_assets: {
+      preview: { type: 'json', data: previewData, path: filePath }
+    }
+  };
 }
 
 function invert(a: A): I {

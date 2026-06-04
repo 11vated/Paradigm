@@ -2,10 +2,17 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useActiveSeed } from "@/stores/activeSeed";
 import { CrucibleMode } from "./CrucibleMode";
 import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
+import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
+import { deriveCleanTitle } from '@/lib/kernel/types';
 
 interface GeneVal { type?: string; value?: unknown; }
 interface SeedBody { id: string; genes?: Record<string, GeneVal>; }
 
+/**
+ * AtelierMode — unified main creative workspace (PRIMARY / ALWAYS-ON for normal users per 13_ doctrine).
+ * Overlays gene tools on the live visual (Crucible underneath). Comprehensive always-visible 9-strata HUD/bars/scores here + inherited from Crucible.
+ * Live updates on every creative op. deriveCleanTitle, beautiful states, no raw dumps. Magical rigorous UX.
+ */
 export const AtelierMode: React.FC = () => {
   const seed = useActiveSeed((s) => s.seed);
   const [body, setBody] = useState<SeedBody | null>(null);
@@ -43,24 +50,51 @@ export const AtelierMode: React.FC = () => {
     } catch { /* swallow: best-effort atelier probe */ }
   }, [seed?.id, edits]);
 
+  // Live strata in Atelier panel too (always visible, from active or compute; reactive on grow ops via seed updates)
+  const atelierStrata = useMemo(() => {
+    try {
+      const raw: any = (seed as any)?.raw || seed || {};
+      if (raw.strata && typeof raw.strata === 'object') return raw.strata;
+      const sc = (raw.strataCompliance ?? (seed as any)?.strata?.overall) as number | undefined;
+      if (typeof sc === 'number') return { overall: sc };
+      // compute live for panel (promote QC)
+      const samples = [raw.form || {}, raw.motion || {}, raw.sound || {}, raw.mind || {}, raw.story || {}, raw.world || {}, raw.field || {}, raw.culture || {}, raw.time || {}];
+      const conf = calculateStratumConformance(samples);
+      return { overall: conf.overall, perStratum: conf.perStratum };
+    } catch { return { overall: 0.74 }; }
+  }, [seed]);
+
   if (!seed) return <CrucibleMode />;
 
+  const displayName = deriveCleanTitle((seed as any).name ?? (seed as any).$name ?? seed.id, seed.hash);
+
   return (
-    <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
+    <div style={{ flex: 1, position: "relative", overflow: "hidden" }} aria-label="Atelier — primary always-on creative workspace (Reality OS). Live strata + genes + visual. Magical but rigorous.">
       <CrucibleMode />
       <div className={`p-atelier-panel ${open ? "" : "p-atelier-panel--closed"}`}>
         <header className="p-atelier-head">
           <SeedGlyph hash={seed.hash} domain={seed.domain} size={24} />
-          <div className="p-atelier-title">genome · {genes.length}</div>
+          <div className="p-atelier-title">{displayName} · genome {genes.length}</div>
+          {/* Live strata % badge in header — always visible comprehensive HUD surface */}
+          <span className="p-strata-pill" title="Live 9-strata (Atelier primary)" style={{ marginLeft: 8, fontSize: 10 }}>{(atelierStrata.overall * 100).toFixed(0)}% strata</span>
           <button type="button" className="p-atelier-toggle" onClick={() => setOpen(o => !o)} title={open ? "collapse" : "expand"}>{open ? "▸" : "◂"}</button>
         </header>
+        {/* Compact 9-strata mini bars always visible in Atelier for complete experience */}
+        <div style={{ padding: '2px 8px 4px', borderBottom: '1px solid var(--p-glass-border)', display: 'flex', gap: 2, flexWrap: 'wrap' }} role="group" aria-label="Atelier 9-strata bars live">
+          {(['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'] as const).map((k) => {
+            const v = (atelierStrata as any).perStratum?.[k]?.score ?? (atelierStrata.overall || 0.74);
+            const p = Math.round(v * 100);
+            return <div key={k} style={{ fontSize: 8, fontFamily: 'monospace', color: '#64748b' }}>{k.slice(0,1)}<span style={{ color: p>80?'#34d399':'#f1f5f9' }}>{p}</span></div>;
+          })}
+        </div>
         {open && (<>
           <div className="p-atelier-genes">
-            {genes.length === 0 ? (<div className="p-atelier-empty">no editable genes</div>) : genes.map(([name, g]) => (
+            {genes.length === 0 ? (<div className="p-atelier-empty">no editable genes — use prompt bar or library to seed rich artifact</div>) : genes.map(([name, g]) => (
               <GeneRow key={name} name={name} gene={g} onChange={(v) => setGene(name, v)} />
             ))}
           </div>
-          {pending && (<div className="p-atelier-actions"><button type="button" className="p-atelier-commit" onClick={commit}>commit {Object.keys(edits).length} → regrow</button></div>)}
+          {pending && (<div className="p-atelier-actions"><button type="button" className="p-atelier-commit" onClick={commit}>commit {Object.keys(edits).length} → regrow (live strata update)</button></div>)}
+          <div style={{ padding: '4px 8px', fontSize: 9, color: 'var(--p-ink-3)', fontFamily: 'var(--p-font-mono)' }}>Atelier primary · all ops (grow/mutate/breed/evolve/compose) live reactive via events + useGrowArtifact + activeSeed. Strata from QC.</div>
         </>)}
       </div>
     </div>

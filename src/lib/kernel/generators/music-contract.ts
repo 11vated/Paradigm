@@ -27,9 +27,11 @@ interface MusicArtifact {
   wavBuffer: Buffer;
   meta: { duration: number; tempo: number; key: string; sampleRate: number };
   audioDataURL?: string;
+  previewData?: string;
   visual?: {
     type: 'png' | 'svg' | 'raster' | 'audio';
     audioDataURL?: string;
+    previewData?: string;
   };
   emergent_assets?: {
     audio?: {
@@ -52,6 +54,7 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
     const wavPath = r.filePath || (r.wavPath) || path.join(dir, 'music.wav');
     const wavBuffer = await fs.readFile(wavPath);
     const audioDataURL = `data:audio/wav;base64,${wavBuffer.toString('base64')}`;
+    const previewData = audioDataURL;
     return {
       wavBuffer,
       meta: {
@@ -61,9 +64,11 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
         sampleRate: r.sampleRate ?? 44100,
       },
       audioDataURL,
+      previewData,
       visual: {
         type: 'audio',
         audioDataURL,
+        previewData,
       },
       emergent_assets: {
         audio: {

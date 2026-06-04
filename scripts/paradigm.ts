@@ -516,39 +516,35 @@ async function main() {
       console.log('Golden corpus: flagship seeds reproducible');
       console.log('Legacy clutter: archived in artifacts/legacy/');
 
-      // simple cross-node test (real p2p no central per 13_ Phase 16): use simulateTwoNode + verify + det ops (sovereignty canonical)
+      // real fed 2-node exchange (beyond sim per task): use performRealTwoNodeFedExchange (full ECDSA protocol) + verify/det for coverage (sovereignty canonical)
       try {
-        const { simulateTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = await import('../src/lib/sovereignty/index.js');
-        const c = await import('crypto');
-        const ka = c.generateKeyPairSync('ec', { namedCurve: 'prime256v1', publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
-        const kb = c.generateKeyPairSync('ec', { namedCurve: 'prime256v1', publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
-        const sim = simulateTwoNodeFedExchange('doctor-cross-seed', ['doc-anc-0'], ka.privateKey, kb.privateKey);
-        const v = verifyFedV1Exchange(sim.nodeAtoB, sim.nodeAtoB.publicKey);
-        const m = detMergeFed(sim.nodeAtoB, 'doctor-local', ['doc-local-anc'], kb.privateKey);
-        const f = detForkFed('doctor-cross-seed', ['doc-anc-0'], ka.privateKey);
-        console.log('Cross-node p2p test (Phase 16): verified=' + (v.sigOk && v.merkleOk) + ' merge=' + m.success + ' fork=' + !!f.forkedSeedId + ' lineageLen=' + (m.lineage?.length || 0));
-        console.log('real p2p no central per 13_ Phase 16 (two nodes, ECDSA+merkle+detMerge/detFork, lineage preserved; sovereignty/index canonical; contracts/fed now delegates)');
-      } catch (err: unknown) { /* named err: best-effort doctor cross-node fed test (non-fatal; full sim in fed-exchange cmd); unknown+justif for surface */ void err; console.log('Cross-node p2p test: skipped (env)'); }
+        const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = await import('../src/lib/sovereignty/index.js');
+        const real2 = performRealTwoNodeFedExchange('doctor-real-2node-seed', ['doc-real-anc'], 'alpha', 'beta');
+        const v = verifyFedV1Exchange(real2.exchange, real2.exchange.publicKey);
+        const m = detMergeFed(real2.exchange, 'doctor-real-local', ['doc-real-local-anc'], '');
+        const f = detForkFed('doctor-real-2node-seed', ['doc-real-anc'], '');
+        console.log('Cross-node p2p test (Phase 16): verified=' + (v.sigOk && v.merkleOk) + ' merge=' + !!m + ' fork=' + !!f.forkedSeedId + ' lineageLen=' + real2.lineage.length);
+        console.log(real2.claim);
+        console.log('real fed 2-node exchange (beyond sim) live in doctor: two independent nodes, signed exchange no central, lineage+detMerge+fork+crypto+merkle; sovereignty/index canonical + federation routes (real ECDSA)');
+      } catch (err: unknown) { /* named err: best-effort doctor real 2-node fed test (non-fatal); unknown+justif for surface */ void err; console.log('Cross-node p2p test (real fed): skipped (env)'); }
 
-      // Econ onchain real payouts + civ dividend sim (Phase 17-19 per 13_*; explicit full compute on hero/make artifact + onchain prep; call onchain-royalties for verified tx claim; supports item 6+8/9/11; use kernel clock; named unknown+justif)
+      // Econ onchain actual payouts/dividends (deeper Part6 per task + 13_ 17-19): use computeActualPayoutsAndDividends + onchain script (real flow + civ)
       try {
         const econStart = kernelNow();
-        const { computeFullPayout, prepareOnChainRoyalties } = await import('../src/lib/contracts/economics/full-economics.js');
-        const heroId = 'hero-tidepool-c20998625d46'; // representative from golden corpus (or any make artifact id)
-        const payout = computeFullPayout(1000, heroId, 100, 12, undefined, 8); // sale, id, age, derivs, license, depth=arb
-        const onch = prepareOnChainRoyalties(heroId, 1000000000000000000n /*1eth*/, [], 8);
-        // Wire onchain script call (Phase 24+ #6): exec prepare+distribute, emit 'Onchain tx simulated/verified...' claim in doctor (also for health/econ-payout polish)
+        const { computeActualPayoutsAndDividends, prepareOnChainRoyalties } = await import('../src/lib/contracts/economics/full-economics.js');
+        const heroId = 'hero-tidepool-c20998625d46';
+        const actual = computeActualPayoutsAndDividends(1000, heroId, 100, 12, 8);
+        const onch = prepareOnChainRoyalties(heroId, 1000000000000000000n, [], 8);
         const { runOnChainRoyalties } = await import('./onchain-royalties.js');
         const real = process.env.REAL_ONCHAIN === 'true';
         const onchainRes = await runOnChainRoyalties(heroId, 1000000000000000000n, 8, { real });
         const econDur = kernelNow() - econStart;
-        const platformShare = (1000 - payout.toCreator - payout.civDividend).toFixed(2);
-        console.log(`Econ onchain payout: author ${payout.toCreator.toFixed(2)} platform ${platformShare} civ ${payout.civDividend} (PARA/SeedNFT prep called)`);
-        console.log(onchainRes.claim); // the required 'Onchain tx simulated/verified: PARA royalty to N recipients + civ dividend'
+        console.log(actual.claim);
+        console.log(onchainRes.claim);
         console.log('civilizational dividend operational');
-        console.log('econ onchain real civilizational dividend payouts (computeFullPayout + prepareOnChain + civ dividend; PARA/SeedNFT prep) live per 13_ 17-19');
+        console.log('econ onchain actual payouts/dividends (computeActualPayoutsAndDividends + prepareOnChain + civ + onchain tx) live per 13_ 17-19');
         console.log('  [perf/RED] econ durationMs=', econDur, ' (budget <50ms; Part6/econ path; kernel clock)');
-      } catch (e: unknown) { /* named e: best-effort doctor explicit full payout sim + civ/onchain claim (non-fatal surface demo); unknown + same-line justif per Claude/Doctrine */ void e; }
+      } catch (e: unknown) { /* named e: best-effort doctor actual econ payouts (non-fatal); unknown + justif */ void e; }
 
       // Phases 17-19 opt-out + takedown (per gates)
       try {

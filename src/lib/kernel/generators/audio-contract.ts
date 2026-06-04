@@ -15,7 +15,24 @@ import { withKernelClock } from '../clock';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface AudioSeed { $hash?: string; $name?: string; genes?: any; }
-interface AudioArtifact { wav: Buffer; meta: { duration: number; sampleRate: number; size: number }; }
+interface AudioArtifact {
+  wav: Buffer;
+  meta: { duration: number; sampleRate: number; size: number };
+  audioDataURL?: string;
+  visual?: {
+    type: 'audio' | 'png' | 'svg' | 'raster';
+    audioDataURL?: string;
+  };
+  emergent_assets?: {
+    audio?: {
+      type: 'wav';
+      data?: string;
+      path?: string;
+      duration?: number;
+    };
+    preview?: any;
+  };
+}
 interface AudioInverted { sampleRate: number; durationS: number; bytes: number; }
 
 async function synth(seed: AudioSeed): Promise<AudioArtifact> {
@@ -23,7 +40,21 @@ async function synth(seed: AudioSeed): Promise<AudioArtifact> {
   try {
     const r = await generateAudio(seed, dir);
     const wav = await fs.readFile(r.wavPath);
-    return { wav, meta: { duration: r.duration, sampleRate: r.sampleRate, size: wav.length } };
+    const audioDataURL = `data:audio/wav;base64,${wav.toString('base64')}`;
+    return {
+      wav,
+      meta: { duration: r.duration, sampleRate: r.sampleRate, size: wav.length },
+      audioDataURL,
+      visual: { type: 'audio', audioDataURL },
+      emergent_assets: {
+        audio: {
+          type: 'wav',
+          data: audioDataURL,
+          path: r.wavPath,
+          duration: r.duration
+        }
+      }
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }

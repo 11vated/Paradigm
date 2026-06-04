@@ -181,7 +181,7 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
     if (pick('sdfPath') || pick('sdf')) richFiles.sdf = pick('sdfPath') || pick('sdf');
     if (pick('wasmPath') || pick('wasm')) richFiles.wasm = pick('wasmPath') || pick('wasm');
     (artifact as any).files = richFiles;
-    artifact.c2pa_manifest = buildC2PAManifest(seed, domain);
+    artifact.c2pa_manifest = buildC2PAManifest(seed, domain, '2.0', generatorOutput || artifact);
     applyAgentSpecialization(artifact, seed);
     return artifact;
   } catch {
@@ -195,13 +195,13 @@ export async function growSeed(seed: Seed): Promise<Artifact> {
         main: gOut.filePath || gOut.main, midi: gOut.midiPath || gOut.midi, html: gOut.htmlPath || gOut.storyPlayerPath || gOut.html, json: gOut.jsonPath || gOut.json,
         stl: gOut.stlPath || gOut.stl, gerber: gOut.gerberPath || gOut.gerber, sdf: gOut.sdfPath || gOut.sdf, wasm: gOut.wasmPath || gOut.wasm
       };
-      (result as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      (result as any).c2pa_manifest = buildC2PAManifest(seed, domain, '2.0', artifact || result);
       applyAgentSpecialization(result, seed);
       return result;
     } catch {
       const artifact = growGeneric(seed);
       applyAgentSpecialization(artifact, seed);
-      (artifact as any).c2pa_manifest = buildC2PAManifest(seed, domain);
+      (artifact as any).c2pa_manifest = buildC2PAManifest(seed, domain, '2.0', artifact);
       // Generic path still emits metadata + C2PA for universal substrate guarantee; rich generators take precedence in dispatch.
       return artifact;
     }

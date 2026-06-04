@@ -81,17 +81,20 @@ export const DEFAULT_ROYALTY_CONFIG: RoyaltyConfig = {
 /**
  * Compute royalty splits for a seed sale.
  * Traces lineage and allocates royalties to each ancestor.
+ * Extended for rich artifacts uniform: optional artifact carries the data embeds for provenance in CLI/server/exports.
  */
 export function computeRoyaltyWaterfall(
   seed: SeedLineage,
   salePrice: number,
   lineage: Map<string, SeedLineage>,
   config: RoyaltyConfig = DEFAULT_ROYALTY_CONFIG,
+  artifact?: any,
 ): {
   splits: RoyaltySplit[];
   totalRoyalty: number;
   platformFee: number;
   sellerAmount: number;
+  rich?: boolean; // uniform for rich artifacts in provenance/packs
 } {
   const splits: RoyaltySplit[] = [];
   let totalRoyalty = 0;
@@ -155,6 +158,7 @@ export function computeRoyaltyWaterfall(
     totalRoyalty,
     platformFee,
     sellerAmount: Math.max(0, sellerAmount),
+    rich: !!(artifact && (artifact.files || artifact.visual || artifact.htmlData)), // uniform rich
   };
 }
 
