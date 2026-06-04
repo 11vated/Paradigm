@@ -61,6 +61,12 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
         if (result?.svg && !result.svgDataURL) {
           result.svgDataURL = `data:image/svg+xml;base64,${Buffer.from(String(result.svg)).toString('base64')}`;
         }
+        if (result?.wavBuffer && !result.audioDataURL) {
+          result.audioDataURL = `data:audio/wav;base64,${result.wavBuffer.toString('base64')}`;
+        }
+        if (result?.manuscript && !result.storyData) {
+          result.storyData = JSON.stringify(result.manuscript);
+        }
         if (!result.visual) result.visual = {};
         if (result.pngDataURL) result.visual.pngDataURL = result.pngDataURL;
         if (result.svgDataURL) result.visual.svgDataURL = result.svgDataURL;

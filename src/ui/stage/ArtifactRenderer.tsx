@@ -52,11 +52,12 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     if (!artifact) return 'empty';
     if (artifact.svgPath || artifact.svg)   return 'svg';
     if (artifact.htmlPath || artifact.html) return 'html';
-    if (artifact.wavPath || artifact.midiPath) return 'audio';
+    if (artifact.wavPath || artifact.midiPath || artifact.audioDataURL) return 'audio';
     if (artifact.pdbPath)  return 'pdb';
     if (artifact.gltfPath) return 'gltf';
     if (artifact.pngPath)  return 'png';
     if (artifact.jsonPath || artifact.json) return 'json';
+    if (artifact.storyData || artifact.manuscript) return 'story';
     if (artifact.outputPath) {
       const ext = artifact.outputPath.split('.').pop()?.toLowerCase();
       if (ext === 'svg')  return 'svg';
@@ -142,7 +143,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
 
   // ─── AUDIO: native player ─────────────────────────────────────────────────
   if (kind === 'audio') {
-    const wav = toUrl(artifact.wavPath);
+    const wav = toUrl(artifact.wavPath) || artifact.audioDataURL;
     const mid = toUrl(artifact.midiPath);
     return (
       <div className="p-artifact p-artifact-audio">
@@ -194,6 +195,19 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
           open .gltf ↗
         </a>
         <div className="p-artifact-gltf-hint">Three.js viewport ships with slice-7</div>
+      </div>
+    );
+  }
+
+  // ─── STORY / NARRATIVE: nice rendered view (not raw JSON dump) ─────────────
+  if (kind === 'story') {
+    const story = artifact.storyData || artifact.manuscript || artifact.json;
+    const content = typeof story === 'string' ? story : JSON.stringify(story, null, 2);
+    return (
+      <div className="p-artifact p-artifact-story">
+        <div className="p-artifact-story-header">Story / Narrative</div>
+        <pre className="p-artifact-story-content">{content.slice(0, 2000)}{content.length > 2000 ? '...' : ''}</pre>
+        <div className="p-artifact-story-hint">Full manuscript available in export / .gseed. (Live player in future slice.)</div>
       </div>
     );
   }

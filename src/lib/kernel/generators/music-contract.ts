@@ -26,6 +26,21 @@ interface MusicSeed { $hash: string; genes?: Record<string, { value: any }>; }
 interface MusicArtifact {
   wavBuffer: Buffer;
   meta: { duration: number; tempo: number; key: string; sampleRate: number };
+  audioDataURL?: string;
+  visual?: {
+    type: 'png' | 'svg' | 'raster' | 'audio';
+    audioDataURL?: string;
+  };
+  emergent_assets?: {
+    audio?: {
+      type: 'wav';
+      data?: string;
+      path?: string;
+      duration?: number;
+    };
+    visual?: any;
+    mesh?: any;
+  };
 }
 
 async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
@@ -36,6 +51,7 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
     const r: any = await generateMusic(seed as any, out);
     const wavPath = r.filePath || (r.wavPath) || path.join(dir, 'music.wav');
     const wavBuffer = await fs.readFile(wavPath);
+    const audioDataURL = `data:audio/wav;base64,${wavBuffer.toString('base64')}`;
     return {
       wavBuffer,
       meta: {
@@ -43,6 +59,19 @@ async function synthesize(seed: MusicSeed): Promise<MusicArtifact> {
         tempo: r.tempo ?? 120,
         key: r.key ?? 'C major',
         sampleRate: r.sampleRate ?? 44100,
+      },
+      audioDataURL,
+      visual: {
+        type: 'audio',
+        audioDataURL,
+      },
+      emergent_assets: {
+        audio: {
+          type: 'wav',
+          data: audioDataURL,
+          path: wavPath,
+          duration: r.duration ?? 0,
+        },
       },
     };
   } finally {

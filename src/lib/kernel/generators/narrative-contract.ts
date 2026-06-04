@@ -22,6 +22,20 @@ interface NarrativeSeed { $hash: string; genes?: Record<string, { value: any }>;
 interface NarrativeArtifact {
   manuscript: any;
   meta: { chapters: number; wordCount: number };
+  storyData?: string;
+  visual?: {
+    type: 'png' | 'svg' | 'raster' | 'text';
+    storyData?: string;
+  };
+  emergent_assets?: {
+    story?: {
+      type: 'json' | 'text';
+      data?: string;
+      path?: string;
+      chapters?: number;
+    };
+    visual?: any;
+  };
 }
 
 async function synthesize(seed: NarrativeSeed): Promise<NarrativeArtifact> {
@@ -30,9 +44,23 @@ async function synthesize(seed: NarrativeSeed): Promise<NarrativeArtifact> {
   try {
     const r = await generateNarrativeV3(seed as any, out);
     const manuscript = JSON.parse(await fs.readFile(r.jsonPath, 'utf8'));
+    const storyData = JSON.stringify(manuscript);
     return {
       manuscript,
       meta: { chapters: r.chapters, wordCount: r.wordCount },
+      storyData,
+      visual: {
+        type: 'text',
+        storyData,
+      },
+      emergent_assets: {
+        story: {
+          type: 'json',
+          data: storyData,
+          path: r.jsonPath,
+          chapters: r.chapters,
+        },
+      },
     };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });

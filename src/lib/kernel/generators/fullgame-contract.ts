@@ -19,7 +19,13 @@ import { withKernelClock } from '../clock';
 // Direct 15_ usage (Epoch 2 pattern)
 
 interface S { $domain: 'fullgame'; $name?: string; genes: Record<string, unknown> }
-interface A { filePath: string; meta: Record<string, unknown> }
+interface A {
+  filePath: string;
+  meta: Record<string, unknown>;
+  htmlData?: string;
+  visual?: { type: 'html'; htmlData?: string };
+  emergent_assets?: { html?: { type: 'html'; data?: string; path?: string } };
+}
 
 function hashArtifact(a: A): string {
   return crypto.createHash('sha256').update(a.filePath + JSON.stringify(a.meta)).digest('hex');
@@ -38,7 +44,23 @@ export const FullgameQualityContract: QualityContract<S, A, Record<string, unkno
     const r = await withKernelClock(0, () => generateFullGameV3(seed as never, dir)) as { filePath?: string; htmlPath?: string };
     const filePath = r.htmlPath ?? r.filePath ?? path.join(dir, 'fullgame_unknown.html');
     const data = await fsp.readFile(filePath, 'utf-8').catch(async () => (await fsp.readFile(filePath)).toString('base64'));
-    return { filePath: data, meta: {} };
+    const htmlData = typeof data === 'string' ? data : data.toString('utf8');
+    return {
+      filePath: data,
+      meta: {},
+      htmlData,
+      visual: {
+        type: 'html' as any,
+        htmlData,
+      },
+      emergent_assets: {
+        html: {
+          type: 'html',
+          data: htmlData,
+          path: filePath,
+        },
+      },
+    };
   },
   invert: (a) => ({ size: a.filePath.length }),
   rate: (a) => {

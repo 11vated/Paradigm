@@ -16,7 +16,24 @@ import type { QualityContract, QualityReport } from '../quality-contract';
 
 interface G3Seed { $hash: string; genes?: Record<string, any>; }
 interface G3Inverted { vertices: number; faces: number; meshes: number; lodCount: number; gltfChars: number; }
-interface G3Artifact { gltf: string; meta: { gltfPath: string; vertices: number; faces: number; lodCount: number } }
+interface G3Artifact {
+  gltf: string;
+  meta: { gltfPath: string; vertices: number; faces: number; lodCount: number };
+  visual?: {
+    type: 'png' | 'svg' | 'raster' | 'gltf';
+    gltfPath?: string;
+    resolution?: number;
+  };
+  emergent_assets?: {
+    visual?: {
+      type: 'gltf' | 'png' | 'svg';
+      data?: string;
+      path?: string;
+      resolution?: number;
+    };
+    mesh?: any;
+  };
+}
 
 async function synthesize(seed: G3Seed): Promise<G3Artifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-g3-'));
@@ -24,9 +41,23 @@ async function synthesize(seed: G3Seed): Promise<G3Artifact> {
     const out = path.join(dir, 'mesh.gltf');
     const r = await generateGeometry3DV4(seed as any, out);
     const gltf = await fs.readFile(r.filePath, 'utf8');
+
+    // Attach rich asset data for UI (Phase 1 consistency; gltf is the primary 'visual' for 3D).
     return {
       gltf,
       meta: { gltfPath: r.filePath, vertices: r.vertices ?? 0, faces: r.faces ?? 0, lodCount: r.lodPaths?.length ?? 0 },
+      visual: {
+        type: 'gltf',
+        gltfPath: r.filePath,
+        resolution: r.vertices ?? 0, // proxy for complexity
+      },
+      emergent_assets: {
+        visual: {
+          type: 'gltf',
+          data: gltf, // inline for immediate use in previews/exports (text GLTF)
+          path: r.filePath,
+        },
+      },
     };
   } finally {
     await fs.rm(dir, { recursive: true, force: true }).catch(() => {});

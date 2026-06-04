@@ -43,6 +43,21 @@ interface SpriteArtifact {
   pngBuffer: Buffer;
   metaJson: any;
   meta: { frames: number; resolution: number; paletteSize: number };
+  pngDataURL?: string;
+  visual?: {
+    type: 'png' | 'svg' | 'raster';
+    pngDataURL?: string;
+    resolution?: number;
+  };
+  emergent_assets?: {
+    visual?: {
+      type: 'png' | 'svg';
+      data?: string;
+      path?: string;
+      resolution?: number;
+    };
+    mesh?: any;
+  };
 }
 
 async function synthesize(seed: SpriteSeed): Promise<SpriteArtifact> {
@@ -52,7 +67,30 @@ async function synthesize(seed: SpriteSeed): Promise<SpriteArtifact> {
     const r = await generateSpriteV3(seed as any, out);
     const pngBuffer = await fs.readFile(r.filePath);
     const metaJson = JSON.parse(await fs.readFile(r.atlas, 'utf8'));
-    return { pngBuffer, metaJson, meta: { frames: r.frames, resolution: r.resolution, paletteSize: r.paletteSize } };
+
+    // Attach UI-consumable rich data (Phase 1 consistency with visual2d/character pattern).
+    const pngDataURL = `data:image/png;base64,${pngBuffer.toString('base64')}`;
+
+    return {
+      pngBuffer,
+      metaJson,
+      meta: { frames: r.frames, resolution: r.resolution, paletteSize: r.paletteSize },
+      pngPath: r.filePath,
+      pngDataURL,
+      visual: {
+        type: 'raster',
+        pngDataURL,
+        resolution: r.resolution,
+      },
+      emergent_assets: {
+        visual: {
+          type: 'png',
+          data: pngDataURL,
+          path: r.filePath,
+          resolution: r.resolution,
+        },
+      },
+    };
   } finally {
     await fs.rm(dir, { recursive: true, force: true });
   }
