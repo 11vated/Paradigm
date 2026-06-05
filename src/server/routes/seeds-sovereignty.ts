@@ -39,11 +39,38 @@ export function registerSeedsSovereigntyRoutes(app: Express, deps: SeedsSovereig
   const { seeds, saveSeeds, optionalAuth, validateBody, SignSeedSchema, VerifySeedSchema, MintSeedSchema, crypto, SovereigntyLayer, OnChainSovereignty, canonicalizeSeed, seedDigestBytes32, createSovereignGene, isSovereignGene, getGeneProvenance, licenseSovereignGene, checkGenePermission, LocalHmacSigner, LocalDryRunAnchor, LocalFilePin, mintSeedSovereignty, encodeGseed, log, audit } = deps;
 
   app.get('/api/sovereignty/receipt', optionalAuth, async (req: any, res: any) => {
-    const hash = req.query.hash as string;
-    if (!hash) return res.status(400).json({ error: 'hash required' });
-    const seed = seeds.find((s: any) => s.$hash === hash || s.id === hash);
+    const key = (req.query.id ?? req.query.hash) as string;
+    if (!key) return res.status(400).json({ error: 'id or hash required' });
+    const seed = seeds.find((s: any) => s.$hash === key || s.id === key);
     if (!seed) return res.status(404).json({ error: 'Seed not found' });
-    res.json({ seedHash: hash, domain: seed.$domain ?? 'unknown', sovereignty: { signed: !!(seed.$sovereignty?.signature), valid: seed.$sovereignty?.signature ? true : null, publicKeyFingerprint: seed.$sovereignty?.author_pubkey ?? null, algorithm: 'ECDSA P-256', signedAt: seed.$sovereignty?.timestamp ?? null }, lineage: (seed.$lineage ?? []).slice(0, 8).map((h: string, i: number) => ({ hash: h, depth: i + 1, domain: seed.$domain ?? 'unknown', operation: 'mutate' })), commits: [], anchor: { minted: false } });
+    const sov = seed.$sovereignty ?? {};
+    const signed = !!sov.signature;
+    const onchain = sov.onchain ?? null;
+    // $lineage is an object ({ generation, operation, parents? }) on seeds, not
+    // an array — read parent hashes defensively so the receipt never throws.
+    const lin = seed.$lineage;
+    const lineageArr: string[] = Array.isArray(lin)
+      ? lin
+      : Array.isArray(lin?.parents)
+        ? lin.parents
+        : [];
+    res.json({
+      // Flat fields consumed by the Sovereignty mode UI.
+      signed,
+      signature: sov.signature ?? null,
+      pubkey: sov.public_key ?? null,
+      signedAt: sov.signed_at ?? null,
+      anchor: onchain
+        ? { tx: onchain.transactionHash, network: onchain.network, block: onchain.block ?? null }
+        : undefined,
+      // Nested shape preserved for any other consumers.
+      seedHash: seed.$hash ?? key,
+      domain: seed.$domain ?? 'unknown',
+      sovereignty: { signed, valid: signed ? true : null, publicKeyFingerprint: sov.public_key ?? null, algorithm: 'ECDSA P-256', signedAt: sov.signed_at ?? null },
+      lineage: lineageArr.slice(0, 8).map((h: string, i: number) => ({ hash: String(h), depth: i + 1, domain: seed.$domain ?? 'unknown', operation: lin?.operation ?? 'mutate' })),
+      commits: [],
+      minted: !!onchain,
+    });
   });
 
   app.post('/api/sovereignty/export/gseed', optionalAuth, async (req: any, res: any) => {
@@ -75,13 +102,16 @@ export function registerSeedsSovereigntyRoutes(app: Express, deps: SeedsSovereig
       const seedIndex = seeds.findIndex((s: any) => s.id === req.params.id);
       if (seedIndex === -1) return res.status(404).json({ detail: 'Seed not found' });
       const seed = seeds[seedIndex];
-      const sovereignty = SovereigntyLayer.signSeed(seed, req.body.private_key);
+      // Local-first: mint an ephemeral keypair when the caller brings none, so
+      // the UI's one-click Sign always produces a real, verifiable signature.
+      const privateKey = req.body?.private_key || SovereigntyLayer.generateKeys().private_key;
+      const sovereignty = SovereigntyLayer.signSeed(seed, privateKey);
       seeds[seedIndex] = { ...seed, $sovereignty: sovereignty };
       saveSeeds();
       const verified = SovereigntyLayer.verifySeed(seeds[seedIndex], sovereignty.public_key);
       log('INFO', 'Seed signed', { id: seed.id });
       audit('seed.sign', 'seed', seed.id, {}, req);
-      res.json({ sovereignty, verified });
+      res.json({ sovereignty, verified, signature: sovereignty.signature, public_key: sovereignty.public_key, signedAt: sovereignty.signed_at });
     } catch (e: any) { log('ERROR', 'Signing error', { error: e.message }); res.status(500).json({ detail: e.message || 'Signing failed' }); }
   });
 
@@ -89,8 +119,11 @@ export function registerSeedsSovereigntyRoutes(app: Express, deps: SeedsSovereig
     try {
       const seed = seeds.find((s: any) => s.id === req.params.id);
       if (!seed) return res.status(404).json({ detail: 'Seed not found' });
-      const verified = SovereigntyLayer.verifySeed(seed, req.body.public_key);
-      res.json({ verified });
+      // Fall back to the public key stored in the seed's receipt so the UI can
+      // verify a signed seed without re-supplying the key.
+      const publicKey = req.body?.public_key || seed.$sovereignty?.public_key;
+      const verified = publicKey ? SovereigntyLayer.verifySeed(seed, publicKey) : false;
+      res.json({ verified, valid: verified });
     } catch (e: any) { res.status(500).json({ detail: e.message || 'Verification failed' }); }
   });
 
