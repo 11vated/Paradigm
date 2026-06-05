@@ -18,6 +18,46 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import type { FriendSeedData } from './types';
 
+/**
+ * Atomic-ish JSON write that is robust on Windows.
+ *
+ * The naive `writeFile(tmp)` → `rename(tmp, target)` pattern throws
+ * `EPERM`/`EACCES`/`EBUSY` intermittently on Windows when the destination is
+ * momentarily held open by another handle (antivirus, Search indexer, a
+ * concurrent reader). We retry the rename a few times with a short backoff,
+ * and as a last resort overwrite the target in place so a transient lock never
+ * surfaces as a 500 to the caller. A unique tmp suffix avoids cross-write
+ * collisions when several persists race.
+ */
+async function atomicWriteJson(targetPath: string, value: unknown): Promise<void> {
+  const serialized = JSON.stringify(value, null, 2);
+  const tmpPath = `${targetPath}.tmp.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}`;
+  await fs.writeFile(tmpPath, serialized, 'utf8');
+  const transient = new Set(['EPERM', 'EACCES', 'EBUSY', 'EEXIST']);
+  const maxAttempts = 5;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await fs.rename(tmpPath, targetPath);
+      return;
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException)?.code ?? '';
+      if (!transient.has(code) || attempt === maxAttempts) {
+        // Fall back to a direct overwrite so a stubborn lock or a
+        // non-retryable error still persists the data instead of failing.
+        try {
+          await fs.writeFile(targetPath, serialized, 'utf8');
+          await fs.rm(tmpPath, { force: true }).catch(() => {});
+          return;
+        } catch {
+          await fs.rm(tmpPath, { force: true }).catch(() => {});
+          throw err;
+        }
+      }
+      await new Promise((r) => setTimeout(r, 25 * attempt));
+    }
+  }
+}
+
 export interface LineageNode {
   id: string;
   name: string;
@@ -96,17 +136,14 @@ export class FriendStore {
   }
 
   private async persist(): Promise<void> {
-    // Atomic write: write to tmp, rename. Last-write-wins under concurrency.
+    // Atomic write (Windows-robust): write to tmp, rename with retry, fall
+    // back to in-place overwrite. Last-write-wins under concurrency.
     const all = Array.from(this.byId.values());
-    const tmp = this.filePath + '.tmp';
-    await fs.writeFile(tmp, JSON.stringify(all, null, 2), 'utf8');
-    await fs.rename(tmp, this.filePath);
+    await atomicWriteJson(this.filePath, all);
     // Persist notes sidecar.
     const notesMap: Record<string, FriendNote[]> = {};
     for (const [id, list] of this.notesOf) notesMap[id] = list;
-    const ntmp = this.notesPath + '.tmp';
-    await fs.writeFile(ntmp, JSON.stringify(notesMap, null, 2), 'utf8');
-    await fs.rename(ntmp, this.notesPath);
+    await atomicWriteJson(this.notesPath, notesMap);
   }
 
   private enqueueWrite(): Promise<void> {

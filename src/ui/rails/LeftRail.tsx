@@ -90,19 +90,28 @@ export const LeftRail: React.FC<{
       .then((r) => (r.ok ? r.json() : { seeds: [] }))
       .then((j) => {
         if (cancelled) return;
-        const seeds: LibrarySeed[] = (j.seeds ?? j ?? []).map((s: any) => {
+        // Dedupe by id (falling back to hash): the persisted store can contain
+        // the same seed more than once, which would otherwise render duplicate
+        // rows and trigger React "duplicate key" warnings. Keep first occurrence.
+        const seen = new Set<string>();
+        const seeds: LibrarySeed[] = [];
+        for (const s of (j.seeds ?? j ?? []) as any[]) {
           const hash = s.hash ?? s.$hash ?? '';
+          const id = s.id ?? hash;
+          const dedupeKey = id || hash;
+          if (dedupeKey && seen.has(dedupeKey)) continue;
+          if (dedupeKey) seen.add(dedupeKey);
           // Prefer a real human name ($name/name); only fall back to a derived
           // title from the intent/prompt, never to the raw seed id.
           const rawName = s.$name ?? s.name ?? s.$intent ?? s.originalPrompt ?? '';
-          return {
-            id:     s.id ?? hash,
+          seeds.push({
+            id,
             name:   deriveCleanTitle(rawName || undefined, hash),
             domain: s.domain ?? s.$domain ?? 'default',
             hash,
             age:    s.age,
-          };
-        });
+          });
+        }
         setLibrarySeeds(seeds);
       })
       .catch(() => {
