@@ -2,7 +2,7 @@
  * Tests for the database migration system.
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { runMigrations, getCurrentVersion, getMigrationStatus, MIGRATIONS } from '../../src/lib/data/migrations.js';
+import { runMigrations, getCurrentVersion, getMigrationStatus, MIGRATIONS, stripKnownHashFragments } from '../../src/lib/data/migrations.js';
 import { JsonStore } from '../../src/lib/data/json-store.js';
 import fs from 'fs';
 import path from 'path';
@@ -116,6 +116,50 @@ describe('Migration System', () => {
     expect(count).toBe(0); // Nothing to apply
 
     await store2.close();
+  });
+
+  it('migration v5 strips baked-in hash fragments from seed names', async () => {
+    await store.addSeed({
+      id: 'seed-bab69f55eeb28345-0001',
+      $domain: 'visual2d',
+      $name: 'Cyberpunk City Skyline In Rain bab69f',
+      $hash: 'bab69f55eeb283458406dd7ea178d99035a94bd91d7ec27699967e7ffd669e46',
+      $lineage: { generation: 1, operation: 'primordial', parents: [] },
+      $fitness: { overall: 0.5 },
+      genes: {},
+    } as any);
+    await store.addSeed({
+      id: 'seed-210d3e8c-breed-0005',
+      $domain: 'character',
+      $name: 'Parent d48da8 × Parent 3f5cef',
+      $hash: '210d3e8c95a9de4890da2c65a80aca3d022562d025ca7832a2275888540b1ee4',
+      $lineage: { generation: 2, operation: 'breed', parents: [
+        'd48da81118aeabd00250a6fada4e78a8e2995a8aa5094261890531a5fa1eb033',
+        '3f5cef7744343f5d7438f532bac77c929714b6938a4ee897167d9772471379a1',
+      ] },
+      $fitness: { overall: 0.6 },
+      genes: {},
+    } as any);
+
+    await runMigrations(store, TEST_DIR);
+
+    const a = await store.getSeedById('seed-bab69f55eeb28345-0001') as any;
+    const b = await store.getSeedById('seed-210d3e8c-breed-0005') as any;
+    expect(a.$name).toBe('Cyberpunk City Skyline In Rain');
+    expect(b.$name).toBe('Parent × Parent');
+  });
+
+  it('stripKnownHashFragments preserves real words and unknown hex tokens', () => {
+    const known = new Set(['bab69f', 'd48da8']);
+    // Strips a known fragment.
+    expect(stripKnownHashFragments('Cyberpunk Rain bab69f', known)).toBe('Cyberpunk Rain');
+    // Preserves a six-letter word that is coincidentally all hex but NOT a known hash prefix.
+    expect(stripKnownHashFragments('Ornate Facade', known)).toBe('Ornate Facade');
+    expect(stripKnownHashFragments('A Decade Of Bloom', known)).toBe('A Decade Of Bloom');
+    // Leaves a hex token that is not a known prefix untouched.
+    expect(stripKnownHashFragments('Vision ffffff', known)).toBe('Vision ffffff');
+    // If stripping would empty the name, keep the original.
+    expect(stripKnownHashFragments('bab69f', known)).toBe('bab69f');
   });
 
   it('MIGRATIONS array is in order', () => {

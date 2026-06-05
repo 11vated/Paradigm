@@ -142,31 +142,53 @@ export function useAgent() {
 
       const trySse = async (): Promise<boolean> => {
         let controller: AbortController | undefined;
+        // Watchdogs so a stalled stream never leaves the turn stuck forever on
+        // "Evolving seed…": abort if headers don't arrive (TTFB) or if the
+        // stream goes idle between chunks, then fall back to the plain query.
+        // The server emits comment-frame heartbeats every 10s, so a healthy
+        // long-running kernel composition keeps resetting the idle timer.
+        const TTFB_MS = 20000;
+        const IDLE_MS = 25000;
+        let ttfbTimer: ReturnType<typeof setTimeout> | undefined;
+        let idleTimer: ReturnType<typeof setTimeout> | undefined;
+        const clearTimers = () => {
+          if (ttfbTimer) { clearTimeout(ttfbTimer); ttfbTimer = undefined; }
+          if (idleTimer) { clearTimeout(idleTimer); idleTimer = undefined; }
+        };
+        const collectedCards: SurfacedCard[] = [];
+        let tier: string | undefined;
+        let accumulatedText = '';
+        let done = false;
         try {
           abortRef.current?.abort();
           controller = new AbortController();
           abortRef.current = controller;
+          const ctl = controller;
 
+          ttfbTimer = setTimeout(() => { ctl.abort(); }, TTFB_MS);
           const res = await fetch('/api/agent/stream', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ query: text.trim() }),
             signal: controller.signal,
           });
+          if (ttfbTimer) { clearTimeout(ttfbTimer); ttfbTimer = undefined; }
 
-          if (!res.ok || !res.body) return false;
+          if (!res.ok || !res.body) { clearTimers(); return false; }
 
           const reader = res.body.getReader();
           const decoder = new TextDecoder();
           let buffer = '';
-          const collectedCards: SurfacedCard[] = [];
-          let tier: string | undefined;
-          let accumulatedText = '';
-          let done = false;
+          const bumpIdle = () => {
+            if (idleTimer) clearTimeout(idleTimer);
+            idleTimer = setTimeout(() => { ctl.abort(); }, IDLE_MS);
+          };
+          bumpIdle();
 
           while (true) {
             const { value, done: readDone } = await reader.read();
             if (readDone) break;
+            bumpIdle();
 
             buffer += decoder.decode(value, { stream: true });
             const lines = buffer.split('\n');
@@ -273,6 +295,7 @@ export function useAgent() {
             }
           }
 
+          clearTimers();
           if (!done) {
             finishTurn({
               text: accumulatedText || "I'll keep working on that — check the plan below.",
@@ -284,8 +307,25 @@ export function useAgent() {
 
           return true;
         } catch {
+          clearTimers();
+          // A newer turn replaced our controller → resolve this one quietly
+          // and don't re-query (the new turn owns the conversation now).
+          const superseded = !!controller && abortRef.current !== controller;
+          if (superseded) {
+            finishTurn({ text: accumulatedText || '(superseded)' });
+            return true;
+          }
+          // Partial stream then stalled → keep what we have rather than
+          // re-querying and duplicating the reply.
+          if (accumulatedText) {
+            finishTurn({ text: accumulatedText, inferenceTier: tier as Turn['inferenceTier'], cards: collectedCards.length ? collectedCards : undefined });
+            return true;
+          }
+          // Nothing arrived (TTFB/idle timeout or transport failure) → let the
+          // caller fall back to the non-streaming query path.
           return false;
         } finally {
+          clearTimers();
           if (controller && abortRef.current?.signal === controller.signal) {
             abortRef.current = null;
           }
@@ -296,11 +336,15 @@ export function useAgent() {
       if (sseWorked) return;
 
       try {
+        const fbController = new AbortController();
+        const fbTimer = setTimeout(() => fbController.abort(), 30000);
         const res = await fetch('/api/agent/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query: text.trim() }),
+          signal: fbController.signal,
         });
+        clearTimeout(fbTimer);
 
         const json: AgentResponse = await res.json().catch(() => ({
           success: false,
