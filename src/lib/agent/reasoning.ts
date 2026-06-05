@@ -23,6 +23,7 @@ import type {
 } from './types.js';
 import { executeTool } from './tools.js';
 import { getInferenceClient } from './inference.js';
+import { inferDomain } from '../ui/inferDomain.js';
 
 // ─── CONSTANTS ──────────────────────────────────────────────────────────────
 
@@ -186,6 +187,26 @@ export function parseQuery(raw: string): ParsedQuery {
   if (intent === 'create_seed' && !entities.domain) {
     if (lower.includes('agent') || lower.includes('assistant') || lower.includes('ai')) {
       entities.domain = 'agent';
+    }
+  }
+
+  // ── Bare descriptive prompt → creation intent ──
+  // The product invites users to "describe anything digital" and have it grow.
+  // When no command/knowledge pattern matched (intent still 'unknown'), treat a
+  // plain description as a create intent (route to a growable domain), rather
+  // than dumping unrelated knowledge-base chunks. Genuine questions/knowledge
+  // queries (those starting with an interrogative or ending in '?') are left as
+  // unknown so they still hit the knowledge base.
+  if (intent === 'unknown' && lower.length > 0) {
+    const isQuestion =
+      /\?\s*$/.test(raw) ||
+      /^(who|what|whats|when|where|why|how|is|are|was|were|do|does|did|can|could|should|would|will|explain|define|tell\s+me|show\s+me|list|describe)\b/i.test(lower);
+    if (!isQuestion) {
+      intent = 'create_seed';
+      confidence = 0.55;
+      if (!entities.domain) entities.domain = inferDomain(raw);
+      // Let the create tool derive a clean human title from the full prompt.
+      if (!entities.seedName) entities.seedName = raw.trim();
     }
   }
 

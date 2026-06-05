@@ -90,13 +90,19 @@ export const LeftRail: React.FC<{
       .then((r) => (r.ok ? r.json() : { seeds: [] }))
       .then((j) => {
         if (cancelled) return;
-        const seeds: LibrarySeed[] = (j.seeds ?? j ?? []).map((s: any) => ({
-          id:     s.id ?? s.hash ?? s.$hash ?? '',
-          name:   s.name ?? s.id ?? 'untitled',
-          domain: s.domain ?? s.$domain ?? 'default',
-          hash:   s.hash ?? s.$hash ?? '',
-          age:    s.age,
-        }));
+        const seeds: LibrarySeed[] = (j.seeds ?? j ?? []).map((s: any) => {
+          const hash = s.hash ?? s.$hash ?? '';
+          // Prefer a real human name ($name/name); only fall back to a derived
+          // title from the intent/prompt, never to the raw seed id.
+          const rawName = s.$name ?? s.name ?? s.$intent ?? s.originalPrompt ?? '';
+          return {
+            id:     s.id ?? hash,
+            name:   deriveCleanTitle(rawName || undefined, hash),
+            domain: s.domain ?? s.$domain ?? 'default',
+            hash,
+            age:    s.age,
+          };
+        });
         setLibrarySeeds(seeds);
       })
       .catch(() => {
@@ -126,7 +132,7 @@ export const LeftRail: React.FC<{
       const st = getStrataFor(s);
       setSeed({
         id: s.id,
-        name: deriveCleanTitle(s.name, s.hash),
+        name: s.name, // already a clean human title (derived on load)
         domain: s.domain,
         hash: s.hash,
         strata: { overall: st.overall, perStratum: st.per, compliance: st.overall },

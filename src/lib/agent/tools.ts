@@ -68,7 +68,7 @@ async function savePersistentPersonality(agentId: string, personality: Record<st
   } catch (e) { /* recovery: best-effort hydration; tool still registered with kernel fallback */ console.debug('tool hydrate recovery', (e as any)?.message); }
 }
 
-function makeSeed(domain: string, name: string, genes: Record<string, any>, parentHashes: string[] = []): any {
+async function makeSeed(domain: string, name: string, genes: Record<string, any>, parentHashes: string[] = []): Promise<any> {
   const genesStr = JSON.stringify(genes);
   const genesHash = crypto.createHash('sha256').update(genesStr).digest('hex');
   const cleanName = deriveCleanTitle(name, genesHash);
@@ -77,18 +77,19 @@ function makeSeed(domain: string, name: string, genes: Record<string, any>, pare
   // (CodeSmith/plan paths + create/grow intents benefit as they route through here or execute_gspl tool).
   // No new RNG; fallback preserves det (rngFromHash only).
   try {
-    const gsplLines: string[] = [
-      `// GSPL program for agent creation intent (makeSeed)`,
-      `seed "${cleanName}" in ${domain} {`,
-    ];
-    for (const [k, g] of Object.entries(genes) as [string, any][]) {
+    // Gene declarations must be comma-separated (GSPL grammar: `{ a: 1, b: 2 }`).
+    const geneDecls = (Object.entries(genes) as [string, any][]).map(([k, g]) => {
       const v = g && typeof g === 'object' && 'value' in g ? g.value : g;
       const val = typeof v === 'string' ? `"${String(v).replace(/"/g, '\\"')}"` : JSON.stringify(v);
-      gsplLines.push(`  ${k}: ${val}`);
-    }
-    gsplLines.push('}');
-    const gspl = gsplLines.join('\n');
-    const execRes: any = executeGspl(gspl);
+      return `  ${k}: ${val}`;
+    });
+    const gspl = [
+      `// GSPL program for agent creation intent (makeSeed)`,
+      `seed "${cleanName}" in ${domain} {`,
+      geneDecls.join(',\n'),
+      `}`,
+    ].join('\n');
+    const execRes: any = await executeGspl(gspl);
     let produced: any = null;
     if (execRes?.seeds) {
       if (execRes.seeds instanceof Map) produced = Array.from(execRes.seeds.values())[0];
@@ -101,6 +102,14 @@ function makeSeed(domain: string, name: string, genes: Record<string, any>, pare
       // ensure agent-expected fields (interp may vary); attach gsplSource for roundtrip
       produced.id = produced.id || nextSeedId();
       produced.$name = produced.$name || cleanName;
+      // Content-derived hash + deterministic fitness: the interpreter seeds $hash
+      // from a default RNG (content-independent), so we override with the gene
+      // hash to guarantee different genes → different $hash and full reproducibility.
+      produced.$hash = genesHash;
+      if (!produced.$fitness) {
+        const fitRng = rngFromHash(deterministicSalt(name, domain, genesHash));
+        produced.$fitness = { overall: 0.3 + fitRng.nextF64() * 0.4 };
+      }
       produced.$lineage = produced.$lineage || { generation: parentHashes.length > 0 ? 1 : 0, operation: 'agent_tool_gspl', parents: parentHashes };
       if (!produced.gsplSource) produced.gsplSource = gspl;
       return produced;
@@ -151,7 +160,7 @@ const createSeedTool: AgentTool = {
       }
     }
 
-    const seed = makeSeed(domain, name, genes);
+    const seed = await makeSeed(domain, name, genes);
 
     return {
       success: true,
@@ -312,7 +321,10 @@ const growSeedTool: AgentTool = {
     try {
       // Elevated for grow intent (per revised Section 1): output GSPL using domain + grow builtin, execute via executeGspl for det result, then map to rich.
       // Falls back to pipeline; attaches gsplSource.
-      const gsplForGrow = `seed "${target.$name || 's'}" in ${target.$domain} {\n${Object.entries(target.genes || {}).map(([k, g]: [string, any]) => `  ${k}: ${JSON.stringify(g && typeof g === 'object' && 'value' in g ? g.value : g)}`).join('\n')}\n}\ngrow("${target.$name || 's'}");`;
+      const growGeneDecls = Object.entries(target.genes || {})
+        .map(([k, g]: [string, any]) => `  ${k}: ${JSON.stringify(g && typeof g === 'object' && 'value' in g ? g.value : g)}`)
+        .join(',\n'); // comma-separated per GSPL grammar
+      const gsplForGrow = `seed "${target.$name || 's'}" in ${target.$domain} {\n${growGeneDecls}\n}\ngrow("${target.$name || 's'}");`;
       let gsplRich: any = null;
       let usedGspl = false;
       try {

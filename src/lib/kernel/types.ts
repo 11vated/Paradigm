@@ -48,7 +48,13 @@ export interface SeedGraphEdge {
 /**
  * Tiny pure deterministic title derivation from intent/prompt.
  * Used to ensure human-readable display_name / name / $name instead of raw hashes/IDs.
- * Fully deterministic (string ops + optional hash slice), no RNG, no side effects.
+ * Fully deterministic (string ops only), no RNG, no side effects.
+ *
+ * Produces a clean, human-readable name — NEVER appends a hash/ID suffix. The
+ * short hash is surfaced separately as its own UI chip, so the name itself stays
+ * a real title (e.g. "Cyberpunk City Skyline In Rain", "Aria"). Words that already
+ * carry intentional casing (camelCase / PascalCase like "ToolTestHero") are
+ * preserved verbatim; plain words are Title-Cased.
  */
 export function deriveCleanTitle(intent: string | undefined | null, seedHash?: string): string {
   if (!intent || typeof intent !== 'string' || intent.trim().length === 0) {
@@ -62,11 +68,15 @@ export function deriveCleanTitle(intent: string | undefined | null, seedHash?: s
     .filter((w) => w.length > 1)
     .slice(0, 6);
   let title = words
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .map((w) =>
+      // Preserve words that already contain an intentional uppercase letter
+      // (camelCase / PascalCase / acronyms) so names like "ToolTestHero" survive.
+      /[A-Z]/.test(w)
+        ? w.charAt(0).toUpperCase() + w.slice(1)
+        : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(),
+    )
     .join(' ');
   if (!title) title = 'Vision';
-  const h = (seedHash || '').slice(0, 6);
-  if (h) title += ` ${h}`;
   if (title.length > 60) title = title.slice(0, 57) + '...';
   return title;
 }
