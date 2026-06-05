@@ -35,11 +35,25 @@ export function registerAgentRoutes(app: Express, deps: AgentDeps): void {
     const query = req.body.query || req.body.message;
     metrics.agentQueries++;
     res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
+    // no-transform stops well-behaved proxies from buffering/altering the
+    // stream; X-Accel-Buffering disables nginx response buffering specifically.
+    res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    const write = (obj: Record<string, unknown>) => { res.write(`data: ${JSON.stringify(obj)}\n\n`); };
+    res.setHeader('X-Accel-Buffering', 'no');
+    // Open the response immediately so the client gets headers (TTFB) without
+    // waiting for the kernel to finish composing — this is what keeps the
+    // browser from sitting on a blank "Evolving seed…" state.
+    if (typeof res.flushHeaders === 'function') res.flushHeaders();
+    const flush = () => { if (typeof res.flush === 'function') res.flush(); };
+    const write = (obj: Record<string, unknown>) => { res.write(`data: ${JSON.stringify(obj)}\n\n`); flush(); };
+    // Comment-frame heartbeat keeps the connection warm during long kernel
+    // composition so intermediaries don't drop it and the client's idle
+    // watchdog never trips. Lines starting with ':' are ignored by SSE parsers.
+    res.write(': open\n\n'); flush();
+    const heartbeat = setInterval(() => { try { res.write(': ping\n\n'); flush(); } catch { /* socket closed */ } }, 10000);
     try {
       const response = await gsplAgent.process(query, { seeds });
+      clearInterval(heartbeat);
       if (response.success && response.data?.seed) { seeds.push(response.data.seed); saveSeeds(); }
       if (response.success && response.data?.population) { for (const s of response.data.population) seeds.push(s); saveSeeds(); }
       if (response.success && response.data?.seeds) { for (const s of response.data.seeds) seeds.push(s); saveSeeds(); }
@@ -51,7 +65,7 @@ export function registerAgentRoutes(app: Express, deps: AgentDeps): void {
       write({ type: 'tier', tier: response.tier ?? 0 });
       write({ type: 'done', latencyMs: 0 });
       res.end();
-    } catch (e: any) { write({ type: 'delta', token: `Error: ${e?.message ?? 'stream failed'}` }); write({ type: 'done', latencyMs: 0 }); res.end(); }
+    } catch (e: any) { clearInterval(heartbeat); write({ type: 'delta', token: `Error: ${e?.message ?? 'stream failed'}` }); write({ type: 'done', latencyMs: 0 }); res.end(); }
   });
 
   app.get('/api/agent/help', async (_req, res) => { res.json(await gsplAgent.process('help', {})); });

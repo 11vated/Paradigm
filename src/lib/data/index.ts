@@ -65,7 +65,12 @@ export async function initStore(): Promise<SeedStore> {
   await store.init();
   console.log(`[DATA] Using JSON file storage (set DATABASE_URL for PostgreSQL)`);
   _store = store;
-  await runMigrations(store, dataDir);
+  const appliedJson = await runMigrations(store, dataDir);
+  // Flush any data migrations rewrote (e.g. seed-name hygiene) so the cleaned
+  // state is durable rather than only living in memory until the next write.
+  if (appliedJson > 0 && typeof (store as any).persist === 'function') {
+    await (store as any).persist();
+  }
 
   return store;
 }

@@ -90,13 +90,32 @@ export const LeftRail: React.FC<{
       .then((r) => (r.ok ? r.json() : { seeds: [] }))
       .then((j) => {
         if (cancelled) return;
-        const seeds: LibrarySeed[] = (j.seeds ?? j ?? []).map((s: any) => ({
-          id:     s.id ?? s.hash ?? s.$hash ?? '',
-          name:   s.name ?? s.id ?? 'untitled',
-          domain: s.domain ?? s.$domain ?? 'default',
-          hash:   s.hash ?? s.$hash ?? '',
-          age:    s.age,
-        }));
+        // Dedupe by content hash (a seed's canonical identity in Paradigm: same
+        // genes → same $hash). The persisted store can list the same artifact
+        // multiple times — across sessions, or under different lineage ids
+        // (e.g. `-0001`, `-0006`) that all resolve to identical content — which
+        // would otherwise render visually duplicate rows and trigger React
+        // "duplicate key" warnings. Fall back to id only when a hash is absent.
+        // Keep the first occurrence.
+        const seen = new Set<string>();
+        const seeds: LibrarySeed[] = [];
+        for (const s of (j.seeds ?? j ?? []) as any[]) {
+          const hash = s.hash ?? s.$hash ?? '';
+          const id = s.id ?? hash;
+          const dedupeKey = hash || id;
+          if (dedupeKey && seen.has(dedupeKey)) continue;
+          if (dedupeKey) seen.add(dedupeKey);
+          // Prefer a real human name ($name/name); only fall back to a derived
+          // title from the intent/prompt, never to the raw seed id.
+          const rawName = s.$name ?? s.name ?? s.$intent ?? s.originalPrompt ?? '';
+          seeds.push({
+            id,
+            name:   deriveCleanTitle(rawName || undefined, hash),
+            domain: s.domain ?? s.$domain ?? 'default',
+            hash,
+            age:    s.age,
+          });
+        }
         setLibrarySeeds(seeds);
       })
       .catch(() => {
@@ -126,7 +145,7 @@ export const LeftRail: React.FC<{
       const st = getStrataFor(s);
       setSeed({
         id: s.id,
-        name: deriveCleanTitle(s.name, s.hash),
+        name: s.name, // already a clean human title (derived on load)
         domain: s.domain,
         hash: s.hash,
         strata: { overall: st.overall, perStratum: st.per, compliance: st.overall },
@@ -416,7 +435,7 @@ export const LeftRail: React.FC<{
             ) : (
               filtered.slice(0, 200).map((s) => (
                 <button
-                  key={s.id}
+                  key={s.hash || s.id}
                   className="p-seed-card"
                   data-active={s.id === seed?.id}
                   onClick={() => loadSeed(s)}

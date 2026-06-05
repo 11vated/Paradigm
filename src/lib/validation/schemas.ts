@@ -186,12 +186,17 @@ export const AgentQuerySchema = z.object({
 // SOVEREIGNTY
 // ═══════════════════════════════════════════════════════════════════════════
 
+// private_key is optional: Paradigm is sovereign and local-first, so signing
+// from the UI mints a local ECDSA keypair when the caller doesn't bring its
+// own. Supplying a key still works for bring-your-own-identity flows.
 export const SignSeedSchema = z.object({
-  private_key: z.string().min(1, 'Private key is required'),
+  private_key: z.string().min(1, 'Private key must be a non-empty PEM').optional(),
 });
 
+// public_key is optional: verification falls back to the key embedded in the
+// seed's stored sovereignty receipt, so the UI can verify with one click.
 export const VerifySeedSchema = z.object({
-  public_key: z.string().min(1, 'Public key is required'),
+  public_key: z.string().min(1, 'Public key must be a non-empty PEM').optional(),
 });
 
 export const KeysGenerateSchema = z.object({}).passthrough();

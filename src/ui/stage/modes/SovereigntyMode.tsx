@@ -39,10 +39,10 @@ export const SovereigntyMode: React.FC = () => {
     if (!seed?.id) return;
     setBusy('verify'); setErr(null);
     try {
-      const r = await fetch('/api/seeds/' + seed.id + '/sovereignty/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+      const r = await fetch('/api/seeds/' + seed.id + '/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
       const j = await r.json();
-      if (!r.ok) throw new Error(j?.message ?? 'verify failed');
-      setReceipt({ ...(receipt as Receipt ?? { signed: false }), signed: !!j?.valid });
+      if (!r.ok) throw new Error(j?.message ?? j?.detail ?? 'verify failed');
+      setReceipt({ ...(receipt as Receipt ?? { signed: false }), signed: !!(j?.valid ?? j?.verified) });
     } catch (e: any) { setErr(e?.message ?? String(e)); }
     finally { setBusy(null); }
   }, [seed, receipt]);

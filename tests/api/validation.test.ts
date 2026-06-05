@@ -231,14 +231,26 @@ describe('Validation Schemas', () => {
       expect(valid(SignSeedSchema, { private_key: 'abcdef1234567890' })).toBe(true);
     });
 
-    it('rejects missing private key', () => {
-      expect(invalid(SignSeedSchema, {})).toBe(true);
+    it('accepts a missing private key (local-first signing mints one)', () => {
+      expect(valid(SignSeedSchema, {})).toBe(true);
+    });
+
+    it('rejects an empty private key string', () => {
+      expect(invalid(SignSeedSchema, { private_key: '' })).toBe(true);
     });
   });
 
   describe('VerifySeedSchema', () => {
     it('accepts valid public key', () => {
       expect(valid(VerifySeedSchema, { public_key: '04abcdef1234567890' })).toBe(true);
+    });
+
+    it('accepts a missing public key (verify falls back to the stored key)', () => {
+      expect(valid(VerifySeedSchema, {})).toBe(true);
+    });
+
+    it('rejects an empty public key string', () => {
+      expect(invalid(VerifySeedSchema, { public_key: '' })).toBe(true);
     });
   });
 

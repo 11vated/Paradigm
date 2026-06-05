@@ -24,6 +24,29 @@ export interface Migration {
   up: (store: any) => Promise<void>;
 }
 
+// ─── Name hygiene helper ────────────────────────────────────────────────────
+
+/**
+ * Strip baked-in hash fragments from a seed name.
+ *
+ * Pre-fix naming code appended a seed's 6-hex hash prefix to its `$name`
+ * (e.g. "Cyberpunk City Skyline In Rain bab69f"), and bred names inherited
+ * their parents' fragments ("Parent d48da8 × Parent 3f5cef"). We only remove a
+ * 6-hex token when it matches a *known* hash/parent prefix, so legitimate words
+ * that happen to be six hex characters (e.g. "Facade", "Decade") are preserved.
+ * If stripping would empty the name, the original is kept.
+ */
+export function stripKnownHashFragments(name: string, knownPrefixes: Set<string>): string {
+  if (!name) return name;
+  const cleaned = name
+    .split(/\s+/)
+    .filter((tok) => !(/^[0-9a-f]{6}$/i.test(tok) && knownPrefixes.has(tok.toLowerCase())))
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  return cleaned.length > 0 ? cleaned : name;
+}
+
 // ─── Migration Registry ─────────────────────────────────────────────────────
 // Add new migrations at the end. Never delete or reorder existing ones.
 
@@ -93,6 +116,33 @@ export const MIGRATIONS: Migration[] = [
         }
         if (updated && store.updateUser) {
           await store.updateUser(user.id, user);
+        }
+      }
+    },
+  },
+  {
+    version: 5,
+    name: 'clean-baked-in-seed-names',
+    up: async (store: any) => {
+      const seeds = await store.getAllSeeds();
+      // Gather every known hash/parent prefix so we only strip fragments that
+      // are genuinely hashes, never legitimate six-letter words.
+      const known = new Set<string>();
+      for (const s of seeds) {
+        const h = String(s.$hash ?? s.hash ?? '');
+        if (h.length >= 6) known.add(h.slice(0, 6).toLowerCase());
+        const parents = s.$lineage?.parents ?? s.$lineage?.parentHashes ?? s.parentHashes ?? [];
+        for (const p of parents) {
+          const ph = String(p ?? '');
+          if (ph.length >= 6) known.add(ph.slice(0, 6).toLowerCase());
+        }
+      }
+      for (const seed of seeds) {
+        const name = String(seed.$name ?? seed.name ?? '');
+        const cleaned = stripKnownHashFragments(name, known);
+        if (cleaned !== name) {
+          seed.$name = cleaned;
+          await store.updateSeed(seed.id, seed);
         }
       }
     },
