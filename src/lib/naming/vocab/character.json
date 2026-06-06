@@ -1,0 +1,25 @@
+{
+  "domain": "character",
+  "adjectives": [
+    "neon", "velvet", "ember", "vesper", "lacquered", "feral", "bioluminescent",
+    "draconic", "spectral", "argent", "ashen", "fey", "lunar", "solar", "obsidian",
+    "ivory", "verdant", "crimson", "azure", "amber", "cobalt", "scarlet", "jade",
+    "molten", "frozen", "echoing", "wandering", "luminous", "twilight", "haunted",
+    "fractured", "brooding", "wailing", "silent", "resolute", "languid", "sleepless",
+    "nameless", "longing", "distant", "recent", "familiar", "forgotten", "remembered",
+    "patient", "impatient", "furious", "stillborn", "reborn", "drowning", "ascending"
+  ],
+  "nouns": [
+    "samurai", "cat", "cartographer", "assassin", "monk", "ghost", "weaver", "sentinel",
+    "herald", "pilgrim", "vagrant", "arcanist", "warden", "outlaw", "lyricist", "alchemist",
+    "soothsayer", "maskmaker", "seamstress", "ferryman", "lantern-bearer", "archivist",
+    "garden-keeper", "string-puller", "honey-thief", "dune-runner", "thorn-witch",
+    "mirror-walker", "dream-merchant", "bone-collector", "salt-singer", "storm-reader",
+    "name-keeper", "stone-sleeper", "ink-scribe", "iron-vesper", "ash-pilgrim"
+  ],
+  "modifiers": [
+    "with electric stripes", "of the drowned choir", "in lacquered armour", "of the second moon",
+    "of the hanging gardens", "in tattered cerements", "of the broken loom", "of the patient dusk",
+    "of the unsent letter", "in midnight jade", "of the weeping archive", "of the empty throne"
+  ]
+}

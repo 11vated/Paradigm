@@ -1,0 +1,13 @@
+{
+  "domain": "default",
+  "adjectives": [
+    "luminous", "patient", "wandering", "fey", "weeping", "fractured", "lunar", "solar",
+    "iron", "ivory", "ashen", "lacquered", "argent", "crimson", "cobalt", "amber", "jade",
+    "verdant", "obsidian", "frozen", "molten", "longing", "forgotten", "remembered"
+  ],
+  "nouns": [
+    "tidepool", "hollow", "meridian", "lantern", "vesper", "thicket", "foundry", "garden",
+    "observatory", "atoll", "lighthouse", "aviary", "cloister", "waystation"
+  ],
+  "modifiers": []
+}

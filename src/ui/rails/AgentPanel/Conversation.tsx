@@ -116,7 +116,7 @@ export const Conversation = React.memo(() => {
 
             {/* Inference tier badge */}
             {u.inferenceTier && u.role === 'agent' && !u.streaming && (
-              <div style={{ marginTop: 2, display: 'flex', gap: 6, alignItems: 'center' }}>
+              <div style={{ marginTop: 2, display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
                 <span
                   style={{
                     fontFamily: 'var(--r-font-num)',
@@ -130,6 +130,20 @@ export const Conversation = React.memo(() => {
                 {u.fingerprint?.latencyMs && (
                   <span style={{ fontFamily: 'var(--r-font-num)', fontSize: 7, color: 'var(--r-ink-4)' }}>
                     {u.fingerprint.latencyMs}ms
+                  </span>
+                )}
+                {u.pipelineTrace && u.pipelineTrace.length > 0 && (
+                  <span
+                    title={u.pipelineTrace.map((p) => `stage ${p.stage}: ${p.ms}ms`).join('\n')}
+                    style={{
+                      fontFamily: 'var(--r-font-num)',
+                      fontSize: 7,
+                      color: 'var(--r-ink-4)',
+                      letterSpacing: '0.04em',
+                      cursor: 'help',
+                    }}
+                  >
+                    pipeline {u.pipelineTrace.map((p) => p.stage).join('·')}
                   </span>
                 )}
               </div>

@@ -96,6 +96,8 @@ export default function DaoPage() {
             </button>
           ))}
           <button onClick={() => setShowForm(!showForm)}
+            aria-expanded={showForm}
+            aria-controls="dao-proposal-form"
             className="ml-auto px-3 py-1 text-[10px] font-mono uppercase tracking-wider bg-accent/20 text-accent border border-accent/30 rounded hover:bg-accent/30">
             + Propose
           </button>

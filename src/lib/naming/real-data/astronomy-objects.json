@@ -1,0 +1,53 @@
+{
+  "domain": "astronomy-objects",
+  "type": "reality-mirroring",
+  "stars": [
+    {"name": "Sun", "type": "G-type main-sequence", "distance": "0 AU"},
+    {"name": "Sirius", "type": "A-type main-sequence", "distance": "8.6 ly"},
+    {"name": "Canopus", "type": "A-type giant", "distance": "310 ly"},
+    {"name": "Arcturus", "type": "K-type giant", "distance": "36.7 ly"},
+    {"name": "Vega", "type": "A-type main-sequence", "distance": "25 ly"},
+    {"name": "Capella", "type": "G-type giant", "distance": "42.9 ly"},
+    {"name": "Rigel", "type": "B-type supergiant", "distance": "860 ly"},
+    {"name": "Procyon", "type": "F-type main-sequence", "distance": "11.5 ly"},
+    {"name": "Betelgeuse", "type": "M-type supergiant", "distance": "700 ly"},
+    {"name": "Altair", "type": "A-type main-sequence", "distance": "16.7 ly"},
+    {"name": "Aldebaran", "type": "K-type giant", "distance": "65 ly"},
+    {"name": "Antares", "type": "M-type supergiant", "distance": "550 ly"},
+    {"name": "Spica", "type": "B-type main-sequence", "distance": "250 ly"},
+    {"name": "Pollux", "type": "K-type giant", "distance": "34 ly"},
+    {"name": "Fomalhaut", "type": "A-type main-sequence", "distance": "25 ly"},
+    {"name": "Deneb", "type": "A-type supergiant", "distance": "2615 ly"},
+    {"name": "Mimosa", "type": "B-type giant", "distance": "280 ly"},
+    {"name": "Regulus", "type": "B-type main-sequence", "distance": "79 ly"},
+    {"name": "Adhara", "type": "B-type giant", "distance": "430 ly"},
+    {"name": "Castor", "type": "A-type main-sequence", "distance": "51 ly"}
+  ],
+  "planets": [
+    {"name": "Mercury", "type": "Terrestrial", "moons": 0},
+    {"name": "Venus", "type": "Terrestrial", "moons": 0},
+    {"name": "Earth", "type": "Terrestrial", "moons": 1},
+    {"name": "Mars", "type": "Terrestrial", "moons": 2},
+    {"name": "Jupiter", "type": "Gas giant", "moons": 95},
+    {"name": "Saturn", "type": "Gas giant", "moons": 146},
+    {"name": "Uranus", "type": "Ice giant", "moons": 27},
+    {"name": "Neptune", "type": "Ice giant", "moons": 14}
+  ],
+  "galaxies": [
+    {"name": "Milky Way", "type": "Barred spiral", "distance": "0"},
+    {"name": "Andromeda", "type": "Spiral", "distance": "2.537 Mly"},
+    {"name": "Triangulum", "type": "Spiral", "distance": "2.73 Mly"},
+    {"name": "Centaurus A", "type": "Elliptical", "distance": "13 Mly"},
+    {"name": "Sombrero", "type": "Spiral", "distance": "29.3 Mly"},
+    {"name": "Whirlpool", "type": "Spiral", "distance": "23 Mly"},
+    {"name": "Pinwheel", "type": "Spiral", "distance": "21 Mly"},
+    {"name": "Cartwheel", "type": "Ring", "distance": "500 Mly"}
+  ],
+  "constellations": [
+    "Orion", "Ursa Major", "Cassiopeia", "Cygnus", "Leo", "Scorpius",
+    "Taurus", "Gemini", "Virgo", "Libra", "Sagittarius", "Capricornus",
+    "Aquarius", "Pisces", "Aries", "Cancer", "Pegasus", "Andromeda",
+    "Perseus", "Hercules", "Draco", "Boötes", "Auriga", "Canis Major",
+    "Canis Minor", "Lyra", "Aquila", "Cygnus", "Delphinus", "Pegasus"
+  ]
+}

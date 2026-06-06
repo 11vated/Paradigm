@@ -1,0 +1,57 @@
+{
+  "domain": "history-figures",
+  "type": "reality-mirroring",
+  "ancient": [
+    {"name": "Socrates", "period": "Ancient Greece", "field": "Philosophy"},
+    {"name": "Plato", "period": "Ancient Greece", "field": "Philosophy"},
+    {"name": "Aristotle", "period": "Ancient Greece", "field": "Philosophy"},
+    {"name": "Alexander the Great", "period": "Hellenistic", "field": "Military"},
+    {"name": "Julius Caesar", "period": "Roman Republic", "field": "Military"},
+    {"name": "Cleopatra", "period": "Ptolemaic Egypt", "field": "Politics"},
+    {"name": "Confucius", "period": "Spring and Autumn", "field": "Philosophy"},
+    {"name": "Laozi", "period": "Spring and Autumn", "field": "Philosophy"},
+    {"name": "Buddha", "period": "Ancient India", "field": "Religion"},
+    {"name": "Ashoka", "period": "Maurya Empire", "field": "Politics"},
+    {"name": "Hannibal", "period": "Punic Wars", "field": "Military"},
+    {"name": "Cicero", "period": "Roman Republic", "field": "Politics"},
+    {"name": "Augustus", "period": "Roman Empire", "field": "Politics"},
+    {"name": "Marcus Aurelius", "period": "Roman Empire", "field": "Philosophy"},
+    {"name": "Constantine", "period": "Roman Empire", "field": "Politics"}
+  ],
+  "medieval": [
+    {"name": "Charlemagne", "period": "Early Medieval", "field": "Politics"},
+    {"name": "Alfred the Great", "period": "Anglo-Saxon", "field": "Politics"},
+    {"name": "Genghis Khan", "period": "Mongol Empire", "field": "Military"},
+    {"name": "Kublai Khan", "period": "Yuan Dynasty", "field": "Politics"},
+    {"name": "Saladin", "period": "Crusades", "field": "Military"},
+    {"name": "Joan of Arc", "period": "Hundred Years' War", "field": "Military"},
+    {"name": "Marco Polo", "period": "Late Medieval", "field": "Exploration"},
+    {"name": "Thomas Aquinas", "period": "High Medieval", "field": "Philosophy"},
+    {"name": "Dante Alighieri", "period": "Late Medieval", "field": "Literature"},
+    {"name": "Geoffrey Chaucer", "period": "Late Medieval", "field": "Literature"}
+  ],
+  "renaissance": [
+    {"name": "Leonardo da Vinci", "period": "Renaissance", "field": "Art"},
+    {"name": "Michelangelo", "period": "Renaissance", "field": "Art"},
+    {"name": "Raphael", "period": "Renaissance", "field": "Art"},
+    {"name": "Niccolò Machiavelli", "period": "Renaissance", "field": "Politics"},
+    {"name": "Galileo Galilei", "period": "Scientific Revolution", "field": "Science"},
+    {"name": "Johannes Kepler", "period": "Scientific Revolution", "field": "Science"},
+    {"name": "Isaac Newton", "period": "Scientific Revolution", "field": "Science"},
+    {"name": "William Shakespeare", "period": "Renaissance", "field": "Literature"},
+    {"name": "Christopher Columbus", "period": "Age of Discovery", "field": "Exploration"},
+    {"name": "Vasco da Gama", "period": "Age of Discovery", "field": "Exploration"}
+  ],
+  "modern": [
+    {"name": "Napoleon Bonaparte", "period": "Napoleonic Era", "field": "Military"},
+    {"name": "Abraham Lincoln", "period": "American Civil War", "field": "Politics"},
+    {"name": "Queen Victoria", "period": "Victorian Era", "field": "Politics"},
+    {"name": "Albert Einstein", "period": "20th Century", "field": "Science"},
+    {"name": "Marie Curie", "period": "20th Century", "field": "Science"},
+    {"name": "Mahatma Gandhi", "period": "20th Century", "field": "Politics"},
+    {"name": "Winston Churchill", "period": "World War II", "field": "Politics"},
+    {"name": "Franklin D. Roosevelt", "period": "World War II", "field": "Politics"},
+    {"name": "Martin Luther King Jr.", "period": "Civil Rights", "field": "Activism"},
+    {"name": "Nelson Mandela", "period": "Apartheid", "field": "Politics"}
+  ]
+}

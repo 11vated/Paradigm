@@ -1,0 +1,52 @@
+{
+  "domain": "culture",
+  "adjectives": [
+    "cultural", "social", "artistic", "literary", "musical", "theatrical", "cinematic",
+    "visual", "performing", "creative", "expressive", "aesthetic", "stylistic",
+    "traditional", "contemporary", "modern", "postmodern", "avant-garde", "experimental",
+    "classical", "romantic", "baroque", "renaissance", "gothic", "byzantine",
+    "romanesque", "neoclassical", "impressionist", "expressionist", "surrealist",
+    "cubist", "abstract", "realist", "naturalist", "symbolist", "fauvist",
+    "dadaist", "futurist", "minimalist", "conceptual", "pop", "op", "kinetic",
+    "digital", "electronic", "virtual", "immersive", "interactive", "participatory",
+    "collaborative", "community-based", "grassroots", "folk", "popular", "mass",
+    "elite", "high", "low", "subculture", "counterculture", "underground", "mainstream",
+    "indigenous", "native", "ethnic", "multicultural", "pluralistic", "diverse",
+    "global", "cosmopolitan", "local", "regional", "national", "transnational",
+    "hybrid", "syncretic", "fusion", "eclectic", "cross-cultural", "intercultural",
+    "multicultural", "polycultural", "transcultural", "acculturated", "enculturated",
+    "assimilated", "integrated", "segregated", "ghettoized", "gentrified", "marginalized"
+  ],
+  "nouns": [
+    "culture", "society", "community", "tradition", "custom", "ritual", "ceremony",
+    "festival", "celebration", "holiday", "feast", "carnival", "procession",
+    "parade", "performance", "concert", "play", "opera", "ballet", "dance",
+    "music", "song", "poem", "story", "myth", "legend", "folktale", "fable",
+    "art", "painting", "sculpture", "architecture", "design", "craft", "pottery",
+    "weaving", "textile", "clothing", "costume", "dress", "fashion", "style",
+    "language", "dialect", "accent", "slang", "jargon", "idiom", "proverb",
+    "literature", "novel", "poetry", "drama", "theater", "cinema", "film",
+    "media", "television", "radio", "internet", "social", "network", "platform",
+    "religion", "spirituality", "belief", "faith", "worship", "prayer", "meditation",
+    "philosophy", "ideology", "value", "norm", "moral", "ethic", "principle",
+    "identity", "ethnicity", "nationality", "citizenship", "heritage", "ancestry",
+    "lineage", "genealogy", "family", "kinship", "clan", "tribe", "caste",
+    "class", "status", "role", "position", "occupation", "profession", "vocation",
+    "education", "school", "university", "academy", "institution", "organization"
+  ],
+  "modifiers": [
+    "of the ancient tradition", "with contemporary style", "of the folk heritage",
+    "of the popular culture", "of the subcultural movement", "of the artistic avant-garde",
+    "of the literary canon", "of the musical tradition", "of the theatrical performance",
+    "of the cinematic masterpiece", "of the visual arts", "of the decorative arts",
+    "of the applied arts", "of the craft tradition", "of the artisanal practice",
+    "of the cultural heritage", "of the intangible heritage", "of the living tradition",
+    "of the oral tradition", "of the written record", "of the archival document",
+    "of the museum collection", "of the gallery exhibition", "of the public art",
+    "of the street art", "of the graffiti", "of the digital culture", "of the virtual world",
+    "of the online community", "of the social network", "of the media landscape",
+    "of the cultural institution", "of the artistic movement", "of the stylistic period",
+    "of the aesthetic philosophy", "of the critical theory", "of the cultural studies",
+    "of the anthropological research", "of the sociological analysis", "of the historical inquiry"
+  ]
+}

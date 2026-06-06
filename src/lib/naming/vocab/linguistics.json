@@ -1,0 +1,53 @@
+{
+  "domain": "linguistics",
+  "adjectives": [
+    "linguistic", "phonological", "morphological", "syntactic", "semantic", "pragmatic",
+    "lexical", "grammatical", "discourse", "sociolinguistic", "psycholinguistic",
+    "computational", "historical", "comparative", "descriptive", "prescriptive",
+    "theoretical", "applied", "experimental", "empirical", "qualitative", "quantitative",
+    "synchronic", "diachronic", "generative", "functional", "structural", "cognitive",
+    "typological", "areal", "contact", "borrowed", "native", "indigenous", "endemic",
+    "endangered", "extinct", "revitalized", "preserved", "documented", "analyzed",
+    "spoken", "written", "signed", "multimodal", "digital", "analog", "formal",
+    "informal", "standard", "non-standard", "dialectal", "regional", "social",
+    "ethnic", "cultural", "historical", "modern", "ancient", "contemporary", "archaic"
+  ],
+  "nouns": [
+    "linguistics", "language", "speech", "writing", "communication", "discourse",
+    "phonology", "phoneme", "sound", "pronunciation", "articulation", "acoustics",
+    "morphology", "morpheme", "word", "stem", "root", "affix", "prefix", "suffix",
+    "syntax", "sentence", "phrase", "clause", "structure", "grammar", "rule",
+    "semantics", "meaning", "reference", "sense", "denotation", "connotation",
+    "pragmatics", "context", "use", "function", "speech-act", "implicature",
+    "lexicon", "vocabulary", "dictionary", "thesaurus", "word", "term", "expression",
+    "grammar", "syntax", "morphology", "phonology", "semantics", "pragmatics",
+    "dialect", "variety", "register", "style", "sociolect", "ethnolect", "idiolect",
+    "language", "family", "group", "isolate", "creole", "pidgin", "mixed",
+    "bilingual", "multilingual", "polyglot", "acquisition", "learning", "teaching",
+    "comprehension", "production", "processing", "representation", "cognition",
+    "brain", "mind", "neuroscience", "psychology", "sociology", "anthropology",
+    "culture", "society", "community", "identity", "ideology", "power", "politics"
+  ],
+  "modifiers": [
+    "of the linguistic analysis", "with phonological precision", "of the morphological structure",
+    "of the syntactic pattern", "of the semantic meaning", "of the pragmatic use",
+    "of the lexical choice", "of the grammatical rule", "of the discourse analysis",
+    "of the sociolinguistic variation", "of the psycholinguistic process", "of the computational model",
+    "of the historical development", "of the comparative study", "of the descriptive account",
+    "of the prescriptive rule", "of the theoretical framework", "of the applied linguistics",
+    "of the experimental method", "of the empirical evidence", "of the qualitative research",
+    "of the quantitative analysis", "of the synchronic description", "of the diachronic change",
+    "of the generative grammar", "of the functional explanation", "of the structural analysis",
+    "of the cognitive processing", "of the typological classification", "of the areal feature",
+    "of the contact phenomenon", "of the borrowed word", "of the native term",
+    "of the indigenous language", "of the endemic expression", "of the endangered dialect",
+    "of the extinct tongue", "of the revitalized language", "of the preserved tradition",
+    "of the documented speech", "of the analyzed pattern", "of the spoken form",
+    "of the written text", "of the signed language", "of the multimodal communication",
+    "of the digital medium", "of the analog signal", "of the formal register",
+    "of the informal style", "of the standard variety", "of the non-standard dialect",
+    "of the regional accent", "of the social dialect", "of the ethnic language",
+    "of the cultural expression", "of the historical period", "of the modern usage",
+    "of the ancient text", "of the contemporary speech", "of the archaic word"
+  ]
+}

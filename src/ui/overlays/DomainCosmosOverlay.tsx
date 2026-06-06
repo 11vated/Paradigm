@@ -135,7 +135,7 @@ export const DomainCosmosOverlay: React.FC<OverlayProps> = ({ open, onClose }) =
   if (!open) return null;
 
   return (
-    <div className="p-atlas" role="dialog" aria-label="Composition Atlas" onClick={onClose}>
+    <div className="p-atlas" role="dialog" aria-modal="true" aria-label="Composition Atlas" onClick={onClose}>
       <div className="p-atlas-inner" onClick={(e) => e.stopPropagation()}>
         <header className="p-atlas-header">
           <span className="p-atlas-title">composition atlas</span>

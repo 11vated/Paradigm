@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useDomainColor } from '@/hooks/useDomainColor';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 interface LineageEntry {
   id: string;
@@ -69,6 +70,7 @@ export const LineageMode: React.FC = () => {
 
   return (
     <div className="p-lineage" style={{ '--p-accent': accent } as React.CSSProperties}>
+      <ModePurposeHeader mode="lineage" showRadar={false} />
       <header className="p-lineage-header">
         <span className="p-lineage-label">lineage</span>
         <span className="p-lineage-meta">

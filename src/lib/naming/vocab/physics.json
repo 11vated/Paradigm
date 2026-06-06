@@ -1,0 +1,41 @@
+{
+  "domain": "physics",
+  "adjectives": [
+    "quantum", "relativistic", "electromagnetic", "gravitational", "nuclear", "subatomic",
+    "particle", "wave", "field", "thermal", "mechanical", "kinetic", "potential",
+    "static", "dynamic", "inertial", "non-inertial", "conserved", "dissipated",
+    "isentropic", "isothermal", "adiabatic", "isentropic", "reversible", "irreversible",
+    "equilibrium", "non-equilibrium", "steady", "transient", "periodic", "chaotic",
+    "deterministic", "stochastic", "probabilistic", "statistical", "classical", "modern",
+    "theoretical", "experimental", "computational", "mathematical", "phenomenological",
+    "fundamental", "applied", "condensed", "atomic", "molecular", "optical", "acoustic",
+    "fluid", "solid", "plasma", "superconducting", "superfluid", "ferromagnetic",
+    "paramagnetic", "diamagnetic", "antiferromagnetic", "piezoelectric", "pyroelectric",
+    "thermoelectric", "photoelectric", "electrochemical", "magneto-optical", "nonlinear"
+  ],
+  "nouns": [
+    "particle", "wave", "field", "force", "energy", "momentum", "angular", "spin",
+    "charge", "mass", "time", "space", "dimension", "universe", "cosmos", "galaxy",
+    "star", "planet", "atom", "nucleus", "electron", "proton", "neutron", "photon",
+    "quark", "lepton", "boson", "fermion", "hadron", "meson", "baryon", "gluon",
+    "graviton", "higgs", "neutrino", "antimatter", "dark", "matter", "energy", "radiation",
+    "quantum", "entanglement", "superposition", "tunneling", "interference", "diffraction",
+    "refraction", "reflection", "scattering", "absorption", "emission", "spectrum",
+    "wavelength", "frequency", "amplitude", "phase", "polarization", "coherence",
+    "temperature", "pressure", "volume", "density", "entropy", "enthalpy", "free",
+    "thermodynamics", "statistical", "mechanics", "dynamics", "kinematics", "statics",
+    "fluid", "solid", "elasticity", "plasticity", "viscosity", "turbulence", "laminar",
+    "shock", "wave", "acoustic", "optics", "laser", "photonics", "plasmonics",
+    "nanophotonics", "metamaterial", "superconductor", "magnet", "electricity", "circuit"
+  ],
+  "modifiers": [
+    "of the quantum realm", "with relativistic speeds", "of the electromagnetic spectrum",
+    "of the gravitational field", "of the nuclear force", "of the subatomic world",
+    "with wave-particle duality", "of the uncertainty principle", "of the entangled state",
+    "of the superposition", "of the tunneling effect", "of the interference pattern",
+    "of the thermodynamic limit", "of the phase transition", "of the critical point",
+    "of the symmetry breaking", "of the gauge invariance", "of the conservation law",
+    "of the field equation", "of the wave function", "of the action principle",
+    "of the lagrangian", "of the hamiltonian", "of the path integral", "of the renormalization"
+  ]
+}

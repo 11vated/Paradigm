@@ -37,6 +37,7 @@ export default function AudioViewport({ artifact }: ViewportProps) {
         ))}
       </div>
       <button onClick={togglePlay}
+        aria-pressed={playing}
         className="flex items-center gap-2 px-4 py-2 border border-primary/30 text-primary text-xs font-mono uppercase hover:bg-primary/10 transition-colors">
         {playing ? <Square className="w-3 h-3" /> : <Play className="w-3 h-3" />}
         {playing ? 'Stop' : 'Play'}

@@ -1,0 +1,47 @@
+{
+  "domain": "energy",
+  "adjectives": [
+    "energetic", "powerful", "dynamic", "active", "kinetic", "potential",
+    "thermal", "electrical", "mechanical", "chemical", "nuclear", "solar",
+    "wind", "hydro", "geothermal", "biomass", "renewable", "sustainable",
+    "clean", "green", "fossil", "carbon-based", "non-renewable", "depletable",
+    "efficient", "inefficient", "conserved", "wasted", "stored", "transmitted",
+    "distributed", "generated", "consumed", "produced", "harvested", "captured",
+    "grid-connected", "off-grid", "micro-grid", "smart-grid", "decentralized",
+    "centralized", "intermittent", "baseload", "peak-load", "dispatchable",
+    "variable", "stable", "reliable", "unreliable", "abundant", "scarce"
+  ],
+  "nouns": [
+    "energy", "power", "electricity", "fuel", "resource", "source", "supply",
+    "demand", "consumption", "production", "generation", "transmission", "distribution",
+    "grid", "network", "infrastructure", "system", "plant", "station", "facility",
+    "solar-panel", "wind-turbine", "hydro-dam", "geothermal-plant", "biomass",
+    "nuclear-reactor", "coal-plant", "gas-plant", "oil-refinery", "battery",
+    "storage", "capacitor", "generator", "turbine", "engine", "motor",
+    "efficiency", "conservation", "sustainability", "renewability", "carbon-footprint",
+    "emission", "pollution", "waste", "byproduct", "residue", "ash",
+    "kilowatt", "megawatt", "gigawatt", "terawatt", "joule", "calorie", "btu",
+    "watt-hour", "kilowatt-hour", "megawatt-hour", "gigawatt-hour", "capacity",
+    "output", "input", "throughput", "yield", "productivity", "performance"
+  ],
+  "modifiers": [
+    "of the energy sector", "with powerful output", "of the dynamic system",
+    "of the active component", "of the kinetic energy", "of the potential storage",
+    "of the thermal transfer", "of the electrical current", "of the mechanical work",
+    "of the chemical reaction", "of the nuclear fission", "of the solar radiation",
+    "of the wind power", "of the hydro flow", "of the geothermal heat",
+    "of the biomass fuel", "of the renewable resource", "of the sustainable future",
+    "of the clean technology", "of the green energy", "of the fossil fuel",
+    "of the carbon-based source", "of the non-renewable resource", "of the depletable reserve",
+    "of the efficient system", "of the inefficient process", "of the conserved energy",
+    "of the wasted power", "of the stored capacity", "of the transmitted electricity",
+    "of the distributed network", "of the generated power", "of the consumed energy",
+    "of the produced fuel", "of the harvested resource", "of the captured sunlight",
+    "of the grid-connected system", "of the off-grid solution", "of the micro-grid network",
+    "of the smart-grid technology", "of the decentralized generation", "of the centralized plant",
+    "of the intermittent source", "of the baseload power", "of the peak-load demand",
+    "of the dispatchable generation", "of the variable output", "of the stable supply",
+    "of the reliable infrastructure", "of the unreliable source", "of the abundant resource",
+    "of the scarce commodity"
+  ]
+}

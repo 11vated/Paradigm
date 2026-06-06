@@ -1,0 +1,17 @@
+{
+  "domain": "molecule",
+  "adjectives": [
+    "optimized", "folded", "linear", "cyclic", "aromatic", "aliphatic", "saturated",
+    "strained", "twisted", "planar", "polar", "nonpolar", "ionic", "covalent",
+    "chiral", "achiral", "meso", "supramolecular", "polymeric", "oligomeric"
+  ],
+  "nouns": [
+    "caffeine", "aspirin", "serotonin", "dopamine", "ibuprofen", "paracetamol", "glucose",
+    "fructose", "sucrose", "benzene", "methane", "ethanol", "water", "ammonia",
+    "lysine", "tryptophan", "histidine", "phenylalanine", "thymine", "adenine", "guanine"
+  ],
+  "modifiers": [
+    "at optimized geometry", "in the gas phase", "solvated in water", "at physiological pH",
+    "in vacuum", "with hydrogen atoms implicit", "in the lowest-energy conformer"
+  ]
+}

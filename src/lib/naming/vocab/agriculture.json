@@ -1,0 +1,46 @@
+{
+  "domain": "agriculture",
+  "adjectives": [
+    "agricultural", "farming", "cultivated", "harvested", "planted", "sown",
+    "irrigated", "fertilized", "pesticide-treated", "organic", "conventional",
+    "sustainable", "regenerative", "permaculture", "biodynamic", "hydroponic",
+    "aquaponic", "vertical", "urban", "rural", "suburban", "industrial",
+    "small-scale", "large-scale", "family-owned", "corporate", "commercial",
+    "subsistence", "cash-crop", "mixed-crop", "rotational", "cover-crop",
+    "soil-based", "soil-less", "greenhouse", "field", "pasture", "orchard",
+    "vineyard", "dairy", "livestock", "poultry", "aquaculture", "fishery"
+  ],
+  "nouns": [
+    "agriculture", "farming", "cultivation", "harvest", "planting", "sowing",
+    "irrigation", "fertilization", "pesticide", "herbicide", "fungicide", "insecticide",
+    "soil", "land", "field", "acre", "hectare", "farm", "ranch",
+    "crop", "plant", "seed", "grain", "vegetable", "fruit", "nut",
+    "livestock", "cattle", "sheep", "goat", "pig", "chicken", "poultry",
+    "dairy", "milk", "cheese", "butter", "yogurt", "egg", "meat",
+    "machinery", "tractor", "plow", "harvester", "seeder", "irrigation-system",
+    "greenhouse", "hoop-house", "high-tunnel", "cold-frame", "hydroponic-system",
+    "aquaponics", "fish-farm", "aquaculture", "fishery", "pond", "tank",
+    "sustainability", "regeneration", "permaculture", "biodynamics", "organic",
+    "conventional", "industrial", "technology", "innovation", "science", "research"
+  ],
+  "modifiers": [
+    "of the agricultural sector", "with farming expertise", "of the cultivated land",
+    "of the harvested crop", "of the planted seed", "of the sown field",
+    "of the irrigated system", "of the fertilized soil", "of the pesticide application",
+    "of the organic practice", "of the conventional method", "of the sustainable approach",
+    "of the regenerative agriculture", "of the permaculture design", "of the biodynamic farm",
+    "of the hydroponic system", "of the aquaponic setup", "of the vertical farm",
+    "of the urban agriculture", "of the rural landscape", "of the suburban garden",
+    "of the industrial operation", "of the small-scale farm", "of the large-scale enterprise",
+    "of the family-owned business", "of the corporate agriculture", "of the commercial production",
+    "of the subsistence farming", "of the cash-crop economy", "of the mixed-crop system",
+    "of the rotational planting", "of the cover-crop practice", "of the soil-based cultivation",
+    "of the soil-less growing", "of the greenhouse production", "of the field crop",
+    "of the pasture grazing", "of the orchard fruit", "of the vineyard wine",
+    "of the dairy operation", "of the livestock management", "of the poultry farming",
+    "of the aquaculture production", "of the fishery harvest", "of the sustainability goal",
+    "of the regeneration effort", "of the permaculture principle", "of the biodynamic preparation",
+    "of the organic certification", "of the conventional technology", "of the industrial innovation",
+    "of the agricultural science", "of the farming research"
+  ]
+}

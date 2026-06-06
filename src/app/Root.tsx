@@ -12,6 +12,7 @@ import { getInstallGenesisHash } from '@/lib/ui/genesisSuggestions';
 
 import { TopBar } from '@/ui/chrome/TopBar';
 import { AmbientStrip } from '@/ui/chrome/AmbientStrip';
+import { StatusBar } from '@/ui/chrome/StatusBar';
 import { LeftRail } from '@/ui/rails/LeftRail';
 import { CollapsedLeftRail } from '@/ui/rails/CollapsedLeftRail';
 import { AgentPanel } from '@/ui/rails/AgentPanel';
@@ -198,6 +199,7 @@ export const Root: React.FC = () => {
         </div>
       </div>
 
+      <StatusBar />
       <AmbientStrip />
       <DomainCosmosOverlay open={cosmosOpen} onClose={closeCosmos} />
     </div>

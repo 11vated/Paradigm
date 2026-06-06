@@ -1,0 +1,42 @@
+{
+  "domain": "art",
+  "adjectives": [
+    "artistic", "creative", "expressive", "aesthetic", "visual", "graphic", "pictorial",
+    "sculptural", "three-dimensional", "two-dimensional", "abstract", "representational",
+    "figurative", "realistic", "impressionistic", "expressionistic", "surrealist",
+    "cubist", "minimalist", "maximalist", "contemporary", "modern", "postmodern",
+    "classical", "renaissance", "baroque", "romantic", "gothic", "byzantine",
+    "digital", "analog", "traditional", "experimental", "avant-garde", "innovative",
+    "conceptual", "performance-based", "installation", "multimedia", "interactive",
+    "immersive", "site-specific", "ephemeral", "permanent", "timeless", "iconic"
+  ],
+  "nouns": [
+    "art", "artist", "artwork", "piece", "work", "creation", "masterpiece",
+    "painting", "drawing", "sketch", "illustration", "print", "etching", "engraving",
+    "sculpture", "statue", "monument", "installation", "assemblage", "collage",
+    "photography", "film", "video", "animation", "digital", "media", "mixed-media",
+    "canvas", "brush", "paint", "pigment", "color", "palette", "medium",
+    "technique", "style", "movement", "school", "genre", "period", "era",
+    "gallery", "museum", "exhibition", "show", "display", "collection", "acquisition",
+    "patron", "collector", "critic", "curator", "dealer", "auction", "market",
+    "aesthetic", "beauty", "form", "composition", "balance", "harmony", "contrast",
+    "perspective", "proportion", "scale", "texture", "light", "shadow", "depth"
+  ],
+  "modifiers": [
+    "of the artistic vision", "with creative expression", "of the aesthetic judgment",
+    "of the visual language", "of the graphic design", "of the pictorial representation",
+    "of the sculptural form", "of the three-dimensional space", "of the two-dimensional plane",
+    "of the abstract concept", "of the representational style", "of the figurative approach",
+    "of the realistic depiction", "of the impressionistic brushwork", "of the expressionistic emotion",
+    "of the surrealist dream", "of the cubist geometry", "of the minimalist reduction",
+    "of the maximalist abundance", "of the contemporary scene", "of the modern movement",
+    "of the postmodern critique", "of the classical tradition", "of the renaissance master",
+    "of the baroque drama", "of the romantic feeling", "of the gothic darkness",
+    "of the byzantine icon", "of the digital revolution", "of the analog technique",
+    "of the traditional craft", "of the experimental method", "of the avant-garde breakthrough",
+    "of the innovative approach", "of the conceptual idea", "of the performance-based work",
+    "of the installation space", "of the multimedia experience", "of the interactive engagement",
+    "of the immersive environment", "of the site-specific context", "of the ephemeral moment",
+    "of the permanent legacy", "of the timeless quality", "of the iconic status"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "domain": "technology",
+  "adjectives": [
+    "digital", "analog", "electronic", "mechanical", "optical", "acoustic", "thermal",
+    "electrical", "magnetic", "electromagnetic", "quantum", "nanoscale", "microscopic",
+    "macroscopic", "miniaturized", "compact", "portable", "mobile", "wireless",
+    "networked", "connected", "internet", "cloud", "distributed", "centralized",
+    "decentralized", "peer-to-peer", "blockchain", "cryptographic", "secure", "encrypted",
+    "automated", "autonomous", "robotic", "intelligent", "smart", "adaptive",
+    "programmable", "configurable", "customizable", "scalable", "extensible", "modular",
+    "integrated", "embedded", "wearable", "implantable", "biometric", "sensor-based",
+    "actuator-driven", "haptic", "virtual", "augmented", "mixed", "immersive",
+    "interactive", "responsive", "real-time", "high-speed", "low-latency", "bandwidth-intensive",
+    "energy-efficient", "sustainable", "renewable", "green", "eco-friendly", "recyclable",
+    "biodegradable", "disposable", "reusable", "durable", "reliable", "robust",
+    "fault-tolerant", "redundant", "resilient", "self-healing", "self-repairing", "self-optimizing"
+  ],
+  "nouns": [
+    "technology", "innovation", "invention", "discovery", "breakthrough", "advancement",
+    "device", "gadget", "appliance", "machine", "instrument", "tool", "equipment",
+    "hardware", "software", "firmware", "system", "platform", "architecture",
+    "network", "internet", "web", "cloud", "server", "client", "database",
+    "algorithm", "program", "application", "app", "interface", "user-experience",
+    "artificial", "intelligence", "machine", "learning", "neural", "network",
+    "robot", "robotics", "automation", "autonomy", "sensor", "actuator", "controller",
+    "processor", "chip", "circuit", "board", "component", "module", "assembly",
+    "display", "screen", "monitor", "interface", "input", "output", "peripheral",
+    "storage", "memory", "drive", "disk", "flash", "solid-state", "cloud",
+    "communication", "transmission", "signal", "bandwidth", "frequency", "spectrum",
+    "wireless", "cellular", "wifi", "bluetooth", "satellite", "fiber", "optic",
+    "security", "encryption", "authentication", "authorization", "privacy", "protection",
+    "blockchain", "cryptocurrency", "token", "smart", "contract", "decentralized",
+    "virtual", "reality", "augmented", "reality", "mixed", "reality", "metaverse",
+    "quantum", "computing", "nanotechnology", "biotechnology", "genetic", "engineering"
+  ],
+  "modifiers": [
+    "of the digital revolution", "with electronic components", "of the mechanical system",
+    "of the optical device", "of the acoustic technology", "of the thermal management",
+    "of the electrical circuit", "of the magnetic storage", "of the electromagnetic spectrum",
+    "of the quantum computer", "of the nanoscale device", "of the microscopic structure",
+    "of the miniaturized component", "of the portable device", "of the mobile technology",
+    "of the wireless network", "of the connected system", "of the internet infrastructure",
+    "of the cloud platform", "of the distributed system", "of the centralized architecture",
+    "of the decentralized network", "of the peer-to-peer protocol", "of the blockchain ledger",
+    "of the cryptographic algorithm", "of the secure communication", "of the encrypted data",
+    "of the automated process", "of the autonomous system", "of the robotic automation",
+    "of the intelligent agent", "of the smart device", "of the adaptive system",
+    "of the programmable logic", "of the configurable hardware", "of the scalable architecture",
+    "of the extensible platform", "of the modular design", "of the integrated system",
+    "of the embedded controller", "of the wearable technology", "of the biometric sensor"
+  ]
+}

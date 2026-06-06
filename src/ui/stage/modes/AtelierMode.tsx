@@ -4,6 +4,7 @@ import { CrucibleMode } from "./CrucibleMode";
 import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 import { deriveCleanTitle } from '@/lib/kernel/types';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 interface GeneVal { type?: string; value?: unknown; }
 interface SeedBody { id: string; genes?: Record<string, GeneVal>; }
@@ -77,7 +78,7 @@ export const AtelierMode: React.FC = () => {
           <div className="p-atelier-title">{displayName} · genome {genes.length}</div>
           {/* Live strata % badge in header — always visible comprehensive HUD surface */}
           <span className="p-strata-pill" title="Live 9-strata (Atelier primary)" style={{ marginLeft: 8, fontSize: 10 }}>{(atelierStrata.overall * 100).toFixed(0)}% strata</span>
-          <button type="button" className="p-atelier-toggle" onClick={() => setOpen(o => !o)} title={open ? "collapse" : "expand"}>{open ? "▸" : "◂"}</button>
+          <button type="button" className="p-atelier-toggle" onClick={() => setOpen(o => !o)} aria-expanded={open} aria-controls="open-section" title={open ? "collapse" : "expand"}>{open ? "▸" : "◂"}</button>
         </header>
         {/* Compact 9-strata mini bars always visible in Atelier for complete experience */}
         <div style={{ padding: '2px 8px 4px', borderBottom: '1px solid var(--p-glass-border)', display: 'flex', gap: 2, flexWrap: 'wrap' }} role="group" aria-label="Atelier 9-strata bars live">

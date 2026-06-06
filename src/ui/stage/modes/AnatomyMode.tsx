@@ -9,6 +9,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { useDomainColor } from '@/hooks/useDomainColor';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 // Gene category mapping (mirrors src/lib/kernel/composition.ts but stays
 // browser-safe — no kernel imports).
@@ -122,6 +123,7 @@ export const AnatomyMode: React.FC = () => {
 
   return (
     <div className="p-anatomy">
+      <ModePurposeHeader mode="anatomy" showRadar={false} />
       <header className="p-anatomy-header">
         <SeedGlyph hash={seed.hash} domain={seed.domain} size={48} />
         <div className="p-anatomy-id">

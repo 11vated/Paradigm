@@ -111,11 +111,11 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
       );
     }
     if (fetchError) {
-      // Fallback to <img> when fetch is blocked or fails
+      // Fallback to image element when fetch is blocked or fails
       const url = toUrl(artifact.svgPath || artifact.outputPath);
       return (
         <div className="p-artifact p-artifact-svg">
-          {url ? <img src={url} alt={artifact.name ?? seed?.name ?? 'svg'} /> : null}
+          {url ? <img src={url} alt={artifact.name ?? seed?.name ?? 'svg artifact'} aria-label={`SVG artifact: ${artifact.name ?? seed?.name ?? 'seed'}`} /> : null}
         </div>
       );
     }

@@ -124,6 +124,8 @@ The repo went through a Phase 0 surgical cleanup pass that established a single 
 | Sovereignty | `src/lib/sovereignty/` |
 | Rendering | `src/lib/rendering/` |
 | Studio UI | `src/pages/StudioPage.tsx`, `src/components/studio/*` |
+| Seed naming | `src/lib/naming/seed-namer.ts` (11 domain vocabularies in `src/lib/naming/vocab/`) |
+| Strata radar | `src/components/studio/StrataRadar.tsx` (3×3 grid + 9-axis SVG radar) |
 | Server routes | `server.ts` (3,500 LOC; route-splitting is a future sprint) |
 
 ---
@@ -254,6 +256,11 @@ After Phase 0 surgical cleanup and seven phases of substrate work, the canonical
 
 ```
 src/lib/
+├── naming/                Seed naming (Tier 0/1/2 — PoS-pairing + LLM)
+│   ├── seed-namer.ts      nameSeed / nameSeedSync / etymologyFor / nameOnly
+│   └── vocab/             11 domain vocabularies (character, world, music, …)
+├── kernel/
+src/lib/
 ├── kernel/                  Deterministic RNG, generators, composition, clock shim, Quality Contract
 │   ├── clock.ts             kernelNow / kernelNowIso — injectable wall-clock
 │   ├── composition.ts       Functor bridges (Friend × any → projection, with custom transforms)
@@ -294,6 +301,7 @@ src/lib/
 ```bash
 npm run typecheck          # 0 errors
 npm run determinism:check  # 0 hard violations
-npm run quality:contract   # 7/7 contracts green
-npm run golden:verify      # 30/30 hashes match
+npm run quality:contract   # 13/13 contracts green
+npm run golden:verify      # flagship tier hashes match
+npm run build              # vite build (clean)
 ```

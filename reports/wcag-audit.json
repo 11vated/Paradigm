@@ -1,0 +1,262 @@
+{
+  "scanned": {
+    "tsx": 176,
+    "css": 4,
+    "lines": 24789
+  },
+  "contrast": 2,
+  "byRule": {
+    "1.4.11 Non-text Contrast — 3:1 minimum": 7,
+    "2.4.7 Focus Visible": 6,
+    "4.1.2 Name, Role, Value (aria-expanded)": 19,
+    "2.1.1 Keyboard": 2,
+    "2.3.3 Animation from Interactions": 1
+  },
+  "findings": [
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --p-prism-violet (#7c3aed) on --void: ratio 3.60:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --p-prism-rose (#e11d48) on --void: ratio 4.37:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --r-prism-core (#7C3AED) on --void: ratio 3.60:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --r-prism-resonant (#4F46E5) on --void: ratio 3.27:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --r-prism-warm (#E11D48) on --void: ratio 4.37:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --domain-agent (#64748b) on --void: ratio 4.32:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "1.4.11 Non-text Contrast — 3:1 minimum",
+      "message": "ACCENT token --domain-furniture (#78716c) on --void: ratio 4.28:1 (passes 3:1 non-text; do not use for body text)",
+      "file": "src/styles/tokens.css (or paradigm-os.css)",
+      "line": 0
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/paradigm-os.css",
+      "line": 837
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/paradigm-os.css",
+      "line": 1543
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/paradigm-os.css",
+      "line": 1778
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/reality-os.css",
+      "line": 674
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/reality-os.css",
+      "line": 951
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "2.4.7 Focus Visible",
+      "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
+      "file": "src/styles/reality-os.css",
+      "line": 1082
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/components/studio/SeedLibrary.tsx",
+      "line": 64
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/components/studio/SeedLibrary.tsx",
+      "line": 70
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/components/studio/SeedLibrary.tsx",
+      "line": 78
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/components/studio/viewports/CodeViewport.tsx",
+      "line": 27
+    },
+    {
+      "severity": "SERIOUS",
+      "rule": "2.1.1 Keyboard",
+      "message": "Click handler on non-interactive element without role/tabIndex/keyboard handler",
+      "file": "src/components/ui/PolishComponents.tsx",
+      "line": 321
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/DaoPage.tsx",
+      "line": 98
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/DaoPage.tsx",
+      "line": 122
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/HealthPage.tsx",
+      "line": 227
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/StudioPage.tsx",
+      "line": 321
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/StudioPage.tsx",
+      "line": 679
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/StudioPage.tsx",
+      "line": 718
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/pages/WorldSeedPage.tsx",
+      "line": 209
+    },
+    {
+      "severity": "SERIOUS",
+      "rule": "2.1.1 Keyboard",
+      "message": "Click handler on non-interactive element without role/tabIndex/keyboard handler",
+      "file": "src/ui/overlays/DomainCosmosOverlay.tsx",
+      "line": 139
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/rails/AgentPanel/Composer.tsx",
+      "line": 187
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/rails/AgentPanel/GsplStrip.tsx",
+      "line": 115
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/rails/CollapsedLeftRail.tsx",
+      "line": 51
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/rails/CollapsedLeftRail.tsx",
+      "line": 76
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/rails/CollapsedLeftRail.tsx",
+      "line": 98
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/stage/ModePurposeHeader.tsx",
+      "line": 41
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/stage/ModePurposeHeader.tsx",
+      "line": 110
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/ui/stage/modes/AtelierMode.tsx",
+      "line": 81
+    },
+    {
+      "severity": "MINOR",
+      "rule": "2.3.3 Animation from Interactions",
+      "message": "Reduced-motion support: 29 motion-reduce: classes found in TSX, prefers-reduced-motion in CSS. Good.",
+      "file": "src/styles/*.css",
+      "line": 0
+    }
+  ]
+}

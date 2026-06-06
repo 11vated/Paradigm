@@ -1,0 +1,43 @@
+{
+  "domain": "theater",
+  "adjectives": [
+    "theatrical", "dramatic", "performing", "stage", "live", "acting", "directed",
+    "produced", "written", "designed", "lighted", "costumed", "staged",
+    "classical", "contemporary", "experimental", "avant-garde", "immersive",
+    "interactive", "site-specific", "promenade", "black-box", "proscenium",
+    "thrust", "arena", "in-the-round", "outdoor", "street", "community",
+    "professional", "amateur", "student", "educational", "recreational",
+    "tragic", "comic", "satirical", "farcical", "musical", "operatic",
+    "physical", "verbal", "visual", "multimedia", "digital", "traditional"
+  ],
+  "nouns": [
+    "theater", "theatre", "drama", "play", "script", "screenplay", "dialogue",
+    "monologue", "scene", "act", "character", "role", "part", "protagonist",
+    "antagonist", "hero", "villain", "supporting", "cast", "ensemble", "company",
+    "actor", "actress", "performer", "artist", "player", "thespian",
+    "director", "playwright", "writer", "dramaturg", "producer", "stage-manager",
+    "designer", "lighting", "sound", "set", "costume", "makeup", "prop",
+    "stage", "theater", "venue", "auditorium", "house", "audience", "spectator",
+    "performance", "production", "show", "run", "premiere", "opening", "closing",
+    "rehearsal", "practice", "preparation", "blocking", "staging", "choreography",
+    "curtain", "call", "ovation", "applause", "review", "criticism", "critique"
+  ],
+  "modifiers": [
+    "of the theatrical art", "with dramatic intensity", "of the performing craft",
+    "of the stage presence", "of the live performance", "of the acting technique",
+    "of the directed vision", "of the produced work", "of the written word",
+    "of the designed space", "of the lighted scene", "of the costumed character",
+    "of the staged production", "of the classical tradition", "of the contemporary voice",
+    "of the experimental approach", "of the avant-garde vision", "of the immersive experience",
+    "of the interactive engagement", "of the site-specific context", "of the promenade staging",
+    "of the black-box intimacy", "of the proscenium arch", "of the thrust stage",
+    "of the arena configuration", "of the in-the-round immersion", "of the outdoor setting",
+    "of the street performance", "of the community engagement", "of the professional standard",
+    "of the amateur spirit", "of the student learning", "of the educational mission",
+    "of the recreational enjoyment", "of the tragic emotion", "of the comic timing",
+    "of the satirical wit", "of the farcical absurdity", "of the musical spectacle",
+    "of the operatic grandeur", "of the physical expression", "of the verbal power",
+    "of the visual impact", "of the multimedia integration", "of the digital innovation",
+    "of the traditional craft"
+  ]
+}

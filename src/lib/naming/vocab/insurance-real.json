@@ -1,0 +1,49 @@
+{
+  "domain": "insurance-real",
+  "adjectives": [
+    "insurance", "insured", "uninsured", "underinsured", "overinsured", "fully-insured",
+    "covered", "uncovered", "protected", "unprotected", "risk-averse", "risk-seeking",
+    "premium", "deductible", "copay", "coinsurance", "out-of-pocket", "in-network",
+    "out-of-network", "in-force", "lapsed", "expired", "renewable", "non-renewable",
+    "term", "permanent", "whole-life", "universal-life", "variable-life", "indexed",
+    "guaranteed", "non-guaranteed", "participating", "non-participating", "dividend-paying",
+    "non-dividend", "level", "increasing", "decreasing", "graded", "modified",
+    "group", "individual", "family", "employer-sponsored", "government-sponsored", "private",
+    "public", "mandatory", "voluntary", "required", "optional", "elective",
+    "comprehensive", "limited", "basic", "enhanced", "supplemental", "umbrella",
+    "excess", "surplus", "reinsurance", "retrocedent", "ceded", "assumed",
+    "admitted", "non-admitted", "surplus-lines", "standard-lines", "specialty", "excess"
+  ],
+  "nouns": [
+    "AIG", "Allstate", "State Farm", "Geico", "Progressive",
+    "Liberty Mutual", "Travelers", "Chubb", "Zurich", "Munich Re",
+    "Swiss Re", "Hannover Re", "SCOR", "PartnerRe", "XL Catlin",
+    "Berkshire Hathaway", "Warren Buffett", "Ajay Banga", "Brian Duperreault",
+    "Evan Greenberg", "John Hancock", "MetLife", "Prudential", "Northwestern Mutual",
+    "New York Life", "MassMutual", "Guardian", "Lincoln Financial", "Transamerica",
+    "Aetna", "UnitedHealth", "Cigna", "Humana", "Anthem",
+    "Blue Cross Blue Shield", "Kaiser Permanente", "Oscar Health", "Bright Health",
+    "Medicare", "Medicaid", "ACA", "Obamacare", "Affordable Care Act",
+    "Health Insurance", "Life Insurance", "Auto Insurance", "Home Insurance", "Renters Insurance",
+    "Business Insurance", "Liability Insurance", "Property Insurance", "Casualty Insurance",
+    "Professional Liability", "General Liability", "Product Liability", "Workers Compensation",
+    "Disability Insurance", "Long-term Care", "Critical Illness", "Accident", "Travel",
+    "Pet Insurance", "Flood Insurance", "Earthquake Insurance", "Umbrella", "Excess"
+  ],
+  "modifiers": [
+    "of the insurance industry", "with insured protection", "of the uninsured risk",
+    "of the underinsured exposure", "of the overinsured premium", "of the fully-insured coverage",
+    "of the covered loss", "of the uncovered expense", "of the protected asset",
+    "of the unprotected liability", "of the risk-averse strategy", "of the risk-seeking behavior",
+    "of the premium payment", "of the deductible amount", "of the copay responsibility",
+    "of the coinsurance share", "of the out-of-pocket cost", "of the in-network provider",
+    "of the out-of-network coverage", "of the in-force policy", "of the lapsed coverage",
+    "of the expired term", "of the renewable contract", "of the non-renewable policy",
+    "of the term insurance", "of the permanent coverage", "of the whole-life policy",
+    "of the universal-life contract", "of the variable-life investment", "of the indexed product",
+    "of the guaranteed benefit", "of the non-guaranteed return", "of the participating policy",
+    "of the non-participating contract", "of the dividend-paying stock", "of the non-dividend fund",
+    "of the level premium", "of the increasing benefit", "of the decreasing term",
+    "of the graded death benefit", "of the modified endowment", "of the group policy"
+  ]
+}

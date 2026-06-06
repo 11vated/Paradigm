@@ -1,0 +1,44 @@
+{
+  "domain": "chemistry",
+  "adjectives": [
+    "molecular", "atomic", "ionic", "covalent", "metallic", "hydrogen", "van der waals",
+    "organic", "inorganic", "biochemical", "analytical", "physical", "theoretical",
+    "synthetic", "natural", "industrial", "pharmaceutical", "polymer", "colloidal",
+    "surface", "catalytic", "enzymatic", "metabolic", "redox", "acidic", "basic",
+    "neutral", "buffered", "saturated", "unsaturated", "supersaturated", "concentrated",
+    "dilute", "aqueous", "non-aqueous", "polar", "non-polar", "amphiphilic", "hydrophilic",
+    "hydrophobic", "lipophilic", "oleophilic", "volatile", "non-volatile", "reactive",
+    "inert", "stable", "unstable", "explosive", "flammable", "corrosive", "toxic",
+    "hazardous", "radioactive", "magnetic", "paramagnetic", "diamagnetic", "ferromagnetic",
+    "crystalline", "amorphous", "glassy", "polymeric", "macromolecular", "nanomolecular",
+    "chiral", "achiral", "racemic", "enantiomeric", "diastereomeric", "stereoisomeric",
+    "isotopic", "allotropic", "polymorphic", "stoichiometric", "non-stoichiometric"
+  ],
+  "nouns": [
+    "element", "atom", "molecule", "ion", "cation", "anion", "compound", "mixture",
+    "solution", "suspension", "colloid", "emulsion", "gel", "sol", "aerosol", "foam",
+    "reaction", "equilibrium", "kinetics", "mechanism", "catalyst", "enzyme", "substrate",
+    "product", "reactant", "intermediate", "transition", "state", "bond", "orbital",
+    "electron", "proton", "neutron", "nucleus", "isotope", "radioisotope", "radionuclide",
+    "periodic", "table", "group", "period", "block", "series", "lanthanide", "actinide",
+    "metal", "nonmetal", "metalloid", "alkali", "alkaline", "transition", "post-transition",
+    "halogen", "noble", "chalcogen", "pnictogen", "carbon", "nitrogen", "oxygen",
+    "hydrogen", "helium", "lithium", "beryllium", "boron", "carbon", "nitrogen", "oxygen",
+    "fluorine", "neon", "sodium", "magnesium", "aluminum", "silicon", "phosphorus",
+    "sulfur", "chlorine", "argon", "potassium", "calcium", "scandium", "titanium",
+    "vanadium", "chromium", "manganese", "iron", "cobalt", "nickel", "copper", "zinc",
+    "functional", "group", "alkane", "alkene", "alkyne", "aromatic", "alcohol", "ether",
+    "aldehyde", "ketone", "carboxylic", "acid", "ester", "amine", "amide", "polymer"
+  ],
+  "modifiers": [
+    "of the periodic table", "with covalent bonding", "of the ionic lattice",
+    "of the molecular orbital", "of the transition state", "of the catalytic cycle",
+    "of the reaction mechanism", "of the equilibrium constant", "of the rate law",
+    "of the activation energy", "of the thermodynamic parameter", "of the enthalpy change",
+    "of the entropy change", "of the free energy", "of the redox potential",
+    "of the acid-base equilibrium", "of the buffer solution", "of the solubility product",
+    "of the complex ion", "of the coordination compound", "of the organometallic",
+    "of the polymer chain", "of the macromolecular assembly", "of the nanostructure",
+    "of the crystal lattice", "of the unit cell", "of the space group", "of the symmetry"
+  ]
+}

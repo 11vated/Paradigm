@@ -136,6 +136,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map(toast => (
           <div
             key={toast.id}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
             style={{
               padding: '12px 20px',
               borderRadius: 8,
@@ -147,9 +150,13 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
               animation: 'slideIn 0.3s ease',
               minWidth: 200,
-              maxWidth: 400
+              maxWidth: 400,
+              cursor: 'pointer'
             }}
+            tabIndex={0}
             onClick={() => removeToast(toast.id)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); removeToast(toast.id); } }}
+            aria-label={`${toast.type} toast: ${toast.message}. Press Enter to dismiss.`}
           >
             {toast.message}
           </div>
@@ -297,16 +304,20 @@ export function CommandPalette({ commands, isOpen, onClose }: CommandPaletteProp
   if (!isOpen) return null;
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(0,0,0,0.8)',
-      display: 'flex',
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-      paddingTop: 100,
-      zIndex: 9999
-    }} onClick={onClose}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Command palette"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(0,0,0,0.8)',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        paddingTop: 100,
+        zIndex: 9999
+      }} onClick={onClose}>
       <div
         style={{
           background: '#2a2a2a',
@@ -335,14 +346,19 @@ export function CommandPalette({ commands, isOpen, onClose }: CommandPaletteProp
           }}
           autoFocus
         />
-        <div style={{ overflow: 'auto', flex: 1 }}>
+        <div role="listbox" aria-label="Command palette results" style={{ overflow: 'auto', flex: 1 }}>
           {filtered.map((cmd, i) => (
             <div
               key={i}
+              role="option"
+              tabIndex={0}
+              aria-selected={false}
               onClick={() => {
                 cmd.action();
                 onClose();
               }}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cmd.action(); onClose(); } }}
+              aria-label={`Command: ${cmd.name}, shortcut ${cmd.shortcut}`}
               style={{
                 padding: '12px 16px',
                 borderBottom: '1px solid #333',

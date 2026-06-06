@@ -1,0 +1,18 @@
+{
+  "domain": "cosmology",
+  "adjectives": [
+    "spiral", "elliptical", "irregular", "dwarf", "giant", "supermassive", "binary",
+    "triple", "colliding", "merging", "isolated", "clustered", "redshifted", "blueshifted",
+    "young", "ancient", "dying", "quiescent", "starburst", "active", "Seyfert", "quasar"
+  ],
+  "nouns": [
+    "galaxy", "cluster", "nebula", "supernova", "pulsar", "quasar", "blazar", "black hole",
+    "binary system", "protostar", "white dwarf", "neutron star", "magnetar", "accretion disk",
+    "spiral arm", "halo", "bulge", "bar", "stream", "tidal tail"
+  ],
+  "modifiers": [
+    "with 200 bodies", "in N-body simulation", "with Barnes-Hut acceleration",
+    "with realistic dark-matter halo", "with initial conditions from cosmic web",
+    "in the local group"
+  ]
+}

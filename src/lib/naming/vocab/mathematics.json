@@ -1,0 +1,47 @@
+{
+  "domain": "mathematics",
+  "adjectives": [
+    "algebraic", "geometric", "analytic", "topological", "differential", "integral",
+    "discrete", "continuous", "finite", "infinite", "countable", "uncountable",
+    "rational", "irrational", "real", "complex", "imaginary", "transcendental",
+    "algebraic", "prime", "composite", "odd", "even", "positive", "negative",
+    "linear", "nonlinear", "convex", "concave", "monotonic", "periodic",
+    "symmetric", "asymmetric", "commutative", "associative", "distributive",
+    "invertible", "singular", "determinant", "orthogonal", "unitary", "hermitian",
+    "stochastic", "deterministic", "probabilistic", "statistical", "combinatorial",
+    "graph-theoretic", "number-theoretic", "set-theoretic", "logical", "categorical",
+    "homological", "cohomological", "differential-geometric", "riemannian",
+    "symplectic", "algebraic-geometric", "arithmetic", "harmonic", "functional"
+  ],
+  "nouns": [
+    "number", "integer", "natural", "whole", "rational", "real", "complex",
+    "variable", "constant", "parameter", "coefficient", "function", "mapping",
+    "relation", "operation", "addition", "subtraction", "multiplication", "division",
+    "exponent", "logarithm", "root", "power", "factor", "multiple", "divisor",
+    "polynomial", "equation", "inequality", "system", "matrix", "vector", "tensor",
+    "space", "set", "subset", "union", "intersection", "complement", "cartesian",
+    "group", "ring", "field", "algebra", "module", "vector", "norm", "inner",
+    "topology", "manifold", "curve", "surface", "dimension", "metric", "distance",
+    "derivative", "integral", "limit", "continuity", "differentiability", "integrability",
+    "series", "sequence", "convergence", "divergence", "sum", "product", "limit",
+    "probability", "statistics", "distribution", "mean", "variance", "deviation",
+    "correlation", "regression", "hypothesis", "test", "significance", "confidence",
+    "graph", "node", "edge", "path", "cycle", "tree", "network", "flow",
+    "algorithm", "computation", "complexity", "efficiency", "optimization", "solution"
+  ],
+  "modifiers": [
+    "of the algebraic structure", "with geometric properties", "of the analytic function",
+    "of the topological space", "of the differential equation", "of the integral transform",
+    "of the discrete mathematics", "of the continuous system", "of the finite set",
+    "of the infinite series", "of the prime number", "of the rational approximation",
+    "of the complex plane", "of the linear transformation", "of the nonlinear dynamics",
+    "of the convex optimization", "of the stochastic process", "of the deterministic system",
+    "of the probabilistic model", "of the statistical inference", "of the combinatorial design",
+    "of the graph theory", "of the number theory", "of the set theory",
+    "of the mathematical logic", "of the category theory", "of the homological algebra",
+    "of the differential geometry", "of the riemannian manifold", "of the symplectic form",
+    "of the algebraic geometry", "of the arithmetic progression", "of the harmonic analysis",
+    "of the functional analysis", "of the mathematical proof", "of the theorem",
+    "of the conjecture", "of the lemma", "of the corollary", "of the axiom"
+  ]
+}

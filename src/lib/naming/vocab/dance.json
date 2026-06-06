@@ -1,0 +1,44 @@
+{
+  "domain": "dance",
+  "adjectives": [
+    "dancing", "choreographic", "rhythmic", "musical", "expressive", "artistic",
+    "graceful", "elegant", "fluid", "dynamic", "energetic", "powerful", "athletic",
+    "technical", "artistic", "classical", "contemporary", "modern", "traditional",
+    "folk", "ethnic", "cultural", "social", "ballroom", "latin", "street",
+    "hip-hop", "breakdance", "jazz", "ballet", "tap", "theatrical", "performance",
+    "solo", "duet", "trio", "ensemble", "group", "company", "troupe",
+    "improvisational", "choreographed", "structured", "free-form", "spontaneous",
+    "synchronized", "harmonious", "coordinated", "balanced", "poised", "controlled"
+  ],
+  "nouns": [
+    "dance", "dancing", "dancer", "choreography", "choreographer", "movement",
+    "rhythm", "beat", "tempo", "music", "song", "melody", "harmony",
+    "step", "pattern", "sequence", "routine", "combination", "phrase", "variation",
+    "technique", "skill", "ability", "talent", "gift", "training", "practice",
+    "rehearsal", "performance", "show", "concert", "recital", "production", "premiere",
+    "stage", "studio", "floor", "space", "venue", "theater", "auditorium",
+    "costume", "costume", "outfit", "dress", "shoe", "footwear", "prop", "accessory",
+    "style", "genre", "form", "tradition", "culture", "heritage", "legacy",
+    "ballet", "jazz", "modern", "contemporary", "hip-hop", "tap", "folk",
+    "ballroom", "latin", "street", "breakdance", "aerial", "acrobatic", "theatrical"
+  ],
+  "modifiers": [
+    "of the dancing art", "with choreographic vision", "of the rhythmic precision",
+    "of the musicality", "of the expressive movement", "of the artistic expression",
+    "of the graceful flow", "of the elegant line", "of the fluid transition",
+    "of the dynamic energy", "of the powerful presence", "of the athletic ability",
+    "of the technical skill", "of the artistic interpretation", "of the classical tradition",
+    "of the contemporary innovation", "of the modern movement", "of the traditional form",
+    "of the folk heritage", "of the ethnic culture", "of the social dance",
+    "of the ballroom elegance", "of the latin passion", "of the street style",
+    "of the hip-hop groove", "of the breakdance power", "of the jazz rhythm",
+    "of the ballet precision", "of the tap percussion", "of the theatrical drama",
+    "of the performance quality", "of the solo spotlight", "of the duet partnership",
+    "of the trio harmony", "of the ensemble unity", "of the group cohesion",
+    "of the company artistry", "of the troupe excellence", "of the improvisational freedom",
+    "of the choreographed structure", "of the structured routine", "of the free-form expression",
+    "of the spontaneous creation", "of the synchronized movement", "of the harmonious unity",
+    "of the coordinated action", "of the balanced composition", "of the poised presence",
+    "of the controlled technique"
+  ]
+}

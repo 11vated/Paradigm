@@ -1,0 +1,45 @@
+{
+  "domain": "film",
+  "adjectives": [
+    "cinematic", "filmmaking", "visual", "auditory", "narrative", "storytelling",
+    "dramatic", "comic", "tragic", "thrilling", "suspenseful", "romantic",
+    "action-packed", "adventurous", "sci-fi", "fantasy", "horror", "mystery",
+    "documentary", "experimental", "avant-garde", "independent", "mainstream",
+    "commercial", "artistic", "auteur", "studio", "genre", "style",
+    "classic", "contemporary", "modern", "postmodern", "silent", "sound",
+    "color", "black-and-white", "digital", "analog", "animated", "live-action",
+    "feature-length", "short", "episodic", "serial", "franchise", "sequel",
+    "prequel", "remake", "adaptation", "original", "inspired", "based"
+  ],
+  "nouns": [
+    "film", "movie", "cinema", "picture", "motion-picture", "feature", "short",
+    "documentary", "animation", "live-action", "director", "filmmaker", "producer",
+    "writer", "screenwriter", "actor", "actress", "cast", "crew", "star",
+    "character", "role", "performance", "scene", "shot", "sequence", "montage",
+    "camera", "lens", "lighting", "sound", "music", "score", "soundtrack",
+    "editing", "cut", "transition", "effect", "special-effect", "visual-effect",
+    "genre", "style", "tone", "mood", "atmosphere", "theme", "motif",
+    "plot", "story", "narrative", "dialogue", "script", "screenplay", "adaptation",
+    "studio", "production", "distribution", "release", "premiere", "festival", "award",
+    "audience", "viewer", "critic", "review", "rating", "box-office", "ticket"
+  ],
+  "modifiers": [
+    "of the cinematic experience", "with filmmaking craft", "of the visual storytelling",
+    "of the auditory landscape", "of the narrative structure", "of the dramatic tension",
+    "of the comic timing", "of the tragic depth", "of the thrilling pace",
+    "of the suspenseful buildup", "of the romantic chemistry", "of the action-packed sequence",
+    "of the adventurous journey", "of the sci-fi world", "of the fantasy realm",
+    "of the horror atmosphere", "of the mystery puzzle", "of the documentary truth",
+    "of the experimental form", "of the avant-garde vision", "of the independent spirit",
+    "of the mainstream appeal", "of the commercial success", "of the artistic merit",
+    "of the auteur vision", "of the studio system", "of the genre convention",
+    "of the stylistic choice", "of the classic status", "of the contemporary relevance",
+    "of the modern technique", "of the postmodern critique", "of the silent era",
+    "of the sound revolution", "of the color technology", "of the digital innovation",
+    "of the analog tradition", "of the animated artistry", "of the live-action realism",
+    "of the feature-length epic", "of the short film", "of the episodic series",
+    "of the serial drama", "of the franchise universe", "of the sequel continuation",
+    "of the prequel origin", "of the remake reinterpretation", "of the adaptation translation",
+    "of the original creation", "of the inspired story", "of the based-on reality"
+  ]
+}

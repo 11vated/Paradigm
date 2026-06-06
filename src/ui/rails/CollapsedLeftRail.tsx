@@ -42,7 +42,7 @@ export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }
           onClick={expand}
           title="Expand left rail (⌘\\)"
           aria-label="Expand left rail"
-        >
+          aria-pressed={false}>
           ▸
         </button>
 
@@ -52,9 +52,9 @@ export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }
             className="p-icon-button"
             data-active="true"
             onClick={expand}
-            title={`Active seed · ${deriveCleanTitle(seed.name, seed.hash)} · strata ${Math.round(((seed.strata?.overall ?? 0.73)*100))}% (always visible)`}
-            style={{ width: 40, height: 40 }}
-          >
+            aria-label={`Active seed ${seed.name || 'Untitled'}, expand rail to view details`}
+            title={`Active seed · ${seed.name && !/^Seed-[0-9a-f]{6,}/.test(seed.name) ? seed.name : (seed.name || 'Untitled')} · strata ${Math.round(((seed.strata?.overall ?? 0.73)*100))}%`}
+            style={{ width: 40, height: 40 }}>
             <SeedGlyph hash={seed.hash} domain={seed.domain} size={28} breathing />
           </button>
         )}
@@ -77,7 +77,7 @@ export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }
           className="p-icon-button"
           onClick={expand}
           title="Library"
-          aria-label="Library"
+          aria-label="Open library (expand rail)"
         >⌬</button>
         <button
           className="p-icon-button"

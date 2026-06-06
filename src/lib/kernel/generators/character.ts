@@ -20,7 +20,6 @@ import { Xoshiro256StarStar, rngFromHash } from '../rng';
 import { exportGLTF } from './gltf-exporter';
 import { createProvenance } from '../provenance';
 import { createCanvas } from './canvas-utils.js';
-import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 // Extended character parameters for world-class output
 interface CharacterParams {

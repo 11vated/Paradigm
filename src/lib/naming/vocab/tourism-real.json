@@ -1,0 +1,52 @@
+{
+  "domain": "tourism-real",
+  "adjectives": [
+    "tourism", "travel", "vacation", "holiday", "leisure", "recreation",
+    "adventure", "cultural", "historical", "educational", "ecotourism", "sustainable",
+    "mass", "alternative", "responsible", "ethical", "volunteer", "medical",
+    "religious", "spiritual", "pilgrimage", "wellness", "health", "spa",
+    "business", "corporate", "MICE", "convention", "conference", "incentive",
+    "domestic", "international", "inbound", "outbound", "regional", "local",
+    "seasonal", "year-round", "peak", "off-peak", "shoulder", "low",
+    "high", "luxury", "budget", "backpacker", "independent", "group",
+    "guided", "self-guided", "package", "custom", "tailor-made", "bespoke",
+    "multiday", "day-trip", "excursion", "tour", "cruise", "expedition",
+    "safari", "trekking", "hiking", "climbing", "diving", "snorkeling",
+    "beach", "mountain", "desert", "forest", "jungle", "arctic"
+  ],
+  "nouns": [
+    "Thomas Cook", "Karl Baedeker", "Arthur Frommer", "Rick Steves", "Lonely Planet",
+    "TripAdvisor", "Booking.com", "Expedia", "Airbnb", "VRBO",
+    "Marriott", "Hilton", "Hyatt", "InterContinental", "Accor",
+    "Disney", "Universal", "SeaWorld", "Six Flags", "Cedar Fair",
+    "Carnival", "Royal Caribbean", "Norwegian", "MSC", "Princess",
+    "Taj Mahal", "Great Wall of China", "Machu Picchu", "Petra", "Colosseum",
+    "Eiffel Tower", "Louvre", "British Museum", "Vatican Museums", "Metropolitan Museum of Art",
+    "Yellowstone", "Yosemite", "Grand Canyon", "Niagara Falls", "Mount Everest",
+    "Kilimanjaro", "Mount Fuji", "Mount Rushmore", "Statue of Liberty", "Sydney Opera House",
+    "Eiffel Tower", "Big Ben", "Tower of London", "Buckingham Palace", "Westminster Abbey",
+    "Notre Dame Cathedral", "Louvre Museum", "Eiffel Tower", "Arc de Triomphe",
+    "Colosseum", "Roman Forum", "Vatican City", "Sistine Chapel", "St. Peter's Basilica",
+    "Acropolis", "Parthenon", "Santorini", "Mykonos", "Crete",
+    "Pyramids of Giza", "Sphinx", "Luxor Temple", "Valley of the Kings", "Abu Simbel",
+    "Great Barrier Reef", "Sydney Opera House", "Uluru", "Kakadu", "Great Ocean Road",
+    "Banff", "Lake Louise", "Niagara Falls", "CN Tower", "Parliament Hill"
+  ],
+  "modifiers": [
+    "of the tourism industry", "with travel experience", "of the vacation destination",
+    "of the holiday resort", "of the leisure activity", "of the recreational facility",
+    "of the adventure travel", "of the cultural experience", "of the historical site",
+    "of the educational tour", "of the ecotourism destination", "of the sustainable practice",
+    "of the mass tourism", "of the alternative travel", "of the responsible tourism",
+    "of the ethical travel", "of the volunteer opportunity", "of the medical tourism",
+    "of the religious site", "of the spiritual destination", "of the pilgrimage route",
+    "of the wellness retreat", "of the health tourism", "of the spa resort",
+    "of the business travel", "of the corporate event", "of the MICE industry",
+    "of the convention center", "of the conference facility", "of the incentive program",
+    "of the domestic tourism", "of the international travel", "of the inbound visitor",
+    "of the outbound traveler", "of the regional destination", "of the local attraction",
+    "of the seasonal peak", "of the year-round destination", "of the peak season",
+    "of the off-peak period", "of the shoulder season", "of the low season",
+    "of the high demand", "of the luxury travel", "of the budget accommodation"
+  ]
+}

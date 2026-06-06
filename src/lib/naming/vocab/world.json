@@ -1,0 +1,24 @@
+{
+  "domain": "world",
+  "adjectives": [
+    "lantern", "hollow", "meridian", "fey", "veiled", "weeping", "humming", "salt",
+    "ashen", "coral", "tidal", "molten", "frozen", "shifting", "patient", "wailing",
+    "quiet", "thorned", "emerald", "obsidian", "verdant", "fractured", "reborn",
+    "drowned", "sunken", "hovering", "wandering", "iron", "ivory", "paper", "glass",
+    "lacquered", "twin", "distant", "forgotten", "remembered", "recent", "ancestral"
+  ],
+  "nouns": [
+    "village", "citadel", "observatory", "orchard", "labyrinth", "cove", "atoll",
+    "foundry", "bazaar", "catacomb", "lighthouse", "monastery", "aviary", "menagerie",
+    "greenhouse", "greenhouse", "outpost", "waystation", "garrison", "tidepool",
+    "marsh", "fen", "grove", "shoal", "reef", "shoals", "cove", "harbor", "spire",
+    "throne", "sanctum", "sanctuary", "cloister", "colonnade", "pavilion", "atrium",
+    "court", "ward", "quarter", "enclave", "archipelago", "peninsula", "sound", "strait"
+  ],
+  "modifiers": [
+    "with lantern lights", "of six warring factions", "at the edge of the unsounded map",
+    "in perpetual twilight", "with a single winding road", "of the patient tides",
+    "in the hour of the wolf", "where the bells do not ring", "of quiet hums",
+    "with two suns and one mourning", "in the second age of iron", "of the broken weather"
+  ]
+}

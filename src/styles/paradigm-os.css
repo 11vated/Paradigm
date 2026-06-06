@@ -23,11 +23,12 @@
   --p-deep:           #0a0814;
   --p-mid:            #14111f;
   --p-elev:           #1a162a;
-  --p-ink-4:          #1d1929;   /* hairline borders */
-  --p-ink-3:          #4a4458;   /* dividers + disabled */
-  --p-ink-2:          #918aa3;   /* secondary text */
-  --p-ink-1:          #d8d2e8;   /* primary text */
-  --p-ink-0:          #f0ebff;   /* bright text, focused */
+  --p-ink-4:          #1d1929;   /* hairline borders (non-text, decorative) */
+  --p-ink-3:          #4a4458;   /* dividers + disabled (non-text; AAA-exempt by design) */
+  --p-ink-2:          #aaa5b8;   /* secondary text — AAA-strong (8.59:1 on --p-void) */
+  --p-ink-1:          #d8d2e8;   /* primary text — AAA-strong (14:1 on --p-void) */
+  --p-ink-0:          #f0ebff;   /* bright text, focused — AAA-strong (17.6:1) */
+  --p-ink-aaa:        var(--p-ink-1);  /* alias: the canonical AAA body text token */
 
   /* ── Prism (functional accents) ────────────────────────────────────── */
   --p-prism-violet:   #7c3aed;   /* PRIMARY — GSPL, kernel, active */
@@ -1280,10 +1281,10 @@
   --r-deep:               var(--p-deep);
   --r-mid:                var(--p-mid);
   --r-ink-4:              var(--p-ink-4);
-  --r-ink-3:              var(--p-ink-3);
-  --r-ink-2:              var(--p-ink-2);
-  --r-ink-1:              var(--p-ink-1);
-  --r-ink-0:              var(--p-ink-0);
+  --r-ink-3:              var(--p-ink-3);  /* non-text (dividers, disabled) — AAA-exempt */
+  --r-ink-2:              var(--p-ink-2);  /* secondary text — AAA-strong (8.59:1) */
+  --r-ink-1:              var(--p-ink-1);  /* primary text — AAA-strong (14:1) */
+  --r-ink-0:              var(--p-ink-0);  /* bright text, focused — AAA-strong */
   --r-prism-core:         var(--p-prism-violet);
   --r-prism-resonant:     var(--p-prism-violet-2);
   --r-prism-grad-a:       var(--p-prism-cyan);

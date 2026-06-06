@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useActiveSeed } from "@/stores/activeSeed";
 import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
 import { rngFromHash } from "@/lib/kernel/rng";
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 const DIMENSIONS = [
   { key: "spatial",    glyph: "▣", label: "SPATIAL",    desc: "physical 3D space" },
@@ -35,6 +36,7 @@ export const ResonanceMode: React.FC = () => {
 
   return (
     <div className="p-resonance">
+      <ModePurposeHeader mode="resonance" showRadar={false} />
       <header className="p-resonance-head">
         <SeedGlyph hash={seed.hash} domain={seed.domain} size={32} />
         <div className="p-resonance-id">

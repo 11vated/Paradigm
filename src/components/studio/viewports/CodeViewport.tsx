@@ -26,6 +26,8 @@ export default function CodeViewport({ artifact }: ViewportProps) {
           </div>
           <button
             onClick={() => setShowPlayer(!showPlayer)}
+            aria-expanded={showPlayer}
+            aria-controls="narrative-player"
             className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-mono border border-neutral-700 hover:border-primary rounded"
           >
             <Play className="w-3 h-3" /> {showPlayer ? 'HIDE PLAYER' : 'LAUNCH LIVE PLAYER'}

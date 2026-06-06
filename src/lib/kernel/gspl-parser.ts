@@ -180,6 +180,7 @@ export class GsplParser {
     }
     const nameToken = this.advance(); // gene name or bare identifier
     const name = nameToken.value;
+    const startLine = nameToken.line;
 
     let geneType: unknown = null;
     let constraints: unknown = null;
@@ -220,12 +221,27 @@ export class GsplParser {
 
     const value = this.parseExpression();
 
-    // Semicolon or comma is optional if } is next
+    // Separator handling — tolerant of `;`, `,`, or an implicit newline between gene decls.
+    // 1) `;` is always consumed and acts as separator.
+    // 2) `,` is consumed and acts as separator (style choice; both supported).
+    // 3) RBRACE / EOF: end of block, nothing to consume.
+    // 4) Otherwise: if the previous token was on a *newer* line than the start of this gene decl,
+    //    treat the newline as an implicit semicolon (NOT a parse error). This matches natural
+    //    authoring style (e.g. agent tool's `makeSeed` emits one gene per line without `;`).
+    // 5) Otherwise: require an explicit `;` for same-line compound decls.
     if (!this.check('RBRACE') && !this.check('EOF')) {
-      if (this.check('COMMA')) {
+      if (this.check('SEMICOLON')) {
+        this.advance();
+      } else if (this.check('COMMA')) {
         this.advance(); // consume comma
       } else {
-        this.expect('SEMICOLON'); // ;
+        const lastTok = this.tokens[this.pos - 1];
+        const nextTok = this.tokens[this.pos];
+        if (lastTok && nextTok && nextTok.line > startLine) {
+          // implicit newline separator; no token consumed
+        } else {
+          this.expect('SEMICOLON'); // ;
+        }
       }
     }
 

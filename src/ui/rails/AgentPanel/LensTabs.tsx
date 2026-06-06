@@ -17,7 +17,7 @@ export const LensTabs: React.FC = () => {
   const setLens = useAgentThreads((s) => s.setLens);
 
   return (
-    <nav role="tablist" className="r-agent-tabs">
+    <nav role="tablist" className="r-agent-tabs p-agent-tabs">
       {LENSES.map((l) => {
         const active = lens === l.id;
         return (
@@ -25,7 +25,7 @@ export const LensTabs: React.FC = () => {
             key={l.label}
             role="tab"
             aria-selected={active}
-            className="r-agent-tab"
+            className="r-agent-tab p-agent-tab"
             data-active={active}
             onClick={() => setLens(l.id)}
           >

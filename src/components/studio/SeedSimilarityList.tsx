@@ -2,6 +2,7 @@
 // TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useState, useEffect, useMemo } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
+import { nameOnly } from '@/lib/naming/seed-namer';
 
 interface SimilarSeed {
   id: string;
@@ -48,7 +49,7 @@ export default function SeedSimilarityList({
         
         const mapped: SimilarSeed[] = (data.similar || data.results || []).map((item: any) => ({
           id: item.seedId || item.id || item.hash,
-          name: item.name || item.seed_name || item.$name || item.seed_id?.slice(0, 8) || 'Unknown',
+          name: item.name || item.seed_name || item.$name || nameOnly(item.hash || item.seedId || item.id, item.domain || item.$domain || 'default'),
           domain: item.domain || item.$domain || 'default',
           similarity: item.similarity || item.score || 0,
         }));

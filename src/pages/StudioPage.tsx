@@ -43,8 +43,8 @@ type PanelTab = 'chat' | 'editor' | 'genes' | 'gallery' | 'library' | 'lineage' 
 type BottomTab = 'compose' | 'evolve' | 'breed' | 'export' | 'mint' | 'agent' | 'sovereign';
 
 const LEFT_TABS: { id: PanelTab; label: string; Icon: React.ComponentType<{ size?: number }> }[] = [
+  { id: 'editor',   label: 'GSPL',     Icon: FileCode },
   { id: 'chat',     label: 'Chat',     Icon: MessageSquare },
-  { id: 'editor',   label: 'Editor',   Icon: FileCode },
   { id: 'genes',    label: 'Genes',    Icon: Dna },
   { id: 'gallery',  label: 'Gallery',  Icon: ImageIcon },
   { id: 'library',  label: 'Library',  Icon: Library },
@@ -70,7 +70,7 @@ interface Artifact {
 
 export function StudioPage() {
   const [currentArtifact, setCurrentArtifact] = useState<Artifact | null>(null);
-  const [activePanel, setActivePanel] = useState<PanelTab>('chat');
+  const [activePanel, setActivePanel] = useState<PanelTab>('editor');
   const [activeBottom, setActiveBottom] = useState<BottomTab | null>(null);
   const [selectedSeed, setSelectedSeed] = useState<Seed | null>(null);
   const [serverOk, setServerOk] = useState<boolean | null>(null);
@@ -166,9 +166,6 @@ export function StudioPage() {
   const leftPanelContent = (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <div style={{ flex: 1, overflow: 'hidden' }}>
-        {activePanel === 'chat' && (
-          <SeedChatIntegrated onArtifactGenerated={handleArtifactGenerated} />
-        )}
         {activePanel === 'editor' && (
           <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 1 }}>
             <div style={{ flex: 1, overflow: 'auto' }}>
@@ -178,6 +175,9 @@ export function StudioPage() {
               <GsplRepl />
             </div>
           </div>
+        )}
+        {activePanel === 'chat' && (
+          <SeedChatIntegrated onArtifactGenerated={handleArtifactGenerated} />
         )}
         {activePanel === 'genes' && (
           <GeneEditor seed={selectedSeed as unknown as Record<string, unknown>} onSeedUpdated={(s: unknown) => handleSelectSeed(s as Seed | null)} />
@@ -320,6 +320,8 @@ export function StudioPage() {
 
         <button
           onClick={() => setShowHelp(v => !v)}
+          aria-expanded={showHelp}
+          aria-controls="studio-help"
           className="p-glass"
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',

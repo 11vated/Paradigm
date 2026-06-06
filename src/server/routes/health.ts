@@ -180,7 +180,8 @@ export function registerHealthRoutes(app: Express, deps: HealthDeps): void {
     });
   };
   app.get('/api/health', healthHandler);
-  app.get('/health', healthHandler);
+  // Note: bare '/health' is NOT registered as an API route — it's reserved
+  // for the React Substrate Health Dashboard at /health (see App.tsx).
 
   // Readiness probe — separate from liveness so load balancers can drain
   // traffic from degraded instances without killing the process. Checks run

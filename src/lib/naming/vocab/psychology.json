@@ -1,0 +1,53 @@
+{
+  "domain": "psychology",
+  "adjectives": [
+    "psychological", "mental", "cognitive", "emotional", "behavioral", "social",
+    "developmental", "clinical", "counseling", "educational", "industrial",
+    "organizational", "forensic", "health", "neuropsychological", "biopsychological",
+    "evolutionary", "comparative", "cross-cultural", "positive", "humanistic",
+    "existential", "gestalt", "cognitive-behavioral", "psychodynamic", "psychoanalytic",
+    "behavioral", "experimental", "applied", "theoretical", "empirical", "qualitative",
+    "quantitative", "longitudinal", "cross-sectional", "correlational", "experimental",
+    "observational", "introspective", "subjective", "objective", "conscious",
+    "unconscious", "subconscious", "preconscious", "automatic", "controlled",
+    "deliberate", "intentional", "motivated", "driven", "compelled", "impulsive",
+    "rational", "irrational", "logical", "emotional", "affective", "conative"
+  ],
+  "nouns": [
+    "psychology", "mind", "consciousness", "awareness", "perception", "sensation",
+    "attention", "memory", "learning", "thinking", "reasoning", "problem-solving",
+    "decision-making", "judgment", "intelligence", "creativity", "imagination",
+    "emotion", "feeling", "mood", "affect", "motivation", "drive", "need",
+    "desire", "want", "goal", "purpose", "meaning", "value", "belief",
+    "attitude", "opinion", "prejudice", "stereotype", "bias", "schema", "script",
+    "personality", "trait", "character", "temperament", "disposition", "self",
+    "identity", "ego", "superego", "id", "unconscious", "subconscious", "defense",
+    "mechanism", "repression", "denial", "projection", "displacement", "rationalization",
+    "development", "growth", "maturation", "aging", "lifespan", "stage", "phase",
+    "transition", "crisis", "trauma", "stress", "coping", "adaptation", "adjustment",
+    "therapy", "treatment", "counseling", "intervention", "assessment", "diagnosis",
+    "disorder", "syndrome", "condition", "illness", "disease", "pathology", "symptom"
+  ],
+  "modifiers": [
+    "of the psychological process", "with mental clarity", "of the cognitive function",
+    "of the emotional state", "of the behavioral pattern", "of the social interaction",
+    "of the developmental stage", "of the clinical assessment", "of the counseling session",
+    "of the educational setting", "of the industrial organization", "of the forensic evaluation",
+    "of the health psychology", "of the neuropsychological test", "of the biopsychological model",
+    "of the evolutionary adaptation", "of the comparative study", "of the cross-cultural research",
+    "of the positive psychology", "of the humanistic approach", "of the existential perspective",
+    "of the gestalt principle", "of the cognitive-behavioral therapy", "of the psychodynamic theory",
+    "of the psychoanalytic interpretation", "of the behavioral conditioning", "of the experimental design",
+    "of the applied psychology", "of the theoretical framework", "of the empirical evidence",
+    "of the qualitative analysis", "of the quantitative research", "of the longitudinal study",
+    "of the cross-sectional survey", "of the correlational analysis", "of the experimental manipulation",
+    "of the observational method", "of the introspective insight", "of the subjective experience",
+    "of the objective measurement", "of the conscious awareness", "of the unconscious motivation",
+    "of the subconscious influence", "of the preconscious memory", "of the automatic response",
+    "of the controlled processing", "of the deliberate action", "of the intentional behavior",
+    "of the motivated performance", "of the driven impulse", "of the compelled action",
+    "of the impulsive reaction", "of the rational decision", "of the irrational belief",
+    "of the logical argument", "of the emotional expression", "of the affective experience",
+    "of the conative drive"
+  ]
+}

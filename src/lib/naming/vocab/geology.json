@@ -1,0 +1,49 @@
+{
+  "domain": "geology",
+  "adjectives": [
+    "igneous", "sedimentary", "metamorphic", "volcanic", "plutonic", "intrusive", "extrusive",
+    "clastic", "chemical", "biochemical", "organic", "detrital", "authigenic", "allogenic",
+    "crystalline", "amorphous", "glassy", "vesicular", "porphyritic", "pegmatitic",
+    "foliated", "non-foliated", "schistose", "gneissic", "slaty", "phyllitic",
+    "granular", "massive", "bedded", "laminated", "cross-bedded", "graded", "sorted",
+    "unsorted", "well-sorted", "poorly-sorted", "rounded", "angular", "sub-rounded",
+    "sub-angular", "well-rounded", "poorly-rounded", "mature", "immature", "supermature",
+    "textural", "mineralogical", "compositional", "geochemical", "isotopic", "structural",
+    "tectonic", "orogenic", "epeirogenic", "diastrophic", "seismic", "volcanic",
+    "magmatic", "metamorphic", "hydrothermal", "weathering", "erosional", "depositional",
+    "diagenetic", "lithification", "cementation", "compaction", "recrystallization",
+    "pressure", "solution", "folding", "faulting", "jointing", "cleavage", "schistosity",
+    "gneissosity", "lineation", "foliation", "bedding", "stratification", "lamination"
+  ],
+  "nouns": [
+    "rock", "mineral", "crystal", "grain", "clast", "matrix", "cement", "pore",
+    "sediment", "deposit", "formation", "member", "bed", "layer", "stratum", "sequence",
+    "group", "supergroup", "basin", "platform", "craton", "shield", "terrane",
+    "province", "belt", "zone", "arc", "trench", "ridge", "rise", "plate",
+    "lithosphere", "asthenosphere", "mesosphere", "core", "mantle", "crust",
+    "magma", "lava", "ash", "tephra", "pyroclast", "bomb", "block", "lapilli",
+    "volcano", "vent", "caldera", "crater", "cone", "dome", "shield", "stratovolcano",
+    "earthquake", "fault", "fold", "thrust", "normal", "reverse", "strike-slip",
+    "displacement", "slip", "rupture", "epicenter", "hypocenter", "focus", "seismic",
+    "wave", "p-wave", "s-wave", "surface", "rayleigh", "love", "tsunami",
+    "landslide", "debris", "flow", "avalanche", "rockfall", "creep", "slump",
+    "glacier", "ice", "sheet", "cap", "field", "valley", "cirque", "moraine",
+    "till", "outwash", "esker", "kame", "kettle", "drumlin", "roche", "moutonnee",
+    "river", "stream", "channel", "floodplain", "delta", "alluvial", "fan", "terrace",
+    "beach", "coast", "shoreline", "cliff", "wave", "cut", "platform", "barrier", "island"
+  ],
+  "modifiers": [
+    "of the ancient craton", "with volcanic activity", "of the sedimentary basin",
+    "of the metamorphic belt", "of the tectonic plate", "of the fault zone",
+    "of the fold structure", "of the mineral deposit", "of the ore body",
+    "of the hydrothermal vein", "of the igneous intrusion", "of the extrusive rock",
+    "of the plutonic body", "of the volcanic arc", "of the subduction zone",
+    "of the mid-ocean ridge", "of the transform fault", "of the continental margin",
+    "of the passive margin", "of the active margin", "of the rift valley",
+    "of the graben", "of the horst", "of the basin", "of the arch", "of the dome",
+    "of the anticline", "of the syncline", "of the monocline", "of the unconformity",
+    "of the disconformity", "of the nonconformity", "of the angular unconformity",
+    "of the sedimentary structure", "of the cross-bedding", "of the ripple mark",
+    "of the mud crack", "of the sole mark", "of the flute cast", "of the groove cast"
+  ]
+}

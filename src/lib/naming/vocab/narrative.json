@@ -1,0 +1,16 @@
+{
+  "domain": "narrative",
+  "adjectives": [
+    "luminous", "hollow", "patient", "wandering", "fey", "weeping", "fractured",
+    "lunar", "solar", "iron", "ivory", "paper", "ashen", "lacquered", "argent",
+    "reborn", "forgotten", "remembered", "longing", "absent", "present", "unrecovered"
+  ],
+  "nouns": [
+    "letter", "ledger", "archive", "memoir", "epistle", "monologue", "vignette", "tale",
+    "novella", "fable", "parable", "chronicle", "annals", "diary", "journal", "testimony"
+  ],
+  "modifiers": [
+    "told in the second person", "in epistolary form", "in fragments and lacunae",
+    "in a single unbroken sentence", "as a series of voicemails", "as a series of found notes"
+  ]
+}

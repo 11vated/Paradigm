@@ -1,0 +1,46 @@
+{
+  "domain": "transportation",
+  "adjectives": [
+    "transportation", "transport", "logistics", "mobility", "movement", "travel",
+    "commuting", "transit", "public", "private", "personal", "shared",
+    "autonomous", "self-driving", "electric", "hybrid", "sustainable", "green",
+    "efficient", "fast", "slow", "rapid", "express", "local", "regional",
+    "national", "international", "global", "intercontinental", "transcontinental",
+    "urban", "suburban", "rural", "intercity", "intracity", "long-distance",
+    "short-distance", "door-to-door", "point-to-point", "hub-and-spoke", "networked",
+    "integrated", "connected", "seamless", "multimodal", "intermodal", "connected"
+  ],
+  "nouns": [
+    "transportation", "transport", "logistics", "mobility", "movement", "travel",
+    "commute", "transit", "trip", "journey", "ride", "drive", "flight",
+    "vehicle", "car", "automobile", "truck", "bus", "train", "railway",
+    "subway", "metro", "tram", "streetcar", "trolley", "cable-car", "funicular",
+    "airplane", "aircraft", "helicopter", "drone", "ship", "boat", "vessel",
+    "ferry", "cruise", "yacht", "sailboat", "canoe", "kayak", "bicycle",
+    "bike", "scooter", "motorcycle", "moped", "skateboard", "roller-skate",
+    "infrastructure", "road", "highway", "freeway", "street", "avenue", "boulevard",
+    "lane", "highway", "interstate", "route", "path", "trail", "track",
+    "station", "terminal", "hub", "depot", "garage", "parking", "lot",
+    "port", "harbor", "airport", "airfield", "runway", "terminal", "gate",
+    "network", "system", "schedule", "timetable", "route", "line", "service",
+    "passenger", "commuter", "traveler", "driver", "operator", "pilot", "captain"
+  ],
+  "modifiers": [
+    "of the transportation system", "with logistical efficiency", "of the mobility solution",
+    "of the movement pattern", "of the travel experience", "of the commuting routine",
+    "of the transit network", "of the public service", "of the private vehicle",
+    "of the personal transport", "of the shared economy", "of the autonomous technology",
+    "of the self-driving future", "of the electric revolution", "of the hybrid efficiency",
+    "of the sustainable practice", "of the green initiative", "of the efficient operation",
+    "of the fast connection", "of the slow travel", "of the rapid transit",
+    "of the express service", "of the local route", "of the regional network",
+    "of the national system", "of the international connection", "of the global reach",
+    "of the intercontinental flight", "of the transcontinental journey", "of the urban infrastructure",
+    "of the suburban sprawl", "of the rural access", "of the intercity corridor",
+    "of the intracity transit", "of the long-distance travel", "of the short-distance trip",
+    "of the door-to-door service", "of the point-to-point route", "of the hub-and-spoke model",
+    "of the networked system", "of the integrated solution", "of the connected infrastructure",
+    "of the seamless journey", "of the multimodal transport", "of the intermodal transfer",
+    "of the connected experience"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "domain": "retail",
+  "adjectives": [
+    "retail", "commercial", "shopping", "consumer", "customer", "merchandise",
+    "branded", "private-label", "luxury", "premium", "mass-market", "discount",
+    "budget", "value", "high-end", "mid-range", "entry-level", "exclusive",
+    "boutique", "department-store", "specialty", "big-box", "warehouse", "online",
+    "e-commerce", "digital", "omnichannel", "brick-and-mortar", "physical",
+    "in-store", "curbside", "delivery", "pickup", "ship-to-home", "same-day",
+    "seasonal", "trending", "popular", "best-selling", "featured", "promoted",
+    "clearance", "sale", "discounted", "marked-down", "reduced", "priced"
+  ],
+  "nouns": [
+    "retail", "retailer", "store", "shop", "boutique", "market", "mall",
+    "shopping-center", "plaza", "outlet", "warehouse", "department-store",
+    "supermarket", "grocery", "pharmacy", "convenience", "specialty", "big-box",
+    "e-commerce", "online-store", "website", "app", "platform", "marketplace",
+    "customer", "consumer", "shopper", "buyer", "patron", "client",
+    "merchandise", "product", "item", "good", "inventory", "stock", "shelf",
+    "brand", "label", "logo", "trademark", "packaging", "display",
+    "sale", "promotion", "discount", "coupon", "deal", "offer", "bargain",
+    "price", "cost", "value", "quality", "service", "experience", "loyalty"
+  ],
+  "modifiers": [
+    "of the retail industry", "with commercial success", "of the shopping experience",
+    "of the consumer behavior", "of the customer service", "of the merchandise selection",
+    "of the branded product", "of the private-label line", "of the luxury brand",
+    "of the premium quality", "of the mass-market appeal", "of the discount retailer",
+    "of the budget option", "of the value proposition", "of the high-end segment",
+    "of the mid-range market", "of the entry-level product", "of the exclusive collection",
+    "of the boutique shop", "of the department-store chain", "of the specialty retailer",
+    "of the big-box store", "of the warehouse club", "of the online platform",
+    "of the e-commerce giant", "of the digital marketplace", "of the omnichannel strategy",
+    "of the brick-and-mortar location", "of the physical store", "of the in-stock inventory",
+    "of the curbside pickup", "of the delivery service", "of the pickup option",
+    "of the ship-to-home convenience", "of the same-day delivery", "of the seasonal collection",
+    "of the trending item", "of the popular product", "of the best-seller",
+    "of the featured display", "of the promoted offer", "of the clearance sale",
+    "of the discount pricing", "of the marked-down item", "of the reduced cost",
+    "of the priced inventory"
+  ]
+}

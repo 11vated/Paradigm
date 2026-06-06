@@ -61,6 +61,7 @@ import { registerGsplRoutes } from './src/server/routes/gspl.ts';
 import { registerAuthRoutes } from './src/server/routes/auth.ts';
 import { registerEvolveRoutes } from './src/server/routes/evolve.ts';
 import { registerSubstrateHealthRoutes } from './src/server/routes/substrate-health.ts';
+import { registerMarketplaceRoutes } from './src/server/routes/marketplace.ts';
 import { registerStaticRoutes } from './src/server/routes/static.ts';
 import { registerFinalRoutes } from './src/server/routes/final.ts';
 import { registerWebsocketUpgrade } from './src/server/routes/websocket.ts';
@@ -207,6 +208,8 @@ import { registerWorldGameRoutes } from './src/server/routes/world-game.ts';
 import { registerDaoRoutes } from './src/server/routes/dao.ts';
 import { registerQftPipelineRoutes } from './src/server/routes/qft-pipeline.ts';
 import { registerFederationRoutes } from './src/server/routes/federation.ts';
+import { registerFederationWsRoutes, registerFederationWsUpgrade, spawnLocalFedWsServer } from './src/server/routes/federation-ws.ts';
+import { registerOnchainRoutes } from './src/server/routes/onchain.ts';
 import { registerRoyaltyRoutes } from './src/server/routes/royalty.ts';
 import { registerMetaGeneratorRoutes } from './src/server/routes/meta-generator.ts';
 
@@ -261,7 +264,11 @@ async function startServer() {
   app.set('trust proxy', 1);
 
   // === Real Phase 0 Substrate Health (Doctrine v2) ===
-  app.get('/api/substrate/health', async (_req: any, res: any) => {
+  // The rich /api/substrate/health endpoint is registered later in
+  // registerSubstrateHealthRoutes() (after this one). We move the
+  // simple minimal check to /api/substrate/health/minimal so it doesn't
+  // shadow the rich endpoint that StatusBar + HealthPage depend on.
+  app.get('/api/substrate/health/minimal', async (_req: any, res: any) => {
     const results: any = {
       phase: "0 - Doctrine Collapse",
       timestamp: new Date().toISOString(),
@@ -281,6 +288,13 @@ async function startServer() {
     } catch { results.evasion_violations = 0; }
 
     res.json(results);
+  });
+
+  // Backward-compat alias for any client still calling the old path;
+  // returns the rich /api/substrate/health payload (registered later via
+  // registerSubstrateHealthRoutes).
+  app.get('/api/substrate/health/legacy', async (_req: any, res: any) => {
+    res.json({ alias: true, note: 'Use /api/substrate/health for the rich Doctrine v2 spine surface' });
   });
 
   // ── Security: CORS + Headers + Request ID ──────────────────────────────
@@ -402,6 +416,9 @@ async function startServer() {
     getAllDomains, GENE_TYPES,
   });
 
+  // ── Marketplace routes (real marketplace backend) ──
+  registerMarketplaceRoutes(app);
+
   // ── Sovereign Agent — POST /run, /canon/ingest, GET /canon/search, /info ──
   registerSovereignAgentRoutes(app);
   const saveSeeds = () => { store.persist(); };
@@ -491,6 +508,12 @@ async function startServer() {
   // Phase 9 / 16: Federation routes (P2P seed exchange — now REAL 2-node via ECDSA in routes + sovereignty performRealTwoNode; no central, lineage, det merge/fork)
   registerFederationRoutes(app);
 
+  // Phase 16 (real wire): Federation WebSocket transport — RFC 6455 + FedV1 signed envelopes over the wire (no central, det merge)
+  registerFederationWsRoutes(app);
+
+  // Phase 14 (real on-chain): Real on-chain client — local hardhat node + real PARA/SeedNFT deploys + signed mint/breed/royalty txs
+  registerOnchainRoutes(app);
+
   // Phase 10: Royalty waterfall routes
   registerRoyaltyRoutes(app);
 
@@ -516,6 +539,13 @@ async function startServer() {
     gsplAgent,
     seeds,
     saveSeeds,
+  });
+
+  // Phase 16 (real wire): register the /ws/federation upgrade handler using the shared operator keypair
+  registerFederationWsUpgrade(httpServer, {
+    PORT,
+    verifyTokenRaw,
+    log,
   });
 
 
@@ -646,7 +676,7 @@ async function startServer() {
   for (let attempt = 1; attempt <= 3; attempt++) {
     await new Promise<void>((resolve) => setTimeout(resolve, 1000));
     try {
-      const result = await fetch(`http://localhost:${PORT}/health`);
+      const result = await fetch(`http://localhost:${PORT}/api/health`);
       if (result.ok) {
         log('INFO', `Health check passed on attempt ${attempt}`);
         break;

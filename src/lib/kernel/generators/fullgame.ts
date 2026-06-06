@@ -7,7 +7,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar } from '../rng';
-import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 interface FullGameParams {
   genre: 'action' | 'rpg' | 'puzzle' | 'platformer' | 'shooter';

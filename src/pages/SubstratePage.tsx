@@ -392,7 +392,11 @@ function MAPElitesArchive({ seed }: { seed: Seed }) {
         {gridCells.length > 0 ? gridCells.slice(0, 10).map((cell, idx) => (
           <div
             key={cell.id || idx}
+            role="button"
+            tabIndex={0}
             onClick={() => adopt(cell.seed || seed)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); adopt(cell.seed || seed); } }}
+            aria-label={`Adopt elite cell ${idx + 1} with fitness ${(cell.fitness * 100).toFixed(0)}%`}
             title={`Fitness ${cell.fitness.toFixed(3)} — click to adopt`}
             style={{
               height: 42,

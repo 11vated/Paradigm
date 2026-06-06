@@ -132,7 +132,11 @@ export function PopulationGrid({ seeds, onSelect, columns = 10, showFitness = tr
       {seeds.map((seed, index) => (
         <div
           key={seed.$hash || index}
+          role="button"
+          tabIndex={0}
           onClick={() => onSelect(seed)}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(seed); } }}
+          aria-label={`Select seed ${seed.$name || seed.$hash?.substring(0, 8) || `seed ${index + 1}`}, fitness ${((seed.fitness || 0) * 100).toFixed(0)}%`}
           style={{
             background: '#2a2a2a',
             borderRadius: 8,
@@ -199,7 +203,11 @@ export function MAPElitesGrid({ data, onSelect, dimensions = [10, 10] }: MAPElit
           row.map((cell, x) => (
             <div
               key={`${x}-${y}`}
+              role={cell ? 'button' : undefined}
+              tabIndex={cell ? 0 : -1}
               onClick={() => cell && onSelect(cell.seed)}
+              onKeyDown={cell ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(cell.seed); } } : undefined}
+              aria-label={cell ? `MAP-elites cell at column ${x + 1}, row ${y + 1}, fitness ${(cell.fitness * 100).toFixed(0)}%` : `Empty MAP-elites cell at column ${x + 1}, row ${y + 1}`}
               style={{
                 aspectRatio: '1/1',
                 background: cell

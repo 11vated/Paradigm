@@ -1,0 +1,42 @@
+{
+  "domain": "construction",
+  "adjectives": [
+    "construction", "building", "structural", "architectural", "civil", "infrastructure",
+    "residential", "commercial", "industrial", "institutional", "municipal",
+    "heavy", "light", "high-rise", "low-rise", "single-family", "multi-family",
+    "modular", "prefabricated", "site-built", "custom", "spec", "design-build",
+    "green", "sustainable", "energy-efficient", "leed-certified", "net-zero",
+    "passive-house", "smart", "automated", "integrated", "connected",
+    "renovation", "restoration", "preservation", "adaptive-reuse", "retrofit",
+    "demolition", "excavation", "grading", "site-work", "foundation", "framing"
+  ],
+  "nouns": [
+    "construction", "building", "structure", "edifice", "facility", "complex",
+    "project", "development", "site", "lot", "parcel", "property", "land",
+    "foundation", "footing", "slab", "basement", "crawl-space", "pier",
+    "frame", "wall", "floor", "ceiling", "roof", "structure", "system",
+    "material", "concrete", "steel", "wood", "masonry", "brick", "stone",
+    "glass", "insulation", "drywall", "plaster", "finishing", "fixture",
+    "contractor", "builder", "developer", "architect", "engineer", "subcontractor",
+    "tradesperson", "laborer", "worker", "crew", "team", "supervisor",
+    "permit", "inspection", "code", "regulation", "standard", "specification",
+    "blueprint", "plan", "drawing", "design", "schedule", "budget", "cost"
+  ],
+  "modifiers": [
+    "of the construction industry", "with building expertise", "of the structural integrity",
+    "of the architectural vision", "of the civil engineering", "of the infrastructure project",
+    "of the residential development", "of the commercial property", "of the industrial facility",
+    "of the institutional building", "of the municipal structure", "of the heavy construction",
+    "of the light framing", "of the high-rise tower", "of the low-rise building",
+    "of the single-family home", "of the multi-family complex", "of the modular unit",
+    "of the prefabricated component", "of the site-built structure", "of the custom home",
+    "of the spec house", "of the design-build project", "of the green building",
+    "of the sustainable design", "of the energy-efficient system", "of the leed-certified project",
+    "of the net-zero building", "of the passive-house standard", "of the smart technology",
+    "of the automated system", "of the integrated design", "of the connected infrastructure",
+    "of the renovation project", "of the restoration effort", "of the preservation work",
+    "of the adaptive-reuse conversion", "of the retrofit upgrade", "of the demolition process",
+    "of the excavation work", "of the grading operation", "of the site-work preparation",
+    "of the foundation construction", "of the framing assembly"
+  ]
+}

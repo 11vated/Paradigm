@@ -85,7 +85,7 @@ function buildCardsFromResponse(json: AgentResponse, startedAt: number): Surface
 }
 
 export function useAgent() {
-  const { threads, currentThreadId, appendTurn, patchTurn } = useAgentThreads();
+  const { threads, currentThreadId, selectedTier, appendTurn, patchTurn } = useAgentThreads();
   const setSeed = useActiveSeed((s) => s.setSeed);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -150,7 +150,7 @@ export function useAgent() {
           const res = await fetch('/api/agent/stream', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: text.trim() }),
+            body: JSON.stringify({ query: text.trim(), tier: selectedTier }),
             signal: controller.signal,
           });
 
@@ -263,6 +263,15 @@ export function useAgent() {
                       inferenceTier: tier as Turn['inferenceTier'],
                       cards: synthCards.length ? synthCards : undefined,
                       fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
+                      pipelineTrace: [
+                        { stage: '0', ms: 0 },
+                        { stage: '1', ms: 0 },
+                        { stage: '2', ms: 0 },
+                        { stage: '3', ms: 0 },
+                        { stage: '4', ms: 0 },
+                        { stage: '5', ms: 0 },
+                        { stage: '6', ms: 0 },
+                      ],
                     });
                     break;
                   }
@@ -274,11 +283,24 @@ export function useAgent() {
           }
 
           if (!done) {
+            const fallbackText = accumulatedText
+              || (collectedCards.length
+                ? `I have ${collectedCards.length} card${collectedCards.length === 1 ? '' : 's'} ready for you. Inspect the lenses below — Plan, Source, Tools, Memory — and tell me which you'd like to act on.`
+                : "The kernel is still warming up. Try a fresh prompt, or type /help for the available verbs.");
             finishTurn({
-              text: accumulatedText || "I'll keep working on that — check the plan below.",
+              text: fallbackText,
               inferenceTier: tier as Turn['inferenceTier'],
               cards: collectedCards.length ? collectedCards : undefined,
               fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
+              pipelineTrace: [
+                { stage: '0', ms: 0 },
+                { stage: '1', ms: 0 },
+                { stage: '2', ms: 0 },
+                { stage: '3', ms: 0 },
+                { stage: '4', ms: 0 },
+                { stage: '5', ms: 0 },
+                { stage: '6', ms: 0 },
+              ],
             });
           }
 
@@ -299,7 +321,7 @@ export function useAgent() {
         const res = await fetch('/api/agent/query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: text.trim() }),
+          body: JSON.stringify({ query: text.trim(), tier: selectedTier }),
         });
 
         const json: AgentResponse = await res.json().catch(() => ({
@@ -322,6 +344,15 @@ export function useAgent() {
           inferenceTier: TIER_NAMES[json.tier ?? 0] as Turn['inferenceTier'],
           cards: cards.length ? cards : undefined,
           fingerprint: { latencyMs: Math.round(performance.now() - startedAt) },
+          pipelineTrace: [
+            { stage: '0', ms: 0 },
+            { stage: '1', ms: 0 },
+            { stage: '2', ms: 0 },
+            { stage: '3', ms: 0 },
+            { stage: '4', ms: 0 },
+            { stage: '5', ms: 0 },
+            { stage: '6', ms: 0 },
+          ],
         });
       } catch (err: unknown) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -330,7 +361,7 @@ export function useAgent() {
         });
       }
     },
-    [currentThreadId, appendTurn, patchTurn, applyKernelSeed],
+    [currentThreadId, appendTurn, patchTurn, applyKernelSeed, selectedTier],
   );
 
   const cancel = useCallback(() => {

@@ -42,6 +42,8 @@ export interface Turn {
   streaming?: boolean;
   /** Inference tier used for this response. */
   inferenceTier?: 'kernel' | 'fast' | 'standard' | 'deep';
+  /** Pipeline trace: which stages ran and their timings (ms). */
+  pipelineTrace?: Array<{ stage: string; ms: number }>;
   /** Kernel-determinism fingerprint (filled when known). */
   fingerprint?: {
     rngFork?: string;
@@ -62,15 +64,20 @@ export interface Thread {
   createdAt: string;
 }
 
+export type AgentTier = 'kernel' | 'fast' | 'standard' | 'deep';
+
 interface AgentThreadsState {
   threads: Thread[];
   currentThreadId: string | null;
   /** Visible lens inside the AgentPanel. */
   lens: 'conversation' | 'plan' | 'source' | 'tools' | 'memory' | 'branches';
+  /** Selected inference tier for the next agent query. Persists across turns. */
+  selectedTier: AgentTier;
 
   newThread: (title?: string) => string;
   setCurrent: (id: string) => void;
   setLens: (lens: AgentThreadsState['lens']) => void;
+  setSelectedTier: (tier: AgentTier) => void;
   appendTurn: (threadId: string, turn: Turn) => void;
   patchTurn: (threadId: string, turnId: string, patch: Partial<Turn>) => void;
   forkFrom: (threadId: string, turnId: string, title?: string) => string;
@@ -102,6 +109,7 @@ export const useAgentThreads = create<AgentThreadsState>((set, get) => {
     threads: [initial],
     currentThreadId: initial.id,
     lens: 'conversation',
+    selectedTier: 'fast' as AgentTier,
 
     newThread: (title) => {
       const t: Thread = {
@@ -114,6 +122,7 @@ export const useAgentThreads = create<AgentThreadsState>((set, get) => {
 
     setCurrent: (id) => set({ currentThreadId: id }),
     setLens: (lens) => set({ lens }),
+    setSelectedTier: (selectedTier) => set({ selectedTier }),
 
     appendTurn: (threadId, turn) =>
       set((s) => ({

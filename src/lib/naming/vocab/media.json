@@ -1,0 +1,43 @@
+{
+  "domain": "media",
+  "adjectives": [
+    "media", "journalistic", "editorial", "broadcast", "digital", "online",
+    "print", "electronic", "social", "mass", "mainstream", "alternative",
+    "independent", "corporate", "public", "commercial", "non-profit", "community",
+    "local", "regional", "national", "international", "global", "transnational",
+    "multimedia", "interactive", "participatory", "user-generated", "crowd-sourced",
+    "viral", "trending", "popular", "influential", "authoritative", "credible",
+    "biased", "objective", "subjective", "balanced", "fair", "unfair",
+    "sensational", "tabloid", "investigative", "explanatory", "analytical", "opinionated"
+  ],
+  "nouns": [
+    "media", "journalism", "news", "reporting", "story", "article", "piece",
+    "journalist", "reporter", "writer", "editor", "publisher", "producer",
+    "broadcaster", "anchor", "host", "correspondent", "columnist", "critic",
+    "newspaper", "magazine", "journal", "periodical", "publication", "broadcast",
+    "television", "radio", "internet", "website", "blog", "podcast", "stream",
+    "social-media", "platform", "network", "channel", "feed", "timeline", "post",
+    "content", "media", "video", "audio", "image", "text", "graphic",
+    "audience", "viewer", "reader", "listener", "user", "subscriber", "follower",
+    "rating", "view", "click", "share", "like", "comment", "engagement",
+    "advertising", "marketing", "promotion", "sponsorship", "brand", "influence"
+  ],
+  "modifiers": [
+    "of the media landscape", "with journalistic integrity", "of the editorial decision",
+    "of the broadcast reach", "of the digital transformation", "of the online presence",
+    "of the print tradition", "of the electronic medium", "of the social network",
+    "of the mass audience", "of the mainstream coverage", "of the alternative voice",
+    "of the independent spirit", "of the corporate interest", "of the public service",
+    "of the commercial model", "of the non-profit mission", "of the community focus",
+    "of the local relevance", "of the regional scope", "of the national importance",
+    "of the international perspective", "of the global reach", "of the transnational flow",
+    "of the multimedia experience", "of the interactive engagement", "of the participatory culture",
+    "of the user-generated content", "of the crowd-sourced wisdom", "of the viral phenomenon",
+    "of the trending topic", "of the popular appeal", "of the influential voice",
+    "of the authoritative source", "of the credible reporting", "of the biased perspective",
+    "of the objective truth", "of the subjective opinion", "of the balanced coverage",
+    "of the fair treatment", "of the unfair portrayal", "of the sensational headline",
+    "of the tabloid style", "of the investigative depth", "of the explanatory clarity",
+    "of the analytical insight", "of the opinionated commentary"
+  ]
+}

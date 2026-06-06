@@ -1,0 +1,46 @@
+{
+  "domain": "astronomy",
+  "adjectives": [
+    "stellar", "galactic", "cosmic", "planetary", "lunar", "solar", "interstellar",
+    "intergalactic", "extragalactic", "extraterrestrial", "celestial", "orbital", "astronomical",
+    "astrophysical", "cosmological", "relativistic", "quantum", "gravitational",
+    "electromagnetic", "spectral", "radiative", "thermal", "kinetic", "potential",
+    "dynamical", "evolutionary", "formational", "accretionary", "collisional",
+    "merging", "tidal", "rotational", "spin", "magnetic", "electric", "plasma",
+    "gaseous", "dusty", "metallic", "rocky", "icy", "volcanic", "tectonic",
+    "atmospheric", "climatic", "habitable", "uninhabitable", "terrestrial", "jovian",
+    "dwarf", "giant", "supergiant", "hypergiant", "neutron", "pulsar", "quasar",
+    "blazar", "active", "dormant", "extinct", "variable", "periodic", "irregular",
+    "eclipsing", "binary", "multiple", "cluster", "globular", "open", "associations"
+  ],
+  "nouns": [
+    "universe", "cosmos", "galaxy", "star", "planet", "moon", "asteroid", "comet",
+    "meteor", "meteorite", "nebula", "cluster", "supercluster", "void", "filament",
+    "wall", "structure", "formation", "evolution", "big", "bang", "inflation",
+    "dark", "matter", "energy", "radiation", "background", "microwave", "cosmological",
+    "constant", "hubble", "expansion", "acceleration", "redshift", "blueshift",
+    "doppler", "spectrum", "line", "absorption", "emission", "continuum", "blackbody",
+    "luminosity", "brightness", "magnitude", "absolute", "apparent", "parallax",
+    "distance", "light-year", "parsec", "astronomical", "unit", "mass", "solar",
+    "radius", "temperature", "effective", "surface", "core", "nuclear", "fusion",
+    "burning", "main", "sequence", "giant", "branch", "horizontal", "asymptotic",
+    "white", "dwarf", "neutron", "star", "pulsar", "magnetar", "black", "hole",
+    "event", "horizon", "singularity", "accretion", "disk", "jet", "outflow",
+    "wind", "ejecta", "supernova", "nova", "remnant", "pulsar", "wind", "nebula",
+    "planetary", "nebula", "protostar", "protostellar", "disk", "protoplanetary",
+    "planet", "exoplanet", "extrasolar", "habitable", "zone", "goldilocks", "terra",
+    "luna", "mars", "venus", "jupiter", "saturn", "uranus", "neptune", "pluto"
+  ],
+  "modifiers": [
+    "of the distant galaxy", "with stellar nucleosynthesis", "of the cosmic microwave",
+    "of the dark matter halo", "of the gravitational lens", "of the event horizon",
+    "of the accretion disk", "of the relativistic jet", "of the supernova remnant",
+    "of the planetary nebula", "of the protoplanetary disk", "of the habitable zone",
+    "of the goldilocks region", "of the exoplanet system", "of the binary star",
+    "of the globular cluster", "of the galactic center", "of the supermassive black hole",
+    "of the cosmic web", "of the large-scale structure", "of the void region",
+    "of the filamentary structure", "of the galaxy cluster", "of the supercluster",
+    "of the cosmic expansion", "of the hubble flow", "of the redshift survey",
+    "of the spectral line", "of the absorption feature", "of the emission line"
+  ]
+}

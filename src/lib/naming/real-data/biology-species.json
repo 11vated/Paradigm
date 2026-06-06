@@ -1,0 +1,47 @@
+{
+  "domain": "biology-species",
+  "type": "reality-mirroring",
+  "species": [
+    "Homo sapiens", "Pan troglodytes", "Gorilla gorilla", "Pongo pygmaeus",
+    "Canis lupus familiaris", "Felis catus", "Equus ferus caballus", "Bos taurus",
+    "Sus scrofa domesticus", "Ovis aries", "Gallus gallus domesticus",
+    "Mus musculus", "Rattus norvegicus", "Danio rerio", "Drosophila melanogaster",
+    "Caenorhabditis elegans", "Saccharomyces cerevisiae", "Escherichia coli",
+    "Arabidopsis thaliana", "Zea mays", "Oryza sativa", "Triticum aestivum",
+    "Aquila chrysaetos", "Panthera leo", "Panthera tigris", "Ursus arctos",
+    "Elephas maximus", "Loxodonta africana", "Giraffa camelopardalis",
+    "Balaenoptera musculus", "Carcharodon carcharias", "Crocodylus niloticus",
+    "Python regius", "Boa constrictor", "Varanus komodoensis", "Chelonia mydas",
+    "Dermochelys coriacea", "Gavialis gangeticus", "Alligator mississippiensis",
+    "Rana temporaria", "Bufo bufo", "Salamandra salamandra", "Ambystoma mexicanum",
+    "Struthio camelus", "Apteryx australis", "Dromaius novaehollandiae",
+    "Penguin antarcticus", "Puffinus puffinus", "Falco peregrinus",
+    "Aquila chrysaetos", "Haliaeetus leucocephalus", "Bubo bubo",
+    "Corvus corax", "Pica pica", "Sturnus vulgaris", "Turdus migratorius",
+    "Passer domesticus", "Columba livia", "Anas platyrhynchos", "Meleagris gallopavo"
+  ],
+  "common_names": [
+    "Human", "Chimpanzee", "Gorilla", "Orangutan", "Dog", "Cat", "Horse", "Cow",
+    "Pig", "Sheep", "Chicken", "Mouse", "Rat", "Zebrafish", "Fruit fly",
+    "Nematode", "Yeast", "E. coli", "Thale cress", "Maize", "Rice", "Wheat",
+    "Golden eagle", "Lion", "Tiger", "Brown bear", "Asian elephant", "African elephant",
+    "Giraffe", "Blue whale", "Great white shark", "Nile crocodile", "Ball python",
+    "Boa constrictor", "Komodo dragon", "Green sea turtle", "Leatherback turtle",
+    "Gharial", "American alligator", "Common frog", "Common toad", "Fire salamander",
+    "Axolotl", "Ostrich", "Kiwi", "Emu", "Emperor penguin", "Manx shearwater",
+    "Peregrine falcon", "Golden eagle", "Bald eagle", "Eurasian eagle-owl",
+    "Common raven", "Eurasian magpie", "European starling", "American robin",
+    "House sparrow", "Rock dove", "Mallard", "Wild turkey"
+  ],
+  "families": [
+    "Hominidae", "Cercopithecidae", "Canidae", "Felidae", "Equidae", "Bovidae",
+    "Suidae", "Caviidae", "Muridae", "Cyprinidae", "Drosophilidae", "Rhabditidae",
+    "Saccharomycetaceae", "Enterobacteriaceae", "Brassicaceae", "Poaceae",
+    "Accipitridae", "Felidae", "Ursidae", "Elephantidae", "Giraffidae",
+    "Balaenopteridae", "Lamnidae", "Crocodylidae", "Pythonidae", "Boidae",
+    "Varanidae", "Cheloniidae", "Dermochelyidae", "Gavialidae", "Alligatoridae",
+    "Ranidae", "Bufonidae", "Salamandridae", "Ambystomatidae", "Struthionidae",
+    "Apterygidae", "Dromaiidae", "Spheniscidae", "Procellariidae", "Falconidae",
+    "Corvidae", "Sturnidae", "Turdidae", "Passeridae", "Columbidae", "Anatidae"
+  ]
+}

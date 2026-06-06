@@ -10,6 +10,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 const GRID_SIZE = 16;
 
@@ -71,7 +72,8 @@ export const EvolutionMode: React.FC = () => {
   const covPct = archive ? ((filledCount / (GRID_SIZE * GRID_SIZE)) * 100).toFixed(1) : '0.0';
 
   return (
-    <div className="p-evo-page">
+    <div className="p-evo-page" style={{ position: 'relative' }}>
+      <ModePurposeHeader mode="evolution" showRadar={false} />
       <div className="p-evo-header">
         <div className="p-evo-head-left">
           <div className="p-evo-title">MAP-ELITES ARCHIVE</div>

@@ -1,0 +1,16 @@
+{
+  "domain": "website",
+  "adjectives": [
+    "brutalist", "minimal", "maximal", "editorial", "monastic", "scholarly", "industrial",
+    "memphis", "swiss", "scandinavian", "japanese", "venetian", "bauhaus", "deconstructivist",
+    "haunted", "vaporous", "fey", "lacquered", "obsidian", "ivory", "paper", "vellum"
+  ],
+  "nouns": [
+    "portfolio", "landing", "manifesto", "archive", "manifest", "atelier", "studio",
+    "gallery", "shop", "journal", "almanac", "codex", "directory", "index", "vade mecum"
+  ],
+  "modifiers": [
+    "for a digital sculptor", "with one long scroll", "with no images", "with one image per page",
+    "with serif body and mono headers", "with the navigation always visible", "in pure CSS"
+  ]
+}

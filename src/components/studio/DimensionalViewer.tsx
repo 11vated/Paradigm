@@ -575,48 +575,171 @@ function TemporalPanel({ seed }: { seed: Seed }) {
 }
 
 const EM_BANDS = [
-  { label: 'γ-ray', lo: 0, hi: 0.01e-9, color: '#ff00ff' },
-  { label: 'X-ray', lo: 0.01e-9, hi: 10e-9, color: '#cc44ff' },
-  { label: 'UV', lo: 10e-9, hi: 400e-9, color: '#8844ff' },
-  { label: '380nm', lo: 380e-9, hi: 450e-9, color: '#4400ff' },
-  { label: '450nm', lo: 450e-9, hi: 495e-9, color: '#0044ff' },
-  { label: '495nm', lo: 495e-9, hi: 570e-9, color: '#00cc44' },
-  { label: '570nm', lo: 570e-9, hi: 590e-9, color: '#aacc00' },
-  { label: '590nm', lo: 590e-9, hi: 620e-9, color: '#ffaa00' },
-  { label: '620nm', lo: 620e-9, hi: 700e-9, color: '#ff2200' },
-  { label: 'NIR', lo: 700e-9, hi: 1.4e-6, color: '#880000' },
-  { label: 'MIR', lo: 1.4e-6, hi: 3e-6, color: '#550000' },
-  { label: 'FIR', lo: 3e-6, hi: 1e-3, color: '#330000' },
-  { label: 'Micro', lo: 1e-3, hi: 0.1, color: '#001133' },
-  { label: 'Radio', lo: 0.1, hi: 1000, color: '#000066' },
+  { label: 'γ-ray', lo: 0, hi: 0.01e-9, color: '#ff00ff', desc: 'Gamma rays (10⁻¹²–10⁻¹⁰ m)' },
+  { label: 'Hard X', lo: 0.01e-9, hi: 0.1e-9, color: '#cc44ff', desc: 'Hard X-rays' },
+  { label: 'Soft X', lo: 0.1e-9, hi: 10e-9, color: '#9966ff', desc: 'Soft X-rays' },
+  { label: 'EUV', lo: 10e-9, hi: 124e-9, color: '#8844ff', desc: 'Extreme UV' },
+  { label: 'UVC', lo: 124e-9, hi: 280e-9, color: '#6622ff', desc: 'UV-C (germicidal)' },
+  { label: 'UVB', lo: 280e-9, hi: 315e-9, color: '#5511ee', desc: 'UV-B (sunburn)' },
+  { label: 'UVA', lo: 315e-9, hi: 380e-9, color: '#4400dd', desc: 'UV-A (blacklight)' },
+  { label: 'Violet', lo: 380e-9, hi: 450e-9, color: '#4400ff', desc: '380–450nm' },
+  { label: 'Blue', lo: 450e-9, hi: 495e-9, color: '#0044ff', desc: '450–495nm' },
+  { label: 'Green', lo: 495e-9, hi: 570e-9, color: '#00cc44', desc: '495–570nm' },
+  { label: 'Yellow', lo: 570e-9, hi: 590e-9, color: '#aacc00', desc: '570–590nm' },
+  { label: 'Orange', lo: 590e-9, hi: 620e-9, color: '#ffaa00', desc: '590–620nm' },
+  { label: 'Red', lo: 620e-9, hi: 700e-9, color: '#ff2200', desc: '620–700nm' },
+  { label: 'NIR', lo: 700e-9, hi: 1.4e-6, color: '#880000', desc: 'Near IR' },
+  { label: 'SWIR', lo: 1.4e-6, hi: 3e-6, color: '#660000', desc: 'Short-wave IR' },
+  { label: 'MWIR', lo: 3e-6, hi: 8e-6, color: '#550000', desc: 'Mid-wave IR' },
+  { label: 'LWIR', lo: 8e-6, hi: 15e-6, color: '#440000', desc: 'Long-wave IR' },
+  { label: 'FIR', lo: 15e-6, hi: 1e-3, color: '#330000', desc: 'Far IR' },
+  { label: 'EHF', lo: 1e-3, hi: 0.03, color: '#002244', desc: 'Extremely high freq' },
+  { label: 'SHF', lo: 0.03, hi: 0.3, color: '#001a33', desc: 'Super high freq' },
+  { label: 'UHF', lo: 0.3, hi: 1, color: '#001122', desc: 'Ultra high freq' },
+  { label: 'VHF', lo: 1, hi: 10, color: '#000a11', desc: 'Very high freq' },
+  { label: 'HF', lo: 10, hi: 100, color: '#000808', desc: 'High freq' },
+  { label: 'MF', lo: 100, hi: 1000, color: '#000606', desc: 'Medium freq' },
 ];
 
 function SpectralPanel({ seed }: { seed: Seed }) {
   const floats = useMemo(() => seedToFloats(seed, 32),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
     [seed.$hash]);
-  const W = 280; const H = 80;
+  const W = 280; const H = 90;
 
   const bandW = W / EM_BANDS.length;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H + 16}`} width="100%" style={{ display: 'block', background: '#080812', borderRadius: 4 }}>
+    <svg viewBox={`0 0 ${W} ${H + 20}`} width="100%" style={{ display: 'block', background: '#080812', borderRadius: 4 }}>
       {EM_BANDS.map((band, i) => {
         const intensity = floats[i] * 0.85 + 0.05;
         const barH = intensity * H;
         return (
           <g key={i}>
-            <rect x={i * bandW} y={H - barH} width={bandW - 0.5} height={barH} fill={band.color} opacity={intensity} />
-            <rect x={i * bandW} y={0} width={bandW - 0.5} height={H} fill={band.color} opacity={0.04} />
+            <rect x={i * bandW} y={H - barH} width={bandW - 0.3} height={barH} fill={band.color} opacity={intensity} />
+            <rect x={i * bandW} y={0} width={bandW - 0.3} height={H} fill={band.color} opacity={0.04} />
           </g>
         );
       })}
       {EM_BANDS.map((band, i) => (
-        <text key={i} x={i * bandW + bandW / 2} y={H + 12} textAnchor="middle" fontSize="5.5" fill="rgba(255,255,255,0.3)" fontFamily="monospace">{band.label}</text>
+        <text key={i} x={i * bandW + bandW / 2} y={H + 14} textAnchor="middle" fontSize="4.5" fill="rgba(255,255,255,0.3)" fontFamily="monospace">{band.label}</text>
       ))}
-      <line x1={6 * bandW} y1={0} x2={9 * bandW} y2={0} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-      <text x={(6 * bandW + 9 * bandW) / 2} y={8} textAnchor="middle" fontSize="6" fill="rgba(255,255,255,0.4)" fontFamily="monospace">VISIBLE</text>
+      <line x1={7 * bandW} y1={0} x2={13 * bandW} y2={0} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+      <text x={(7 * bandW + 13 * bandW) / 2} y={8} textAnchor="middle" fontSize="5" fill="rgba(255,255,255,0.4)" fontFamily="monospace">VISIBLE SPECTRUM</text>
     </svg>
+  );
+}
+
+// Enhanced Spectral Panel with Phase 3 capabilities (interactive wavelength slider)
+function EnhancedSpectralPanel({ seed }: { seed: Seed }) {
+  const [wavelength, setWavelength] = useState(550e-9); // Default to green
+  const [intensity, setIntensity] = useState(0.8);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  
+  const floats = useMemo(() => seedToFloats(seed, 32),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed.$hash; full seed object is intentionally narrowed
+    [seed.$hash]);
+  
+  // Extract spectral signature from seed genes
+  const realGenes = seed.genes || {};
+  const seedWavelength = useMemo(() => {
+    const colorGene = realGenes.color?.value;
+    if (typeof colorGene === 'number') {
+      return 380e-9 + colorGene * (700e-9 - 380e-9);
+    }
+    return 550e-9;
+  }, [realGenes]);
+  
+  useEffect(() => {
+    setWavelength(seedWavelength);
+  }, [seedWavelength]);
+
+  const W = 280; const H = showAdvanced ? 180 : 90;
+  const bandW = W / EM_BANDS.length;
+
+  const wavelengthNm = wavelength * 1e9;
+  const frequency = 3e8 / wavelength;
+  const energy = 6.626e-34 * frequency;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <svg viewBox={`0 0 ${W} ${H + (showAdvanced ? 60 : 20)}`} width="100%" style={{ display: 'block', background: '#080812', borderRadius: 4 }}>
+        {EM_BANDS.map((band, i) => {
+          const intensity = floats[i] * 0.85 + 0.05;
+          const barH = intensity * (H - (showAdvanced ? 60 : 20));
+          const isSelected = wavelength >= band.lo && wavelength < band.hi;
+          return (
+            <g key={i}>
+              <rect x={i * bandW} y={H - (showAdvanced ? 60 : 20) - barH} width={bandW - 0.3} height={barH} fill={band.color} opacity={isSelected ? intensity + 0.3 : intensity} />
+              <rect x={i * bandW} y={0} width={bandW - 0.3} height={H - (showAdvanced ? 60 : 20)} fill={band.color} opacity={isSelected ? 0.15 : 0.04} />
+            </g>
+          );
+        })}
+        {EM_BANDS.map((band, i) => (
+          <text key={i} x={i * bandW + bandW / 2} y={H - (showAdvanced ? 60 : 20) + 14} textAnchor="middle" fontSize="4.5" fill="rgba(255,255,255,0.3)" fontFamily="monospace">{band.label}</text>
+        ))}
+        <line x1={7 * bandW} y1={0} x2={13 * bandW} y2={0} stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+        <text x={(7 * bandW + 13 * bandW) / 2} y={8} textAnchor="middle" fontSize="5" fill="rgba(255,255,255,0.4)" fontFamily="monospace">VISIBLE SPECTRUM</text>
+        
+        {showAdvanced && (
+          <>
+            <text x={W / 2} y={H - 45} textAnchor="middle" fontSize="9" fill="#00e5ff" fontFamily="monospace">
+              {wavelengthNm < 1 ? wavelength.toExponential(2) : `${wavelengthNm.toFixed(1)} nm`}
+            </text>
+            <text x={W / 2} y={H - 35} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.5)" fontFamily="monospace">
+              {frequency.toExponential(2)} Hz
+            </text>
+            <text x={W / 2} y={H - 25} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.5)" fontFamily="monospace">
+              {energy.toExponential(2)} J
+            </text>
+          </>
+        )}
+      </svg>
+      
+      {/* Interactive wavelength slider */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ color: '#a0a0b0', fontSize: 10, fontFamily: 'monospace' }}>Wavelength</span>
+          <button 
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            style={{ 
+              padding: '2px 6px', 
+              fontSize: 9, 
+              fontFamily: 'monospace', 
+              background: 'rgba(0, 229, 255, 0.1)', 
+              border: '1px solid rgba(0, 229, 255, 0.3)', 
+              borderRadius: 3, 
+              color: '#00e5ff', 
+              cursor: 'pointer' 
+            }}
+          >
+            {showAdvanced ? 'Simple' : 'Advanced'}
+          </button>
+        </div>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={Math.log10(wavelength) / Math.log10(1000) * 100}
+          onChange={(e) => {
+            const value = parseFloat(e.target.value);
+            const logMin = Math.log10(1e-12);
+            const logMax = Math.log10(1000);
+            const logValue = logMin + (value / 100) * (logMax - logMin);
+            setWavelength(Math.pow(10, logValue));
+          }}
+          style={{ width: '100%', cursor: 'pointer' }}
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 8, color: '#606070', fontFamily: 'monospace' }}>
+          <span>γ-ray</span>
+          <span>X-ray</span>
+          <span>UV</span>
+          <span>Visible</span>
+          <span>IR</span>
+          <span>Radio</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1081,7 +1204,7 @@ function StructuralPanel({ seed }: { seed: Seed }) {
 const DIM_PANELS: Record<DimId, React.ComponentType<{ seed: Seed }>> = {
   spatial:    SpatialPanel,
   temporal:   TemporalPanel,
-  spectral:   SpectralPanel,
+  spectral:   EnhancedSpectralPanel, // Phase 3: Enhanced with interactive wavelength slider
   modal:      ModalPanel,
   possible:   PossiblePanel,
   semantic:   SemanticPanel,
@@ -1172,7 +1295,13 @@ export function DimensionalViewer({ seed, className }: DimensionalViewerProps) {
           {ALL_DIMS.map(dim => {
             const Panel = DIM_PANELS[dim];
             return (
-              <div key={dim} onClick={() => { setActiveDim(dim); setLayout('focus'); }}
+              <div
+                key={dim}
+                role="button"
+                tabIndex={0}
+                onClick={() => { setActiveDim(dim); setLayout('focus'); }}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveDim(dim); setLayout('focus'); } }}
+                aria-label={`Focus on dimension ${DIM_LABELS[dim]}`}
                 style={{ cursor: 'pointer', borderRadius: 6, border: `1px solid ${activeDim === dim ? DIM_COLORS[dim] : 'rgba(255,255,255,0.06)'}`, overflow: 'hidden' }}>
                 <div style={{ padding: '4px 8px', background: 'rgba(255,255,255,0.03)', display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontFamily: 'monospace', fontSize: 7, color: DIM_COLORS[dim], letterSpacing: '0.08em' }}>{DIM_LABELS[dim]}</span>

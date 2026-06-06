@@ -10,6 +10,7 @@
 import { createSeed, growSeed, mutateSeed } from '@/services/api';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { inferDomain } from '@/lib/ui/inferDomain';
+import { nameSeedSync } from '@/lib/naming/seed-namer';
 
 export type ActionResult = {
   ok: boolean;
@@ -42,16 +43,21 @@ export async function actCreateFromPrompt(
   const trimmed = text.trim();
   if (!trimmed) return { ok: false, message: 'Empty prompt' };
   const d = domain ?? inferDomain(trimmed);
+  // nameSeedSync → Tier 1 (PoS-pairing) when the trimmed intent has shape, Tier 0 (hash) when empty.
+  const named = nameSeedSync(trimmed, d);
   try {
-    const created: any = await createSeed({ name: trimmed, domain: d } as any);
+    const created: any = await createSeed({ name: named.name, domain: d } as any);
     useActiveSeed.getState().setSeed({
       id: created.id,
-      name: trimmed,
+      name: named.name,
       domain: d,
       hash: created.hash ?? created.$hash ?? '',
       generation: created.generation ?? created.$lineage?.generation ?? 0,
+      etymology: named.etymology,
+      slug: named.slug,
+      nameTier: named.tier as 0 | 1 | 2,
     });
-    return { ok: true, message: `seed created · ${d}`, seedId: created.id };
+    return { ok: true, message: `${named.name} · ${d}`, seedId: created.id };
   } catch (e) {
     dispatch(EVENTS.CREATE_FAILED, { text: trimmed, error: String(e) });
     return { ok: false, message: `create failed: ${String(e).slice(0, 80)}` };
@@ -82,9 +88,13 @@ export async function actMutate(seedId?: string): Promise<ActionResult> {
   if (!id || !cur) return { ok: false, message: 'no active seed' };
   try {
     const mutated: any = await mutateSeed(id, { rate: 0.15 });
+    const mutatedName = mutated.$name ?? (() => {
+      const next = nameSeedSync(`${cur.name} ${Date.now().toString(36)}`, cur.domain);
+      return next.name;
+    })();
     useActiveSeed.getState().setSeed({
       id: mutated.id,
-      name: mutated.$name ?? `${cur.name} (mut)`,
+      name: mutatedName,
       domain: mutated.$domain ?? cur.domain,
       hash: mutated.hash ?? mutated.$hash ?? '',
       generation: (cur.generation ?? 0) + 1,

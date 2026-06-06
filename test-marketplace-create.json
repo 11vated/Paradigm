@@ -1,0 +1,9 @@
+{
+  "seedId": "test_seed_001",
+  "sellerId": "test_user",
+  "price": 29.99,
+  "currency": "USD",
+  "tags": ["test"],
+  "domain": "game",
+  "description": "Test listing"
+}

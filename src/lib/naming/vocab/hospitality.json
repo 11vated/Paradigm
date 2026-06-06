@@ -1,0 +1,47 @@
+{
+  "domain": "hospitality",
+  "adjectives": [
+    "hospitality", "hotel", "resort", "lodging", "accommodation", "guest",
+    "service-oriented", "customer-focused", "guest-centric", "welcoming", "friendly",
+    "luxurious", "premium", "deluxe", "suite", "standard", "budget",
+    "economy", "motel", "boutique", "chain", "independent", "family-owned",
+    "beachfront", "mountain", "urban", "suburban", "rural", "resort",
+    "all-inclusive", "full-service", "limited-service", "self-service", "automated",
+    "spa", "wellness", "fitness", "business", "conference", "event",
+    "wedding", "banquet", "catering", "restaurant", "bar", "lounge"
+  ],
+  "nouns": [
+    "hospitality", "hotel", "resort", "motel", "inn", "lodge", "guest-house",
+    "bed-and-breakfast", "hostel", "vacation-rental", "airbnb", "timeshare",
+    "accommodation", "room", "suite", "penthouse", "studio", "cabin",
+    "guest", "customer", "client", "visitor", "traveler", "tourist",
+    "service", "staff", "reception", "front-desk", "concierge", "housekeeping",
+    "amenity", "facility", "pool", "spa", "gym", "fitness-center",
+    "restaurant", "bar", "lounge", "cafe", "room-service", "catering",
+    "event", "conference", "meeting", "wedding", "banquet", "reception",
+    "booking", "reservation", "check-in", "check-out", "stay", "visit",
+    "rating", "review", "star", "diamond", "award", "recognition"
+  ],
+  "modifiers": [
+    "of the hospitality industry", "with hotel excellence", "of the resort experience",
+    "of the lodging sector", "of the accommodation option", "of the guest satisfaction",
+    "of the service-oriented approach", "of the customer-focused philosophy", "of the guest-centric model",
+    "of the welcoming atmosphere", "of the friendly staff", "of the luxurious amenity",
+    "of the premium service", "of the deluxe accommodation", "of the suite experience",
+    "of the standard room", "of the budget option", "of the economy lodging",
+    "of the motel convenience", "of the boutique charm", "of the chain reliability",
+    "of the independent character", "of the family-owned business", "of the beachfront location",
+    "of the mountain retreat", "of the urban hotel", "of the suburban inn",
+    "of the rural getaway", "of the resort destination", "of the all-inclusive package",
+    "of the full-service hotel", "of the limited-service property", "of the self-service facility",
+    "of the automated system", "of the spa treatment", "of the wellness program",
+    "of the fitness center", "of the business traveler", "of the conference facility",
+    "of the event space", "of the wedding venue", "of the banquet hall",
+    "of the catering service", "of the restaurant quality", "of the bar atmosphere",
+    "of the lounge comfort", "of the booking process", "of the reservation system",
+    "of the check-in experience", "of the check-out efficiency", "of the memorable stay",
+    "of the pleasant visit", "of the guest rating", "of the customer review",
+    "of the star classification", "of the diamond rating", "of the industry award",
+    "of the professional recognition"
+  ]
+}

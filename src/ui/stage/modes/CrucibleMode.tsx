@@ -4,6 +4,11 @@
  * Enhanced: always-visible comprehensive 9-strata HUD/bars/scores using live artifact.strata or calculateStratumConformance.
  * Beautiful subtle loading ("Generating rich visual…"), deriveCleanTitle polish, provenance hints, no raw dumps.
  * Live reactive via useGrowArtifact + activeSeed updates on grow/mutate/breed/evolve/compose.
+ *
+ * The new ModePurposeHeader surfaces the mode's purpose + dominant strata +
+ * a compact StrataRadar so users always know what lens they're looking
+ * through. The legacy inline 9-strata bars remain on the bottom HUD for
+ * the existing live-readout workflow.
  */
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
@@ -13,6 +18,7 @@ import { inferDomain } from '@/lib/ui/inferDomain';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { ArtifactRenderer } from '@/ui/stage/ArtifactRenderer';
 import { EmptyState } from '../EmptyState';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 import { createSeed } from '@/services/api';
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 import { deriveCleanTitle } from '@/lib/kernel/types';
@@ -125,6 +131,7 @@ export const CrucibleMode: React.FC = () => {
       onMouseMove={() => revealHud()}
       aria-label="Atelier primary workspace — live artifact + always-visible 9-strata HUD (Reality OS surface)"
     >
+      <ModePurposeHeader mode="crucible" />
       <ArtifactRenderer artifact={artifact} seed={seed} />
 
       {/* ALWAYS-VISIBLE 9-STRATA HUD (comprehensive, live data from artifact.strata / rate / manifest / calculateStratumConformance; primary for normal users; Atelier always-on) */}
@@ -138,6 +145,15 @@ export const CrucibleMode: React.FC = () => {
         <SeedGlyph hash={seed.hash} domain={seed.domain} size={28} />
         <div className="p-crucible-hud-meta">
           <div className="p-crucible-hud-name" title={displayName}>{displayName}</div>
+          {(seed as any).etymology && (
+            <div
+              className="p-crucible-hud-etymology"
+              title="Why this name"
+              style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', fontStyle: 'italic', marginTop: 1, lineHeight: 1.3, maxWidth: 360 }}
+            >
+              {(seed as any).etymology}
+            </div>
+          )}
           <div className="p-crucible-hud-sub">
             <span className="p-chip p-chip-domain" data-domain={seed.domain}>{seed.domain}</span>
             <span className="p-crucible-hud-hash">{shortHash(seed.hash)}</span>
@@ -154,7 +170,7 @@ export const CrucibleMode: React.FC = () => {
           {/* Comprehensive always-visible 9-strata bars — magical rigorous UX, no raw dumps, lived <60s beautiful named artifact */}
           <div className="p-strata-hud-bars" role="group" aria-label="9-strata live scores" style={{ display: 'flex', gap: 3, marginTop: 3, flexWrap: 'wrap' }}>
             {(['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'] as const).map((stratum) => {
-              const val = (liveStrata.perStratum as any)?.[stratum] ?? (liveStrata.overall * 0.9 + (Math.random()-0.5)*0.1); // stable fallback if no per
+              const val = (liveStrata.perStratum as any)?.[stratum] ?? (liveStrata.overall || 0.5);
               const pct = Math.max(0, Math.min(100, Math.round((val || 0.5) * 100)));
               const color = pct > 85 ? '#34d399' : pct > 70 ? '#fbbf24' : '#f87171';
               return (

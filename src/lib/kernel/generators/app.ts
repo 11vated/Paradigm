@@ -17,7 +17,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import type { Seed } from '../engines';
 import { Xoshiro256StarStar, rngFromHash } from '../rng';
-import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

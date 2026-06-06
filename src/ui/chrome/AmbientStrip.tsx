@@ -86,14 +86,14 @@ export const AmbientStrip: React.FC = () => {
   return (
     <footer className="p-ambient" role="status" aria-live="polite">
       <span className="p-ambient-seg">
-        <span className="p-ambient-key">tick</span>
+        <span className="p-ambient-key">kernel tick</span>
         <span className="p-ambient-val">{tick.toLocaleString()}</span>
       </span>
 
       <span className="p-ambient-divider" />
 
       <span className="p-ambient-seg">
-        <span className="p-ambient-key">last</span>
+        <span className="p-ambient-key">last op</span>
         <span className="p-ambient-val">
           {lastOp ? `${lastOp.kind} · ${lastOp.ago}` : 'idle'}
         </span>
@@ -124,8 +124,8 @@ export const AmbientStrip: React.FC = () => {
 
       <span className="p-ambient-seg">
         <span className="p-ambient-key">memory</span>
-        <span className="p-ambient-val">
-          w {memory.working} · e {memory.episodic} · s {memory.semantic} · W {memory.world}
+        <span className="p-ambient-val" title="working · episodic · semantic · world">
+          working {memory.working} · episodic {memory.episodic} · semantic {memory.semantic} · world {memory.world}
         </span>
       </span>
     </footer>

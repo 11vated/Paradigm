@@ -18,7 +18,7 @@ interface ComposerProps {
 
 export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) => {
   const { send } = useAgent();
-  const { currentThreadId, forkFrom } = useAgentThreads();
+  const { currentThreadId, forkFrom, selectedTier, setSelectedTier } = useAgentThreads();
   const seed = useActiveSeed((s) => s.seed);
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
@@ -238,6 +238,37 @@ export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) =>
           ))}
         </div>
 
+        {/* 3-tier selector: fast / standard / deep (kernel is the local fallback) */}
+        <div
+          role="group"
+          aria-label="Inference tier"
+          style={{ display: 'flex', gap: 1, padding: '0 2px', borderLeft: '1px solid var(--r-ink-5)', marginLeft: 2 }}
+        >
+          {(['fast', 'standard', 'deep'] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              data-active={selectedTier === t}
+              title={`${t} tier${t === 'fast' ? ' — quick replies, no model change' : t === 'standard' ? ' — balanced (default)' : ' — full reasoning, slower'}`}
+              onClick={() => setSelectedTier(t)}
+              style={{
+                cursor: 'pointer',
+                fontSize: 8,
+                height: 18,
+                padding: '0 5px',
+                background: selectedTier === t ? 'var(--r-prism-core)' : 'transparent',
+                color: selectedTier === t ? 'var(--r-void-0)' : 'var(--r-ink-2)',
+                border: '1px solid var(--r-ink-5)',
+                borderRadius: 2,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+              }}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
         {/* Voice button */}
         {voiceSupported && (
           <button
@@ -252,7 +283,8 @@ export const Composer = React.memo<ComposerProps>(({ voiceSupported = true }) =>
               padding: '0 5px',
             }}
             title={listening ? 'Listening…' : 'Voice input'}
-          >
+            aria-pressed={listening}
+            aria-label={listening ? 'Voice input (listening)' : 'Voice input'}>
             {listening ? '◉' : '🎤'}
           </button>
         )}

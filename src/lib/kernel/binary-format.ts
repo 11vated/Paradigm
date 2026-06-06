@@ -518,8 +518,13 @@ export function createGseed(
   };
 
   // Add outputs based on generator type — extended for ANY rich artifact (png/svg/audio/story/html/gltf/preview/code/sim/json etc) embed data or ref + TLV OUTPUTS for packs/.gseed
-  const richTitle = deriveCleanTitle((seed as any).$name || (seed as any).name || generatorName, (seed as any).$hash || String(seed.hash));
-  if (pkg.metadata) (pkg.metadata as any).title = richTitle;
+  // Only enrich the title with Tier 2 (PoS-pairing + LLM-style) naming if the caller didn't
+  // pass an explicit `metadata.title`. Explicit caller intent must win so that exports and
+  // sovereign provenance reflect the seed's author-given name, not an auto-derived one.
+  if (!metadata.title || metadata.title.trim().length === 0) {
+    const richTitle = deriveCleanTitle((seed as any).$name || (seed as any).name || generatorName, (seed as any).$hash || String(seed.hash));
+    if (pkg.metadata) (pkg.metadata as any).title = richTitle;
+  }
 
   if (output.mesh && output.format === 'obj') {
     pkg.outputs!.push({
@@ -585,7 +590,8 @@ export function createGseed(
   }
   // always ensure at least metadata rich name for UI/exports even if no binary outputs
   if ((!pkg.outputs || pkg.outputs.length === 0) && (o.files || o.visual || o.emergent_assets)) {
-    const metaRich = JSON.stringify({ files: o.files || {}, visual: o.visual || null, name: richTitle, strata: o.strata || [] });
+    const fallbackName = pkg.metadata?.title || (seed as any).$name || (seed as any).name || generatorName;
+    const metaRich = JSON.stringify({ files: o.files || {}, visual: o.visual || null, name: fallbackName, strata: o.strata || [] });
     pkg.outputs!.push({ type: OutputType.PREVIEW, index: 0, data: new TextEncoder().encode(metaRich) });
   }
 

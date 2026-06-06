@@ -1,0 +1,38 @@
+{
+  "domain": "culture-civilizations",
+  "type": "reality-mirroring",
+  "ancient_civilizations": [
+    {"name": "Sumer", "region": "Mesopotamia", "period": "4500-1900 BCE", "achievements": ["Writing", "Mathematics", "Law"]},
+    {"name": "Ancient Egypt", "region": "Nile Valley", "period": "3100-332 BCE", "achievements": ["Pyramids", "Hieroglyphics", "Medicine"]},
+    {"name": "Indus Valley", "region": "South Asia", "period": "3300-1300 BCE", "achievements": ["Urban planning", "Sanitation", "Trade"]},
+    {"name": "Shang Dynasty", "region": "China", "period": "1600-1046 BCE", "achievements": ["Bronze casting", "Writing", "Calendar"]},
+    {"name": "Minoan", "region": "Crete", "period": "2700-1450 BCE", "achievements": ["Palace architecture", "Maritime trade", "Art"]},
+    {"name": "Mycenaean", "region": "Greece", "period": "1600-1100 BCE", "achievements": ["Fortifications", "Linear B", "Warfare"]},
+    {"name": "Olmec", "region": "Mesoamerica", "period": "1500-400 BCE", "achievements": ["Colossal heads", "Rubber", "Writing"]},
+    {"name": "Chavín", "region": "Andes", "period": "900-200 BCE", "achievements": ["Stone carving", "Religion", "Agriculture"]},
+    {"name": "Nok", "region": "West Africa", "period": "1000 BCE-300 CE", "achievements": ["Iron smelting", "Sculpture", "Trade"]},
+    {"name": "Phoenicia", "region": "Levant", "period": "1200-539 BCE", "achievements": ["Alphabet", "Navigation", "Trade"]}
+  ],
+  "classical_civilizations": [
+    {"name": "Ancient Greece", "region": "Mediterranean", "period": "800-146 BCE", "achievements": ["Democracy", "Philosophy", "Drama"]},
+    {"name": "Roman Empire", "region": "Mediterranean/Europe", "period": "27 BCE-476 CE", "achievements": ["Law", "Engineering", "Governance"]},
+    {"name": "Han Dynasty", "region": "China", "period": "206 BCE-220 CE", "achievements": ["Paper", "Compass", "Civil service"]},
+    {"name": "Maurya Empire", "region": "India", "period": "322-185 BCE", "achievements": ["Buddhism", "Trade", "Administration"]},
+    {"name": "Parthian Empire", "region": "Iran", "period": "247 BCE-224 CE", "achievements": ["Cavalry", "Trade routes", "Art"]}
+  ],
+  "medieval_civilizations": [
+    {"name": "Byzantine Empire", "region": "Eastern Mediterranean", "period": "330-1453 CE", "achievements": ["Law", "Art", "Preservation"]},
+    {"name": "Islamic Caliphate", "region": "Middle East/North Africa", "period": "632-1258 CE", "achievements": ["Science", "Mathematics", "Architecture"]},
+    {"name": "Tang Dynasty", "region": "China", "period": "618-907 CE", "achievements": ["Poetry", "Woodblock printing", "Silk road"]},
+    {"name": "Song Dynasty", "region": "China", "period": "960-1279 CE", "achievements": ["Gunpowder", "Compass", "Paper money"]},
+    {"name": "Mongol Empire", "region": "Eurasia", "period": "1206-1368 CE", "achievements": ["Trade", "Tolerance", "Communication"]},
+    {"name": "Holy Roman Empire", "region": "Central Europe", "period": "962-1806 CE", "achievements": ["Gothic architecture", "Universities", "Music"]}
+  ],
+  "modern_cultures": [
+    {"name": "Renaissance Italy", "region": "Italy", "period": "14th-17th century", "achievements": ["Art", "Science", "Humanism"]},
+    {"name": "Enlightenment Europe", "region": "Europe", "period": "17th-18th century", "achievements": ["Reason", "Science", "Rights"]},
+    {"name": "Meiji Japan", "region": "Japan", "period": "1868-1912 CE", "achievements": ["Modernization", "Industry", "Education"]},
+    {"name": "Industrial Britain", "region": "United Kingdom", "period": "18th-19th century", "achievements": ["Industry", "Railways", "Technology"]},
+    {"name": "American Frontier", "region": "North America", "period": "19th century", "achievements": ["Expansion", "Democracy", "Innovation"]}
+  ]
+}

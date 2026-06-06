@@ -7,6 +7,7 @@
  * OS Shell is the Phase 12 desktop environment prototype.
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HealthPage from './pages/HealthPage';
 import Root from '@/app/Root';
 import { LegacyShell } from '@/app/legacy/LegacyShell';
 import SubstratePage from '@/pages/SubstratePage';
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path="/classic/*" element={<LegacyShell />} />
         <Route path="/substrate" element={<SubstratePage />} />
+        <Route path="/health" element={<HealthPage />} />
         <Route path="/os" element={<OSDShell />} />
         <Route path="/*" element={<Root />} />
       </Routes>

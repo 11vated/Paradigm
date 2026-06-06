@@ -71,11 +71,14 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
       {/* Center: active seed strip */}
       <div className="p-topbar-center">
         {seed ? (
-          <div className="p-active-seed-strip" title={`Active seed · ${seed.hash}`}>
+          <div className="p-active-seed-strip" title={seed.etymology ?? `Active seed · ${seed.hash}`}>
             <span className="p-active-seed-glyph">
               <SeedGlyph hash={seed.hash} domain={seed.domain} size={20} />
             </span>
-            <span className="p-active-seed-name">{deriveCleanTitle(seed.name, seed.hash)}</span>
+            <span className="p-active-seed-name">{seed.name && !/^Seed-[0-9a-f]{6,}/.test(seed.name) ? seed.name : (seed.name || 'Untitled Seed')}</span>
+            {seed.slug && (
+              <span className="p-hash-tail" title="handle">@{seed.slug}</span>
+            )}
             <span className="p-domain-pill">{seed.domain}</span>
             <span className="p-hash-tail">{shortHash(seed.hash)}</span>
             {typeof seed.generation === 'number' && (
@@ -99,7 +102,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
 
       {/* Right: search + kernel + sovereignty + domain count */}
       <div className="p-topbar-right">
-        <button className="p-topbar-action" aria-label="Open command palette">
+        <button className="p-topbar-action" aria-label="Open command palette (Ctrl+K)" aria-haspopup="dialog">
           <span>search</span>
           <span className="p-kbd">⌘K</span>
         </button>

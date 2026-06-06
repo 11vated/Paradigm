@@ -19,7 +19,6 @@ import * as path from 'path';
 import type { Seed } from '../engines';
 import { rngFromHash } from '../rng';
 import { exportGLTF } from './gltf-exporter';
-import { GsplModuleResolver } from '../gspl-module-resolver.js';
 
 const TEXTURE_RESOLUTION: Record<string, number> = { low: 512, medium: 1024, high: 2048, photorealistic: 4096 };
 const GRID_RESOLUTIONS: Record<string, number> = { low: 32, medium: 64, high: 96, photorealistic: 128 };

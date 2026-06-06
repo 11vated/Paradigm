@@ -139,7 +139,11 @@ function SeedCard({ seed, onClick, onGrow, onEvolve }: { seed: any; onClick: any
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick?.(); } }}
+      aria-label={`Open seed ${name}, ${domain} domain, generation ${generation}, fitness ${(fitness * 100).toFixed(0)}%`}
       style={{
         background: '#1a1a1a',
         border: `1px solid ${color}40`,

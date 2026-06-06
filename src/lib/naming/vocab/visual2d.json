@@ -1,0 +1,19 @@
+{
+  "domain": "visual2d",
+  "adjectives": [
+    "luminous", "geometric", "mandala-like", "deep violet", "molten gold", "ashen",
+    "lunar", "fractured", "fey", "weeping", "hollow", "patient", "wandering", "verdant",
+    "crimson", "cobalt", "jade", "ivory", "obsidian", "amber", "argent", "lacquered",
+    "twilight", "haunted", "vaporous", "stippled", "crosshatched", "engraved", "gilded"
+  ],
+  "nouns": [
+    "mandala", "tapestry", "icon", "diptych", "triptych", "mosaic", "fresco", "mural",
+    "vignette", "cartouche", "medallion", "rosette", "stele", "plaque", "vase",
+    "illustration", "ex-libris", "frontispiece", "marginalia", "illumination", "miniature"
+  ],
+  "modifiers": [
+    "in deep violet and gold", "with one central figure", "with no human forms",
+    "in the style of an old alchemical woodcut", "drawn in two colors only",
+    "with a single repeating motif", "in the lower right corner of an empty page"
+  ]
+}

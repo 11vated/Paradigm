@@ -1,0 +1,15 @@
+{
+  "domain": "quantum",
+  "adjectives": [
+    "delocalized", "entangled", "coherent", "decoherent", "superposed", "tunneling",
+    "bound", "free", "eigenstated", "ground", "excited", "virtual", "real"
+  ],
+  "nouns": [
+    "wavefunction", "orbital", "eigenstate", "spinor", "density matrix", "Bloch sphere",
+    "potential", "wavepacket", "Fock state", "cat state", "GHZ state", "Bell pair"
+  ],
+  "modifiers": [
+    "in the double-well", "in a harmonic trap", "in a lattice", "with periodic boundary conditions",
+    "in momentum space", "at zero temperature", "with dissipation"
+  ]
+}

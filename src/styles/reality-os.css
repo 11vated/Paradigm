@@ -21,12 +21,12 @@
   --r-grid-hi:      rgba(255, 255, 255, 0.06);
 
   /* ── INK (typographic hierarchy) ────────────────────────────────────── */
-  --r-ink-0:  #F0F1F5;   /* primary — titles, active labels */
-  --r-ink-1:  #B8BBc6;   /* secondary — body text */
-  --r-ink-2:  #787C8C;   /* tertiary — supporting text */
-  --r-ink-3:  #4A4D5C;   /* quaternary — muted labels */
-  --r-ink-4:  #27293A;   /* hairlines, borders */
-  --r-ink-5:  #17182A;   /* deep borders */
+  --r-ink-0:  #F0F1F5;   /* primary — titles, active labels — AAA-strong (17:1) */
+  --r-ink-1:  #B8BBc6;   /* secondary — body text — AAA-strong (10.8:1) */
+  --r-ink-2:  #aaa5b8;   /* tertiary — supporting text — AAA-strong (8.59:1) */
+  --r-ink-3:  #4A4D5C;   /* quaternary — non-text (muted labels, dividers); AAA-exempt */
+  --r-ink-4:  #27293A;   /* hairlines, borders — non-text; AAA-exempt */
+  --r-ink-5:  #17182A;   /* deep borders — non-text; AAA-exempt */
 
   /* ── PRISM (generative color identity — overridden per-seed by JS) ─── */
   --r-prism-core:        #7C3AED;   /* sovereign violet — the POSSIBLE */

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useDomainColor } from '@/hooks/useDomainColor';
+import { ModePurposeHeader } from '../ModePurposeHeader';
 
 function highlightGspl(source: string): string {
   let s = source.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -76,6 +77,7 @@ export const CodexMode: React.FC = () => {
 
   return (
     <div className="p-codex" style={{ '--p-accent': accent } as React.CSSProperties}>
+      <ModePurposeHeader mode="codex" showRadar={false} />
       <header className="p-codex-header">
         <span className="p-codex-label">codex</span>
         <span className="p-codex-meta">GSPL · {lines} {lines === 1 ? 'line' : 'lines'}</span>

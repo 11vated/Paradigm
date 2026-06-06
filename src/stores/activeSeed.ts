@@ -24,6 +24,12 @@ export interface ActiveSeed {
     perStratum?: Record<string, number>;
     compliance?: number; // alias for overall
   };
+  /** Etymology line for the seed's name; surfaced in pin + library + TopBar. */
+  etymology?: string;
+  /** Kebab-case slug derived from the name; used for stable handle / filenames. */
+  slug?: string;
+  /** Naming tier used to produce the name: 0 = hash fallback, 1 = PoS-pairing, 2 = LLM. */
+  nameTier?: 0 | 1 | 2;
 }
 
 interface ActiveSeedState {

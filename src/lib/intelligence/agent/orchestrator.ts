@@ -88,7 +88,7 @@ export class SovereignAgent {
     private readonly llm: SeedLLM,
     private readonly memory: MemoryOrchestrator,
     private readonly subAgents: SubAgent[] = defaultSubAgents(),
-    private readonly version = '0.1',
+    private readonly version = '1.0.0',
     private readonly canon?: CanonMemory,
   ) {}
 

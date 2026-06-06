@@ -1,19 +1,23 @@
 /**
- * modeStore — center stage mode (1..10).
+ * modeStore — center stage mode (1..8 visible + 2 overflow).
  *
- * Modes are deterministic projections of the active seed. Switching modes
- * never edits seed state; it only changes which lens the user sees.
+ * The 8 visible modes are 8 *lenses* on the same active seed — switching
+ * never edits seed state, it only changes which face the user sees. Each
+ * lens emphasizes a different subset of the 9 strata (see MODE_STRATA).
  *
- * 1 → Crucible    (the seed in its native medium)
- * 2 → Atelier     (crucible + floating tool panels)
- * 3 → Anatomy     (gene fluid sliders)
- * 4 → Resonance   (frequency field)
- * 5 → Lineage     (family tree)
- * 6 → Codex       (live GSPL source)
- * 7 → Topology    (functor neighborhood)
- * 8 → Evolution   (MAP-Elites live quality-diversity archive)
- * 9 → Substrate   (7-dimensional reality renderer)
- * 10 → Sovereignty (provenance, signature, export)
+ * Visible (compass):
+ *  1 → Crucible    (the seed in its native medium)        · Form, Story
+ *  2 → Atelier     (creative workspace w/ tool panels)    · Mind, Culture
+ *  3 → Anatomy     (gene-fluid sliders)                   · Form, Field
+ *  4 → Resonance   (frequency / sound field)               · Sound, Time
+ *  5 → Lineage     (family hyperobject)                   · Time, Culture
+ *  6 → Codex       (live GSPL source)                     · Mind, Story
+ *  7 → Topology    (functor neighborhood)                 · World, Field
+ *  8 → Evolution   (MAP-Elites quality-diversity)         · Form, Time
+ *
+ * Overflow (status-bar / route):
+ *  9  → Substrate    (7D reality renderer)         — at /substrate
+ *  10 → Sovereignty  (provenance · signature · export) — status bar
  */
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
@@ -33,6 +37,12 @@ export const MODES = [
 
 export type Mode = typeof MODES[number];
 
+/** Modes shown in the center compass. Sovereignty + Substrate live elsewhere. */
+export const COMPASS_MODES: ReadonlyArray<Mode> = [
+  'crucible', 'atelier', 'anatomy', 'resonance',
+  'lineage', 'codex', 'topology', 'evolution',
+] as const;
+
 export const MODE_LABEL: Record<Mode, string> = {
   crucible:    'Crucible',
   atelier:     'Atelier',
@@ -47,16 +57,30 @@ export const MODE_LABEL: Record<Mode, string> = {
 };
 
 export const MODE_HINT: Record<Mode, string> = {
-  crucible:    'seed in its native medium',
-  atelier:     'crucible + floating tools',
-  anatomy:     'gene-fluid composition',
-  resonance:   'frequency field',
-  lineage:     'family hyperobject',
-  codex:       'live GSPL inscription',
-  topology:    'functor neighborhood',
-  evolution:   'MAP-Elites quality-diversity archive',
-  substrate:   '7-dimensional reality renderer',
-  sovereignty: 'provenance · signature · export',
+  crucible:    'the seed in its native medium — what does it want to be?',
+  atelier:     'creative workspace — shape, mutate, and refine with floating tools',
+  anatomy:     'gene-fluid composition — every gene is a continuous slider',
+  resonance:   'frequency field — see the seed as sound, motion, and time',
+  lineage:     'family hyperobject — ancestors, cousins, future generations',
+  codex:       'live GSPL inscription — the source code that grows the seed',
+  topology:    'functor neighborhood — what this seed is *adjacent* to',
+  evolution:   'MAP-Elites quality-diversity — explore the design space',
+  substrate:   '7-dimensional reality renderer (route /substrate)',
+  sovereignty: 'provenance · signature · export (status bar)',
+};
+
+/** Dominant strata this mode emphasizes (drives StrataRadar highlighting). */
+export const MODE_STRATA: Record<Mode, ReadonlyArray<string>> = {
+  crucible:    ['Form', 'Story'],
+  atelier:     ['Mind', 'Culture'],
+  anatomy:     ['Form', 'Field'],
+  resonance:   ['Sound', 'Time'],
+  lineage:     ['Time', 'Culture'],
+  codex:       ['Mind', 'Story'],
+  topology:    ['World', 'Field'],
+  evolution:   ['Form', 'Time'],
+  substrate:   ['Field', 'World', 'Time'],
+  sovereignty: ['Culture', 'Time'],
 };
 
 export const MODE_NUM: Record<Mode, number> = {
@@ -80,7 +104,9 @@ interface ModeState {
 export const useMode = create<ModeState>()(
   persist(
     (set) => ({
-      mode: 'atelier',  // PRIMARY / DEFAULT / ALWAYS-ON per 13_ doctrine v2: Atelier (unified main creative workspace) for normal users. Not Crucible. Crucible is internal lens only. All normal flows surface in Atelier + live 9-strata HUD + provenance everywhere.
+      // PRIMARY / DEFAULT per 13_ doctrine v2 — Atelier is the unified
+      // creative workspace for normal users. Crucible is internal-only.
+      mode: 'atelier',
       setMode: (mode) => set({ mode }),
     }),
     { name: 'paradigm.mode' },

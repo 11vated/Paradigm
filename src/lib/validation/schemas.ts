@@ -178,6 +178,7 @@ export const GsplExecuteSchema = z.object({
 export const AgentQuerySchema = z.object({
   query: z.string().min(1, 'Query is required').max(4096, 'Query must be at most 4096 characters').optional(),
   message: z.string().min(1).max(4096).optional(),
+  tier: z.enum(['kernel', 'fast', 'standard', 'deep']).optional(),
 }).refine(data => data.query || data.message, {
   message: 'Either query or message is required',
 });

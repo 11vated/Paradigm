@@ -1,0 +1,49 @@
+{
+  "domain": "hospitality-real",
+  "adjectives": [
+    "hospitality", "hotel", "restaurant", "food-service", "tourism", "travel",
+    "luxury", "premium", "mid-range", "budget", "economy", "value",
+    "full-service", "limited-service", "all-inclusive", "bed-and-breakfast", "boutique",
+    "chain", "independent", "franchise", "corporate", "family-owned", "locally-owned",
+    "international", "national", "regional", "local", "destination", "resort",
+    "urban", "suburban", "rural", "beach", "mountain", "countryside",
+    "business", "leisure", "vacation", "holiday", "weekend", "extended-stay",
+    "short-stay", "transit", "airport", "highway", "downtown", "waterfront",
+    "historic", "modern", "contemporary", "traditional", "eco-friendly", "sustainable",
+    "green", "certified", "rated", "star-rated", "diamond-rated", "award-winning",
+    "family-friendly", "pet-friendly", "accessible", "ADA-compliant", "inclusive", "welcoming"
+  ],
+  "nouns": [
+    "Conrad Hilton", "J. Willard Marriott", "Ray Kroc", "Colonel Sanders", "Dave Thomas",
+    "Howard Schultz", "Steve Ells", "Chipotle", "Panera Bread", "Starbucks",
+    "Four Seasons", "Ritz-Carlton", "Marriott", "Hilton", "Hyatt",
+    "InterContinental", "Wyndham", "Choice Hotels", "Best Western", "Accor",
+    "IHG", "Marriott International", "Hilton Worldwide", "Hyatt Hotels", "Choice Hotels International",
+    "Airbnb", "Booking.com", "Expedia", "TripAdvisor", "Yelp",
+    "Michelin", "AAA", "Forbes Travel Guide", "Zagat", "OpenTable",
+    "Wolfgang Puck", "Gordon Ramsay", "Jamie Oliver", "Bobby Flay", "Emeril Lagasse",
+    "Mario Batali", "Daniel Boulud", "Thomas Keller", "Jean-Georges Vongerichten",
+    "Joel Robuchon", "Alain Ducasse", "Paul Bocuse", "Guy Savoy", "Pierre Gagnaire",
+    "Disney", "Universal", "SeaWorld", "Six Flags", "Cedar Fair",
+    "Busch Gardens", "Legoland", "Merlin Entertainments", "Circus Circus", "Caesars Entertainment",
+    "Las Vegas Sands", "MGM Resorts", "Wynn Resorts", "Melco", "SJM Holdings",
+    "Carnival Corporation", "Royal Caribbean", "Norwegian Cruise Line", "MSC Cruises",
+    "Princess Cruises", "Holland America Line", "Celebrity Cruises", "Viking Ocean Cruises"
+  ],
+  "modifiers": [
+    "of the hospitality industry", "with hotel excellence", "of the restaurant experience",
+    "of the food-service operation", "of the tourism sector", "of the travel industry",
+    "of the luxury accommodation", "of the premium service", "of the mid-range hotel",
+    "of the budget option", "of the economy brand", "of the value proposition",
+    "of the full-service hotel", "of the limited-service property", "of the all-inclusive resort",
+    "of the bed-and-breakfast", "of the boutique hotel", "of the chain property",
+    "of the independent hotel", "of the franchise operation", "of the corporate ownership",
+    "of the family-owned business", "of the locally-owned establishment", "of the international brand",
+    "of the national chain", "of the regional hotel", "of the local inn",
+    "of the destination resort", "of the urban hotel", "of the suburban location",
+    "of the rural retreat", "of the beach resort", "of the mountain lodge",
+    "of the countryside inn", "of the business hotel", "of the leisure destination",
+    "of the vacation spot", "of the holiday resort", "of the weekend getaway",
+    "of the extended-stay hotel", "of the short-stay accommodation", "of the transit hotel"
+  ]
+}

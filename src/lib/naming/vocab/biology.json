@@ -1,0 +1,34 @@
+{
+  "domain": "biology",
+  "adjectives": [
+    "cellular", "genomic", "mitochondrial", "neural", "vascular", "skeletal", "muscular",
+    "epithelial", "lymphatic", "endocrine", "digestive", "respiratory", "reproductive",
+    "immunological", "metabolic", "synaptic", "dendritic", "axonal", "myelinated",
+    "photosynthetic", "chlorophyll", "xylem", "phloem", "stomatal", "root", "stem",
+    "flowering", "pollinated", "fertilized", "germinated", "dormant", "deciduous",
+    "evergreen", "perennial", "annual", "biennial", "herbaceous", "woody", "aquatic",
+    "terrestrial", "arboreal", "fossorial", "marine", "freshwater", "estuarine", "pelagic",
+    "benthic", "planktonic", "nektonic", "symbiotic", "parasitic", "commensal", "mutualistic",
+    "predatory", "herbivorous", "carnivorous", "omnivorous", "insectivorous", "frugivorous",
+    "nectarivorous", "granivorous", "detritivorous", "saprophagous", "coprophagous", "hematophagous"
+  ],
+  "nouns": [
+    "organism", "species", "genus", "family", "order", "class", "phylum", "kingdom",
+    "cell", "nucleus", "mitochondrion", "chloroplast", "ribosome", "endoplasmic", "golgi",
+    "lysosome", "vacuole", "cytoplasm", "membrane", "wall", "tissue", "organ", "system",
+    "genome", "chromosome", "gene", "allele", "mutation", "variation", "adaptation",
+    "evolution", "selection", "speciation", "extinction", "fossil", "taxonomy", "phylogeny",
+    "cladistics", "morphology", "anatomy", "physiology", "ecology", "behavior", "ethology",
+    "population", "community", "ecosystem", "biome", "biosphere", "habitat", "niche",
+    "trophic", "cascade", "succession", "disturbance", "resilience", "stability", "diversity",
+    "biodiversity", "conservation", "restoration", "management", "sustainability", "stewardship"
+  ],
+  "modifiers": [
+    "of the ancient lineage", "with adaptive mutations", "of the tropical canopy",
+    "of the deep ocean", "of the arctic tundra", "of the desert bloom", "of the coral reef",
+    "of the primordial forest", "with genetic diversity", "of the migratory path",
+    "of the seasonal rhythm", "of the nocturnal realm", "of the microscopic world",
+    "with cellular complexity", "of the metabolic pathway", "of the neural network",
+    "of the symbiotic relationship", "of the evolutionary arms race", "of the ecological web"
+  ]
+}

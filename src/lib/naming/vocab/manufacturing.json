@@ -1,0 +1,43 @@
+{
+  "domain": "manufacturing",
+  "adjectives": [
+    "manufacturing", "industrial", "production", "fabrication", "assembly", "processing",
+    "automated", "manual", "mechanized", "computerized", "digital", "smart",
+    "lean", "agile", "just-in-time", "mass-production", "batch", "custom",
+    "bespoke", "made-to-order", "made-to-stock", "high-volume", "low-volume",
+    "high-mix", "low-mix", "flexible", "versatile", "adaptable", "scalable",
+    "efficient", "inefficient", "productive", "unproductive", "quality-focused",
+    "cost-effective", "expensive", "affordable", "premium", "budget", "value",
+    "innovative", "traditional", "modern", "advanced", "cutting-edge", "state-of-the-art"
+  ],
+  "nouns": [
+    "manufacturing", "industry", "production", "fabrication", "assembly", "processing",
+    "factory", "plant", "facility", "workshop", "mill", "foundry", "forge",
+    "machine", "equipment", "tool", "die", "mold", "fixture", "jig",
+    "robot", "automation", "cnc", "cad", "cam", "plc", "sensor",
+    "material", "raw-material", "component", "part", "product", "good", "item",
+    "inventory", "stock", "warehouse", "storage", "supply-chain", "logistics",
+    "quality", "control", "inspection", "testing", "assurance", "compliance",
+    "efficiency", "productivity", "throughput", "yield", "output", "capacity",
+    "cost", "expense", "overhead", "labor", "wage", "salary", "benefit",
+    "innovation", "technology", "research", "development", "engineering", "design"
+  ],
+  "modifiers": [
+    "of the manufacturing process", "with industrial capability", "of the production line",
+    "of the fabrication technique", "of the assembly operation", "of the processing method",
+    "of the automated system", "of the manual labor", "of the mechanized equipment",
+    "of the computerized control", "of the digital technology", "of the smart factory",
+    "of the lean production", "of the agile manufacturing", "of the just-in-time delivery",
+    "of the mass-production scale", "of the batch processing", "of the custom fabrication",
+    "of the bespoke creation", "of the made-to-order product", "of the made-to-stock inventory",
+    "of the high-volume output", "of the low-volume specialty", "of the high-mix variety",
+    "of the low-mix standardization", "of the flexible system", "of the versatile capability",
+    "of the adaptable process", "of the scalable operation", "of the efficient workflow",
+    "of the inefficient bottleneck", "of the productive shift", "of the unproductive downtime",
+    "of the quality-focused approach", "of the cost-effective solution", "of the expensive material",
+    "of the affordable product", "of the premium quality", "of the budget option",
+    "of the value proposition", "of the innovative technology", "of the traditional method",
+    "of the modern technique", "of the advanced system", "of the cutting-edge innovation",
+    "of the state-of-the-art facility"
+  ]
+}

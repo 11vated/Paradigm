@@ -1,0 +1,50 @@
+{
+  "domain": "physics-elements",
+  "type": "reality-mirroring",
+  "elements": [
+    {"symbol": "H", "number": 1, "name": "Hydrogen", "category": "nonmetal"},
+    {"symbol": "He", "number": 2, "name": "Helium", "category": "noble gas"},
+    {"symbol": "Li", "number": 3, "name": "Lithium", "category": "alkali metal"},
+    {"symbol": "Be", "number": 4, "name": "Beryllium", "category": "alkaline earth metal"},
+    {"symbol": "B", "number": 5, "name": "Boron", "category": "metalloid"},
+    {"symbol": "C", "number": 6, "name": "Carbon", "category": "nonmetal"},
+    {"symbol": "N", "number": 7, "name": "Nitrogen", "category": "nonmetal"},
+    {"symbol": "O", "number": 8, "name": "Oxygen", "category": "nonmetal"},
+    {"symbol": "F", "number": 9, "name": "Fluorine", "category": "halogen"},
+    {"symbol": "Ne", "number": 10, "name": "Neon", "category": "noble gas"},
+    {"symbol": "Na", "number": 11, "name": "Sodium", "category": "alkali metal"},
+    {"symbol": "Mg", "number": 12, "name": "Magnesium", "category": "alkaline earth metal"},
+    {"symbol": "Al", "number": 13, "name": "Aluminum", "category": "post-transition metal"},
+    {"symbol": "Si", "number": 14, "name": "Silicon", "category": "metalloid"},
+    {"symbol": "P", "number": 15, "name": "Phosphorus", "category": "nonmetal"},
+    {"symbol": "S", "number": 16, "name": "Sulfur", "category": "nonmetal"},
+    {"symbol": "Cl", "number": 17, "name": "Chlorine", "category": "halogen"},
+    {"symbol": "Ar", "number": 18, "name": "Argon", "category": "noble gas"},
+    {"symbol": "K", "number": 19, "name": "Potassium", "category": "alkali metal"},
+    {"symbol": "Ca", "number": 20, "name": "Calcium", "category": "alkaline earth metal"},
+    {"symbol": "Fe", "number": 26, "name": "Iron", "category": "transition metal"},
+    {"symbol": "Cu", "number": 29, "name": "Copper", "category": "transition metal"},
+    {"symbol": "Zn", "number": 30, "name": "Zinc", "category": "transition metal"},
+    {"symbol": "Ag", "number": 47, "name": "Silver", "category": "transition metal"},
+    {"symbol": "Au", "number": 79, "name": "Gold", "category": "transition metal"},
+    {"symbol": "Hg", "number": 80, "name": "Mercury", "category": "transition metal"},
+    {"symbol": "Pb", "number": 82, "name": "Lead", "category": "post-transition metal"},
+    {"symbol": "U", "number": 92, "name": "Uranium", "category": "actinide"},
+    {"symbol": "Pu", "number": 94, "name": "Plutonium", "category": "actinide"}
+  ],
+  "particles": [
+    "Proton", "Neutron", "Electron", "Photon", "Neutrino", "Muon", "Tau",
+    "Quark", "Gluon", "W boson", "Z boson", "Higgs boson", "Graviton",
+    "Positron", "Antiproton", "Antineutron", "Pion", "Kaon", "Lambda",
+    "Sigma", "Xi", "Omega", "Meson", "Baryon", "Hadron", "Lepton"
+  ],
+  "constants": [
+    {"name": "Speed of light", "symbol": "c", "value": "299792458 m/s"},
+    {"name": "Planck constant", "symbol": "h", "value": "6.62607015e-34 J⋅s"},
+    {"name": "Gravitational constant", "symbol": "G", "value": "6.67430e-11 m³/kg⋅s²"},
+    {"name": "Boltzmann constant", "symbol": "k", "value": "1.380649e-23 J/K"},
+    {"name": "Avogadro constant", "symbol": "Nₐ", "value": "6.02214076e23 mol⁻¹"},
+    {"name": "Elementary charge", "symbol": "e", "value": "1.602176634e-19 C"},
+    {"name": "Fine-structure constant", "symbol": "α", "value": "7.2973525693e-3"}
+  ]
+}

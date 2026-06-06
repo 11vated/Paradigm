@@ -129,9 +129,10 @@ export function MapElitesPanel({ domain, seed, onSelectSeed }: MapElitesPanelPro
           </button>
           <button
             onClick={fetchArchive}
-            className="p-1 rounded hover:bg-zinc-800 transition-colors"
+            aria-label="Refresh map-elites archive"
+            className="p-1 rounded hover:bg-zinc-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-zinc-400" />
+            <RefreshCw aria-hidden="true" className="w-3.5 h-3.5 text-zinc-400" />
           </button>
         </div>
       </div>

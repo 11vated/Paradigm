@@ -1,0 +1,53 @@
+{
+  "domain": "botany",
+  "adjectives": [
+    "photosynthetic", "chlorophyllous", "xerophytic", "hydrophytic", "mesophytic",
+    "epiphytic", "parasitic", "symbiotic", "mycorrhizal", "nitrogen-fixing",
+    "deciduous", "evergreen", "perennial", "annual", "biennial", "herbaceous",
+    "woody", "arborescent", "frutescent", "suffrutescent", "rhizomatous", "tuberous",
+    "bulbous", "cormous", "stoloniferous", "runner-forming", "clumping", "tufted",
+    "creeping", "climbing", "twining", "scandent", "prostrate", "erect",
+    "ascending", "decumbent", "caespitose", "cespitose", "solitary", "gregarious",
+    "colonial", "monocarpic", "polycarpic", "hapaxanthic", "pleonanthic", "iteroparous",
+    "semelparous", "hermaphroditic", "dioecious", "monoecious", "gynomonoecious", "andromonoecious",
+    "polygamomonoecious", "trimonoecious", "polygamous", "gynodioecious", "androdioecious",
+    "trioecious", "heterostylous", "homostylous", "self-compatible", "self-incompatible",
+    "apomictic", "agamospermous", "pseudogamous", "facultatively apomictic", "obligately apomictic",
+    "viviparous", "recalcitrant", "orthodox", "intermediate"
+  ],
+  "nouns": [
+    "Homo sapiens", "Pan troglodytes", "Gorilla gorilla", "Pongo pygmaeus", "Hylobates lar",
+    "Macaca mulatta", "Papio hamadryas", "Cercopithecus mitis", "Colobus guereza", "Nasalis larvatus",
+    "Ateles geoffroyi", "Alouatta palliata", "Cebus capucinus", "Saimiri sciureus", "Aotus trivirgatus",
+    "Callithrix jacchus", "Saguinus oedipus", "Leontopithecus rosalia", "Tarsius syrichta", "Galago senegalensis",
+    "Perodicticus potto", "Loris tardigradus", "Nycticebus coucang", "Daubentonia madagascariensis",
+    "Lemur catta", "Propithecus verreauxi", "Indri indri", "Daubentonia madagascariensis",
+    "Felis catus", "Canis lupus familiaris", "Equus ferus caballus", "Bos taurus", "Sus scrofa domesticus",
+    "Ovis aries", "Capra hircus", "Gallus gallus domesticus", "Meleagris gallopavo", "Anas platyrhynchos",
+    "Columba livia", "Passer domesticus", "Mus musculus", "Rattus norvegicus", "Cavia porcellus",
+    "Oryctolagus cuniculus", "Mesocricetus auratus", "Meriones unguiculatus", "Rattus norvegicus",
+    "Danio rerio", "Xenopus laevis", "Drosophila melanogaster", "Caenorhabditis elegans",
+    "Arabidopsis thaliana", "Oryza sativa", "Zea mays", "Triticum aestivum", "Glycine max",
+    "Solanum lycopersicum", "Solanum tuberosum", "Nicotiana tabacum", "Gossypium hirsutum",
+    "Saccharum officinarum", "Musa acuminata", "Theobroma cacao", "Coffea arabica",
+    "Camellia sinensis", "Vitis vinifera", "Citrus sinensis", "Malus domestica", "Pyrus communis",
+    "Prunus persica", "Prunus armeniaca", "Prunus domestica", "Prunus avium", "Fragaria ananassa",
+    "Rubus idaeus", "Ribes nigrum", "Vaccinium myrtillus", "Ficus carica", "Phoenix dactylifera",
+    "Cocos nucifera", "Elaeis guineensis", "Olea europaea", "Juglans regia", "Prunus dulcis",
+    "Pistacia vera", "Corylus avellana", "Castanea sativa", "Fagus sylvatica", "Quercus robur",
+    "Acer platanoides", "Betula pendula", "Populus tremula", "Salix alba", "Tilia cordata",
+    "Ulmus glabra", "Fraxinus excelsior", "Aesculus hippocastanum", "Platanus orientalis",
+    "Robinia pseudoacacia", "Gleditsia triacanthos", "Cercis siliquastrum", "Laburnum anagyroides",
+    "Syringa vulgaris", "Ligustrum vulgare", "Buxus sempervirens", "Taxus baccata", "Ilex aquifolium",
+    "Hedera helix", "Lonicera periclymenum", "Rosa canina", "Rubus fruticosus", "Crataegus monogyna",
+    "Prunus spinosa", "Sambucus nigra", "Viburnum opulus", "Cornus sanguinea", "Corylus avellana"
+  ],
+  "modifiers": [
+    "of the ancient lineage", "with adaptive mutations", "of the tropical canopy",
+    "of the deep ocean", "of the arctic tundra", "of the desert bloom", "of the coral reef",
+    "of the primordial forest", "with genetic diversity", "of the migratory path",
+    "of the seasonal rhythm", "of the nocturnal realm", "of the microscopic world",
+    "with cellular complexity", "of the metabolic pathway", "of the neural network",
+    "of the symbiotic relationship", "of the evolutionary arms race", "of the ecological web"
+  ]
+}

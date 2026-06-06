@@ -1,0 +1,45 @@
+{
+  "domain": "communication",
+  "adjectives": [
+    "communicative", "interactive", "conversational", "dialogic", "discursive",
+    "verbal", "non-verbal", "written", "spoken", "signed", "gestural",
+    "visual", "auditory", "multimodal", "digital", "analog", "electronic",
+    "interpersonal", "intrapersonal", "group", "mass", "public", "private",
+    "formal", "informal", "professional", "casual", "academic", "technical",
+    "persuasive", "informative", "expressive", "directive", "declarative",
+    "interrogative", "exclamatory", "imperative", "assertive", "passive",
+    "active", "empathetic", "sympathetic", "understanding", "misunderstanding",
+    "clear", "ambiguous", "precise", "vague", "concise", "verbose"
+  ],
+  "nouns": [
+    "communication", "interaction", "conversation", "dialogue", "discourse",
+    "message", "signal", "information", "data", "content", "meaning",
+    "language", "speech", "writing", "text", "code", "symbol", "sign",
+    "medium", "channel", "platform", "network", "system", "technology",
+    "speaker", "listener", "writer", "reader", "sender", "receiver",
+    "audience", "public", "community", "group", "individual", "person",
+    "context", "situation", "setting", "environment", "culture", "society",
+    "purpose", "intent", "goal", "objective", "aim", "function",
+    "style", "tone", "voice", "register", "dialect", "accent",
+    "feedback", "response", "reaction", "interpretation", "understanding", "comprehension"
+  ],
+  "modifiers": [
+    "of the communicative act", "with interactive engagement", "of the conversational flow",
+    "of the dialogic exchange", "of the discursive formation", "of the verbal expression",
+    "of the non-verbal cue", "of the written record", "of the spoken word",
+    "of the signed language", "of the gestural communication", "of the visual message",
+    "of the auditory signal", "of the multimodal experience", "of the digital platform",
+    "of the analog medium", "of the electronic channel", "of the interpersonal relationship",
+    "of the intrapersonal reflection", "of the group dynamic", "of the mass media",
+    "of the public sphere", "of the private conversation", "of the formal protocol",
+    "of the informal chat", "of the professional setting", "of the casual interaction",
+    "of the academic discourse", "of the technical manual", "of the persuasive argument",
+    "of the informative report", "of the expressive art", "of the directive command",
+    "of the declarative statement", "of the interrogative question", "of the exclamatory outburst",
+    "of the imperative order", "of the assertive claim", "of the passive reception",
+    "of the active participation", "of the empathetic understanding", "of the sympathetic response",
+    "of the misunderstanding", "of the clear message", "of the ambiguous meaning",
+    "of the precise definition", "of the vague description", "of the concise summary",
+    "of the verbose explanation"
+  ]
+}

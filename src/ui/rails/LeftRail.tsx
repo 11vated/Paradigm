@@ -17,6 +17,7 @@ import { domainColor } from '@/hooks/useDomainColor';
 import { growSeed, mutateSeed } from '@/services/api';
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 import { deriveCleanTitle } from '@/lib/kernel/types';
+import { StrataRadar } from '@/components/studio/StrataRadar';
 
 type LibraryTab = 'mine' | 'curated' | 'lineage';
 
@@ -208,7 +209,7 @@ export const LeftRail: React.FC<{
             onClick={onToggleCollapse}
             title="Expand rail"
             aria-label="Expand left rail"
-          >
+            aria-pressed={false}>
             ▸
           </button>
           {seed && (
@@ -248,7 +249,7 @@ export const LeftRail: React.FC<{
             onClick={onToggleCollapse}
             title="Collapse rail"
             aria-label="Collapse left rail"
-          >
+            aria-pressed={true}>
             ◂
           </button>
         </div>
@@ -280,10 +281,22 @@ export const LeftRail: React.FC<{
                     <span className="p-thumb-inline" title="code preview">{'</>'}</span>
                   ) : null}
                 </div>
-                <div className="p-active-seed-pin-meta">
-                  <div className="p-active-seed-pin-name">{deriveCleanTitle(seed.name, seed.hash)}</div>
+                  <div className="p-active-seed-pin-meta">
+                  <div className="p-active-seed-pin-name">{seed.name && !/^Seed-[0-9a-f]{6,}/.test(seed.name) ? seed.name : (seed.name || 'Untitled Seed')}</div>
+                  {seed.etymology && (
+                    <div
+                      className="p-active-seed-pin-etymology"
+                      title="Why this name"
+                      style={{ fontSize: 9, color: 'rgba(255,255,255,0.45)', fontStyle: 'italic', marginTop: 2, lineHeight: 1.3, maxWidth: 220 }}
+                    >
+                      {seed.etymology}
+                    </div>
+                  )}
                   <div className="p-active-seed-pin-row">
                     <span className="p-domain-pill">{seed.domain}</span>
+                    {seed.slug && (
+                      <span className="p-hash-tail" title="handle">@{seed.slug}</span>
+                    )}
                     {typeof seed.contractScore === 'number' && (
                       <span
                         className="p-contract-score"
@@ -305,13 +318,16 @@ export const LeftRail: React.FC<{
                     {typeof seed.generation === 'number' && (
                       <span className="p-hash-tail">gen {seed.generation}</span>
                     )}
+                    {seed.nameTier === 2 && (
+                      <span className="p-hash-tail" title="Named by LLM">llm</span>
+                    )}
+                    {seed.nameTier === 1 && (
+                      <span className="p-hash-tail" title="Named by substrate">substrate</span>
+                    )}
                   </div>
-                  {/* Full 9-strata mini HUD always visible in active seed (LeftRail part of comprehensive) */}
-                  <div style={{ marginTop: 4, display: 'flex', gap: 2, flexWrap: 'wrap' }} role="group" aria-label="Active seed 9-strata">
-                    {(() => { const st = getStrataFor(seed); return (['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'] as const).map(s => {
-                      const v = (st.per as any)?.[s] ?? st.overall; const p = Math.round(v*100);
-                      return <span key={s} style={{ fontSize: 8, padding: '0 2px', background: 'rgba(0,0,0,0.2)', borderRadius: 2 }} title={`${s} ${p}%`}>{s.slice(0,1)}{p}</span>;
-                    }); })()}
+                  {/* Full 9-strata radar — replaces the cryptic mini HUD */}
+                  <div style={{ marginTop: 6 }}>
+                    <StrataRadar seed={seed} density="compact" />
                   </div>
                 </div>
               </div>
@@ -366,7 +382,7 @@ export const LeftRail: React.FC<{
         <div className="p-leftrail-section" data-pane="library">
           <div
             className="p-leftrail-section-header"
-            onClick={() => undefined}
+            aria-hidden="true"
           >
             <span className="p-section-label">{SECTION_LIBRARY}</span>
             <span className="p-hash-tail">{filtered.length}</span>
@@ -406,25 +422,29 @@ export const LeftRail: React.FC<{
           </div>
           <div className="p-library-list">
             {libraryLoading ? (
-              <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
-                Loading library… (beautiful named artifacts)
+              <div className="p-library-loading" aria-live="polite">
+                <span className="p-spinner p-spinner-sm" aria-hidden />
+                <span>Loading library…</span>
               </div>
             ) : filtered.length === 0 ? (
               <div style={{ padding: '12px 8px', color: 'var(--p-ink-3)', fontSize: 'var(--p-text-1)' }}>
                 {libTab === 'mine' ? 'No seeds yet. Grow one.' : 'No matches.'}
               </div>
             ) : (
-              filtered.slice(0, 200).map((s) => (
+              filtered.slice(0, 200).map((s) => {
+                const st = getStrataFor(s);
+                const strata = (st.per as Record<string, number> | undefined) ?? {};
+                return (
                 <button
                   key={s.id}
                   className="p-seed-card"
                   data-active={s.id === seed?.id}
                   onClick={() => loadSeed(s)}
-                  title={s.hash}
+                  title={s.name || s.hash}
                 >
                   <SeedGlyph hash={s.hash} domain={s.domain} size={28} />
                   <div className="p-seed-card-meta">
-                    <span className="p-seed-card-name">{deriveCleanTitle(s.name, s.hash)}</span>
+                    <span className="p-seed-card-name">{(s.name && !/^Seed-[0-9a-f]{6,}/.test(s.name)) ? s.name : (s.name || 'Untitled Seed')}</span>
                     <span className="p-seed-card-sub">
                       <span
                         className="p-domain-pill"
@@ -437,31 +457,31 @@ export const LeftRail: React.FC<{
                         {s.domain}
                       </span>
                       <span>{shortHash(s.hash)}</span>
-                      {/* Thumbnails/previews + status (domain, gen, QC, strata %) for 100% of library items — extend existing thumb logic */}
                       {(() => {
-                        const st = getStrataFor(s);
-                        const qc = (s as any).contractScore ?? (s as any).raw?.contractScore;
-                        const gen = (s as any).generation ?? (s as any).$lineage?.generation;
+                        const qc = (s as { contractScore?: number }).contractScore ?? (s as { raw?: { contractScore?: number } }).raw?.contractScore;
+                        const gen = (s as { generation?: number }).generation ?? (s as { $lineage?: { generation?: number } }).$lineage?.generation;
+                        const mediaIcon = (s as { raw?: { svg?: string; pngDataURL?: string; audioDataURL?: string; gltf?: unknown; htmlData?: string; previewData?: unknown; storyData?: unknown } }).raw;
+                        const icon = mediaIcon?.svg || mediaIcon?.pngDataURL ? '🖼' : mediaIcon?.audioDataURL ? '♫' : mediaIcon?.gltf ? '⬡' : mediaIcon?.htmlData ? '◫' : mediaIcon?.previewData ? '</>' : mediaIcon?.storyData ? '📖' : null;
                         return <>
                           {typeof qc === 'number' && <span className="p-strata-mini" title="QC">qc{(qc*100).toFixed(0)}</span>}
                           <span className="p-strata-mini" title="strata">{(st.overall * 100).toFixed(0)}%</span>
                           {typeof gen === 'number' && <span className="p-strata-mini" title="gen">g{gen}</span>}
-                          {/* Extended thumb previews for code/sim/html/gltf/audio/story/particle etc. */}
-                          {(s as any).raw?.svg ? '🖼' : (s as any).raw?.pngDataURL ? '🖼' : (s as any).raw?.audioDataURL ? '♫' : (s as any).raw?.gltf ? '⬡' : (s as any).raw?.htmlData ? '◫' : (s as any).raw?.previewData ? '</>' : (s as any).raw?.storyData ? '📖' : null}
+                          {icon}
                         </>;
                       })()}
                     </span>
                   </div>
-                  {/* Mini 9-strata bars always for every library/gallery item (complete coverage) */}
-                  <div style={{ display: 'flex', gap: 1, marginTop: 2 }} aria-hidden>
-                    {(() => { const st = getStrataFor(s); return (['F','M','S','Mi','St','W','Fi','C','T'] as const).map((lab,i) => {
-                      const key = ['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'][i];
-                      const v = (st.per as any)?.[key] ?? st.overall; const p = Math.round((v||0.7)*100);
-                      return <div key={lab} style={{ flex:1, height:2, background: p>80 ? '#166534' : '#3f3f46', position:'relative' }}><div style={{ position:'absolute', left:0, top:0, height:2, width: `${p}%`, background: p>80?'#4ade80':'#a3a3a3' }} /></div>;
-                    }); })()}
+                  <div className="p-seed-card-strata" aria-hidden>
+                    {(['Form','Motion','Sound','Mind','Story','World','Field','Culture','Time'] as const).map((key) => {
+                      const v = strata[key] ?? st.overall;
+                      const p = Math.round((v || 0.7) * 100);
+                      const tone = p > 80 ? 'h' : p > 50 ? 'm' : 'l';
+                      return <div key={key} className="p-seed-card-strata-bar" data-tone={tone} style={{ width: `${p}%` }} title={`${key} ${p}%`} />;
+                    })}
                   </div>
                 </button>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -470,7 +490,12 @@ export const LeftRail: React.FC<{
         <div className="p-leftrail-section" data-pane="threads">
           <div
             className="p-leftrail-section-header"
+            role="button"
+            tabIndex={0}
+            aria-expanded={threadsOpen}
+            aria-controls="threads-section"
             onClick={() => setThreadsOpen((v) => !v)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setThreadsOpen((v) => !v); } }}
           >
             <span className="p-section-label">
               {threadsOpen ? '▾' : '▸'} {SECTION_THREADS}

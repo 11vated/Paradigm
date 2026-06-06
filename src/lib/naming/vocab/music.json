@@ -1,0 +1,22 @@
+{
+  "domain": "music",
+  "adjectives": [
+    "velvet", "hollow", "marrow", "spectral", "argent", "vesper", "sonorous", "lacquered",
+    "ashen", "fey", "fractured", "weeping", "luminous", "patient", "wandering", "lunar",
+    "solar", "iron", "ivory", "jade", "amber", "cobalt", "crimson", "frozen", "molten",
+    "thawing", "second", "absent", "unrecovered", "mournful", "longing", "triumphal",
+    "lullaby", "elegiac", "threnodic", "threnodial", "marble", "venetian", "gilded"
+  ],
+  "nouns": [
+    "elegies", "lullabies", "fugues", "dirges", "hymns", "scherzos", "nocturnes", "etudes",
+    "preludes", "intermezzi", "caprices", "fantasias", "rhapsodies", "ballades", "berceuses",
+    "requiems", "misereres", "mottetti", "chansons", "romanzas", "romances", "chorales",
+    "passacaglias", "chaconnes", "toccatas", "ricercari", "sinfonias", "concertos",
+    "sonatas", "suites", "partitas", "divertimenti", "scherzi", "interludes", "cadenzas"
+  ],
+  "modifiers": [
+    "in D minor", "in the Dorian mode", "at 96 BPM", "for solo piano and distant bells",
+    "for string quartet and glass harmonica", "in 7/8 time", "in pure Pythagorean tuning",
+    "with no sharps and no flats", "in the old Lydian", "with one long held note"
+  ]
+}

@@ -1,5 +1,7 @@
 // Local type definitions to avoid circular dependencies
 // Mirrors the Seed class shape in seed-class.ts without importing it
+import { nameSeedSync } from '../naming/seed-namer';
+
 export interface Seed {
   id?: string;
   hash?: string;
@@ -46,27 +48,36 @@ export interface SeedGraphEdge {
 }
 
 /**
- * Tiny pure deterministic title derivation from intent/prompt.
+ * Pure deterministic title derivation from intent/prompt.
  * Used to ensure human-readable display_name / name / $name instead of raw hashes/IDs.
- * Fully deterministic (string ops + optional hash slice), no RNG, no side effects.
+ *
+ * Delegates to the SeedNamer (Tier 1 PoS-pairing → Tier 0 hash fallback). The
+ * intent and seed hash are both deterministic, so same input → same output
+ * forever, which preserves the determinism contract. No RNG, no wall-clock.
  */
 export function deriveCleanTitle(intent: string | undefined | null, seedHash?: string): string {
   if (!intent || typeof intent !== 'string' || intent.trim().length === 0) {
     const h = (seedHash || '').slice(0, 8);
     return h ? `Seed-${h}` : 'Untitled Seed';
   }
-  const words = intent
-    .replace(/[^a-zA-Z0-9\s-]/g, ' ')
-    .trim()
-    .split(/\s+/)
-    .filter((w) => w.length > 1)
-    .slice(0, 6);
-  let title = words
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-    .join(' ');
-  if (!title) title = 'Vision';
-  const h = (seedHash || '').slice(0, 6);
-  if (h) title += ` ${h}`;
-  if (title.length > 60) title = title.slice(0, 57) + '...';
-  return title;
+  const named = nameSeedSync(intent, 'character');
+  // If SeedNamer gave us back a hash-style name (Tier 0 for very short / empty
+  // intent), fall back to the original intent+hash to preserve readability.
+  if (named.tier === 0) {
+    const words = intent
+      .replace(/[^a-zA-Z0-9\s-]/g, ' ')
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 1)
+      .slice(0, 6);
+    let title = words
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+    if (!title) title = 'Vision';
+    const h = (seedHash || '').slice(0, 6);
+    if (h) title += ` ${h}`;
+    if (title.length > 60) title = title.slice(0, 57) + '...';
+    return title;
+  }
+  return named.name;
 }

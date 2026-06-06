@@ -1,0 +1,51 @@
+{
+  "domain": "history",
+  "adjectives": [
+    "ancient", "medieval", "modern", "contemporary", "prehistoric", "historic",
+    "archaeological", "paleontological", "anthropological", "sociological", "cultural",
+    "political", "economic", "military", "diplomatic", "religious", "intellectual",
+    "technological", "scientific", "artistic", "literary", "philosophical", "ethical",
+    "imperial", "colonial", "postcolonial", "feudal", "capitalist", "socialist",
+    "communist", "fascist", "democratic", "republican", "monarchical", "theocratic",
+    "secular", "revolutionary", "reformist", "conservative", "progressive", "radical",
+    "traditional", "innovative", "industrial", "agrarian", "urban", "rural",
+    "nomadic", "sedentary", "migratory", "settled", "civilized", "barbarian",
+    "tribal", "clan-based", "kingdom-based", "empire-based", "nation-based", "state-based",
+    "global", "international", "transnational", "regional", "local", "micro",
+    "macro", "long-term", "short-term", "immediate", "gradual", "sudden", "abrupt",
+    "continuous", "discontinuous", "cyclical", "linear", "teleological", "deterministic",
+    "contingent", "chaotic", "complex", "interconnected", "interdependent", "networked"
+  ],
+  "nouns": [
+    "era", "epoch", "age", "period", "century", "decade", "millennium", "generation",
+    "civilization", "culture", "society", "community", "tribe", "clan", "nation",
+    "state", "kingdom", "empire", "republic", "democracy", "monarchy", "dynasty",
+    "empire", "colony", "province", "region", "territory", "border", "frontier",
+    "boundary", "war", "battle", "campaign", "revolution", "rebellion", "uprising",
+    "insurrection", "revolt", "coup", "invasion", "conquest", "occupation", "liberation",
+    "independence", "unification", "reunification", "separation", "division", "partition",
+    "treaty", "alliance", "league", "confederation", "federation", "union", "commonwealth",
+    "constitution", "charter", "declaration", "manifesto", "proclamation", "edict",
+    "decree", "law", "statute", "ordinance", "regulation", "policy", "reform",
+    "movement", "ideology", "philosophy", "religion", "faith", "belief", "doctrine",
+    "dogma", "heresy", "schism", "sect", "cult", "church", "temple", "mosque",
+    "synagogue", "shrine", "monastery", "convent", "cathedral", "basilica", "chapel",
+    "leader", "ruler", "monarch", "emperor", "king", "queen", "prince", "princess",
+    "president", "premier", "chancellor", "dictator", "tyrant", "despot", "warlord"
+  ],
+  "modifiers": [
+    "of the ancient world", "with medieval traditions", "of the modern era",
+    "of the industrial revolution", "of the digital age", "of the information age",
+    "of the global era", "of the cold war", "of the postcolonial period",
+    "of the renaissance", "of the enlightenment", "of the scientific revolution",
+    "of the agricultural revolution", "of the urban revolution", "of the neolithic",
+    "of the bronze age", "of the iron age", "of the classical period",
+    "of the hellenistic world", "of the roman empire", "of the byzantine empire",
+    "of the medieval period", "of the reformation", "of the counter-reformation",
+    "of the age of exploration", "of the age of discovery", "of the colonial era",
+    "of the revolutionary period", "of the napoleonic wars", "of the victorian era",
+    "of the gilded age", "of the progressive era", "of the interwar period",
+    "of the world war", "of the great depression", "of the postwar period",
+    "of the cold war", "of the space age", "of the nuclear age", "of the information age"
+  ]
+}

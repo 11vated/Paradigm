@@ -1,0 +1,50 @@
+{
+  "domain": "literature",
+  "adjectives": [
+    "literary", "poetic", "prose", "narrative", "fictional", "non-fictional",
+    "dramatic", "lyrical", "epic", "tragic", "comic", "satirical", "ironic",
+    "romantic", "realistic", "naturalistic", "modernist", "postmodernist", "experimental",
+    "classical", "medieval", "renaissance", "victorian", "contemporary", "timeless",
+    "allegorical", "symbolic", "metaphorical", "mythological", "legendary", "folkloric",
+    "autobiographical", "biographical", "historical", "philosophical", "political",
+    "social", "cultural", "psychological", "existential", "spiritual", "religious",
+    "epistolary", "stream-of-consciousness", "modernist", "postcolonial", "feminist",
+    "gothic", "horror", "science-fiction", "fantasy", "magical-realism", "dystopian",
+    "utopian", "adventure", "mystery", "thriller", "romance", "historical-fiction"
+  ],
+  "nouns": [
+    "literature", "writing", "author", "writer", "poet", "playwright", "novelist",
+    "storyteller", "narrator", "character", "protagonist", "antagonist", "hero",
+    "villain", "supporting", "cast", "ensemble", "dialogue", "monologue", "soliloquy",
+    "plot", "theme", "motif", "symbol", "metaphor", "simile", "allegory",
+    "genre", "style", "voice", "tone", "mood", "atmosphere", "setting",
+    "scene", "chapter", "stanza", "verse", "line", "paragraph", "sentence",
+    "word", "phrase", "clause", "punctuation", "grammar", "syntax", "diction",
+    "vocabulary", "language", "idiom", "expression", "cliché", "trope", "archetype",
+    "novel", "short-story", "poem", "play", "script", "screenplay", "essay",
+    "memoir", "biography", "autobiography", "history", "journalism", "criticism",
+    "review", "analysis", "interpretation", "critique", "commentary", "scholarship"
+  ],
+  "modifiers": [
+    "of the literary tradition", "with poetic beauty", "of the prose style",
+    "of the narrative structure", "of the fictional world", "of the non-fictional account",
+    "of the dramatic tension", "of the lyrical expression", "of the epic scope",
+    "of the tragic flaw", "of the comic relief", "of the satirical wit",
+    "of the ironic twist", "of the romantic ideal", "of the realistic detail",
+    "of the naturalistic observation", "of the modernist innovation", "of the postmodernist deconstruction",
+    "of the experimental form", "of the classical canon", "of the medieval legend",
+    "of the renaissance humanism", "of the victorian morality", "of the contemporary voice",
+    "of the timeless wisdom", "of the allegorical meaning", "of the symbolic representation",
+    "of the metaphorical depth", "of the mythological resonance", "of the legendary status",
+    "of the folkloric tradition", "of the autobiographical insight", "of the biographical accuracy",
+    "of the historical context", "of the philosophical inquiry", "of the political critique",
+    "of the social commentary", "of the cultural reflection", "of the psychological exploration",
+    "of the existential question", "of the spiritual journey", "of the religious experience",
+    "of the epistolary form", "of the stream-of-consciousness technique", "of the modernist break",
+    "of the postcolonial perspective", "of the feminist voice", "of the gothic atmosphere",
+    "of the horror element", "of the science-fiction world", "of the fantasy realm",
+    "of the magical-realism blend", "of the dystopian vision", "of the utopian dream",
+    "of the adventure quest", "of the mystery puzzle", "of the thriller suspense",
+    "of the romance passion", "of the historical-fiction setting"
+  ]
+}
