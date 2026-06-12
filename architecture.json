@@ -1,0 +1,64 @@
+{
+  "project": "Paradigm Infinite",
+  "version": "1.0.0",
+  "description": "Deterministic sovereign GSPL-based Digital Creation Reality OS",
+  "corePackages": [
+    {
+      "name": "paradigm-absolute",
+      "path": ".",
+      "type": "root",
+      "dependencies": ["express", "three", "vitest", "tsx", "zod", "react", "vite"]
+    },
+    {
+      "name": "paradigm-sdk",
+      "path": "packages/paradigm-sdk",
+      "type": "sdk",
+      "dependencies": ["core kernel interfaces"]
+    },
+    {
+      "name": "kernel",
+      "path": "src/lib/kernel",
+      "type": "core",
+      "submodules": ["rng", "gspl-lexer", "gspl-parser", "gspl-interpreter", "quality-contract", "composition", "engine-dispatcher", "generators/* (272 files)", "federation", "sovereignty"]
+    },
+    {
+      "name": "gspl",
+      "path": "src/lib/kernel (gspl-*) + tests/gspl",
+      "type": "language-runtime",
+      "dependencies": ["kernel/rng", "kernel/quality"]
+    },
+    {
+      "name": "federation",
+      "path": "src/lib/federation",
+      "type": "network",
+      "dependencies": ["kernel", "sovereignty/ecdsa", "express"]
+    },
+    {
+      "name": "sovereignty",
+      "path": "src/lib/sovereignty",
+      "type": "crypto",
+      "dependencies": ["node:crypto", "node:buffer"]
+    },
+    {
+      "name": "cli",
+      "path": "cli",
+      "type": "cli",
+      "dependencies": ["kernel (via tsx dynamic)", "make.ts", "grow.ts"]
+    },
+    {
+      "name": "web-dashboard",
+      "path": "web/dashboard",
+      "type": "frontend",
+      "dependencies": ["static html/js for demo"]
+    },
+    {
+      "name": "tests",
+      "path": "tests",
+      "type": "qa",
+      "subpackages": ["unit", "determinism", "gspl", "federation", "kernel", "e2e"]
+    }
+  ],
+  "generatorPackages": "100+ domain specific under src/lib/kernel/generators/* and src/lib/contracts/* (each with -contract.ts for quality)",
+  "totalEffectivePackages": 10,
+  "notes": "Not a traditional 41-package pnpm monorepo; 'packages' count inflated by node_modules and archives. Core is monolithic src/lib + cli + tests."
+}
