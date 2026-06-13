@@ -1,0 +1,17 @@
+<!doctype html><html><head><title>Paradigm v1.3 Global Federation Dashboard</title></head><body>
+<h1>Global Federation Dashboard (v1.3)</h1>
+<p>Real-time status from /health and /metrics (regions: US/EU/APAC + external)</p>
+<pre id="status">Loading...</pre>
+<script>
+async function load() {
+  try {
+    const h = await fetch('/federation/health').then(r=>r.json());
+    const m = await fetch('/federation/metrics').then(r=>r.json());
+    document.getElementById('status').textContent = JSON.stringify({health:h, metrics:m}, null, 2);
+  } catch(e) { document.getElementById('status').textContent = 'Dashboard requires running federation server (see global deploy).'; }
+}
+load(); setInterval(load, 5000);
+</script>
+<p>Reproducibility proofs: see docs/audit/ and .paradigm/</p>
+<p>External onboarding: use deriveKeyPair + signed offer to any regional bootstrap.</p>
+</body></html>

@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/11vated/Paradigm/security/advisories/new
+    about: Please report security issues privately here instead of a public issue.
+  - name: Discussions & Ideas
+    url: https://github.com/11vated/Paradigm/discussions
+    about: For general questions, showcase, and roadmap discussion, please use GitHub Discussions.
