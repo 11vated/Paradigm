@@ -135,8 +135,8 @@ export const DomainCosmosOverlay: React.FC<OverlayProps> = ({ open, onClose }) =
   if (!open) return null;
 
   return (
-    <div className="p-atlas" role="dialog" aria-modal="true" aria-label="Composition Atlas" onClick={onClose}>
-      <div className="p-atlas-inner" onClick={(e) => e.stopPropagation()}>
+    <div className="p-atlas" role="dialog" aria-modal="true" aria-label="Composition Atlas" onClick={onClose} tabIndex={0} onKeyDown={e => { if (e.key === 'Escape' || e.key === ' ') { e.preventDefault(); onClose(); } }}>
+      <div className="p-atlas-inner" onClick={(e) => e.stopPropagation()} role="button" tabIndex={0} onKeyDown={e => { if (e.key === 'Escape' || e.key === ' ') { e.preventDefault(); } }}>
         <header className="p-atlas-header">
           <span className="p-atlas-title">composition atlas</span>
           <span className="p-atlas-count">{engines.length} engines · 3 tiers</span>

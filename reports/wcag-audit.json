@@ -1,14 +1,14 @@
 {
   "scanned": {
-    "tsx": 176,
+    "tsx": 178,
     "css": 4,
-    "lines": 24789
+    "lines": 25498
   },
   "contrast": 2,
   "byRule": {
     "1.4.11 Non-text Contrast — 3:1 minimum": 7,
     "2.4.7 Focus Visible": 6,
-    "4.1.2 Name, Role, Value (aria-expanded)": 19,
+    "4.1.2 Name, Role, Value (aria-expanded)": 20,
     "2.1.1 Keyboard": 2,
     "2.3.3 Animation from Interactions": 1
   },
@@ -103,6 +103,13 @@
       "message": "CSS sets outline: none — verify a focus indicator is provided elsewhere (border-color/box-shadow on :focus)",
       "file": "src/styles/reality-os.css",
       "line": 1082
+    },
+    {
+      "severity": "MODERATE",
+      "rule": "4.1.2 Name, Role, Value (aria-expanded)",
+      "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
+      "file": "src/components/studio/DimensionalViewer.tsx",
+      "line": 703
     },
     {
       "severity": "MODERATE",

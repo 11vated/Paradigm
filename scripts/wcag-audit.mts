@@ -277,13 +277,13 @@ function auditTsx(file: string, content: string): void {
     }
   }
   // Click handlers on non-interactive. Skip if the tag has role= OR tabIndex >= 0 OR
-  // onKeyDown.
+  // onKeyDown (including onKeyDown={ for JSX).
   for (const m of content.matchAll(/<(div|span|li|td|tr|section|article)\b([^>]*\bonClick=[^>]*?)>/g)) {
     const tag = m[0];
     if (
       /\brole\s*=/.test(tag) ||
       /\btabIndex\s*=/.test(tag) ||
-      /\bonKeyDown\s*=/.test(tag)
+      /\bonKeyDown\s*[={]/.test(tag)
     ) continue;
     addFinding({
       severity: 'SERIOUS',
