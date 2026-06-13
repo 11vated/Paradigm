@@ -13,6 +13,7 @@ import { createHash } from 'node:crypto';
 import { kernelNowIso } from '../../src/lib/kernel/clock.ts';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import crypto from 'node:crypto';
 
 // calculateStratumConformance will be loaded lazily inside the function to avoid top-level await issues with tsx
 let calculateStratumConformance: any = null;
@@ -125,10 +126,91 @@ function growDeterministicTreeGLTF(seedMaterial: string): any {
   return gltf;
 }
 
+/**
+ * Deterministic UI generator for v1.1.0 (simple HTML/JS "app" from seed).
+ * Pure, no timestamps, schema: { html, css, js, strata }
+ */
+function growDeterministicUI(seedMaterial: string, rng: any, seedHash: string): any {
+  const complexity = 3 + Math.floor(rng.nextF64() * 5);
+  const themeHue = Math.floor(rng.nextF64() * 360);
+  const components = ['header', 'nav', 'main', 'footer', 'card', 'form'].slice(0, complexity);
+  const html = `<div class="app" data-seed="${seedMaterial.slice(0,8)}-${seedHash}">
+  ${components.map(c => `<section class="${c}">${c.toUpperCase()} (seed-derived)</section>`).join('\n  ')}
+</div>`;
+  const css = `:root { --hue: ${themeHue}; } .app { display: grid; gap: 1rem; }`;
+  const js = `console.log('UI seed ${seedHash} loaded'); // deterministic`;
+  return {
+    $schema: "ui/v1.1",
+    html, css, js,
+    components,
+    theme: { hue: themeHue },
+    seed: seedMaterial,
+    strata: ['Form', 'Time']
+  };
+}
+
+/**
+ * Deterministic Game generator (simple state machine / level from seed).
+ */
+function growDeterministicGame(seedMaterial: string, rng: any, seedHash: string): any {
+  const width = 8 + Math.floor(rng.nextF64() * 8);
+  const height = 8 + Math.floor(rng.nextF64() * 8);
+  const enemies = Math.floor(rng.nextF64() * 5) + 1;
+  const level = Array.from({length: height}, (_, y) => 
+    Array.from({length: width}, (_, x) => ( (x+y + Math.floor(rng.nextF64()*3)) % 3 ) )
+  );
+  return {
+    $schema: "game/v1.1",
+    seed: seedMaterial,
+    dimensions: {width, height},
+    enemies,
+    level,
+    hash: seedHash,
+    strata: ['Motion', 'World', 'Mind']
+  };
+}
+
+/**
+ * Deterministic Audio generator (simple synth spec / "WAV" descriptor).
+ */
+function growDeterministicAudio(seedMaterial: string, rng: any, seedHash: string): any {
+  const bpm = 80 + Math.floor(rng.nextF64() * 60);
+  const notes = Array.from({length: 8}, () => 40 + Math.floor(rng.nextF64() * 40));
+  const duration = 2 + rng.nextF64() * 6;
+  // Fake base64 "audio" for determinism (in real would use actual WAV writer with seeded samples)
+  const wavStub = Buffer.from(`RIFF${seedHash}WAVEfmt ${bpm}${notes.join('')}`).toString('base64').slice(0, 128);
+  return {
+    $schema: "audio/v1.1",
+    seed: seedMaterial,
+    bpm, notes, duration,
+    wav: wavStub,
+    strata: ['Sound', 'Time']
+  };
+}
+
+/**
+ * Deterministic Simulation generator (e.g. particle / ecosystem state).
+ */
+function growDeterministicSimulation(seedMaterial: string, rng: any, seedHash: string): any {
+  const particles = 10 + Math.floor(rng.nextF64() * 40);
+  const steps = 50 + Math.floor(rng.nextF64() * 100);
+  const rules = ['gravity', 'attraction', 'repel'].sort(() => rng.nextF64() - 0.5).slice(0, 2);
+  const state = Array.from({length: particles}, () => ({
+    x: rng.nextF64(), y: rng.nextF64(), vx: rng.nextF64()-0.5, vy: rng.nextF64()-0.5
+  }));
+  return {
+    $schema: "simulation/v1.1",
+    seed: seedMaterial,
+    particles, steps, rules,
+    initialState: state,
+    strata: ['Motion', 'Field', 'World']
+  };
+}
+
 export async function paradigmMake(intent: string, opts: MakeOptions = {}): Promise<MakeResult> {
   const seedMaterial = opts.seed || intent; // intent as seed if no explicit
   const rng = rngFromHash(seedMaterial);
-  const seedHash = require("crypto").createHash("sha256").update(seedMaterial).digest("hex").slice(0,8); // extra entropy to avoid collisions // prove we used it
+  const seedHash = crypto.createHash("sha256").update(seedMaterial).digest("hex").slice(0,8); // extra entropy to avoid collisions
   void rng.nextF64(); // consume a bit for good measure (still deterministic)
 
   const domain = (opts.domain || 'tree').toLowerCase();
@@ -136,6 +218,14 @@ export async function paradigmMake(intent: string, opts: MakeOptions = {}): Prom
 
   if (domain.includes('tree') || domain === 'gltf' || opts.format === 'gltf') {
     artifact = growDeterministicTreeGLTF(seedMaterial);
+  } else if (domain.includes('ui') || domain === 'web' || domain === 'interface') {
+    artifact = growDeterministicUI(seedMaterial, rng, seedHash);
+  } else if (domain.includes('game') || domain === 'simulation' || domain.includes('play')) {
+    artifact = growDeterministicGame(seedMaterial, rng, seedHash);
+  } else if (domain.includes('audio') || domain === 'sound' || domain === 'music') {
+    artifact = growDeterministicAudio(seedMaterial, rng, seedHash);
+  } else if (domain.includes('sim') || domain === 'simulation' || domain.includes('model')) {
+    artifact = growDeterministicSimulation(seedMaterial, rng, seedHash);
   } else {
     // Fallback: simple deterministic JSON artifact (used by many generators)
     artifact = {

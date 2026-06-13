@@ -1,0 +1,10 @@
+{
+  "v1.3_global_contributors": [
+    {"id": "us-bootstrap", "region": "US", "endpoint": "https://us.paradigm.example/federation", "onboarded": true, "type": "core"},
+    {"id": "eu-node", "region": "EU", "endpoint": "https://eu.paradigm.example/federation", "onboarded": true, "type": "regional"},
+    {"id": "apac-node", "region": "APAC", "endpoint": "https://apac.paradigm.example/federation", "onboarded": true, "type": "regional"},
+    {"id": "external-contributor-1", "region": "EXTERNAL", "endpoint": "https://contributor1.example/federation", "onboarded": true, "type": "external", "onboard_method": "deriveKeyPair + signed offer"},
+    {"id": "external-contributor-2", "region": "EXTERNAL", "endpoint": "https://contributor2.example/federation", "onboarded": true, "type": "external"}
+  ],
+  "onboarding": "See scripts/global-federation-deploy.ps1 and src/lib/sovereignty/ecdsa.ts (deriveKeyPair + signSovereign for registration seed). Public dashboard: web/global-federation-dashboard.html"
+}

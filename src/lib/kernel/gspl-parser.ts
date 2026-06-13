@@ -50,6 +50,10 @@ export enum ASTNodeType {
   GROW_OP = 'GROW_OP',
   SIGNED_OP = 'SIGNED_OP',
 
+  // v1.1.0 advanced generative operators
+  REFLECT_OP = 'REFLECT_OP',
+  NARRATE_OP = 'NARRATE_OP',
+
   // Match expression
   MATCH_EXPR = 'MATCH_EXPR',
   MATCH_ARM = 'MATCH_ARM',
@@ -803,6 +807,32 @@ export class GsplParser {
       seed,
       engine,
       with: withSeed,
+      loc: { line: token.line, column: token.column }
+    };
+  }
+
+  // v1.1.0 advanced operators: reflect (self-inspect seed), narrate (generate description)
+  private parseReflectOp(): ASTNode {
+    const token = this.advance(); // reflect
+    const target = this.parseExpression();
+    return {
+      type: ASTNodeType.REFLECT_OP,
+      target,
+      loc: { line: token.line, column: token.column }
+    };
+  }
+
+  private parseNarrateOp(): ASTNode {
+    const token = this.advance(); // narrate
+    const target = this.parseExpression();
+    let style = undefined;
+    if (this.match('COMMA')) {
+      style = this.expect('STRING').value;
+    }
+    return {
+      type: ASTNodeType.NARRATE_OP,
+      target,
+      style,
       loc: { line: token.line, column: token.column }
     };
   }

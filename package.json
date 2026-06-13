@@ -1,7 +1,7 @@
 {
   "name": "paradigm-absolute",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "bin": {
     "paradigm": "./cli/index.js"
@@ -63,7 +63,9 @@
     "lint:no-evasion": "tsx scripts/lint-no-evasion.ts --max-unwaived 338",
     "substrate:health": "echo Substrate health endpoint (Phase 0) - run via server",
     "verify:phase": "bash scripts/verify-phase.sh",
-    "verify:phase:1": "bash scripts/verify-phase.sh 1"
+    "verify:phase:1": "bash scripts/verify-phase.sh 1",
+    "release:patch": "node scripts/bump-version.js patch && git add package.json CHANGELOG.md && git commit -m \"chore(release): patch bump\" && git tag \"v$(node -p \\\"require(''./package.json'').version\\\")\"",
+    "release:minor": "node scripts/bump-version.js minor && git add package.json CHANGELOG.md && git commit -m \"chore(release): minor bump\" && git tag \"v$(node -p \\\"require(''./package.json'').version\\\")\""
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
