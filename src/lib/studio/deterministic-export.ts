@@ -54,7 +54,8 @@ export class DeterministicExportPipeline {
       const hash = seed.$hash || seed.id || 'default';
       this.rng = rngFromHash(hash).nextF64;
     } else {
-      this.rng = Math.random;
+      // Use deterministic default seed instead of Math.random for reproducibility
+      this.rng = rngFromHash('default-export-seed').nextF64;
     }
   }
   
@@ -81,12 +82,14 @@ export class DeterministicExportPipeline {
       const jsonString = JSON.stringify(exportData, null, 2);
       const data = this.applyCompression(jsonString, format.compression);
       
+      const checksum = await this.calculateChecksum(data);
+      
       const metadata: ExportMetadata = {
         seedHash,
         timestamp,
         format,
         size: data.length,
-        checksum: this.calculateChecksum(data),
+        checksum,
         provenance: {
           lineage: seed.$lineage?.parents || [],
           operations: seed.$lineage?.operators || [],
@@ -136,12 +139,14 @@ export class DeterministicExportPipeline {
       
       const data = this.applyCompression(combinedData, format.compression);
       
+      const checksum = await this.calculateChecksum(data);
+      
       const metadata: ExportMetadata = {
         seedHash,
         timestamp,
         format,
         size: data.length,
-        checksum: this.calculateChecksum(data),
+        checksum,
         provenance: {
           lineage: seed.$lineage?.parents || [],
           operations: seed.$lineage?.operators || [],
@@ -183,12 +188,14 @@ export class DeterministicExportPipeline {
       
       const data = this.applyCompression(gsplCode, format.compression);
       
+      const checksum = await this.calculateChecksum(data);
+      
       const metadata: ExportMetadata = {
         seedHash,
         timestamp,
         format,
         size: data.length,
-        checksum: this.calculateChecksum(data),
+        checksum,
         provenance: {
           lineage: seed.$lineage?.parents || [],
           operations: seed.$lineage?.operators || [],
@@ -255,7 +262,7 @@ export class DeterministicExportPipeline {
    * Validate exported data
    */
   async validateExport(data: Uint8Array | string, metadata: ExportMetadata): Promise<boolean> {
-    const calculatedChecksum = this.calculateChecksum(data);
+    const calculatedChecksum = await this.calculateChecksum(data);
     const isValid = calculatedChecksum === metadata.checksum;
     
     this.notifyValidation(isValid, metadata);
@@ -347,32 +354,30 @@ export class DeterministicExportPipeline {
   }
   
   /**
-   * Calculate checksum for data
+   * Calculate checksum for data using SHA-256
    */
-  private calculateChecksum(data: string | Uint8Array): string {
-    let hash = 0;
+  private async calculateChecksum(data: string | Uint8Array): Promise<string> {
+    // Convert data to Uint8Array if it's a string
+    const bytes = typeof data === 'string' 
+      ? new TextEncoder().encode(data)
+      : data;
     
-    if (typeof data === 'string') {
-      for (let i = 0; i < data.length; i++) {
-        const char = data.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32-bit integer
-      }
-    } else {
-      for (let i = 0; i < data.length; i++) {
-        hash = ((hash << 5) - hash) + data[i];
-        hash = hash & hash;
-      }
-    }
+    // Use Web Crypto API for SHA-256 (works in browser and Node.js with crypto shim)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', bytes as BufferSource);
     
-    return Math.abs(hash).toString(16).padStart(8, '0');
+    // Convert to hex string
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    return hashHex;
   }
   
   /**
    * Register export callback
    */
   onExport(callback: (result: ExportResult) => void): () => void {
-    const id = `export-${Date.now()}-${Math.random()}`;
+    const rng = this.rng || rngFromHash('default-export-seed').nextF64;
+    const id = `export-${Date.now()}-${rng()}`;
     this.exportCallbacks.set(id, callback);
     
     return () => {
@@ -384,7 +389,8 @@ export class DeterministicExportPipeline {
    * Register validation callback
    */
   onValidation(callback: (isValid: boolean, metadata: ExportMetadata) => void): () => void {
-    const id = `validation-${Date.now()}-${Math.random()}`;
+    const rng = this.rng || rngFromHash('default-export-seed').nextF64;
+    const id = `validation-${Date.now()}-${rng()}`;
     this.validationCallbacks.set(id, callback);
     
     return () => {
