@@ -1,0 +1,57 @@
+# Paradigm Infinite - Canary Deployment Configuration
+# Extends the base docker-compose.yml with canary-specific services
+
+version: '3.8'
+
+services:
+  # Canary instance of the application
+  app-canary:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: paradigm-canary-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - PARA_TOKEN_ADDRESS=${PARA_TOKEN_ADDRESS}
+      - SEED_NFT_ADDRESS=${SEED_NFT_ADDRESS}
+      - LOG_LEVEL=info
+      - ENABLE_METRICS=true
+      - PROMETHEUS_ENABLED=true
+      - DEPLOYMENT_TYPE=canary
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - paradigm
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.paradigm.deployment=canary"
+      - "com.paradigm.version=${CANARY_VERSION:-latest}"
+
+  # Canary-specific metrics exporter
+  prometheus-canary-exporter:
+    image: prom/node-exporter:latest
+    container_name: paradigm-canary-exporter
+    restart: unless-stopped
+    ports:
+      - "9101:9100"
+    networks:
+      - paradigm
+    labels:
+      - "com.paradigm.deployment=canary"
+
+networks:
+  paradigm:
+    external: true

@@ -60,6 +60,20 @@ export function deriveCleanTitle(intent: string | undefined | null, seedHash?: s
     const h = (seedHash || '').slice(0, 8);
     return h ? `Seed-${h}` : 'Untitled Seed';
   }
+  
+  // Check if the intent looks like an explicit name override (no spaces, or camelCase/PascalCase)
+  // This preserves names like 'ToolTestHero', 'Aria', 'Echo' that are explicitly provided
+  const hasSpaces = /\s/.test(intent);
+  const isCamelCase = /^[a-z]+([A-Z][a-z]*)*$/.test(intent);
+  const isPascalCase = /^[A-Z][a-z]+([A-Z][a-z]*)*$/.test(intent);
+  
+  // If it's a single word without special characters, treat it as an explicit name
+  if (!hasSpaces && (isCamelCase || isPascalCase || /^[a-zA-Z]+$/.test(intent))) {
+    // Clean up the name: capitalize first letter, lowercase the rest
+    const cleaned = intent.charAt(0).toUpperCase() + intent.slice(1);
+    return cleaned;
+  }
+  
   const named = nameSeedSync(intent, 'character');
   // If SeedNamer gave us back a hash-style name (Tier 0 for very short / empty
   // intent), fall back to the original intent+hash to preserve readability.

@@ -35,11 +35,25 @@ export interface GSPLContext {
   currentUser?: string;
   output: string[];
   errors: string[];
+  // Phase 1-26 dynamic context extensions (Doctrine v2 Part 6+)
+  _v15_adapt?: Record<string, any>;
+  _v16_conscious?: Record<string, any>;
+  _v17_gov?: Record<string, any>;
+  _v18_fed?: Record<string, any>;
+  _v19_civ?: Record<string, any>;
+  _v20_continuum?: Record<string, any>;
+  _v21_genesis?: Record<string, any>;
+  _v22_eternal?: Record<string, any>;
+  _v23_omniversal?: Record<string, any>;
+  _v24_absolute?: Record<string, any>;
+  _v25_eternal?: Record<string, any>;
+  _v26_absolute?: Record<string, any>;
 }
 
 export class GsplInterpreter {
   private context: GSPLContext;
   private _resolver: unknown | null = null;
+  private adaptiveLearningState: Map<string, any> = new Map();
 
   private async getResolver(): Promise<unknown> {
     if (!this._resolver) {
@@ -502,7 +516,7 @@ export class GsplInterpreter {
           const reflection = await this.evaluateReflect({ target: targetSeed });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(targetSeed, this.VALID_STRATA) : 0.5;
           // simple per stratum + adaptive rate (in-run "learning" via closure map for this execution)
-          const perStratum = {};
+          const perStratum: Record<string, number> = {};
           for (const s of this.VALID_STRATA) perStratum[s] = this.strataScoreBuiltin(targetSeed, [s]);
           const stateKey = String((targetSeed && (targetSeed.$hash || targetSeed.hash)) || 'anon').slice(0,16);
           if (!this.context._v15_adapt) this.context._v15_adapt = {};
@@ -533,7 +547,7 @@ export class GsplInterpreter {
           // Build on prior reflect + v1.5 autonomous state for continuity
           const reflection = await this.evaluateReflect({ target });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(target, this.VALID_STRATA) : 0.5;
-          const perStratum = {};
+          const perStratum: Record<string, number> = {};
           for (const s of this.VALID_STRATA) perStratum[s] = this.strataScoreBuiltin(target, [s]);
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           // v1.5 legacy state if present
@@ -606,7 +620,7 @@ export class GsplInterpreter {
           // Leverage v1.6 reflective for base awareness + ethics
           const reflection = await this.evaluateReflect({ target });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(target, this.VALID_STRATA) : 0.5;
-          const perStratum = {};
+          const perStratum: Record<string, number> = {};
           for (const s of this.VALID_STRATA) perStratum[s] = this.strataScoreBuiltin(target, [s]);
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           const priorV15 = (this.context._v15_adapt && this.context._v15_adapt[stateKey]) || { evos: 0, avgUplift: 0 };
@@ -1157,7 +1171,7 @@ export class GsplInterpreter {
           const maintenanceDelta = 0.005; // det increment
           const newCoherence = Math.min(this.context._v24_absolute.boundaries.maxCoherence, currentCoherence + maintenanceDelta);
           const adaptiveRate = Math.max(0.05, Math.min(0.15, (newCoherence - 0.8) * 0.5));
-          let sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate);
+          let sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
           // Adaptive enhancement (self-sustaining optimization)
           if (sustained && sustained.genes) {
             Object.keys(sustained.genes).forEach(k => {
@@ -1222,7 +1236,7 @@ export class GsplInterpreter {
           const regenDelta = 0.002; // det perpetual increment
           const newP = Math.min(this.context._v25_eternal.boundaries.maxPerpetuation, currentP + regenDelta);
           const regenRate = Math.max(0.03, Math.min(0.12, (newP - 0.85) * 0.4));
-          let perpetuated = this.callKernelMutate(eternalSubstrate, regenRate);
+          let perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
           // Adaptive regeneration (self-perpetuating optimization)
           if (perpetuated && perpetuated.genes) {
             Object.keys(perpetuated.genes).forEach(k => {
@@ -1287,7 +1301,7 @@ export class GsplInterpreter {
           const verifyDelta = 0.001; // det perpetual increment
           const newC = Math.min(this.context._v26_absolute.boundaries.maxConvergence, currentC + verifyDelta);
           const verifyRate = Math.max(0.02, Math.min(0.1, (newC - 0.9) * 0.3));
-          let converged = this.callKernelMutate(absoluteContinuum, verifyRate);
+          let converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
           // Recursive verification (self-referential propagation)
           if (converged && converged.genes) {
             Object.keys(converged.genes).forEach(k => {
@@ -2605,6 +2619,38 @@ export class GsplInterpreter {
     const last = (await this.execute(source) as any)?.lastResult; // re-exec safe (det)
     return last || null;
   }
+
+  // v1.1.0 advanced operator implementations (added for GSPL evolution; called from evaluateNode switch)
+  async evaluateReflect(node: any): Promise<any> { // v1.6 (non-private for broad loader compat; still instance method in practice)
+    const target = await this.evaluateNode(node.target);
+    const reflection = {
+      type: 'reflection',
+      seed: target,
+      strata: target?.strata || this.VALID_STRATA,
+      genes: Object.keys(target?.genes || {}),
+      hash: target?.$hash || 'reflected',
+      timestamp: kernelNowIso(),
+      // v1.6: include conscious state if present for full reflective cognition
+      conscious: (target && target.$conscious) || (this.context._v16_conscious && this.context._v16_conscious[String((target && (target.$hash || target.hash)) || 'anon').slice(0,16)]) || null
+    };
+    this.context.output.push(`REFLECT: ${JSON.stringify(reflection).slice(0,120)}...`);
+    return reflection;
+  }
+
+  async evaluateNarrate(node: any): Promise<any> { // v1.1.0 narrate operator
+    const target = await this.evaluateNode(node.target);
+    const narrative = {
+      type: 'narrative',
+      seed: target,
+      strata: target?.strata || this.VALID_STRATA,
+      genes: Object.keys(target?.genes || {}),
+      hash: target?.$hash || 'narrated',
+      timestamp: kernelNowIso(),
+      content: target?.description || target?.genes?.description?.value || 'A story unfolds...'
+    };
+    this.context.output.push(`NARRATE: ${JSON.stringify(narrative).slice(0,120)}...`);
+    return narrative;
+  }
 }
 
 class GSPLReturn {
@@ -2643,23 +2689,5 @@ export async function fromGSPL(source: string, seedPhrase?: string): Promise<any
 }
 
 // (old non-executable toGSPL/fromGSPL tail replaced by the canonical executable versions below for parser-roundtrip + strata support)
-
-// v1.1.0 advanced operator implementations (added for GSPL evolution; called from evaluateNode switch)
-  async evaluateReflect(node: any): Promise<any> { // v1.6 (non-private for broad loader compat; still instance method in practice)
-    const target = await this.evaluateNode(node.target);
-    const reflection = {
-      type: 'reflection',
-      seed: target,
-      strata: target?.strata || this.VALID_STRATA,
-      genes: Object.keys(target?.genes || {}),
-      hash: target?.$hash || 'reflected',
-      timestamp: kernelNowIso(),
-      // v1.6: include conscious state if present for full reflective cognition
-      conscious: (target && target.$conscious) || (this.context._v16_conscious && this.context._v16_conscious[String((target && (target.$hash || target.hash)) || 'anon').slice(0,16)]) || null
-    };
-    this.context.output.push(`REFLECT: ${JSON.stringify(reflection).slice(0,120)}...`);
-    return reflection;
-  }
-
 
 

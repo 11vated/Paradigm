@@ -317,7 +317,7 @@ export function CommandPalette({ commands, isOpen, onClose }: CommandPaletteProp
         justifyContent: 'center',
         paddingTop: 100,
         zIndex: 9999
-      }} onClick={onClose}>
+      }} onClick={onClose} tabIndex={0} onKeyDown={e => { if (e.key === 'Escape' || e.key === ' ') { e.preventDefault(); onClose(); } }}>
       <div
         style={{
           background: '#2a2a2a',
@@ -329,6 +329,9 @@ export function CommandPalette({ commands, isOpen, onClose }: CommandPaletteProp
           flexDirection: 'column'
         }}
         onClick={e => e.stopPropagation()}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => { if (e.key === 'Escape' || e.key === ' ') { e.preventDefault(); } }}
       >
         <input
           type="text"

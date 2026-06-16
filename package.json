@@ -1,7 +1,7 @@
 {
   "name": "paradigm-absolute",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "bin": {
     "paradigm": "./cli/index.js"
@@ -27,6 +27,12 @@
     "test:determinism": "vitest run tests/determinism --run",
     "test:unit": "vitest run tests/unit --run",
     "test:simple": "node --input-type=module --eval \"import { generateMusicV2 } from './src/lib/kernel/generators/music-v2.ts'; const seed = { \\$domain: 'music', \\$name: 'Test' }; generateMusicV2(seed).then(r => console.log('Success:', r.name)).catch(e => console.error('Error:', e.message));\"",
+    "smoke:test": "tsx scripts/smoke-test.ts",
+    "load:test:smoke": "k6 run load-tests/smoke-test.js",
+    "load:test:load": "k6 run load-tests/load-test.js",
+    "load:test:stress": "k6 run load-tests/stress-test.js",
+    "docker:scan": "bash scripts/docker-scan.sh",
+    "docker:scan:win": "powershell -ExecutionPolicy Bypass -File scripts/docker-scan.ps1",
     "test:visual": "npx playwright test tests/visual/regressions.spec.ts",
     "test:visual:update": "npx playwright test tests/visual/regressions.spec.ts --update-snapshots=missing",
     "profile:baseline": "tsx scripts/profile-engines.ts",
@@ -182,5 +188,9 @@
     "typescript-eslint": "^8.58.1",
     "vite": "^6.2.0",
     "vitest": "^4.1.4"
+  },
+  "optionalDependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.600.0",
+    "node-vault-client": "^0.2.0"
   }
 }

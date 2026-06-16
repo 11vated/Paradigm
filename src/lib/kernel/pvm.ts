@@ -102,10 +102,13 @@ export class PVM {
     try {
       await this.run();
 
+      // Collect artifacts from execution (seed_grow operations produce artifacts)
+      const artifacts = this.collectArtifacts();
+
       return {
         success: true,
         output: this.state.output,
-        artifacts: [], // TODO: Collect artifacts from seed_grow
+        artifacts,
         steps: this.state.steps,
         finalStack: [...this.state.stack],
       };
@@ -119,6 +122,23 @@ export class PVM {
         finalStack: [...this.state.stack],
       };
     }
+  }
+
+  /**
+   * Collect artifacts from execution output
+   * Artifacts are produced by seed_grow operations and stored in the output array
+   */
+  private collectArtifacts(): Artifact[] {
+    const artifacts: Artifact[] = [];
+    
+    // Scan output array for Artifact objects
+    for (const item of this.state.output) {
+      if (item && typeof item === 'object' && 'artifactType' in item) {
+        artifacts.push(item as Artifact);
+      }
+    }
+    
+    return artifacts;
   }
 
   /**
@@ -465,6 +485,215 @@ export class PVM {
         if (this.config.debug) {
           console.log('[PVM Output]', value);
         }
+        return 'continue';
+      }
+
+      // Bitwise operations
+      case Opcode.BIT_AND: {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(a & b);
+        return 'continue';
+      }
+
+      case Opcode.BIT_OR: {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(a | b);
+        return 'continue';
+      }
+
+      case Opcode.BIT_XOR: {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(a ^ b);
+        return 'continue';
+      }
+
+      case Opcode.BIT_NOT: {
+        const a = stack.pop();
+        stack.push(~a);
+        return 'continue';
+      }
+
+      case Opcode.SHL: {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(a << b);
+        return 'continue';
+      }
+
+      case Opcode.SHR: {
+        const b = stack.pop();
+        const a = stack.pop();
+        stack.push(a >> b);
+        return 'continue';
+      }
+
+      // Load/Store field and index
+      case Opcode.LOAD_FIELD: {
+        const fieldName = this.program.strings[operand];
+        const obj = stack.pop();
+        stack.push(obj?.[fieldName]);
+        return 'continue';
+      }
+
+      case Opcode.STORE_FIELD: {
+        const fieldName = this.program.strings[operand];
+        const value = stack.pop();
+        const obj = stack.pop();
+        if (obj && typeof obj === 'object') {
+          obj[fieldName] = value;
+        }
+        stack.push(value);
+        return 'continue';
+      }
+
+      case Opcode.LOAD_INDEX: {
+        const index = stack.pop();
+        const arr = stack.pop();
+        stack.push(arr?.[index]);
+        return 'continue';
+      }
+
+      case Opcode.STORE_INDEX: {
+        const index = stack.pop();
+        const value = stack.pop();
+        const arr = stack.pop();
+        if (Array.isArray(arr)) {
+          arr[index] = value;
+        }
+        stack.push(value);
+        return 'continue';
+      }
+
+      // Additional seed operations
+      case Opcode.SEED_MUTATE: {
+        const rate = operand > 0 ? stack.pop() : 0.15;
+        const seed = stack.pop();
+        // Use seed's built-in mutate method
+        if (seed && typeof seed.mutate === 'function') {
+          const mutated = seed.mutate(this.state.rng, rate);
+          stack.push(mutated);
+        } else {
+          stack.push(seed);
+        }
+        return 'continue';
+      }
+
+      case Opcode.SEED_CROSSOVER: {
+        const seedB = stack.pop();
+        const seedA = stack.pop();
+        // Use seed's built-in cross method
+        if (seedA && typeof seedA.cross === 'function') {
+          const child = seedA.cross(seedB, this.state.rng);
+          stack.push(child);
+        } else {
+          stack.push(seedA);
+        }
+        return 'continue';
+      }
+
+      case Opcode.SEED_BREED: {
+        const seedB = stack.pop();
+        const seedA = stack.pop();
+        // Use seed's built-in cross method for breeding
+        if (seedA && typeof seedA.cross === 'function') {
+          const child = seedA.cross(seedB, this.state.rng);
+          stack.push(child);
+        } else {
+          stack.push(seedA);
+        }
+        return 'continue';
+      }
+
+      // Type operations
+      case Opcode.TYPE_CAST: {
+        const targetType = this.program.strings[operand];
+        const value = stack.pop();
+        let casted: any;
+        switch (targetType) {
+          case 'string':
+            casted = String(value);
+            break;
+          case 'number':
+            casted = Number(value);
+            break;
+          case 'boolean':
+            casted = Boolean(value);
+            break;
+          default:
+            casted = value;
+        }
+        stack.push(casted);
+        return 'continue';
+      }
+
+      case Opcode.TYPE_CHECK: {
+        const expectedType = this.program.strings[operand];
+        const value = stack.pop();
+        let isMatch = false;
+        switch (expectedType) {
+          case 'string':
+            isMatch = typeof value === 'string';
+            break;
+          case 'number':
+            isMatch = typeof value === 'number';
+            break;
+          case 'boolean':
+            isMatch = typeof value === 'boolean';
+            break;
+          case 'object':
+            isMatch = typeof value === 'object' && value !== null;
+            break;
+          case 'array':
+            isMatch = Array.isArray(value);
+            break;
+          default:
+            isMatch = false;
+        }
+        stack.push(isMatch);
+        return 'continue';
+      }
+
+      // Vector/Struct operations
+      case Opcode.VECTOR_CREATE: {
+        const count = operand;
+        const elements = [];
+        for (let i = 0; i < count; i++) {
+          elements.unshift(stack.pop());
+        }
+        stack.push(elements);
+        return 'continue';
+      }
+
+      case Opcode.STRUCT_CREATE: {
+        const fieldCount = operand;
+        const struct: Record<string, any> = {};
+        for (let i = 0; i < fieldCount; i++) {
+          const value = stack.pop();
+          const fieldName = this.program.strings[stack.pop()];
+          struct[fieldName] = value;
+        }
+        stack.push(struct);
+        return 'continue';
+      }
+
+      case Opcode.GET_FIELD: {
+        const fieldName = this.program.strings[operand];
+        const obj = stack.pop();
+        stack.push(obj?.[fieldName]);
+        return 'continue';
+      }
+
+      case Opcode.SET_FIELD: {
+        const fieldName = this.program.strings[operand];
+        const value = stack.pop();
+        const obj = stack.pop();
+        if (obj && typeof obj === 'object') {
+          obj[fieldName] = value;
+        }
+        stack.push(obj);
         return 'continue';
       }
 

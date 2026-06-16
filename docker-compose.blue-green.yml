@@ -1,0 +1,109 @@
+# Paradigm Infinite - Blue-Green Deployment Configuration
+# Maintains two identical environments (blue and green) for zero-downtime deployments
+
+version: '3.8'
+
+services:
+  # Blue environment (current production)
+  app-blue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: paradigm-blue-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - PARA_TOKEN_ADDRESS=${PARA_TOKEN_ADDRESS}
+      - SEED_NFT_ADDRESS=${SEED_NFT_ADDRESS}
+      - LOG_LEVEL=info
+      - ENABLE_METRICS=true
+      - PROMETHEUS_ENABLED=true
+      - DEPLOYMENT_TYPE=blue
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - paradigm
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.paradigm.deployment=blue"
+      - "com.paradigm.environment=production"
+
+  # Green environment (new version)
+  app-green:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: paradigm-green-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - PARA_TOKEN_ADDRESS=${PARA_TOKEN_ADDRESS}
+      - SEED_NFT_ADDRESS=${SEED_NFT_ADDRESS}
+      - LOG_LEVEL=info
+      - ENABLE_METRICS=true
+      - PROMETHEUS_ENABLED=true
+      - DEPLOYMENT_TYPE=green
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - paradigm
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.paradigm.deployment=green"
+      - "com.paradigm.environment=production"
+
+  # Load balancer (Nginx) for traffic routing
+  load-balancer:
+    image: nginx:alpine
+    container_name: paradigm-load-balancer
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-load-balancer.conf:/etc/nginx/nginx.conf:ro
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - app-blue
+      - app-green
+    networks:
+      - paradigm
+    labels:
+      - "com.paradigm.service=load-balancer"
+
+networks:
+  paradigm:
+    external: true
+
+volumes:
+  nginx-logs:
+    labels:
+      - "com.paradigm.service=load-balancer"

@@ -1,0 +1,157 @@
+# Paradigm Infinite - Staging Environment
+# This configuration is for staging/preview deployments
+# Uses staging-specific environment variables and resource limits
+
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: paradigm-staging-app
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://paradigm:paradigm_staging_pass@postgres-staging:5432/paradigm_staging
+      - REDIS_URL=redis://redis-staging:6379
+      - JWT_SECRET=${JWT_SECRET:-staging-jwt-secret-change-in-production}
+      - PARA_TOKEN_ADDRESS=${PARA_TOKEN_ADDRESS:-}
+      - SEED_NFT_ADDRESS=${SEED_NFT_ADDRESS:-}
+      - LOG_LEVEL=debug
+      - ENABLE_METRICS=true
+      - PROMETHEUS_ENABLED=true
+    ports:
+      - "3001:3000" # Use port 3001 for staging
+    depends_on:
+      postgres-staging:
+        condition: service_healthy
+      redis-staging:
+        condition: service_healthy
+    networks:
+      - paradigm-staging
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.paradigm.environment=staging"
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: paradigm-staging-caddy
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+      - "8443:443"
+    volumes:
+      - ./Caddyfile.staging:/etc/caddy/Caddyfile:ro
+      - caddy-staging-data:/data
+      - caddy-staging-config:/config
+    depends_on:
+      - app
+    networks:
+      - paradigm-staging
+
+  postgres-staging:
+    image: postgres:15-alpine
+    container_name: paradigm-staging-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=paradigm
+      - POSTGRES_PASSWORD=paradigm_staging_pass
+      - POSTGRES_DB=paradigm_staging
+    volumes:
+      - postgres-staging-data:/var/lib/postgresql/data
+    networks:
+      - paradigm-staging
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U paradigm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.paradigm.environment=staging"
+
+  redis-staging:
+    image: redis:7-alpine
+    container_name: paradigm-staging-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-staging-data:/data
+    networks:
+      - paradigm-staging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.paradigm.environment=staging"
+
+  prometheus-staging:
+    image: prom/prometheus:latest
+    container_name: paradigm-staging-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9091:9090" # Use port 9091 for staging
+    volumes:
+      - ./monitoring/prometheus.staging.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-staging-data:/prometheus
+    networks:
+      - paradigm-staging
+    labels:
+      - "com.paradigm.environment=staging"
+
+  grafana-staging:
+    image: grafana/grafana:latest
+    container_name: paradigm-staging-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000" # Note: conflicts with app port, use 3002 instead
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-staging-grafana-password}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-staging-data:/var/lib/grafana
+    networks:
+      - paradigm-staging
+    depends_on:
+      - prometheus-staging
+    labels:
+      - "com.paradigm.environment=staging"
+
+networks:
+  paradigm-staging:
+    driver: bridge
+    labels:
+      - "com.paradigm.environment=staging"
+
+volumes:
+  postgres-staging-data:
+    labels:
+      - "com.paradigm.environment=staging"
+  redis-staging-data:
+    labels:
+      - "com.paradigm.environment=staging"
+  caddy-staging-data:
+    labels:
+      - "com.paradigm.environment=staging"
+  caddy-staging-config:
+    labels:
+      - "com.paradigm.environment=staging"
+  prometheus-staging-data:
+    labels:
+      - "com.paradigm.environment=staging"
+  grafana-staging-data:
+    labels:
+      - "com.paradigm.environment=staging"

@@ -220,7 +220,7 @@ app.post('/federation/offer', (req: Request, res: Response) => {
   offerCache.set(seedHash, { receivedAt: kernelNowIso(), from: body.fromNode });
   if (offerCache.size > 1000) { // simple eviction
     const firstKey = offerCache.keys().next().value;
-    offerCache.delete(firstKey);
+    if (firstKey !== undefined) offerCache.delete(firstKey);
   }
   REGISTRY.push({ seedHash, fromNode: body.fromNode, at: kernelNowIso() });
   if (REGISTRY.length > 10000) REGISTRY.shift(); // bounded
@@ -318,7 +318,7 @@ app.post('/federation/cache', (req: Request, res: Response) => {
     ARTIFACT_CACHE.set(key, value);
     if (ARTIFACT_CACHE.size > 5000) {
       const first = ARTIFACT_CACHE.keys().next().value;
-      ARTIFACT_CACHE.delete(first);
+      if (first !== undefined) ARTIFACT_CACHE.delete(first);
     }
   }
   res.json({ cached: !!key, size: ARTIFACT_CACHE.size });
@@ -437,8 +437,8 @@ app.get('/governance/protocol', (_req, res) => {
 });
 
 // v1.8 Unified Conscious Federation + Cooperative Evolution (sync ethical/reflective states, consensus protocols, cooperative evolution across nodes)
-const globalConsciousRegistry = {}; // nodeId -> {conscious, gov, lastProof}
-const consensusProposals = {}; // proposalId -> {votes, state}
+const globalConsciousRegistry: Record<string, { conscious: any; gov: any; lastProof: string; at: string }> = {};
+const consensusProposals: Record<string, { votes: Record<string, { vote: boolean; ethical: number; proof?: string }>; state: { seedHash?: string; proposedCoop?: any; nodeStates?: any }; proofs: string[] }> = {};
 
 function getGlobalFederationState() {
   const gov = getGovernanceState();
@@ -488,7 +488,7 @@ app.get('/consensus/global', (_req, res) => {
 });
 
 // v1.9 Cooperative Synthetic Civilization + Collective Creation (civilization-scale endpoints, collective creation sync, civ governance, audit trails)
-const civilizationRegistry = {}; // nodeId -> {collective, civGov, lastCivProof}
+const civilizationRegistry: Record<string, { collective: any; civGov: any; lastCivProof: string; at: string }> = {};
 const civAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let civPrev = 'civ-genesis';
 
@@ -533,7 +533,7 @@ app.get('/civilization/audit', (_req, res) => {
 });
 
 // v2.0 Synthetic Continuum + Recursive Substrate Evolution (multi-layer sync, cross-reality federation, recursion audit, containment)
-const continuumRegistry = {}; // layerId -> {substrate, depth, continuumProof}
+const continuumRegistry: Record<string, { substrate: any; depth: number; continuumProof: string; at: string }> = {};
 const continuumAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let continuumPrev = 'cont-genesis';
 
@@ -577,7 +577,7 @@ app.get('/continuum/audit', (_req, res) => {
 });
 
 // v2.1 Infinite Recursive Genesis + Autonomous Universe Creation (genesis sync, cross-universe federation, universe audit, containment)
-const genesisRegistry = {}; // universeId -> {substrate, depth, genesisProof}
+const genesisRegistry: Record<string, { substrate: any; depth: number; genesisProof: string; at: string }> = {};
 const genesisAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let genesisPrev = 'genesis-genesis';
 
@@ -621,7 +621,7 @@ app.get('/genesis/audit', (_req, res) => {
 });
 
 // v2.2 Eternal Substrate Continuity + Cross-Reality Cooperation (continuous sync, cooperative inter-universe exchange, continuity audit, containment)
-const continuityRegistry = {}; // universeId -> {eternalState, syncDepth, continuityProof}
+const continuityRegistry: Record<string, { eternalState: any; syncDepth: number; continuityProof: string; at: string }> = {};
 const continuityAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let continuityPrev = 'continuity-genesis';
 
@@ -665,7 +665,7 @@ app.get('/continuity/audit', (_req, res) => {
 });
 
 // v2.3 Omniversal Integration + Cooperative Intelligence (merge all realities, shared cognition across unified substrate, omniversal audit, containment)
-const omniversalRegistry = {}; // layerId -> {unifiedSubstrate, layers, omniProof}
+const omniversalRegistry: Record<string, { unifiedSubstrate: any; layers: number; omniProof: string; at: string }> = {};
 const omniAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let omniPrev = 'omni-genesis';
 
@@ -709,7 +709,7 @@ app.get('/omniversal/audit', (_req, res) => {
 });
 
 // v2.4 Absolute Continuum + Self-Sustaining Evolution (total coherence, self-sustaining maintenance/optimization, absolute audit, containment)
-const absoluteRegistry = {}; // substrateId -> {absoluteState, coherence, sustainProof}
+const absoluteRegistry: Record<string, { absoluteState: any; coherence: number; sustainProof: string; at: string }> = {};
 const absoluteAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let absolutePrev = 'absolute-genesis';
 
@@ -753,7 +753,7 @@ app.get('/absolute/audit', (_req, res) => {
 });
 
 // v2.5 Eternal Paradigm + Omniversal Self-Perpetuation (perpetual self-sustaining, autonomous regeneration, eternal audit, containment)
-const eternalRegistry = {}; // substrateId -> {eternalState, perpetuation, perpetuateProof}
+const eternalRegistry: Record<string, { eternalState: any; perpetuation: number; perpetuateProof: string; at: string }> = {};
 const eternalAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let eternalPrev = 'eternal-genesis';
 
@@ -797,47 +797,47 @@ app.get('/eternal/audit', (_req, res) => {
 });
 
 // v2.6 Paradigm Absolute + Infinite Deterministic Convergence (self-referential continuum merge, perpetual truth propagation, absolute audit, containment)
-const absoluteRegistry = {}; // substrateId -> {absoluteState, convergence, convergeProof}
-const absoluteAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
-let absolutePrev = 'absolute-genesis';
+const absoluteConvergeRegistry: Record<string, { absoluteState: any; convergence: number; convergeProof: string; at: string }> = {};
+const absoluteConvergeAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
+let absoluteConvergePrev = 'absolute-converge-genesis';
 
-function getAbsoluteState() {
+function getAbsoluteConvergeState() {
   const etern = getEternalState();
   return {
     ...etern,
-    absoluteConvergence: Object.keys(absoluteRegistry).length ? (Object.values(absoluteRegistry)[0] as any).convergence || 0.9999 : 0.9999,
-    convergeDepth: Math.max(0, ...Object.values(absoluteRegistry).map((r: any) => r.convergence || 0)),
+    absoluteConvergence: Object.keys(absoluteConvergeRegistry).length ? (Object.values(absoluteConvergeRegistry)[0] as any).convergence || 0.9999 : 0.9999,
+    convergeDepth: Math.max(0, ...Object.values(absoluteConvergeRegistry).map((r: any) => r.convergence || 0)),
     absoluteContainment: 'paradigm_absolute_isolated_with_infinite_deterministic_convergence',
-    lastAbsolute: absoluteAudit.length ? absoluteAudit[absoluteAudit.length-1].decision : 'no_absolute_yet'
+    lastAbsolute: absoluteConvergeAudit.length ? absoluteConvergeAudit[absoluteConvergeAudit.length-1].decision : 'no_absolute_yet'
   };
 }
 
 app.post('/absolute/continuum-merge', (req: Request, res: Response) => {
   const { substrateId, absoluteState, convergence, convergeProof } = req.body || {};
   if (substrateId && absoluteState) {
-    absoluteRegistry[substrateId] = { absoluteState, convergence: convergence || 0.9999, convergeProof: convergeProof || 'no-proof', at: kernelNowIso() };
+    absoluteConvergeRegistry[substrateId] = { absoluteState, convergence: convergence || 0.9999, convergeProof: convergeProof || 'no-proof', at: kernelNowIso() };
   }
-  res.json({ absoluteMerged: true, substrateId, absoluteState: getAbsoluteState() });
+  res.json({ absoluteMerged: true, substrateId, absoluteState: getAbsoluteConvergeState() });
 });
 
 app.post('/convergence/verify', (req: Request, res: Response) => {
   const { substrateId, propagation, proof } = req.body || {};
   const decision = `v2.6_absolute_converge: substrate=${substrateId} propagation=${(propagation||[]).length} proof=${(proof||'').slice(0,12)}`;
-  const entry = { ts: kernelNowIso(), decision, proof: '', prev: absolutePrev };
+  const entry = { ts: kernelNowIso(), decision, proof: '', prev: absoluteConvergePrev };
   const h = createHash('sha256').update(JSON.stringify(entry) + (substrateId || '')).digest('hex').slice(0, 24);
   entry.proof = h;
-  absolutePrev = h;
-  absoluteAudit.push(entry);
-  if (absoluteAudit.length > 15) absoluteAudit.shift();
-  res.json({ perpetualVerify: true, substrateId, convergeProof: h, absoluteState: getAbsoluteState(), auditTail: absoluteAudit.slice(-3) });
+  absoluteConvergePrev = h;
+  absoluteConvergeAudit.push(entry);
+  if (absoluteConvergeAudit.length > 15) absoluteConvergeAudit.shift();
+  res.json({ perpetualVerify: true, substrateId, convergeProof: h, absoluteState: getAbsoluteConvergeState(), auditTail: absoluteConvergeAudit.slice(-3) });
 });
 
 app.get('/absolute/global', (_req, res) => {
-  res.json({ registry: absoluteRegistry, state: getAbsoluteState(), absoluteChainHead: absolutePrev });
+  res.json({ registry: absoluteConvergeRegistry, state: getAbsoluteConvergeState(), absoluteChainHead: absoluteConvergePrev });
 });
 
 app.get('/absolute/audit', (_req, res) => {
-  res.json({ chainTail: absoluteAudit.slice(-8), head: absolutePrev, len: absoluteAudit.length, absoluteProtocol: 'v2.6_paradigm_absolute' });
+  res.json({ chainTail: absoluteConvergeAudit.slice(-8), head: absoluteConvergePrev, len: absoluteConvergeAudit.length, absoluteProtocol: 'v2.6_paradigm_absolute' });
 });
 
 export const federationApp = app;
