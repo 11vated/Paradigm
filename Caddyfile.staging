@@ -1,0 +1,105 @@
+# Paradigm Infinite - Staging Caddy Configuration
+# Reverse proxy for staging environment (port 8080/8443)
+
+{
+  # Global options
+  email admin@paradigm-staging.local
+}
+
+# HTTP to HTTPS redirect
+http://staging.paradigm.local, http://*.staging.paradigm.local {
+  redir https://{host}{uri} permanent
+}
+
+# HTTPS server
+https://staging.paradigm.local, https://*.staging.paradigm.local {
+  # Auto HTTPS with Let's Encrypt (disabled for staging, use self-signed or manual certs)
+  tls internal {
+    on_demand
+  }
+
+  # Security headers
+  header {
+    # HSTS (disabled for staging)
+    # Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Other security headers
+    X-Content-Type-Options "nosniff"
+    X-Frame-Options "SAMEORIGIN"
+    X-XSS-Protection "1; mode=block"
+    Referrer-Policy "strict-origin-when-cross-origin"
+    Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    
+    # CORS headers (more permissive for staging)
+    Access-Control-Allow-Origin "*"
+    Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers "Content-Type, Authorization"
+    Access-Control-Max-Age "3600"
+  }
+
+  # Reverse proxy to app
+  reverse_proxy app:3000 {
+    # Health check
+    health_uri /api/health
+    health_interval 10s
+    health_timeout 5s
+    health_status 200
+    
+    # Timeouts
+    header_up Host {host}
+    header_up X-Real-IP {remote}
+    header_up X-Forwarded-For {remote}
+    header_up X-Forwarded-Proto {scheme}
+    
+    # WebSocket support
+    header_up Connection {>Connection}
+    header_up Upgrade {>Upgrade}
+  }
+
+  # Embedder sidecar proxy (if needed)
+  handle /embed/* {
+    reverse_proxy sbert-embedder:5000
+  }
+
+  # File uploads (increase limits for staging)
+  handle /api/seeds/upload {
+    reverse_proxy app:3000 {
+      header_up Content-Length {>Content-Length}
+    }
+  }
+
+  # Static files (if serving from app)
+  handle /assets/* {
+    reverse_proxy app:3000
+  }
+
+  # Metrics endpoint (protected in staging)
+  handle /metrics {
+    reverse_proxy app:3000
+  }
+
+  # Log format
+  log {
+    output file /var/log/caddy/staging-access.log
+    format json
+  }
+}
+
+# Prometheus metrics endpoint (restricted)
+https://prometheus.staging.paradigm.local {
+  tls internal
+  
+  # Basic auth for metrics
+  basicauth {
+    prometheus $2a$14$prometheus-staging-secret
+  }
+  
+  reverse_proxy prometheus-staging:9090
+}
+
+# Grafana dashboard
+https://grafana.staging.paradigm.local {
+  tls internal
+  
+  reverse_proxy grafana-staging:3000
+}

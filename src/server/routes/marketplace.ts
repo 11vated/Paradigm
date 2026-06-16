@@ -11,7 +11,7 @@
 
 import { Router, Request, Response } from 'express';
 
-// In-memory storage (TODO: replace with database persistence in production)
+// In-memory storage (TODO: replace with PostgreSQL persistence in production - requires schema design, migration scripts, and database client integration)
 interface SeedListing {
   id: string;
   seedId: string;
@@ -47,7 +47,7 @@ interface MarketplaceStats {
   topCreators: string[];
 }
 
-// In-memory storage (TODO: migrate to PostgreSQL)
+// In-memory storage (TODO: migrate to PostgreSQL - requires schema design, migration scripts, and database client integration)
 const listings = new Map<string, SeedListing>();
 const transactions = new Map<string, Transaction>();
 const userListings = new Map<string, string[]>();

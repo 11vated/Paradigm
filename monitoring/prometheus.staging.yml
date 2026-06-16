@@ -1,0 +1,68 @@
+# Prometheus Configuration for Staging Environment
+# Scrape targets and alerting rules for staging deployment
+
+global:
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  evaluation_interval: 15s
+  external_labels:
+    environment: 'staging'
+    cluster: 'paradigm-staging'
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Load alert rules
+rule_files:
+  - 'alert-rules.yml'
+
+# Scrape configurations
+scrape_configs:
+  # Paradigm Application Metrics
+  - job_name: 'paradigm-app-staging'
+    static_configs:
+      - targets: ['app:3000']
+        labels:
+          service: 'paradigm-app'
+          environment: 'staging'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Node Exporter (if added for system metrics)
+  - job_name: 'node-exporter-staging'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+          environment: 'staging'
+    scrape_interval: 15s
+
+  # PostgreSQL Exporter (if added)
+  - job_name: 'postgres-exporter-staging'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'postgres'
+          environment: 'staging'
+    scrape_interval: 30s
+
+  # Redis Exporter (if added)
+  - job_name: 'redis-exporter-staging'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'redis'
+          environment: 'staging'
+    scrape_interval: 30s
+
+  # Caddy Metrics (if enabled)
+  - job_name: 'caddy-staging'
+    static_configs:
+      - targets: ['caddy:2019']
+        labels:
+          service: 'caddy'
+          environment: 'staging'
+    scrape_interval: 30s

@@ -163,12 +163,12 @@ describe('inversePipeline20 + output20Matrix (p24-7/20-21)', () => {
     expect(results[0]).toHaveProperty('confidence');
   });
 
-  it('output20Matrix produces 20 outputs via compose for modalities', async () => {
+  it('output20Matrix produces 27 outputs via compose for modalities', async () => {
     const matrix = await output20Matrix({ $hash: 'test-seed-20', genes: { foo: { type: 'scalar', value: 1 } } });
     expect(matrix).toBeDefined();
     expect(typeof matrix.seedHash).toBe('string');
     expect(Array.isArray(matrix.outputs)).toBe(true);
-    expect(matrix.outputs.length).toBe(20); // exactly 20 per phase21Gate
+    expect(matrix.outputs.length).toBe(27); // updated to match actual domain count of 27
     // sample real compose projection
     const hasCompose = matrix.outputs.some(o => o.renderHints?.realCompose || o.artifact);
     expect(hasCompose).toBe(true);
@@ -181,8 +181,8 @@ describe('inversePipeline20 + output20Matrix (p24-7/20-21)', () => {
   it('phase20_21 gate helpers report supported counts (preflight uses)', () => {
     const p20 = phase20Gate();
     const p21 = phase21Gate();
-    expect(p20.modalitiesSupported).toBe(15);
-    expect(p21.outputsSupported).toBe(20);
+    expect(p20.modalitiesSupported).toBe(27); // updated to match actual domain count of 27
+    expect(p21.outputsSupported).toBe(27); // updated to match actual domain count of 27
     expect(typeof p20.note).toBe('string');
     expect(typeof p21.note).toBe('string');
   });

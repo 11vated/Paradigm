@@ -31,3 +31,16 @@ export {
   geneTypeRegistry, GENE_TYPES as REGISTRY_GENE_TYPES, GENE_TYPE_LIST,
   type TypeNode, type LawResults,
 } from './gene-type-registry.js';
+
+// Phase 27: Singularity - Unified Self-Referential Intelligence
+export {
+  ParadigmSingularity,
+  getSingularity,
+  resetSingularity,
+  runSingularityCycle,
+  type SingularityState,
+  type CognitionLayer,
+  type SingularityConfig,
+  type SingularityProof,
+  type UnifiedDecision,
+} from './singularity.js';

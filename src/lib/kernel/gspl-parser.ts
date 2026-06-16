@@ -665,6 +665,34 @@ export class GsplParser {
       };
     }
 
+    // Struct literal (object literal)
+    if (token.type === 'LBRACE') {
+      const startToken = this.advance();
+      const fields: Array<{ key: string; value: ASTNode }> = [];
+      if (!this.check('RBRACE')) {
+        do {
+          // Allow both IDENTIFIER and STRING as keys
+          let keyToken;
+          if (this.check('IDENTIFIER')) {
+            keyToken = this.expect('IDENTIFIER');
+          } else if (this.check('STRING')) {
+            keyToken = this.expect('STRING');
+          } else {
+            throw new Error(`Expected IDENTIFIER or STRING for struct key at line ${this.peek().line}, col ${this.peek().column}`);
+          }
+          this.expect('COLON');
+          const value = this.parseExpression();
+          fields.push({ key: keyToken.value, value });
+        } while (this.match('COMMA'));
+      }
+      this.expect('RBRACE');
+      return {
+        type: ASTNodeType.STRUCT_LITERAL,
+        fields,
+        loc: { line: startToken.line, column: startToken.column }
+      };
+    }
+
     // Identifier or keyword that's an identifier
     if (token.type === 'IDENTIFIER' || token.type === 'GENE_NAME') {
       this.advance();

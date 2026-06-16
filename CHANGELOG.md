@@ -1,16 +1,18 @@
-# Paradigm Infinite v2.6 Release Notes (Paradigm Absolute and Infinite Deterministic Convergence)
+# Paradigm Infinite v2.7 Release Notes (Singularity — Unified Self-Referential Intelligence)
 
-## v2.6 Highlights
-- Paradigm Absolute: kernel `paradigm_absolute` / `self_referential_continuum` / `infinite_converge` with _v26_absolute (continuum + convergence + verificationLog + propagation + boundaries {maxConvergence, verifyDepth}); merges all prior substrates into single self-referential continuum with perpetual truth propagation; stamps $absolute / $paradigm / $convergence with absoluteProof.
-- Infinite determinism: perpetual truth propagation + recursive verification (det self-referential eternal loops); benchmarks via convergence/verify depth/dur in sprint; det truth under infinite convergence (double full-absolute identical proofs + self-referential artifacts).
-- Federation hardening: separate absoluteRegistry + absoluteAudit hash-chain, explicit absoluteContainment ("paradigm_absolute_isolated_with_infinite_deterministic_convergence"), client mergeAbsoluteContinuum + verifyConvergence; prior eternal/absolute layers untouched.
-- Community: absolute-paradigm-dashboard.html (Paradigm Absolute panel, infinite determinism + convergence, global absolute canvas, /absolute + /convergence profile, convergence portal), absolute-paradigm-sprint.js (paradigm priming + Paradigm Absolute + infinite converge + double det + proofs).
-- Governance: Full v2.6 ROADMAP section, v2.6-release-notes.md, CHANGELOG, proofs appended (v2.6_paradigm_absolute, v2.6_infinite_deterministic_convergence, v2.6_absolute_paradigm_sprint_complete, etc.).
-- Determinism: full absolute scenario (N paradigms + clients) double-executed with identical PARADIGM_ABSOLUTE + INFINITE_DETERMINISM_AUDIT + absoluteProofs + self-referential artifacts; no new entropy.
+## v2.7 Highlights
+- Paradigm Singularity: kernel `singularity_unified` / `maintain_coherence` / `verify_convergence` / `regenerate_perpetuation` / `deepen_cognition` / `validate_ethics` with _v27_singularity (state {coherence, convergence, perpetuation, cognitionDepth, ethicalScore} + layers {reflective, conscious, ethical, physical, federation, economics, governance, os_shell, quantum} + proofChain + decisionLog + boundaries {maxCoherence: 0.999999, maxConvergence: 0.999999, maxPerpetuation: 0.999999, ethicalFloor: 0.72}); collapses all prior cognition layers into single deterministic substrate with unified proof chain; stamps $singularity / $unified / $determinism with singularityProof.
+- Unified intelligence: nine integrated cognition layers with real-time integrity tracking, hash-chained audit trail (SHA-256 proof chain), deterministic maintenance cycles, 9-strata conformance validation, ethical floor enforcement (0.72); five-dimensional state advancement per cycle (coherence +0.0005, convergence +0.0003, perpetuation +0.0002, cognition +0.001, ethics via strata).
+- Federation hardening: unified singularityRegistry + singularityAudit hash-chain, explicit singularityContainment ("paradigm_singularity_isolated_with_unified_self_referential_intelligence"), client executeUnifiedCycle + getSubstrateHealth; all prior v2.6/v2.5/v2.4 layers consolidated.
+- Community: singularity-dashboard.html (singularity panel, unified intelligence + five-dimensional state, global singularity canvas, health profile, convergence portal), singularity-sprint.js (substrate priming + singularity unified cycle + double det + proofs).
+- Governance: Full v2.7 ROADMAP section, v2.7-release-notes.md, CHANGELOG, proofs appended (v2.7_singularity_unified, v2.7_unified_self_referential_intelligence, v2.7_singularity_sprint_complete, etc.).
+- Determinism: full singularity scenario (N substrates + clients) double-executed with identical SINGULARITY_UNIFIED + DETERMINISM_AUDIT + singularityProofs + unified artifacts; no new entropy.
 
-**Self-test**: npx tsx scripts/absolute-paradigm-sprint.js 8 2 ; GSPL paradigm_absolute on "test123" ; V2.6_* PASS in harness.
+**Self-test**: npx tsx scripts/singularity-sprint.js 7 2 ; GSPL singularity_unified on "test123" ; V2.7_* PASS in harness.
 
 ---
+
+# Paradigm Infinite v2.6 Release Notes (Paradigm Absolute and Infinite Deterministic Convergence)
 
 # Paradigm Infinite v2.5 Release Notes (Eternal Paradigm and Omniversal Self-Perpetuation)
 
