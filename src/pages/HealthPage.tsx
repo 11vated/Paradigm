@@ -19,8 +19,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   Activity, AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, Clock,
-  Cpu, Database, ExternalLink, GitBranch, Layers, Network, RefreshCw, Shield,
-  Sparkles, TrendingUp, Wallet, Zap,
+  Cpu, Database, ExternalLink, GitBranch, Layers, RefreshCw, Shield,
+  Sparkles, Wallet,
 } from 'lucide-react';
 
 interface PhaseGate {

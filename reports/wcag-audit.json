@@ -1,15 +1,14 @@
 {
   "scanned": {
-    "tsx": 178,
+    "tsx": 182,
     "css": 4,
-    "lines": 25498
+    "lines": 27118
   },
   "contrast": 2,
   "byRule": {
     "1.4.11 Non-text Contrast — 3:1 minimum": 7,
     "2.4.7 Focus Visible": 6,
     "4.1.2 Name, Role, Value (aria-expanded)": 20,
-    "2.1.1 Keyboard": 2,
     "2.3.3 Animation from Interactions": 1
   },
   "findings": [
@@ -140,13 +139,6 @@
       "line": 27
     },
     {
-      "severity": "SERIOUS",
-      "rule": "2.1.1 Keyboard",
-      "message": "Click handler on non-interactive element without role/tabIndex/keyboard handler",
-      "file": "src/components/ui/PolishComponents.tsx",
-      "line": 321
-    },
-    {
       "severity": "MODERATE",
       "rule": "4.1.2 Name, Role, Value (aria-expanded)",
       "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
@@ -194,13 +186,6 @@
       "message": "Collapsible/toggle button missing aria-expanded (consider aria-pressed for toggles, aria-expanded for show/hide)",
       "file": "src/pages/WorldSeedPage.tsx",
       "line": 209
-    },
-    {
-      "severity": "SERIOUS",
-      "rule": "2.1.1 Keyboard",
-      "message": "Click handler on non-interactive element without role/tabIndex/keyboard handler",
-      "file": "src/ui/overlays/DomainCosmosOverlay.tsx",
-      "line": 139
     },
     {
       "severity": "MODERATE",

@@ -142,7 +142,7 @@ export const federationMetrics = {
 // All decisions deterministic given metrics state (counters + bounded history). No wall randomness in policy.
 let adaptiveRateLimit = RATE_LIMIT;
 let adaptiveCacheBound = 1000;
-let intelAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
+const intelAudit: Array<{ ts: string; decision: string; proof: string; prev: string }> = [];
 let prevAuditHash = 'genesis';
 
 function profileGlobalPerf() {

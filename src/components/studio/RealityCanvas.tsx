@@ -49,6 +49,7 @@ const RealityCanvas: React.FC<RealityCanvasProps> = ({
   const webgpuContextRef = useRef<GPUDevice | null>(null);
   const animationFrameRef = useRef<number | null>(null);
   const timeRef = useRef<number>(0);
+  const renderRef = useRef<((timestamp: number) => void) | null>(null);
   
   const [nodes, setNodes] = useState<ArtifactNode[]>([]);
   const [camera, setCamera] = useState({ x: 0, y: 0, z: 1000, rotationX: 0, rotationY: 0 });
@@ -110,8 +111,10 @@ const RealityCanvas: React.FC<RealityCanvasProps> = ({
   }, []);
   
   // Particle system
-  const particles = useMemo(() => {
-    return Array.from({ length: 200 }, (_, i) => ({
+  const [particles, setParticles] = useState<Array<{ x: number; y: number; z: number; size: number; speed: number; opacity: number; phase: number }>>([]);
+  
+  useEffect(() => {
+    const newParticles = Array.from({ length: 200 }, (_, i) => ({
       x: (Math.random() - 0.5) * 4000,
       y: (Math.random() - 0.5) * 4000,
       z: (Math.random() - 0.5) * 2000,
@@ -120,6 +123,7 @@ const RealityCanvas: React.FC<RealityCanvasProps> = ({
       opacity: 0.1 + Math.random() * 0.3,
       phase: Math.random() * Math.PI * 2,
     }));
+    setParticles(newParticles);
   }, []);
   
   // Main render loop

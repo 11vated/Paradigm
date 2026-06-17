@@ -6,7 +6,7 @@
  * purpose on hover. The active mode's hint is always visible at the top.
  */
 import React from 'react';
-import { useMode, COMPASS_MODES, MODE_LABEL, MODE_HINT, MODE_NUM, MODE_STRATA, type Mode } from '@/stores/modeStore';
+import { useMode, COMPASS_MODES, MODE_LABEL, MODE_HINT, MODE_NUM, MODE_STRATA } from '@/stores/modeStore';
 
 export const ModeCompass = React.memo(() => {
   const { mode, setMode } = useMode();

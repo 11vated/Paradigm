@@ -178,7 +178,7 @@ export class ContextAwareTooltips {
     
     // Analyze context history for patterns
     const recentContexts = this.contextHistory.slice(-10);
-    const elementFrequency = this.analyzeElementFrequency(recentContexts);
+    this.analyzeElementFrequency(recentContexts);
     
     // Generate suggestions based on context
     if (context.element === 'seed' && context.seed) {

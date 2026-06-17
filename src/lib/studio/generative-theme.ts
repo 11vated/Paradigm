@@ -85,7 +85,7 @@ export interface GenerativeTheme {
 /**
  * Generate a color palette from a seed hash
  */
-function generateColorPalette(hash: string, rng: () => number): GenerativeTheme['colors'] {
+function generateColorPalette(_hash: string, rng: () => number): GenerativeTheme['colors'] {
   // Generate hue from hash (0-360)
   const hue = Math.floor(rng() * 360);
   
@@ -96,7 +96,6 @@ function generateColorPalette(hash: string, rng: () => number): GenerativeTheme[
   // Generate complementary and analogous colors
   const complementaryHue = (hue + 180) % 360;
   const analogousHue1 = (hue + 30) % 360;
-  const analogousHue2 = (hue - 30 + 360) % 360;
   
   // Convert HSL to hex
   const hslToHex = (h: number, s: number, l: number): string => {
@@ -293,7 +292,7 @@ export function applyTheme(theme: GenerativeTheme): void {
 /**
  * Create a theme transition effect
  */
-export function transitionTheme(fromTheme: GenerativeTheme, toTheme: GenerativeTheme, duration: number = 1000): void {
+export function transitionTheme(_fromTheme: GenerativeTheme, toTheme: GenerativeTheme, duration: number = 1000): void {
   const root = document.documentElement;
   
   // Enable smooth transitions

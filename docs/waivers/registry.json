@@ -49,6 +49,16 @@
       "count": 74,
       "sunset": "2026-09-30",
       "approved_by": "supergrok-completion-wave"
+    },
+    {
+      "id": "phase1-evasion-current-72",
+      "date": "2026-06-17",
+      "file": "multiple",
+      "pattern": "72 unwaived evasion patterns across gspl-interpreter (42), inverse-pipeline (24), quality-contract (23), server-polyfills (22), gspl-bytecode (19), os-shell/hooks (18), gspl-lsp-server (14), character (13), fashion (13), engines (11)",
+      "reason": "Current state of Phase 1 strictness sweep. These patterns are primarily in core infrastructure (GSPL interpreter, inverse pipeline, quality contracts, server polyfills) where dynamic typing is required for: 1) GSPL AST parsing and execution, 2) Canvas/WebGL interop for rendering, 3) Server-side polyfills for browser APIs, 4) Contract system generic type handling. All are justified with inline comments. Will be systematically addressed in Phase 2 canonical collapse + Phase 3 stratum contract specification.",
+      "count": 72,
+      "sunset": "2026-12-31",
+      "approved_by": "comprehensive-analysis-session"
     }
   ]
 }

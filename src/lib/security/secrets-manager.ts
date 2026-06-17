@@ -61,6 +61,7 @@ class VaultBackend implements SecretBackend {
 
     try {
       // Dynamic import to avoid dependency if not used
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Optional dependency
       // @ts-ignore - Optional dependency
       const { NodeVaultClient } = await import('node-vault-client');
       this.client = new NodeVaultClient({
@@ -129,6 +130,7 @@ class AWSSecretsBackend implements SecretBackend {
     if (this.mounted) return;
 
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Optional dependency
       // @ts-ignore - Optional dependency
       const { SecretsManagerClient } = await import('@aws-sdk/client-secrets-manager');
       this.client = new SecretsManagerClient({ region: this.region });
@@ -144,6 +146,7 @@ class AWSSecretsBackend implements SecretBackend {
     if (!this.client) return null;
 
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Optional dependency
       // @ts-ignore - Optional dependency
       const { GetSecretValueCommand } = await import('@aws-sdk/client-secrets-manager');
       const command = new GetSecretValueCommand({
@@ -165,7 +168,7 @@ class AWSSecretsBackend implements SecretBackend {
     if (!this.client) {
       throw new Error('AWS Secrets Manager client not available');
     }
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Optional dependency
     // @ts-ignore - Optional dependency
     const { CreateSecretCommand, UpdateSecretCommand } = await import('@aws-sdk/client-secrets-manager');
     const secretId = `${this.prefix}/${key}`;
@@ -196,13 +199,14 @@ class AWSSecretsBackend implements SecretBackend {
     if (!this.client) return [];
 
     try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Optional dependency
       // @ts-ignore - Optional dependency
       const { ListSecretsCommand } = await import('@aws-sdk/client-secrets-manager');
       const command = new ListSecretsCommand({
-        Filters: {
+        Filters: [{
           Key: 'name',
           Values: [`${this.prefix}/`],
-        },
+        }],
       });
       const response = await this.client.send(command);
       return (response.SecretList || [])

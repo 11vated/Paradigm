@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
@@ -121,6 +121,20 @@ function GenericWidget({ value, onChange }: { value: any; onChange: any }) {
   );
 }
 
+function StrataConformanceDisplay({ seed }: { seed: any }) {
+  const conformance = safeCalculateStratumConformance(seed.raw || seed);
+  if (!conformance) return null;
+  return <span className="p-strata-mini" title="live strata in genes panel">{Math.round(conformance.overall * 100)}%</span>;
+}
+
+function safeCalculateStratumConformance(seed: any) {
+  try {
+    return calculateStratumConformance([seed]);
+  } catch {
+    return null;
+  }
+}
+
 const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { seed: any; onSeedUpdated: any }) {
   const [updating, setUpdating] = useState<any>(null);
   const updateGeneInStore = useSeedStore((s: any) => s.updateGene);
@@ -158,7 +172,7 @@ const GeneEditor = React.memo(function GeneEditor({ seed, onSeedUpdated }: { see
         <span className="font-mono text-[9px] text-[#666] uppercase tracking-widest">Gene Map · {deriveCleanTitle(seed.name || seed.id, seed.hash)}</span>
         <span className="font-mono text-[9px] text-[#444]">{geneEntries.length} locus points</span>
         {/* Right gene panel strata HUD */}
-        {(() => { try { const c=calculateStratumConformance([seed.raw||seed]); return <span className="p-strata-mini" title="live strata in genes panel">{Math.round(c.overall*100)}%</span>; } catch{return null;} })()}
+        <StrataConformanceDisplay seed={seed} />
       </div>
       {geneEntries.map(([name, gene]: [any, any]) => {
         const gtype = gene.type;

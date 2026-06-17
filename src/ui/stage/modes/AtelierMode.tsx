@@ -4,7 +4,6 @@ import { CrucibleMode } from "./CrucibleMode";
 import { SeedGlyph } from "@/ui/primitives/SeedGlyph";
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 import { deriveCleanTitle } from '@/lib/kernel/types';
-import { ModePurposeHeader } from '../ModePurposeHeader';
 
 interface GeneVal { type?: string; value?: unknown; }
 interface SeedBody { id: string; genes?: Record<string, GeneVal>; }
@@ -40,7 +39,7 @@ export const AtelierMode: React.FC = () => {
     setPending(true);
   }, []);
 
-  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- React Compiler can't trace CustomEvent dispatch via window object
+   
   const commit = useCallback(async () => {
     if (!seed?.id || Object.keys(edits).length === 0) return;
     try {

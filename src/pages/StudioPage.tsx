@@ -459,7 +459,7 @@ export function StudioPage() {
                           const art: any = currentArtifact.output || {};
                           const sc = art.strataCompliance ?? art.strata?.overall ?? (currentArtifact.seed as any)?.strataCompliance;
                           let pct = typeof sc === 'number' ? Math.round(sc*100) : null;
-                          if (pct == null) { try { const c = calculateStratumConformance([art]); pct = Math.round(c.overall*100); } catch{} }
+                          if (pct == null) { try { const c = calculateStratumConformance([art]); pct = Math.round(c.overall*100); } catch { /* ignore */ } }
                           return pct != null ? <span className="p-strata-pill" title="9-strata live">{pct}% strata</span> : null;
                         })()}
                       </div>

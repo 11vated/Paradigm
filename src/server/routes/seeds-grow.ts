@@ -59,7 +59,7 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
 
       if (!rawSeed) return res.status(400).json({ error: 'Missing seed in body' });
       const domain = domainOverride ?? rawSeed.$domain ?? 'visual2d';
-      let seed = { ...rawSeed, $domain: domain };
+      const seed = { ...rawSeed, $domain: domain };
       let result: any;
 
       const NEW_DOMAIN_GENERATORS: Record<string, (s: any, p: string) => Promise<any>> = {
@@ -245,7 +245,7 @@ export function registerSeedsGrowRoutes(app: Express, deps: SeedsGrowDeps): void
         // Extended light promotion for full rich completion (audio, html/story/sim/code, gltf, preview, strata)
         if (g.audioDataURL || g.wavPath) {
           if (!g.visual) g.visual = {};
-          g.visual.audioDataURL = g.audioDataURL || (g.wavPath ? `/artifacts/${g.wavPath.replace(/^.*[\\\/]/, '')}` : null);
+          g.visual.audioDataURL = g.audioDataURL || (g.wavPath ? `/artifacts/${g.wavPath.replace(/^.*[/]/, '')}` : null);
         }
         if (g.htmlData || g.storyData || g.previewData) {
           if (!g.visual) g.visual = g.visual || {};

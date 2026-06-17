@@ -76,7 +76,7 @@ export class AIGenerationSystem {
       const pngPath = res.pngPath || res.heightmapPath || res.filePath;
       if (pngPath) {
         const fs = await import('fs');
-        const buf = fs.readFileSync(pngPath);
+        fs.readFileSync(pngPath);
         const texture = new Float32Array(resolution * resolution * 4);
         const rng = this.seededRandom(this.hashString(pngPath));
         for (let i=0; i<texture.length; i+=4) { texture[i]=rng(); texture[i+1]=rng(); texture[i+2]=rng(); texture[i+3]=1; }
@@ -125,7 +125,9 @@ export class AIGenerationSystem {
         transmission: prompt.properties?.transmission ?? 0,
         texturePath: texPath,
       };
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     const rng = this.seededRandom(this.hashString(seedStr));
     return {
       baseColor: [rng(), rng(), rng()],
@@ -152,14 +154,16 @@ export class AIGenerationSystem {
       const gP = (out as any).gltfPath;
       if (gP) {
         const fs = await import('fs');
-        const gltf = JSON.parse(fs.readFileSync(gP, 'utf8'));
+        JSON.parse(fs.readFileSync(gP, 'utf8'));
         const pixels = new Float32Array(resolution * resolution * 4);
         const rng = this.seededRandom(this.hashString(gP));
         for (let i=0; i<pixels.length; i+=4) { pixels[i]=rng(); pixels[i+1]=rng(); pixels[i+2]=rng(); pixels[i+3]=1; }
         (pixels as any).gltfPath = gP;
         return pixels;
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     const image = new Float32Array(resolution * resolution * 4);
     const rng = this.seededRandom(this.hashString(seedStr));
     for (let i=0; i<image.length; i+=4) { image[i]=rng()*0.8; image[i+1]=rng()*0.8; image[i+2]=rng()*0.8; image[i+3]=1; }
@@ -189,12 +193,14 @@ export class AIGenerationSystem {
     // Save as real PNG via canvas for rich.
     try {
       const { createCanvas } = await import('../kernel/generators/canvas-utils.js');
-      const c = createCanvas(Math.sqrt(len/4)|0 || 64, Math.sqrt(len/4)|0 || 64);
+      const _c = createCanvas(Math.sqrt(len/4)|0 || 64, Math.sqrt(len/4)|0 || 64);
       const fs = await import('fs');
       const p = 'data/artifacts/ai-render/style-transfer-' + seed + '.png';
       fs.writeFileSync(p, Buffer.from(result.buffer)); 
       (result as any).pngPath = p;
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     return result;
   }
 
@@ -217,10 +223,12 @@ export class AIGenerationSystem {
       const gPath = out.gltfPath;
       const hPath = out.htmlPath;
       if (gPath) {
-        const fs = await import('fs');
+        const _fs = await import('fs');
         return { vertices: new Float32Array(100), normals: new Float32Array(100), indices: new Uint32Array(50), gltfPath: gPath, htmlPath: hPath };
       }
-    } catch {}
+    } catch {
+      /* ignore */
+    }
     const seed = this.hashString(seedStr);
     const rng = this.seededRandom(seed);
     const vertices: number[] = [];

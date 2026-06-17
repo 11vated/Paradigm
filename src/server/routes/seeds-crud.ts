@@ -26,7 +26,7 @@ export interface SeedsCrudDeps {
 }
 
 export function registerSeedsCrudRoutes(app: Express, deps: SeedsCrudDeps): void {
-  const { seeds, saveSeeds, optionalAuth, validateBody, CreateSeedSchema, crypto, GENE_TYPES, validateGene, rngFromHash, deterministicSeedId, addOwnerIfAuthed, log, audit, metrics, IntelligenceLayer } = deps;
+  const { seeds, saveSeeds, optionalAuth, validateBody, CreateSeedSchema, crypto, GENE_TYPES, validateGene, rngFromHash, deterministicSeedId, addOwnerIfAuthed, log, audit, metrics } = deps;
 
   app.get('/api/seeds', optionalAuth, (req: any, res: any) => {
     const page = Math.max(1, parseInt(req.query.page as string) || 1);

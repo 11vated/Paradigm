@@ -178,7 +178,8 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
             const { computeFullPayout, prepareOnChainRoyalties, distributeRoyaltiesOnChain } = await import('../../lib/contracts/economics/full-economics.js');
             const payout = computeFullPayout(1000, 'health-econ-sample', 10, 5);
             const onchain = prepareOnChainRoyalties('health-econ-sample', 1000000000000000000n, [], 4);
-            const distOn = distributeRoyaltiesOnChain(onchain); // call distribute for verified onchain tx (Phase 24+ item 6)
+            // call distribute for verified onchain tx (Phase 24+ item 6)
+            distributeRoyaltiesOnChain(onchain);
             const part6EconDur = kernelNow() - part6EconStart;
             const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = await import('../../lib/sovereignty/index.js');
             // Real 2-node (beyond sim): use the new performRealTwoNodeFedExchange (full ECDSA, protocol steps) + still call det* for merge/fork coverage
@@ -188,8 +189,7 @@ export function registerSubstrateHealthRoutes(app: Express, _deps: SubstrateHeal
             const multiFed = typeof multiMod.simulateMultiNodeFedExchange === 'function' ? multiMod.simulateMultiNodeFedExchange('health-fed-multi', ['anc-0', 'health-multi', 'anc-0'], 'alpha', 'beta', 'gamma', { name: 'health-rich-demo', summary: 'Rich preview propagated in multi-node fed', visualType: 'structured', strata: 0.555 }) : null;
             const vReal = verifyFedV1Exchange(realFed.exchange, realFed.exchange.publicKey);
             const mergeRes = detMergeFed(realFed.exchange, 'health-local-real', ['local-anc-real'], ''); // priv optional in some paths
-            const forkRes = detForkFed('health-fed-sample-real', ['anc-0'], ''); 
-            const vmerge = verifyFedV1Exchange(mergeRes.newExchange || ({} as any), (mergeRes.newExchange as any)?.publicKey || ''); // any: dynamic from det merge (health surface only)
+            const forkRes = detForkFed('health-fed-sample-real', ['anc-0'], '');
             part6 = {
               economics: `computeFullPayout (real): toCreator=${payout.toCreator.toFixed(2)} civDividend=${payout.civDividend} depth=${payout.depthUsed}; onchainPrep recipients=${onchain.recipients.length} (PARA/SeedNFT ready); Econ onchain payout: author ${payout.toCreator.toFixed(2)} platform ${(1000-payout.toCreator-payout.civDividend).toFixed(2)} civ ${payout.civDividend} (PARA/SeedNFT prep called); Onchain tx simulated/verified: PARA royalty to ${onchain.recipients.length} recipients + civ dividend (dist executed); civilizational dividend operational per 17-19`,
               physicalBridge: 'completePhysicalBridge + advanced + materials DB',

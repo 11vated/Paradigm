@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { paradigmGrow } from '../../cli/commands/grow';
-import { createHash } from 'node:crypto';
 
 describe('Paradigm Grow Determinism (bit-identical across invocations)', () => {
   it('grow tree GLTF from "test123" twice → identical hash', async () => {

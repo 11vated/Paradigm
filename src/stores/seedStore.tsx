@@ -315,9 +315,7 @@ export const useSeedStore = create((set: any, get: any) => ({
     try {
       const res = calculateStratumConformance([mock]);
       // update cache (zustand set minimal to avoid loop)
-      // @ts-ignore - internal perf cache
       (get() as any)._lastStrataKey = key;
-      // @ts-ignore
       (get() as any)._lastPreview = res;
       return res;
     } catch {

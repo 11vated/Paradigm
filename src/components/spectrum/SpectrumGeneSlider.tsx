@@ -5,9 +5,9 @@
  * and spectral composition tools
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { SpectrumComposer, type SpectralSignature } from '@/lib/spectrum/spectrum-composition';
-import { EMSpectrumRenderer, EM_BANDS, type EMBand } from '@/lib/spectrum/em-spectrum-renderer';
+import { EMSpectrumRenderer, EM_BANDS } from '@/lib/spectrum/em-spectrum-renderer';
 
 interface SpectrumGeneSliderProps {
   geneName: string;
@@ -22,19 +22,11 @@ export const SpectrumGeneSlider: React.FC<SpectrumGeneSliderProps> = ({
   geneName,
   geneValue,
   onValueChange,
-  wavelength = 550e-9,
   showSpectrum = true,
   className = '',
 }) => {
-  const [currentWavelength, setCurrentWavelength] = useState(wavelength);
-  const composer = useMemo(() => new SpectrumComposer(), []);
   const renderer = useMemo(() => new EMSpectrumRenderer(), []);
-
-  // Update wavelength when gene value changes
-  useEffect(() => {
-    const newWavelength = 380e-9 + geneValue * (700e-9 - 380e-9);
-    setCurrentWavelength(newWavelength);
-  }, [geneValue]);
+  const currentWavelength = 380e-9 + geneValue * (700e-9 - 380e-9);
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value) / 100;

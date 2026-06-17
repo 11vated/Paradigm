@@ -24,13 +24,13 @@ export interface WorldGameDeps {
   log: (level: string, msg: string, meta?: any) => void;
 }
 
+import { createHash } from 'crypto';
+
 const hashWorldArtifact = (a: any) => {
-  const crypto = require('crypto');
-  return crypto.createHash('sha256').update(JSON.stringify(a ?? {}, Object.keys(a ?? {}).sort())).digest('hex');
+  return createHash('sha256').update(JSON.stringify(a ?? {}, Object.keys(a ?? {}).sort())).digest('hex');
 };
 const hashGameArtifact = (a: any) => {
-  const crypto = require('crypto');
-  return crypto.createHash('sha256').update(JSON.stringify(a ?? {}, Object.keys(a ?? {}).sort())).digest('hex');
+  return createHash('sha256').update(JSON.stringify(a ?? {}, Object.keys(a ?? {}).sort())).digest('hex');
 };
 
 export function registerWorldGameRoutes(app: Express, deps: WorldGameDeps): void {

@@ -47,7 +47,7 @@ function tokenColor(tok: string, i: number): string {
 function miniHighlight(src: string): React.ReactNode[] {
   // Single-line view: take only the first non-empty line and colorise
   const firstLine = src.split('\n').map((l) => l.trim()).find((l) => l.length > 0) ?? '';
-  const tokens = firstLine.split(/(\s+|[(){}\[\],;:.])/g).filter(Boolean).slice(0, 40);
+  const tokens = firstLine.split(/(\s+|[(){}\],;:.])/g).filter(Boolean).slice(0, 40);
   return tokens.map((t, i) => (
     <span key={i} style={{ color: tokenColor(t, i) }}>{t}</span>
   ));

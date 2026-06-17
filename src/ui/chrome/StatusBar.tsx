@@ -12,7 +12,7 @@
  *   [substrate] live · contracts green · seeds
  *   [sovereignty] (link out to /sovereignty route)
  */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useAgentThreads } from '@/stores/agentThreads';
 import { kernelNowIso } from '@/lib/kernel/clock';
@@ -40,7 +40,7 @@ export const StatusBar: React.FC = () => {
   const [lastOp, setLastOp] = useState<LastOp | null>(null);
   const [memory, setMemory] = useState<MemoryCounts>({ working: 0, episodic: 0, semantic: 95, world: 0 });
   const [substrate, setSubstrate] = useState<SubstrateHealth>({ live: false, contracts: 0, seeds: 0 });
-  const [determinismOk, setDeterminismOk] = useState(true);
+  const [determinismOk] = useState(true);
 
   // Heartbeat
   useEffect(() => {
@@ -89,10 +89,8 @@ export const StatusBar: React.FC = () => {
   }, []);
 
   // Determinism (best-effort: read from any sub-state)
-  useEffect(() => {
-    // Local-only check: as long as we don't have a violation flagged, we're good.
-    setDeterminismOk(true);
-  }, [tick]);
+  // Local-only check: as long as we don't have a violation flagged, we're good.
+  // State is initialized to true by default
 
   return (
     <footer

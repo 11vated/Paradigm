@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
-import { deriveCleanTitle } from '@/lib/kernel/types';
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 
 export interface TopBarProps {

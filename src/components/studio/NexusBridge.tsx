@@ -18,7 +18,7 @@ import { type Seed } from '@/lib/kernel/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { ArrowRightLeft, Layers, Zap, Play, Pause, RotateCcw, Settings, Activity, Database, Cpu } from 'lucide-react';
+import { ArrowRightLeft, Layers, Play, Pause, RotateCcw, Settings, Activity, Database, Cpu } from 'lucide-react';
 
 type LayerType = 'creation' | 'simulation' | 'export' | 'archive';
 
@@ -51,17 +51,38 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     export: 'synced',
     archive: 'synced',
   });
-  const [layers, setLayers] = useState<LayerState[]>([
-    { type: 'creation', name: 'Creation Layer', active: true, data: seeds, lastSync: Date.now() },
-    { type: 'simulation', name: 'Simulation Layer', active: false, data: [], lastSync: Date.now() },
-    { type: 'export', name: 'Export Layer', active: false, data: [], lastSync: Date.now() },
-    { type: 'archive', name: 'Archive Layer', active: false, data: [], lastSync: Date.now() },
-  ]);
+  const [layers, setLayers] = useState<LayerState[]>(() => {
+    const now = Date.now();
+    return [
+      { type: 'creation', name: 'Creation Layer', active: true, data: seeds, lastSync: now },
+      { type: 'simulation', name: 'Simulation Layer', active: false, data: [], lastSync: now },
+      { type: 'export', name: 'Export Layer', active: false, data: [], lastSync: now },
+      { type: 'archive', name: 'Archive Layer', active: false, data: [], lastSync: now },
+    ];
+  });
   const [selectedSeed, setSelectedSeed] = useState<Seed | null>(null);
   const [autoSync, setAutoSync] = useState(true);
   const [syncInterval, setSyncInterval] = useState(5); // seconds
+  const [now, setNow] = useState(Date.now());
   
   const transitionRef = useRef<number | null>(null);
+  const nowIntervalRef = useRef<number | null>(null);
+
+  const handleSync = useCallback((layer: LayerType) => {
+    setSyncStatus(prev => ({ ...prev, [layer]: 'syncing' }));
+    
+    // Simulate sync process
+    setTimeout(() => {
+      setSyncStatus(prev => ({ ...prev, [layer]: 'synced' }));
+      setLayers(prev => prev.map(l => 
+        l.type === layer ? { ...l, lastSync: Date.now() } : l
+      ));
+      
+      if (onStateSync) {
+        onStateSync(layer);
+      }
+    }, 500);
+  }, [onStateSync]);
 
   // Auto-sync functionality
   useEffect(() => {
@@ -76,7 +97,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     }, syncInterval * 1000);
     
     return () => clearInterval(interval);
-  }, [autoSync, syncInterval, layers]);
+  }, [autoSync, syncInterval, layers, handleSync]);
 
   const handleTransition = useCallback(async (from: LayerType, to: LayerType, seed?: Seed) => {
     setIsTransitioning(true);
@@ -96,6 +117,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
         transitionRef.current = requestAnimationFrame(animate);
       } else {
         // Complete transition
+        const now = Date.now();
         setCurrentLayer(to);
         setTargetLayer(null);
         setIsTransitioning(false);
@@ -105,7 +127,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
           ...layer,
           active: layer.type === to,
           data: layer.type === to ? (seed ? [...layer.data, seed] : layer.data) : layer.data,
-          lastSync: Date.now(),
+          lastSync: now,
         })));
         
         if (seed && onLayerTransition) {
@@ -116,22 +138,6 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     
     transitionRef.current = requestAnimationFrame(animate);
   }, [onLayerTransition]);
-
-  const handleSync = useCallback((layer: LayerType) => {
-    setSyncStatus(prev => ({ ...prev, [layer]: 'syncing' }));
-    
-    // Simulate sync process
-    setTimeout(() => {
-      setSyncStatus(prev => ({ ...prev, [layer]: 'synced' }));
-      setLayers(prev => prev.map(l => 
-        l.type === layer ? { ...l, lastSync: Date.now() } : l
-      ));
-      
-      if (onStateSync) {
-        onStateSync(layer);
-      }
-    }, 500);
-  }, [onStateSync]);
 
   const handleQuickTransition = useCallback((to: LayerType) => {
     if (isTransitioning || to === currentLayer) return;
@@ -151,7 +157,13 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     setTransitionProgress(0);
   }, []);
 
-  const currentLayerData = layers.find(l => l.type === currentLayer);
+  // Update current time for "Last Sync" display
+  useEffect(() => {
+    nowIntervalRef.current = setInterval(() => setNow(Date.now()), 1000) as unknown as number;
+    return () => {
+      if (nowIntervalRef.current) clearInterval(nowIntervalRef.current);
+    };
+  }, []);
 
   return (
     <div className="h-full flex flex-col bg-slate-900/95 backdrop-blur-sm">
@@ -305,26 +317,28 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
                 <div>
                   <span className="text-slate-400">Last Sync:</span>
                   <span className="ml-2 text-white font-mono">
-                    {Math.floor((Date.now() - layer.lastSync) / 1000)}s ago
+                    {Math.floor((now - layer.lastSync) / 1000)}s ago
                   </span>
                 </div>
               </div>
-              
+
               {layer.active && layer.data.length > 0 && (
                 <div className="mt-3 pt-3 border-t border-slate-700">
                   <div className="text-xs text-slate-400 mb-2">Recent Items:</div>
                   <div className="space-y-1">
                     {layer.data.slice(0, 3).map((seed, index) => (
-                      <div
+                      <button
                         key={index}
-                        className="flex items-center gap-2 p-2 bg-slate-900/50 rounded cursor-pointer hover:bg-slate-800/50 transition-colors"
+                        type="button"
+                        className="w-full flex items-center gap-2 p-2 bg-slate-900/50 rounded cursor-pointer hover:bg-slate-800/50 transition-colors text-left"
                         onClick={() => setSelectedSeed(seed)}
+                        tabIndex={0}
                       >
                         <div className="w-2 h-2 rounded-full bg-cyan-400" />
                         <span className="text-xs text-slate-300 truncate">
                           {seed.$name || seed.name || 'Untitled'}
                         </span>
-                      </div>
+                      </button>
                     ))}
                   </div>
                 </div>

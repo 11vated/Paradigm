@@ -9,8 +9,7 @@
  * and LLM naming, using actual gene values to drive name selection.
  */
 
-import vocabIndex from './vocab/index.js';
-import type { Vocab } from './seed-namer';
+// import type { Vocab } from './seed-namer';
 
 export interface Gene {
   type: string;

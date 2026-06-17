@@ -58,3 +58,10 @@ cache/
 # Paradigm make --verify outputs (reproducible artifacts, never commit)
 paradigm-out/
 
+# IDE config
+.idea/
+.kiro/
+
+# Build artifacts
+*.tgz
+

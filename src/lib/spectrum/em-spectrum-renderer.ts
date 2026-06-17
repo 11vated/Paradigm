@@ -345,21 +345,27 @@ export class EMSpectrumRenderer {
     if (!band) return '#000000';
     
     switch (band.renderingMode) {
-      case 'thermal':
+      case 'thermal': {
         // Blue (cold) to red (hot) gradient
         const t = intensity;
         const r = Math.round(t * 255);
         const b = Math.round((1 - t) * 255);
         return `rgb(${r}, 0, ${b})`;
+      }
       
-      case 'uv-film':
+      case 'uv-film': {
         // Purple/blue UV-sensitive film style
-        return `rgb(${Math.round(100 + intensity * 100)}, ${Math.round(50 + intensity * 50)}, ${Math.round(200 + intensity * 55)})`;
+        const r = Math.round(100 + intensity * 100);
+        const g = Math.round(50 + intensity * 50);
+        const b = Math.round(200 + intensity * 55);
+        return `rgb(${r}, ${g}, ${b})`;
+      }
       
-      case 'xray':
+      case 'xray': {
         // Bone-density grayscale
         const gray = Math.round(intensity * 255);
         return `rgb(${gray}, ${gray}, ${gray})`;
+      }
       
       case 'particles':
         // High-energy particle trails with magenta/purple
@@ -530,7 +536,7 @@ export class EMSpectrumRenderer {
     }
   }
 
-  drawAnnotations(x: number, y: number, width: number): void {
+  drawAnnotations(x: number, y: number, _width: number): void {
     const { wavelength } = this.config;
     const band = this.getBandForWavelength(wavelength);
     
@@ -544,7 +550,7 @@ export class EMSpectrumRenderer {
     this.ctx.fillText(`Band: ${band.label} - ${band.desc}`, x, y + 45);
   }
 
-  drawRealWorldExamples(x: number, y: number, width: number): void {
+  drawRealWorldExamples(x: number, y: number, _width: number): void {
     const { wavelength } = this.config;
     const band = this.getBandForWavelength(wavelength);
     

@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { EMSpectrumRenderer, EM_BANDS, type EMBand, type SpectrumConfig } from '@/lib/spectrum/em-spectrum-renderer';
+import { EMSpectrumRenderer, EM_BANDS, type EMBand } from '@/lib/spectrum/em-spectrum-renderer';
 
 interface SpectrumViewerProps {
   className?: string;
@@ -32,49 +32,13 @@ export const SpectrumViewer: React.FC<SpectrumViewerProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<EMSpectrumRenderer | null>(null);
   
-  const [wavelength, setWavelength] = useState(initialWavelength);
+  const [userWavelength, setUserWavelength] = useState(initialWavelength);
+  const [userInteracted, setUserInteracted] = useState(false);
   const [intensity, setIntensity] = useState(0.8);
   const [renderingMode, setRenderingMode] = useState<EMBand['renderingMode']>('visible');
   const [showAnnotations, setShowAnnotations] = useState(true);
   const [showRealWorldExamples, setShowRealWorldExamples] = useState(true);
   const [selectedBand, setSelectedBand] = useState<EMBand | null>(null);
-
-  // Initialize renderer
-  useEffect(() => {
-    if (!canvasRef.current) return;
-    
-    const renderer = new EMSpectrumRenderer({
-      wavelength,
-      intensity,
-      renderingMode,
-      showAnnotations,
-      showRealWorldExamples,
-    });
-    
-    renderer.attach(canvasRef.current);
-    renderer.render();
-    rendererRef.current = renderer;
-    
-    return () => {
-      renderer.destroy();
-    };
-  }, []);
-
-  // Update renderer when config changes
-  useEffect(() => {
-    if (!rendererRef.current) return;
-    
-    rendererRef.current.setWavelength(wavelength);
-    rendererRef.current.setIntensity(intensity);
-    rendererRef.current.setRenderingMode(renderingMode);
-    
-    const band = rendererRef.current.getBandForWavelength(wavelength);
-    setSelectedBand(band);
-    
-    if (onWavelengthChange) {
-      onWavelengthChange(wavelength);
-    }
-  }, [wavelength, intensity, renderingMode, onWavelengthChange]);
 
   // Extract spectral signature from seed genes if available
   const seedSpectralSignature = useMemo(() => {
@@ -82,8 +46,6 @@ export const SpectrumViewer: React.FC<SpectrumViewerProps> = ({
     
     // Map seed genes to spectral properties
     const colorGene = seed.genes.color?.value;
-    const brightnessGene = seed.genes.brightness?.value;
-    const warmthGene = seed.genes.warmth?.value;
     
     if (colorGene !== undefined) {
       // Convert color gene to wavelength approximation
@@ -96,26 +58,66 @@ export const SpectrumViewer: React.FC<SpectrumViewerProps> = ({
     return null;
   }, [seed]);
 
-  // Apply seed spectral signature when available
-  useEffect(() => {
-    if (seedSpectralSignature !== null) {
-      setWavelength(seedSpectralSignature);
-      
-      // Set rendering mode based on wavelength
-      if (seedSpectralSignature < 380e-9) {
-        setRenderingMode('uv-film');
-      } else if (seedSpectralSignature > 700e-9) {
-        setRenderingMode('thermal');
-      } else {
-        setRenderingMode('visible');
-      }
+  // Derive effective wavelength: use seed if available and user hasn't interacted, otherwise use user value
+  const wavelength = useMemo(() => {
+    if (seedSpectralSignature !== null && !userInteracted) {
+      return seedSpectralSignature;
     }
-  }, [seedSpectralSignature]);
+    return userWavelength;
+  }, [seedSpectralSignature, userInteracted, userWavelength]);
+
+  // Derive effective rendering mode based on wavelength
+  const effectiveRenderingMode = useMemo(() => {
+    if (seedSpectralSignature !== null && !userInteracted) {
+      if (seedSpectralSignature < 380e-9) return 'uv-film';
+      if (seedSpectralSignature > 700e-9) return 'thermal';
+      return 'visible';
+    }
+    return renderingMode;
+  }, [seedSpectralSignature, userInteracted, renderingMode]);
+
+  // Initialize renderer (runs once on mount; updates handled by separate effect)
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    
+    const renderer = new EMSpectrumRenderer({
+      wavelength,
+      intensity,
+      renderingMode: effectiveRenderingMode,
+      showAnnotations,
+      showRealWorldExamples,
+    });
+    
+    renderer.attach(canvasRef.current);
+    renderer.render();
+    rendererRef.current = renderer;
+    
+    return () => {
+      renderer.destroy();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update renderer when config changes
+  useEffect(() => {
+    if (!rendererRef.current) return;
+    
+    rendererRef.current.setWavelength(wavelength);
+    rendererRef.current.setIntensity(intensity);
+    rendererRef.current.setRenderingMode(effectiveRenderingMode);
+    
+    const band = rendererRef.current.getBandForWavelength(wavelength);
+    setSelectedBand(band);
+    
+    if (onWavelengthChange) {
+      onWavelengthChange(wavelength);
+    }
+  }, [wavelength, intensity, effectiveRenderingMode, onWavelengthChange]);
+
+
 
   const handleWavelengthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
-    const minWavelength = 0; // Gamma rays
-    const maxWavelength = 1000; // Radio waves (meters)
     
     // Logarithmic scale for better UX across huge range
     const logMin = Math.log10(1e-12);
@@ -123,7 +125,8 @@ export const SpectrumViewer: React.FC<SpectrumViewerProps> = ({
     const logValue = logMin + (value / 100) * (logMax - logMin);
     const newWavelength = Math.pow(10, logValue);
     
-    setWavelength(newWavelength);
+    setUserInteracted(true);
+    setUserWavelength(newWavelength);
   };
 
   const handleIntensityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,13 +135,13 @@ export const SpectrumViewer: React.FC<SpectrumViewerProps> = ({
 
   const handleBandClick = (band: EMBand) => {
     const midWavelength = (band.lo + band.hi) / 2;
-    setWavelength(midWavelength);
+    setUserWavelength(midWavelength);
+    setUserInteracted(true);
     setRenderingMode(band.renderingMode);
   };
 
   const wavelengthInNm = wavelength * 1e9;
   const frequency = 3e8 / wavelength;
-  const energy = 6.626e-34 * frequency;
 
   return (
     <div className={`spectrum-viewer ${className}`} style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 16, background: '#0a0a14', borderRadius: 8, border: '1px solid #1a1a2e' }}>

@@ -28,7 +28,7 @@ import {
   SovereigntyLayer,
 } from '../../src/lib/sovereignty/index.js';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 type _Unused = FedWsServerInstance;
 
 interface ServerHandle {

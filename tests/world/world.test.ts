@@ -13,7 +13,7 @@ import {
   generateWorld,
   hashArtifact,
 } from '../../src/lib/world/generator';
-import type { WorldSeedData, WorldArtifact } from '../../src/lib/world/types';
+import type { WorldArtifact } from '../../src/lib/world/types';
 
 const VALID_ERAS = ['medieval', 'modern', 'sci-fi', 'mythic', 'post-apocalyptic'];
 const VALID_BIOMES = ['forest', 'desert', 'ocean', 'tundra', 'urban', 'underground', 'sky', 'volcanic'];

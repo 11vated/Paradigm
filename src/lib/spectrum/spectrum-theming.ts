@@ -37,7 +37,6 @@ export class SpectrumThemer {
    */
   generateTheme(signature: SpectralSignature): SpectrumTheme {
     const dominantWavelength = signature.dominantWavelength;
-    const dominantBand = signature.dominantBand;
     const spectralWidth = signature.spectralWidth;
 
     // Get base color from dominant wavelength
@@ -47,7 +46,7 @@ export class SpectrumThemer {
     // Generate complementary and analogous colors
     const complementary = this.rotateHue(rgb, 180);
     const analogous1 = this.rotateHue(rgb, 30);
-    const analogous2 = this.rotateHue(rgb, -30);
+    this.rotateHue(rgb, -30);
 
     // Calculate theme colors based on spectral characteristics
     const primary = baseColor;
@@ -234,7 +233,8 @@ export class SpectrumThemer {
   }
 
   private hslToRgb(hsl: { h: number; s: number; l: number }): { r: number; g: number; b: number } {
-    let { h, s, l } = hsl;
+    let { h } = hsl;
+    const { s, l } = hsl;
     h /= 360;
 
     let r: number, g: number, b: number;

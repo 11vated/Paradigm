@@ -10,7 +10,6 @@ import { useMode, MODES, MODE_LABEL, type Mode } from '@/stores/modeStore';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
-import { deriveCleanTitle } from '@/lib/kernel/types';
 
 interface CollapsedLeftRailProps {
   onCosmos?: () => void;

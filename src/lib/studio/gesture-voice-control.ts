@@ -358,9 +358,6 @@ export class GestureRecognizer {
   }
   
   private detectGesture(dx: number, dy: number, distance: number): void {
-    const angle = Math.atan2(dy, dx);
-    const angleDeg = angle * (180 / Math.PI);
-    
     let type: GestureAction['type'];
     
     if (Math.abs(dx) > Math.abs(dy) * 2) {

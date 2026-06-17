@@ -18,10 +18,9 @@ import {
   runLocalFedWsSmoke,
   performRealTwoNodeFedExchangeOverWs,
 } from '../../lib/intelligence/federation/index.js';
-import { SovereigntyLayer, createFedV1SignedExchange, verifyFedV1Exchange, type FedV1Exchange } from '../../lib/sovereignty/index.js';
+import { SovereigntyLayer, type FedV1Exchange } from '../../lib/sovereignty/index.js';
 import { createServer as httpCreateServer } from 'node:http';
 import { registerFederationWebsocket } from '../../lib/intelligence/federation/transport.js';
-import { verifyTokenRaw } from '../../lib/auth/index.js';
 import { kernelNowIso } from '../../lib/kernel/clock.js';
 
 interface FedWsRuntime {

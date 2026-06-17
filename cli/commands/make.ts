@@ -54,7 +54,7 @@ function growDeterministicTreeGLTF(seedMaterial: string): any {
   // Trunk + 3 branches + leaves. All coords from RNG in [-1,1] scaled.
   const positions: number[] = [];
   const indices: number[] = [];
-  let idx = 0;
+  const idx = 0;
 
   // Trunk (simple cylinder approx as 2 quads)
   const trunkH = 1.0 + rng.nextF64() * 0.8;

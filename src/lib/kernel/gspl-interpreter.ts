@@ -575,7 +575,7 @@ export class GsplInterpreter {
             reason: `reflecting on ${query}: strata alignment ${Object.values(perStratum).filter((v: any) => v > 0.5).length}/9, prior uplift ${(priorV15.avgUplift||0).toFixed(3)}`
           };
           // Ethical boundaries + self-referential logic (det check; produce proof if near boundary)
-          let ethical = Math.max(0.2, Math.min(1, baseFitness * 0.6 + cognitionDepth * 0.4 - (trace.substrate.ownIntegrity < 0.6 ? 0.15 : 0)));
+          const ethical = Math.max(0.2, Math.min(1, baseFitness * 0.6 + cognitionDepth * 0.4 - (trace.substrate.ownIntegrity < 0.6 ? 0.15 : 0)));
           let boundaryNote = '';
           let integrityProof = selfModel;
           if (ethical < 0.65) {
@@ -1171,7 +1171,7 @@ export class GsplInterpreter {
           const maintenanceDelta = 0.005; // det increment
           const newCoherence = Math.min(this.context._v24_absolute.boundaries.maxCoherence, currentCoherence + maintenanceDelta);
           const adaptiveRate = Math.max(0.05, Math.min(0.15, (newCoherence - 0.8) * 0.5));
-          let sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
+          const sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
           // Adaptive enhancement (self-sustaining optimization)
           if (sustained && sustained.genes) {
             Object.keys(sustained.genes).forEach(k => {
@@ -1236,7 +1236,7 @@ export class GsplInterpreter {
           const regenDelta = 0.002; // det perpetual increment
           const newP = Math.min(this.context._v25_eternal.boundaries.maxPerpetuation, currentP + regenDelta);
           const regenRate = Math.max(0.03, Math.min(0.12, (newP - 0.85) * 0.4));
-          let perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
+          const perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
           // Adaptive regeneration (self-perpetuating optimization)
           if (perpetuated && perpetuated.genes) {
             Object.keys(perpetuated.genes).forEach(k => {
@@ -1301,7 +1301,7 @@ export class GsplInterpreter {
           const verifyDelta = 0.001; // det perpetual increment
           const newC = Math.min(this.context._v26_absolute.boundaries.maxConvergence, currentC + verifyDelta);
           const verifyRate = Math.max(0.02, Math.min(0.1, (newC - 0.9) * 0.3));
-          let converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
+          const converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
           // Recursive verification (self-referential propagation)
           if (converged && converged.genes) {
             Object.keys(converged.genes).forEach(k => {

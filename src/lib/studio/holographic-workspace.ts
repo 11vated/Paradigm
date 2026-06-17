@@ -98,7 +98,7 @@ export class HolographicWorkspace {
    * Project 3D point to 2D screen space
    */
   project(point: Vector3, screenWidth: number, screenHeight: number): Vector3 {
-    const { position: camPos, rotation: camRot, fov, near, far } = this.camera;
+    const { position: camPos, rotation: camRot, fov, near } = this.camera;
     
     // Translate to camera space
     const x = point.x - camPos.x;
