@@ -251,7 +251,7 @@ export class ParadigmSingularity {
     this.verifyConvergence(`${intent}_convergence`);
     this.regeneratePerpetuation(`${intent}_perpetuation`);
     this.deepenCognition(`${intent}_cognition`);
-    const ethicsDecision = this.validateEthics(`${intent}_ethics`);
+    const _ethicsDecision = this.validateEthics(`${intent}_ethics`);
 
     const unifiedProof = this.generateProof('unified', intent,
       (this.state.coherence + this.state.convergence + this.state.perpetuation +

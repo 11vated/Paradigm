@@ -15,6 +15,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { type Seed } from '@/lib/kernel/types';
+import { rngFromHash } from '@/lib/kernel/rng';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -52,22 +53,44 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     archive: 'synced',
   });
   const [layers, setLayers] = useState<LayerState[]>([
-    { type: 'creation', name: 'Creation Layer', active: true, data: seeds, lastSync: Date.now() },
-    { type: 'simulation', name: 'Simulation Layer', active: false, data: [], lastSync: Date.now() },
-    { type: 'export', name: 'Export Layer', active: false, data: [], lastSync: Date.now() },
-    { type: 'archive', name: 'Archive Layer', active: false, data: [], lastSync: Date.now() },
+    { type: 'creation', name: 'Creation Layer', active: true, data: seeds, lastSync: 0 },
+    { type: 'simulation', name: 'Simulation Layer', active: false, data: [], lastSync: 0 },
+    { type: 'export', name: 'Export Layer', active: false, data: [], lastSync: 0 },
+    { type: 'archive', name: 'Archive Layer', active: false, data: [], lastSync: 0 },
   ]);
   const [selectedSeed, setSelectedSeed] = useState<Seed | null>(null);
   const [autoSync, setAutoSync] = useState(true);
   const [syncInterval, setSyncInterval] = useState(5); // seconds
+  const [deterministicTime, setDeterministicTime] = useState(0);
   
   const transitionRef = useRef<number | null>(null);
+  const timeRef = useRef<number>(0);
+
+  // Initialize deterministic time from seed hash
+  useEffect(() => {
+    if (seeds.length > 0) {
+      const seed = seeds[0];
+      const hash = seed.$hash || seed.id || 'default';
+      const rng = rngFromHash(hash).nextF64;
+      timeRef.current = Math.floor(rng() * 1000000);
+      setDeterministicTime(timeRef.current);
+      
+      // Initialize layer sync times
+      setLayers(prev => prev.map(layer => ({
+        ...layer,
+        lastSync: timeRef.current,
+      })));
+    }
+  }, [seeds]);
 
   // Auto-sync functionality
   useEffect(() => {
     if (!autoSync) return;
     
     const interval = setInterval(() => {
+      timeRef.current += syncInterval * 1000;
+      setDeterministicTime(timeRef.current);
+      
       layers.forEach(layer => {
         if (layer.active) {
           handleSync(layer.type);
@@ -85,10 +108,12 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     
     // Animate transition progress
     const duration = 1000; // 1 second transition
-    const startTime = Date.now();
+    const startTime = deterministicTime;
     
     const animate = () => {
-      const elapsed = Date.now() - startTime;
+      timeRef.current += 16; // Approximate 60fps frame time
+      setDeterministicTime(timeRef.current);
+      const elapsed = timeRef.current - startTime;
       const progress = Math.min(elapsed / duration, 1);
       setTransitionProgress(progress);
       
@@ -105,7 +130,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
           ...layer,
           active: layer.type === to,
           data: layer.type === to ? (seed ? [...layer.data, seed] : layer.data) : layer.data,
-          lastSync: Date.now(),
+          lastSync: timeRef.current,
         })));
         
         if (seed && onLayerTransition) {
@@ -115,7 +140,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     };
     
     transitionRef.current = requestAnimationFrame(animate);
-  }, [onLayerTransition]);
+  }, [onLayerTransition, deterministicTime]);
 
   const handleSync = useCallback((layer: LayerType) => {
     setSyncStatus(prev => ({ ...prev, [layer]: 'syncing' }));
@@ -124,7 +149,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
     setTimeout(() => {
       setSyncStatus(prev => ({ ...prev, [layer]: 'synced' }));
       setLayers(prev => prev.map(l => 
-        l.type === layer ? { ...l, lastSync: Date.now() } : l
+        l.type === layer ? { ...l, lastSync: timeRef.current } : l
       ));
       
       if (onStateSync) {
@@ -305,7 +330,7 @@ const NexusBridge: React.FC<NexusBridgeProps> = ({
                 <div>
                   <span className="text-slate-400">Last Sync:</span>
                   <span className="ml-2 text-white font-mono">
-                    {Math.floor((Date.now() - layer.lastSync) / 1000)}s ago
+                    {Math.floor((deterministicTime - layer.lastSync) / 1000)}s ago
                   </span>
                 </div>
               </div>

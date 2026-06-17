@@ -199,10 +199,12 @@ class AWSSecretsBackend implements SecretBackend {
       // @ts-ignore - Optional dependency
       const { ListSecretsCommand } = await import('@aws-sdk/client-secrets-manager');
       const command = new ListSecretsCommand({
-        Filters: {
-          Key: 'name',
-          Values: [`${this.prefix}/`],
-        },
+        Filters: [
+          {
+            Key: 'name',
+            Values: [`${this.prefix}/`],
+          },
+        ],
       });
       const response = await this.client.send(command);
       return (response.SecretList || [])

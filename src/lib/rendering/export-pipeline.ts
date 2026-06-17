@@ -400,10 +400,26 @@ export class ProductionExportPipeline {
   /**
    * Compress GLB using Draco
    */
-  async compressGLB(glb: Uint8Array, _level: number): Promise<Uint8Array> {
-    // Placeholder for Draco compression
-    // In production, would use Draco encoder or similar
-    return glb;
+  async compressGLB(glb: Uint8Array, level: number): Promise<Uint8Array> {
+    // Simple compression using gzip as placeholder for Draco
+    // In production, would use Draco encoder for mesh compression
+    try {
+      // Use CompressionStream if available (modern browsers)
+      if (typeof CompressionStream !== 'undefined') {
+        const stream = new CompressionStream('gzip');
+        // Create a copy of the Uint8Array to avoid SharedArrayBuffer issues
+        const copy = new Uint8Array(glb);
+        const compressedStream = new Blob([copy]).stream().pipeThrough(stream);
+        const compressedBlob = await new Response(compressedStream).blob();
+        return new Uint8Array(await compressedBlob.arrayBuffer());
+      }
+      
+      // Fallback: return original if compression not available
+      return glb;
+    } catch (error) {
+      // If compression fails, return original
+      return glb;
+    }
   }
 
   /**

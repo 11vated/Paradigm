@@ -208,7 +208,7 @@ export class GSeedRenderer {
 
   private commandEncoder?: GPUCommandEncoder;
 
-  render(config: GSeedVisualConfig, deltaTime: number): void {
+  async render(config: GSeedVisualConfig, deltaTime: number): Promise<void> {
     if (!this.device || !this.context) return;
 
     this.time += deltaTime;
@@ -228,7 +228,7 @@ export class GSeedRenderer {
     renderPass.end();
 
     // Render Quantum Core (compute shader)
-    this.renderQuantumCore(config);
+    await this.renderQuantumCore(config);
 
     // Update and render particles
     this.updateParticles(deltaTime, config.hash);
@@ -304,7 +304,7 @@ export class GSeedRenderer {
     // (Simplified - in production, use instanced rendering with billboards)
   }
 
-  private renderQuantumCore(config: GSeedVisualConfig): void {
+  private async renderQuantumCore(config: GSeedVisualConfig): Promise<void> {
     if (!this.device || !this.context) return;
 
     const white = this.context.getCurrentTexture();
@@ -346,7 +346,7 @@ export class GSeedRenderer {
     // Dispatch compute shader
     const commandEncoder = this.device.createCommandEncoder();
     const computePass = commandEncoder.beginComputePass();
-    computePass.setPipeline(this.pipelines.get('render')! as any);
+    computePass.setPipeline(this.pipelines.get('quantumCore')! as any);
     computePass.setBindGroup(0, bindGroup);
     computePass.dispatchWorkgroups(Math.ceil(800 / 8), Math.ceil(600 / 8));
     computePass.end();
@@ -363,6 +363,10 @@ export class GSeedRenderer {
     renderPass.end();
 
     this.device.queue.submit([commandEncoder.finish()]);
+    
+    // Wait for GPU to finish before destroying resources
+    await this.device.queue.onSubmittedWorkDone();
+    
     outputTexture.destroy();
     uniformBuffer.destroy();
   }

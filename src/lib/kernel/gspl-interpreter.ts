@@ -513,7 +513,7 @@ export class GsplInterpreter {
           if (evaluatedArgs.length < 1) throw new Error('autonomous_evolve requires at least 1 argument (seed)');
           const targetSeed = evaluatedArgs[0];
           // reflect for self-awareness
-          const reflection = await this.evaluateReflect({ target: targetSeed });
+          const _reflection = await this.evaluateReflect({ target: targetSeed });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(targetSeed, this.VALID_STRATA) : 0.5;
           // simple per stratum + adaptive rate (in-run "learning" via closure map for this execution)
           const perStratum: Record<string, number> = {};
@@ -545,7 +545,7 @@ export class GsplInterpreter {
           const target = evaluatedArgs[0];
           const query = evaluatedArgs[1] || 'self';
           // Build on prior reflect + v1.5 autonomous state for continuity
-          const reflection = await this.evaluateReflect({ target });
+          const _reflection = await this.evaluateReflect({ target });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(target, this.VALID_STRATA) : 0.5;
           const perStratum: Record<string, number> = {};
           for (const s of this.VALID_STRATA) perStratum[s] = this.strataScoreBuiltin(target, [s]);
@@ -574,8 +574,8 @@ export class GsplInterpreter {
             selfModelHash: selfModel,
             reason: `reflecting on ${query}: strata alignment ${Object.values(perStratum).filter((v: any) => v > 0.5).length}/9, prior uplift ${(priorV15.avgUplift||0).toFixed(3)}`
           };
-          // Ethical boundaries + self-referential logic (det check; produce proof if near boundary)
-          let ethical = Math.max(0.2, Math.min(1, baseFitness * 0.6 + cognitionDepth * 0.4 - (trace.substrate.ownIntegrity < 0.6 ? 0.15 : 0)));
+           // Ethical boundaries + self-referential logic (det check; produce proof if near boundary)
+           const ethical = Math.max(0.2, Math.min(1, baseFitness * 0.6 + cognitionDepth * 0.4 - (trace.substrate.ownIntegrity < 0.6 ? 0.15 : 0)));
           let boundaryNote = '';
           let integrityProof = selfModel;
           if (ethical < 0.65) {
@@ -617,8 +617,8 @@ export class GsplInterpreter {
           const target = evaluatedArgs[0];
           const policy = (evaluatedArgs[1] || 'default').toString();
           const query = evaluatedArgs[2] || 'evolution';
-          // Leverage v1.6 reflective for base awareness + ethics
-          const reflection = await this.evaluateReflect({ target });
+           // Leverage v1.6 reflective for base awareness + ethics
+           const _reflection = await this.evaluateReflect({ target });
           const baseFitness = this.strataScoreBuiltin ? this.strataScoreBuiltin(target, this.VALID_STRATA) : 0.5;
           const perStratum: Record<string, number> = {};
           for (const s of this.VALID_STRATA) perStratum[s] = this.strataScoreBuiltin(target, [s]);
@@ -695,8 +695,8 @@ export class GsplInterpreter {
           const target = evaluatedArgs[0];
           const peers = evaluatedArgs[1] || 3; // number of federated nodes for consensus sim (det)
           const policy = (evaluatedArgs[2] || 'global').toString();
-          // Base on v1.7 gov + v1.6 conscious for unified conscious federation
-          const baseGov = await this.evaluateNode({type: 'call', callee: {name: 'self_govern'}, arguments: [ {value: target}, {value: policy} ] }).catch(() => null) || this.context._v17_gov?.[String((target && (target.$hash || target.hash)) || 'anon').slice(0,16)];
+           // Base on v1.7 gov + v1.6 conscious for unified conscious federation
+           const _baseGov = await this.evaluateNode({type: 'call', callee: {name: 'self_govern'}, arguments: [ {value: target}, {value: policy} ] }).catch(() => null) || this.context._v17_gov?.[String((target && (target.$hash || target.hash)) || 'anon').slice(0,16)];
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           const priorCons = (this.context._v16_conscious && this.context._v16_conscious[stateKey]) || { cognitionDepth: 0.5, integrity: 0.8, ethical: 0.75 };
           const priorGov = (this.context._v17_gov && this.context._v17_gov[stateKey]) || { lastScore: 0.75, validations: 1 };
@@ -760,9 +760,9 @@ export class GsplInterpreter {
           const target = evaluatedArgs[0];
           const civNodes = evaluatedArgs[1] || 5; // civilization-scale nodes for collective
           const creativeIntent = (evaluatedArgs[2] || 'collective_artifact').toString();
-          // Build on v1.8 cooperative + v1.7 gov/conscious for civilization layer
-          const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
-          const priorFed = (this.context._v18_fed && this.context._v18_fed.nodes) || {};
+           // Build on v1.8 cooperative + v1.7 gov/conscious for civilization layer
+           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
+           const _priorFed = (this.context._v18_fed && this.context._v18_fed.nodes) || {};
           const priorCons = (this.context._v16_conscious && this.context._v16_conscious[stateKey]) || { cognitionDepth: 0.6, ethical: 0.8 };
           const priorGov = (this.context._v17_gov && this.context._v17_gov[stateKey]) || { lastScore: 0.78 };
           // v1.9 civilization state (collective creation + governance)
@@ -1001,9 +1001,9 @@ export class GsplInterpreter {
           const universes = evaluatedArgs[1] || 6; // number of recursive universes for eternal sync
           const coopIntent = (evaluatedArgs[2] || 'cross_reality_cooperation').toString();
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
-          // Build on v2.1 genesis + prior layers for eternal continuity
-          const priorGen = (this.context._v21_genesis && this.context._v21_genesis.universes) || [];
-          const priorCont = (this.context._v20_continuum && this.context._v20_continuum.layers) || [];
+           // Build on v2.1 genesis + prior layers for eternal continuity
+           const priorGen = (this.context._v21_genesis && this.context._v21_genesis.universes) || [];
+           const _priorCont = (this.context._v20_continuum && this.context._v20_continuum.layers) || [];
           // v2.2 eternal continuity state (continuous sync, cross-reality coop, inheritance)
           if (!this.context._v22_eternal) this.context._v22_eternal = { universes: [], currentSync: 0, cooperationLog: [], continuityBoundaries: { maxSync: 10, hashContinuity: true, ethicalCheck: true } };
           const currentSync = this.context._v22_eternal.currentSync || 0;
@@ -1148,10 +1148,10 @@ export class GsplInterpreter {
       case 'coherent_maintain':
       case 'adaptive_optimize':
       case 'sustain_continuum': {
-        return (async () => {
-          const target = evaluatedArgs[0];
-          const layers = evaluatedArgs[1] || 8; // layers for absolute coherence
-          const intent = (evaluatedArgs[2] || 'self_sustaining_evolution').toString();
+         return (async () => {
+           const target = evaluatedArgs[0];
+           const _layers = evaluatedArgs[1] || 8; // layers for absolute coherence
+           const intent = (evaluatedArgs[2] || 'self_sustaining_evolution').toString();
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           // Build on v2.3 omniversal + all prior for absolute continuum
           const priorOmni = (this.context._v23_omniversal && this.context._v23_omniversal.unified) || {};
@@ -1170,8 +1170,8 @@ export class GsplInterpreter {
           // Self-sustaining: autonomous maintenance + adaptive optimization (det self-referential loop)
           const maintenanceDelta = 0.005; // det increment
           const newCoherence = Math.min(this.context._v24_absolute.boundaries.maxCoherence, currentCoherence + maintenanceDelta);
-          const adaptiveRate = Math.max(0.05, Math.min(0.15, (newCoherence - 0.8) * 0.5));
-          let sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
+           const adaptiveRate = Math.max(0.05, Math.min(0.15, (newCoherence - 0.8) * 0.5));
+           const sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
           // Adaptive enhancement (self-sustaining optimization)
           if (sustained && sustained.genes) {
             Object.keys(sustained.genes).forEach(k => {
@@ -1213,10 +1213,10 @@ export class GsplInterpreter {
       case 'self_regenerate':
       case 'perpetual_optimize':
       case 'eternal_sustain': {
-        return (async () => {
-          const target = evaluatedArgs[0];
-          const layers = evaluatedArgs[1] || 9; // layers for eternal perpetuation
-          const intent = (evaluatedArgs[2] || 'omniversal_self_perpetuation').toString();
+         return (async () => {
+           const target = evaluatedArgs[0];
+           const _layers = evaluatedArgs[1] || 9; // layers for eternal perpetuation
+           const intent = (evaluatedArgs[2] || 'omniversal_self_perpetuation').toString();
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           // Build on v2.4 absolute + all prior for eternal paradigm
           const priorAbs = (this.context._v24_absolute && this.context._v24_absolute.substrate) || {};
@@ -1235,8 +1235,8 @@ export class GsplInterpreter {
           // Omniversal self-perpetuation: autonomous regeneration + adaptive optimization (det self-referential eternal loop)
           const regenDelta = 0.002; // det perpetual increment
           const newP = Math.min(this.context._v25_eternal.boundaries.maxPerpetuation, currentP + regenDelta);
-          const regenRate = Math.max(0.03, Math.min(0.12, (newP - 0.85) * 0.4));
-          let perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
+           const regenRate = Math.max(0.03, Math.min(0.12, (newP - 0.85) * 0.4));
+           const perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
           // Adaptive regeneration (self-perpetuating optimization)
           if (perpetuated && perpetuated.genes) {
             Object.keys(perpetuated.genes).forEach(k => {
@@ -1278,10 +1278,10 @@ export class GsplInterpreter {
       case 'self_referential_continuum':
       case 'perpetual_verify':
       case 'absolute_converge': {
-        return (async () => {
-          const target = evaluatedArgs[0];
-          const substrates = evaluatedArgs[1] || 10; // substrates for absolute merge
-          const intent = (evaluatedArgs[2] || 'infinite_deterministic_convergence').toString();
+         return (async () => {
+           const target = evaluatedArgs[0];
+           const _substrates = evaluatedArgs[1] || 10; // substrates for absolute merge
+           const intent = (evaluatedArgs[2] || 'infinite_deterministic_convergence').toString();
           const stateKey = String((target && (target.$hash || target.hash)) || 'anon').slice(0, 16);
           // Build on v2.5 eternal + all prior for Paradigm Absolute
           const priorEternal = (this.context._v25_eternal && this.context._v25_eternal.substrate) || {};
@@ -1300,8 +1300,8 @@ export class GsplInterpreter {
           // Infinite determinism: perpetual truth propagation + recursive verification (det self-referential eternal loop)
           const verifyDelta = 0.001; // det perpetual increment
           const newC = Math.min(this.context._v26_absolute.boundaries.maxConvergence, currentC + verifyDelta);
-          const verifyRate = Math.max(0.02, Math.min(0.1, (newC - 0.9) * 0.3));
-          let converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
+           const verifyRate = Math.max(0.02, Math.min(0.1, (newC - 0.9) * 0.3));
+           const converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
           // Recursive verification (self-referential propagation)
           if (converged && converged.genes) {
             Object.keys(converged.genes).forEach(k => {

@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import { Play, Pause, BarChart3, Bot, Star, Users } from 'lucide-react';
+import { pinoLogger } from '@/lib/logger';
 
 // Define AgentThought type
 interface AgentThought {
@@ -35,10 +36,10 @@ export default function AgentPanel({ onSeedCreated }: AgentPanelProps) {
 
     try {
       const request = 'Generate innovative seeds across all domains';
-      console.log('Swarm evolution requested:', request);
+      pinoLogger.info({ request }, 'Swarm evolution requested');
       // In real use this would call breedSwarm / run_swarm tools
     } catch (e) {
-      console.error('Evolution error:', e);
+      pinoLogger.error({ error: e }, 'Evolution error');
      } finally {
        setIsEvolving(false);
        evolutionRef.current = false;

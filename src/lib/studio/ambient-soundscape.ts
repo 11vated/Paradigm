@@ -175,7 +175,9 @@ export class AmbientSoundscape {
     const lfo = this.audioContext.createOscillator();
     const lfoGain = this.audioContext.createGain();
     
-    lfo.frequency.value = 0.1 + Math.random() * 0.2; // Slow modulation
+    // Use deterministic RNG for modulation frequency
+    const rng = this.rng || (() => 0.5); // Fallback to constant if no RNG
+    lfo.frequency.value = 0.1 + rng() * 0.2; // Slow modulation
     lfoGain.gain.value = layer.amplitude * 0.3;
     
     lfo.connect(lfoGain);
