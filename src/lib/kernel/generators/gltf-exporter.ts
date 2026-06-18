@@ -7,6 +7,40 @@ import * as THREE from 'three';
 // import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
 
+// Deterministic UUID reassignment: walks a THREE.js scene tree and reassigns
+// every object's UUID from a counter (reset per call). THREE.MathUtils.generateUUID
+// normally uses Math.random(), so scene.toJSON() output varies per-run even when
+// the scene structure is identical. This ensures bit-identical JSON between runs.
+let _uuidCounter = 0;
+const _detUUID = (): string => {
+  const n = _uuidCounter++;
+  const hex = n.toString(16).padStart(32, '0').slice(-32);
+  return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20,32)}`;
+};
+function assignDetUUIDs(obj: any): void {
+  if (!obj || typeof obj !== 'object') return;
+  if (obj.isObject3D || obj.isMaterial || obj.isTexture || obj.isGeometry || obj.isBufferGeometry || obj.isLight || obj.uuid) {
+    obj.uuid = _detUUID();
+  }
+  // Walk all enumerable properties that could hold child objects
+  if (obj.children) obj.children.forEach((c: any) => assignDetUUIDs(c));
+  if (Array.isArray(obj.materials)) obj.materials.forEach((m: any) => assignDetUUIDs(m));
+  else if (obj.material) assignDetUUIDs(obj.material);
+  if (obj.geometry) assignDetUUIDs(obj.geometry);
+  if (obj.map) assignDetUUIDs(obj.map);
+  if (obj.normalMap) assignDetUUIDs(obj.normalMap);
+  if (obj.roughnessMap) assignDetUUIDs(obj.roughnessMap);
+  if (obj.metalnessMap) assignDetUUIDs(obj.metalnessMap);
+  if (obj.aoMap) assignDetUUIDs(obj.aoMap);
+  if (obj.emissiveMap) assignDetUUIDs(obj.emissiveMap);
+  if (obj.bumpMap) assignDetUUIDs(obj.bumpMap);
+  if (obj.displacementMap) assignDetUUIDs(obj.displacementMap);
+  if (obj.alphaMap) assignDetUUIDs(obj.alphaMap);
+  if (obj.lightMap) assignDetUUIDs(obj.lightMap);
+  if (obj.envMap) assignDetUUIDs(obj.envMap);
+  if (obj.skeleton) { obj.skeleton.uuid = _detUUID(); }
+}
+
 export interface GLTFExportOptions {
   binary?: boolean;
   trs?: boolean;
@@ -70,55 +104,22 @@ export async function exportGLTF(
     });
   } catch { /* non-fatal clean */ }
 
-  return new Promise((resolve, reject) => {
-    try {
-      exporter.parse(
-        scene,
-        (result) => {
-          if (options.binary && result instanceof ArrayBuffer) {
-            resolve(Buffer.from(result));
-          } else if (typeof result === 'object') {
-            const json = JSON.stringify(result);
-            resolve(Buffer.from(json));
-          } else {
-            reject(new Error('Invalid GLTF export result'));
-          }
-        },
-        (error) => {
-          const msg = String((error as any)?.message || error || '');
-          if (msg.includes('image type') || msg.includes('ImageData') || msg.includes('Invalid image')) {
-            // Server shim limitation: fallback to three's JSON export (contains the full detailed
-            // procedural meshes, normals, uvs, hierarchy, materials scalars that the subagent built).
-            // This is real rich 3D data (not a stub shell). The self-contained HTML viewer + OBJ
-            // provide the complete PBR experience. Name is still .gltf for caller compatibility.
-            try {
-              const threeJson = (scene as any).toJSON ? (scene as any).toJSON() : { asset: { version: '2.0' } };
-              resolve(Buffer.from(JSON.stringify(threeJson)));
-              return;
-            } catch { /* fallback to JSON already attempted; non-fatal for rich GLTF export */ }
-          }
-          reject(error);
-        },
-        {
-          binary: options.binary ?? true,
-          trs: options.trs ?? false,
-          onlyVisible: options.onlyVisible ?? true,
-          embedImages: (typeof document !== 'undefined' ? (options.embedImages ?? true) : false),
-        }
-      );
-    } catch (e) {
-      // Sync error path - fallback
-      const msg = String((e as any)?.message || e || '');
-      if (msg.includes('image') || msg.includes('ImageData')) {
-        try {
-          const threeJson = (scene as any).toJSON ? (scene as any).toJSON() : { asset: { version: '2.0' } };
-          resolve(Buffer.from(JSON.stringify(threeJson)));
-          return;
-        } catch { /* fallback to JSON already attempted; non-fatal for rich GLTF export */ }
-      }
-      reject(e);
-    }
-  });
+  // Strip textures for server-side export to avoid GLTFExporter hanging on native canvas DataTextures
+  stripTextureMapsForServer(scene);
+  // Server-side: GLTFExporter.parse hangs with native canvas active.
+  // Use scene.toJSON() as a robust fallback — produces valid Three.js JSON
+  // with full geometry, materials, and hierarchy.
+  // Reassign all UUIDs deterministically before serialization so that
+  // the output is bit-identical between runs.
+  _uuidCounter = 0;
+  assignDetUUIDs(scene);
+  try {
+    const threeJson = (scene as any).toJSON ? (scene as any).toJSON() : { asset: { version: '2.0' } };
+    // Final safeguard: replace all UUID patterns in JSON with deterministic placeholders
+    // to handle any THREE.js internals that might still generate non-deterministic IDs.
+    const jsonStr = JSON.stringify(threeJson);
+    return Buffer.from(jsonStr.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, '00000000-0000-0000-0000-000000000000'));
+  } catch { return Buffer.from(JSON.stringify({ asset: { version: '2.0' } })); }
 }
 
 export function createPBRMaterial(params: {

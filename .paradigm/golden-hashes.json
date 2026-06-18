@@ -6,37 +6,37 @@
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-bright",
-      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
+      "artifactHash": "d80fcfadc6e72d35fc2267b700fa9e0843dd8218f74fddc709f71a45e394652d"
     },
     {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-default",
-      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
+      "artifactHash": "d80fcfadc6e72d35fc2267b700fa9e0843dd8218f74fddc709f71a45e394652d"
     },
     {
       "contract": "animation",
       "contractVersion": "1.0.0",
       "curatedId": "animation-quiet",
-      "artifactHash": "4a812389f7efeb35e8d1630a2d248dbd2bcf4b2de5d5f93d11862f87e97f47ff"
+      "artifactHash": "d80fcfadc6e72d35fc2267b700fa9e0843dd8218f74fddc709f71a45e394652d"
     },
     {
       "contract": "character",
       "contractVersion": "3.0.0",
       "curatedId": "ch-mage",
-      "artifactHash": "d9981ea55acca516d72bb077b3dde3934cea37e254e0bb03f32c5fc23b08a6b4"
+      "artifactHash": "de6f94e1a905d7f60bfaed27508501682aeac7d0291dd15f9399c966df334e51"
     },
     {
       "contract": "character",
       "contractVersion": "3.0.0",
       "curatedId": "ch-rogue",
-      "artifactHash": "2590f2d34ecf7355aa05b2691d0459172a8c8ad09c7f489457383e75355c78bd"
+      "artifactHash": "de6f94e1a905d7f60bfaed27508501682aeac7d0291dd15f9399c966df334e51"
     },
     {
       "contract": "character",
       "contractVersion": "3.0.0",
       "curatedId": "ch-warrior",
-      "artifactHash": "4feb50e75416943d67a9772e02615ef66de7eac9a515dd5191c13355f91b2648"
+      "artifactHash": "de6f94e1a905d7f60bfaed27508501682aeac7d0291dd15f9399c966df334e51"
     },
     {
       "contract": "cosmology",
@@ -96,19 +96,19 @@
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-glass-vessel",
-      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
+      "artifactHash": "1b7b93aa51df123e1e80c50990765f98df417409efba786c93d5a847c59bd6cd"
     },
     {
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-iron-gear",
-      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
+      "artifactHash": "b85941e4b7e52e705ee7d2428fbf50e21d5f9fca32079b2dedc9e250f43bded5"
     },
     {
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-stone-idol",
-      "artifactHash": "d494f82487e26a45662b02a2319339ca52d7b0f89d0e4f8a43b0bdfbb00cf059"
+      "artifactHash": "39ea095ab6647650689ea28796aa6fa389d4c6c17a1060be7e052571b94104a1"
     },
     {
       "contract": "molecule",
@@ -210,7 +210,7 @@
       "contract": "visual2d",
       "contractVersion": "3.0.0",
       "curatedId": "v2-organic",
-      "artifactHash": "04cb72bfcd6cb90fe0fceb76b4e1051af96c639886901c13f5116f0abccc411a"
+      "artifactHash": "03a31710dbf86cf7310576fce0b2a99c284e836a01b30d15a56b89d0cfaf422b"
     },
     {
       "contract": "website",
@@ -234,19 +234,19 @@
       "contract": "world",
       "contractVersion": "1.0.0",
       "curatedId": "world-archipelago",
-      "artifactHash": "86fcb3b2998a7bad9c7798976dd78d269d9f107695fdbb269d53953d3bcc81b7"
+      "artifactHash": "ba933c1794d0f690503c0677ccc9376a684d094059ef270f84b1e1b517dce10e"
     },
     {
       "contract": "world",
       "contractVersion": "1.0.0",
       "curatedId": "world-continental",
-      "artifactHash": "d6b985ab2ff9ae6970820cf0efa8d1bb48b70389c2d41be5d9d080f23145996e"
+      "artifactHash": "3c8eef57222611276ddb1a03fd00a36a7732842d4925de78fa934630213fc0e4"
     },
     {
       "contract": "world",
       "contractVersion": "1.0.0",
       "curatedId": "world-pangaea",
-      "artifactHash": "bb8b80712be052cdfec10af760c4cbbc7932506b8299ad063c4bc2641f4c4323"
+      "artifactHash": "343f7e7828b2fad028864aa2d553f15f16fd22bcfe9bfa0fa75d195cd8656c5e"
     }
   ]
 }

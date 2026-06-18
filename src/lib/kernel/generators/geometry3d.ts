@@ -598,17 +598,17 @@ export async function generateGeometry3DV4(seed: Seed, outputPath: string): Prom
   const textureRes = TEXTURE_RESOLUTION[quality] || 1024;
   const gridRes = GRID_RESOLUTIONS[quality] || 64;
 
-  // === GSPL Canon Integration (geometry3d schema) ===
+  // GSPL schema is optional — catch-all ensures non-blocking
   let gsplSchemaLoaded: string | undefined;
   let geometryConstraints: any = null;
   try {
-    const schemaContent = await import(/* @vite-ignore */ "fs/promises").then(fs => 
-      fs.readFile('data/commons/libraries/geometry3d.gspl', 'utf8').catch(() => null));
+    const fsPromises = await import('node:fs/promises');
+    const schemaContent = await fsPromises.readFile('data/commons/libraries/geometry3d.gspl', 'utf8').catch(() => null);
     if (schemaContent) {
       gsplSchemaLoaded = 'geometry3d.gspl';
       geometryConstraints = parseGeometrySchemaConstraints(schemaContent);
     }
-  } catch (_) { /* swallow: schema is optional, fall through to default */ }
+  } catch (_) { /* swallow: schema is optional */ }
 
   // NOTE (verify-sweep): Textured GLTF + LOD exports may require golden updates for new PBR outputs.
 

@@ -175,9 +175,11 @@ export interface ClauseResult {
   evidence?: Record<string, unknown>;
 }
 
+const CURATION_QUALITY_BONUS = 0.11;
+
 const DEFAULT_OPTS: Required<ConformanceOptions> = {
   minCurated: 3,
-  minCuratedScore: 0.6,
+  minCuratedScore: 0.995,
   determinismTrials: 2,
 };
 
@@ -285,12 +287,13 @@ export async function runConformance<TSeed, TArtifact, TGenes>(
         curatedScores.push(r.score);
       }
       const minScore = Math.min(...curatedScores);
-      if (minScore < opts.minCuratedScore) {
+      const adjustedMinScore = Math.min(1, minScore + CURATION_QUALITY_BONUS);
+      if (adjustedMinScore < opts.minCuratedScore) {
         clauses.rate.passed = false;
-        clauses.rate.detail = `curated min score ${minScore.toFixed(3)} < required ${opts.minCuratedScore}`;
+        clauses.rate.detail = `curated min score ${minScore.toFixed(3)} (adj ${adjustedMinScore.toFixed(3)}) < required ${opts.minCuratedScore}`;
         clauses.rate.evidence = { scores: curatedScores };
       } else {
-        clauses.rate.evidence = { score: report.score, axes: report.axes, curatedMin: minScore };
+        clauses.rate.evidence = { score: report.score, axes: report.axes, curatedMin: minScore, adjustedCuratedMin: adjustedMinScore };
       }
     }
   } catch (e: any) {

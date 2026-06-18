@@ -79,6 +79,18 @@ export function isCanvasAvailable(): boolean {
 }
 
 /**
+ * Switch between native and polyfill canvas mode for server-side determinism.
+ * Polyfill mode uses no-op canvas stubs (deterministic, no real rendering).
+ * Native mode uses node-canvas (rich output, may have run-to-run variance).
+ * Safe to call even when no polyfill is loaded (no-op in browser).
+ */
+export function setCanvasMode(mode: 'native' | 'polyfill'): void {
+  if (typeof document !== 'undefined') return;
+  const fn = (globalThis as any).__setCanvasMode;
+  if (typeof fn === 'function') fn(mode);
+}
+
+/**
  * Cross-env texture from canvas for PBR in 3D generators.
  * - Browser: returns CanvasTexture (rich embedded when GLTF exported in browser).
  * - Server: returns null (avoids GLTFExporter image type errors with node-canvas shims / polyfills).

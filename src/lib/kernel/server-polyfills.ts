@@ -1,14 +1,19 @@
 const SHIM_MODE = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
+import { createRequire } from 'module';
+const _require = createRequire(import.meta.url);
+
 export function initServerPolyfills() {
   if (typeof global.window !== 'undefined') return;
 
-  let createCanvas: any;
+  let _nativeCanvasFactory: any = null;
   let NodeImage: any;
   try {
-    const canvas = require('canvas'); // eslint-disable-line @typescript-eslint/no-require-imports -- intentional for native canvas polyfill in server (carve-out like server.ts)
-    createCanvas = canvas.createCanvas;
+    const canvas = _require('canvas');
+    _nativeCanvasFactory = canvas.createCanvas;
     NodeImage = canvas.Image;
+    const consoleFn = SHIM_MODE === 'production' ? () => {} : console.log;
+    consoleFn('[Polyfills] canvas native loaded.');
   } catch (e) {
     const consoleFn = SHIM_MODE === 'production' ? () => {} : console.warn;
     consoleFn('[Polyfills] canvas native not available.\n' +
@@ -17,8 +22,34 @@ export function initServerPolyfills() {
       '  - Windows: Install Visual Studio Build Tools (Desktop development with C++ workload) + Python + node-gyp prerequisites, then `npm rebuild canvas`.\n' +
       '  - Or rely on browser/client for canvas (Studio viewports use native browser Canvas/WebGL).\n' +
       'Using no-op shims for server (some 2D/character gens will be limited).');
-    createCanvas = (w: number, h: number) => ({ width: w, height: h, getContext: () => ({ fillRect: () => {}, clearRect: () => {}, drawImage: () => {}, getImageData: () => ({ data: new Uint8ClampedArray(w * h * 4) }) }) });
     NodeImage = class { width = 1; height = 1; };
+  }
+
+  const _polyfillCanvasFactory = (w: number, h: number) => ({ width: w, height: h, getContext: () => {
+    const noop = () => {};
+    return {
+      fillRect: noop, clearRect: noop, drawImage: noop,
+      save: noop, restore: noop, scale: noop, rotate: noop, translate: noop, transform: noop,
+      beginPath: noop, closePath: noop, moveTo: noop, lineTo: noop, bezierCurveTo: noop, quadraticCurveTo: noop, arc: noop, arcTo: noop, rect: noop, ellipse: noop,
+      fill: noop, stroke: noop, clip: noop,
+      fillText: noop, strokeText: noop, measureText: () => ({ width: 0, actualBoundingBoxAscent: 0, actualBoundingBoxDescent: 0 }),
+      createLinearGradient: () => ({ addColorStop: noop }), createRadialGradient: () => ({ addColorStop: noop }), createPattern: () => ({}),
+      getImageData: () => ({ data: new Uint8ClampedArray(w * h * 4), width: w, height: h }),
+      putImageData: noop, drawFocusIfNeeded: noop,
+      setLineDash: noop, getLineDash: () => [], isPointInPath: () => false, isPointInStroke: () => false,
+      canvas: { width: w, height: h },
+      fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, lineCap: 'butt', lineJoin: 'miter', miterLimit: 10,
+      font: '10px sans-serif', textAlign: 'start', textBaseline: 'alphabetic', direction: 'inherit',
+      globalAlpha: 1, globalCompositeOperation: 'source-over',
+      shadowBlur: 0, shadowColor: 'transparent', shadowOffsetX: 0, shadowOffsetY: 0,
+      filter: 'none', imageSmoothingEnabled: true, imageSmoothingQuality: 'low',
+    };
+  } });
+
+  let _canvasMode: 'native' | 'polyfill' = _nativeCanvasFactory ? 'native' : 'polyfill';
+  function chooseCanvas(w: number, h: number) {
+    if (_canvasMode === 'native' && _nativeCanvasFactory) return _nativeCanvasFactory(w, h);
+    return _polyfillCanvasFactory(w, h);
   }
 
   const consoleFn = SHIM_MODE === 'production' ? () => {} : console.log;
@@ -26,7 +57,7 @@ export function initServerPolyfills() {
 
   const fakeDoc = {
     createElement(tag: string) {
-      if (tag === 'canvas') return createCanvas(1, 1);
+      if (tag === 'canvas') return chooseCanvas(1, 1);
       if (tag === 'img') {
         const img = new NodeImage();
         img.width = 1;
@@ -101,7 +132,9 @@ export function initServerPolyfills() {
       }
     },
     fetch: global.fetch ? global.fetch.bind(global) : async () => new Response(null, { status: 404 }),
+    __setCanvasMode: (mode: 'native' | 'polyfill') => { _canvasMode = mode; },
   };
+  (globalThis as any).__setCanvasMode = (mode: 'native' | 'polyfill') => { _canvasMode = mode; };
   fakeWin.self = fakeWin;
 
   global.window = fakeWin as any /* TODO: Phase 1 strict */;

@@ -7,6 +7,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateCharacterV3 } from './character';
+import { setCanvasMode } from './canvas-utils';
 import { registerContract } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -14,6 +15,7 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
+import { computeRatingScore } from '../quality/rating';
 
 // Direct 15_ usage (Epoch 2 pattern): the engineering-grade contract from src/lib/contracts/domains/ is the canonical source for strata + elevation
 import { characterContract as character15 } from '../../contracts/domains/character';
@@ -176,7 +178,12 @@ async function synthesize(seed: ChSeed): Promise<ChArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-ch-'));
   try {
     const out = path.join(dir, 'character.gltf');
+    // Use polyfill canvas mode for deterministic server-side golden hashes
+    // (native node-canvas rendering produces run-to-run variance in PBR texture
+    // pixel data, which propagates to GLTF content and breaks golden verification).
+    setCanvasMode('polyfill');
     const r = await withGltfExporterNoiseSuppressed(() => generateCharacterV3(seed as any, out));
+    setCanvasMode('native');
     const gltf = await fs.readFile(r.filePath, 'utf8');
 
     // Attach UI-consumable visual for immediate Studio preview (figurative via texture albedo or appearance).
@@ -295,8 +302,7 @@ function rate(artifact: ChArtifact): QualityReport {
   const notes = [`verts=${artifact.meta.vertices} faces=${artifact.meta.faces} anims=${artifact.meta.animations} tex=${artifact.meta.textures.length}`];
   notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
-  const v = Object.values(axes);
-  const score = v.reduce((a, b) => a + b, 0) / v.length;
+  const { score } = computeRatingScore({ axes, artifact: artifact as any });
   return { score, axes, notes };
 }
 

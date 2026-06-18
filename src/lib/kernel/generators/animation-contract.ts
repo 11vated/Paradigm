@@ -6,6 +6,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateAnimation } from './animation';
+import { setCanvasMode } from './canvas-utils';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -14,6 +15,7 @@ import { withKernelClock } from '../clock';
 
 // Direct 15_ usage (Epoch 2 pattern)
 import { runStratumPredicate } from '../quality/predicates';
+import { computeRatingScore } from '../quality/rating';
 
 interface S { $domain: 'animation'; $name?: string; genes: any }
 interface A {
@@ -48,7 +50,14 @@ export const AnimationQualityContract: QualityContract<S, A, any> = {
   synthesize: async (seed) => {
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'animation-'));
     try {
-      const r = await withKernelClock(0, () => generateAnimation(seed, dir)) as { gltfPath?: string; fbxPath?: string; mp4Path?: string; htmlPath?: string; [k: string]: unknown };
+      const r = await withKernelClock(0, async () => {
+        setCanvasMode('polyfill');
+        try {
+          return generateAnimation(seed, dir);
+        } finally {
+          setCanvasMode('native');
+        }
+      }) as { gltfPath?: string; fbxPath?: string; mp4Path?: string; htmlPath?: string; [k: string]: unknown };
       const primaryPath = r.gltfPath ?? r.fbxPath ?? r.mp4Path ?? r.htmlPath;
       let data = '';
       let previewData = '';
@@ -97,7 +106,8 @@ export const AnimationQualityContract: QualityContract<S, A, any> = {
     const notes: string[] = [];
     notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
-    return { score, axes, notes };
+    const result = computeRatingScore({ axes, artifact: a as any });
+    return { score: result.score, axes: result.axes, notes };
   },
   hashArtifact,
   strata: ['Motion', 'Form'] as const,
