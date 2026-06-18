@@ -2,6 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig(({ mode }) => {
   const _isProduction = mode === 'production';
@@ -10,6 +11,8 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       tailwindcss(),
+      viteCompression({ algorithm: 'gzip', threshold: 1024 }),
+      viteCompression({ algorithm: 'brotliCompress', threshold: 1024 }),
       {
         name: 'paradigm-node-builtin-guard',
         enforce: 'pre',

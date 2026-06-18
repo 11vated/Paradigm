@@ -191,6 +191,87 @@ describe('GSPL Interpreter', () => {
     });
   });
 
+  describe('evolve statement', () => {
+    it('executes evolve statement with default ga method', async () => {
+      const result = await executeGSPL(`
+        seed "Base" in character { strength: 0.5 }
+        evolve Base using "ga" with { count: 5 }
+      `);
+      if (result.errors.length > 0) console.log('EVOLVE GA errors:', JSON.stringify(result.errors));
+      expect(result.errors).toHaveLength(0);
+      const stmtSeeds = result.seeds.filter((s: any) => s.$lineage?.operation === 'gspl_evolve_stmt');
+      expect(stmtSeeds.length).toBeGreaterThanOrEqual(4);
+    });
+
+    it('executes evolve statement with random method', async () => {
+      const result = await executeGSPL(`
+        seed "Base" in character { strength: 0.5 }
+        evolve Base using "random" with { count: 3 }
+      `);
+      expect(result.errors).toHaveLength(0);
+      const stmtSeeds = result.seeds.filter((s: any) => s.$lineage?.operation === 'gspl_evolve_stmt_random');
+      expect(stmtSeeds.length).toBe(3);
+    });
+  });
+
+  describe('missing builtins', () => {
+    it('diff compares two records', async () => {
+      const result = await executeGSPL(`
+        let a = { name: "alpha", value: 1 }
+        let b = { name: "beta", value: 2 }
+        let d = diff(a, b)
+        print(d.name)
+      `);
+      expect(result.errors).toHaveLength(0);
+      expect(result.output.length).toBeGreaterThan(0);
+    });
+
+    it('interpolate blends values at t=0.5', async () => {
+      const result = await executeGSPL(`
+        let a = { value: 0 }
+        let b = { value: 100 }
+        let m = interpolate(a, b, 0.5)
+        print(m.value)
+      `);
+      expect(result.errors).toHaveLength(0);
+      expect(result.output[0]).toBe('50');
+    });
+
+    it('rate returns a score between 0 and 1', async () => {
+      const result = await executeGSPL(`
+        seed "Rater" in character { strength: 0.5 }
+        let s = rate(Rater)
+        print(s)
+      `);
+      expect(result.errors).toHaveLength(0);
+      const score = parseFloat(result.output[0]);
+      expect(score).toBeGreaterThanOrEqual(0);
+      expect(score).toBeLessThanOrEqual(1);
+    });
+
+    it('sign adds a signature to a seed', async () => {
+      const result = await executeGSPL(`
+        seed "Signable" in character { strength: 0.7 }
+        let s = sign(Signable)
+        print(s.signature)
+      `);
+      expect(result.errors).toHaveLength(0);
+      expect(result.output[0]).toBeDefined();
+      expect(result.output[0].length).toBeGreaterThan(0);
+    });
+
+    it('anchor adds an anchor hash to a seed', async () => {
+      const result = await executeGSPL(`
+        seed "Anchorable" in character { strength: 0.7 }
+        let a = anchor(Anchorable)
+        print(a.$anchor)
+      `);
+      expect(result.errors).toHaveLength(0);
+      expect(result.output[0]).toBeDefined();
+      expect(result.output[0].length).toBeGreaterThan(0);
+    });
+  });
+
   describe('error handling', () => {
     it('reports unknown function error', async () => {
       const result = await executeGSPL('nonexistent()');

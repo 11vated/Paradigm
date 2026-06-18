@@ -396,6 +396,7 @@ export function StudioPage() {
 
   return (
     <div
+      data-testid="studio-page-legacy"
       role="application"
       aria-label="Paradigm Absolute Studio — full sovereign GSPL OS for rich multi-modal seed artifacts. Type intent to create first real rich thing in <60s. WCAG 2.2 AAA (deeper: skip links, landmarks, enhanced live/valuetext for strata/pack/royalty/civ/fed/Part6, 7:1 high-contrast ready, keyboard, semantic), mobile-first."
       data-onboard-start={Date.now()}

@@ -83,6 +83,7 @@ export function OSDShell({ seedHash }: ShellProps) {
 
   return (
     <div
+      data-testid="os-shell"
       style={{
         width: '100vw',
         height: '100vh',

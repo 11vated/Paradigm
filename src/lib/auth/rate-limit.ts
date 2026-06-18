@@ -12,18 +12,38 @@ async function getRedis(): Promise<RedisClientType | null> {
   if (redisClient) return redisClient;
   
   const redisUrl = process.env.REDIS_URL;
-  if (!redisUrl || redisUrl === 'redis://redis:6379') {
-    try {
-       redisClient = createClient() as any;
-      await redisClient!.connect();
-      useRedis = true;
-      console.log('[RateLimiter] Using Redis backend');
-      return redisClient;
-    } catch (e) {
-      console.warn('[RateLimiter] Redis unavailable, falling back to in-memory');
-    }
+  const isProd = process.env.NODE_ENV === 'production';
+  
+  // PRODUCTION: Redis is REQUIRED for distributed rate limiting
+  if (isProd && !redisUrl) {
+    throw new Error(
+      'REDIS_URL is required in production for distributed rate limiting.\n' +
+      'Set REDIS_URL environment variable or use a managed Redis service.\n' +
+      'In-memory rate limiting is not suitable for multi-instance deployments.'
+    );
   }
-  return null;
+  
+  if (!redisUrl) {
+    console.warn('[RateLimiter] Redis not configured, using in-memory (development only)');
+    return null;
+  }
+  
+  try {
+    redisClient = createClient({ url: redisUrl }) as any;
+    await redisClient!.connect();
+    useRedis = true;
+    console.log('[RateLimiter] Connected to Redis:', redisUrl.replace(/:[^:]*@/, ':***@'));
+    return redisClient;
+  } catch (e) {
+    if (isProd) {
+      throw new Error(
+        `Redis connection failed in production: ${e instanceof Error ? e.message : String(e)}\n` +
+        'Check REDIS_URL and ensure Redis is accessible.'
+      );
+    }
+    console.warn('[RateLimiter] Redis connection failed, falling back to in-memory:', e);
+    return null;
+  }
 }
 
 export interface RateLimitConfig {
@@ -72,13 +92,19 @@ export function createRateLimiter(config: RateLimitConfig = {}) {
     }
 
     if (!client || !useRedis) {
-      const timestamps = inMemRates.get(key) || [];
+      // Use keyPrefix in in-memory storage too
+      const memKey = `${keyPrefix}${key}`;
+      const timestamps = inMemRates.get(memKey) || [];
       const validTimestamps = timestamps.filter(t => now - t < windowMs);
       
       validTimestamps.push(now);
-      inMemRates.set(key, validTimestamps);
+      inMemRates.set(memKey, validTimestamps);
       
       canProceed = validTimestamps.length <= limit;
+      
+      if (!canProceed) {
+        res.setHeader('Retry-After', Math.ceil(windowMs / 1000).toString());
+      }
     }
 
     if (!canProceed) {

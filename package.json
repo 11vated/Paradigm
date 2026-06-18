@@ -1,7 +1,7 @@
 {
   "name": "paradigm-absolute",
   "private": true,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "bin": {
     "paradigm": "./cli/index.js"
@@ -70,8 +70,11 @@
     "substrate:health": "echo Substrate health endpoint (Phase 0) - run via server",
     "verify:phase": "bash scripts/verify-phase.sh",
     "verify:phase:1": "bash scripts/verify-phase.sh 1",
+    "build:release": "npx tsx scripts/build-release.ts",
+    "build:compressed": "npx vite build && npx tsx scripts/build-release.ts",
     "release:patch": "node scripts/bump-version.js patch && git add package.json CHANGELOG.md && git commit -m \"chore(release): patch bump\" && git tag \"v$(node -p \\\"require(''./package.json'').version\\\")\"",
-    "release:minor": "node scripts/bump-version.js minor && git add package.json CHANGELOG.md && git commit -m \"chore(release): minor bump\" && git tag \"v$(node -p \\\"require(''./package.json'').version\\\")\""
+    "release:minor": "node scripts/bump-version.js minor && git add package.json CHANGELOG.md && git commit -m \"chore(release): minor bump\" && git tag \"v$(node -p \\\"require(''./package.json'').version\\\")\"",
+    "ci:check": "npm run typecheck && npm run determinism:check && npm run quality:contract && npm run golden:verify && npm run build"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
@@ -137,6 +140,7 @@
     "react-resizable-panels": "^4.9.0",
     "react-router-dom": "^7.14.0",
     "recharts": "^3.8.1",
+    "redis": "^6.0.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
@@ -148,6 +152,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@eslint/js": "^9.39.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.2",
     "@nomicfoundation/hardhat-ethers": "^3.1.3",
@@ -158,6 +163,9 @@
     "@openzeppelin/contracts": "4.9",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/vite": "^4.1.14",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@typechain/ethers-v6": "^0.5.1",
     "@typechain/hardhat": "^9.1.0",
     "@types/d3-force": "^3.0.10",
@@ -187,6 +195,7 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.58.1",
     "vite": "^6.2.0",
+    "vite-plugin-compression": "^0.5.1",
     "vitest": "^4.1.4"
   },
   "optionalDependencies": {

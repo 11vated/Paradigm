@@ -436,7 +436,7 @@ async function startServer() {
       details,
       ip: req?.ip || req?.connection?.remoteAddress,
     };
-    store.addAuditEntry(entry).catch(() => {}); // Non-blocking
+    store.addAuditEntry(entry).catch((err: any) => log('ERROR', 'Audit entry failed', { error: err?.message || String(err) }));
   }
 
   // Deterministic ID counter (resets per server start — same inputs → same outputs within a run)

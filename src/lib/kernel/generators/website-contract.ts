@@ -10,6 +10,7 @@ import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (al
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
 import { runStratumPredicate } from '../quality/predicates';
+import { computeRatingScore } from '../quality/rating';
 
 interface WSSeed { $hash: string; genes?: Record<string, any>; }
 interface WSArtifact {
@@ -92,7 +93,7 @@ function rate(a: WSArtifact): QualityReport {
   const notes = [`${a.sections} sections, ${a.byteSize} bytes, ${a.colorPalette.length} colors`];
   notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
-  const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
+  const { score } = computeRatingScore({ axes, artifact: a as any });
   return { score, axes, notes };
 }
 

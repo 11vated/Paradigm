@@ -121,6 +121,7 @@ function invert(a: MusicArtifact): MusicInverted {
 }
 
 import { analyzePcm, audioQualityAxes } from '../quality/audio-features';
+import { computeRatingScore } from '../quality/rating';
 
 function rate(a: MusicArtifact): QualityReport {
   const axes: Record<string, number> = {};
@@ -161,7 +162,7 @@ function rate(a: MusicArtifact): QualityReport {
   axes.strataCompliance = strataCompliance;
   notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
-  const score = Object.values(axes).reduce((s, v) => s + v, 0) / Object.values(axes).length;
+  const { score } = computeRatingScore({ axes, artifact: a as any });
   return { score, axes, notes };
 }
 

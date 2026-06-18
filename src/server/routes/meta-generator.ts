@@ -9,6 +9,7 @@
  */
 
 import type { Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import { MetaGenerator, SelfImprovementLoop } from '../../lib/kernel/meta-generator';
 
 const metaGen = new MetaGenerator();
@@ -19,7 +20,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * POST /meta/generate
    * Generate a new generator from a specification.
    */
-  app.post('/meta/generate', (req: Request, res: Response) => {
+  app.post('/meta/generate', requireAuth, (req: Request, res: Response) => {
     const { domain, name, description, parameters, output, strata } = req.body;
 
     if (!domain || !name) {
@@ -55,7 +56,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * POST /meta/verify
    * Verify a generated generator.
    */
-  app.post('/meta/verify', (req: Request, res: Response) => {
+  app.post('/meta/verify', requireAuth, (req: Request, res: Response) => {
     const { id } = req.body;
 
     if (!id) {
@@ -77,7 +78,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * GET /meta/list
    * List all generated generators.
    */
-  app.get('/meta/list', (req: Request, res: Response) => {
+  app.get('/meta/list', optionalAuth, (req: Request, res: Response) => {
     const generators = metaGen.list();
     res.json({
       generators: generators.map(g => ({
@@ -96,7 +97,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * GET /meta/:id
    * Get a specific generated generator.
    */
-  app.get('/meta/:id', (req: Request, res: Response) => {
+  app.get('/meta/:id', optionalAuth, (req: Request, res: Response) => {
     const gen = metaGen.get(req.params.id);
     if (!gen) {
       res.status(404).json({ error: 'Generator not found' });
@@ -118,7 +119,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * POST /meta/improve
    * Attempt to improve an existing generator.
    */
-  app.post('/meta/improve', (req: Request, res: Response) => {
+  app.post('/meta/improve', requireAuth, (req: Request, res: Response) => {
     const { currentSource, targetDomain, improvementGoal } = req.body;
 
     if (!currentSource || !targetDomain) {
@@ -142,7 +143,7 @@ export function registerMetaGeneratorRoutes(app: any) {
    * GET /meta/improvements
    * List all improvement attempts.
    */
-  app.get('/meta/improvements', (req: Request, res: Response) => {
+  app.get('/meta/improvements', optionalAuth, (req: Request, res: Response) => {
     const attempts = improvementLoop.listAttempts();
     const accepted = improvementLoop.getAcceptedAttempts();
 

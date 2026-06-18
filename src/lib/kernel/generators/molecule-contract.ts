@@ -9,6 +9,7 @@ import { registerContract } from '../quality-contract';
 import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { computeRatingScore } from '../quality/rating';
 
 interface MSeed { $hash: string; genes?: Record<string, any>; }
 interface MArtifact {
@@ -69,7 +70,7 @@ function rate(a: MArtifact): QualityReport {
     atomCount: Math.min(1, a.atomCount / 20),
     hasMW:    a.mw > 0 ? 1 : 0,
   };
-  const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
+  const { score } = computeRatingScore({ axes, artifact: a as any });
   return { score, axes, notes: [`${a.formula}, MW=${a.mw.toFixed(1)}, atoms=${a.atomCount}`] };
 }
 

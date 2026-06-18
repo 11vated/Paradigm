@@ -59,18 +59,10 @@ class LokiBackend implements LogBackend {
   private async ensureClient(): Promise<void> {
     if (this.mounted) return;
 
-    try {
-      // @ts-ignore - Optional dependency
-      const { Loki } = await import('lokijs');
-      this.client = new Loki(this.lokiUrl);
-      this.mounted = true;
+    this.mounted = true;
       
       // Start periodic flush
       this.flushInterval = setInterval(() => this.flush(), this.flushIntervalMs);
-    } catch (error) {
-      console.warn('Loki client not available, falling back to console:', error);
-      this.mounted = false;
-    }
   }
 
   write(log: any): void {
@@ -95,7 +87,7 @@ class LokiBackend implements LogBackend {
   }
 
   async flush(): Promise<void> {
-    if (!this.client || this.buffer.length === 0) return;
+    if (!this.mounted || this.buffer.length === 0) return;
 
     try {
       const payload = { streams: this.buffer };
@@ -178,7 +170,7 @@ class ElasticsearchBackend implements LogBackend {
   }
 
   async flush(): Promise<void> {
-    if (!this.client || this.buffer.length === 0) return;
+    if (!this.mounted || this.buffer.length === 0) return;
 
     try {
       const body = this.buffer.flatMap(doc => [
@@ -254,7 +246,7 @@ class CloudWatchBackend implements LogBackend {
   }
 
   async flush(): Promise<void> {
-    if (!this.client || this.buffer.length === 0) return;
+    if (!this.mounted || this.buffer.length === 0) return;
 
     try {
       // @ts-ignore - Optional dependency

@@ -329,7 +329,7 @@ export default function HealthPage() {
   const waiverCount = data.metrics.waiver_count;
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050508', color: 'white', padding: 24, fontFamily: 'monospace' }}>
+    <div data-testid="health-page" style={{ minHeight: '100vh', background: '#050508', color: 'white', padding: 24, fontFamily: 'monospace' }}>
       <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
 
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>

@@ -3,6 +3,7 @@ import { GsplParser, ASTNodeType } from './gspl-parser';
 import { Xoshiro256StarStar } from './rng';
 import { geneTypeRegistry, type GeneTypeOps, type GeneSchema } from './gene-type-registry';
 import { kernelNow, kernelNowIso } from './clock';
+import { SafeGeneExecutor, validateGeneOperationSource } from './safe-gene-executor';
 
 export interface GSPLGeneTypeDefinition {
   name: string;
@@ -79,46 +80,31 @@ export function parseGSPLGeneType(source: string): GSPLGeneTypeDefinition {
 
 /**
  * Compile operator function bodies into callable GeneTypeOps.
- * Uses new Function() with injected RNG helpers — the bodies are plain
- * JavaScript evaluated at runtime (safe because they run server-side
- * and are validated before registration).
+ * Uses SafeGeneExecutor for sandboxed execution (no eval/Function).
+ * All operations are validated before compilation.
  */
 export function compileGSPLOperators(
   definition: GSPLGeneTypeDefinition,
 ): GeneTypeOps {
-  const makeFn = (body: string, params: string[]): ((...args: unknown[]) => unknown) => {
-    const rngHelpers = `
-      var _rngNextF64 = function() { return _rng.nextF64() };
-      var _rngNextInt = function(m,x) { return _rng.nextInt(m||0,x||100) };
-      var _rngNextBool = function() { return _rng.nextBool() };
-      var _rngNextGaussian = function() { return _rng.nextGaussian() };
-      var _rngChoice = function(a) { return _rng.nextChoice(a) };
-    `;
-    return new Function('_v', '_r', '_a', '_b', '_rng', '_s', rngHelpers + '\n' + body) as unknown as ((...args: unknown[]) => unknown);
-  };
+  // Validate all operation sources before compilation
+  validateGeneOperationSource(definition.validate);
+  validateGeneOperationSource(definition.mutate);
+  validateGeneOperationSource(definition.crossover);
+  validateGeneOperationSource(definition.distance);
+  if (definition.canonicalize) {
+    validateGeneOperationSource(definition.canonicalize);
+  }
+  if (definition.repair) {
+    validateGeneOperationSource(definition.repair);
+  }
 
   return {
-    validate: ((value: any, schema?: any) => {
-      try { return !!makeFn(definition.validate, ['v','s'])(value, null, null, null, null, schema); }
-      catch { return false; }
-    }) as any,
-    mutate: ((value: any, rate: number, rng: any, schema?: any) => {
-      return makeFn(definition.mutate, ['v','rate','rng','s'])(value, rate, null, null, rng, schema);
-    }) as any,
-    crossover: ((a: any, b: any, rng: any) => {
-      return makeFn(definition.crossover, ['a','b','rng'])(null, null, a, b, rng, null);
-    }) as any,
-    distance: ((a: any, b: any, schema?: any) => {
-      return makeFn(definition.distance, ['a','b','s'])(null, null, a, b, null, schema) as number;
-    }) as any,
-    canonicalize: ((value: any, schema?: any) => {
-      try { return makeFn(definition.canonicalize ?? '(v,s) => v', ['v','s'])(value, null, null, null, null, schema); }
-      catch { return value; }
-    }) as any,
-    repair: ((value: any, schema?: any) => {
-      try { return makeFn(definition.repair ?? '(v,s) => v', ['v','s'])(value, null, null, null, null, schema); }
-      catch { return value; }
-    }) as any,
+    validate: SafeGeneExecutor.createValidate(definition.validate),
+    mutate: SafeGeneExecutor.createMutate(definition.mutate),
+    crossover: SafeGeneExecutor.createCrossover(definition.crossover),
+    distance: SafeGeneExecutor.createDistance(definition.distance),
+    canonicalize: SafeGeneExecutor.createCanonicalize(definition.canonicalize ?? 'return _v'),
+    repair: SafeGeneExecutor.createRepair(definition.repair ?? 'return _v'),
   };
 }
 

@@ -179,7 +179,7 @@ const CURATION_QUALITY_BONUS = 0.11;
 
 const DEFAULT_OPTS: Required<ConformanceOptions> = {
   minCurated: 3,
-  minCuratedScore: 0.995,
+  minCuratedScore: 0.999,  // Phase 6: Quality Pass C (raised from 0.995)
   determinismTrials: 2,
 };
 

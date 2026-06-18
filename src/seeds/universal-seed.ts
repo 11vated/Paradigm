@@ -83,6 +83,9 @@ export class UniversalSeed {
   constructor(data?: Partial<UniversalSeedData>) {
     this.id = data?.id ?? createDeterministicSeedId();
     this.metadata = data?.metadata ?? this.createDefaultMetadata();
+    if (!this.metadata.lineage) {
+      this.metadata.lineage = [];
+    }
     this.genes = data?.genes ?? new Map();
     this.expression = data?.expression ?? this.createDefaultExpression();
     this.derivation = data?.derivation;

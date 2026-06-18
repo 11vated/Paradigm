@@ -121,6 +121,16 @@ export default tseslint.config(
           message:
             'Deterministic boundary: performance.now() is forbidden. Pass timings in.',
         },
+        {
+          selector: "NewExpression[callee.name='Function']",
+          message:
+            'Security boundary: new Function() enables arbitrary code execution. Use SafeGeneExecutor from src/lib/kernel/safe-gene-executor.ts instead.',
+        },
+        {
+          selector: "CallExpression[callee.name='eval']",
+          message:
+            'Security boundary: eval() enables arbitrary code execution. Use SafeGeneExecutor from src/lib/kernel/safe-gene-executor.ts instead.',
+        },
       ],
     },
   },
@@ -131,6 +141,7 @@ export default tseslint.config(
     files: [
       'src/lib/kernel/rng.ts',
       'src/lib/kernel/rng-contract.ts',
+      'src/lib/kernel/safe-gene-executor.ts', // Allowed to use new Function() with validation
       'src/seeds/types.ts',
       // tests are excluded from the boundary — they need sample data
       'src/lib/kernel/**/__tests__/**',

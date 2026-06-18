@@ -9,35 +9,66 @@ import { registerContract } from '../quality-contract';
 import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { computeRatingScore } from '../quality/rating';
 
 interface FSeed { $hash: string; genes?: Record<string, any>; }
-interface FArtifact { svg: string; fieldData: any; sourceType: string; gridSize: number; maxE: number; maxH: number; }
-interface FInverted { gridSize: number; maxE: number; maxH: number; svgHash: string; }
+interface FArtifact {
+  svg: string;
+  fieldData: any;
+  sourceType: string;
+  gridSize: number;
+  peakMagnitude: number;
+  energyDensity: number;
+  previewData?: string;
+  visual?: {
+    type: 'svg' | 'json' | 'text';
+    previewData?: string;
+  };
+  emergent_assets?: {
+    preview?: {
+      type: 'svg' | 'json' | 'text';
+      data?: string;
+      path?: string;
+    };
+  };
+}
+interface FInverted { gridSize: number; peakMagnitude: number; energyDensity: number; svgHash: string; }
 
 async function synthesize(seed: FSeed): Promise<FArtifact> {
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-fd-'));
   try {
     const r = await generateField(seed as any, dir) as any;
     const svg = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
-    const fd  = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).fieldSnapshot ?? {};
-    return { svg, fieldData: fd, sourceType: r.sourceType ?? '', gridSize: r.gridSize ?? 0, maxE: fd.maxE ?? 0, maxH: fd.maxH ?? 0 };
+    const json = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
+    const peakMagnitude = json.peakMagnitude ?? 0;
+    const energyDensity = json.energyDensity ?? 0;
+    const previewData = svg;
+    return {
+      svg, fieldData: json, sourceType: json.fieldType ?? '',
+      gridSize: json.gridSize ?? 64, peakMagnitude, energyDensity,
+      previewData,
+      visual: { type: 'svg', previewData },
+      emergent_assets: {
+        preview: { type: 'svg', data: previewData, path: r.svgPath },
+      },
+    };
   } finally { await fs.rm(dir, { recursive: true, force: true }).catch(() => {}); }
 }
 
 function invert(a: FArtifact): FInverted {
-  return { gridSize: a.gridSize, maxE: a.maxE, maxH: a.maxH,
+  return { gridSize: a.gridSize, peakMagnitude: a.peakMagnitude, energyDensity: a.energyDensity,
     svgHash: crypto.createHash('sha256').update(a.svg).digest('hex').slice(0, 16) };
 }
 
 function rate(a: FArtifact): QualityReport {
   const axes: Record<string, number> = {
     hasSvg:   a.svg.length > 200 ? 1 : 0,
-    hasField: a.maxE > 0 || a.maxH > 0 ? 1 : 0,
+    hasField: a.peakMagnitude > 0 || a.energyDensity > 0 ? 1 : 0,
     gridSize: Math.min(1, a.gridSize / 64),
-    physicallyValid: isFinite(a.maxE) && isFinite(a.maxH) ? 1 : 0,
+    physicallyValid: isFinite(a.peakMagnitude) && isFinite(a.energyDensity) ? 1 : 0,
   };
-  const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
-  return { score, axes, notes: [`${a.sourceType}, grid=${a.gridSize}, maxE=${a.maxE.toFixed(3)}`] };
+  const { score } = computeRatingScore({ axes, artifact: a as any });
+  return { score, axes, notes: [`${a.sourceType}, grid=${a.gridSize}, peakMag=${a.peakMagnitude.toFixed(3)}`] };
 }
 
 function hashArtifact(a: FArtifact): string {

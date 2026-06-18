@@ -10,6 +10,7 @@
  */
 
 import { Router, Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 
 // In-memory storage (TODO: replace with PostgreSQL persistence in production - requires schema design, migration scripts, and database client integration)
 interface SeedListing {
@@ -87,9 +88,12 @@ function seedFeaturedListings(): void {
 
 seedFeaturedListings();
 
+// Deterministic ID counter (same inputs = same IDs within a run)
+let marketplaceIdCounter = 0;
+
 export function registerMarketplaceRoutes(router: Router): void {
   // GET /api/marketplace - Get featured listings
-  router.get('/api/marketplace', (req: Request, res: Response) => {
+  router.get('/api/marketplace', optionalAuth, (req: Request, res: Response) => {
     try {
       const featured = Array.from(listings.values())
         .filter(l => l.featured)
@@ -103,7 +107,7 @@ export function registerMarketplaceRoutes(router: Router): void {
   });
 
   // GET /api/marketplace/listings - Get all listings with optional filters
-  router.get('/api/marketplace/listings', (req: Request, res: Response) => {
+  router.get('/api/marketplace/listings', optionalAuth, (req: Request, res: Response) => {
     try {
       const { domain, seller, search, limit = '50', offset = '0' } = req.query;
       
@@ -142,7 +146,7 @@ export function registerMarketplaceRoutes(router: Router): void {
   });
 
   // GET /api/marketplace/listings/:id - Get specific listing
-  router.get('/api/marketplace/listings/:id', (req: Request, res: Response) => {
+  router.get('/api/marketplace/listings/:id', optionalAuth, (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const listing = listings.get(id);
@@ -159,7 +163,7 @@ export function registerMarketplaceRoutes(router: Router): void {
   });
 
   // POST /api/marketplace/listings - Create new listing
-  router.post('/api/marketplace/listings', (req: Request, res: Response) => {
+  router.post('/api/marketplace/listings', requireAuth, (req: Request, res: Response) => {
     try {
       const { seedId, sellerId, price, currency, tags, domain, description } = req.body;
       
@@ -167,7 +171,7 @@ export function registerMarketplaceRoutes(router: Router): void {
         return res.status(400).json({ error: 'Missing required fields: seedId, sellerId, price, domain' });
       }
       
-      const id = `listing_${Date.now()}`;
+      const id = `listing_${(++marketplaceIdCounter).toString(36).padStart(6, '0')}`;
       const newListing: SeedListing = {
         id,
         seedId,
@@ -288,7 +292,7 @@ export function registerMarketplaceRoutes(router: Router): void {
   });
 
   // GET /api/marketplace/stats - Get marketplace statistics
-  router.get('/api/marketplace/stats', (req: Request, res: Response) => {
+  router.get('/api/marketplace/stats', optionalAuth, (req: Request, res: Response) => {
     try {
       const allListings = Array.from(listings.values());
       const allTransactions = Array.from(transactions.values());
@@ -323,7 +327,7 @@ export function registerMarketplaceRoutes(router: Router): void {
   });
 
   // GET /api/marketplace/domains - Get available domains
-  router.get('/api/marketplace/domains', (req: Request, res: Response) => {
+  router.get('/api/marketplace/domains', optionalAuth, (req: Request, res: Response) => {
     try {
       const domains = Array.from(new Set(
         Array.from(listings.values()).map(l => l.domain)

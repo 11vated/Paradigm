@@ -1,4 +1,3 @@
-// TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useEffect, useRef } from 'react';
 import { Dna } from 'lucide-react';
 import { DOMAIN_COLORS as DOMAIN_COLORS_HEX } from '@/lib/constants';

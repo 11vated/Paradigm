@@ -11,6 +11,7 @@
  * tx hash + gas used.
  */
 import type { Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import { runLocalOnchainDemo, RealOnChainClient, startLocalHardhatNode, type LocalOnchainDemoResult } from '../../lib/contracts/onchain/real-client.js';
 import { kernelNowIso } from '../../lib/kernel/clock.js';
 
@@ -32,7 +33,7 @@ export function registerOnchainRoutes(app: any): void {
    * GET /onchain/status
    * Returns current on-chain demo state + metrics.
    */
-  app.get('/onchain/status', (_req: Request, res: Response) => {
+  app.get('/onchain/status', optionalAuth, (_req: Request, res: Response) => {
     res.json({
       status: 'ready',
       lastRunAt: state.lastRunAt || null,
@@ -90,7 +91,7 @@ export function registerOnchainRoutes(app: any): void {
    * Body: { rpcUrl: string, privateKey?: string }
    * privateKey defaults to Hardhat Account #0 (dev only).
    */
-  app.post('/onchain/dial', async (req: Request, res: Response) => {
+  app.post('/onchain/dial', requireAuth, async (req: Request, res: Response) => {
     const { rpcUrl, privateKey } = req.body || {};
     if (!rpcUrl) {
       res.status(400).json({ error: 'missing-rpcUrl' });
@@ -141,7 +142,7 @@ export function registerOnchainRoutes(app: any): void {
    * Body: { port?: number } — port defaults to a free port.
    * Returns: { rpcUrl, port, pid, close: fn-name-to-call }
    */
-  app.post('/onchain/spawn-node', async (req: Request, res: Response) => {
+  app.post('/onchain/spawn-node', requireAuth, async (req: Request, res: Response) => {
     try {
       const node = await startLocalHardhatNode({ port: req.body?.port });
       res.json({

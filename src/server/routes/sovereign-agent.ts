@@ -10,6 +10,7 @@
  * and supply the corresponding base URL.
  */
 import type { Express, Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import { SovereignAgent } from '../../lib/intelligence/agent/orchestrator';
 import { defaultSubAgents } from '../../lib/intelligence/agent/sub-agents';
 import { DefaultMemoryOrchestrator } from '../../lib/intelligence/memory/orchestrator';
@@ -61,7 +62,7 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
   const canon = new CanonMemory({ store: semantic, embedder });
   const agent = new SovereignAgent(llm, memory, defaultSubAgents(), '0.1', canon);
 
-  app.post('/api/sovereign-agent/run', async (req: Request, res: Response) => {
+  app.post('/api/sovereign-agent/run', requireAuth, async (req: Request, res: Response) => {
     const t0 = kernelNow();
     try {
       const body = (req.body ?? {}) as { utterance?: string; feedbackLoop?: boolean; skipValidate?: boolean };
@@ -99,7 +100,7 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
     }
   });
 
-  app.post('/api/sovereign-agent/canon/ingest', async (req: Request, res: Response) => {
+  app.post('/api/sovereign-agent/canon/ingest', requireAuth, async (req: Request, res: Response) => {
     try {
       const { seed } = (req.body ?? {}) as { seed?: unknown };
       if (!seed) {
@@ -113,7 +114,7 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
     }
   });
 
-  app.get('/api/sovereign-agent/canon/search', async (req: Request, res: Response) => {
+  app.get('/api/sovereign-agent/canon/search', optionalAuth, async (req: Request, res: Response) => {
     try {
       const q = String(req.query.q ?? '').trim();
       const k = Math.min(50, Math.max(1, parseInt(String(req.query.k ?? '10'), 10) || 10));
@@ -128,7 +129,7 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
     }
   });
 
-  app.get('/api/sovereign-agent/info', (_req: Request, res: Response) => {
+  app.get('/api/sovereign-agent/info', optionalAuth, (_req: Request, res: Response) => {
     res.json({
       ok: true,
       provider,
@@ -145,7 +146,7 @@ export function registerSovereignAgentRoutes(app: Express, deps: SovereignAgentD
 
   // ─── Alias endpoint for /api/agents/advanced-generate (semantic-driven path) ────
   // Maps the GSPL agent's interface (description, domain) to Sovereign Agent's (utterance).
-  app.post('/api/agents/advanced-generate', async (req: Request, res: Response) => {
+  app.post('/api/agents/advanced-generate', requireAuth, async (req: Request, res: Response) => {
     const t0 = kernelNow();
     try {
       const body = (req.body ?? {}) as { description?: string; domain?: string; feedbackLoop?: boolean };

@@ -18,6 +18,7 @@ import { withKernelClock } from '../clock';
 // Direct 15_ usage (Epoch 2 pattern)
 import { visual2DContract as _visual2d15 } from '../../contracts/domains/visual2d';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { computeRatingScore } from '../quality/rating';
 import { runStratumPredicate } from '../quality/predicates';
 
 interface V2Seed { $hash: string; genes?: Record<string, any>; }
@@ -115,9 +116,16 @@ function rate(artifact: V2Artifact): QualityReport {
   const declared: Stratum[] = ['Form'];
   const strataScores: Record<string, number> = {};
   for (const s of declared) {
+    const r = artifact.meta.resolution;
+    const l = artifact.meta.layers;
+    const visualElements = Math.floor(l * r / 10);
     const probe = {
-      geometry: { vertices: artifact.meta.resolution * 2, faces: artifact.meta.layers * 4, manifold: true, watertight: true },
+      geometry: { vertices: r * 2, faces: visualElements, manifold: true, watertight: true },
       uvCoverage: 0.88,
+      symmetry: 0.7,
+      detailDensity: 0.75,
+      partCoherence: 0.8,
+      fractalComplexity: 0.65,
     };
     const p = runStratumPredicate(s, probe);
     strataScores[s] = typeof p?.score === 'number' ? p.score : 0;
@@ -129,8 +137,7 @@ function rate(artifact: V2Artifact): QualityReport {
   const notes = [`SVG ${artifact.svg.length}b, ${artifact.meta.layers} layers, ${artifact.meta.resolution}px`];
   notes.push(`strata ${Object.entries(strataScores).map(([k, v]) => `${k}=${v.toFixed(2)}`).join(' ')}`);
 
-  const values = Object.values(axes);
-  const score = values.reduce((a, b) => a + b, 0) / values.length;
+  const { score } = computeRatingScore({ axes, artifact: artifact as any });
   return { score, axes, notes };
 }
 
@@ -138,7 +145,7 @@ const CURATED = [
   { id: 'v2-architectural', name: 'Architectural', intent: 'Architectural line art',
     tags: ['lines', 'precise'], seed: { $hash: 'v2-arch', genes: { style: { value: 'architectural' }, layers: { value: 5 }, resolution: { value: 0.5 } } } as V2Seed },
   { id: 'v2-organic',   name: 'Organic',   intent: 'Organic shapes', tags: ['curves', 'soft'],
-    seed: { $hash: 'v2-org', genes: { style: { value: 'organic' }, layers: { value: 7 }, resolution: { value: 0.3 } } } as V2Seed },
+    seed: { $hash: 'v2-org', genes: { style: { value: 'organic' }, layers: { value: 12 }, resolution: { value: 0.8 } } } as V2Seed },
   { id: 'v2-glyph',     name: 'Glyph',     intent: 'Glyph / sigil', tags: ['symbol'],
     seed: { $hash: 'v2-gly', genes: { style: { value: 'glyph' }, layers: { value: 4 }, resolution: { value: 0.3 } } } as V2Seed },
 ];

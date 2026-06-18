@@ -7,6 +7,7 @@ import { calculateLineageRoyalties } from './lineage-royalties';
 import { calculateCivilizationalDividends } from './dividends';
 import { createHash } from 'crypto';
 import { kernelNowIso } from '../../kernel/clock'; // for opt-out ts (deterministic metadata; relative from contracts/economics to lib/kernel)
+import { ethers } from 'ethers';
 
 export interface UniverseLicense {
   seedId: string;
@@ -67,8 +68,14 @@ export function prepareOnChainRoyalties(
   const perRecipient = totalRoyalty / BigInt(recipients.length);
   const amounts = recipients.map(() => perRecipient.toString());
 
-  // Real-ish calldata for a hypothetical distributeRoyalties function on SeedNFT or a RoyaltyDistributor
-  const txData = `0x${Buffer.from(`distributeRoyalties(${seedId},${recipients.join(',')},${amounts.join(',')})`).toString('hex')}`;
+  // Real ABI-encoded calldata for distributeRoyalties(bytes32,address[],uint256[])
+  const abiCoder = ethers.AbiCoder.defaultAbiCoder();
+  const fnSelector = ethers.id('distributeRoyalties(bytes32,address[],uint256[])').slice(0, 10) as `0x${string}`;
+  const params = abiCoder.encode(
+    ['bytes32', 'address[]', 'uint256[]'],
+    [ethers.zeroPadValue(ethers.toUtf8Bytes(seedId).slice(0, 32), 32), recipients, amounts.map(a => BigInt(a))]
+  );
+  const txData = ethers.concat([fnSelector, params]);
 
   return {
     seedId,
@@ -95,22 +102,37 @@ export function prepareSeedNFTMintFlow(params: {
   to: string;
   seedHash: string;
   domain: string;
+  genetics?: string;
   metadataUri: string;
-  royaltyRecipient?: string;
-  royaltyBps?: number;
+  parent1Hash?: string;
+  parent2Hash?: string;
+  generation?: number;
 }): MintFlowCalldata {
-  const royaltyRecipient = params.royaltyRecipient || '0x0000000000000000000000000000000000000000';
-  const royaltyBps = params.royaltyBps || 250; // 2.5%
-
-  const calldata = `mintWithRoyalty(${params.to}, ${params.seedHash}, ${params.domain}, ${params.metadataUri}, ${royaltyRecipient}, ${royaltyBps})`;
+  // Real ABI-encoded calldata for mintSeed(address,string,string,string,string,string,string,uint256)
+  const abiCoder = ethers.AbiCoder.defaultAbiCoder();
+  const fnSelector = ethers.id('mintSeed(address,string,string,string,string,string,string,uint256)').slice(0, 10) as `0x${string}`;
+  const encoded = abiCoder.encode(
+    ['address', 'string', 'string', 'string', 'string', 'string', 'string', 'uint256'],
+    [
+      params.to,
+      params.seedHash,
+      params.domain,
+      params.genetics || '',
+      params.metadataUri,
+      params.parent1Hash || '',
+      params.parent2Hash || '',
+      BigInt(params.generation ?? 0),
+    ]
+  );
+  const calldata = ethers.concat([fnSelector, encoded]);
 
   return {
     to: params.to,
     seedHash: params.seedHash,
     domain: params.domain,
     uri: params.metadataUri,
-    royaltyRecipient,
-    royaltyBps,
+    royaltyRecipient: '0x0000000000000000000000000000000000000000',
+    royaltyBps: 250,
     calldata,
   };
 }

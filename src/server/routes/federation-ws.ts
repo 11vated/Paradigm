@@ -11,6 +11,7 @@
  * to exercise the actual TCP/WS layer, not in-memory shortcuts).
  */
 import type { Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import * as crypto from 'crypto';
 import {
   type FedWsMetrics,
@@ -62,7 +63,7 @@ export function registerFederationWsRoutes(app: any): void {
    * GET /federation/ws/status
    * Returns transport metrics + local operator identity.
    */
-  app.get('/federation/ws/status', (_req: Request, res: Response) => {
+  app.get('/federation/ws/status', optionalAuth, (_req: Request, res: Response) => {
     const r = ensureInitialized();
     res.json({
       operatorNodeId: r.operatorNodeId,
@@ -82,7 +83,7 @@ export function registerFederationWsRoutes(app: any): void {
    * POST /federation/ws/init
    * Re-init the operator keypair. Idempotent — only re-keys if `force=true`.
    */
-  app.post('/federation/ws/init', (req: Request, res: Response) => {
+  app.post('/federation/ws/init', requireAuth, (req: Request, res: Response) => {
     const force = req.body?.force === true;
     if (runtime.operatorPrivateKey && !force) {
       res.json({
@@ -116,7 +117,7 @@ export function registerFederationWsRoutes(app: any): void {
    * HELLO→OFFER→ACCEPT→PING→PONG→BYE round trip, and returns the full
    * result. Exercises the entire real-wire path (TCP + RFC 6455 + FedV1).
    */
-  app.get('/federation/ws/smoke', async (req: Request, res: Response) => {
+  app.get('/federation/ws/smoke', optionalAuth, async (req: Request, res: Response) => {
     try {
       const seedHash = (req.query.seedHash as string) || `smoke-${Date.now().toString(36)}`;
       const initialLineage = ((req.query.lineage as string) || 'anc-0,anc-1').split(',').filter(Boolean);
@@ -155,7 +156,7 @@ export function registerFederationWsRoutes(app: any): void {
    *   { url: 'wss://...', token: 'jwt', clientNodeId, serverNodeId, seedHash, lineage?, richPreview? }
    * Used by cross-node integration tests + production cross-cluster offers.
    */
-  app.post('/federation/ws/dial', async (req: Request, res: Response) => {
+  app.post('/federation/ws/dial', requireAuth, async (req: Request, res: Response) => {
     const { url, token, clientNodeId, serverNodeId, seedHash, lineage, richPreview, timeoutMs } = req.body || {};
     if (!url || !token || !clientNodeId || !serverNodeId || !seedHash) {
       res.status(400).json({
@@ -186,7 +187,7 @@ export function registerFederationWsRoutes(app: any): void {
    * Returns the URL of the local WebSocket server (if registered) so callers
    * know how to dial back. Reads from env to avoid hard-coding.
    */
-  app.get('/federation/ws/local-server-info', (_req: Request, res: Response) => {
+  app.get('/federation/ws/local-server-info', requireAuth, (_req: Request, res: Response) => {
     const r = ensureInitialized();
     const port = process.env.PORT || '3000';
     res.json({

@@ -40,6 +40,7 @@ export enum ASTNodeType {
   WHILE_STMT = 'WHILE_STMT',
   RETURN_STMT = 'RETURN_STMT',
   EXPR_STMT = 'EXPR_STMT',
+  EVOLVE_STMT = 'EVOLVE_STMT',
   BLOCK = 'BLOCK',
 
   // Seed operations
@@ -105,6 +106,7 @@ export class GsplParser {
       case 'FOR': return this.parseForStmt();
       case 'WHILE': return this.parseWhileStmt();
       case 'RETURN': return this.parseReturnStmt();
+      case 'EVOLVE': return this.parseEvolveStmt();
       case 'EOF': return null;
       default: {
         const expr = this.parseExpression();
@@ -272,7 +274,9 @@ export class GsplParser {
 
     const value = this.parseExpression();
 
-    this.expect('SEMICOLON'); // ;
+    // Semicolon is optional (normalization in executeGSPL add them for most lines,
+    // but lines ending with `}` like struct literals don't get auto-semicolons)
+    if (this.check('SEMICOLON')) this.advance();
 
     return {
       type: ASTNodeType.LET_DECL,
@@ -374,6 +378,7 @@ export class GsplParser {
       case 'FOR': return this.parseForStmt();
       case 'WHILE': return this.parseWhileStmt();
       case 'RETURN': return this.parseReturnStmt();
+      case 'EVOLVE': return this.parseEvolveStmt();
       default: {
         const expr = this.parseExpression();
         // Semicolon is optional if next token is } or EOF
@@ -814,6 +819,27 @@ export class GsplParser {
       type: ASTNodeType.EVOLVE_OP,
       seed,
       count,
+      loc: { line: token.line, column: token.column }
+    };
+  }
+
+  private parseEvolveStmt(): ASTNode {
+    const token = this.advance(); // evolve
+    // Syntax: evolve <seedExpr> using <methodExpr> [with { <options> }]
+    const seed = this.parseExpression();
+    let method: ASTNode | undefined;
+    let opts: ASTNode | undefined;
+    if (this.match('USING')) {
+      method = this.parseExpression();
+    }
+    if (this.match('WITH')) {
+      opts = this.parseExpression();
+    }
+    return {
+      type: ASTNodeType.EVOLVE_STMT,
+      seed,
+      method,
+      opts,
       loc: { line: token.line, column: token.column }
     };
   }

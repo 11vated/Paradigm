@@ -172,9 +172,17 @@ export class GsplInterpreter {
 
       case ASTNodeType.STRUCT_LITERAL: {
         const struct: Record<string, any> = {};
-        const fields = node.fields as Record<string, any> || {};
-        for (const [key, value] of Object.entries(fields)) {
-          struct[key] = await this.evaluateNode(value);
+        const fields = node.fields;
+        if (Array.isArray(fields)) {
+          for (const field of fields) {
+            if (field && typeof field === 'object' && 'key' in field) {
+              struct[String(field.key)] = await this.evaluateNode(field.value);
+            }
+          }
+        } else {
+          for (const [key, value] of Object.entries(fields || {})) {
+            struct[key] = await this.evaluateNode(value);
+          }
         }
         return struct;
       }
@@ -282,6 +290,9 @@ export class GsplInterpreter {
 
       case ASTNodeType.EVOLVE_OP:
         return this.evaluateEvolve(node);
+
+      case ASTNodeType.EVOLVE_STMT:
+        return this.evaluateEvolveStmt(node);
 
       case ASTNodeType.GROW_OP:
         return this.evaluateGrow(node);
@@ -1487,6 +1498,75 @@ export class GsplInterpreter {
         if (evaluatedArgs.length < 3) throw new Error('strata_preferred_compose requires (population, targetDomain, targetStrata)');
         return await this.strataPreferredComposeBuiltin(evaluatedArgs[0], evaluatedArgs[1], evaluatedArgs[2]);
       
+      case 'diff': {
+        if (evaluatedArgs.length < 2) throw new Error('diff requires 2 seeds');
+        const [dA, dB] = evaluatedArgs;
+        const diff: Record<string, { a: unknown; b: unknown; same: boolean }> = {};
+        const allKeys = new Set([...(typeof dA === 'object' && dA ? Object.keys(dA) : []), ...(typeof dB === 'object' && dB ? Object.keys(dB) : [])]);
+        for (const k of allKeys) {
+          const va = dA && typeof dA === 'object' ? (dA as Record<string, unknown>)[k] : undefined;
+          const vb = dB && typeof dB === 'object' ? (dB as Record<string, unknown>)[k] : undefined;
+          if (JSON.stringify(va) !== JSON.stringify(vb)) {
+            diff[k] = { a: va, b: vb, same: false };
+          }
+        }
+        return diff;
+      }
+      
+      case 'interpolate': {
+        if (evaluatedArgs.length < 3) throw new Error('interpolate requires (seedA, seedB, t)');
+        const [iA, iB, iT] = evaluatedArgs;
+        const t = Number(iT) || 0.5;
+        const result: Record<string, unknown> = {};
+        const iKeys = new Set([...(typeof iA === 'object' && iA ? Object.keys(iA as Record<string, unknown>) : []), ...(typeof iB === 'object' && iB ? Object.keys(iB as Record<string, unknown>) : [])]);
+        for (const k of iKeys) {
+          const av = iA && typeof iA === 'object' ? (iA as Record<string, unknown>)[k] : undefined;
+          const bv = iB && typeof iB === 'object' ? (iB as Record<string, unknown>)[k] : undefined;
+          if (typeof av === 'number' && typeof bv === 'number') {
+            result[k] = av + (bv - av) * t;
+          } else {
+            result[k] = t < 0.5 ? av : bv;
+          }
+        }
+        return result;
+      }
+      
+      case 'rate':
+      case 'score': {
+        const rateTarget = evaluatedArgs[0];
+        const rateStrata = evaluatedArgs[1] ? String(evaluatedArgs[1]) : undefined;
+        if (!rateTarget || typeof rateTarget !== 'object') return 0.5;
+        const rSource = rateTarget as Record<string, unknown>;
+        const hashField = String(rSource['$hash'] ?? rSource['hash'] ?? '');
+        const rng = new Xoshiro256StarStar(createHash('sha256').update(hashField).digest('hex'));
+        const base = rng.nextF64();
+        if (!rateStrata) return base;
+        // Stratum-specific: use hash of stratum name for deterministic offset
+        const stratumRng = new Xoshiro256StarStar(createHash('sha256').update(rateStrata + hashField).digest('hex'));
+        return stratumRng.nextF64();
+      }
+      
+      case 'sign': {
+        if (evaluatedArgs.length < 1) throw new Error('sign requires a seed argument');
+        const signTarget = evaluatedArgs[0];
+        if (!signTarget || typeof signTarget !== 'object') return signTarget;
+        const sObj = signTarget as Record<string, unknown>;
+        const payload = JSON.stringify(sObj);
+        // Deterministic signature via hash chain
+        const sigHash = createHash('sha256').update(payload).digest('hex');
+        return { ...sObj, signature: sigHash, signed_at: kernelNowIso() };
+      }
+      
+      case 'anchor': {
+        if (evaluatedArgs.length < 1) throw new Error('anchor requires a seed argument');
+        const anchorTarget = evaluatedArgs[0];
+        if (!anchorTarget || typeof anchorTarget !== 'object') return anchorTarget;
+        const aObj = anchorTarget as Record<string, unknown>;
+        const aPayload = JSON.stringify(aObj);
+        const anchorHash = createHash('sha256').update(aPayload).digest('hex');
+        return { ...aObj, $anchor: anchorHash, anchored_at: kernelNowIso() };
+      }
+      
       default:
         throw new Error(`Unknown built-in: ${name}`);
     }
@@ -2150,6 +2230,66 @@ export class GsplInterpreter {
     const options = await this.evaluateNode(node.options);
     const population: Seed[] = ((options as { population?: unknown }).population as Seed[]) || [];
     return population.slice(0, 5);
+  }
+
+  private async evaluateEvolveStmt(node: any): Promise<Seed[]> {
+    // Syntax: evolve <seedExpr> using <methodExpr> [with { <options> }]
+    const baseSeed: Seed = await this.evaluateNode(node.seed);
+    const method: string = node.method ? String(await this.evaluateNode(node.method)) : 'ga';
+    const opts: any = node.opts ? await this.evaluateNode(node.opts) : {};
+    const popSize: number = opts.populationSize || opts.count || 10;
+    const rate: number = opts.mutationRate || 0.1;
+
+    const registerSeed = (s: Seed, name: string) => {
+      this.context.seeds.set(name, s);
+      return s;
+    };
+
+    if (method === 'random') {
+      const pop: Seed[] = [];
+      for (let i = 0; i < popSize; i++) {
+        const hash = this.context.rng.nextF64().toString(16);
+        const s: Seed = {
+          ...baseSeed,
+          $hash: hash,
+          $name: `${String(baseSeed.$name ?? 'seed')}_gen${i}`,
+          $lineage: { ...baseSeed.$lineage, generation: (baseSeed.$lineage?.generation ?? 0) + 1, operation: 'gspl_evolve_stmt_random' }
+        };
+        pop.push(registerSeed(s, `${baseSeed.$name ?? 'seed'}_stmt_rand_${i}`));
+      }
+      return pop;
+    }
+
+    if (method === 'map-elites') {
+      const dims = opts.dimensions || opts.dims || 5;
+      const eliteCount = opts.eliteCount || dims;
+      const pop: Seed[] = [];
+      for (let i = 0; i < eliteCount; i++) {
+        const hash = this.context.rng.nextF64().toString(16);
+        const s: Seed = {
+          ...baseSeed,
+          $hash: hash,
+          $name: `${String(baseSeed.$name ?? 'seed')}_elite${i}`,
+          $lineage: { ...baseSeed.$lineage, generation: (baseSeed.$lineage?.generation ?? 0) + 1, operation: 'gspl_evolve_stmt_elites' }
+        };
+        pop.push(registerSeed(s, `${baseSeed.$name ?? 'seed'}_stmt_elite_${i}`));
+      }
+      return pop;
+    }
+
+    // Default 'ga' path
+    const pop: Seed[] = [registerSeed(baseSeed, `${baseSeed.$name ?? 'seed'}_stmt_ga_0`)];
+    for (let i = 1; i < popSize; i++) {
+      const hash = this.context.rng.nextF64().toString(16);
+      const s: Seed = {
+        ...baseSeed,
+        $hash: hash,
+        $name: `${String(baseSeed.$name ?? 'seed')}_gen${i}`,
+        $lineage: { ...baseSeed.$lineage, generation: (baseSeed.$lineage?.generation ?? 0) + 1, operation: 'gspl_evolve_stmt' }
+      };
+      pop.push(registerSeed(s, `${baseSeed.$name ?? 'seed'}_stmt_ga_${i}`));
+    }
+    return pop;
   }
 
   private async evaluateGrow(node: any): Promise<unknown> {

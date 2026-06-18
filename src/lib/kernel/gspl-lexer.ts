@@ -44,6 +44,8 @@ export enum TokenType {
   IN = 'IN',
   SIGNED = 'SIGNED',
   FROM = 'FROM',
+  USING = 'USING',
+  WITH = 'WITH',
   AS = 'AS',
 
   // Operators
@@ -145,6 +147,8 @@ const KEYWORDS: Record<string, TokenType> = {
   'domain': TokenType.DOMAIN,
   'signed': TokenType.SIGNED,
   'from': TokenType.FROM,
+  'using': TokenType.USING,
+  'with': TokenType.WITH,
   'as': TokenType.AS
 };
 

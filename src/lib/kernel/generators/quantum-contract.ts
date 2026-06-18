@@ -9,6 +9,7 @@ import { registerContract } from '../quality-contract';
 import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { computeRatingScore } from '../quality/rating';
 
 interface QSeed { $hash: string; genes?: Record<string, any>; }
 interface QArtifact {
@@ -68,7 +69,7 @@ function rate(a: QArtifact): QualityReport {
     normalized: a.normError < 0.05 ? 1 : Math.max(0, 1 - a.normError * 10),
     hasExpectation: Object.keys(a.expectation).length >= 3 ? 1 : 0,
   };
-  const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
+  const { score } = computeRatingScore({ axes, artifact: a as any });
   return { score, axes, notes: [`${a.potentialType}, normErr=${a.normError.toExponential(2)}`] };
 }
 

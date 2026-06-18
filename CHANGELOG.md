@@ -1,4 +1,15 @@
-# Paradigm Infinite v1.0.2 Release Notes (Production Readiness + Comprehensive Audit)
+# Paradigm Infinite v1.0.3 Release Notes (Security, GSPL, Performance, CI/CD)
+
+## v1.0.3 Highlights
+- **Auth Gating (Phase 1):** 38 API endpoints hardened with `requireAuth`/`optionalAuth` middleware across 7 route files
+- **GSPL Evolve Statement (Phase 2):** `evolve ... using ... [with {}]` syntax with lexer, parser, interpreter support; 5 new builtins (`diff`, `interpolate`, `rate`, `sign`, `anchor`); 65 GSPL tests passing
+- **Audit Fixes:** Silent `.catch()` in server.ts now logs; dead `lokijs` import removed from log-aggregator; `Date.now()` replaced with `kernelNow()` in federation (9 sites); non-deterministic listing IDs fixed in marketplace
+- **Bundle Compression:** gzip + brotli via vite-plugin-compression; `build:release` script chains full deterministic pipeline
+- **Deterministic Release Pipeline (Phase 4):** `scripts/build-release.ts` — typecheck → determinism → quality contract → golden verify → build → C2PA provenance digest → release summary
+- **CI/CD Automation (Phase 5):** `.github/workflows/ci.yml` with 7 parallel jobs (typecheck, determinism, lint, test, quality-contracts, golden-verify, build)
+- **Full Suite:** 65 GSPL tests + 1665 other tests passing; TypeScript 0 errors; production build succeeds
+
+## v1.0.2 Release Notes (Production Readiness + Comprehensive Audit)
 
 ## v1.0.2 Highlights
 - **Production Readiness:** Comprehensive audit confirms all critical gates passing, approved for production deployment
@@ -398,4 +409,28 @@ See ROADMAP.md for next (v1.4+ advanced scaling).
 - Continuous sync and real-time reproducibility across simulated global nodes.
 - Autonomous evolution produces deterministic outputs while 'optimizing'.
 - Global throughput/latency benchmarks pass; determinism intact under load.
+
+## [1.0.3] - 2026-06-17
+### Added
+- Auth gating on 38 API endpoints across 7 route files with `requireAuth`/`optionalAuth` middleware
+- GSPL `evolve ... using ... [with {}]` statement: lexer tokens (`USING`, `WITH`), AST node (`EVOLVE_STMT`), `parseEvolveStmt()`, `evaluateEvolveStmt()` with seed context registration
+- 5 new GSPL builtins: `diff`, `interpolate`, `rate` (alias `score`), `sign`, `anchor`
+- Bundle compression: gzip + brotli via `vite-plugin-compression`
+- `scripts/build-release.ts` — deterministic release pipeline (typecheck → determinism → contracts → golden → build → C2PA provenance)
+- `.github/workflows/ci.yml` — 7 parallel CI jobs (typecheck, determinism, lint, test, quality-contracts, golden-verify, build)
+- `npm run ci:check` — local pre-commit gate (typecheck + determinism + contracts + golden + build)
+
+### Fixed
+- Server silent catch: `.catch(() => {})` now logs via `log('ERROR', ...)`
+- Log-aggregator: dead `lokijs` import removed; `flush()` uses `this.mounted` instead of `this.client`
+- Determinism: 9 `Date.now()` calls in federation routes replaced with `kernelNow()`; marketplace listing IDs use monotonic counter instead of `Date.now()`
+- GSPL `STRUCT_LITERAL` evaluator — `node.fields` is `Array<{key, value}>` not `Record`
+- GSPL `parseLetDecl()` — mandatory semicolon changed to optional (auto-semicolons skip lines ending with `}`)
+- GSPL `evaluateEvolveStmt()` — registers evolved seeds in context so they appear in `result.seeds`
+
+### Changed
+- Version bump 1.0.2 → 1.0.3
+- Source: src/lib/kernel/gspl-lexer.ts, gspl-parser.ts, gspl-interpreter.ts
+- Source: src/server/routes/{marketplace,federation,federation-ws,onchain,royalty,meta-generator,sovereign-agent}.ts
+- Tests: 7 new evolve/builtin tests in tests/gspl/interpreter.test.ts (65 total GSPL tests)
 

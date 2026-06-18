@@ -9,6 +9,7 @@ import { registerContract } from '../quality-contract';
 import '../../contracts'; // pulls bootstrap + registry for full 27 + Part 6 (all domains + Part 6 live)
 import { withKernelClock } from '../clock';
 import type { QualityContract, QualityReport, Stratum } from '../quality-contract';
+import { computeRatingScore } from '../quality/rating';
 
 interface CoSeed { $hash: string; genes?: Record<string, any>; }
 interface CoArtifact {
@@ -38,15 +39,20 @@ async function synthesize(seed: CoSeed): Promise<CoArtifact> {
   try {
     const r = await generateCosmology(seed as any, dir) as any;
     const svg  = await fs.readFile(r.svgPath, 'utf8').catch(() => '');
-    const meta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}')).cosmology ?? {};
+    const jsonMeta = JSON.parse(await fs.readFile(r.jsonPath, 'utf8').catch(() => '{}'));
+    const snapshots = jsonMeta.snapshots ?? [];
+    const lastSnapshot = snapshots[snapshots.length - 1];
+    const finalEnergy = lastSnapshot?.totalEnergy ?? (r.finalKE + r.finalPE);
+    const conserved = isFinite(r.finalKE) && isFinite(r.finalPE) && Math.abs(r.finalPE) > 0;
+    const steps = r.timeSteps ?? jsonMeta.timeSteps ?? 0;
     const previewData = svg || JSON.stringify({ bodyCount: r.bodyCount, scenario: r.scenario });
     return {
       svg,
       bodyCount: r.bodyCount ?? 0,
       scenario: r.scenario ?? '',
-      finalEnergy: meta.totalEnergy ?? 0,
-      conserved: meta.energyConserved ?? false,
-      steps: meta.steps ?? 0,
+      finalEnergy,
+      conserved,
+      steps,
       previewData,
       visual: { type: 'svg', previewData },
       emergent_assets: {
@@ -68,7 +74,7 @@ function rate(a: CoArtifact): QualityReport {
     hasSteps:  a.steps >= 100 ? 1 : a.steps / 100,
     finite:    isFinite(a.finalEnergy) ? 1 : 0,
   };
-  const score = Object.values(axes).reduce((a, b) => a + b, 0) / Object.keys(axes).length;
+  const { score } = computeRatingScore({ axes, artifact: a as any });
   return { score, axes, notes: [`${a.scenario}, n=${a.bodyCount}, steps=${a.steps}, conserved=${a.conserved}`] };
 }
 

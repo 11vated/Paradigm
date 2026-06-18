@@ -2,6 +2,7 @@ import { Xoshiro256StarStar } from './rng';
 import {
   GENE_TYPES as FLAT_TYPES, type GeneTypeOps, type GeneSchema, type ValidateFn, type MutateFn, type DistanceFn,
 } from './gene_system';
+import { SafeGeneExecutor, validateGeneOperationSource } from './safe-gene-executor';
 export type { GeneTypeOps, GeneSchema };
 
 // ─── TYPE NODE IN THE LATTICE ──────────────────────────────────────────────
@@ -330,14 +331,26 @@ export class GeneTypeRegistry {
     for (const entry of data) {
       if (this.get(entry.name)) continue;
       try {
-        // Reconstruct operator functions from source
+        // Validate all operation sources before execution
+        validateGeneOperationSource(entry.opsSource.validate);
+        validateGeneOperationSource(entry.opsSource.mutate);
+        validateGeneOperationSource(entry.opsSource.crossover);
+        validateGeneOperationSource(entry.opsSource.distance);
+        if (entry.opsSource.canonicalize) {
+          validateGeneOperationSource(entry.opsSource.canonicalize);
+        }
+        if (entry.opsSource.repair) {
+          validateGeneOperationSource(entry.opsSource.repair);
+        }
+        
+        // Reconstruct operator functions using safe executor
         const ops: GeneTypeOps = {
-          validate: new Function('return ' + entry.opsSource.validate)(),
-          mutate: new Function('return ' + entry.opsSource.mutate)(),
-          crossover: new Function('return ' + entry.opsSource.crossover)(),
-          distance: new Function('return ' + entry.opsSource.distance)(),
-          canonicalize: new Function('return ' + (entry.opsSource.canonicalize ?? '(v) => v'))(),
-          repair: new Function('return ' + (entry.opsSource.repair ?? '(v) => v'))(),
+          validate: SafeGeneExecutor.createValidate(entry.opsSource.validate),
+          mutate: SafeGeneExecutor.createMutate(entry.opsSource.mutate),
+          crossover: SafeGeneExecutor.createCrossover(entry.opsSource.crossover),
+          distance: SafeGeneExecutor.createDistance(entry.opsSource.distance),
+          canonicalize: SafeGeneExecutor.createCanonicalize(entry.opsSource.canonicalize ?? 'return _v'),
+          repair: SafeGeneExecutor.createRepair(entry.opsSource.repair ?? 'return _v'),
         };
         this.derive(entry.parent, {
           name: entry.name,

@@ -87,12 +87,12 @@ contract ParaToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Votes, AccessContr
     uint256 public constant TEAM_ADVISORS_BPS = 1500;    // 15%
     uint256 public constant ECOSYSTEM_FUND_BPS = 1000;  // 10%
     
-    // Pre-allocated addresses (to be replaced with actual addresses after deployment)
-    address public constant CREATOR_REWARDS_WALLET = address(0xAAAA1);
-    address public constant DAO_TREASURY_WALLET = address(0xAAAA2);
-    address public constant STAKING_REWARDS_WALLET = address(0xAAAA3);
-    address public constant TEAM_WALLET = address(0xAAAA4);
-    address public constant ECOSYSTEM_WALLET = address(0xAAAA5);
+    // Allocation wallet addresses (set in constructor)
+    address public immutable CREATOR_REWARDS_WALLET;
+    address public immutable DAO_TREASURY_WALLET;
+    address public immutable STAKING_REWARDS_WALLET;
+    address public immutable TEAM_WALLET;
+    address public immutable ECOSYSTEM_WALLET;
     
     // ─────────────────────────────────────────────────────────────────────────
     // EVENTS
@@ -107,10 +107,29 @@ contract ParaToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Votes, AccessContr
     // ─────────────────────────────────────────────────────────────────────────
     // CONSTRUCTOR
     // ─────────────────────────────────────────────────────────────────────────
-    constructor() 
-        ERC20("Paradigm Absolute", "PARA") 
+    constructor(
+        address creatorRewardsWallet,
+        address daoTreasuryWallet,
+        address stakingRewardsWallet,
+        address teamWallet,
+        address ecosystemWallet
+    )
+        ERC20("Paradigm Absolute", "PARA")
         ERC20Permit("Paradigm Absolute")
     {
+        require(creatorRewardsWallet != address(0), "Invalid creator rewards wallet");
+        require(daoTreasuryWallet != address(0), "Invalid DAO treasury wallet");
+        require(stakingRewardsWallet != address(0), "Invalid staking rewards wallet");
+        require(teamWallet != address(0), "Invalid team wallet");
+        require(ecosystemWallet != address(0), "Invalid ecosystem wallet");
+        
+        // Set immutable wallet addresses
+        CREATOR_REWARDS_WALLET = creatorRewardsWallet;
+        DAO_TREASURY_WALLET = daoTreasuryWallet;
+        STAKING_REWARDS_WALLET = stakingRewardsWallet;
+        TEAM_WALLET = teamWallet;
+        ECOSYSTEM_WALLET = ecosystemWallet;
+        
         // Grant roles to deployer
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);

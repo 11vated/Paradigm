@@ -14,8 +14,11 @@
  */
 
 import * as crypto from 'crypto';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import type { Request, Response } from 'express';
-import { SovereigntyLayer } from '../../lib/sovereignty/index.js'; // real ECDSA for federation routes (beyond hash sim; makes 2-node exchange cryptographically real per 13_ Phase 16 + advanced surfaces)
+import { SovereigntyLayer } from '../../lib/sovereignty/index.js';
+import { kernelNow } from '../../lib/kernel/clock.js';
+// real ECDSA for federation routes (beyond hash sim; makes 2-node exchange cryptographically real per 13_ Phase 16 + advanced surfaces)
 
 // ─── In-Memory Federation State ──────────────────────────────────────────────
 
@@ -117,7 +120,7 @@ export function registerFederationRoutes(app: any) {
    * GET /federation/status
    * Returns node status and capabilities.
    */
-  app.get('/federation/status', (req: Request, res: Response) => {
+  app.get('/federation/status', optionalAuth, (req: Request, res: Response) => {
     const ledger = (state as any).ledger || [];
     res.json({
       nodeId: state.nodeId,
@@ -130,7 +133,7 @@ export function registerFederationRoutes(app: any) {
       activeOffers: state.offers.size,
       ledgerLen: ledger.length,
       lastLedgerRich: ledger.length ? ledger[ledger.length-1].richPreview : null,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
   });
 
@@ -138,7 +141,7 @@ export function registerFederationRoutes(app: any) {
    * GET /federation/ledger
    * Hardened: full append-only ledger with richPreview, c2paRef, provenance for audit/sov integration.
    */
-  app.get('/federation/ledger', (req: Request, res: Response) => {
+  app.get('/federation/ledger', optionalAuth, (req: Request, res: Response) => {
     const ledger = (state as any).ledger || [];
     res.json({ nodeId: state.nodeId, ledgerLen: ledger.length, ledger: ledger.slice(-20) }); // last 20 for demo
   });
@@ -147,7 +150,7 @@ export function registerFederationRoutes(app: any) {
    * GET /federation/peers
    * Returns list of known peers.
    */
-  app.get('/federation/peers', (req: Request, res: Response) => {
+  app.get('/federation/peers', optionalAuth, (req: Request, res: Response) => {
     const peers = Array.from(state.peers.values());
     res.json({ peers, count: peers.length });
   });
@@ -156,7 +159,7 @@ export function registerFederationRoutes(app: any) {
    * POST /federation/discover
    * Discover peers by querying a known peer list.
    */
-  app.post('/federation/discover', (req: Request, res: Response) => {
+  app.post('/federation/discover', requireAuth, (req: Request, res: Response) => {
     const { peerUrl: _peerUrl } = req.body;
     
     // In production: fetch peer list from the given URL
@@ -174,7 +177,7 @@ export function registerFederationRoutes(app: any) {
    * POST /federation/offer
    * Send a seed offer to this node.
    */
-  app.post('/federation/offer', (req: Request, res: Response) => {
+  app.post('/federation/offer', requireAuth, (req: Request, res: Response) => {
     const offer: SeedOffer = req.body;
 
     // Validate offer
@@ -213,7 +216,7 @@ export function registerFederationRoutes(app: any) {
     state.seedStore.set(offer.seed.$hash, offer.seed);
 
     // Create receipt signature
-    const receiptData = `${offerHash}:${state.nodeId}:${Date.now()}`;
+    const receiptData = `${offerHash}:${state.nodeId}:${kernelNow()}`;
     const receiptSignature = signData(receiptData, state.privateKey);
 
     res.json({
@@ -222,7 +225,7 @@ export function registerFederationRoutes(app: any) {
       receiverSignature: receiptSignature,
       proofOfReceipt: crypto.createHash('sha256').update(receiptData).digest('hex').slice(0, 32),
       lineageFork: false,
-      timestamp: Date.now(),
+      timestamp: kernelNow(),
     });
   });
 
@@ -230,7 +233,7 @@ export function registerFederationRoutes(app: any) {
    * POST /federation/accept
    * Accept a previously sent offer (acknowledgement).
    */
-  app.post('/federation/accept', (req: Request, res: Response) => {
+  app.post('/federation/accept', requireAuth, (req: Request, res: Response) => {
     const { offerHash, receiverNodeId, receiverSignature: _receiverSignature } = req.body;
 
     if (!offerHash || !receiverNodeId) {
@@ -250,7 +253,7 @@ export function registerFederationRoutes(app: any) {
       parentId: offer.seed.$lineage?.parents?.[0] || null,
       childId: null,
       forkPoint: offer.seed.$lineage?.generation || 0,
-      mergedAt: Date.now(),
+      mergedAt: kernelNow(),
       mergedBy: receiverNodeId,
     };
 
@@ -261,7 +264,7 @@ export function registerFederationRoutes(app: any) {
     try {
       const richP = offer.richPreview || (offer.seed && (offer.seed.visual || offer.seed.summary) ? { name: offer.seed.$name || 'fed-rich', summary: offer.seed.summary || (offer.seed.visual && offer.seed.visual.summary), strata: 0.55, c2paRef: offer.seed.$hash } : null);
       const ledgerEntry = {
-        id: `fed-ledger-${(Date.now()).toString(36)}`,
+        id: `fed-ledger-${(kernelNow()).toString(36)}`,
         offerHash,
         seedHash: offer.seed.$hash,
         richPreview: richP,
@@ -287,7 +290,7 @@ export function registerFederationRoutes(app: any) {
    * POST /federation/reject
    * Reject a previously sent offer.
    */
-  app.post('/federation/reject', (req: Request, res: Response) => {
+  app.post('/federation/reject', requireAuth, (req: Request, res: Response) => {
     const { offerHash, reason } = req.body;
 
     if (!offerHash) {
@@ -311,7 +314,7 @@ export function registerFederationRoutes(app: any) {
    * GET /federation/lineage/:id
    * Get lineage tree for a seed.
    */
-  app.get('/federation/lineage/:id', (req: Request, res: Response) => {
+  app.get('/federation/lineage/:id', optionalAuth, (req: Request, res: Response) => {
     const seedId = req.params.id;
     const lineage = state.lineage.get(seedId);
     const seed = state.seedStore.get(seedId);
@@ -325,7 +328,7 @@ export function registerFederationRoutes(app: any) {
       seedId,
       lineage: lineage || null,
       seed: seed ? { $hash: seed.$hash, $domain: seed.$domain, $name: seed.$name } : null,
-      storedAt: Date.now(),
+      storedAt: kernelNow(),
     });
   });
 
@@ -333,7 +336,7 @@ export function registerFederationRoutes(app: any) {
    * POST /federation/exchange
    * High-level seed exchange: offer + auto-accept if valid.
    */
-  app.post('/federation/exchange', (req: Request, res: Response) => {
+  app.post('/federation/exchange', requireAuth, (req: Request, res: Response) => {
     const { seed, signature, senderNodeId, senderPublicKey, targetNodeId: _targetNodeId } = req.body;
 
     if (!seed || !signature) {
@@ -356,19 +359,19 @@ export function registerFederationRoutes(app: any) {
       seedId: seed.$hash,
       parentId: seed.$lineage?.parents?.[0] || null,
       source: senderNodeId,
-      exchangedAt: Date.now(),
+      exchangedAt: kernelNow(),
     };
     state.lineage.set(seed.$hash, lineage);
 
     // Create receipt
-    const receiptData = `exchange:${seed.$hash}:${state.nodeId}:${Date.now()}`;
+    const receiptData = `exchange:${seed.$hash}:${state.nodeId}:${kernelNow()}`;
     const receiptSignature = signData(receiptData, state.privateKey);
 
     res.json({
       accepted: true,
       receipt: {
         signature: receiptSignature,
-        timestamp: Date.now(),
+        timestamp: kernelNow(),
         nodeId: state.nodeId,
       },
       lineage,

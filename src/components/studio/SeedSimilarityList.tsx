@@ -1,5 +1,4 @@
 
-// TODO(typing-sprint): Legacy studio component (/classic/* routes). AGENTS.md sanctions this debt pending the Typing Sprint that converts these JSX-style files to fully typed TSX.
 import { useState, useEffect, useMemo } from 'react';
 import { useSeedStore } from '@/stores/seedStore';
 import { nameOnly } from '@/lib/naming/seed-namer';

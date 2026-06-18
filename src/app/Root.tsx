@@ -34,11 +34,13 @@ const SkipLink: React.FC = () => (
 const Gripper: React.FC<
   React.HTMLAttributes<HTMLDivElement> & {
     bind: ReturnType<typeof usePaneLayout>['leftGripper'];
+    name?: string;
   }
-> = ({ bind, style, ...rest }) => (
+> = ({ bind, style, name, ...rest }) => (
   <div
     role="separator"
     aria-orientation="vertical"
+    data-testid={name ? `gripper-${name}` : 'gripper'}
     {...rest}
     {...bind}
     style={{
@@ -117,6 +119,7 @@ export const Root: React.FC = () => {
   return (
     <div
       data-paradigm-shell="paradigm-os"
+      data-testid="root-shell"
       style={{
         ...shellVars,
         position: 'fixed',
@@ -135,6 +138,7 @@ export const Root: React.FC = () => {
 
       <div
         id="main-content"
+        data-testid="main-content"
         style={{
           flex: 1,
           minHeight: 0,
@@ -145,12 +149,15 @@ export const Root: React.FC = () => {
         }}
       >
         {calm && !agentFull && (
-          <CollapsedLeftRail onCosmos={openCosmos} />
+          <div data-testid="collapsed-left-rail">
+            <CollapsedLeftRail onCosmos={openCosmos} />
+          </div>
         )}
 
         {computedLeftPct > 0 && (
           <>
             <div
+              data-testid="left-rail"
               style={{
                 width: `${computedLeftPct}%`,
                 minWidth: 'var(--r-rail-min)',
@@ -166,11 +173,12 @@ export const Root: React.FC = () => {
                 <LeftRail onCosmos={openCosmos} />
               </ErrorBoundary>
             </div>
-            <Gripper bind={leftGripper} />
+            <Gripper bind={leftGripper} name="left" />
           </>
         )}
 
         <div
+          data-testid="center-stage"
           style={{
             flex: 1,
             width: `${computedCenterPct}%`,
@@ -183,9 +191,10 @@ export const Root: React.FC = () => {
           </ErrorBoundary>
         </div>
 
-        <Gripper bind={agentGripper} />
+        <Gripper bind={agentGripper} name="agent" />
 
         <div
+          data-testid="agent-panel"
           style={{
             width: `${computedAgentPct}%`,
             minWidth: 'var(--r-agent-min)',

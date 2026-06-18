@@ -9,6 +9,7 @@
  */
 
 import type { Request, Response } from 'express';
+import { requireAuth, optionalAuth } from '../../lib/auth/index.js';
 import { computeRoyaltyWaterfall, createRoyaltyTransaction, verifyRoyaltyTransaction, computePlatformRevenue, DEFAULT_ROYALTY_CONFIG } from '../../lib/sovereignty/royalty-waterfall';
 import type { SeedLineage, RoyaltyTransaction } from '../../lib/sovereignty/royalty-waterfall';
 
@@ -21,7 +22,7 @@ export function registerRoyaltyRoutes(app: any) {
    * POST /royalty/calculate
    * Compute royalty splits for a hypothetical sale.
    */
-  app.post('/royalty/calculate', (req: Request, res: Response) => {
+  app.post('/royalty/calculate', requireAuth, (req: Request, res: Response) => {
     const { seedHash, salePrice, currency } = req.body;
 
     if (!seedHash || !salePrice) {
@@ -53,7 +54,7 @@ export function registerRoyaltyRoutes(app: any) {
    * POST /royalty/transaction
    * Record a royalty transaction.
    */
-  app.post('/royalty/transaction', (req: Request, res: Response) => {
+  app.post('/royalty/transaction', requireAuth, (req: Request, res: Response) => {
     const { seedHash, buyerId, sellerId, salePrice, currency } = req.body;
 
     if (!seedHash || !buyerId || !sellerId || !salePrice) {
@@ -87,7 +88,7 @@ export function registerRoyaltyRoutes(app: any) {
    * GET /royalty/ledger
    * View all royalty transactions.
    */
-  app.get('/royalty/ledger', (req: Request, res: Response) => {
+  app.get('/royalty/ledger', optionalAuth, (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 100;
     const offset = parseInt(req.query.offset as string) || 0;
     res.json({
@@ -100,7 +101,7 @@ export function registerRoyaltyRoutes(app: any) {
    * GET /royalty/summary
    * Platform revenue summary.
    */
-  app.get('/royalty/summary', (req: Request, res: Response) => {
+  app.get('/royalty/summary', optionalAuth, (req: Request, res: Response) => {
     const summary = computePlatformRevenue(transactions);
     res.json(summary);
   });
@@ -109,7 +110,7 @@ export function registerRoyaltyRoutes(app: any) {
    * GET /royalty/creator/:id
    * Royalties earned by a specific creator.
    */
-  app.get('/royalty/creator/:id', (req: Request, res: Response) => {
+  app.get('/royalty/creator/:id', optionalAuth, (req: Request, res: Response) => {
     const creatorId = req.params.id;
     const creatorTxs = transactions.filter(tx =>
       tx.splits.some(s => s.ancestorId === creatorId)
