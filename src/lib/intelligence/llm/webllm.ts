@@ -186,7 +186,6 @@ export class WebLLMSeedLLM implements SeedLLM {
       );
     }
     // Dynamic import to keep web-llm out of the default bundle.
-    // @ts-expect-error - optional peer dep, installed lazily at runtime by browsers that opt into local inference
     const mlc = (await import(/* @vite-ignore */ '@mlc-ai/web-llm')) as {
       CreateMLCEngine: (
         modelId: string,

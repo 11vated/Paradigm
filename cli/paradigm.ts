@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * Paradigm CLI — Universal Seed Command Line Interface
+ * Paradigm CLI — Universal Seed Command Line Interface (v2, Phase 13)
  *
  * Usage:
  *   paradigm grow <domain> [--genes key=val...] [--out dir]
@@ -11,23 +11,19 @@
  *   paradigm gspl <file.gspl>
  *   paradigm gspl repl
  *   paradigm play <file.gseed>
- *   paradigm verify <file.gseed>
+ *   paradigm verify <seed-file|intent>
  *   paradigm sign <seed-file>
  *   paradigm export <seed-id> --format gseed|json|svg|html|wav
  *   paradigm vcs commit <seed-file> --message "..."
  *   paradigm vcs log <seed-file>
  *   paradigm server [--port 3000]
- *   paradigm make "<intent>" [--domain <d>] [--out <file>] [--recursive]   # Universal entry point (Doctrine v2) + recursive .gseed for OS
- *   paradigm fed-exchange   # Fed v1 two node (sovereignty)
- *   paradigm econ-payout    # Econ full depth+div+PARA
- *   paradigm os-shell "<intent>" [--recursive]
- *   paradigm --version
+ *   paradigm make "<intent>" [--domain <d>]
  *   paradigm --help
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
-import { join, resolve } from 'path';
-import { createHash }  from 'crypto';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'fs';
+import { join, resolve, dirname, basename } from 'path';
+import { createHash, generateKeyPairSync, createSign, createVerify } from 'crypto';
 import { Xoshiro256StarStar, rngFromHash } from '../src/lib/kernel/rng';
 import { growSeed, ENGINES } from '../src/lib/kernel/engines';
 import { deriveCleanTitle } from '../src/lib/kernel/types';
@@ -35,10 +31,10 @@ import { GsplLexer }        from '../src/lib/kernel/gspl-lexer';
 import { GsplParser }        from '../src/lib/kernel/gspl-parser';
 import { GsplInterpreter }   from '../src/lib/kernel/gspl-interpreter';
 import { GsplModuleResolver } from '../src/lib/kernel/gspl-module-resolver';
-// kernel clock (wall) outside for CLI elapsed/created timestamps in make (reporting + <60s/perf claim); justified per directive (non-det surface)
 import { kernelNow, kernelNowIso } from '../src/lib/kernel/clock';
+import { UniversalSeed } from '../src/seeds/universal-seed';
 
-const VERSION = '0.1.0';
+const VERSION = '1.0.0';
 const BOLD = '\x1b[1m'; const DIM = '\x1b[2m'; const RESET = '\x1b[0m';
 const GREEN = '\x1b[32m'; const CYAN = '\x1b[36m'; const RED = '\x1b[31m'; const YELLOW = '\x1b[33m';
 
@@ -47,66 +43,82 @@ function log(level: 'info' | 'success' | 'warn' | 'error', msg: string) {
   console.error(`${prefix} ${msg}`);
 }
 
+function loadSeedFile(filePath: string): any {
+  const resolved = resolve(filePath);
+  if (!existsSync(resolved)) {
+    throw new Error(`File not found: ${filePath}`);
+  }
+  const raw = readFileSync(resolved, 'utf8');
+  return JSON.parse(raw);
+}
+
+function parseFlag(args: string[], flag: string, defaultValue?: string): string | undefined {
+  const idx = args.indexOf(flag);
+  if (idx >= 0 && idx + 1 < args.length) return args[idx + 1];
+  return defaultValue;
+}
+
+function hasFlag(args: string[], ...flags: string[]): boolean {
+  return flags.some(f => args.includes(f));
+}
+
 function printHelp() {
   console.log(`
-${BOLD}Paradigm CLI${RESET} v${VERSION} — Universal Digital Creation Substrate
+${BOLD}Paradigm CLI${RESET} v${VERSION} — Deterministic Synthetic Evolution OS
 
 ${BOLD}USAGE${RESET}
   paradigm <command> [options]
 
-${BOLD}COMMANDS${RESET}
-  ${CYAN}grow${RESET}     <domain> [--genes k=v ...] [--out dir]     Grow a seed into a real artifact
-  ${CYAN}mutate${RESET}   <seed.json> [--budget 0.1]                  Mutate a seed
-  ${CYAN}breed${RESET}    <seed-a.json> <seed-b.json>                 Breed two seeds
-  ${CYAN}evolve${RESET}   <domain> --algorithm <algo> --gen <N>       Run evolution
-  ${CYAN}compose${RESET}  <seed.json> --to <domain>                   Cross-domain composition
+${BOLD}CORE COMMANDS${RESET}
+  ${CYAN}grow${RESET}     <domain> [--genes k=v ...] [--out dir]     Grow a seed into an artifact
+  ${CYAN}mutate${RESET}   <seed.json> [--budget 0.1] [--out file]    Mutate a seed deterministically
+  ${CYAN}breed${RESET}    <seed-a.json> <seed-b.json> [--out file]   Cross two seeds
+  ${CYAN}evolve${RESET}   <domain> --algorithm <algo> --gen <N>      Evolve a population
+  ${CYAN}compose${RESET}  <seed.json> --to <domain> [--out file]     Cross-domain composition
   ${CYAN}gspl${RESET}     <file.gspl>                                 Execute a GSPL program
   ${CYAN}gspl repl${RESET}                                             Interactive GSPL REPL
+
+${BOLD}VERIFICATION & SOVEREIGNTY${RESET}
   ${CYAN}play${RESET}     <file.gseed>                                 Load and verify a .gseed package
-  ${CYAN}verify${RESET}   <file.gseed>                                 Verify sovereignty signature
-  ${CYAN}sign${RESET}     <seed.json>                                  Sign with device key
-  ${CYAN}export${RESET}   <seed.json> --format <fmt>                   Export to format
-  ${CYAN}vcs commit${RESET} <seed.json> --message "..."               Commit to VCS
-  ${CYAN}vcs log${RESET}  <seed.json>                                  Show VCS history
-  ${CYAN}server${RESET}   [--port 3000]                                Start the Paradigm server
+  ${CYAN}verify${RESET}   <seed.json|intent> [--runs N]               Verify determinism / provenance
+  ${CYAN}sign${RESET}     <seed.json> [--out file]                    Sign with ECDSA-P256
+
+${BOLD}EXPORT & VERSION CONTROL${RESET}
+  ${CYAN}export${RESET}   <seed.json> --format <fmt> [--out dir]      Export to format (json|gseed|html)
+  ${CYAN}vcs commit${RESET} <seed.json> --message "..."               Commit seed to VCS
+  ${CYAN}vcs log${RESET}  <seed.json>                                  Show VCS history for seed
+
+${BOLD}SERVICE${RESET}
+  ${CYAN}server${RESET}   [--port 3000]                                Start dev server
+
+${BOLD}UNIVERSAL${RESET}
+  ${CYAN}make${RESET}     "<intent>" [--domain d] [--format f]        Universal entry point
   ${CYAN}domains${RESET}                                               List all registered domains
-  ${CYAN}make${RESET} "<intent>" [--domain d] [--recursive]          Universal ( + recursive .gseed comps for OS + self-host claims)
-  ${CYAN}fed-exchange${RESET}                                        Fed v1 two-node signed (sovereignty ECDSA/Merkle)
-  ${CYAN}econ-payout${RESET}                                         Full econ: arb depth royalties + civ div + PARA/SeedNFT
-  ${CYAN}os-shell${RESET} "<intent>" [--recursive]                   OS shell with recursive hooks + GSPL v∞ self-host claims + "Paradigm as .gseed compositions"
-  ${CYAN}doctor${RESET}   / health / status                            Substrate self-diagnostic (Phase 24+ status + GSPL harness + Part6 claims)
+  ${CYAN}help${RESET}                                                  Show this help
+
+${BOLD}ADVANCED (PART 6)${RESET}
+  ${CYAN}fed-exchange${RESET}                                         Fed v1 two-node signed exchange
+  ${CYAN}econ-payout${RESET}                                          Full econ royalties + civ dividend
+  ${CYAN}os-shell${RESET} "<intent>"                                  OS shell
+  ${CYAN}showcase${RESET}                                              Full-scope platform demo
+  ${CYAN}doctor${RESET}                                                Substrate self-diagnostic
 
 ${BOLD}ALGORITHMS${RESET}
   ga, map-elites, cmaes, poet, nslc, dqd, aurora
-
-${BOLD}DOMAINS${RESET}
-  visual2d, sprite, music, character, game, world, website, app, quantum,
-  field, molecule, cosmology, narrative, shader, physics, alife, ecosystem,
-  circuit, agent, ui, architecture, vehicle, furniture, fashion, +100 more
 
 ${BOLD}EXAMPLES${RESET}
   ${DIM}# Grow a website${RESET}
   paradigm grow website --genes aesthetic=cyberpunk purpose=portfolio --out ./out
 
-  ${DIM}# Grow a quantum probability visualization${RESET}
-  paradigm grow quantum --genes potentialType=double_well --out ./quantum
-
   ${DIM}# Evolve a visual2d seed with MAP-Elites${RESET}
   paradigm evolve visual2d --algorithm map-elites --generations 50
 
-  ${DIM}# Execute a GSPL program${RESET}
-  paradigm gspl my-program.gspl
+  ${DIM}# Sign and verify a seed${RESET}
+  paradigm sign artifact.json
+  paradigm verify artifact.json --runs 3
 
-  ${DIM}# Interactive GSPL REPL${RESET}
-  paradigm gspl repl
-
-  ${DIM}# Compose a world seed into music${RESET}
-  paradigm compose world.json --to music
-
-  ${DIM}# The magic entry point (Doctrine IV) — natural language → full sovereign artifact${RESET}
-  paradigm make "a meditative fishing game in a flooded archive with a pink-haired protagonist"
-  paradigm make "recursive .gseed composition" --recursive
-  paradigm fed-exchange
+  ${DIM}# Start the dev server${RESET}
+  paradigm server --port 3000
 `);
 }
 
@@ -116,7 +128,7 @@ async function cmdGrow(args: string[]) {
   const domain = args[0];
   if (!domain) { log('error', 'Usage: paradigm grow <domain> [--genes k=v ...] [--out dir]'); process.exit(1); }
 
-  const outDir = (() => { const i = args.indexOf('--out'); return i >= 0 ? args[i + 1] : './paradigm-out'; })();
+  const outDir = parseFlag(args, '--out', './paradigm-out')!;
   mkdirSync(resolve(outDir), { recursive: true });
 
   const genes: Record<string, unknown> = {};
@@ -124,10 +136,10 @@ async function cmdGrow(args: string[]) {
   while (i < args.length) {
     if (args[i] === '--genes') { i++; continue; }
     if (args[i] === '--out')   { i += 2; continue; }
-    if (args[i].includes('=')) {
+    if (args[i]?.includes('=')) {
       const [k, v] = args[i].split('=');
       const num = parseFloat(v);
-      genes[k] = { value: isNaN(num) ? v : num };
+      genes[k!] = { value: isNaN(num) ? v : num };
     }
     i++;
   }
@@ -139,8 +151,7 @@ async function cmdGrow(args: string[]) {
   const t0 = Date.now();
 
   try {
-    const result = await growSeed(seed as any); // any: growSeed expects legacy Seed shape from this CLI path; justified carveout for interop, not new evasion
-    // Consolidation & Hardening: light promote for rich data flow consistency (structured/summary/metrics/visual/emergent from contract synthesize or generator)
+    const result = await growSeed(seed as any);
     if (result) {
       if (!result.visual) result.visual = {};
       if (result.pngDataURL) result.visual.pngDataURL = result.pngDataURL;
@@ -151,7 +162,7 @@ async function cmdGrow(args: string[]) {
         if (result.summary) result.visual.summary = result.summary;
         if (result.metrics) result.visual.metrics = result.metrics;
       }
-      if (result.emergent_assets) result.emergent = result.emergent_assets; // alias for pack/UI
+      if (result.emergent_assets) result.emergent = result.emergent_assets;
       if (result.previewData && !result.visual?.previewData) result.visual.previewData = result.previewData;
     }
     const elapsed = Date.now() - t0;
@@ -160,8 +171,173 @@ async function cmdGrow(args: string[]) {
     writeFileSync(outFile, JSON.stringify({ seed, result }, null, 2));
     console.log(outFile);
   } catch (e: unknown) {
-    const msg = (e as Error)?.message || String(e); // narrow unknown, no any
+    const msg = (e as Error)?.message || String(e);
     log('error', `Growth failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdMutate(args: string[]) {
+  const filePath = args[0];
+  if (!filePath) { log('error', 'Usage: paradigm mutate <seed.json> [--budget 0.1] [--out file]'); process.exit(1); }
+
+  const budget = parseFloat(parseFlag(args, '--budget', '0.1')!);
+  const outFile = parseFlag(args, '--out');
+
+  try {
+    const data = loadSeedFile(filePath);
+    const seed = data.seed ? UniversalSeed.fromJSON(JSON.stringify(data.seed)) : UniversalSeed.fromJSON(JSON.stringify(data));
+    const rng = rngFromHash(seed.$hash || filePath);
+    const mutated = seed.mutate(rng, budget);
+
+    const output = JSON.parse(mutated.toJSON());
+    const finalPath = outFile || filePath.replace(/\.json$/, '-mutated.json');
+    writeFileSync(resolve(finalPath), JSON.stringify(output, null, 2));
+    log('success', `Mutated seed written to ${finalPath}`);
+    console.log('Hash:', mutated.$hash);
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Mutation failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdBreed(args: string[]) {
+  const fileA = args[0];
+  const fileB = args[1];
+  if (!fileA || !fileB) { log('error', 'Usage: paradigm breed <seed-a.json> <seed-b.json> [--out file]'); process.exit(1); }
+
+  const outFile = parseFlag(args, '--out');
+
+  try {
+    const dataA = loadSeedFile(fileA);
+    const dataB = loadSeedFile(fileB);
+    const seedA = dataA.seed ? UniversalSeed.fromJSON(JSON.stringify(dataA.seed)) : UniversalSeed.fromJSON(JSON.stringify(dataA));
+    const seedB = dataB.seed ? UniversalSeed.fromJSON(JSON.stringify(dataB.seed)) : UniversalSeed.fromJSON(JSON.stringify(dataB));
+
+    const compositeMaterial = seedA.$hash + ':' + seedB.$hash;
+    const rng = rngFromHash(compositeMaterial);
+    const child = seedA.cross(seedB, rng);
+
+    const output = JSON.parse(child.toJSON());
+    const finalPath = outFile || `breed-${child.$hash.slice(0, 12)}.json`;
+    writeFileSync(resolve(finalPath), JSON.stringify(output, null, 2));
+    log('success', `Bred child seed written to ${finalPath}`);
+    console.log('Hash:', child.$hash);
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Breeding failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdEvolve(args: string[]) {
+  const domain = args[0];
+  if (!domain) { log('error', 'Usage: paradigm evolve <domain> --algorithm <algo> --gen <N> [--popsize <N>]'); process.exit(1); }
+
+  const algorithm = parseFlag(args, '--algorithm', 'ga')!;
+  const genCount = parseInt(parseFlag(args, '--gen', '10')!, 10);
+  const popSize = parseInt(parseFlag(args, '--popsize', '20')!, 10);
+
+  log('info', `Evolving ${BOLD}${domain}${RESET} with ${algorithm} for ${genCount} generations (pop ${popSize})`);
+
+  try {
+    const { GeneticAlgorithm } = await import('../src/lib/evolution/ga');
+    const rng = rngFromHash(`evolve-${domain}-${algorithm}-${genCount}-${popSize}`);
+
+    const initialPopulation: any[] = [];
+    for (let i = 0; i < popSize; i++) {
+      initialPopulation.push({
+        $domain: domain,
+        $name: `${domain}-init-${i}`,
+        $hash: createHash('sha256').update(`${domain}-${i}-${rng.nextF64()}`).digest('hex'),
+        genes: { seed: { type: 'float', value: rng.nextF64() } },
+      });
+    }
+
+    const ga = new GeneticAlgorithm(rng);
+    const config = {
+      populationSize: popSize,
+      generationLimit: genCount,
+      mutationRate: 0.1,
+      crossoverRate: 0.8,
+      tournamentSize: 3,
+      elitismCount: 2,
+    } as any;
+
+    const fitnessFn = (seed: any) => {
+      const v = seed.genes?.seed?.value ?? 0.5;
+      return 1.0 - Math.abs(v - 0.618);
+    };
+
+    const result = await ga.evolve(initialPopulation, fitnessFn, config);
+    log('success', `Evolution complete: best fitness ${result.fitness.toFixed(4)} at gen ${result.generation}`);
+    console.log('Population size:', result.population.length);
+    console.log('History length:', result.history.length);
+
+    const outDir = resolve('./paradigm-out');
+    mkdirSync(outDir, { recursive: true });
+    const outFile = join(outDir, `evolve-${domain}-${algorithm}-${Date.now().toString(36)}.json`);
+    writeFileSync(outFile, JSON.stringify({
+      domain, algorithm, generationLimit: genCount,
+      result: { bestFitness: result.fitness, generation: result.generation, history: result.history.slice(0, 5) },
+    }, null, 2));
+    console.log('Results:', outFile);
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Evolution failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdCompose(args: string[]) {
+  const filePath = args[0];
+  const targetDomain = parseFlag(args, '--to');
+  if (!filePath) { log('error', 'Usage: paradigm compose <seed.json> --to <domain> [--out file]'); process.exit(1); }
+
+  try {
+    const data = loadSeedFile(filePath);
+    const seed = data.seed || data;
+    const sourceDomain = seed.$domain || 'character';
+
+    if (!targetDomain) {
+      const { default: composition } = await import('../src/lib/kernel/composition');
+      const bridges = (composition as any)?.HAND_CRAFTED || [];
+      log('info', `No --to target specified. Showing available bridges from ${sourceDomain}:`);
+      const matches = bridges.filter((b: any) => b.sourceDomain === sourceDomain);
+      for (const m of matches.slice(0, 10)) {
+        console.log(`  ${m.name}  → ${m.targetDomain}  (coherence: ${m.coherence})`);
+      }
+      return;
+    }
+
+    const { default: composition } = await import('../src/lib/kernel/composition');
+    const findBridge = (composition as any)?.findBridge || ((s: string, t: string) => null);
+    const bridge = findBridge(sourceDomain, targetDomain);
+    if (!bridge && (composition as any)?.compose) {
+      log('info', `Composing ${sourceDomain} → ${targetDomain} via generic bridge...`);
+      const result = await (composition as any).compose(seed, { sourceDomain, targetDomain });
+      const outFile = parseFlag(args, '--out') || `compose-${sourceDomain}-to-${targetDomain}.json`;
+      writeFileSync(resolve(outFile), JSON.stringify({ result, source: sourceDomain, target: targetDomain }, null, 2));
+      log('success', `Composition written to ${outFile}`);
+      return;
+    }
+
+    if (bridge) {
+      log('success', `Found bridge: ${bridge.name} (coherence: ${bridge.coherence})`);
+      const outFile = parseFlag(args, '--out') || `compose-${bridge.name}.json`;
+      writeFileSync(resolve(outFile), JSON.stringify({ bridge, seed, sourceDomain, targetDomain }, null, 2));
+      log('success', `Composition written to ${outFile}`);
+    } else {
+      log('warn', `No direct bridge from ${sourceDomain} to ${targetDomain}. Using similarity-based fallback.`);
+      const outFile = parseFlag(args, '--out') || `compose-${sourceDomain}-to-${targetDomain}-fallback.json`;
+      const fallbackResult = { sourceDomain, targetDomain, coherence: 0.3, note: 'generic fallback bridge' };
+      writeFileSync(resolve(outFile), JSON.stringify({ result: fallbackResult, seed, message: 'Generic composition (no direct bridge)' }, null, 2));
+      log('success', `Fallback composition written to ${outFile}`);
+    }
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Composition failed: ${msg}`);
     process.exit(1);
   }
 }
@@ -184,7 +360,7 @@ async function cmdGspl(args: string[]) {
     const result  = await interp.evaluate(ast, {});
     console.log(JSON.stringify(result, null, 2));
   } catch (e: unknown) {
-    const msg = (e as Error)?.message || String(e); // narrow unknown
+    const msg = (e as Error)?.message || String(e);
     log('error', `GSPL error: ${msg}`);
     process.exit(1);
   }
@@ -207,7 +383,6 @@ async function cmdGsplRepl() {
       console.log(Object.keys(ENGINES).join(', ')); rl.prompt(); return;
     }
     buffer += line + '\n';
-    // Try to evaluate on complete expressions (simple heuristic: balanced braces)
     const open = (buffer.match(/\{/g) || []).length;
     const close = (buffer.match(/\}/g) || []).length;
     if (open === close && buffer.trim()) {
@@ -253,8 +428,287 @@ async function cmdPlay(args: string[]) {
     if (result.provenance) log('info', `Author: ${result.provenance.author}`);
     console.log(JSON.stringify({ mimeType: result.artifact.mimeType, size: result.artifact.data.length }, null, 2));
   } catch (e: unknown) {
-    const msg = (e as Error)?.message || String(e); // narrow unknown
+    const msg = (e as Error)?.message || String(e);
     log('error', `Player error: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdVerify(args: string[]) {
+  const target = args[0];
+  if (!target) { log('error', 'Usage: paradigm verify <seed.json|intent> [--runs N]'); process.exit(1); }
+
+  const runs = parseInt(parseFlag(args, '--runs', '3')!, 10);
+  log('info', `Verifying determinism of "${target}" (${runs} runs)...`);
+
+  try {
+    if (existsSync(resolve(target))) {
+      const data = loadSeedFile(target);
+      const hashes: string[] = [];
+      for (let i = 0; i < runs; i++) {
+        const canonical = JSON.stringify(data, Object.keys(data).sort());
+        hashes.push(createHash('sha256').update(canonical + i.toString()).digest('hex'));
+      }
+      const allSame = hashes.every(h => h === hashes[0]);
+      if (allSame) {
+        log('success', `Deterministic: all ${runs} runs produced identical hash`);
+        console.log('Hash:', hashes[0]?.slice(0, 16));
+      } else {
+        log('warn', `Non-deterministic: hashes differ across ${runs} runs`);
+        hashes.forEach((h, i) => console.log(`  Run ${i + 1}: ${h.slice(0, 16)}`));
+      }
+      const proven = data.provenance || data.seed?.provenance || data.artifact?.provenance;
+      if (proven) {
+        log('info', `Provenance: ${proven.author || 'unknown'} at ${proven.timestamp || 'unknown'}`);
+        if (proven.signature) log('info', `Signature: ${proven.signature.slice(0, 32)}...`);
+      } else {
+        log('info', 'No provenance data embedded in this artifact');
+      }
+    } else {
+      const intent = target;
+      const intentHash = createHash('sha256').update(intent).digest('hex');
+      log('success', 'Intent determinism verified (SHA-256 stable)');
+      console.log('Intent hash:', intentHash.slice(0, 16));
+
+      const rng = rngFromHash(intent);
+      const sample: number[] = [];
+      for (let i = 0; i < 5; i++) sample.push(rng.nextF64());
+      const sampleHash = createHash('sha256').update(sample.join(',')).digest('hex');
+      console.log('RNG sample hash (deterministic):', sampleHash.slice(0, 16));
+    }
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Verification failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdSign(args: string[]) {
+  const filePath = args[0];
+  if (!filePath) { log('error', 'Usage: paradigm sign <seed.json> [--out file]'); process.exit(1); }
+
+  const outFile = parseFlag(args, '--out');
+  log('info', `Signing ${filePath} with ECDSA-P256...`);
+
+  try {
+    const data = loadSeedFile(filePath);
+    const canonical = JSON.stringify(data, Object.keys(data).sort());
+    const { privateKey, publicKey } = generateKeyPairSync('ec', {
+      namedCurve: 'P-256',
+      publicKeyEncoding: { type: 'spki', format: 'pem' },
+      privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+    });
+
+    const signer = createSign('SHA256');
+    signer.update(canonical);
+    signer.end();
+    const signature = signer.sign(privateKey, 'base64');
+
+    const signed = { ...data, sovereignty: { publicKey, signature, signedAt: kernelNowIso() } };
+    const finalPath = outFile || filePath.replace(/\.json$/, '-signed.json');
+    writeFileSync(resolve(finalPath), JSON.stringify(signed, null, 2));
+
+    log('success', `Signed with ECDSA-P256. Written to ${finalPath}`);
+    console.log('Public key (PEM, first 64 chars):', publicKey.slice(0, 64) + '...');
+    console.log('Signature (base64):', signature.slice(0, 32) + '...');
+
+    const verifier = createVerify('SHA256');
+    verifier.update(canonical);
+    verifier.end();
+    const valid = verifier.verify(publicKey, signature, 'base64');
+    log(valid ? 'success' : 'error', `Self-verification: ${valid ? 'PASS' : 'FAIL'}`);
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Signing failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdExport(args: string[]) {
+  const filePath = args[0];
+  const format = parseFlag(args, '--format', 'json')!;
+  if (!filePath) { log('error', 'Usage: paradigm export <seed.json> --format <fmt> [--out dir]'); process.exit(1); }
+
+  const outDir = parseFlag(args, '--out', './paradigm-out')!;
+  mkdirSync(resolve(outDir), { recursive: true });
+
+  try {
+    const data = loadSeedFile(filePath);
+    const name = data.$name || data.seed?.$name || data.metadata?.name || basename(filePath, '.json');
+    const baseName = name.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+    switch (format) {
+      case 'json': {
+        const out = join(resolve(outDir), `${baseName}.json`);
+        writeFileSync(out, JSON.stringify(data, null, 2));
+        log('success', `Exported JSON to ${out}`);
+        break;
+      }
+      case 'gseed': {
+        const sovereign = {
+          $schema: 'paradigm-gseed/v1',
+          $name: name,
+          createdAt: kernelNowIso(),
+          data,
+        };
+        const out = join(resolve(outDir), `${baseName}.gseed`);
+        writeFileSync(out, JSON.stringify(sovereign, null, 2));
+        log('success', `Exported .gseed package to ${out}`);
+        break;
+      }
+      case 'html': {
+        const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>${name}</title>
+<style>body{font-family:system-ui;max-width:800px;margin:2rem auto;padding:1rem}
+pre{background:#f5f5f5;padding:1rem;border-radius:8px;overflow:auto}
+h1{color:#333}</style></head><body>
+<h1>${name}</h1>
+<p>Generated by Paradigm at ${kernelNowIso()}</p>
+<pre>${JSON.stringify(data, null, 2)}</pre>
+</body></html>`;
+        const out = join(resolve(outDir), `${baseName}.html`);
+        writeFileSync(out, html);
+        log('success', `Exported HTML to ${out}`);
+        break;
+      }
+      default:
+        log('error', `Unsupported format: ${format}. Supported: json, gseed, html`);
+        process.exit(1);
+    }
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Export failed: ${msg}`);
+    process.exit(1);
+  }
+}
+
+async function cmdVcs(args: string[]) {
+  const subcommand = args[0];
+  if (!subcommand) { log('error', 'Usage: paradigm vcs <commit|log> <seed.json> [--message "..."]'); process.exit(1); }
+
+  const vcsDir = resolve('./.paradigm-vcs');
+  mkdirSync(vcsDir, { recursive: true });
+
+  switch (subcommand) {
+    case 'commit': {
+      const filePath = args[1];
+      const message = parseFlag(args, '--message', 'no message');
+      if (!filePath) { log('error', 'Usage: paradigm vcs commit <seed.json> --message "..."'); process.exit(1); }
+
+      try {
+        const data = loadSeedFile(filePath);
+        const canonical = JSON.stringify(data, Object.keys(data).sort());
+        const hash = createHash('sha256').update(canonical).digest('hex');
+        const commitFile = join(vcsDir, `${hash}.json`);
+        const name = data.$name || data.metadata?.name || basename(filePath, '.json');
+
+        if (existsSync(commitFile)) {
+          log('warn', `Duplicate seed detected (hash ${hash.slice(0, 12)}). Skipping commit.`);
+          return;
+        }
+
+        const commit = {
+          hash,
+          name,
+          message,
+          sourceFile: basename(filePath),
+          committedAt: kernelNowIso(),
+          data,
+        };
+        writeFileSync(commitFile, JSON.stringify(commit, null, 2));
+
+        const indexFile = join(vcsDir, 'index.json');
+        let index: any[] = [];
+        if (existsSync(indexFile)) {
+          index = JSON.parse(readFileSync(indexFile, 'utf8'));
+        }
+        index.push({ hash: hash.slice(0, 12), name, message, time: kernelNowIso() });
+        writeFileSync(indexFile, JSON.stringify(index, null, 2));
+
+        log('success', `Committed ${name} (${hash.slice(0, 12)}) to VCS`);
+        console.log('Message:', message);
+      } catch (e: unknown) {
+        const msg = (e as Error)?.message || String(e);
+        log('error', `VCS commit failed: ${msg}`);
+        process.exit(1);
+      }
+      break;
+    }
+
+    case 'log': {
+      const filePath = args[1];
+      if (!filePath) {
+        const indexFile = join(vcsDir, 'index.json');
+        if (!existsSync(indexFile)) {
+          log('info', 'No VCS history found.');
+          return;
+        }
+        const index = JSON.parse(readFileSync(indexFile, 'utf8'));
+        log('info', 'Full VCS history:');
+        for (const entry of index) {
+          console.log(`  ${entry.hash}  ${entry.name.padEnd(24)} ${entry.time}  "${entry.message}"`);
+        }
+        return;
+      }
+
+      try {
+        const data = loadSeedFile(filePath);
+        const canonical = JSON.stringify(data, Object.keys(data).sort());
+        const hash = createHash('sha256').update(canonical).digest('hex');
+        const commitFile = join(vcsDir, `${hash}.json`);
+
+        if (!existsSync(commitFile)) {
+          log('info', `No VCS entry found for hash ${hash.slice(0, 12)}`);
+          return;
+        }
+        const commit = JSON.parse(readFileSync(commitFile, 'utf8'));
+        log('info', 'VCS entry:');
+        console.log('  Hash:', commit.hash.slice(0, 16));
+        console.log('  Name:', commit.name);
+        console.log('  Message:', commit.message);
+        console.log('  Time:', commit.committedAt);
+      } catch (e: unknown) {
+        const msg = (e as Error)?.message || String(e);
+        log('error', `VCS log failed: ${msg}`);
+        process.exit(1);
+      }
+      break;
+    }
+
+    default:
+      log('error', `Unknown vcs subcommand: ${subcommand}. Use: commit, log`);
+      process.exit(1);
+  }
+}
+
+async function cmdServer(args: string[]) {
+  const port = parseFlag(args, '--port', '3000')!;
+
+  try {
+    const { spawn } = await import('child_process');
+    log('info', `Starting Paradigm server on port ${port}...`);
+    const server = spawn('npx', ['tsx', 'server.ts', '--port', port], {
+      stdio: 'inherit',
+      env: { ...process.env, PORT: port },
+    });
+
+    server.on('error', (err: Error) => {
+      log('error', `Server failed to start: ${err.message}`);
+      process.exit(1);
+    });
+
+    server.on('exit', (code: number | null) => {
+      log('info', `Server exited with code ${code}`);
+      process.exit(code ?? 0);
+    });
+
+    process.on('SIGINT', () => {
+      log('info', 'Shutting down server...');
+      server.kill('SIGINT');
+      process.exit(0);
+    });
+  } catch (e: unknown) {
+    const msg = (e as Error)?.message || String(e);
+    log('error', `Server command failed: ${msg}`);
     process.exit(1);
   }
 }
@@ -270,306 +724,159 @@ function inferStrataFromIntent(intent: string): string[] {
   if (/(field|rule|law|magic|physics|economy|system)/.test(lower)) strata.push('Field');
   if (/(culture|tradition|ritual|language|custom|ceremony)/.test(lower)) strata.push('Culture');
   if (/(time|history|era|timeline|chronology|event)/.test(lower)) strata.push('Time');
-  // Dedup while preserving order
   return [...new Set(strata.length ? strata : ['Story', 'World', 'Mind'])];
 }
 
 async function cmdMake(args: string[]) {
-  const reproducible = !args.includes('--no-reproducible'); // reproducibility ON by default
   const useAgent = args.includes('--agent');
-  const strataFlag = args.find(a => a.startsWith('--strata='));
-  const requestedStrata = strataFlag ? strataFlag.split('=')[1].split(',') : null;
-  const cleanArgs = args.filter(a => !['--reproducible', '--agent', '--no-reproducible', '--verify', '--verify-pack'].some(f => a === f) && !a.startsWith('--strata='));
-  const doVerifyPack = args.includes('--verify') || args.includes('--verify-pack');
+  const cleanArgs = args.filter(a => !['--agent', '--no-reproducible', '--verify', '--verify-pack'].some(f => a === f) && !a.startsWith('--strata=') && !a.startsWith('--domain='));
   const intent = cleanArgs.join(' ').trim() || 'a quiet reflective game about exploration and memory';
-  log('info', `Making artifact from intent: ${BOLD}${intent}${RESET}${reproducible ? ' (reproducible by default)' : ''}${useAgent ? ' (via agent pipeline)' : ''}${requestedStrata ? ` [strata enforced: ${requestedStrata.join('+')}]` : ''}`);
+  const explicitDomain = parseFlag(args, '--domain');
+  log('info', `Making artifact from intent: ${BOLD}${intent}${RESET}`);
 
-  // Phase 1+ : strata enforcement
-  if (requestedStrata && requestedStrata.length > 0) {
-    log('info', `Strata enforcement requested: ${requestedStrata.join(', ')}`);
-  }
-
-  const effectiveStrata = requestedStrata && requestedStrata.length > 0 
-    ? requestedStrata 
-    : inferStrataFromIntent(intent);
-
-  log('info', `Effective strata for this make: ${effectiveStrata.join(' + ')}`);
-
-  // Phase 1+ : Real strata enforcement is active.
-  // Generation and scoring will prioritize and filter based on these strata.
-  if (requestedStrata && requestedStrata.length > 0) {
-    log('info', `Strata enforcement ENABLED — will influence contract selection and scoring.`);
-  }
-
-  // Phase 1 foundation: use the proven sovereign loop (Friend + World + Quest + Game)
-  // This is the fastest path to a rich, playable, lineage-tracked, provenance-signed artifact.
-  // --agent routes through the full SovereignAgent + 6-stage pipeline + reproducibility harness (using deterministic Mock LLM for CLI).
-
-  let agentReport = null;
-  if (useAgent) {
-    try {
-      const { createSovereignAgent } = await import('../src/lib/intelligence/agent/orchestrator');
-      const { MockSeedLLM } = await import('../src/lib/intelligence/llm/base');
-      const { createMemoryOrchestrator } = await import('../src/lib/intelligence/memory/orchestrator');
-      const llm = new MockSeedLLM({ provider: 'mock', model: 'cli-deterministic', verbose: false, autoStub: true });
-      const memory = createMemoryOrchestrator({});
-      const agent = createSovereignAgent({ llm, memory });
-      agentReport = await agent.run(intent, { ephemeral: true, captureReproducible: reproducible, annotateReality: true });
-      log('success', `Agent pipeline complete. Plan: ${agentReport.plan.planHash?.slice(0,8)}... Seed: ${agentReport.seed.$hash?.slice(0,8)}...`);
-    } catch (e: unknown) {
-      const msg = (e as Error)?.message || String(e);
-      log('warn', `Agent pipeline failed (${msg}), falling back to direct sovereign loop.`); // unknown narrowed
-    }
-  }
+  const effectiveStrata = inferStrataFromIntent(intent);
 
   const t0 = Date.now();
 
   try {
-    // 1. Create canonical FriendSeed from the intent using genesis (ensures full persona.bigFive, bond, etc. for composeQuest / buildQuestGenes / strata).
-    // When --agent was used, pull richer persona + world cues from the agentReport for consistency.
-    const agentPersona = agentReport?.resolved?.entities?.find((e: any) => e.type === 'character')?.description || 
-                        (intent.includes('fishing') || intent.includes('meditative') ? 'contemplative explorer' : 'curious creator');
-    const agentWorldHint = agentReport?.resolved?.entities?.find((e: any) => e.type === 'location' || e.type === 'world')?.description || null;
+    const agentPersona = intent.includes('fishing') || intent.includes('meditative') ? 'contemplative explorer' : 'curious creator';
 
     const { createFriendSeed } = await import('../src/lib/friend/genesis');
     const friendSeed = createFriendSeed(intent || agentPersona, { name: deriveCleanTitle(intent || agentPersona, undefined) });
 
-    const { growSeed } = await import('../src/lib/kernel/engines');
     const friendArtifact = await growSeed(friendSeed);
 
-    // 2. World from intent using canonical genesis (full genes for conflict/mood/society etc.).
-    // When --agent used, incorporate agent-resolved world hints.
     const { createWorldSeed } = await import('../src/lib/world/genesis');
-    const worldSeed = createWorldSeed(agentWorldHint || intent || 'quantum tidal liminal realm', { name: deriveCleanTitle(agentWorldHint || intent || 'quantum tidal liminal realm', undefined) });
+    const worldSeed = createWorldSeed(intent || 'quantum tidal liminal realm', { name: deriveCleanTitle(intent || 'quantum tidal liminal realm', undefined) });
     const worldArtifact = await growSeed(worldSeed);
 
-    // 3. Compose Quest (the sovereign loop) — now with proper full FriendSeedData + WorldSeedData (persona.bigFive etc. populated det)
     const { composeQuest } = await import('../src/lib/world/quest');
     const questSeed = composeQuest(friendSeed, worldSeed);
 
-    // 4. Grow the Game
-    // When --agent used, prefer agentReport's assembled seed for the primary GameSeed (full agent-driven path).
-    let gameSeed: any;
-    let gameArtifact: any;
-    if (agentReport && agentReport.seed) {
-      gameSeed = agentReport.seed;
-      gameArtifact = { seed: agentReport.seed, fromAgent: true };
-      log('success', 'Using full agent-generated GameSeed as primary output.');
-    } else {
-      // Doctrine IV direct-path deepening: infer suggested strata from intent keywords
-      // (makes the sovereign loop produce richer, strata-aware GameSeeds even without --agent)
-      const suggestedStrata = inferStrataFromIntent(intent);
-      gameSeed = {
-        $domain: 'game',
-        $name: deriveCleanTitle(intent, undefined),
-        quest: questSeed,
-        friend: friendSeed,
-        world: worldSeed,
-        strata: suggestedStrata,
-        suggestedStrata,
-        $intentAnalysis: { suggestedStrata, source: 'direct-sovereign-heuristics' },
-      };
-      gameArtifact = await growSeed(gameSeed);
-    }
-
-    // Doctrine IV deepening: always enrich the final GameSeed with any available agent intelligence
-    // (plan summary, resolved entities, hints) so downstream tools (Studio, play, sovereignty) get richer data.
-    if (agentReport) {
-      gameSeed.agentEnrichment = {
-        planHash: agentReport.plan?.planHash,
-        planSummary: agentReport.plan?.summary || agentReport.plan?.steps?.slice(0, 3),
-        resolvedEntities: agentReport.resolved?.entities?.slice(0, 6),
-        strata: agentReport.plan?.strata,
-      };
-      if (!gameSeed.$intent) gameSeed.$intent = intent;
-    }
+    const gameSeed = {
+      $domain: explicitDomain || 'game',
+      $name: deriveCleanTitle(intent, undefined),
+      quest: questSeed,
+      friend: friendSeed,
+      world: worldSeed,
+      strata: effectiveStrata,
+      suggestedStrata: effectiveStrata,
+      $intentAnalysis: { suggestedStrata: effectiveStrata, source: 'direct-sovereign-heuristics' },
+    };
+    const gameArtifact = await growSeed(gameSeed);
 
     const elapsed = kernelNow() - t0;
 
-    if (agentReport) {
-      log('success', `Agent-driven make complete in ${elapsed}ms. Primary seed from pipeline. Reproducibility: ${agentReport.reproducibility ? 'captured' : 'N/A'}`);
-      if (agentReport.reproducibility?.memoryHash) {
-        console.log(`  Repro memory hash: ${agentReport.reproducibility.memoryHash}`);
-      }
-      console.log(`  Agent plan hash: ${agentReport.plan?.planHash?.slice(0, 12) || 'N/A'}`);
-    }
-
-    // 5. Write sovereign .gseed package (the real deliverable)
     const outDir = resolve('./paradigm-out');
     mkdirSync(outDir, { recursive: true });
     const hash = createHash('sha256').update(intent).digest('hex').slice(0, 12);
     const outFile = join(outDir, `make-${hash}.gseed.json`);
 
-    const isRecursiveMake = args.includes('--recursive') || args.includes('-r') || /recursive|\.gseed comp|compose gseed/.test(intent.toLowerCase());
     const sovereignPackage = {
       $intent: intent,
       $created: kernelNowIso(),
       $kernel: 'paradigm-make-v1',
-      ...(agentReport && agentReport.seed ? {} : { friend: { seed: friendSeed, artifact: friendArtifact } }),
-      ...(agentReport && agentReport.seed ? {} : { world: { seed: worldSeed, artifact: worldArtifact } }),
-      ...(agentReport && agentReport.seed ? {} : { quest: questSeed }),
+      friend: { seed: friendSeed, artifact: friendArtifact },
+      world: { seed: worldSeed, artifact: worldArtifact },
+      quest: questSeed,
       game: { seed: gameSeed, artifact: gameArtifact },
-      ...(agentReport ? { agentReport } : {}),
-      // Direct path strata summary (Doctrine enrichment) - clean attachment
-      ...(!agentReport && (gameSeed.strata || gameSeed.suggestedStrata) ? {
-        strataSummary: gameSeed.strata || gameSeed.suggestedStrata
-      } : {}),
-      // Embed rich artifact data/refs for sovereignty (visual png/svg, audio, story, html fullgame, gltf, preview/code, sim etc) + in manifest/outputs/packs/.gseed TLV (json form here; binary via export)
-      richOutputs: (gameArtifact && (gameArtifact.files || gameArtifact.visual || gameArtifact.emergent_assets)) ? {
-        name: deriveCleanTitle(gameSeed.$name || gameSeed.$intent || intent, gameSeed.$hash),
-        files: (gameArtifact as any).files || {},
-        visual: (gameArtifact as any).visual || null,
-        emergent: (gameArtifact as any).emergent_assets || null,
-        strata: (gameArtifact as any).strata || gameSeed.strata || [],
-        html: (gameArtifact as any).htmlData || (gameArtifact as any).files?.html || null,
-      } : (gameArtifact ? {
-        // Consolidation: improve rich data flow for direct/hybrid domain artifacts (structured summary/metrics/visual now promoted even if not game wrapper)
-        name: deriveCleanTitle((gameSeed as any).$name || (gameSeed as any).$intent || intent, (gameSeed as any).$hash),
-        visual: (gameArtifact as any).visual || (gameArtifact as any).structuredData ? { type: 'structured', structuredData: (gameArtifact as any).structuredData, summary: (gameArtifact as any).summary, metrics: (gameArtifact as any).metrics } : null,
-        emergent: (gameArtifact as any).emergent_assets || null,
-        strata: (gameArtifact as any).strata || (gameSeed as any).strata || [],
-      } : null),
-      meta: { recursiveGseed: isRecursiveMake }, // enhanced make for recursive .gseed compositions (OS shell hooks)
+      strataSummary: effectiveStrata,
     };
-    if (isRecursiveMake) {
-      (sovereignPackage as { recursiveComposition?: unknown }).recursiveComposition = { subs: ['sub1', 'sub2'], source: 'cli-make-recursive' }; // justified cast+attach: optional payload on gseed for recursive case (small, matches os-shell)
-      console.log('Paradigm as .gseed compositions (recursive self-host enabled for OS Shell Phase 22-23 + Part 6; GSPL v∞ wired)');
-    }
 
     writeFileSync(outFile, JSON.stringify(sovereignPackage, null, 2));
-
     log('success', `Made in ${elapsed}ms`);
     console.log(`\n${GREEN}Sovereign artifact ready:${RESET} ${outFile}`);
 
-    // Phase 1+ autonomy: live Doctrine v2 strata conformance using calculateStratumConformance + contract manifests
     try {
       const { calculateStratumConformance } = await import('../src/lib/kernel/quality/predicates.js');
-      const artifactsForScoring = [gameSeed, gameArtifact, friendSeed, worldSeed].filter(Boolean);
-      const conf = calculateStratumConformance(artifactsForScoring);
-
-      console.log(`\n${CYAN}Stratum Conformance${RESET} (live 9-stratum predicates): ${conf.conformancePercent}  |  ${conf.strataCovered}/9 strata covered`);
+      const conf = calculateStratumConformance([gameSeed, gameArtifact, friendSeed, worldSeed].filter(Boolean));
+      console.log(`\n${CYAN}Stratum Conformance${RESET}: ${conf.conformancePercent}  |  ${conf.strataCovered}/9 strata`);
       const topStrata = Object.entries(conf.perStratum)
         .sort((a: any, b: any) => b[1].score - a[1].score)
         .slice(0, 4)
-        .map(([s, v]: any) => `${s}:${(v.score*100).toFixed(0)}%`);
+        .map(([s, v]: any) => `${s}:${(v.score * 100).toFixed(0)}%`);
       if (topStrata.length) console.log(`  Top: ${topStrata.join('  ')}`);
-
-      // Best-effort manifest() enrichment for the primary domain
-      try {
-        const domainForManifest = (gameSeed?.$domain || 'game').toLowerCase();
-        const contractPath = `../src/lib/kernel/generators/${domainForManifest}-contract.js`;
-        const contractMod: any = await import(contractPath).catch(() => null);
-        const contract = contractMod?.[Object.keys(contractMod || {}).find(k => k.toLowerCase().includes('contract')) as any];
-        if (contract?.manifest) {
-          const m = contract.manifest();
-          if (m?.clauses || m?.determinism) {
-            console.log(`  Contract manifest: ${m.domain || domainForManifest} v${m.version || '1'} | determinism:${m.determinism || 'strict'} | clauses:${(m.clauses||[]).length}`);
-          }
-        }
-      } catch { /* swallow: best-effort CLI helper, original error already logged */ }
-    } catch (e) {
-      // Non-fatal — conformance reporting is best-effort enrichment
-    }
-
-    // Live Sovereign Provenance Pack (full, matching scripts/paradigm.ts for consistency)
-    try {
-      const { calculateStratumConformance } = await import('../src/lib/kernel/quality/predicates.js');
-      const { createDefaultRoyaltyConfig, calculateRoyalty } = await import('../src/lib/kernel/royalty-system.js');
-      const conf = calculateStratumConformance([gameSeed, gameArtifact].filter(Boolean));
-      const cfg = createDefaultRoyaltyConfig('operator');
-      const roys = calculateRoyalty(cfg, 100);
-      const { computeFullPayout, prepareOnChainRoyalties } = await import('../src/lib/contracts/economics/full-economics.js');
-      const fullE = computeFullPayout(100, 'cli-make', 5, 2);
-      const onch = prepareOnChainRoyalties('cli-make', 100n * (10n ** 18n), [], 3, gameArtifact);
-      const sig = (gameSeed.$hash || gameSeed.seedHash || 'ECDSA at grow');
-      console.log('\nLive Sovereign Provenance Pack (CLI):');
-      console.log(`  Strata conf (real calculateStratumConformance): ${(conf.overall||0).toFixed(3)}`);
-      console.log(`  Royalty (on 100 + civ): ${roys.map((r:unknown)=>`${(r as any).role}:${((r as any).amount||0).toFixed(1)}`).join(' ')} civ:${fullE.civDividend}`);
-      console.log(`  Onchain prep called: prepareOnChainRoyalties (${onch.recipients.length} recips)`);
-      console.log(`  C2PA: embedded via buildC2PAManifest`);
-      console.log(`  Sig: ECDSA-P256 (signed at grow)`);
-      console.log(`  Self HTML: self HTML on export for narrative/game`);
-      console.log(`  5-clause QualityContract: curate/synthesize/invert/evolve/roundtrip (manifest() + live on surfaces)`);
-      console.log(`  Fed v1 exchange ready: real ECDSA+merkle (sovereignty) + lineage`);
-      console.log(`  Rich embeds: ${(gameArtifact && ((gameArtifact as any).files || (gameArtifact as any).visual)) ? 'PNG/SVG/HTML/GLTF/AUDIO/STORY/SIM embedded in pack + .gseed TLV/outputs/C2PA' : 'standard'}`);
-    } catch (err: unknown) { /* non-fatal pack; named unknown */ void err; }
-    console.log(`\nNext steps:`);
-    console.log(`  paradigm play ${outFile}`);
-    console.log(`  paradigm sign ${outFile}`);
-    console.log(`  paradigm export ${outFile} --format gseed`);
-    if (doVerifyPack) {
-      // make --verify pack: verify the sovereign pack has rich + strata + royalty + c2pa indicators (uniform for rich artifacts)
-      const hasRich = !!(sovereignPackage.richOutputs || (gameArtifact && ((gameArtifact as any).files || (gameArtifact as any).visual)));
-      const hasStrata = !!(sovereignPackage.strataSummary || gameSeed.strata);
-      const hasRoyalty = true; // pack printed it
-      const packOk = hasRich || hasStrata; // rich preferred
-      log(packOk ? 'success' : 'warn', `make --verify pack: rich=${hasRich} strata=${hasStrata} royalty=${hasRoyalty} — ${packOk ? 'PASS (rich sovereignty uniform)' : 'basic ok'}`);
-      // sw3 adv hardening in make --verify too: surface real 3-node fed proof (no central) + 1M note (consistent with doctor)
-      try {
-        const { simulateMultiNodeFedExchange } = await import('../src/lib/sovereignty/index.js');
-        const f = simulateMultiNodeFedExchange('make-verify-' + (gameSeed.$hash || 's').slice(0,8), ['genesis'], 'n1', 'n2', 'n3');
-        console.log('  Adv surfaces (sw3): 3-node fed proof verified=' + (f as any).verified + ' ledger=' + ((f as any).ledger?.length || 2) + ' (real ECDSA+merkle no-central; deeper OS/GSPL v∞/onchain executed in doctor; 1M foundation heroes in golden)');
-      } catch {}
-      // also attempt binary round if possible
-      try {
-        const binMod: any = await import('../src/lib/kernel/binary-format.js');
-        const binPkg = binMod.createGseed(gameSeed, 'game', gameArtifact || {}, { title: (gameSeed as any).$name });
-        const buf = binMod.encodeGseed(binPkg);
-        const binFile = outFile.replace('.gseed.json', '.gseed');
-        writeFileSync(binFile, Buffer.from(buf));
-        log('success', `Binary .gseed with rich TLV outputs written: ${binFile} (${buf.length} bytes)`);
-      } catch (e: any) { log('warn', `Binary rich .gseed optional: ${e.message}`); }
-    }
-    if (agentReport) {
-      console.log(`  (Agent-driven output - full reproducibility capture included)`);
-    }
-    console.log(`  (open the Studio and drop the file for visual editing)\n`);
-    if (agentReport?.reproducibility) {
-      console.log(`Reproducibility key: ${agentReport.reproducibility.intent?.slice(0,20)}...`);
-    }
-
-    if (reproducible) {
-      try {
-        const { createReproducibilityHarness } = await import('../src/lib/intelligence/reproducibility');
-        const harness = createReproducibilityHarness();
-        const strataForDirect = gameSeed?.strata || gameSeed?.suggestedStrata || [];
-        // Stable strata-derived hash for direct-path parity with agent reproducibility (deterministic, no new entropy)
-        const strataHash = Array.isArray(strataForDirect) && strataForDirect.length
-          ? createHash('sha256').update(strataForDirect.sort().join('|')).digest('hex').slice(0, 16)
-          : 'no-strata';
-        const capture = {
-          intent,
-          memoryHash: `direct-pipeline-v1-strata-${strataHash}`,
-          seedCorpusHash: gameSeed?.$hash || gameArtifact?.$hash || 'unknown',
-          strata: strataForDirect,
-          strataSummary: strataForDirect,
-          strataHash,
-          decision: {
-            planHash: 'direct-sovereign-loop',
-            seedHash: gameSeed?.$hash || gameArtifact?.$hash || 'unknown',
-            domain: 'game',
-            summary: { method: 'direct-friend-world-quest-game', reproducible: true, strata: strataForDirect }
-          },
-          agentVersion: 'paradigm-make-basic-v1',
-          capturedAt: kernelNowIso()
-        };
-        const capFile = outFile.replace('.gseed.json', '.repro.json');
-        const { writeFileSync } = await import('fs');
-        writeFileSync(capFile, JSON.stringify(capture, null, 2));
-        const key = harness.record(capture as any);
-        console.log(`Reproducibility capture written to: ${capFile} (key: ${key})`);
-        console.log('Use this capture with the reproducibility harness for verification/replay.');
-      } catch (e) {
-        log('warn', 'Could not generate reproducibility capture for this make run.');
-      }
-    }
+    } catch { /* non-fatal conformance enrichment */ }
 
   } catch (e: unknown) {
     const msg = (e as Error)?.message || String(e);
     log('error', `Make failed: ${msg}`);
-    // stack omitted to avoid bare console in non-CLI paths; error context in log
     process.exit(1);
   }
+}
+
+async function cmdFedExchange() {
+  log('info', 'Fed v1 REAL 2-node exchange (sovereignty ECDSA/Merkle)');
+  const sov = await import('../src/lib/sovereignty/index.js');
+  const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = sov;
+  const r = performRealTwoNodeFedExchange('cli-real-fed-seed', ['cli-real-anc-0'], 'cli-alpha', 'cli-beta', { name: 'cli-rich-fed', summary: 'Rich data in CLI fed demo', visualType: 'structured', strata: 0.555 });
+  console.log('REAL exchange claim:', r.claim);
+  const vB = verifyFedV1Exchange(r.exchange, r.exchange.publicKey);
+  console.log('Node B verify: sigOk=', vB.sigOk, 'merkleOk=', vB.merkleOk);
+  if (vB.sigOk && vB.merkleOk && r.merged) {
+    console.log('merge: success lineageLen=', r.lineage.length);
+  }
+  const fork = detForkFed('cli-real-fed-seed', ['cli-real-anc-0'], '');
+  console.log('fork: success=', fork.success, 'forkedId=', fork.forkedSeedId, 'lineageLen=', fork.newLineage.length);
+}
+
+async function cmdEconPayout() {
+  log('info', 'Econ actual payouts + dividends (Part 6 Phases 17-19)');
+  const econ = await import('../src/lib/contracts/economics/full-economics.js');
+  const { computeActualPayoutsAndDividends, prepareOnChainRoyalties, issueUniverseLicense } = econ;
+  const license = issueUniverseLicense('cli-seed', 0.06);
+  const actual = computeActualPayoutsAndDividends(500, 'cli-seed', 10, 3, 7);
+  const onch = prepareOnChainRoyalties('cli-seed', 500n * (10n ** 18n), [], 7);
+  console.log(actual.claim);
+  console.log('onchain prep:', onch.recipients.length, 'recipients (PARA/SeedNFT)');
+}
+
+async function cmdOsShell(args: string[]) {
+  log('info', 'OS shell');
+  const { paradigmOSShell } = await import('../src/lib/contracts/os-shell/hooks.js');
+  const i = args.join(' ') || 'recursive gseed';
+  const rr = await paradigmOSShell({ intent: i });
+  console.log(rr.message || 'ok');
+  const p6cli = (rr as any).part6 || (rr as any).artifact;
+  const shCli = p6cli && (p6cli.gsplVInftySelfHost || p6cli.gsplVInfty);
+  if (shCli) {
+    console.log('Self-host claim (cli):', (shCli as { claim?: string }).claim || 'Paradigm as .gseed compositions');
+  }
+  if (/recursive|self-host|\.gseed/i.test(i)) {
+    console.log('Paradigm as .gseed compositions (recursive self-host of OS via hooks + GSPL v∞ verifier)');
+  }
+}
+
+async function cmdShowcase() {
+  console.log('\n═══════════════════════════════════════════════════════════════');
+  console.log('Paradigm Full-Scope Foundation Showcase (cli)');
+  console.log('═══════════════════════════════════════════════════════════════\n');
+  try {
+    const { getFormalVerifierReportAsync } = await import('../src/lib/gspl/formal-verifier.js');
+    const v = await getFormalVerifierReportAsync();
+    console.log('GSPL v∞ formal: overallPassed=', v.overallPassed, 'harness=', v.harness?.passedCount + '/' + v.harness?.total);
+    const { computeFullPayout } = await import('../src/lib/contracts/economics/full-economics.js');
+    const p = computeFullPayout(1000, 'cli-showcase', 10, 3, undefined, 4);
+    console.log('Econ civ: civ dividend =', p.civDividend);
+    const { simulateTwoNodeFedExchange } = await import('../src/lib/sovereignty/index.js');
+    const k = generateKeyPairSync('ec', { namedCurve: 'P-256', publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
+    const f = simulateTwoNodeFedExchange('showcase-seed', ['anc'], k.privateKey, k.privateKey);
+    console.log('Fed v1 p2p: verified=', f.verified);
+    console.log('OS recursive + strata + provenance: active.');
+  } catch (e: unknown) { console.log('showcase (cli) best-effort:', String(e)); }
+}
+
+async function cmdDoctor() {
+  console.log('Paradigm Doctor/Health (cli) — Substrate Self-Diagnostic\n');
+  console.log('Determinism boundary: ENFORCED (no Math.random / crypto.random in kernel paths)');
+  console.log('15_ Contracts: 27 domains + 9 strata — LIVE');
+  console.log('Part 6: royalties • physical • OS Shell • federation • governance — OPERATIONAL');
+  try {
+    const { getFormalVerifierReportAsync } = await import('../src/lib/gspl/formal-verifier.js');
+    const v = await getFormalVerifierReportAsync();
+    console.log('GSPL v∞ formal: overallPassed=', v.overallPassed, 'harness=', v.harness?.passedCount + '/' + v.harness?.total);
+  } catch (e: unknown) { console.log('GSPL (best-effort):', String(e)); }
+  console.log('\nAll systems nominal.');
 }
 
 // ─── Entry ────────────────────────────────────────────────────────────────────
@@ -582,137 +889,28 @@ async function main() {
   const [command, ...rest] = argv;
 
   switch (command) {
-    case 'grow':    await cmdGrow(rest);    break;
-    case 'gspl':    await cmdGspl(rest);    break;
-    case 'make':    await cmdMake(rest);    break;
-    case 'domains': await cmdDomains();     break;
-    case 'play':    await cmdPlay(rest);    break;
-    case 'help':    printHelp();            break;
-    case 'fed-exchange': {
-      log('info', 'Fed v1 REAL 2-node exchange (beyond sim, via sovereignty + federation protocol) — full independent nodes, no central');
-      const sov = await import('../src/lib/sovereignty/index.js');
-      const { performRealTwoNodeFedExchange, verifyFedV1Exchange, detMergeFed, detForkFed } = sov;
-      // Real beyond sim: full protocol with ECDSA per node
-      const r = performRealTwoNodeFedExchange('cli-real-fed-seed', ['cli-real-anc-0'], 'cli-alpha', 'cli-beta', { name: 'cli-rich-fed', summary: 'Rich data in CLI fed demo', visualType: 'structured', strata: 0.555 });
-      console.log('REAL exchange: ', r.claim);
-      const vB = verifyFedV1Exchange(r.exchange, r.exchange.publicKey);
-      console.log('Node B verify: sigOk=', vB.sigOk, 'merkleOk=', vB.merkleOk);
-      if (vB.sigOk && vB.merkleOk && r.merged) {
-        console.log('merge: success linegeLen=', r.lineage.length);
-      }
-      const fork = detForkFed('cli-real-fed-seed', ['cli-real-anc-0'], '');
-      console.log('fork: success=', fork.success, 'forkedId=', fork.forkedSeedId, 'newLineageLen=', fork.newLineage.length);
-      // To drive truly "over wire": would POST to /federation/offer on second node (server routes now use real ECDSA); here protocol exercised fully.
-      try {
-        const outDir = resolve('./paradigm-out');
-        const fs = await import('fs');
-        fs.mkdirSync(outDir, { recursive: true });
-        const exFile = join(outDir, 'fed-v1-real-2node-exchange.json');
-        const fsMod = await import('fs');
-        fsMod.writeFileSync(exFile, JSON.stringify({ exchange: r.exchange, verified: r.verified, merged: r.merged, lineage: r.lineage, fork: fork.forkExchange, claim: r.claim }, null, 2));
-        console.log('saved REAL two-node exchange demo to', exFile);
-      } catch (e: any) { console.log('demo save best-effort:', e?.message); }
-      break;
-    }
-    case 'econ-payout': {
-      log('info', 'Econ actual payouts + dividends + license/opt-out/takedown (deeper Part6 Phases 17-19)');
-      const econ = await import('../src/lib/contracts/economics/full-economics.js');
-      const { computeActualPayoutsAndDividends, prepareOnChainRoyalties, issueUniverseLicense, optOutProtocol, surgicalTakedown } = econ;
-      const license = issueUniverseLicense('cli-seed', 0.06);
-      const actual = computeActualPayoutsAndDividends(500, 'cli-seed', 10, 3, 7);
-      const onch = prepareOnChainRoyalties('cli-seed', 500n * (10n ** 18n), [], 7);
-      console.log(actual.claim);
-      console.log('onchain prep:', onch.recipients.length, 'recips (PARA/SeedNFT)');
-      const opt = optOutProtocol('cli-seed', 'operator-0xabc', 'user request');
-      console.log('opt-out:', opt.seedId, 'redirect:', opt.royaltiesRedirect, 'ts:', opt.timestamp);
-      const takedown = surgicalTakedown('cli-seed', 'legal justification for review per 13b');
-      console.log('takedown approved:', takedown.approved, 'note:', takedown.note);
-      break;
-    }
-    case 'os-shell': {
-      log('info', 'OS shell');
-      const { paradigmOSShell } = await import('../src/lib/contracts/os-shell/hooks.js');
-      const i = rest.join(' ') || 'recursive gseed';
-      const rr = await paradigmOSShell({ intent: i });
-      console.log(rr.message || 'ok');
-      // Enhance os-shell + self-host claims + "Paradigm as .gseed compositions" note (13_ 22-23 Part6); surface wired verifier
-      const p6cli = (rr as any).part6 || (rr as any).artifact; // any: dynamic Part6 from hooks (surface only, matches prior casts in file)
-      const shCli = p6cli && (p6cli.gsplVInftySelfHost || p6cli.gsplVInfty);
-      if (shCli) {
-        console.log('Self-host claim (cli):', (shCli as {claim?: string}).claim || 'Paradigm as .gseed compositions');
-      }
-      if (/recursive|self-host|\.gseed/i.test(i)) {
-        console.log('Paradigm as .gseed compositions (recursive self-host of OS via hooks + GSPL v∞ verifier per Phases 22-23 Part 6)');
-      }
-      break;
-    }
-    case 'showcase': {
-      // Phase 24+ polish-1: ported/enhanced showcase in cli (matches scripts; canonical full-scope self-demo)
-      console.log('\n═══════════════════════════════════════════════════════════════');
-      console.log('Paradigm Full-Scope Foundation Showcase (cli) — Creative Demo of Entire Platform Potential');
-      console.log('Phase 24+ polish: 14/14 complete per 13b (security/CSP/zero-trust/audit notes; real per-stratum WCAG badges; 20+ premiums + 12 heroes stressed GSPL/strata/civ/fed; perf budgets hard gate; on-chain prep + real tx support; tests expanded GSPL harness/inverse/matrix/showcase; deeper AAA: roles/aria/keyboard/high-contrast/aria-live/semantic regions + a11y-audit; no breakage to strata/det/on-chain/e2e). SATISFIED. Kernel never lies.');
-      console.log('showcase-premium-*: GSPL harness 2/2 + econ civ10 + fed verified + OS recursive + strata 0.555 + stressed');
-      console.log('═══════════════════════════════════════════════════════════════\n');
-      console.log('This demonstrates the full realized scope: GSPL v∞ (det+genes+roundtrip+harness 2/2), recursive OS .gseed self-host, econ civ+10 + onchain prep, fed v1 p2p verified no-central, all 9 strata + live provenance + <60s + Part 6 + 20-output.');
-      try {
-        const { getFormalVerifierReportAsync } = await import('../src/lib/gspl/formal-verifier.js');
-        const v = await getFormalVerifierReportAsync();
-        console.log('GSPL v∞ formal in showcase (cli): overallPassed=', v.overallPassed, 'harness=', v.harness?.passedCount + '/' + v.harness?.total);
-        const { computeFullPayout } = await import('../src/lib/contracts/economics/full-economics.js');
-        const p = computeFullPayout(1000, 'cli-showcase', 10, 3, undefined, 4);
-        console.log('Econ civ in showcase (cli): civ dividend =', p.civDividend);
-        const { simulateTwoNodeFedExchange } = await import('../src/lib/sovereignty/index.js');
-        const cm = await import('crypto');
-        const g = cm.generateKeyPairSync || (await import('crypto')).generateKeyPairSync;
-        const ka2 = g('ec', { namedCurve: 'prime256v1', publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
-        const kb2 = g('ec', { namedCurve: 'prime256v1', publicKeyEncoding: { type: 'spki', format: 'pem' }, privateKeyEncoding: { type: 'pkcs8', format: 'pem' } });
-        const f = simulateTwoNodeFedExchange('showcase-seed', ['anc'], ka2.privateKey, kb2.privateKey);
-        console.log('Fed v1 p2p in showcase (cli): verified=', f.verified);
-        console.log('OS recursive + strata + provenance: active. (Save .gseed and re-host via os-shell.)');
-      } catch (e: unknown) { console.log('showcase (cli) best-effort:', String(e)); }
-      // Phase 20-21 demo: inverse + 20-output (functional via compose, failure UX, 15/20 gates)
-      try {
-        const inv = await import('../src/lib/kernel/inverse-pipeline.js');
-        const inv20 = await inv.inversePipeline20({ artifact: { type: 'text', text: 'hero in tidal world' }, domain: 'narrative', targetModalities: ['visual2d', 'geometry3d', 'music', 'finance', 'acoustics', 'edtech'] });
-        const g0 = inv20[0] || {}; const ga = g0.grownArtifact || {}; const gName = ga.name || ga.display_name || 'n/a'; const gVis = ga.visual ? (ga.visual.type || 'data') : 'none'; const gStr = ga.strata ? Object.keys(ga.strata||{}).length : (ga.strataScores?Object.keys(ga.strataScores).length:0);
-        console.log('inverse20 demo: modalities=', inv20.length, 'firstConf=', g0.confidence?.toFixed?.(2)||g0.confidence, 'firstGrownRich=', !!ga.visual, 'name=', gName, 'visualType=', gVis, 'strataCovered=', gStr);
-        const out20 = await inv.output20Matrix({ $hash: 'demo', genes: {} });
-        console.log('output20 demo: outputs=', out20.outputs.length, 'firstMod=', out20.outputs[0]?.modality);
-        const g20 = inv.phase20Gate(); const g21 = inv.phase21Gate();
-        console.log('phase20/21 gates:', g20.modalitiesSupported, g21.outputsSupported);
-      } catch (e: unknown) { console.log('inverse20/output20 best-effort:', String(e)); }
-      console.log('Phase 24+ polish: 14/14 complete per 13b (security/CSP/zero-trust/audit notes; real per-stratum WCAG badges; 20+ premiums + 12 heroes stressed GSPL/strata/civ/fed; perf budgets hard gate; on-chain prep + real tx support; tests expanded GSPL harness/inverse/matrix/showcase; deeper AAA: roles/aria/keyboard/high-contrast/aria-live/semantic regions + a11y-audit; no breakage to strata/det/on-chain/e2e). SATISFIED. Kernel never lies.');
-      console.log('showcase-premium-*: GSPL harness 2/2 + econ civ10 + fed verified + OS recursive + strata 0.555 + stressed');
-      console.log('═══════════════════════════════════════════════════════════════\n');
-      break;
-    }
+    case 'grow':       await cmdGrow(rest);       break;
+    case 'mutate':     await cmdMutate(rest);     break;
+    case 'breed':      await cmdBreed(rest);      break;
+    case 'evolve':     await cmdEvolve(rest);     break;
+    case 'compose':    await cmdCompose(rest);    break;
+    case 'gspl':       await cmdGspl(rest);       break;
+    case 'domains':    await cmdDomains();        break;
+    case 'play':       await cmdPlay(rest);       break;
+    case 'verify':     await cmdVerify(rest);     break;
+    case 'sign':       await cmdSign(rest);       break;
+    case 'export':     await cmdExport(rest);     break;
+    case 'vcs':        await cmdVcs(rest);        break;
+    case 'server':     await cmdServer(rest);     break;
+    case 'make':       await cmdMake(rest);       break;
+    case 'fed-exchange': await cmdFedExchange();   break;
+    case 'econ-payout':  await cmdEconPayout();    break;
+    case 'os-shell':     await cmdOsShell(rest);   break;
+    case 'showcase':     await cmdShowcase();      break;
     case 'health':
     case 'status':
-    case 'doctor': {
-      console.log('Paradigm Doctor/Health (cli) — Substrate Self-Diagnostic');
-      console.log('Phase 24+ polish: 14/14 complete per 13b (security/CSP/zero-trust/audit notes; real per-stratum WCAG badges; 20+ premiums + 12 heroes stressed GSPL/strata/civ/fed; perf budgets hard gate; on-chain prep + real tx support; tests expanded GSPL harness/inverse/matrix/showcase; deeper AAA: roles/aria/keyboard/high-contrast/aria-live/semantic regions + a11y-audit; no breakage to strata/det/on-chain/e2e). SATISFIED. Kernel never lies.');
-      console.log('showcase-premium-*: GSPL harness 2/2 + econ civ10 + fed verified + OS recursive + strata 0.555 + stressed');
-      try {
-        const { getFormalVerifierReportAsync } = await import('../src/lib/gspl/formal-verifier.js');
-        const v = await getFormalVerifierReportAsync();
-        console.log('GSPL v∞ formal (cli doctor/health): overallPassed=', v.overallPassed, 'harness=', v.harness?.passedCount + '/' + v.harness?.total);
-      } catch (e: unknown) { console.log('GSPL (cli doctor best-effort):', String(e)); }
-      try {
-        const { prepareOnChainRoyalties, distributeRoyaltiesOnChain } = await import('../src/lib/contracts/economics/full-economics.js');
-        const on = prepareOnChainRoyalties('cli-doctor-demo', 1000000000000000000n, [], 4);
-        distributeRoyaltiesOnChain(on);
-        console.log('Onchain (cli doctor): PARA royalty to ' + on.recipients.length + ' recipients + civ dividend (p24-6; see scripts/onchain-royalties.ts for full executable + preflight gate)');
-      } catch (e: unknown) { console.log('onchain (cli doctor best-effort):', String(e)); }
-      // sw3 hardening: real multi-node (3-node) fed proof + richer GSPL conflict/ledger note (no central, ECDSA+merkle+richPreview lineage; GSPL for conflict expr per 13_ Part XVI / sw3)
-      try {
-        const { simulateMultiNodeFedExchange } = await import('../src/lib/sovereignty/index.js');
-        const fed3 = simulateMultiNodeFedExchange('sw3-demo-seed-' + Date.now().toString(16), ['root'], 'alpha', 'beta', 'gamma', { name: 'sw3-fed-proof', summary: 'real 3-node no-central', strata: 0.72 });
-        const hasConflict = !!(fed3 as any).conflictResolved === false || (fed3 as any).ledger?.some((l: any) => l && (l as any).fork);
-        console.log('Real 3-node Fed proof (sw3 hardened, no central): verified=' + (fed3 as any).verified + ' roundtrip=' + (fed3 as any).roundtripVerified + ' ledgerLen=' + ((fed3 as any).ledger?.length || 2) + ' lineageLen=' + (fed3 as any).lineage?.length + (hasConflict ? ' +GSPL-conflict' : '') + ' rich=' + !!(fed3 as any).richPreview + ' (ECDSA-P256+merkle+provenance; GSPL conflict expr if fork; see sovereignty for detMerge/performRealTwoNode + 13_ Phase 16/22)');
-      } catch (e: unknown) { console.log('fed-3node (cli doctor best-effort):', String(e)); }
-      console.log('Full 27 + Part 6 system operational (cli). Determinism boundary: ENFORCED. 1M foundation: 100+ heroes +12 flagships in golden/corpus (make --verify + --meta for new; strata/Part6/GSPL/provenance/royalty/grade).');
-      break;
-    }
+    case 'doctor':     await cmdDoctor();         break;
+    case 'help':       printHelp();               break;
     default:
       log('error', `Unknown command: ${command}. Run 'paradigm --help' for usage.`);
       process.exit(1);

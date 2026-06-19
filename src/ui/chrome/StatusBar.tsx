@@ -33,7 +33,7 @@ function timeAgo(iso: string): string {
   return `${Math.floor(dt / 3_600_000)}h ago`;
 }
 
-export const StatusBar: React.FC = () => {
+export const StatusBar: React.FC = React.memo(() => {
   const seed = useActiveSeed((s) => s.seed);
   const tier = useAgentThreads((s) => s.selectedTier);
   const [tick, setTick] = useState(0);
@@ -172,7 +172,7 @@ export const StatusBar: React.FC = () => {
       </a>
     </footer>
   );
-};
+});
 
 const Dot: React.FC = () => <span aria-hidden style={{ color: 'var(--r-ink-5, #2a2a3a)', margin: '0 8px' }}>·</span>;
 

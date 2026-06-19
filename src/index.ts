@@ -48,6 +48,12 @@ export {
 // Intelligence (canonical: src/lib/intelligence)
 export { IntelligenceLayer } from './lib/intelligence';
 
+// Composition (Phases 20-21)
+export { toSeed, toSeedAsync, invertAll, listModalities, hasRealHandler, isInverseSuccess, ALL_MODALITIES } from './lib/composition/inverse-pipeline';
+export type { Modality, InverseResult, InverseSuccess, InverseFailure, InverseCandidateBranch } from './lib/composition/inverse-pipeline';
+export { routeOutput, getOutputType, listOutputTypes, listOutput20Domains, output20Matrix, getOutputRoute, listAllOutputs, OUTPUT_20_TYPES, OUTPUT_20_MODALITIES } from './lib/composition/output_routing';
+export type { Output20Type, OutputModality, OutputRoute, OutputTypeRoute } from './lib/composition/output_routing';
+
 // Platform metadata
 export const VERSION = '1.0.0';
 export const GENE_COUNT = 17;

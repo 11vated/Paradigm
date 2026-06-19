@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { ParaToken } from '../../typechain-types';

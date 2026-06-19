@@ -35,6 +35,7 @@ export default defineConfig({
         // Supporting systems
         'src/lib/naming/**',
         'src/lib/federation/**',
+        'src/lib/economics/**',
         'src/lib/contracts/**',
         
         // Phase 15: Web3 integration

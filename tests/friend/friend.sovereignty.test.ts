@@ -94,6 +94,9 @@ describe('Friend sovereignty — keypair + sign + verify', () => {
     // Build a key-shuffled version
     const shuffled = {
       sovereignty: undefined,
+      $domain: reordered.$domain,
+      $hash: reordered.$hash,
+      $name: reordered.$name,
       genes: reordered.genes,
       bornAt: reordered.bornAt,
       name: reordered.name,

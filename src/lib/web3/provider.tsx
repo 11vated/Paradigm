@@ -146,11 +146,11 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
     try {
       // Request account access
-      const accounts = await window.ethereum.request({
+      const accounts: string[] | undefined = await window.ethereum.request({
         method: 'eth_requestAccounts',
-      });
+      }) as string[] | undefined;
 
-      if (accounts.length === 0) {
+      if (!accounts || accounts.length === 0) {
         throw new Error('No accounts found');
       }
 
@@ -266,8 +266,10 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     window.ethereum.on('chainChanged', handleChainChanged);
 
     return () => {
-      window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-      window.ethereum.removeListener('chainChanged', handleChainChanged);
+      if (typeof window.ethereum !== 'undefined') {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      }
     };
   }, [disconnect]);
 
@@ -277,11 +279,11 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
     async function checkConnection() {
       try {
-        const accounts = await window.ethereum.request({
+        const accounts: string[] | undefined = await window.ethereum.request({
           method: 'eth_accounts',
-        });
+        }) as string[] | undefined;
 
-        if (accounts.length > 0) {
+        if (accounts && accounts.length > 0) {
           await connect();
         }
       } catch (err) {

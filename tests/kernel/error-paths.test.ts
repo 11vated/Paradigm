@@ -12,6 +12,8 @@ import { describe, it, expect } from 'vitest';
 import type { Seed } from '../../src/lib/kernel/engines';
 import { Xoshiro256StarStar } from '../../src/lib/kernel/rng';
 import { createFriendSeed } from '../../src/lib/friend/genesis';
+// Force-register friend functor bridges (side-effect at module load)
+import '../../src/lib/friend/composition';
 import { composeSeed } from '../../src/lib/kernel/composition';
 
 describe('Error Path Coverage', () => {

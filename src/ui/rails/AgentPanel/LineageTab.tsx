@@ -1,14 +1,7 @@
-/**
- * LineageMode — real seed ancestry tree.
- *
- * Per spec §VIII.16. Fetches /api/seeds/:id/lineage and /:id/descendants,
- * renders each as a row with SeedGlyph + name + domain + operation + gen.
- */
 import React, { useCallback, useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useDomainColor } from '@/hooks/useDomainColor';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
-import { ModePurposeHeader } from '../ModePurposeHeader';
 
 interface LineageEntry {
   id: string;
@@ -29,7 +22,7 @@ const OP_GLYPH: Record<string, string> = {
   evolve: '✦',
 };
 
-export const LineageMode: React.FC = () => {
+export const LineageTab: React.FC = () => {
   const { seed } = useActiveSeed();
   const setSeed = useActiveSeed((s: any) => s.setSeed);
   const accent = useDomainColor(seed?.domain);
@@ -49,7 +42,6 @@ export const LineageMode: React.FC = () => {
       setAncestors(Array.isArray(anc) ? anc : (anc.lineage ?? anc.ancestors ?? []));
       setDescendants(Array.isArray(des) ? des : (des.descendants ?? []));
     }).catch((e) => setError(String(e))).finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to seed identity; if seed.id is undefined we no-op
   }, [seed?.id]);
 
   const activate = useCallback((entry: LineageEntry) => {
@@ -62,15 +54,14 @@ export const LineageMode: React.FC = () => {
 
   if (!seed) {
     return (
-      <div className="p-lineage-empty">
-        <span>Select a seed to see its lineage.</span>
+      <div className="p-lineage-empty" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--p-ink-3)', fontSize: 12 }}>
+        Select a seed to see its lineage.
       </div>
     );
   }
 
   return (
-    <div className="p-lineage" style={{ '--p-accent': accent } as React.CSSProperties}>
-      <ModePurposeHeader mode="lineage" showRadar={false} />
+    <div className="p-lineage" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', '--p-accent': accent } as React.CSSProperties}>
       <header className="p-lineage-header">
         <span className="p-lineage-label">lineage</span>
         <span className="p-lineage-meta">
@@ -80,7 +71,7 @@ export const LineageMode: React.FC = () => {
 
       {error && <div className="p-lineage-error">{error}</div>}
 
-      <div className="p-lineage-body">
+      <div className="p-lineage-body" style={{ flex: 1, overflowY: 'auto' }}>
         <section className="p-lineage-section">
           <h3 className="p-lineage-section-label">ancestors · ↑</h3>
           {ancestors.length === 0 && !loading && (

@@ -71,7 +71,7 @@ function fullHighlight(src: string): React.ReactNode[] {
   return out;
 }
 
-export const GsplStrip: React.FC = () => {
+export const GsplStrip: React.FC = React.memo(() => {
   const threads = useAgentThreads((s) => s.threads);
   const [open, setOpen] = useState(false);
 
@@ -166,6 +166,6 @@ export const GsplStrip: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default GsplStrip;

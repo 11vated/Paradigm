@@ -15,10 +15,10 @@ import { BrowserProvider } from 'ethers';
 
 // Mock ethers
 vi.mock('ethers', () => ({
-  BrowserProvider: vi.fn(),
+  BrowserProvider: vi.fn(function() { return {}; }),
   Contract: vi.fn(),
-  formatEther: vi.fn((value) => '1.0'),
-  parseEther: vi.fn((value) => BigInt(value) * BigInt(10 ** 18)),
+  formatEther: vi.fn((value: bigint | string) => '1.0'),
+  parseEther: vi.fn((value: string) => BigInt(value) * BigInt(10n ** 18n)),
 }));
 
 // Mock window.ethereum
@@ -30,17 +30,22 @@ const mockEthereum = {
 
 describe('Web3Provider', () => {
   beforeEach(() => {
-    // Setup window.ethereum mock
-    (global as any).window = {
-      ethereum: mockEthereum,
-    };
+    // Setup window.ethereum mock (don't replace jsdom's window)
+    (globalThis as any).ethereum = mockEthereum;
+    if (typeof window !== 'undefined') {
+      (window as any).ethereum = mockEthereum;
+    }
     
-    // Reset mocks
+    // Reset mocks and set default return (empty accounts)
     vi.clearAllMocks();
+    mockEthereum.request.mockResolvedValue([]);
   });
 
   afterEach(() => {
-    delete (global as any).window;
+    delete (globalThis as any).ethereum;
+    if (typeof window !== 'undefined') {
+      delete (window as any).ethereum;
+    }
   });
 
   describe('useWeb3 hook', () => {
@@ -72,7 +77,10 @@ describe('Web3Provider', () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
       const mockChainId = 1;
 
-      mockEthereum.request.mockResolvedValueOnce([mockAddress]);
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(mockChainId) }),
@@ -80,8 +88,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -103,9 +111,10 @@ describe('Web3Provider', () => {
     });
 
     it('should handle connection rejection', async () => {
-      mockEthereum.request.mockRejectedValueOnce(
-        new Error('User rejected connection')
-      );
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.reject(new Error('User rejected connection'));
+        return Promise.resolve([]);
+      });
 
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
@@ -125,7 +134,7 @@ describe('Web3Provider', () => {
     });
 
     it('should handle missing MetaMask', async () => {
-      delete (global as any).window.ethereum;
+      delete (window as any).ethereum;
 
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
@@ -147,7 +156,10 @@ describe('Web3Provider', () => {
   describe('disconnect', () => {
     it('should disconnect wallet and clear state', async () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
-      mockEthereum.request.mockResolvedValueOnce([mockAddress]);
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -155,8 +167,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -188,9 +200,11 @@ describe('Web3Provider', () => {
   describe('switchNetwork', () => {
     it('should switch to supported network', async () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
-      mockEthereum.request
-        .mockResolvedValueOnce([mockAddress]) // eth_requestAccounts
-        .mockResolvedValueOnce(null); // wallet_switchEthereumChain
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        if (method === 'wallet_switchEthereumChain') return Promise.resolve(null);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -198,8 +212,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -223,10 +237,12 @@ describe('Web3Provider', () => {
 
     it('should add network if not present', async () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
-      mockEthereum.request
-        .mockResolvedValueOnce([mockAddress]) // eth_requestAccounts
-        .mockRejectedValueOnce({ code: 4902 }) // wallet_switchEthereumChain fails
-        .mockResolvedValueOnce(null); // wallet_addEthereumChain
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        if (method === 'wallet_switchEthereumChain') return Promise.reject({ code: 4902 });
+        if (method === 'wallet_addEthereumChain') return Promise.resolve(null);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -234,8 +250,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -268,7 +284,10 @@ describe('Web3Provider', () => {
       const mockAddress1 = '0x1111111111111111111111111111111111111111';
       const mockAddress2 = '0x2222222222222222222222222222222222222222';
 
-      mockEthereum.request.mockResolvedValueOnce([mockAddress1]);
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress1]);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -276,8 +295,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -306,7 +325,10 @@ describe('Web3Provider', () => {
 
     it('should disconnect when accounts become empty', async () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
-      mockEthereum.request.mockResolvedValueOnce([mockAddress]);
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -314,8 +336,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 
@@ -344,7 +366,10 @@ describe('Web3Provider', () => {
   describe('contract initialization', () => {
     it('should initialize contracts when connected', async () => {
       const mockAddress = '0x1234567890123456789012345678901234567890';
-      mockEthereum.request.mockResolvedValueOnce([mockAddress]);
+      mockEthereum.request.mockImplementation(({ method }) => {
+        if (method === 'eth_requestAccounts') return Promise.resolve([mockAddress]);
+        return Promise.resolve([]);
+      });
 
       const mockProvider = {
         getNetwork: vi.fn().mockResolvedValue({ chainId: BigInt(1) }),
@@ -352,8 +377,8 @@ describe('Web3Provider', () => {
         getBalance: vi.fn().mockResolvedValue(BigInt(10 ** 18)),
       };
 
-      (BrowserProvider as any).mockImplementation(() => mockProvider);
-
+      (BrowserProvider as any).mockImplementation(function() { return mockProvider; });
+    
       const wrapper = ({ children }: any) =>
         React.createElement(Web3Provider, null, children);
 

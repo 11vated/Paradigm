@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAgentThreads } from '@/stores/agentThreads';
 
-type Lens = 'conversation' | 'plan' | 'source' | 'tools' | 'memory' | 'branches';
+type Lens = 'conversation' | 'plan' | 'source' | 'tools' | 'memory' | 'branches' | 'evolve' | 'lineage';
 
 const LENSES: Array<{ id: Lens; label: string }> = [
   { id: 'conversation', label: 'Conversation' },
@@ -10,6 +10,8 @@ const LENSES: Array<{ id: Lens; label: string }> = [
   { id: 'tools',        label: 'Tools' },
   { id: 'memory',       label: 'Memory' },
   { id: 'branches',     label: 'Branches' },
+  { id: 'evolve',       label: 'Evolve' },
+  { id: 'lineage',      label: 'Lineage' },
 ];
 
 export const LensTabs: React.FC = () => {

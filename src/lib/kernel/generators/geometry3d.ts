@@ -454,8 +454,8 @@ function runMarchingCubes(scene: SDFScene, gridSize: number, bounds: number): { 
     const [a, b] = EDGE_PAIRS[edge];
     const p0 = points[x + (a & 1)][y + ((a >> 1) & 1)][z + ((a >> 2) & 1)];
     const p1 = points[x + (b & 1)][y + ((b >> 1) & 1)][z + ((b >> 2) & 1)];
-    const v0 = values[x * (gridSize + 1) ** 2 + y * (gridSize + 1) + z + a];
-    const v1 = values[x * (gridSize + 1) ** 2 + y * (gridSize + 1) + z + b];
+    const v0 = values[(x + (a & 1)) * (gridSize + 1) ** 2 + (y + ((a >> 1) & 1)) * (gridSize + 1) + (z + ((a >> 2) & 1))];
+    const v1 = values[(x + (b & 1)) * (gridSize + 1) ** 2 + (y + ((b >> 1) & 1)) * (gridSize + 1) + (z + ((b >> 2) & 1))];
     const v = interpolateEdge(scene, p0, p1, v0, v1);
     vertices.push(v);
     normals.push(computeNormal(scene, v, step * 0.1));
@@ -467,7 +467,7 @@ function runMarchingCubes(scene: SDFScene, gridSize: number, bounds: number): { 
       for (let z = 0; z < gridSize; z++) {
         let cubeIndex = 0;
         for (let i = 0; i < 8; i++) {
-          const vi = values[x + (i & 1) * (gridSize + 1) ** 2 + y + ((i >> 1) & 1) * (gridSize + 1) + z + ((i >> 2) & 1)];
+          const vi = values[(x + (i & 1)) * (gridSize + 1) ** 2 + (y + ((i >> 1) & 1)) * (gridSize + 1) + (z + ((i >> 2) & 1))];
           if (vi < 0) cubeIndex |= (1 << i);
         }
 

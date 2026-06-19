@@ -70,7 +70,7 @@ interface AgentThreadsState {
   threads: Thread[];
   currentThreadId: string | null;
   /** Visible lens inside the AgentPanel. */
-  lens: 'conversation' | 'plan' | 'source' | 'tools' | 'memory' | 'branches';
+  lens: 'conversation' | 'plan' | 'source' | 'tools' | 'memory' | 'branches' | 'evolve' | 'lineage';
   /** Selected inference tier for the next agent query. Persists across turns. */
   selectedTier: AgentTier;
 

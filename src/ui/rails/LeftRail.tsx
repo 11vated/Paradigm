@@ -19,6 +19,43 @@ import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
 import { deriveCleanTitle } from '@/lib/kernel/types';
 import { StrataRadar } from '@/components/studio/StrataRadar';
 
+interface GeneVal { type?: string; value?: unknown; }
+interface SeedBody { id: string; genes?: Record<string, GeneVal>; }
+
+const GeneRow: React.FC<{ name: string; gene: GeneVal; onChange: (v: unknown) => void; }> = ({ name, gene, onChange }) => {
+  const t = gene.type ?? 'unknown';
+  const v = gene.value;
+  if (t === 'scalar' && typeof v === 'number') {
+    return (
+      <div className="p-atelier-row" style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 0' }}>
+        <label className="p-atelier-label" style={{ fontSize: 9, minWidth: 64, color: 'var(--p-ink-2)', fontFamily: 'var(--p-font-mono)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {name}
+          <span style={{ color: 'var(--p-ink-4)', marginLeft: 4 }}>scalar</span>
+        </label>
+        <input type="range" min="-2" max="2" step="0.01" value={v} onChange={(e) => onChange(parseFloat(e.target.value))} style={{ flex: 1, height: 4, accentColor: 'var(--p-prism-core)' }} />
+        <span style={{ fontSize: 9, fontFamily: 'var(--p-font-mono)', color: 'var(--p-ink-2)', minWidth: 32, textAlign: 'right' }}>{v.toFixed(3)}</span>
+      </div>
+    );
+  }
+  if (t === 'categorical' && typeof v === 'string') {
+    return (
+      <div className="p-atelier-row" style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 0' }}>
+        <label className="p-atelier-label" style={{ fontSize: 9, minWidth: 64, color: 'var(--p-ink-2)', fontFamily: 'var(--p-font-mono)' }}>
+          {name}
+          <span style={{ color: 'var(--p-ink-4)', marginLeft: 4 }}>cat</span>
+        </label>
+        <input type="text" value={v} onChange={(e) => onChange(e.target.value)} style={{ flex: 1, fontSize: 9, fontFamily: 'var(--p-font-mono)', background: 'transparent', border: '1px solid var(--p-ink-5)', color: 'var(--p-ink-1)', padding: '1px 4px', borderRadius: 2 }} />
+      </div>
+    );
+  }
+  return (
+    <div className="p-atelier-row" style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '2px 0' }}>
+      <span style={{ fontSize: 9, color: 'var(--p-ink-3)', fontFamily: 'var(--p-font-mono)' }}>{name}:{t}</span>
+      <span style={{ fontSize: 9, fontFamily: 'var(--p-font-mono)', color: 'var(--p-ink-4)' }}>{typeof v === 'object' ? JSON.stringify(v).slice(0, 32) : String(v)}</span>
+    </div>
+  );
+};
+
 type LibraryTab = 'mine' | 'curated' | 'lineage';
 
 interface LibrarySeed {
@@ -62,7 +99,7 @@ export const LeftRail: React.FC<{
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   onCosmos?: () => void;
-}> = ({ collapsed = false, onToggleCollapse, onCosmos: _onCosmos }) => {
+}> = React.memo(({ collapsed = false, onToggleCollapse, onCosmos: _onCosmos }) => {
   const { seed, setSeed } = useActiveSeed();
   const { threads, currentThreadId, newThread } = useAgentThreads();
 
@@ -71,6 +108,39 @@ export const LeftRail: React.FC<{
   const [librarySeeds, setLibrarySeeds] = useState<LibrarySeed[]>([]);
   const [libraryLoading, setLibraryLoading] = useState(false);
   const [threadsOpen, setThreadsOpen] = useState(true);
+  const [genesOpen, setGenesOpen] = useState(false);
+  const [body, setBody] = useState<SeedBody | null>(null);
+  const [edits, setEdits] = useState<Record<string, GeneVal>>({});
+  const [pendingGeneEdits, setPendingGeneEdits] = useState(false);
+
+  // Load seed genome for gene editing
+  useEffect(() => {
+    if (!seed?.id || !genesOpen) { setBody(null); setEdits({}); return; }
+    let cancelled = false;
+    fetch(`/api/seeds/${seed.id}`).then(r => r.json()).then(b => { if (!cancelled) { setBody(b); setEdits({}); } }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [seed?.id, genesOpen]);
+
+  const commitGenes = useCallback(async () => {
+    if (!seed?.id || Object.keys(edits).length === 0) return;
+    try {
+      await fetch(`/api/seeds/${seed.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ genes: edits }) });
+      window.dispatchEvent(new CustomEvent('paradigm:grow-success'));
+      setEdits({}); setPendingGeneEdits(false);
+      const r = await fetch(`/api/seeds/${seed.id}`); const b = await r.json(); setBody(b);
+    } catch { /* best-effort */ }
+  }, [seed?.id, edits]);
+
+  const setGene = useCallback((geneName: string, value: unknown) => {
+    setEdits(prev => ({ ...prev, [geneName]: { ...(prev[geneName] ?? {}), value } }));
+    setPendingGeneEdits(true);
+  }, []);
+
+  const genes = useMemo(() => {
+    const out: Array<[string, GeneVal]> = [];
+    if (body?.genes) for (const [k, v] of Object.entries(body.genes)) out.push([k, { ...(v as GeneVal), ...(edits[k] ?? {}) }]);
+    return out;
+  }, [body, edits]);
 
   // Load library seeds for the active tab.
   useEffect(() => {
@@ -370,6 +440,38 @@ export const LeftRail: React.FC<{
                   {actionState.kind} failed: {actionState.error.slice(0, 120)}
                 </div>
               )}
+
+              {/* ── Genes ── */}
+              <div style={{ marginTop: 8, borderTop: '1px solid var(--p-ink-5)', paddingTop: 6 }}>
+                <button
+                  type="button"
+                  onClick={() => setGenesOpen(v => !v)}
+                  style={{ all: 'unset', cursor: 'pointer', fontSize: 9, fontFamily: 'var(--p-font-mono)', color: 'var(--p-ink-3)', letterSpacing: '0.06em', display: 'flex', alignItems: 'center', gap: 4, width: '100%' }}
+                  aria-expanded={genesOpen}
+                >
+                  {genesOpen ? '▾' : '▸'} genes {genes.length > 0 ? `· ${genes.length}` : ''}
+                </button>
+                {genesOpen && (
+                  <div style={{ marginTop: 4, maxHeight: 200, overflowY: 'auto' }}>
+                    {genes.length === 0 ? (
+                      <div style={{ fontSize: 9, color: 'var(--p-ink-4)', padding: '4px 0' }}>no editable genes — use grow to populate</div>
+                    ) : (
+                      genes.map(([name, g]) => (
+                        <GeneRow key={name} name={name} gene={g} onChange={(v) => setGene(name, v)} />
+                      ))
+                    )}
+                    {pendingGeneEdits && (
+                      <button
+                        type="button"
+                        onClick={commitGenes}
+                        style={{ fontSize: 9, fontFamily: 'var(--p-font-mono)', color: 'var(--p-prism-core)', background: 'transparent', border: '1px solid var(--p-prism-core)', borderRadius: 2, padding: '2px 8px', cursor: 'pointer', marginTop: 4 }}
+                      >
+                        commit {Object.keys(edits).length} changes
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <div style={{ color: 'var(--p-ink-3)', fontSize: 'var(--p-text-2)' }}>
@@ -551,6 +653,6 @@ export const LeftRail: React.FC<{
       </div>
     </aside>
   );
-};
+});
 
 export default LeftRail;

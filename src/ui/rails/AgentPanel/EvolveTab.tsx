@@ -1,23 +1,13 @@
-/**
- * EvolutionMode — MAP-Elites quality-diversity archive.
- *
- * Per spec §VIII.11. Real 16×16 grid against /api/evolve/map-elites,
- * with step button hitting /api/evolve/map-elites/step.
- *
- * Each cell shows the best variant at that quality-diversity niche.
- * Click any cell to make that variant the active seed.
- */
 import React, { useEffect, useState, useCallback } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
-import { ModePurposeHeader } from '../ModePurposeHeader';
 
 const GRID_SIZE = 16;
 
 interface Cell { x: number; y: number; seed?: any; fitness: number; }
 interface Archive { cells: Cell[]; generation: number; coverage: number; best: number; domain: string; }
 
-export const EvolutionMode: React.FC = () => {
+export const EvolveTab: React.FC = () => {
   const seed: any = useActiveSeed((s: any) => s.seed);
   const setSeed = useActiveSeed((s: any) => s.setSeed);
   const domain = seed?.domain ?? seed?.$domain ?? 'visual2d';
@@ -33,7 +23,6 @@ export const EvolutionMode: React.FC = () => {
       const r = await fetch('/api/evolve/map-elites?domain=' + encodeURIComponent(domain));
       const j = await r.json();
       if (!r.ok) throw new Error(j?.message ?? r.statusText);
-      // Normalize into our cell array
       const cells: Cell[] = [];
       const rawCells = j?.archive?.cells ?? j?.cells ?? {};
       for (let x = 0; x < GRID_SIZE; x++) {
@@ -72,8 +61,7 @@ export const EvolutionMode: React.FC = () => {
   const covPct = archive ? ((filledCount / (GRID_SIZE * GRID_SIZE)) * 100).toFixed(1) : '0.0';
 
   return (
-    <div className="p-evo-page" style={{ position: 'relative' }}>
-      <ModePurposeHeader mode="evolution" showRadar={false} />
+    <div className="p-evo-page" style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <div className="p-evo-header">
         <div className="p-evo-head-left">
           <div className="p-evo-title">MAP-ELITES ARCHIVE</div>

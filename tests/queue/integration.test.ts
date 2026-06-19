@@ -23,38 +23,58 @@ import Redis from 'ioredis';
 const createMockRedis = () => {
   const store = new Map<string, string>();
   const lists = new Map<string, string[]>();
+  const sortedSets = new Map<string, Map<string, number>>();
   
-  return {
-    get: vi.fn(async (key: string) => store.get(key) || null),
-    set: vi.fn(async (key: string, value: string) => {
-      store.set(key, value);
-      return 'OK';
-    }),
-    del: vi.fn(async (key: string) => {
-      store.delete(key);
-      return 1;
-    }),
-    lpush: vi.fn(async (key: string, ...values: string[]) => {
+  const self = {
+    get: (key: string) => store.get(key) || null,
+    set: (key: string, value: string) => { store.set(key, value); return 'OK'; },
+    del: (key: string) => { store.delete(key); sortedSets.delete(key); return 1; },
+    lpush: (key: string, ...values: string[]) => {
       if (!lists.has(key)) lists.set(key, []);
       lists.get(key)!.unshift(...values);
       return lists.get(key)!.length;
-    }),
-    rpop: vi.fn(async (key: string) => {
-      const list = lists.get(key);
-      return list?.pop() || null;
-    }),
-    lrange: vi.fn(async (key: string, start: number, stop: number) => {
+    },
+    rpop: (key: string) => { const list = lists.get(key); return list?.pop() || null; },
+    lrange: (key: string, start: number, stop: number) => {
       const list = lists.get(key) || [];
       return list.slice(start, stop === -1 ? undefined : stop + 1);
-    }),
-    zadd: vi.fn(async () => 1),
-    zrange: vi.fn(async () => []),
-    zrem: vi.fn(async () => 1),
-    keys: vi.fn(async (pattern: string) => {
+    },
+    zadd: (key: string, score: number, member: string) => {
+      if (!sortedSets.has(key)) sortedSets.set(key, new Map());
+      sortedSets.get(key)!.set(member, score);
+      return 1;
+    },
+    zrange: (key: string, start: number, stop: number) => {
+      const set = sortedSets.get(key);
+      if (!set) return [];
+      return Array.from(set.entries())
+        .sort((a, b) => a[1] - b[1])
+        .slice(start, stop === -1 ? undefined : stop + 1)
+        .map(([member]) => member);
+    },
+    zrangebyscore: (key: string, min: string, max: number | string) => {
+      const set = sortedSets.get(key);
+      if (!set) return [];
+      const minVal = min === '-inf' ? -Infinity : Number(min);
+      const maxVal = max === '+inf' ? Infinity : Number(max);
+      return Array.from(set.entries())
+        .filter(([, score]) => score >= minVal && score <= maxVal)
+        .sort((a, b) => a[1] - b[1])
+        .map(([member]) => member);
+    },
+    zcard: (key: string) => { const set = sortedSets.get(key); return set ? set.size : 0; },
+    zrem: (key: string, member: string) => {
+      const set = sortedSets.get(key);
+      if (!set) return 0;
+      return set.delete(member) ? 1 : 0;
+    },
+    publish: () => 0,
+    keys: (pattern: string) => {
       return Array.from(store.keys()).filter(k => k.includes(pattern.replace('*', '')));
-    }),
-    quit: vi.fn(async () => 'OK'),
-  } as unknown as Redis;
+    },
+    quit: () => 'OK',
+  };
+  return self as unknown as Redis;
 };
 
 describe('Queue Integration Tests', () => {
@@ -67,7 +87,8 @@ describe('Queue Integration Tests', () => {
       redis,
       queueName: 'test-queue',
       concurrency: 2,
-      pollInterval: 100,
+      pollInterval: 50,
+      retryBackoffMs: 1,
     });
   });
 

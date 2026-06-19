@@ -44,7 +44,7 @@ function toUrl(serverPath: string | undefined): string | null {
   return `${ARTIFACT_BASE}/${cleaned}`;
 }
 
-export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
+export const ArtifactRenderer: React.FC<Props> = React.memo(({ artifact, seed }) => {
   const [svgInline, setSvgInline] = useState<string | null>(null);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
@@ -58,7 +58,16 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
     if (artifact.gltfPath) return 'gltf';
     if (artifact.pngPath)  return 'png';
     if (artifact.jsonPath || artifact.json) return 'json';
+    // Check files[] normalization from engine pipeline
+    if (artifact.files?.gltf || artifact.files?.png || artifact.files?.svg || artifact.files?.html || artifact.files?.json) {
+      if (artifact.files.gltf) return 'gltf';
+      if (artifact.files.png)  return 'png';
+      if (artifact.files.svg)  return 'svg';
+      if (artifact.files.html) return 'html';
+      if (artifact.files.json)  return 'json';
+    }
     if (artifact.storyData || artifact.manuscript) return 'story';
+    if (artifact.glslPath || artifact.wgslPath || artifact.hlslPath) return 'code';
     if (artifact.previewData && (artifact.visual?.type === 'code' || artifact.visual?.type === 'glsl' || artifact.visual?.type === 'wgsl')) return 'code';
     if (artifact.structuredData || artifact.visual?.type === 'structured' || artifact.visual?.structuredData) return 'structured';
     if (artifact.outputPath) {
@@ -70,6 +79,11 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
       if (ext === 'gltf' || ext === 'glb') return 'gltf';
       if (ext === 'png' || ext === 'jpg' || ext === 'jpeg') return 'png';
       if (ext === 'json') return 'json';
+    }
+    if (artifact.filePath) {
+      const ext = artifact.filePath.split('.').pop()?.toLowerCase();
+      if (ext === 'gltf' || ext === 'glb') return 'gltf';
+      if (ext === 'png' || ext === 'jpg' || ext === 'jpeg') return 'png';
     }
     return 'metadata';
   }, [artifact]);
@@ -165,7 +179,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
 
   // ─── PNG: simple image ────────────────────────────────────────────────────
   if (kind === 'png') {
-    const url = toUrl(artifact.pngPath || artifact.outputPath);
+    const url = toUrl(artifact.pngPath || artifact.files?.png || artifact.filePath || artifact.outputPath);
     return url ? (
       <div className="p-artifact p-artifact-png">
         <img src={url} alt={deriveCleanTitle(artifact.name ?? seed?.name ?? 'image', (artifact as any).seed_hash)} />
@@ -190,7 +204,7 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
 
   // ─── GLTF: 3D scene (deferred to Three.js when available) ─────────────
   if (kind === 'gltf') {
-    const url = toUrl(artifact.gltfPath);
+    const url = toUrl(artifact.gltfPath || artifact.files?.gltf || artifact.filePath);
     return (
       <div className="p-artifact p-artifact-gltf">
         <div className="p-artifact-gltf-glyph">⬢</div>
@@ -295,4 +309,4 @@ export const ArtifactRenderer: React.FC<Props> = ({ artifact, seed }) => {
       {artStrataPct != null && <div className="p-strata-mini" style={{ marginTop: 4 }}>live 9-strata {artStrataPct}% (QC)</div>}
     </div>
   );
-};
+});

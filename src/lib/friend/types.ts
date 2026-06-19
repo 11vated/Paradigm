@@ -191,6 +191,12 @@ export interface FriendSeedData {
   id: string;
   /** Display name. */
   name: string;
+  /** Seed-compatible $name alias (same as name). */
+  $name?: string;
+  /** Seed-compatible $hash alias (same as seedHash). */
+  $hash?: string;
+  /** Seed-compatible $domain alias (always 'friend'). */
+  $domain?: string;
   /** Hash that fully determines all generators downstream. */
   seedHash: string;
   /** ISO 8601 birth time (informational metadata only — NOT input to RNG). */

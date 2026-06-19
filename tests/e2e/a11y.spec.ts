@@ -52,4 +52,8 @@ test.describe('Accessibility — WCAG 2.2 AAA', () => {
   test('OS shell has zero WCAG violations', async ({ page }) => {
     await assertNoAxeViolations(page, '/os');
   });
+
+  test('public site has zero WCAG violations', async ({ page }) => {
+    await assertNoAxeViolations(page, '/public');
+  });
 });

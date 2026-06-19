@@ -11,6 +11,9 @@
 import { describe, it, expect } from 'vitest';
 import type { Seed } from '../../src/lib/kernel/engines';
 
+// Force-register friend functor bridges (side-effect at module load)
+import '../../src/lib/friend/composition';
+
 // Import composition system
 import { composeSeed, FUNCTOR_REGISTRY, findCompositionPath } from '../../src/lib/kernel/composition';
 import { createFriendSeed } from '../../src/lib/friend/genesis';

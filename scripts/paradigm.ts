@@ -849,6 +849,39 @@ async function main() {
       break;
     }
 
+    case 'federation': {
+      const sub = args[1];
+      if (sub === 'node') {
+        console.log('Federation v1 Node — create and interact with a FederatedNode\n');
+        const { FederatedNode } = await import('../src/lib/federation/node.js');
+        const nodeId = args[2] || 'cli-node-' + Date.now().toString(36);
+        const node = new FederatedNode({ nodeId, label: 'CLI' });
+        console.log('Node created:', node.nodeId);
+        console.log('Public key:', node.publicKeyPem.slice(0, 64) + '...');
+        const info = node.info;
+        console.log('Exchanges:', info.exchangeCount);
+        console.log('Seeds tracked:', info.seedHashes.length);
+      } else if (sub === 'exchange') {
+        console.log('Federation v1 Exchange — two-node signed exchange\n');
+        const { FederatedNode } = await import('../src/lib/federation/node.js');
+        const alice = new FederatedNode({ nodeId: 'cli-alice' });
+        const bob = new FederatedNode({ nodeId: 'cli-bob' });
+        const seedHash = args[2] || 'cli-seed-' + Date.now().toString(36);
+        const ex = alice.exchangeSeed(seedHash, [], 'cli-bob');
+        const valid = alice.verifyExchange(ex);
+        const merged = bob.mergeLineage(ex, seedHash + '-local', []);
+        console.log('Exchange created: from=' + ex.fromNode + ' to=' + ex.toNode);
+        console.log('Exchange verified:', valid);
+        console.log('Merge successful:', merged.success);
+        console.log('Merged ID:', merged.mergedSeedId || 'N/A');
+      } else {
+        console.log('Federation subcommands:\n');
+        console.log('  federation node [nodeId]        Create a FederatedNode');
+        console.log('  federation exchange [seedHash]  Two-node exchange demo');
+      }
+      break;
+    }
+
     case 'econ-payout': {
       console.log('Econ full: royalties arbitrary depth + civ dividend + PARA/SeedNFT\n');
       const econStart = kernelNow();
@@ -859,7 +892,6 @@ async function main() {
       log('INFO', 'RED econ complete', { op: 'econ', component: 'paradigm-cli', durationMs: econDur, rate: 1, errors: 0, budgetMs: 50, sloPass: true });
       console.log('Payout toCreator:', payout.toCreator.toFixed(2), 'civ:', payout.civDividend, 'depth:', payout.depthUsed);
       const onchain = prepareOnChainRoyalties('seed-demo', 1000000000000000000n /*1eth*/, [], 12);
-      // Wire verified onchain claim (item 6) into econ-payout per spec
       const { runOnChainRoyalties } = await import('./onchain-royalties.js');
       const real = process.env.REAL_ONCHAIN === 'true';
       const onRes = await runOnChainRoyalties('seed-demo', 1000000000000000000n, 12, { real });
@@ -868,6 +900,59 @@ async function main() {
       const mint = prepareSeedNFTMintFlow({ to: '0xabc', seedHash: '0xdef', domain: 'game', metadataUri: 'ipfs://..' });
       console.log('SeedNFT mint prep with royaltyBps:', mint.royaltyBps);
       console.log('  [perf/RED] econ durationMs=', econDur, ' (budget <50ms; Part6 path)');
+      break;
+    }
+
+    case 'econ': {
+      const sub = args[1];
+      if (sub === 'ledger') {
+        console.log('Economics Ledger — royalty transaction ledger\n');
+        const { InMemoryLedger, createLedgerEntry } = await import('../src/lib/economics/ledger.js');
+        const ledger = new InMemoryLedger();
+        const tx1 = createLedgerEntry({
+          seedId: 'demo-seed', seedHash: 'hash-demo',
+          buyerId: 'buyer-1', sellerId: 'seller-1',
+          amount: 1000, currency: 'PARA',
+          splits: [{ ancestorId: 'creator-a', ancestorHash: 'hash-a', generation: 0, royaltyPercent: 10, amount: 100 }],
+        });
+        ledger.append(tx1);
+        const snap = ledger.snapshot();
+        console.log('Ledger entries:', ledger.all().length);
+        console.log('Total distributed:', snap.totalDistributed);
+        console.log('By creator:', Object.keys(snap.byCreator).length, 'entries');
+      } else if (sub === 'royalty') {
+        console.log('Economics Royalty — tiered royalty waterfall\n');
+        const { computeTieredWaterfall, createTieredRoyaltyConfig } = await import('../src/lib/economics/royalties.js');
+        const seed = { seedId: 'demo', seedHash: 'hash-demo', creator: 'creator-a', parentIds: [], generation: 0, createdAt: 1_700_000_000_000 };
+        const lineage = new Map();
+        lineage.set('demo', seed);
+        const cfg = createTieredRoyaltyConfig('indie');
+        console.log('Tier:', cfg.tier, 'creatorRoyaltyPercent:', cfg.creatorRoyaltyPercent);
+        const water = computeTieredWaterfall(seed as any, 1000, lineage, 'indie');
+        console.log('Splits:', water.splits.length, 'totalRoyalty:', water.totalRoyalty);
+        console.log('Platform fee:', water.platformFee, 'seller:', water.sellerAmount);
+      } else if (sub === 'dividend') {
+        console.log('Economics Dividend — civilizational dividend calculation\n');
+        const { calculateSeedDividend, calculatePeriodDividend } = await import('../src/lib/economics/dividend.js');
+        const d = calculateSeedDividend('demo', 100, 5);
+        console.log('Seed dividend:', d.total, '(base:', d.baseDividend, 'multiplier:', d.multiplier.toFixed(3) + ')');
+        const period = calculatePeriodDividend('2026-Q2', 10000, [{ operatorId: 'op-1', contributionScore: 100 }]);
+        console.log('Period dividend pool:', period.dividendPool, 'operators:', period.operators.length);
+      } else if (sub === 'license') {
+        console.log('Economics License — universe licensing tiers\n');
+        const { issueLicense, signLicense, verifyLicense, LICENSE_TEMPLATES } = await import('../src/lib/economics/license.js');
+        console.log('Available tiers:', Object.keys(LICENSE_TEMPLATES).join(', '));
+        const lic = issueLicense('demo-universe', 'creator-a', 'indie');
+        const signed = signLicense(lic, 'demo-key');
+        console.log('License issued:', lic.tier, 'for universe:', lic.universeId);
+        console.log('Signed:', signed.signature ? 'yes' : 'no', 'Verifies:', verifyLicense(signed));
+      } else {
+        console.log('Economics subcommands:\n');
+        console.log('  econ ledger          Royalty transaction ledger demo');
+        console.log('  econ royalty         Tiered royalty waterfall demo');
+        console.log('  econ dividend        Civilizational dividend demo');
+        console.log('  econ license         Universe licensing demo');
+      }
       break;
     }
 
@@ -900,6 +985,130 @@ async function main() {
         } catch (demoErr: unknown) { /* best-effort direct extended verifier demo in os-shell-run test path; non-fatal. Named unknown + context. */ void demoErr; }
       }
       console.log('  [perf/RED] os-shell durationMs=', osShellDur, ' (budget <200ms; GSPL/Part6 path timed with kernel clock)');
+      break;
+    }
+
+    case 'os-shell':
+    case 'os-shell-run': {
+      const shellArgs = args.slice(1);
+      const isRepl = shellArgs.length === 0 || shellArgs[0] === '--repl';
+
+      console.log('Paradigm OS Shell — Phase 22/23\n');
+      const { OSShell } = await import('../src/lib/os-shell/shell.js');
+      const shell = new OSShell(shellArgs.includes('--seed') && shellArgs[shellArgs.indexOf('--seed') + 1] ? shellArgs[shellArgs.indexOf('--seed') + 1] : undefined);
+
+      if (isRepl) {
+        console.log('Interactive OS Shell. Type "help" for commands, "exit" to quit.\n');
+        const rl = readline.createInterface({ input: process.stdin, output: process.stdout, prompt: 'os> ' });
+        rl.prompt();
+        rl.on('line', async (line: string) => {
+          const input = line.trim();
+          if (!input) { rl.prompt(); return; }
+          if (input === 'exit' || input === 'quit') { rl.close(); return; }
+
+          const result = await shell.execute(input);
+          console.log(result.success ? `✓ ${result.message}` : `✗ ${result.message}`);
+          if (result.data) console.dir(result.data, { depth: 2 });
+          rl.prompt();
+        });
+        await new Promise<void>((resolve) => rl.on('close', resolve));
+      } else {
+        const command = shellArgs.join(' ');
+        const result = await shell.execute(command);
+        console.log(result.success ? `✓ ${result.message}` : `✗ ${result.message}`);
+        if (result.data) console.dir(result.data, { depth: 3 });
+      }
+
+      console.log('\nSession: seeds=' + shell.getSession().seeds.size + ' artifacts=' + shell.getSession().artifacts.size + ' commands=' + shell.getSession().commandCount);
+      break;
+    }
+
+    case 'recursive': {
+      console.log('Paradigm Recursive Self-Host — Phase 23\n');
+      const { OSShell } = await import('../src/lib/os-shell/shell.js');
+      const shell = new OSShell('recursive-self-host');
+      const target = args.slice(1).join(' ') || 'shell';
+
+      const cmd = `recursive ${target}`;
+      const result = await shell.execute(cmd);
+
+      if (result.success) {
+        const d = result.data as Record<string, unknown>;
+        const comp = d?.composition as Record<string, unknown> | undefined;
+        console.log(`  Component: ${target}`);
+        console.log(`  Verified:  ${result.success}`);
+        console.log(`  Hash:      ${comp?.hash ?? 'N/A'}`);
+        console.log(`  Recipe:\n    ${String(comp?.gsplRecipe ?? 'N/A')}`);
+        console.log('\nParadigm can build itself as .gseed compositions. Recursive closure achieved.');
+      } else {
+        console.log(`  Failed: ${result.message}`);
+      }
+      break;
+    }
+
+    case 'repro':
+    case 'reproducibility': {
+      console.log('Agent Reproducibility Harness (Phases 9–10)\n');
+      const intent = args.slice(1).filter(a => !a.startsWith('--')).join(' ') || 'a lone monk who paints with living sound';
+      const runsFlagIdx = args.findIndex(a => a === '--runs');
+      const runs = runsFlagIdx >= 0 ? parseInt(args[runsFlagIdx + 1], 10) || 2 : 2;
+      const { verifyReproducibility, verifyAllFixtures } = await import('./agent-repro-harness.ts');
+      const report = verifyReproducibility(intent, undefined, runs);
+      const status = report.verified ? 'PASS' : 'FAIL';
+      console.log(`Intent:     "${report.intent}"`);
+      console.log(`Status:     ${status}`);
+      console.log(`Memory:     ${report.memoryHash.slice(0, 12)}..`);
+      console.log(`Composite:  ${report.compositeHash.slice(0, 12)}..`);
+      console.log(`Domain:     ${report.stableDomain}`);
+      console.log(`Decision:   ${report.stableSeedHash.slice(0, 16)}..`);
+      console.log(`Plan:       ${report.stablePlanHash.slice(0, 16)}..`);
+      console.log(`Runs:       ${report.runs.length} (all identical: ${report.allIdentical})`);
+      process.exit(report.verified ? 0 : 1);
+      break;
+    }
+
+    case 'pipeline': {
+      console.log('Paradigm Agent Pipeline (Phase 10 — 6-stage + 4-layer memory)\n');
+      const pipelineIntent = args.slice(1).filter(a => !a.startsWith('--')).join(' ') || 'a character who walks through crystal caves';
+      const { Pipeline } = await import('../src/lib/agent/pipeline.js');
+      const { MultiLayerMemory } = await import('../src/lib/agent/memory-system.js');
+      const mem = new MultiLayerMemory();
+      const pipeline = new Pipeline(mem);
+      const result = await pipeline.run(pipelineIntent);
+      if (result.success) {
+        const d = result.decision!;
+        console.log(`Intent:       "${pipelineIntent}"`);
+        console.log(`Domain:       ${d.plan.intent.domain}`);
+        console.log(`Style:        ${d.plan.intent.style}`);
+        console.log(`Confidence:   ${d.plan.intent.confidence.toFixed(3)}`);
+        console.log(`Quality:      ${d.verification.qualityScore.toFixed(4)}`);
+        console.log(`Decision:     ${d.decisionHash.slice(0, 16)}..`);
+        console.log(`Determinism:  ${d.verification.determinismHash.slice(0, 16)}..`);
+        console.log(`Memory:       ${d.memoryHash.slice(0, 16)}..`);
+        console.log(`Genes:        ${(d.output.seedHash as string).slice(0, 16)}..`);
+        console.log(`Steps:        ${d.plan.steps.length}`);
+        console.log(`Timing:       ${d.timing.totalMs}ms total`);
+        console.log(`Status:       ${d.verification.passed ? 'PASS' : 'FAIL'}`);
+        console.log(`Issues:       ${d.verification.issues.length > 0 ? d.verification.issues.join(', ') : 'none'}`);
+        if (d.verification.qualityAxes) {
+          console.log('\nQuality Axes:');
+          for (const [k, v] of Object.entries(d.verification.qualityAxes)) {
+            console.log(`  ${k.padEnd(20)} ${v}`);
+          }
+        }
+      } else {
+        console.log(`Pipeline failed: ${result.error}`);
+      }
+      if (result.memoryDigest) {
+        const md = result.memoryDigest;
+        console.log('\nMemory Digest:');
+        console.log(`  Working:  ${md.workingHash.slice(0, 12)}..`);
+        console.log(`  Episodic: ${md.episodicHash.slice(0, 12)}..`);
+        console.log(`  Semantic: ${md.semanticHash.slice(0, 12)}..`);
+        console.log(`  Corpus:   ${md.corpusHash.slice(0, 12)}..`);
+        console.log(`  Composite:${md.compositeHash.slice(0, 12)}..`);
+        console.log(`  Entries:  ${md.entryCount}`);
+      }
       break;
     }
 
@@ -969,7 +1178,7 @@ async function main() {
             const strata = { overall: 0.555, source: 'real calc on artifact (showcase fused)', symmetry: 0.6, density: 0.55, coherence: 0.58, fractal: 0.52, trajectory: 0.57, spectral: 0.61, ecological: 0.54, decision: 0.59, rhythm: 0.53 };
             const royalty = { author: 700, platform: 300, civ: 10, total: 1010, note: 'depth waterfall + 1% civilizational dividend (PARA/SeedNFT prep)' };
             const provenance = { pack: 'Live Sovereign Provenance Pack', strata, royalty, c2pa: 'embedded', sig: 'ECDSA-P256 (salt+hash+genesis; demo)', selfHTML: 'verifiable offline', fiveClause: 'curate/synthesize/invert/evolve/roundtrip', fed: 'v1 exchange ready', onchain: 'prep called', note: 'Full 27 + Part 6' };
-            const meta = { makeCmd: 'npx tsx scripts/paradigm.ts showcase --save', doctrineRef: '13b Phase 24+ polish-1 + 2', strata, royalty, provenance, grade: 'premium-foundation', date: new Date().toISOString(), premium: true };
+            const meta = { makeCmd: 'npx tsx scripts/paradigm.ts showcase', doctrineRef: '13b Phase 24+ polish-1 + 2', strata, royalty, provenance, grade: 'premium-foundation', date: new Date().toISOString(), premium: true };
             await fs.writeFile(premiumPath, JSON.stringify({ seed: premiumSeed, artifact: { type: 'FullScopeShowcase', strata, provenance }, part6: { royalties: royalty, onchain: true } }, null, 2));
             await fs.writeFile(part6Path, JSON.stringify({ royalties: royalty, onchain: { PARA: true, SeedNFT: true }, civDividend: 10 }, null, 2));
             await fs.writeFile(metaPath, JSON.stringify(meta, null, 2));
@@ -988,6 +1197,43 @@ async function main() {
       break;
     }
 
+    case 'gspl-v∞':
+    case 'gspl-vinfty':
+    case 'gspl-v': {
+      console.log('GSPL v∞ — Permanent Research Axis\n');
+      try {
+        const { getFormalVerifierReportAsync, runGSPLFullPropertyHarness, verifyTerminationAsync, verifyCompositionAsync, verifyBreedPropertiesAsync } = await import('../src/lib/gspl/formal-verifier.js');
+        const { composeN, breedPopulation } = await import('../src/lib/gspl/v-infty-extensions.js');
+        const verifierReport = await getFormalVerifierReportAsync();
+        console.log('Verifier Report:');
+        console.log(`  Overall: ${verifierReport.overallPassed ? 'PASSED' : 'FAILED'}`);
+        console.log(`  Version: ${verifierReport.verifierVersion}`);
+        console.log(`  Determinism checks: ${verifierReport.determinism.length} (all passed: ${verifierReport.determinism.every(d => d.passed)})`);
+        console.log(`  Gene types: ${verifierReport.geneTypes.valid} (decls: ${verifierReport.geneTypes.geneDeclCount})`);
+        console.log(`  Roundtrip: ${verifierReport.roundtrip?.passed ? 'PASSED' : 'FAILED'} (seeds: ${verifierReport.roundtrip?.baseSeeds})`);
+        console.log(`  Supremacy roundtrip: ${verifierReport.gsplSupremacyRoundtrip?.passed ? 'PASSED' : 'FAILED'}`);
+        console.log(`  Harness: ${verifierReport.harness?.passedCount}/${verifierReport.harness?.total}`);
+        console.log('');
+        const fullHarness = await runGSPLFullPropertyHarness();
+        console.log(`5 Formal Properties Harness: ${fullHarness.passedCount}/${fullHarness.total}`);
+        for (const d of fullHarness.details) {
+          console.log(`  ${d}`);
+        }
+        console.log('');
+        const termSrc = 'seed "T" in character { strength: 0.5; for i in range(10) { let x = i } }';
+        const term = await verifyTerminationAsync(termSrc);
+        console.log(`Termination (P3): ${term.passed ? 'PASSED' : 'FAILED'} (${term.durationMs.toFixed(1)}ms, ${term.seedsProduced} seeds)`);
+        const compSrc = 'seed "C" in character { strength: 0.7, archetype: "bard" }';
+        const comp = await verifyCompositionAsync(compSrc, 'music');
+        console.log(`Composition (P4): ${comp.passed ? 'PASSED' : 'FAILED'} (${comp.sourceSeeds} seeds → ${comp.targetDomain}, hashMatch=${comp.hashMatch})`);
+        const breed = await verifyBreedPropertiesAsync();
+        console.log(`Breed (P5): ${breed.passed ? 'PASSED' : 'FAILED'} (det=${breed.determinismPassed}, herit=${breed.heritabilityPassed}, closure=${breed.closurePassed})`);
+      } catch (e: unknown) {
+        console.log('GSPL v∞ report error:', String(e));
+      }
+      break;
+    }
+
     case 'help':
     default:
       console.log(`Commands:
@@ -999,14 +1245,25 @@ async function main() {
   verify-15                         Run full 27-domain + Part 6 verification
   golden-check                      Quick regression on flagship golden seeds
   health                            Show 15_ contracts status
+  gspl-v∞ / gspl-vinfty             GSPL v∞ permanent research axis — formal properties + extensions
   chat / converse / talk            Start an interactive conversation with the sovereign GSPL Agent
   federation-merge                  Demo Federation v1 merge (lineage preserving, ECDSA+merkle; sovereignty canonical)
   federation-fork                   Demo Federation v1 fork (det)
   fed-exchange                      Two-node signed seed exchange (no central per 13_ Phase 16; simulate+verify in doctor too)
+  federation node [id]              Create a FederatedNode with ECDSA identity
+  federation exchange [seedHash]    Two-node signed exchange demo
+  econ ledger                       Royalty transaction ledger demo
+  econ royalty                      Tiered royalty waterfall demo
+  econ dividend                     Civilizational dividend calculation demo
+  econ license                      Universe licensing tiers demo
   econ-payout                       Full econ royalties at depth + civ dividend + PARA prep
   os-shell-run <intent> [--recursive]  OS shell (recursive .gseed hooks + GSPL v∞ verifier self-host claims + "Paradigm as .gseed compositions" supported)
-  showcase                          Full-scope platform demo (GSPL v∞ + recursive OS + econ + fed + all strata in one composition)
-  help                              This message
+    os-shell <command> [args]         Interactive OS Shell (Phase 22 — seed/artifact/gspl/recursive)
+    recursive <target>                Recursive self-host as .gseed (Phase 23 — build kernel/engine/agent/cli/shell)
+    pipeline <intent>                 Run 6-stage agent pipeline (Phase 10)
+    repro / reproducibility <intent>  Verify agent decision determinism (same intent→same hash)
+    showcase                          Full-scope platform demo (GSPL v∞ + recursive OS + econ + fed + all strata in one composition)
+   help                              This message
   # GSPL supremacy now primary interface (NL→GSPL→exec roundtrip formal in doctor/make/health/showcase via verifyRoundtrip)
 
 Examples:
@@ -1017,9 +1274,18 @@ Examples:
   npx tsx scripts/paradigm.ts make "same prompt" --mutate
   npx tsx scripts/paradigm.ts list
   npx tsx scripts/paradigm.ts verify-15
+  npx tsx scripts/paradigm.ts gspl-v∞              # GSPL v∞ formal properties + extensions
   npx tsx scripts/paradigm.ts federation-merge
   npx tsx scripts/paradigm.ts fed-exchange
+  npx tsx scripts/paradigm.ts federation node cli-node
+  npx tsx scripts/paradigm.ts federation exchange demo-seed
+  npx tsx scripts/paradigm.ts econ ledger
+  npx tsx scripts/paradigm.ts econ royalty
+  npx tsx scripts/paradigm.ts econ dividend
+  npx tsx scripts/paradigm.ts econ license
   npx tsx scripts/paradigm.ts make "recursive gseed composition of two subseeds" --recursive
+  npx tsx scripts/paradigm.ts repro "a cybernetic monk who paints with living sound" --runs 5
+  npx tsx scripts/paradigm.ts showcase
 `);
   }
 }

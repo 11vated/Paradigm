@@ -7,6 +7,7 @@ import '@/styles/paradigm-os.css';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { useSeedTheme, themeToCssVars } from '@/hooks/useSeedTheme';
 import { usePaneLayout } from '@/hooks/usePaneLayout';
+import { useLayout } from '@/stores/layoutStore';
 import { useCreativeActs } from '@/hooks/useCreativeActs';
 import { getInstallGenesisHash } from '@/lib/ui/genesisSuggestions';
 
@@ -90,6 +91,7 @@ export const Root: React.FC = () => {
 
   useCreativeActs({ onCosmos: openCosmos });
 
+  const { setFocus } = useLayout();
   const {
     leftPct,
     agentPct,
@@ -170,7 +172,7 @@ export const Root: React.FC = () => {
               }}
             >
               <ErrorBoundary fallback={() => <div className="p-4 text-sm text-destructive">Left rail crashed</div>}>
-                <LeftRail onCosmos={openCosmos} />
+                <LeftRail onCosmos={openCosmos} onToggleCollapse={() => setFocus('calm')} />
               </ErrorBoundary>
             </div>
             <Gripper bind={leftGripper} name="left" />

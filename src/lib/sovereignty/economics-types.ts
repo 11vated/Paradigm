@@ -34,6 +34,7 @@ export interface RoyaltySplit {
   ancestorHash: string;
   generation: number;        // Distance from original creator
   royaltyPercent: number;    // Share of this transaction
+  amount: number;            // Calculated amount in currency units
 }
 
 export interface RoyaltyTransaction {

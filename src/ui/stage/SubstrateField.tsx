@@ -17,7 +17,7 @@ interface Particle { x: number; y: number; vx: number; vy: number; life: number;
 const PARTICLE_COUNT = 220;
 const PARTICLE_LIFE = 280; // frames
 
-export const SubstrateField: React.FC = () => {
+export const SubstrateField: React.FC = React.memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number | null>(null);
   const seed: any = useActiveSeed((s: any) => s.seed);
@@ -173,4 +173,4 @@ export const SubstrateField: React.FC = () => {
       className="p-substrate-canvas"
     />
   );
-};
+});

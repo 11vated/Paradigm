@@ -508,5 +508,183 @@ export async function runGSPLPropertyHarness(): Promise<{ passedCount: number; t
   return { passedCount: passed, total, details };
 }
 
+// ─── New Check P3: Termination — verify programs terminate within budget ───
+export interface GSPLTerminationResult {
+  passed: boolean;
+  source: string;
+  seedPhrase: string;
+  durationMs: number;
+  seedsProduced: number;
+  errors: string[];
+  checkedAt: string;
+}
+
+export async function verifyTerminationAsync(
+  source: string,
+  seedPhrase: string = 'gspl-vinfty-term',
+  budgetMs: number = 5000
+): Promise<GSPLTerminationResult> {
+  const checkedAt = kernelNowIso();
+  const start = kernelNow();
+  const errs: string[] = [];
+  let seedsProduced = 0;
+  try {
+    const res = await executeGspl(source, seedPhrase);
+    const seeds = Array.isArray(res?.seeds) ? res.seeds : [];
+    seedsProduced = seeds.length;
+  } catch (e: unknown) {
+    errs.push(`Non-termination or error: ${e instanceof Error ? e.message : String(e)}`);
+  }
+  const durationMs = kernelNow() - start;
+  const passed = errs.length === 0 && durationMs <= budgetMs;
+  return { passed, source: source.slice(0, 120), seedPhrase, durationMs, seedsProduced, errors: errs, checkedAt };
+}
+
+// ─── New Check P4: Compositional Determinism ───
+export interface GSPLCompositionResult {
+  passed: boolean;
+  sourceSeeds: number;
+  targetDomain: string;
+  hash: string;
+  rehash: string;
+  hashMatch: boolean;
+  errors: string[];
+  checkedAt: string;
+}
+
+export async function verifyCompositionAsync(
+  sourceProgram: string,
+  targetDomain: string = 'music',
+  seedPhrase: string = 'gspl-vinfty-comp'
+): Promise<GSPLCompositionResult> {
+  const checkedAt = kernelNowIso();
+  const errs: string[] = [];
+  const { composeSeed } = await import('../kernel/composition.js');
+  let r1: any; let r2: any; let seeds: any[] = [];
+  try {
+    r1 = await executeGspl(sourceProgram, seedPhrase);
+    seeds = Array.isArray(r1?.seeds) ? r1.seeds : [];
+    if (seeds.length === 0) { errs.push('No seeds produced by source program'); }
+  } catch (e: unknown) { errs.push(`Execution error: ${e instanceof Error ? e.message : String(e)}`); }
+  if (errs.length > 0) {
+    return { passed: false, sourceSeeds: seeds.length, targetDomain, hash: '', rehash: '', hashMatch: false, errors: errs, checkedAt };
+  }
+  const composed1 = composeSeed(seeds[0], targetDomain);
+  const composed2 = composeSeed(seeds[0], targetDomain);
+  const h1 = stableHash(composed1);
+  const h2 = stableHash(composed2);
+  const hashMatch = h1 === h2;
+  const passed = hashMatch && errs.length === 0;
+  return { passed, sourceSeeds: seeds.length, targetDomain, hash: h1, rehash: h2, hashMatch, errors: errs, checkedAt };
+}
+
+// ─── New Check P5: Breed Properties (determinism + heritability + closure) ───
+export interface GSPLBreedPropertiesResult {
+  passed: boolean;
+  determinismPassed: boolean;
+  heritabilityPassed: boolean;
+  closurePassed: boolean;
+  parentGenesCount: number;
+  childGenesCount: number;
+  errors: string[];
+  checkedAt: string;
+}
+
+export async function verifyBreedPropertiesAsync(
+  seedPhrase: string = 'gspl-vinfty-breed'
+): Promise<GSPLBreedPropertiesResult> {
+  const checkedAt = kernelNowIso();
+  const errs: string[] = [];
+
+  // Determinism: breed twice, compare offspring hashes
+  const breedProgram = 'seed "P1" in character { strength: 0.9, agility: 0.3 }; seed "P2" in character { strength: 0.2, agility: 0.8 }; breed(P1, P2)';
+  let r1: any; let r2: any;
+  try {
+    r1 = await executeGspl(breedProgram, seedPhrase);
+  } catch (e: unknown) { errs.push(`breed run1 error: ${e instanceof Error ? e.message : String(e)}`); r1 = { seeds: [] }; }
+  try {
+    r2 = await executeGspl(breedProgram, seedPhrase);
+  } catch (e: unknown) { errs.push(`breed run2 error: ${e instanceof Error ? e.message : String(e)}`); r2 = { seeds: [] }; }
+
+  const s1 = Array.isArray(r1?.seeds) ? r1.seeds : [];
+  const s2 = Array.isArray(r2?.seeds) ? r2.seeds : [];
+  const breedOffspring1 = s1.find((s: any) => s?.$lineage?.operation === 'gspl_breed' || s?.$lineage?.parents?.length === 2);
+  const breedOffspring2 = s2.find((s: any) => s?.$lineage?.operation === 'gspl_breed' || s?.$lineage?.parents?.length === 2);
+  const determinismPassed = breedOffspring1 && breedOffspring2 &&
+    stableHash({ genes: breedOffspring1?.genes }) === stableHash({ genes: breedOffspring2?.genes });
+
+  // Heritability: child genes are subset of parent gene union
+  const parent = s1.find((s: any) => s?.$name === 'P1' || (s?.$lineage?.parents?.length ?? 0) === 0);
+  const parent2 = s1.find((s: any) => s?.$name === 'P2');
+  const child = breedOffspring1;
+  let heritabilityPassed = true;
+  if (child?.genes && parent?.genes) {
+    const parentKeys = new Set([...Object.keys(parent.genes), ...Object.keys(parent2?.genes ?? {})]);
+    for (const k of Object.keys(child.genes)) {
+      if (!parentKeys.has(k)) { heritabilityPassed = false; break; }
+    }
+  }
+
+  // Closure: breed offspring can be bred again
+  let closurePassed = false;
+  if (child?.genes) {
+    try {
+      const closureProgram = `seed "C1" in character { strength: 0.5 }; seed "C2" in character { agility: 0.7 }; breed(C1, C2)`;
+      const closureResult = await executeGspl(closureProgram, seedPhrase + '-closure');
+      const closureOffspring = (Array.isArray(closureResult?.seeds) ? closureResult.seeds : [])
+        .find((s: any) => s?.$lineage?.parents?.length === 2);
+      closurePassed = !!closureOffspring;
+    } catch { closurePassed = false; }
+  }
+
+  const passed = determinismPassed && heritabilityPassed && closurePassed && errs.length === 0;
+  return {
+    passed, determinismPassed, heritabilityPassed, closurePassed,
+    parentGenesCount: Object.keys(parent?.genes ?? {}).length + Object.keys(parent2?.genes ?? {}).length,
+    childGenesCount: Object.keys(child?.genes ?? {}).length,
+    errors: errs, checkedAt,
+  };
+}
+
+// ─── Extended harness: run all 5 property checks ───
+export async function runGSPLFullPropertyHarness(): Promise<{ passedCount: number; total: number; details: string[] }> {
+  const details: string[] = [];
+  let passed = 0;
+  const total = 5;
+
+  // P1 Determinism
+  const detSrc = 'seed "D1" in character { strength: 0.33 }; seed "D2" in character { agility: 0.7 }';
+  const dDet1 = await verifyGSPLProgramDeterminismAsync(detSrc, 'full-harness-det');
+  const dDet2 = await verifyGSPLProgramDeterminismAsync(detSrc, 'full-harness-det');
+  const p1 = dDet1.passed && dDet1.hash1 === dDet2.hash1;
+  details.push(`P1-determinism: ${p1} (hashMatch=${dDet1.hash1 === dDet2.hash1})`);
+  if (p1) passed++;
+
+  // P2 Gene type soundness
+  const geneSrc = 'seed "G1" in character { scalar: 0.5, categorical: "hero" }';
+  const gchk = checkGeneTypesInGSPLProgram(geneSrc);
+  details.push(`P2-gene-types: ${gchk.valid} (decls=${gchk.geneDeclCount})`);
+  if (gchk.valid) passed++;
+
+  // P3 Termination
+  const termSrc = 'seed "T1" in character { strength: 0.5 }';
+  const term = await verifyTerminationAsync(termSrc);
+  details.push(`P3-termination: ${term.passed} (duration=${term.durationMs.toFixed(1)}ms)`);
+  if (term.passed) passed++;
+
+  // P4 Compositional determinism
+  const compSrc = 'seed "C1" in character { strength: 0.7, archetype: "bard" }';
+  const comp = await verifyCompositionAsync(compSrc, 'music');
+  details.push(`P4-composition: ${comp.passed} (hashMatch=${comp.hashMatch})`);
+  if (comp.passed) passed++;
+
+  // P5 Breed properties
+  const breed = await verifyBreedPropertiesAsync('full-harness-breed');
+  details.push(`P5-breed: ${breed.passed} (det=${breed.determinismPassed}, herit=${breed.heritabilityPassed}, closure=${breed.closurePassed})`);
+  if (breed.passed) passed++;
+
+  return { passedCount: passed, total, details };
+}
+
 // Re-export the 17 list for consumers.
 export { GSPL_GENE_TYPE_NAMES as GENE_TYPES_17 };

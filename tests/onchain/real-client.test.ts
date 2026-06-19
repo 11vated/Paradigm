@@ -3,6 +3,7 @@
  * deploys PARA + SeedNFT, mints parents, breeds a child, and distributes
  * royalties. Every transaction is a real signed tx with real gas.
  */
+// @vitest-environment node
 import { describe, it, expect, afterAll } from 'vitest';
 import { runLocalOnchainDemo, RealOnChainClient, startLocalHardhatNode } from '../../src/lib/contracts/onchain/real-client.js';
 

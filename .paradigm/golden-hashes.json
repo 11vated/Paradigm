@@ -96,7 +96,7 @@
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-glass-vessel",
-      "artifactHash": "1b7b93aa51df123e1e80c50990765f98df417409efba786c93d5a847c59bd6cd"
+      "artifactHash": "f70bbd4a353ea30f34bbb0ff809291c681312c2aa63d1a28b013d86e96fd5f52"
     },
     {
       "contract": "geometry3d",
@@ -108,7 +108,7 @@
       "contract": "geometry3d",
       "contractVersion": "4.0.0",
       "curatedId": "g3-stone-idol",
-      "artifactHash": "39ea095ab6647650689ea28796aa6fa389d4c6c17a1060be7e052571b94104a1"
+      "artifactHash": "99c2e807299890de0bd73892e36c9bfc8ddc5753695755ddbd3729baa5ce39b3"
     },
     {
       "contract": "molecule",

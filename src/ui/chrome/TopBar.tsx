@@ -7,6 +7,7 @@
  */
 import React, { useEffect, useState } from 'react';
 import { useActiveSeed } from '@/stores/activeSeed';
+import { useLayout } from '@/stores/layoutStore';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
 import { calculateStratumConformance } from '@/lib/kernel/quality/predicates';
@@ -20,9 +21,17 @@ function shortHash(h: string | undefined): string {
   return h.length > 12 ? `${h.slice(0, 4)}…${h.slice(-4)}` : h;
 }
 
+const FOCUS_LABEL: Record<string, string> = {
+  normal: 'focus',
+  calm: 'calm',
+  'agent-fullscreen': 'agent',
+};
+
 export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
   const { seed } = useActiveSeed();
   const _setSeed = useActiveSeed((s: any) => s.setSeed);
+  const focusMode = useLayout((s) => s.focusMode);
+  const setFocus = useLayout((s) => s.setFocus);
   const [kernelTick, setKernelTick] = useState(0);
   const [_creatingSeed, _setCreatingSeed] = useState(false);
   const [_now, _setNow] = useState(() => new Date());
@@ -123,6 +132,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onCosmos }) => {
           {sovState === 'anchored' && '⛓ '}
           {sovState === 'signed' && '✓ '}
           {sovState}
+        </button>
+
+        <button
+          className="p-topbar-action"
+          title={`Focus mode: ${focusMode} (Alt+F)`}
+          onClick={() => setFocus(focusMode === 'normal' ? 'calm' : focusMode === 'calm' ? 'agent-fullscreen' : 'normal')}
+          aria-label="Toggle focus mode"
+        >
+          <span>{FOCUS_LABEL[focusMode] ?? focusMode}</span>
         </button>
 
         <button

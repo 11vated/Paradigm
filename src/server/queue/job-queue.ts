@@ -45,6 +45,7 @@ interface QueueConfig {
   queueName?: string;
   concurrency?: number;
   pollInterval?: number;
+  retryBackoffMs?: number;
 }
 
 export class JobQueue {
@@ -56,12 +57,16 @@ export class JobQueue {
   private pollInterval: number;
   private isRunning = false;
   private pollTimer?: NodeJS.Timeout;
+  private retryBackoffMs: number;
+  private completedCount = 0;
+  private failedCount = 0;
 
   constructor(config: QueueConfig) {
     this.redis = config.redis;
     this.queueName = config.queueName || 'paradigm:jobs';
     this.concurrency = config.concurrency || 5;
     this.pollInterval = config.pollInterval || 1000;
+    this.retryBackoffMs = config.retryBackoffMs ?? 1000;
   }
 
   /**
@@ -328,6 +333,7 @@ export class JobQueue {
       job.progress = 100;
       job.completedAt = Date.now();
       job.updatedAt = Date.now();
+      this.completedCount++;
       await this.redis.set(
         `${this.queueName}:job:${job.id}`,
         JSON.stringify(job),
@@ -346,8 +352,8 @@ export class JobQueue {
       if (job.attempts < job.options.maxRetries) {
         job.status = 'pending';
         
-        // Exponential backoff: 2^attempts seconds
-        const delay = Math.pow(2, job.attempts) * 1000;
+        // Exponential backoff: 2^attempts * retryBackoffMs
+        const delay = Math.pow(2, job.attempts) * this.retryBackoffMs;
         const queueKey = this.getQueueKey(job.options.priority);
         const score = Date.now() + delay;
         
@@ -355,6 +361,7 @@ export class JobQueue {
       } else {
         job.status = 'failed';
         job.completedAt = Date.now();
+        this.failedCount++;
       }
 
       await this.redis.set(
@@ -395,8 +402,8 @@ export class JobQueue {
     return {
       pending,
       processing: this.processing.size,
-      completed: 0, // Would need separate tracking
-      failed: 0, // Would need separate tracking
+      completed: this.completedCount,
+      failed: this.failedCount,
     };
   }
 }

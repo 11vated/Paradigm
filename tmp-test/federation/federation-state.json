@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "nodes": {
+    "info-node": {
+      "nodeId": "info-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEeIXR13ysyJ4jU0S63ZmPQW2XmHCs\nBcUVzO92RJ3gXeuzO9p+rTjkF2utdDue6hfBnX1f4fM7UsVAHsbloem6HQ==\n-----END PUBLIC KEY-----\n",
+      "label": "Info Test",
+      "firstSeen": "2026-06-19T18:28:02.209Z",
+      "lastSeen": "2026-06-19T18:28:02.209Z",
+      "exchangeCount": 0
+    }
+  },
+  "lineage": {},
+  "ledger": [],
+  "updatedAt": "2026-06-19T18:28:02.209Z"
+}

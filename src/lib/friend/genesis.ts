@@ -260,6 +260,9 @@ export function createFriendSeed(
   return {
     id: shortId(seedHash),
     name: sampledName,
+    $name: sampledName,
+    $hash: seedHash,
+    $domain: 'friend',
     seedHash,
     bornAt: options.bornAt ?? new Date(0).toISOString(),
     genomeVersion: 1,

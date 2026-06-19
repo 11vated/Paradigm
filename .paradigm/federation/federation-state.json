@@ -1,0 +1,260 @@
+{
+  "version": 1,
+  "nodes": {
+    "test-node": {
+      "nodeId": "test-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE7zYbA+7DI6/htQx27eKXHV7zNkzR\nLbK51svGA7z4BKvuKfnmVx+EZ1U5aNyB+WI/wIuG0V5rRsUjQxW/TAdSnQ==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.044Z",
+      "lastSeen": "2026-06-19T17:46:09.906Z",
+      "exchangeCount": 0
+    },
+    "alice": {
+      "nodeId": "alice",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWemZyF261odW4xMrpp7v1AUcOMnO\nisq6FDd7tY/b3YGsA7CrGVfVf2/qbPhACBZ+FlQBSqY79T0fSb44UXrPjw==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.046Z",
+      "lastSeen": "2026-06-19T17:46:09.911Z",
+      "exchangeCount": 4
+    },
+    "bob": {
+      "nodeId": "bob",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEyJ5Q50HP5dwYA1G6arujOInfNt4h\nOrpBssUgjmDlu4nREwkF1lERP/fH693/cQzE+DAgwlVG+/1KQ7Ori9oSSw==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.050Z",
+      "lastSeen": "2026-06-19T17:46:09.911Z",
+      "exchangeCount": 2
+    },
+    "fork-node": {
+      "nodeId": "fork-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/uj09qBkUY0a8H4RDT6G/wcUGBpn\nt1p39cDZPrbrhIft5vKM1Cxnb6XpctGOp680y0i1je9oV5PN9L+ZwH6GwQ==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.052Z",
+      "lastSeen": "2026-06-19T17:46:09.914Z",
+      "exchangeCount": 0
+    },
+    "state-node": {
+      "nodeId": "state-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEha1NdGhyrqzuH8lp12hBgio3UG7C\n/Il1RXBhN8Zffavl4Y8S9IDX4ATVmFQDq/4E6hsSHyfCZ2zJ9w9fFAY7gA==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.053Z",
+      "lastSeen": "2026-06-19T17:46:09.915Z",
+      "exchangeCount": 0
+    },
+    "ex-node": {
+      "nodeId": "ex-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmG1Bu2T+1p8RuXqcPDWAHCManRyl\nbvCL4ULYHRx1J852avYmtdfcC8Mw+zBfU26gV478ncGQNiYnnzmhzSAcOA==\n-----END PUBLIC KEY-----\n",
+      "firstSeen": "2026-06-19T17:45:01.053Z",
+      "lastSeen": "2026-06-19T17:46:09.916Z",
+      "exchangeCount": 4
+    },
+    "info-node": {
+      "nodeId": "info-node",
+      "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEKozuwbFKro/s5/f9/841blVEVKdc\njdeoBZpPdSAV9eOqsVcdaozT/Ipq9xK2c1ZTRI1ZxL5keGULnneg9JKVMQ==\n-----END PUBLIC KEY-----\n",
+      "label": "Info Test",
+      "firstSeen": "2026-06-19T17:45:01.054Z",
+      "lastSeen": "2026-06-19T17:46:09.921Z",
+      "exchangeCount": 0
+    }
+  },
+  "lineage": {
+    "seed-hash-1": {
+      "seedHash": "seed-hash-1",
+      "lineage": [
+        "anc-0"
+      ],
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.910Z"
+    },
+    "verify-seed": {
+      "seedHash": "verify-seed",
+      "lineage": [
+        "anc-0"
+      ],
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.910Z"
+    },
+    "merge-9641bd4add2f": {
+      "seedHash": "merge-9641bd4add2f",
+      "lineage": [
+        "anc-a",
+        "anc-b",
+        "merge-seed",
+        "merge-seed-local"
+      ],
+      "merkleRoot": "03c7afa356031afe079b9493a35173db06f01a8cc3a113aa7ec3b897486a0130",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.912Z"
+    },
+    "fork-8dd692485c72": {
+      "seedHash": "fork-8dd692485c72",
+      "lineage": [
+        "anc-0",
+        "source-seed"
+      ],
+      "merkleRoot": "f5b053e73953aab805fc979bca2ec76c7061954d1fcf2569a3fb7ea8fe55d8c2",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.915Z"
+    },
+    "seed-1": {
+      "seedHash": "seed-1",
+      "lineage": [],
+      "merkleRoot": "0eb026731d9ea3f870511f8c18daeb814eaa2c9e276082b204f2a962212fb5bd",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.916Z"
+    },
+    "seed-2": {
+      "seedHash": "seed-2",
+      "lineage": [],
+      "merkleRoot": "532b20b0105c9883348558ed2711c7d23ea6b4ee718364a87e16fad4b3c3a029",
+      "nodeCount": 2,
+      "lastExchange": "2026-06-19T17:46:09.916Z"
+    }
+  },
+  "ledger": [
+    {
+      "fromNode": "alice",
+      "toNode": "bob",
+      "seedHash": "seed-hash-1",
+      "lineage": [
+        "anc-0"
+      ],
+      "signature": "MEUCIQDgb96SgMHLM0M5pHUZSShqKxv2j5G7pmpSOc7YvCgtQQIgBNt+WsopO4PlUNhfoUJoL54zznn8/BoWFVYQ0mYNXDk=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEGhNmWuNm+0tdt6aueld1OfKipw1J\nPGT0jJGfFrin5mtteEzfmztmNpPZpLYKZiHys5lUwuDZLo/PT9SwjxM1mg==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205"
+    },
+    {
+      "fromNode": "alice",
+      "toNode": "bob",
+      "seedHash": "verify-seed",
+      "lineage": [
+        "anc-0"
+      ],
+      "signature": "MEQCIAFPlreSYHbo/yHDIeNRLpiRSPQ0fkyvorVUbIkODmcIAiAaByN8wujIV+FX+5kbyJ2FQz30ogTOGxFB+a1icErq1w==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE6pqXTnirjKFDtUXnIaq/AB34Uqsl\njsDb10CYET/eaowCB94izzfw7u4Btkqo2dfFNEynZvweH3nfjyYbGnFx0A==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205"
+    },
+    {
+      "fromNode": "merged-node",
+      "toNode": "local-node",
+      "seedHash": "merge-9641bd4add2f",
+      "lineage": [
+        "anc-a",
+        "anc-b",
+        "merge-seed",
+        "merge-seed-local"
+      ],
+      "signature": "MEUCIQCqRLO/+K29xFHCMY6VQoPE1gfJ5qaqMfCXwc4+A5q0YwIgf6NO3gj1JRIrZmc1uf6dSLUtk4GENz/24XyS853UKf8=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEG+ayayeFMCfGKSBIfv2ZAV/JJsbU\nJxBjtWoIjuNiWcG7eRhkhkOofHiyvjHwlUXuvJpWrkkSWXsJEqBFeNxC5g==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.004Z",
+      "merkleRoot": "03c7afa356031afe079b9493a35173db06f01a8cc3a113aa7ec3b897486a0130"
+    },
+    {
+      "fromNode": "system",
+      "toNode": "fork-operator",
+      "seedHash": "fork-8dd692485c72",
+      "lineage": [
+        "anc-0",
+        "source-seed",
+        "source-seed"
+      ],
+      "signature": "MEQCIEC5nup5N/I3pHfqprXqw98TofK0k8millmUvOCNRFKFAiBEExf5TlrqDZ3I+BPSVsSMNXYLIHxoFi6TxJoq3b/O6Q==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvTqxnRXaLHjhp8klRkkGLQmawC3H\n3hf+dPFiQfZr8yqqDolL9crYpF2v8A20Obs4JdEMyESjhj7+GctTZqo7Mw==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "f5b053e73953aab805fc979bca2ec76c7061954d1fcf2569a3fb7ea8fe55d8c2"
+    },
+    {
+      "fromNode": "ex-node",
+      "toNode": "other",
+      "seedHash": "seed-1",
+      "lineage": [],
+      "signature": "MEQCIGazyglZQLi0haonKOYVVz/g+KJUXZPEkFTTShGVODyqAiB9lEra9qynqxePDnb8uUCdtJeMBjql0pD9Wz/nGdwMLw==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERGk+iuKewWKzQ/zHbIWRwfIgeJ/L\nQ7Av8X3C7BPiwlogfFqJ3Lwmb+3E6hMC5JHr8DSnu+tOU17x7h7aHI65WA==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "0eb026731d9ea3f870511f8c18daeb814eaa2c9e276082b204f2a962212fb5bd"
+    },
+    {
+      "fromNode": "ex-node",
+      "toNode": "other",
+      "seedHash": "seed-2",
+      "lineage": [],
+      "signature": "MEQCIAKPYZ7V5tTVGGytsxaatyvKSrG0e2os3p18P71avLAWAiBe555bXpR7MF4QUKH3BW6HLv3JqI9LzJ6FIl2a0H9AqA==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERGk+iuKewWKzQ/zHbIWRwfIgeJ/L\nQ7Av8X3C7BPiwlogfFqJ3Lwmb+3E6hMC5JHr8DSnu+tOU17x7h7aHI65WA==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.003Z",
+      "merkleRoot": "532b20b0105c9883348558ed2711c7d23ea6b4ee718364a87e16fad4b3c3a029"
+    },
+    {
+      "fromNode": "alice",
+      "toNode": "bob",
+      "seedHash": "seed-hash-1",
+      "lineage": [
+        "anc-0"
+      ],
+      "signature": "MEQCIFqp7Cpkyxc6d9wV5/oV50ncTnYlMtWg3f9w8s0fO81iAiBAK3aO/Czhipq1Qsr3ydSAoJqUAgI1y3CkzbK8DZUhxw==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEiTlgLFCh/SpFmRyrlO4pkCX+b0xl\n7kjh5MBH5FH1VQu+vPU4KxpR2mTeUl3hBNbU+llX6ds477iaZorsOsMKMg==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205"
+    },
+    {
+      "fromNode": "alice",
+      "toNode": "bob",
+      "seedHash": "verify-seed",
+      "lineage": [
+        "anc-0"
+      ],
+      "signature": "MEUCICE3BOsv2l+gLQsrAYcBt7ZO7OwQq5b5Pi1tKOwjnIijAiEAjaH4+/3quvnwkom8VLO+kReA/tF38g74TimI9rcjsbg=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE+9gzseQVEPVa0pB58xTsXNCDJNaL\nhE6AyhHMXWyIxgnWmwy/U0jHNvzHpyTSO5f1Duhwl8v2SctZjoaTuEw2bQ==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "7df038f94c78dd911df4281ac6ca8733052a200edb700301783a8a47623eb205"
+    },
+    {
+      "fromNode": "merged-node",
+      "toNode": "local-node",
+      "seedHash": "merge-9641bd4add2f",
+      "lineage": [
+        "anc-a",
+        "anc-b",
+        "merge-seed",
+        "merge-seed-local"
+      ],
+      "signature": "MEQCIAqFAUJLleYal4nrUNw7pQc/Pzo24UXGbf8kvMRSdzQBAiA9peAiUty1yHtUdF+ztTLdZByGlQe9bXCwWgfwokSfkA==",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEyJ5Q50HP5dwYA1G6arujOInfNt4h\nOrpBssUgjmDlu4nREwkF1lERP/fH693/cQzE+DAgwlVG+/1KQ7Ori9oSSw==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.004Z",
+      "merkleRoot": "03c7afa356031afe079b9493a35173db06f01a8cc3a113aa7ec3b897486a0130"
+    },
+    {
+      "fromNode": "system",
+      "toNode": "fork-operator",
+      "seedHash": "fork-8dd692485c72",
+      "lineage": [
+        "anc-0",
+        "source-seed",
+        "source-seed"
+      ],
+      "signature": "MEYCIQDXJ0ePLEEQIPPOn6LVRMx/NVaJWKrenpoBATWlFxrShQIhAMBJPUonz2Xt5FoIGvqNXmYhsYgLXX1P7UqaPX5BZRRd",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE/uj09qBkUY0a8H4RDT6G/wcUGBpn\nt1p39cDZPrbrhIft5vKM1Cxnb6XpctGOp680y0i1je9oV5PN9L+ZwH6GwQ==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "f5b053e73953aab805fc979bca2ec76c7061954d1fcf2569a3fb7ea8fe55d8c2"
+    },
+    {
+      "fromNode": "ex-node",
+      "toNode": "other",
+      "seedHash": "seed-1",
+      "lineage": [],
+      "signature": "MEUCIHdyef9uc1isJzlmJxQK6uTOak0xeQKx1hwkoiUDLL13AiEA2cytlW2irt7MCa3qCfE/c+fhfBiVRSJas0OmWaM3r98=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmG1Bu2T+1p8RuXqcPDWAHCManRyl\nbvCL4ULYHRx1J852avYmtdfcC8Mw+zBfU26gV478ncGQNiYnnzmhzSAcOA==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.002Z",
+      "merkleRoot": "0eb026731d9ea3f870511f8c18daeb814eaa2c9e276082b204f2a962212fb5bd"
+    },
+    {
+      "fromNode": "ex-node",
+      "toNode": "other",
+      "seedHash": "seed-2",
+      "lineage": [],
+      "signature": "MEUCIQDatXbHyQgdFb2m9USAFF8pBQJaOqzMv3fLD85egSzj1AIgDS3iifqxMSkbX82wlAXsbuIhnxykdePyZGfxTfgWSzo=",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmG1Bu2T+1p8RuXqcPDWAHCManRyl\nbvCL4ULYHRx1J852avYmtdfcC8Mw+zBfU26gV478ncGQNiYnnzmhzSAcOA==\n-----END PUBLIC KEY-----\n",
+      "timestamp": "1970-01-01T00:00:00.003Z",
+      "merkleRoot": "532b20b0105c9883348558ed2711c7d23ea6b4ee718364a87e16fad4b3c3a029"
+    }
+  ],
+  "updatedAt": "2026-06-19T17:46:09.921Z"
+}

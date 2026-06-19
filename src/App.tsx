@@ -8,6 +8,7 @@
  */
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HealthPage from './pages/HealthPage';
+import PublicSitePage from './pages/PublicSitePage';
 import Root from '@/app/Root';
 import { LegacyShell } from '@/app/legacy/LegacyShell';
 import SubstratePage from '@/pages/SubstratePage';
@@ -21,6 +22,7 @@ function App() {
         <Route path="/substrate" element={<SubstratePage />} />
         <Route path="/health" element={<HealthPage />} />
         <Route path="/os" element={<OSDShell />} />
+        <Route path="/public" element={<PublicSitePage />} />
         <Route path="/*" element={<Root />} />
       </Routes>
     </BrowserRouter>

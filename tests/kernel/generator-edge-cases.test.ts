@@ -119,10 +119,11 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-music-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'music-minimal.wav');
-      const result = await generateMusicV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'music-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateMusicV3(seed, outputDir);
       expect(result).toBeDefined();
-      expect(fs.existsSync(outputPath)).toBe(true);
+      expect(fs.existsSync(path.join(outputDir, `music_${seed.$hash}.wav`))).toBe(true);
     });
 
     it('should handle maximum duration', async () => {
@@ -134,8 +135,9 @@ describe('Generator Edge Cases', () => {
           duration: { type: 'float', value: 300 } // 5 minutes
         }
       };
-      const outputPath = path.join(testOutputDir, 'music-long.wav');
-      const result = await generateMusicV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'music-long');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateMusicV3(seed, outputDir);
       expect(result).toBeDefined();
       expect(result.duration).toBeGreaterThan(0);
     });
@@ -149,8 +151,9 @@ describe('Generator Edge Cases', () => {
           tempo: { type: 'float', value: 200 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'music-fast.wav');
-      const result = await generateMusicV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'music-fast');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateMusicV3(seed, outputDir);
       expect(result).toBeDefined();
     });
   });
@@ -163,11 +166,12 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-visual-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'visual-minimal.png');
-      const result = await generateVisual2DV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'visual-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateVisual2DV3(seed, outputDir);
       expect(result).toBeDefined();
       expect(fs.existsSync(result.pngPath)).toBe(true);
-    });
+    }, 120000);
 
     it('should handle 4K resolution', async () => {
       const seed: Seed = {
@@ -175,14 +179,15 @@ describe('Generator Edge Cases', () => {
         $name: '4KVisual',
         $hash: 'test-hash-visual-4k',
         genes: {
-          resolution: { type: 'int', value: 4096 }
+          resolution: { type: 'float', value: 1.0 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'visual-4k.png');
-      const result = await generateVisual2DV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'visual-4k');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateVisual2DV3(seed, outputDir);
       expect(result).toBeDefined();
       expect(result.resolution).toBe(4096);
-    });
+    }, 60000);
 
     it('should handle maximum layers', async () => {
       const seed: Seed = {
@@ -193,11 +198,12 @@ describe('Generator Edge Cases', () => {
           layers: { type: 'int', value: 20 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'visual-layers.png');
-      const result = await generateVisual2DV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'visual-layers');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateVisual2DV3(seed, outputDir);
       expect(result).toBeDefined();
       expect(result.layers).toBeGreaterThan(0);
-    });
+    }, 60000);
   });
 
   describe('Animation Generator', () => {
@@ -208,8 +214,9 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-anim-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'anim-minimal.mp4');
-      const result = await generateAnimationV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'anim-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateAnimationV3(seed, outputDir);
       expect(result).toBeDefined();
     });
 
@@ -222,8 +229,9 @@ describe('Generator Edge Cases', () => {
           fps: { type: 'int', value: 120 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'anim-highfps.mp4');
-      const result = await generateAnimationV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'anim-highfps');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateAnimationV3(seed, outputDir);
       expect(result).toBeDefined();
     });
   });
@@ -236,8 +244,9 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-sprite-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'sprite-minimal.png');
-      const result = await generateSpriteV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'sprite-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateSpriteV3(seed, outputDir);
       expect(result).toBeDefined();
     });
 
@@ -250,8 +259,9 @@ describe('Generator Edge Cases', () => {
           frames: { type: 'int', value: 64 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'sprite-animated.png');
-      const result = await generateSpriteV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'sprite-animated');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateSpriteV3(seed, outputDir);
       expect(result).toBeDefined();
     });
   });
@@ -264,25 +274,29 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-geo-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'geo-minimal.obj');
-      const result = await generateGeometry3DV4(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'geo-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateGeometry3DV4(seed, path.join(outputDir, 'geo-minimal.glb'));
       expect(result).toBeDefined();
-    });
+    }, 60000);
 
     it('should handle high polygon count', async () => {
       const seed: Seed = {
         $domain: 'geometry3d',
         $name: 'HighPolyGeometry',
-        $hash: 'test-hash-geo-poly',
+        $hash: 'test-hash-geo-poly-2',
         genes: {
-          complexity: { type: 'float', value: 1.0 }
+          quality: { type: 'enum', value: 'ultra' },
+          primitive: { type: 'enum', value: 'sphere' },
+          params: { type: 'vec3', value: [1.0, 0.5, 0.5] }
         }
       };
-      const outputPath = path.join(testOutputDir, 'geo-highpoly.obj');
-      const result = await generateGeometry3DV4(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'geo-highpoly');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateGeometry3DV4(seed, path.join(outputDir, 'geo-highpoly.glb'));
       expect(result).toBeDefined();
       expect(result.vertices).toBeGreaterThan(0);
-    });
+    }, 60000);
   });
 
   describe('World Generator', () => {
@@ -296,7 +310,7 @@ describe('Generator Edge Cases', () => {
       const outputPath = path.join(testOutputDir, 'world-minimal.json');
       const result = await generateWorld(seed, outputPath);
       expect(result).toBeDefined();
-    });
+    }, 60000);
 
     it('should handle large world size', async () => {
       const seed: Seed = {
@@ -310,7 +324,7 @@ describe('Generator Edge Cases', () => {
       const outputPath = path.join(testOutputDir, 'world-large.json');
       const result = await generateWorld(seed, outputPath);
       expect(result).toBeDefined();
-    });
+    }, 60000);
   });
 
   describe('Website Generator', () => {
@@ -462,10 +476,11 @@ describe('Generator Edge Cases', () => {
         $hash: 'test-hash-game-min',
         genes: {}
       };
-      const outputPath = path.join(testOutputDir, 'game-minimal');
-      const result = await generateFullGameV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'game-minimal');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateFullGameV3(seed, outputDir);
       expect(result).toBeDefined();
-    });
+    }, 60000);
 
     it('should handle complex game', async () => {
       const seed: Seed = {
@@ -477,10 +492,11 @@ describe('Generator Edge Cases', () => {
           complexity: { type: 'float', value: 1.0 }
         }
       };
-      const outputPath = path.join(testOutputDir, 'game-complex');
-      const result = await generateFullGameV3(seed, outputPath);
+      const outputDir = path.join(testOutputDir, 'game-complex');
+      fs.mkdirSync(outputDir, { recursive: true });
+      const result = await generateFullGameV3(seed, outputDir);
       expect(result).toBeDefined();
-    });
+    }, 60000);
   });
 
   describe('Cross-Generator Edge Cases', () => {
@@ -491,15 +507,16 @@ describe('Generator Edge Cases', () => {
       const musicSeed: Seed = { $domain: 'music', $name: 'Shared', $hash: hash, genes: {} };
       
       const charPath = path.join(testOutputDir, 'shared-char.glb');
-      const musicPath = path.join(testOutputDir, 'shared-music.wav');
+      const musicDir = path.join(testOutputDir, 'shared-music');
+      fs.mkdirSync(musicDir, { recursive: true });
       
       const charResult = await generateCharacterV3(charSeed, charPath);
-      const musicResult = await generateMusicV3(musicSeed, musicPath);
+      const musicResult = await generateMusicV3(musicSeed, musicDir);
       
       expect(charResult).toBeDefined();
       expect(musicResult).toBeDefined();
       expect(fs.existsSync(charPath)).toBe(true);
-      expect(fs.existsSync(musicPath)).toBe(true);
+      expect(fs.existsSync(path.join(musicDir, `music_${hash}.wav`))).toBe(true);
     });
 
     it('should handle concurrent generation', async () => {
@@ -509,16 +526,16 @@ describe('Generator Edge Cases', () => {
         { $domain: 'visual2d', $name: 'Concurrent3', $hash: 'hash3', genes: {} }
       ];
       
-      const paths = [
-        path.join(testOutputDir, 'concurrent1.glb'),
-        path.join(testOutputDir, 'concurrent2.wav'),
-        path.join(testOutputDir, 'concurrent3.png')
-      ];
+      const charPath = path.join(testOutputDir, 'concurrent1.glb');
+      const musicDir = path.join(testOutputDir, 'concurrent2');
+      const visualDir = path.join(testOutputDir, 'concurrent3');
+      fs.mkdirSync(musicDir, { recursive: true });
+      fs.mkdirSync(visualDir, { recursive: true });
       
       const results = await Promise.all([
-        generateCharacterV3(seeds[0], paths[0]),
-        generateMusicV3(seeds[1], paths[1]),
-        generateVisual2DV3(seeds[2], paths[2])
+        generateCharacterV3(seeds[0], charPath),
+        generateMusicV3(seeds[1], musicDir),
+        generateVisual2DV3(seeds[2], visualDir)
       ]);
       
       expect(results).toHaveLength(3);

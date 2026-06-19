@@ -3,6 +3,8 @@
  * 50+ functor bridges, BFS pathfinding, generic composition via gene mapping
  */
 
+import { createHash } from 'crypto';
+
 export interface FunctorBridge {
   name: string;
   sourceDomain: string;
@@ -361,9 +363,11 @@ function genericCompose(seed: any, sourceDomain: string, targetDomain: string): 
     }
   }
 
+  const newHash = createHash('sha256').update((seed.$hash ?? sourceDomain) + ':' + targetDomain).digest('hex');
   return {
     ...seed,
     $domain: targetDomain,
+    $hash: newHash,
     $lineage: {
       ...seed.$lineage,
       operation: `compose:${sourceDomain}→${targetDomain}`,
@@ -376,6 +380,7 @@ function genericCompose(seed: any, sourceDomain: string, targetDomain: string): 
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 export function composeSeed(seed: any, targetDomain: string): any {
+  if (seed == null) return { $domain: targetDomain ?? 'unknown', genes: {} };
   const sourceDomain = seed.$domain ?? seed.metadata?.domain ?? 'unknown';
   if (sourceDomain === targetDomain) return { ...seed };
 
@@ -414,9 +419,11 @@ export function composeSeed(seed: any, targetDomain: string): any {
       }
     }
 
+    const bridgeHash = createHash('sha256').update((seed.$hash ?? sourceDomain) + ':' + targetDomain).digest('hex');
     return {
       ...seed,
       $domain: targetDomain,
+      $hash: bridgeHash,
       $lineage: {
         ...seed.$lineage,
         operation: `compose:${sourceDomain}→${targetDomain}`,

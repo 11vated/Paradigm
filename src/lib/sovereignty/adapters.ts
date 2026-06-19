@@ -497,7 +497,6 @@ export interface ArweavePinOptions {
 export async function createArweavePin(opts: ArweavePinOptions): Promise<SovereigntyPin> {
   // `arweave` is an optional peer dep — keep the type any to avoid requiring
   // @types/arweave in dev environments that never touch this adapter.
-  // @ts-expect-error — dynamic optional import
   const Arweave = await import('arweave').catch(() => null);
   if (!Arweave) {
     throw new Error('ArweavePin requires the `arweave` package. Install it or use LocalFilePin.');
