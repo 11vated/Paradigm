@@ -3,9 +3,9 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'],
     exclude: ['tests/e2e/**', 'tests/property/**'],
-    environment: 'node',
+    environment: 'jsdom', // Changed from 'node' to support React component tests
     globals: true,
     testTimeout: 30000,
     setupFiles: ['tests/setup.ts'],

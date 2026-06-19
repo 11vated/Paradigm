@@ -1,0 +1,296 @@
+{
+  "name": "ParadigmWAFRules",
+  "description": "AWS WAF rules for Paradigm Absolute platform",
+  "rules": [
+    {
+      "name": "RateLimitRule",
+      "priority": 1,
+      "statement": {
+        "rateBasedStatement": {
+          "limit": 2000,
+          "aggregateKeyType": "IP"
+        }
+      },
+      "action": {
+        "block": {
+          "customResponse": {
+            "responseCode": 429,
+            "customResponseBodyKey": "rate_limit_exceeded"
+          }
+        }
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "RateLimitRule"
+      }
+    },
+    {
+      "name": "SQLInjectionRule",
+      "priority": 2,
+      "statement": {
+        "sqliMatchStatement": {
+          "fieldToMatch": {
+            "allQueryArguments": {}
+          },
+          "textTransformations": [
+            {
+              "priority": 0,
+              "type": "URL_DECODE"
+            },
+            {
+              "priority": 1,
+              "type": "HTML_ENTITY_DECODE"
+            }
+          ]
+        }
+      },
+      "action": {
+        "block": {}
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "SQLInjectionRule"
+      }
+    },
+    {
+      "name": "XSSRule",
+      "priority": 3,
+      "statement": {
+        "xssMatchStatement": {
+          "fieldToMatch": {
+            "allQueryArguments": {}
+          },
+          "textTransformations": [
+            {
+              "priority": 0,
+              "type": "URL_DECODE"
+            },
+            {
+              "priority": 1,
+              "type": "HTML_ENTITY_DECODE"
+            }
+          ]
+        }
+      },
+      "action": {
+        "block": {}
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "XSSRule"
+      }
+    },
+    {
+      "name": "GeoBlockRule",
+      "priority": 4,
+      "statement": {
+        "notStatement": {
+          "statement": {
+            "geoMatchStatement": {
+              "countryCodes": [
+                "US",
+                "CA",
+                "GB",
+                "DE",
+                "FR",
+                "JP",
+                "AU",
+                "NZ",
+                "SG",
+                "KR"
+              ]
+            }
+          }
+        }
+      },
+      "action": {
+        "block": {
+          "customResponse": {
+            "responseCode": 403,
+            "customResponseBodyKey": "geo_blocked"
+          }
+        }
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "GeoBlockRule"
+      }
+    },
+    {
+      "name": "SizeConstraintRule",
+      "priority": 5,
+      "statement": {
+        "sizeConstraintStatement": {
+          "fieldToMatch": {
+            "body": {}
+          },
+          "comparisonOperator": "GT",
+          "size": 10485760,
+          "textTransformations": [
+            {
+              "priority": 0,
+              "type": "NONE"
+            }
+          ]
+        }
+      },
+      "action": {
+        "block": {
+          "customResponse": {
+            "responseCode": 413,
+            "customResponseBodyKey": "payload_too_large"
+          }
+        }
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "SizeConstraintRule"
+      }
+    },
+    {
+      "name": "BadBotRule",
+      "priority": 6,
+      "statement": {
+        "byteMatchStatement": {
+          "searchString": "bot|crawler|spider|scraper",
+          "fieldToMatch": {
+            "singleHeader": {
+              "name": "user-agent"
+            }
+          },
+          "textTransformations": [
+            {
+              "priority": 0,
+              "type": "LOWERCASE"
+            }
+          ],
+          "positionalConstraint": "CONTAINS"
+        }
+      },
+      "action": {
+        "block": {}
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "BadBotRule"
+      }
+    },
+    {
+      "name": "AdminPathProtection",
+      "priority": 7,
+      "statement": {
+        "andStatement": {
+          "statements": [
+            {
+              "byteMatchStatement": {
+                "searchString": "/admin",
+                "fieldToMatch": {
+                  "uriPath": {}
+                },
+                "textTransformations": [
+                  {
+                    "priority": 0,
+                    "type": "LOWERCASE"
+                  }
+                ],
+                "positionalConstraint": "STARTS_WITH"
+              }
+            },
+            {
+              "notStatement": {
+                "statement": {
+                  "ipSetReferenceStatement": {
+                    "arn": "arn:aws:wafv2:us-east-1:ACCOUNT_ID:regional/ipset/admin-whitelist/IPSET_ID"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "action": {
+        "block": {
+          "customResponse": {
+            "responseCode": 403,
+            "customResponseBodyKey": "admin_access_denied"
+          }
+        }
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "AdminPathProtection"
+      }
+    },
+    {
+      "name": "KnownBadInputsRule",
+      "priority": 8,
+      "statement": {
+        "managedRuleGroupStatement": {
+          "vendorName": "AWS",
+          "name": "AWSManagedRulesKnownBadInputsRuleSet"
+        }
+      },
+      "overrideAction": {
+        "none": {}
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "KnownBadInputsRule"
+      }
+    },
+    {
+      "name": "CoreRuleSet",
+      "priority": 9,
+      "statement": {
+        "managedRuleGroupStatement": {
+          "vendorName": "AWS",
+          "name": "AWSManagedRulesCommonRuleSet",
+          "excludedRules": [
+            {
+              "name": "SizeRestrictions_BODY"
+            }
+          ]
+        }
+      },
+      "overrideAction": {
+        "none": {}
+      },
+      "visibilityConfig": {
+        "sampledRequestsEnabled": true,
+        "cloudWatchMetricsEnabled": true,
+        "metricName": "CoreRuleSet"
+      }
+    }
+  ],
+  "customResponseBodies": {
+    "rate_limit_exceeded": {
+      "contentType": "APPLICATION_JSON",
+      "content": "{\"error\":\"Rate limit exceeded. Please try again later.\"}"
+    },
+    "geo_blocked": {
+      "contentType": "APPLICATION_JSON",
+      "content": "{\"error\":\"Access from your location is not permitted.\"}"
+    },
+    "payload_too_large": {
+      "contentType": "APPLICATION_JSON",
+      "content": "{\"error\":\"Request payload too large. Maximum size is 10MB.\"}"
+    },
+    "admin_access_denied": {
+      "contentType": "APPLICATION_JSON",
+      "content": "{\"error\":\"Admin access denied. Your IP is not whitelisted.\"}"
+    }
+  },
+  "visibilityConfig": {
+    "sampledRequestsEnabled": true,
+    "cloudWatchMetricsEnabled": true,
+    "metricName": "ParadigmWAF"
+  }
+}

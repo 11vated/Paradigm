@@ -1,0 +1,206 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Paradigm Absolute — Alertmanager Configuration
+# Alert routing, grouping, and notification
+# ═══════════════════════════════════════════════════════════════════════════
+
+global:
+  resolve_timeout: 5m
+  # PagerDuty integration key (set via environment variable)
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+  
+  # Slack webhook URL (set via environment variable)
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
+
+# Templates for notifications
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Route tree for alert distribution
+route:
+  # Default receiver for all alerts
+  receiver: 'default'
+  
+  # Group alerts by these labels
+  group_by: ['alertname', 'cluster', 'service']
+  
+  # Wait time before sending initial notification
+  group_wait: 10s
+  
+  # Wait time before sending notification about new alerts in group
+  group_interval: 10s
+  
+  # Wait time before re-sending notification
+  repeat_interval: 12h
+  
+  # Child routes for specific alert types
+  routes:
+    # Critical alerts - immediate PagerDuty notification
+    - match:
+        severity: critical
+      receiver: 'pagerduty-critical'
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 4h
+      continue: true
+    
+    # Critical alerts also go to Slack
+    - match:
+        severity: critical
+      receiver: 'slack-critical'
+      group_wait: 10s
+      group_interval: 5m
+      repeat_interval: 4h
+    
+    # Warning alerts - Slack only
+    - match:
+        severity: warning
+      receiver: 'slack-warnings'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 12h
+    
+    # Info alerts - Slack only, less frequent
+    - match:
+        severity: info
+      receiver: 'slack-info'
+      group_wait: 5m
+      group_interval: 30m
+      repeat_interval: 24h
+    
+    # Database alerts - dedicated channel
+    - match:
+        component: database
+      receiver: 'slack-database'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 12h
+    
+    # Infrastructure alerts - dedicated channel
+    - match:
+        component: infrastructure
+      receiver: 'slack-infrastructure'
+      group_wait: 30s
+      group_interval: 10m
+      repeat_interval: 12h
+
+# Inhibition rules - suppress certain alerts when others are firing
+inhibit_rules:
+  # Inhibit warning/info if critical is firing for same alertname
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+  
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'info'
+    equal: ['alertname', 'cluster', 'service']
+  
+  # Inhibit pod alerts if node is down
+  - source_match:
+      alertname: 'KubernetesNodeDown'
+    target_match_re:
+      alertname: '.*Pod.*'
+    equal: ['node']
+
+# Receivers - notification destinations
+receivers:
+  # Default receiver (logs only)
+  - name: 'default'
+    webhook_configs:
+    - url: 'http://localhost:9093/api/v1/alerts'
+      send_resolved: true
+  
+  # PagerDuty for critical alerts
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+    - service_key: '${PAGERDUTY_SERVICE_KEY}'
+      severity: 'critical'
+      description: '{{ .GroupLabels.alertname }}: {{ .CommonAnnotations.summary }}'
+      details:
+        firing: '{{ .Alerts.Firing | len }}'
+        resolved: '{{ .Alerts.Resolved | len }}'
+        cluster: '{{ .GroupLabels.cluster }}'
+        component: '{{ .GroupLabels.component }}'
+      send_resolved: true
+  
+  # Slack for critical alerts
+  - name: 'slack-critical'
+    slack_configs:
+    - channel: '#paradigm-alerts-critical'
+      username: 'Paradigm Alertmanager'
+      icon_emoji: ':fire:'
+      title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+      text: |
+        {{ range .Alerts }}
+        *Alert:* {{ .Labels.alertname }}
+        *Severity:* {{ .Labels.severity }}
+        *Component:* {{ .Labels.component }}
+        *Summary:* {{ .Annotations.summary }}
+        *Description:* {{ .Annotations.description }}
+        {{ end }}
+      send_resolved: true
+  
+  # Slack for warning alerts
+  - name: 'slack-warnings'
+    slack_configs:
+    - channel: '#paradigm-alerts-warnings'
+      username: 'Paradigm Alertmanager'
+      icon_emoji: ':warning:'
+      title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
+      text: |
+        {{ range .Alerts }}
+        *Alert:* {{ .Labels.alertname }}
+        *Severity:* {{ .Labels.severity }}
+        *Component:* {{ .Labels.component }}
+        *Summary:* {{ .Annotations.summary }}
+        {{ end }}
+      send_resolved: true
+  
+  # Slack for info alerts
+  - name: 'slack-info'
+    slack_configs:
+    - channel: '#paradigm-alerts-info'
+      username: 'Paradigm Alertmanager'
+      icon_emoji: ':information_source:'
+      title: 'ℹ️ INFO: {{ .GroupLabels.alertname }}'
+      text: |
+        {{ range .Alerts }}
+        *Alert:* {{ .Labels.alertname }}
+        *Summary:* {{ .Annotations.summary }}
+        {{ end }}
+      send_resolved: true
+  
+  # Slack for database alerts
+  - name: 'slack-database'
+    slack_configs:
+    - channel: '#paradigm-database'
+      username: 'Paradigm Alertmanager'
+      icon_emoji: ':database:'
+      title: '🗄️ DATABASE: {{ .GroupLabels.alertname }}'
+      text: |
+        {{ range .Alerts }}
+        *Alert:* {{ .Labels.alertname }}
+        *Severity:* {{ .Labels.severity }}
+        *Summary:* {{ .Annotations.summary }}
+        {{ end }}
+      send_resolved: true
+  
+  # Slack for infrastructure alerts
+  - name: 'slack-infrastructure'
+    slack_configs:
+    - channel: '#paradigm-infrastructure'
+      username: 'Paradigm Alertmanager'
+      icon_emoji: ':gear:'
+      title: '⚙️ INFRASTRUCTURE: {{ .GroupLabels.alertname }}'
+      text: |
+        {{ range .Alerts }}
+        *Alert:* {{ .Labels.alertname }}
+        *Severity:* {{ .Labels.severity }}
+        *Summary:* {{ .Annotations.summary }}
+        {{ end }}
+      send_resolved: true
+
+# Made with Bob

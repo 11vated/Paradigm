@@ -1,0 +1,50 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Paradigm Absolute — Kibana Configuration
+# Log visualization and analysis
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Server
+server.name: kibana
+server.host: "0.0.0.0"
+server.port: 5601
+
+# Elasticsearch
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "${ELASTICSEARCH_USER:elastic}"
+elasticsearch.password: "${ELASTICSEARCH_PASSWORD}"
+
+# Kibana index
+kibana.index: ".kibana"
+
+# Logging
+logging.dest: stdout
+logging.silent: false
+logging.quiet: false
+logging.verbose: false
+
+# Monitoring
+monitoring.ui.enabled: true
+monitoring.kibana.collection.enabled: true
+
+# Security
+xpack.security.enabled: true
+xpack.security.encryptionKey: "${KIBANA_ENCRYPTION_KEY}"
+
+# Reporting
+xpack.reporting.enabled: true
+xpack.reporting.encryptionKey: "${KIBANA_REPORTING_KEY}"
+
+# Alerting
+xpack.alerting.enabled: true
+
+# Default space
+xpack.spaces.enabled: true
+
+# Telemetry
+telemetry.enabled: false
+telemetry.optIn: false
+
+# UI settings
+i18n.locale: "en"
+
+# Made with Bob

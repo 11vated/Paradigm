@@ -1,249 +1,280 @@
-# Prometheus Alerting Rules for Paradigm Infinite
-# These rules define when alerts should be triggered based on metrics
+# ═══════════════════════════════════════════════════════════════════════════
+# Paradigm Absolute — Prometheus Alert Rules
+# Critical, warning, and info-level alerts
+# ═══════════════════════════════════════════════════════════════════════════
 
 groups:
-  - name: paradigm_alerts
+  # ─── Application Alerts ────────────────────────────────────────────────
+  - name: paradigm_application
     interval: 30s
     rules:
-      # Application Health
-      - alert: ParadigmAppDown
-        expr: up{job="paradigm"} == 0
-        for: 1m
-        labels:
-          severity: critical
-          component: application
-        annotations:
-          summary: Paradigm application is down
-          description: "Paradigm application has been down for more than 1 minute"
+    # Service Down
+    - alert: ParadigmServiceDown
+      expr: up{job="paradigm-app"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        component: application
+      annotations:
+        summary: "Paradigm service is down"
+        description: "Paradigm application {{ $labels.kubernetes_pod_name }} has been down for more than 1 minute."
+    
+    # High Error Rate
+    - alert: HighErrorRate
+      expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
+      for: 5m
+      labels:
+        severity: critical
+        component: application
+      annotations:
+        summary: "High error rate detected"
+        description: "Error rate is {{ $value | humanizePercentage }} (threshold: 5%)"
+    
+    # Slow Response Time
+    - alert: SlowResponseTime
+      expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 5
+      for: 10m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "Slow response time (p95)"
+        description: "95th percentile response time is {{ $value }}s (threshold: 5s)"
+    
+    # High Memory Usage
+    - alert: HighMemoryUsage
+      expr: (container_memory_usage_bytes{pod=~"paradigm-app.*"} / container_spec_memory_limit_bytes{pod=~"paradigm-app.*"}) > 0.85
+      for: 5m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "High memory usage"
+        description: "Pod {{ $labels.pod }} memory usage is {{ $value | humanizePercentage }} (threshold: 85%)"
+    
+    # High CPU Usage
+    - alert: HighCPUUsage
+      expr: rate(container_cpu_usage_seconds_total{pod=~"paradigm-app.*"}[5m]) > 0.8
+      for: 10m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "High CPU usage"
+        description: "Pod {{ $labels.pod }} CPU usage is {{ $value | humanizePercentage }} (threshold: 80%)"
+    
+    # Pod Restart Loop
+    - alert: PodRestartLoop
+      expr: rate(kube_pod_container_status_restarts_total{pod=~"paradigm-app.*"}[15m]) > 0
+      for: 5m
+      labels:
+        severity: warning
+        component: application
+      annotations:
+        summary: "Pod is restarting frequently"
+        description: "Pod {{ $labels.pod }} has restarted {{ $value }} times in the last 15 minutes"
 
-      - alert: ParadigmHighErrorRate
-        expr: rate(http_requests_total{job="paradigm",status=~"5.."}[5m]) > 0.1
-        for: 5m
-        labels:
-          severity: warning
-          component: application
-        annotations:
-          summary: High error rate detected
-          description: "Error rate is {{ $value }} errors/sec over the last 5 minutes"
+  # ─── Database Alerts ───────────────────────────────────────────────────
+  - name: paradigm_database
+    interval: 30s
+    rules:
+    # Database Down
+    - alert: PostgreSQLDown
+      expr: up{job="postgres"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        component: database
+      annotations:
+        summary: "PostgreSQL is down"
+        description: "PostgreSQL database has been down for more than 1 minute."
+    
+    # High Connection Count
+    - alert: HighDatabaseConnections
+      expr: pg_stat_database_numbackends > 80
+      for: 5m
+      labels:
+        severity: warning
+        component: database
+      annotations:
+        summary: "High number of database connections"
+        description: "Database has {{ $value }} active connections (threshold: 80)"
+    
+    # Slow Queries
+    - alert: SlowDatabaseQueries
+      expr: rate(pg_stat_statements_mean_time_seconds[5m]) > 1
+      for: 10m
+      labels:
+        severity: warning
+        component: database
+      annotations:
+        summary: "Slow database queries detected"
+        description: "Average query time is {{ $value }}s (threshold: 1s)"
+    
+    # Low Disk Space
+    - alert: LowDatabaseDiskSpace
+      expr: (node_filesystem_avail_bytes{mountpoint="/var/lib/postgresql/data"} / node_filesystem_size_bytes{mountpoint="/var/lib/postgresql/data"}) < 0.1
+      for: 5m
+      labels:
+        severity: critical
+        component: database
+      annotations:
+        summary: "Low disk space on database volume"
+        description: "Database disk space is {{ $value | humanizePercentage }} full (threshold: 90%)"
+    
+    # Replication Lag
+    - alert: PostgreSQLReplicationLag
+      expr: pg_replication_lag > 30
+      for: 5m
+      labels:
+        severity: warning
+        component: database
+      annotations:
+        summary: "PostgreSQL replication lag"
+        description: "Replication lag is {{ $value }}s (threshold: 30s)"
 
-      - alert: ParadigmHighLatency
-        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job="paradigm"}[5m])) > 1
-        for: 5m
-        labels:
-          severity: warning
-          component: application
-        annotations:
-          summary: High latency detected
-          description: "95th percentile latency is {{ $value }}s over the last 5 minutes"
+  # ─── Cache Alerts ──────────────────────────────────────────────────────
+  - name: paradigm_cache
+    interval: 30s
+    rules:
+    # Redis Down
+    - alert: RedisDown
+      expr: up{job="redis"} == 0
+      for: 1m
+      labels:
+        severity: critical
+        component: cache
+      annotations:
+        summary: "Redis is down"
+        description: "Redis cache has been down for more than 1 minute."
+    
+    # High Memory Usage
+    - alert: RedisHighMemory
+      expr: (redis_memory_used_bytes / redis_memory_max_bytes) > 0.9
+      for: 5m
+      labels:
+        severity: warning
+        component: cache
+      annotations:
+        summary: "Redis memory usage is high"
+        description: "Redis memory usage is {{ $value | humanizePercentage }} (threshold: 90%)"
+    
+    # High Eviction Rate
+    - alert: RedisHighEvictionRate
+      expr: rate(redis_evicted_keys_total[5m]) > 100
+      for: 5m
+      labels:
+        severity: warning
+        component: cache
+      annotations:
+        summary: "High Redis eviction rate"
+        description: "Redis is evicting {{ $value }} keys/s (threshold: 100/s)"
+    
+    # Connection Errors
+    - alert: RedisConnectionErrors
+      expr: rate(redis_rejected_connections_total[5m]) > 0
+      for: 5m
+      labels:
+        severity: warning
+        component: cache
+      annotations:
+        summary: "Redis connection errors"
+        description: "Redis is rejecting connections at {{ $value }}/s"
 
-      # Database Health
-      - alert: ParadigmDatabaseDown
-        expr: pg_up{job="paradigm"} == 0
-        for: 1m
-        labels:
-          severity: critical
-          component: database
-        annotations:
-          summary: PostgreSQL database is down
-          description: "PostgreSQL database has been down for more than 1 minute"
+  # ─── Infrastructure Alerts ─────────────────────────────────────────────
+  - name: paradigm_infrastructure
+    interval: 30s
+    rules:
+    # Node Down
+    - alert: KubernetesNodeDown
+      expr: up{job="kubernetes-nodes"} == 0
+      for: 5m
+      labels:
+        severity: critical
+        component: infrastructure
+      annotations:
+        summary: "Kubernetes node is down"
+        description: "Node {{ $labels.node }} has been down for more than 5 minutes."
+    
+    # High Node CPU
+    - alert: HighNodeCPU
+      expr: (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) by (instance)) > 0.8
+      for: 10m
+      labels:
+        severity: warning
+        component: infrastructure
+      annotations:
+        summary: "High node CPU usage"
+        description: "Node {{ $labels.instance }} CPU usage is {{ $value | humanizePercentage }} (threshold: 80%)"
+    
+    # High Node Memory
+    - alert: HighNodeMemory
+      expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.85
+      for: 10m
+      labels:
+        severity: warning
+        component: infrastructure
+      annotations:
+        summary: "High node memory usage"
+        description: "Node {{ $labels.instance }} memory usage is {{ $value | humanizePercentage }} (threshold: 85%)"
+    
+    # Low Node Disk Space
+    - alert: LowNodeDiskSpace
+      expr: (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs"} / node_filesystem_size_bytes{fstype!~"tmpfs|fuse.lxcfs"}) < 0.1
+      for: 5m
+      labels:
+        severity: critical
+        component: infrastructure
+      annotations:
+        summary: "Low disk space on node"
+        description: "Node {{ $labels.instance }} disk {{ $labels.device }} is {{ $value | humanizePercentage }} full (threshold: 90%)"
+    
+    # High Disk I/O
+    - alert: HighDiskIO
+      expr: rate(node_disk_io_time_seconds_total[5m]) > 0.9
+      for: 10m
+      labels:
+        severity: warning
+        component: infrastructure
+      annotations:
+        summary: "High disk I/O on node"
+        description: "Node {{ $labels.instance }} disk I/O is {{ $value | humanizePercentage }} (threshold: 90%)"
 
-      - alert: ParadigmDatabaseSlowQueries
-        expr: rate(pg_stat_statements_calls_total{job="paradigm"}[5m]) > 100
-        for: 5m
-        labels:
-          severity: warning
-          component: database
-        annotations:
-          summary: High database query rate
-          description: "Database query rate is {{ $value }} queries/sec over the last 5 minutes"
-
-      - alert: ParadigmDatabaseConnectionsHigh
-        expr: pg_stat_database_numbackends{job="paradigm"} / pg_settings_max_connections{job="paradigm"} > 0.8
-        for: 5m
-        labels:
-          severity: warning
-          component: database
-        annotations:
-          summary: Database connection pool nearly full
-          description: "Database connection usage is {{ $value | humanizePercentage }}"
-
-      # Redis Health
-      - alert: ParadigmRedisDown
-        expr: redis_up{job="paradigm"} == 0
-        for: 1m
-        labels:
-          severity: critical
-          component: cache
-        annotations:
-          summary: Redis cache is down
-          description: "Redis cache has been down for more than 1 minute"
-
-      - alert: ParadigmRedisMemoryHigh
-        expr: redis_memory_used_bytes{job="paradigm"} / redis_memory_max_bytes{job="paradigm"} > 0.9
-        for: 5m
-        labels:
-          severity: warning
-          component: cache
-        annotations:
-          summary: Redis memory usage high
-          description: "Redis memory usage is {{ $value | humanizePercentage }}"
-
-      # Seed Operations
-      - alert: ParadigmSeedGenerationFailures
-        expr: rate(seed_operations_total{job="paradigm",status="failed"}[5m]) > 0.05
-        for: 5m
-        labels:
-          severity: warning
-          component: seeds
-        annotations:
-          summary: High seed generation failure rate
-          description: "Seed generation failure rate is {{ $value }} failures/sec over the last 5 minutes"
-
-      - alert: ParadigmSeedGenerationSlow
-        expr: histogram_quantile(0.95, rate(seed_generation_duration_seconds_bucket{job="paradigm"}[5m])) > 10
-        for: 5m
-        labels:
-          severity: warning
-          component: seeds
-        annotations:
-          summary: Slow seed generation
-          description: "95th percentile seed generation time is {{ $value }}s over the last 5 minutes"
-
-      # GSPL Operations
-      - alert: ParadigmGSPLParseErrors
-        expr: rate(gspl_operations_total{job="paradigm",operation="parse",status="error"}[5m]) > 0.01
-        for: 5m
-        labels:
-          severity: warning
-          component: gspl
-        annotations:
-          summary: High GSPL parse error rate
-          description: "GSPL parse error rate is {{ $value }} errors/sec over the last 5 minutes"
-
-      - alert: ParadigmGSPLExecutionErrors
-        expr: rate(gspl_operations_total{job="paradigm",operation="execute",status="error"}[5m]) > 0.01
-        for: 5m
-        labels:
-          severity: warning
-          component: gspl
-        annotations:
-          summary: High GSPL execution error rate
-          description: "GSPL execution error rate is {{ $value }} errors/sec over the last 5 minutes"
-
-      # Determinism Violations
-      - alert: ParadigmDeterminismViolation
-        expr: rate(determinism_violations_total{job="paradigm"}[5m]) > 0
-        for: 1m
-        labels:
-          severity: critical
-          component: determinism
-        annotations:
-          summary: Determinism violation detected
-          description: "Determinism violation rate is {{ $value }} violations/sec over the last 5 minutes"
-
-      # Memory Usage
-      - alert: ParadigmHighMemoryUsage
-        expr: process_resident_memory_bytes{job="paradigm"} / node_memory_MemAvailable_bytes{job="paradigm"} > 0.8
-        for: 5m
-        labels:
-          severity: warning
-          component: system
-        annotations:
-          summary: High memory usage
-          description: "Memory usage is {{ $value | humanizePercentage }}"
-
-      - alert: ParadigmMemoryLeakSuspected
-        expr: increase(process_resident_memory_bytes{job="paradigm"}[1h]) > 1000000000
-        for: 5m
-        labels:
-          severity: warning
-          component: system
-        annotations:
-          summary: Possible memory leak detected
-          description: "Memory increased by {{ $value | humanize }} over the last hour"
-
-      # CPU Usage
-      - alert: ParadigmHighCPUUsage
-        expr: rate(process_cpu_seconds_total{job="paradigm"}[5m]) > 0.8
-        for: 5m
-        labels:
-          severity: warning
-          component: system
-        annotations:
-          summary: High CPU usage
-          description: "CPU usage is {{ $value | humanizePercentage }}"
-
-      # Disk Usage
-      - alert: ParadigmDiskSpaceLow
-        expr: node_filesystem_avail_bytes{job="paradigm",mountpoint="/data"} / node_filesystem_size_bytes{job="paradigm",mountpoint="/data"} < 0.1
-        for: 5m
-        labels:
-          severity: critical
-          component: system
-        annotations:
-          summary: Disk space low
-          description: "Available disk space is {{ $value | humanizePercentage }}"
-
-      # Backup Status
-      - alert: ParadigmBackupFailed
-        expr: backup_success{job="paradigm"} == 0
-        for: 1h
-        labels:
-          severity: critical
-          component: backup
-        annotations:
-          summary: Backup failed
-          description: "Last backup failed or did not complete"
-
-      - alert: ParadigmBackupOld
-        expr: time() - backup_timestamp_seconds{job="paradigm"} > 86400
-        for: 1h
-        labels:
-          severity: warning
-          component: backup
-        annotations:
-          summary: Backup is old
-          description: "Last successful backup was more than 24 hours ago"
-
-  - name: paradigm_sla
+  # ─── Business Metrics Alerts ───────────────────────────────────────────
+  - name: paradigm_business
     interval: 1m
     rules:
-      # SLA Alerts
-      - alert: ParadigmSLAViolation
-        expr: |
-          (
-            rate(http_requests_total{job="paradigm",status=~"5.."}[5m]) /
-            rate(http_requests_total{job="paradigm"}[5m])
-          ) > 0.01
-        for: 5m
-        labels:
-          severity: critical
-          component: sla
-        annotations:
-          summary: SLA violation - error rate above threshold
-          description: "Error rate is {{ $value | humanizePercentage }}, SLA threshold is 1%"
+    # Low Seed Generation Rate
+    - alert: LowSeedGenerationRate
+      expr: rate(paradigm_seeds_generated_total[5m]) < 1
+      for: 15m
+      labels:
+        severity: info
+        component: business
+      annotations:
+        summary: "Low seed generation rate"
+        description: "Seed generation rate is {{ $value }}/s (expected: >1/s)"
+    
+    # High API Error Rate
+    - alert: HighAPIErrorRate
+      expr: (rate(paradigm_api_requests_total{status=~"5.."}[5m]) / rate(paradigm_api_requests_total[5m])) > 0.01
+      for: 5m
+      labels:
+        severity: warning
+        component: business
+      annotations:
+        summary: "High API error rate"
+        description: "API error rate is {{ $value | humanizePercentage }} (threshold: 1%)"
+    
+    # Queue Backlog
+    - alert: HighQueueBacklog
+      expr: paradigm_queue_depth > 1000
+      for: 10m
+      labels:
+        severity: warning
+        component: business
+      annotations:
+        summary: "High queue backlog"
+        description: "Queue has {{ $value }} pending jobs (threshold: 1000)"
 
-      - alert: ParadigmSLALatencyViolation
-        expr: |
-          histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job="paradigm"}[5m])) > 2
-        for: 5m
-        labels:
-          severity: critical
-          component: sla
-        annotations:
-          summary: SLA violation - latency above threshold
-          description: "99th percentile latency is {{ $value }}s, SLA threshold is 2s"
-
-      - alert: ParadigmSLAAvailabilityViolation
-        expr: |
-          (
-            sum(rate(http_requests_total{job="paradigm",status!~"5.."}[5m])) /
-            sum(rate(http_requests_total{job="paradigm"}[5m]))
-          ) < 0.99
-        for: 5m
-        labels:
-          severity: critical
-          component: sla
-        annotations:
-          summary: SLA violation - availability below threshold
-          description: "Availability is {{ $value | humanizePercentage }}, SLA threshold is 99%"
+# Made with Bob
