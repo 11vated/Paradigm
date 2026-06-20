@@ -32,7 +32,7 @@ const CANONICAL_15_DOMAINS = new Set([
   'character','sprite','music','visual2d','procedural','fullgame','animation','geometry3d','narrative',
   'ui','physics','audio','ecosystem','game','alife','shader','particle','typography','architecture',
   'vehicle','furniture','fashion','robotics','circuit','food','choreography','agent',
-  'nanobot','drug','game-wasm'
+  'nanobot','drug'
 ]);
 
 function try15Contract(seed: any, rng: Xoshiro256StarStar) {
@@ -116,7 +116,6 @@ import { generateCloud } from './generators/cloud.js';
 import { generateDevOps } from './generators/devops.js';
 import { generateDataScience } from './generators/data-science.js';
 import { generateML } from './generators/ml.js';
-import { generateRoboticsIndustrial } from './generators/robotics-industrial.js';
 import { generateBiotechnology } from './generators/biotechnology.js';
 import { generateNanotechnology } from './generators/nanotechnology.js';
 import { generateRenewableEnergy } from './generators/renewable-energy.js';
@@ -128,7 +127,6 @@ import { generateQuantumComputing } from './generators/quantum-computing.js';
 import { generateSyntheticBiology } from './generators/synthetic-biology.js';
 import { generateGenomics } from './generators/genomics.js';
 import { generateAgTech } from './generators/agtech.js';
-import { generateFoodDelivery } from './generators/food-delivery.js';
 import { generateSmartHome } from './generators/smart-home.js';
 import { generateWearables } from './generators/wearables.js';
 import { generate3DPrinting } from './generators/3d-printing.js';

@@ -79,6 +79,17 @@ export const generateCosmology = noop;
 export const generateWorld = noop;
 export const generateApp = noop;
 
+// OBJ Loader utilities (used by viewports, should work in browser)
+export const parseOBJ = (content: string) => ({ meshes: [], materialLibs: [] });
+export const objToBufferGeometry = (data: any) => {
+  const { BufferGeometry } = require('three');
+  return new BufferGeometry();
+};
+export const loadOBJFromURL = async () => {
+  const { BufferGeometry } = require('three');
+  return new BufferGeometry();
+};
+
 // Re-export the proxy so any unexpected named import gets a noop
 export default stub;
 

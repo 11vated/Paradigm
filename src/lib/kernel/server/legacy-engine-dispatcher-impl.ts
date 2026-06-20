@@ -16,14 +16,12 @@ export type GeneratorFn = (seed: Seed, outputPath: string) => Promise<{ [key: st
 // Wire the recently upgraded rich generators (real PNG, WASM+playable, STL, Gerber, SDF) so dispatch/grow always gets rich paths.
 import { generateNanobot } from '../generators/nanobot.js';
 import { generateDrug } from '../generators/drug.js';
-import { generateGameWASM } from '../generators/game-wasm.js';
 import { generateProceduralV3 } from '../generators/procedural.js';
 import { generateCircuitV3 } from '../generators/circuit.js';
 
 export const DOMAIN_MAP: Record<string, GeneratorFn> = {
   nanobot: generateNanobot,
   drug: generateDrug,
-  'game-wasm': generateGameWASM,
   procedural: generateProceduralV3,
   circuit: generateCircuitV3,
 };

@@ -13,18 +13,8 @@ import { GeneticAlgorithm } from '../evolution/ga';
 import { MAPElites } from '../evolution/map-elites';
 import { kernelNow, kernelNowIso } from './clock';
 import type { Stratum } from './quality-contract';
+import type { Seed } from './pipeline/types';
 import { createHash } from 'node:crypto'; // v1.6: for deterministic self-model / cognition proofs (seeded inputs only)
-
-type Seed = {
-  $gst?: string;
-  $domain?: unknown;
-  $hash?: string;
-  $name?: unknown;
-  $lineage?: { generation?: number; operation?: string; parents?: string[] };
-  genes: Record<string, { type?: string; value: unknown }>;
-  strata?: string[];
-  [key: string]: unknown;
-};
 
 export interface GSPLContext {
   seeds: Map<string, Seed>;
@@ -366,9 +356,9 @@ export class GsplInterpreter {
       // Check user-defined functions first
       const fnNode = this.context.functions.get(name);
       if (fnNode) {
-        const args = await Promise.all(node.arguments.map((arg: any) => this.evaluateNode(arg)));
+        const args = await Promise.all(node.arguments.map((arg: unknown) => this.evaluateNode(arg)));
         const oldVars = new Map(this.context.variables);
-        const fparams = (fnNode.params || []) as any[];
+        const fparams = (fnNode.params || []) as unknown as Array<{ name: string }>;
         for (let i = 0; i < fparams.length; i++) {
           this.context.variables.set(fparams[i].name, args[i]);
         }
@@ -382,15 +372,16 @@ export class GsplInterpreter {
       return this.evaluateBuiltin(name, node.arguments);
     }
 
-    const callee = this.evaluateNode(node.callee) as any /* Phase 1 carveout: dynamic GSPL callee from tolerant parser; full type would require AST overhaul (see 13b) */;
-    if (callee && callee.type === 'function') {
-      const fnNode = this.context.functions.get(callee.name);
-      if (!fnNode) throw new Error(`Function not found: ${callee.name}`);
+    const callee = this.evaluateNode(node.callee) as unknown; // Phase 1 carveout: dynamic GSPL callee from tolerant parser; full type would require AST overhaul (see 13b)
+    const calleeObj = callee as { type?: string; name?: string } | null;
+    if (calleeObj && calleeObj.type === 'function' && calleeObj.name) {
+      const fnNode = this.context.functions.get(calleeObj.name);
+      if (!fnNode) throw new Error(`Function not found: ${calleeObj.name}`);
 
-      const args = await Promise.all(node.arguments.map((arg: any) => this.evaluateNode(arg)));
+      const args = await Promise.all(node.arguments.map((arg: unknown) => this.evaluateNode(arg)));
 
       const oldVars = new Map(this.context.variables);
-      const fparams = (fnNode.params || []) as any[];
+      const fparams = (fnNode.params || []) as unknown as Array<{ name: string }>;
       for (let i = 0; i < fparams.length; i++) {
         this.context.variables.set(fparams[i].name, args[i]);
       }
@@ -543,7 +534,7 @@ export class GsplInterpreter {
           const up = post - (prior.fitness||baseFitness);
           this.context._v15_adapt[stateKey] = { fitness: post, evos: (prior.evos||0)+1, avgUplift: (prior.avgUplift||0)*0.7 + up*0.3 };
           const res = this.callKernelMutate(targetSeed, rate);
-          if (res && typeof res === 'object') (res as any).$autonomous = { decision, postFitnessProxy: Number(post.toFixed(4)) };
+          if (res && typeof res === 'object') (res as Record<string, unknown>).$autonomous = { decision, postFitnessProxy: Number(post.toFixed(4)) };
           return res;
         })();
 
@@ -1182,12 +1173,14 @@ export class GsplInterpreter {
           const maintenanceDelta = 0.005; // det increment
           const newCoherence = Math.min(this.context._v24_absolute.boundaries.maxCoherence, currentCoherence + maintenanceDelta);
           const adaptiveRate = Math.max(0.05, Math.min(0.15, (newCoherence - 0.8) * 0.5));
-          const sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate) as any;
+          const sustained = this.callKernelMutate(absoluteSubstrate, adaptiveRate);
           // Adaptive enhancement (self-sustaining optimization)
           if (sustained && sustained.genes) {
             Object.keys(sustained.genes).forEach(k => {
-              const optVal = (sustained.genes[k].value || 0) + (newCoherence * 0.02);
-              sustained.genes[k] = { ...(sustained.genes[k]), value: Number(optVal.toFixed(4)) };
+              const gene = sustained.genes[k];
+              const val = typeof gene.value === 'number' ? gene.value : 0;
+              const optVal = val + (newCoherence * 0.02);
+              sustained.genes[k] = { ...gene, value: Number(optVal.toFixed(4)) };
             });
           }
           this.context._v24_absolute.substrate = sustained;
@@ -1247,12 +1240,14 @@ export class GsplInterpreter {
           const regenDelta = 0.002; // det perpetual increment
           const newP = Math.min(this.context._v25_eternal.boundaries.maxPerpetuation, currentP + regenDelta);
           const regenRate = Math.max(0.03, Math.min(0.12, (newP - 0.85) * 0.4));
-          const perpetuated = this.callKernelMutate(eternalSubstrate, regenRate) as any;
+          const perpetuated = this.callKernelMutate(eternalSubstrate, regenRate);
           // Adaptive regeneration (self-perpetuating optimization)
           if (perpetuated && perpetuated.genes) {
             Object.keys(perpetuated.genes).forEach(k => {
-              const regenVal = (perpetuated.genes[k].value || 0) + (newP * 0.015);
-              perpetuated.genes[k] = { ...(perpetuated.genes[k]), value: Number(regenVal.toFixed(4)) };
+              const gene = perpetuated.genes[k];
+              const val = typeof gene.value === 'number' ? gene.value : 0;
+              const regenVal = val + (newP * 0.015);
+              perpetuated.genes[k] = { ...gene, value: Number(regenVal.toFixed(4)) };
             });
           }
           this.context._v25_eternal.substrate = perpetuated;
@@ -1312,12 +1307,14 @@ export class GsplInterpreter {
           const verifyDelta = 0.001; // det perpetual increment
           const newC = Math.min(this.context._v26_absolute.boundaries.maxConvergence, currentC + verifyDelta);
           const verifyRate = Math.max(0.02, Math.min(0.1, (newC - 0.9) * 0.3));
-          const converged = this.callKernelMutate(absoluteContinuum, verifyRate) as any;
+          const converged = this.callKernelMutate(absoluteContinuum, verifyRate);
           // Recursive verification (self-referential propagation)
           if (converged && converged.genes) {
             Object.keys(converged.genes).forEach(k => {
-              const propVal = (converged.genes[k].value || 0) + (newC * 0.01);
-              converged.genes[k] = { ...(converged.genes[k]), value: Number(propVal.toFixed(4)) };
+              const gene = converged.genes[k];
+              const val = typeof gene.value === 'number' ? gene.value : 0;
+              const propVal = val + (newC * 0.01);
+              converged.genes[k] = { ...gene, value: Number(propVal.toFixed(4)) };
             });
           }
           this.context._v26_absolute.continuum = converged;
@@ -1572,10 +1569,11 @@ export class GsplInterpreter {
     }
   }
   
-  private callKernelMutate(target: any, rate: number): unknown { // any: dynamic seed for kernel builtin (GSPL carveout)
+  private callKernelMutate(target: unknown, rate: number): { genes: Record<string, { type?: string; value?: unknown }>; $hash: string; $name: string; $lineage: { generation: number; operation: string; parents: string[] }; [key: string]: unknown } { // dynamic seed for kernel builtin (GSPL carveout)
+    // Ensure parents is always string[] by providing fallback
     const intensity = typeof rate === 'number' ? rate : 0.15;
-    const t = target as any; // any: seed from GSPL context is dynamic (loose Seed union); $hash etc for mutate builtin
-    // Handle plain Seed objects
+    const t = target as { $hash?: string; $name?: string; $lineage?: { generation?: number; operation?: string; parents?: string[] }; genes?: Record<string, { type?: string; value?: unknown }>; [key: string]: unknown };
+      // Handle plain Seed objects
     if (t && t.$hash !== undefined) {
       const mutated = {
         ...t,
@@ -1584,14 +1582,16 @@ export class GsplInterpreter {
         $lineage: {
           ...t.$lineage,
           operation: 'gspl_mutate',
-          generation: (t.$lineage?.generation || 0) + 1
+          generation: (t.$lineage?.generation || 0) + 1,
+          parents: t.$lineage?.parents || [] // ensure parents is always string[]
         },
         genes: { ...t.genes }
       };
       for (const [key, gene] of Object.entries(mutated.genes)) {
         if (this.context.rng.nextF64() < intensity) {
-          if (typeof (gene as any /* Phase 1 carveout: gene shape from seed; see interpreter header */).value === 'number') {
-            mutated.genes[key] = { ...(gene as any), value: (gene as any).value + (this.context.rng.nextF64() - 0.5) * 0.2 };
+          const gv = gene as unknown as { value?: unknown } | undefined; // Phase 1 carveout: gene shape from seed; see interpreter header
+          if (gv && typeof gv.value === 'number') {
+            mutated.genes[key] = { ...gv, value: gv.value + (this.context.rng.nextF64() - 0.5) * 0.2 };
           }
         }
       }
@@ -1601,7 +1601,19 @@ export class GsplInterpreter {
       return mutated;
     }
     if (target instanceof UniversalSeed) {
-      return target.mutate(this.context.rng, intensity);
+      const mutatedSeed = target.mutate(this.context.rng, intensity);
+      // Convert UniversalSeed to expected return format
+      const geneMap = mutatedSeed.getAllGenes();
+      const genes: Record<string, { type?: string; value?: unknown }> = {};
+      for (const [k, v] of geneMap.entries()) {
+        genes[k] = { type: v.type, value: v.value };
+      }
+      return {
+        genes,
+        $hash: mutatedSeed.$hash,
+        $name: mutatedSeed.$name,
+        $lineage: { generation: mutatedSeed.getGeneration(), operation: 'gspl_mutate', parents: mutatedSeed.getParents() },
+      };
     }
     throw new Error(`mutate expects a Seed, got ${typeof target}`);
   }
@@ -1711,22 +1723,23 @@ export class GsplInterpreter {
         $hash: this.context.rng.nextF64().toString(16),
         $lineage: seed.$lineage || { generation: 0, operation: 'gspl-grow' },
         genes: seed.genes || (typeof seed === 'object' ? seed : {}),
-        strata: (seed as any).strata,
+        strata: (seed as unknown as { strata?: string[] }).strata,
       };
     }
 
     if (plain && plain.$hash !== undefined) {
       try {
         const { growSeed } = await import('./engines.js');
-        const artifact: any = await growSeed(plain as any);
+        const artifact = await growSeed(plain as Seed);
         const rich = artifact || {};
         // promote top level as required
+        const { type, domain, name, seed_hash, strata, visual, emergent_assets, summary, metrics, pngDataURL, svgDataURL, structuredData, files, c2pa_manifest, ...rest } = rich;
         return {
           type: 'rich_artifact',
           domain: plain.$domain,
           name: plain.$name,
           seed_hash: plain.$hash,
-          strata: plain.strata || (seed as any)?.strata,
+          strata: plain.strata || (seed as unknown as { strata?: string[] })?.strata,
           visual: rich.visual,
           emergent_assets: rich.emergent_assets,
           summary: rich.summary,
@@ -1737,7 +1750,7 @@ export class GsplInterpreter {
           files: rich.files,
           c2pa_manifest: rich.c2pa_manifest,
           artifact,
-          ...rich
+          ...rest
         };
       } catch (e) {
         return {
@@ -1753,16 +1766,31 @@ export class GsplInterpreter {
     if (seed instanceof UniversalSeed) {
       // Dynamic import (no require) to avoid circular ESM at boot
       const { growSeed } = await import('./engines.js');
-      const artifact: any = await growSeed(seed as any /* justified: UniversalSeed vs local Seed type (private genes vs loose); real kernel op, det preserved */);
+      // Convert UniversalSeed to kernel Seed type for growSeed
+      const geneMap = seed.getAllGenes();
+      const genes: Record<string, { type?: string; value: unknown }> = {};
+      for (const [k, v] of geneMap.entries()) {
+        genes[k] = { type: v.type, value: v.value };
+      }
+      const kernelSeed: Seed = {
+        $domain: seed.$domain,
+        $name: seed.$name,
+        $hash: seed.$hash,
+        $lineage: { generation: seed.getGeneration(), operation: 'gspl-grow', parents: seed.getParents() },
+        genes,
+        strata: seed.metadata.tags || [], // UniversalSeed doesn't have strata field, use tags as proxy
+      };
+      const artifact = await growSeed(kernelSeed);
       // Promote rich fields (visual/emergent/summary/metrics/strata) so GSPL grow produces
       // UI-consumable + canonical-GSPL-reproducible rich artifacts (orchestration layer).
-      const rich = (artifact as any) || {};
+      const rich = artifact || {};
+      const { type, domain, name, seed_hash, strata, visual, emergent_assets, summary, metrics, pngDataURL, svgDataURL, structuredData, files, c2pa_manifest, ...rest } = rich;
       return {
         type: 'rich_artifact',
-        domain: (seed as any).$domain,
-        name: (seed as any).$name,
-        seed_hash: (seed as any).id || (seed as any).$hash,
-        strata: rich.strata || (seed as any).strata,
+        domain: seed.$domain,
+        name: seed.$name,
+        seed_hash: seed.$hash,
+        strata: (rich.strata as string[] | undefined) || seed.metadata.tags || [],
         visual: rich.visual,
         emergent_assets: rich.emergent_assets,
         summary: rich.summary,
@@ -1773,7 +1801,7 @@ export class GsplInterpreter {
         files: rich.files,
         c2pa_manifest: rich.c2pa_manifest,
         artifact,
-        ...rich
+        ...rest
       };
     }
     throw new Error(`grow expects a Seed as argument`);
@@ -1785,17 +1813,27 @@ export class GsplInterpreter {
     // Constraints (strata, genes) from GSPL args (including explicit 2nd arg to generate_*) are merged and passed to grow.
     // Full strata/ support added for generate_* and grow so GSPL can constrain rich gens.
     try {
-      const s: any = seedOrParams || { $domain: domain, genes: {} };
+      const s: Seed = (seedOrParams as unknown as Seed) || { $domain: domain, genes: {} };
       if (typeof s === 'object' && !s.$domain) s.$domain = domain;
       // Merge strataConstraint (for generate_xxx(params, ["Form","Mind"]) form) + from object
-      let strata: any = undefined;
+      let strata: string[] | undefined = undefined;
       if (strataConstraint != null) {
         strata = Array.isArray(strataConstraint) ? strataConstraint : (typeof strataConstraint === 'string' ? [strataConstraint] : undefined);
       }
       if (seedOrParams && typeof seedOrParams === 'object') {
-        const arg = seedOrParams as any;
+        const arg = seedOrParams as unknown as { strata?: string[]; genes?: Record<string, unknown> };
         if (!strata && arg.strata) strata = arg.strata;
-        if (arg.genes) s.genes = { ...(s.genes || {}), ...arg.genes };
+        if (arg.genes) {
+          const convertedGenes: Record<string, { type?: string; value: unknown }> = {};
+          for (const [k, v] of Object.entries(arg.genes)) {
+            if (v && typeof v === 'object' && 'type' in v && 'value' in v) {
+              convertedGenes[k] = { type: String(v.type), value: v.value };
+            } else {
+              convertedGenes[k] = { value: v };
+            }
+          }
+          s.genes = { ...(s.genes || {}), ...convertedGenes };
+        }
       }
       if (strata) {
         s.strata = this.validateStrata(strata) || strata;
@@ -1803,8 +1841,9 @@ export class GsplInterpreter {
       // Use the canonical grow path (pipeline + contracts) which attaches rich UI-consumable data
       // (pngDataURL, visual, emergent_assets, summary, metrics, structuredData etc.)
       const { growSeed } = await import('./engines.js');
-      const artifact: any = await growSeed(s as any);
+      const artifact = await growSeed(s);
       // Return rich-forward structure + promote top level per spec
+      const { type, domain: artDomain, name, seed_hash, strata: artStrata, visual, emergent_assets, summary, metrics, pngDataURL, svgDataURL, previewData, structuredData, files, c2pa_manifest, ...rest } = artifact || {};
       const promoted = {
         type: 'rich_artifact',
         domain,
@@ -1822,7 +1861,7 @@ export class GsplInterpreter {
         structuredData: artifact?.structuredData,
         files: artifact?.files,
         c2pa_manifest: artifact?.c2pa_manifest,
-        ...artifact
+        ...rest
       };
       return promoted;
     } catch (error) {
@@ -1842,8 +1881,8 @@ export class GsplInterpreter {
     const isPlainSeeds = population.length > 0 && population[0].$hash !== undefined;
     
     // Parse config
-    const config = (configExpr || {}) as any; // any: evolve config from GSPL expr is dynamic {generationLimit, strata, ...}
-    const generations = config.generationLimit ?? config.generations ?? 10;
+    const config = (configExpr || {}) as unknown as Record<string, unknown>; // evolve config from GSPL expr is dynamic {generationLimit, strata, ...}
+    const generations = (config.generationLimit as number) ?? (config.generations as number) ?? 10;
     
     if (isPlainSeeds) {
       // Simple evolution for plain seeds: return top N after simulated generations
@@ -1863,21 +1902,38 @@ export class GsplInterpreter {
       }
     }
     
+    // Convert UniversalSeed[] to kernel Seed[] for GA
+    const kernelPopulation: Seed[] = population.map(s => {
+      const geneMap = s.getAllGenes();
+      const genes: Record<string, { type?: string; value: unknown }> = {};
+      for (const [k, v] of geneMap.entries()) {
+        genes[k] = { type: v.type, value: v.value };
+      }
+      return {
+        $domain: s.$domain,
+        $name: s.$name,
+        $hash: s.$hash,
+        $lineage: { generation: s.getGeneration(), operation: 'gspl_evolve', parents: s.getParents() },
+        genes,
+        strata: s.metadata.tags || [],
+      };
+    });
+    
     // Parse config
     const gaConfig = {
-      populationSize: config.populationSize ?? population.length,
-      generationLimit: config.generationLimit ?? 100,
-      mutationRate: config.mutationRate ?? 0.15,
-      crossoverRate: config.crossoverRate ?? 0.8,
-      tournamentSize: config.tournamentSize ?? 5,
-      elitismCount: config.elitismCount ?? Math.ceil(population.length * 0.1)
-    }; // config is any from GSPL (carveout)
+      populationSize: (config.populationSize as number) ?? population.length,
+      generationLimit: (config.generationLimit as number) ?? 100,
+      mutationRate: (config.mutationRate as number) ?? 0.15,
+      crossoverRate: (config.crossoverRate as number) ?? 0.8,
+      tournamentSize: (config.tournamentSize as number) ?? 5,
+      elitismCount: (config.elitismCount as number) ?? Math.ceil(population.length * 0.1)
+    };
     
     // Create GA instance
     const ga = new GeneticAlgorithm(this.context.rng);
     
     // Wrap fitness function
-    let fitnessFn = async (seed: UniversalSeed): Promise<number> => {
+    let fitnessFn = async (seed: Seed): Promise<number> => {
       // If fitnessFnExpr is a function AST node, evaluate it with seed context
       if (typeof fitnessFnExpr === 'function') {
         return await fitnessFnExpr(seed);
@@ -1891,10 +1947,10 @@ export class GsplInterpreter {
     if (targetStrata) {
       const boostFactor = typeof config.strataBoost === 'number' ? config.strataBoost : 0.5;
       fitnessFn = this.makeStrataBoostedFitness(fitnessFn, targetStrata, boostFactor);
-    } // config any (GSPL carveout) for strataBoost etc.
+    }
     
     // Run evolution
-    const result = await ga.evolve(population as any /* Phase 1 carveout: GA pop from GSPL, dynamic; Seed type mismatch (local vs kernel) tolerated for interpreter */ , fitnessFn as any, gaConfig as any);
+    const result = await ga.evolve(kernelPopulation, fitnessFn, gaConfig);
     
     const evolveResult: { bestSeed?: unknown; bestFitness?: number; generation?: number; history?: unknown; strataBoostApplied?: boolean; strataTarget?: unknown; bestStrataScore?: number } = {
       bestSeed: result.best,
@@ -2098,6 +2154,8 @@ export class GsplInterpreter {
       }
     }
 
+    // Ensure seed.genes is initialized
+    if (!seed.genes) seed.genes = {};
     for (const gene of node.genes) {
       const value = await this.evaluateNode(gene.value);
       seed.genes[gene.geneName] = {
@@ -2124,7 +2182,7 @@ export class GsplInterpreter {
         operation: 'gspl_breed',
         parents: [parentA.$hash, parentB.$hash]
       } as { generation?: number; operation?: string; parents?: string[] },
-      genes: {}
+      genes: {} as Record<string, { type?: string; value: unknown }>
     };
 
     const allGenes = new Set([
@@ -2138,15 +2196,15 @@ export class GsplInterpreter {
       
       if (geneA && geneB) {
         if (typeof geneA.value === 'number' && typeof geneB.value === 'number') {
-          child.genes[geneName] = {
+          child.genes![geneName] = {
             type: geneA.type,
             value: this.context.rng.nextF64() > 0.5 ? geneA.value : geneB.value
-          } as any; // value required in Seed gene type, but from dynamic; carveout
+          } as { type?: string; value: unknown }; // value required in Seed gene type, but from dynamic; carveout
         } else {
-          child.genes[geneName] = (this.context.rng.nextF64() > 0.5 ? geneA : geneB) as { type?: string; value: unknown }; // value required in local Seed gene type vs dynamic from GSPL
+          child.genes![geneName] = (this.context.rng.nextF64() > 0.5 ? geneA : geneB) as { type?: string; value: unknown }; // value required in local Seed gene type vs dynamic from GSPL
         }
         } else {
-          (child.genes as Record<string, any>)[geneName] = geneA || geneB;
+          (child.genes! as Record<string, any>)[geneName] = geneA || geneB;
       }
     }
 
@@ -2168,7 +2226,7 @@ export class GsplInterpreter {
         generation: (seed.$lineage?.generation || 0) + 1,
         parents: [seed.$hash]
       },
-      genes: {}
+      genes: {} as Record<string, { type?: string; value: unknown }>
     };
     
     for (const [name, gene] of Object.entries(seed.genes || {})) {
@@ -2179,20 +2237,20 @@ export class GsplInterpreter {
             const u2 = this.context.rng.nextF64();
             return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
           };
-          mutated.genes[name] = {
-            ...(gene as { value?: unknown }),
-            value: ((gene as { value?: number }).value ?? 0) + gaussian() * 0.1
-          };
+      mutated.genes![name] = {
+        ...(gene as { value?: unknown }),
+        value: ((gene as { value?: number }).value ?? 0) + gaussian() * 0.1
+      };
         } else if (Array.isArray((gene as { value?: unknown }).value)) {
-          mutated.genes[name] = {
+          mutated.genes![name] = {
             ...(gene as { value?: unknown }),
             value: ((gene as { value?: number[] }).value ?? []).map((v: number) => v + (this.context.rng.nextF64() - 0.5) * 0.1)
           };
         } else {
-          mutated.genes[name] = gene as { type?: string; value: unknown };
+          mutated.genes![name] = gene as { type?: string; value: unknown };
         }
       } else {
-        mutated.genes[name] = gene as { type?: string; value: unknown };
+        mutated.genes![name] = gene as { type?: string; value: unknown };
       }
     }
     
@@ -2344,17 +2402,19 @@ export class GsplInterpreter {
   // ─── Strata runtime builtins (strata now influences + observable at execution) ───
   private strataOfBuiltin(seedRef: unknown): string[] | null {
     if (!seedRef) return null;
-    const name = typeof seedRef === 'string' ? seedRef : ((seedRef as any).$name || (seedRef as any).name);
+    const ref = seedRef as unknown as { $name?: string; name?: string; strata?: string[]; $strata?: string[] };
+    const name = typeof seedRef === 'string' ? seedRef : (ref.$name || ref.name);
     if (!name) return null;
     for (const s of this.context.seeds.values()) {
-      if ((s as { $name?: unknown; name?: unknown }).$name === name || (s as { $name?: unknown; name?: unknown }).name === name) {
-        const strata = (s as { strata?: unknown }).strata;
+      const sv = s as unknown as { $name?: string; name?: string; strata?: string[] };
+      if (sv.$name === name || sv.name === name) {
+        const strata = sv.strata;
         return Array.isArray(strata) ? strata : null;
       }
     }
     // Also accept direct seed object passed in
-    if (seedRef && Array.isArray((seedRef as any).strata)) return (seedRef as any).strata;
-    if (seedRef && Array.isArray((seedRef as any).$strata)) return (seedRef as any).$strata;
+    if (ref.strata) return ref.strata;
+    if (ref.$strata) return ref.$strata;
     return null;
   }
 
@@ -2456,13 +2516,20 @@ export class GsplInterpreter {
   }
 
   private makeStrataBoostedFitness(
-    baseFitness: (seed: UniversalSeed) => Promise<number> | number,
+    baseFitness: (seed: Seed) => Promise<number> | number,
     targets: any,
     boostFactor = 0.6
-  ): (seed: UniversalSeed) => Promise<number> {
-    return async (seed: UniversalSeed) => {
+  ): (seed: Seed) => Promise<number> {
+    return async (seed: Seed) => {
       const base = await Promise.resolve(baseFitness(seed));
-      const strataScore = this.strataScoreBuiltin(seed, targets);
+      // Convert Seed to UniversalSeed-like for strata scoring
+      const seedLike = {
+        ...seed,
+        $domain: seed.$domain,
+        $hash: seed.$hash,
+        strata: seed.strata,
+      };
+      const strataScore = this.strataScoreBuiltin(seedLike, targets);
       return Math.max(0, Math.min(1, base + (strataScore * boostFactor)));
     };
   }
@@ -2482,6 +2549,23 @@ export class GsplInterpreter {
 
     if (isRealSeeds) {
       // Deeper integration: use the real GeneticAlgorithm with strata-boosted fitness
+      // Convert UniversalSeed[] to kernel Seed[] for GA
+      const kernelPopulation: Seed[] = population.map((s: UniversalSeed) => {
+        const geneMap = s.getAllGenes();
+        const genes: Record<string, { type?: string; value: unknown }> = {};
+        for (const [k, v] of geneMap.entries()) {
+          genes[k] = { type: v.type, value: v.value };
+        }
+        return {
+          $domain: s.$domain,
+          $name: s.$name,
+          $hash: s.$hash,
+          $lineage: { generation: s.getGeneration(), operation: 'gspl_evolve_strata', parents: s.getParents() },
+          genes,
+          strata: s.metadata.tags || [],
+        };
+      });
+
       const gaConfig = {
         populationSize: population.length,
         generationLimit: 30,
@@ -2494,10 +2578,13 @@ export class GsplInterpreter {
       const ga = new GeneticAlgorithm(this.context.rng);
 
       // Base fitness = strataScore (the "weighted" intent for this builtin)
-      const baseFitness = (s: UniversalSeed) => this.strataScoreBuiltin(s, targets);
+      const baseFitness = (s: Seed) => {
+        const seedLike = { ...s, $domain: s.$domain, $hash: s.$hash, strata: s.strata };
+        return this.strataScoreBuiltin(seedLike, targets);
+      };
       const boostedFitness = this.makeStrataBoostedFitness(baseFitness, targets, 0.7);
 
-      const gaResult = await ga.evolve(population as any, boostedFitness as any, gaConfig as any); // Phase 1 carveout: strata-boosted GA, dynamic types tolerated (Seed vs UniversalSeed)
+      const gaResult = await ga.evolve(kernelPopulation, boostedFitness, gaConfig);
 
       this.context.output.push(`Strata-weighted evolve (real GA): best strata alignment ${gaResult.fitness.toFixed(2)} after ${gaResult.generation} generations`);
 
@@ -2717,15 +2804,17 @@ export class GsplInterpreter {
     const name = String(rawName).replace(/[^a-zA-Z0-9_]/g, '_') || 's1';
     const domain = String(seed.$domain || seed.domain || 'character');
     let src = `seed ${name} : ${domain} {`;
+    const s = seed as unknown as { $strata?: string[] };
     const strataArr: string[] = Array.isArray(seed.strata) ? seed.strata :
-      (Array.isArray((seed as any).$strata) ? (seed as any).$strata : []);
+      (Array.isArray(s.$strata) ? s.$strata : []);
     if (strataArr.length > 0) {
       // valid syntax for parser: ID + ID ;  (not JSON array)
       src += `\n  strata: ${strataArr.join(' + ')};`;
     }
     const genes = seed.genes || {};
     for (const [k, gv] of Object.entries(genes)) {
-      const val = (gv && typeof gv === 'object' && 'value' in (gv as any)) ? (gv as any).value : gv;
+      const geneVal = gv as unknown as { value?: unknown } | undefined;
+      const val = (geneVal && typeof geneVal === 'object' && 'value' in geneVal) ? geneVal.value : gv;
       let vstr: string;
       if (typeof val === 'string') vstr = JSON.stringify(val);
       else if (typeof val === 'number' || typeof val === 'boolean' || val === null) vstr = String(val);
@@ -2756,7 +2845,7 @@ export class GsplInterpreter {
     const seeds = Array.from(this.context.seeds.values());
     if (seeds.length > 0) return seeds[0];
     // fallback to lastResult if no seed decl (e.g. pure expr)
-    const last = (await this.execute(source) as any)?.lastResult; // re-exec safe (det)
+    const last = (await this.execute(source) as unknown as { lastResult?: unknown })?.lastResult; // re-exec safe (det)
     return last || null;
   }
 

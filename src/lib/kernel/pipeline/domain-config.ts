@@ -278,8 +278,9 @@ export const DOMAIN_CONFIGS: DomainConfig[] = [
   {
     domain: 'game', version: 'v2', outputExtension: 'js',
     generator: async (s, p) => {
-      const { generateGameWASM } = await import('../generators/game-wasm');
-      return generateGameWASM(s, p);
+      // game.ts now includes the WASM logic directly
+      const { generateGameV3 } = await import('../generators/game');
+      return generateGameV3(s, p);
     },
     postProcess: (o: any, s: Seed) => ({
       game: {

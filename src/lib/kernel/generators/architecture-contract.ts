@@ -6,7 +6,7 @@ import { promises as fsp } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateArchitecture } from './architecture';
+import { generateArchitecture, ensureNodeCanvas } from './architecture';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -50,6 +50,7 @@ export const ArchitectureQualityContract: QualityContract<S, A, any> = {
     { id: 'architecture-quiet', name: 'Quiet architecture', intent: 'low-energy', seed: { $domain: 'architecture', $name: 'architecture-quiet', genes: { energy: 0.1 } } },
   ],
   synthesize: async (seed) => {
+    await ensureNodeCanvas();
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'architecture-'));
     try {
       const r = await withKernelClock(0, () => generateArchitecture(seed, dir));

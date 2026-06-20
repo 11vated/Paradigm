@@ -13,6 +13,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateVehicle } from './vehicle';
+import { ensureNodeCanvas } from './canvas-utils';
 import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -49,6 +50,7 @@ function hashArtifact(a: A): string {
 }
 
 async function synthesize(seed: S): Promise<A> {
+  await ensureNodeCanvas();
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'vehicle-'));
   // Pass directory (not a file) to match the canonical generator's expectation
   // (it appends vehicle_*.json / .gltf / .html inside the directory).

@@ -1,20 +1,54 @@
-import { StratumPredicates, StratumScore, Stratum } from './types';
-import { CharacterArtifact } from '../domains/character';
+/**
+ * World Stratum — Base Predicate Implementation (Engineering Grade)
+ * 
+ * World covers biomes, locations, factions, navigation, and world coherence.
+ */
 
-export class WorldStratum implements StratumPredicates<CharacterArtifact> {
+import { StratumPredicates, StratumScore, Stratum } from './types';
+import { worldPredicate } from '../../kernel/quality/predicates';
+
+export interface WorldArtifact {
+  biomes: string[];
+  locations: any[];
+  factions: string[];
+  navmeshContinuous: boolean;
+  ecologicalCoherence: number;
+  agentDensity: number;
+  spatialConnectivity: number;
+  temporalCoherence: number;
+  resourceBalance: number;
+  conflictRichness: number;
+}
+
+export class WorldStratum implements StratumPredicates<WorldArtifact> {
   readonly stratum: Stratum = 'World';
 
-  evaluate(artifact: CharacterArtifact): StratumScore {
-    const world = artifact.strataScores.World ?? 0.5;
+  evaluate(artifact: WorldArtifact): StratumScore {
+    const result = worldPredicate(artifact);
+    const score = result.passed ? result.score : Math.max(0.1, result.score);
+    
     return {
-      score: world,
-      confidence: 0.8,
-      issues: world < 0.7 ? ['World integration / environmental coherence low'] : [],
+      score,
+      confidence: 0.9,
+      subscores: this.parseDetails(result.details),
+      issues: result.passed ? [] : ['World coherence below flagship threshold'],
     };
   }
 
-  explain(artifact: CharacterArtifact): string {
-    return `World stratum: ${((artifact.strataScores.World ?? 0) * 100).toFixed(1)}%.`;
+  private parseDetails(details: string): Record<string, number> {
+    const result: Record<string, number> = {};
+    details.split(', ').forEach(part => {
+      const [key, value] = part.split('=');
+      if (key && value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) result[key.trim()] = num;
+      }
+    });
+    return result;
+  }
+
+  explain(artifact: WorldArtifact): string {
+    return `World stratum: ${(this.evaluate(artifact).score * 100).toFixed(1)}% — ${worldPredicate(artifact).details}`;
   }
 }
 

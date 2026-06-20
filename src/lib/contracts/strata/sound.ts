@@ -1,22 +1,54 @@
-import { StratumPredicates, StratumScore, Stratum } from './types';
-import { CharacterArtifact } from '../domains/character';
+/**
+ * Sound Stratum — Base Predicate Implementation (Engineering Grade)
+ * 
+ * Sound covers audio quality, stems, LUFS, spectral balance, and rhythm.
+ */
 
-export class SoundStratum implements StratumPredicates<CharacterArtifact> {
+import { StratumPredicates, StratumScore, Stratum } from './types';
+import { soundPredicate } from '../../kernel/quality/predicates';
+
+export interface SoundArtifact {
+  lufs: number;
+  truePeak: number;
+  stems: string[];
+  bpm: number;
+  language?: string;
+  spectralBalance: number;
+  dynamicRange: number;
+  rhythmClarity: number;
+  timbralRichness: number;
+  harmonyConsonance: number;
+}
+
+export class SoundStratum implements StratumPredicates<SoundArtifact> {
   readonly stratum: Stratum = 'Sound';
 
-  evaluate(artifact: CharacterArtifact): StratumScore {
-    const sound = artifact.strataScores.Sound ?? 0.5;
-    const voiceDuration = artifact.voiceSampleDuration || 0;
-    const score = sound * 0.7 + Math.min(voiceDuration / 5, 0.3);
+  evaluate(artifact: SoundArtifact): StratumScore {
+    const result = soundPredicate(artifact);
+    const score = result.passed ? result.score : Math.max(0.1, result.score);
+    
     return {
-      score: Math.min(1, score),
+      score,
       confidence: 0.85,
-      issues: sound < 0.8 ? ['Voice / audio quality insufficient'] : [],
+      subscores: this.parseDetails(result.details),
+      issues: result.passed ? [] : ['Audio quality below flagship threshold'],
     };
   }
 
-  explain(artifact: CharacterArtifact): string {
-    return `Sound stratum: ${((artifact.strataScores.Sound ?? 0) * 100).toFixed(1)}% — ${artifact.voiceSampleDuration}s voice samples.`;
+  private parseDetails(details: string): Record<string, number> {
+    const result: Record<string, number> = {};
+    details.split(', ').forEach(part => {
+      const [key, value] = part.split('=');
+      if (key && value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) result[key.trim()] = num;
+      }
+    });
+    return result;
+  }
+
+  explain(artifact: SoundArtifact): string {
+    return `Sound stratum: ${(this.evaluate(artifact).score * 100).toFixed(1)}% — ${soundPredicate(artifact).details}`;
   }
 }
 

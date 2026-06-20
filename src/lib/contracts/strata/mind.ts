@@ -1,33 +1,52 @@
 /**
  * Mind Stratum — Base Predicate Implementation (Engineering Grade)
  * 
- * Covers intelligence, agency, personality, decision making, and behavior.
+ * Mind covers behaviors, goals, decision depth, adaptability, learning, and memory.
  */
 
 import { StratumPredicates, StratumScore, Stratum } from './types';
-import { CharacterArtifact } from '../domains/character';
+import { mindPredicate } from '../../kernel/quality/predicates';
 
-export class MindStratum implements StratumPredicates<CharacterArtifact> {
+export interface MindArtifact {
+  behaviors: string[];
+  goals: string[];
+  noUnreachableStates: boolean;
+  decisionDepth: number;
+  adaptability: number;
+  learningCapacity: number;
+  goalCoherence: number;
+  memoryUtilization: number;
+}
+
+export class MindStratum implements StratumPredicates<MindArtifact> {
   readonly stratum: Stratum = 'Mind';
 
-  evaluate(artifact: CharacterArtifact): StratumScore {
-    const mindScore = artifact.strataScores.Mind ?? 0.5;
-    const fieldScore = artifact.strataScores.Field ?? 0.5;
-
-    // Mind is heavily weighted toward personality coherence and decision quality
-    const score = (mindScore * 0.65) + (fieldScore * 0.35);
-
+  evaluate(artifact: MindArtifact): StratumScore {
+    const result = mindPredicate(artifact);
+    const score = result.passed ? result.score : Math.max(0.1, result.score);
+    
     return {
-      score: Math.max(0, Math.min(1, score)),
+      score,
       confidence: 0.88,
-      subscores: { personality: mindScore, fieldInfluence: fieldScore },
-      issues: mindScore < 0.9 ? ['Mind coherence below flagship threshold'] : [],
+      subscores: this.parseDetails(result.details),
+      issues: result.passed ? [] : ['Mind/behavior quality below flagship threshold'],
     };
   }
 
-  explain(artifact: CharacterArtifact): string {
-    return `Mind stratum score: ${((artifact.strataScores.Mind ?? 0) * 100).toFixed(1)}%. ` +
-           `Strong personality + Field integration required for hero characters.`;
+  private parseDetails(details: string): Record<string, number> {
+    const result: Record<string, number> = {};
+    details.split(', ').forEach(part => {
+      const [key, value] = part.split('=');
+      if (key && value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) result[key.trim()] = num;
+      }
+    });
+    return result;
+  }
+
+  explain(artifact: MindArtifact): string {
+    return `Mind stratum: ${(this.evaluate(artifact).score * 100).toFixed(1)}% — ${mindPredicate(artifact).details}`;
   }
 }
 

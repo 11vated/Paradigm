@@ -54,7 +54,7 @@ function EmergentMesh({ meshData, color }: { meshData: MeshData | null; color: s
   if (!geometry) return <FallbackMesh domain="unknown" color={color} />;
 
   return (
-    <mesh ref={meshRef} geometry={geometry} castShadow receiveShadow position={[0, 1, 0]}>
+    <mesh ref={meshRef} geometry={geometry as any} castShadow receiveShadow position={[0, 1, 0]}>
       <meshStandardMaterial
         color={meshData?.colors ? 0xffffff : color}
         vertexColors={!!meshData?.colors}
@@ -258,7 +258,7 @@ export default function ThreeViewport({ artifact }: ViewportProps) {
         <Grid infiniteGrid fadeDistance={20} sectionColor="#1a1a1a" cellColor="#111111" position={[0, -0.01, 0]} />
         {hasEmergentMesh ? <EmergentMesh meshData={artifact.emergent_assets.mesh} color={domainColor} />
         : objGeometry ? (
-          <mesh geometry={objGeometry} position={[0, 1, 0]}>
+          <mesh geometry={objGeometry as any} position={[0, 1, 0]}>
             <meshStandardMaterial color="#00E5FF" roughness={0.3} metalness={0.4} side={THREE.DoubleSide} />
           </mesh>
         ) : <FallbackMesh domain={artifact?.domain} color={domainColor} artifact={artifact} />}

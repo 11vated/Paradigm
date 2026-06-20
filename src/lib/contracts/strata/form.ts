@@ -5,33 +5,52 @@
  */
 
 import { StratumPredicates, StratumScore, Stratum } from './types';
-import { CharacterArtifact } from '../domains/character';
+import { formPredicate } from '../../kernel/quality/predicates';
 
-export class FormStratum implements StratumPredicates<CharacterArtifact> {
+export interface FormArtifact {
+  geometry: {
+    vertices: number;
+    faces: number;
+    manifold: boolean;
+    watertight: boolean;
+    genus: number;
+  };
+  uvCoverage: number;
+  materials: string[];
+  boundingBox: { min: number[]; max: number[] };
+}
+
+export class FormStratum implements StratumPredicates<FormArtifact> {
   readonly stratum: Stratum = 'Form';
 
-  evaluate(artifact: CharacterArtifact): StratumScore {
-    const form = artifact.form;
-
-    const triScore = Math.min(form.mesh.triangleCount / 80000, 1.0);
-    const blendScore = Math.min(form.mesh.blendshapeCount / 48, 1.0);
-    const texScore = (form.textures.albedoRes >= 4096 ? 1.0 : 0.7);
-    const hairScore = Math.min(form.hair.strandCount / 150000, 1.0);
-
-    const score = (triScore * 0.35) + (blendScore * 0.25) + (texScore * 0.2) + (hairScore * 0.2);
-
+  evaluate(artifact: FormArtifact): StratumScore {
+    const result = formPredicate(artifact);
+    const score = result.passed ? result.score : Math.max(0.1, result.score);
+    
+    const subscores = this.parseDetails(result.details);
+    
     return {
-      score: Math.max(0, Math.min(1, score)),
+      score,
       confidence: 0.92,
-      subscores: { triangles: triScore, blendshapes: blendScore, textures: texScore, hair: hairScore },
-      issues: score < 0.85 ? ['Form quality below flagship threshold'] : [],
+      subscores,
+      issues: result.passed ? [] : ['Form quality below flagship threshold'],
     };
   }
 
-  explain(artifact: CharacterArtifact): string {
-    const s = this.evaluate(artifact);
-    return `Form stratum score: ${(s.score * 100).toFixed(1)}%. ` +
-           `Triangles=${artifact.form.mesh.triangleCount}, Blendshapes=${artifact.form.mesh.blendshapeCount}`;
+  private parseDetails(details: string): Record<string, number> {
+    const result: Record<string, number> = {};
+    details.split(', ').forEach(part => {
+      const [key, value] = part.split('=');
+      if (key && value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) result[key.trim()] = num;
+      }
+    });
+    return result;
+  }
+
+  explain(artifact: FormArtifact): string {
+    return `Form stratum score: ${(this.evaluate(artifact).score * 100).toFixed(1)}%. ${formPredicate(artifact).details}`;
   }
 }
 

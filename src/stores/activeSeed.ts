@@ -30,11 +30,15 @@ export interface ActiveSeed {
   slug?: string;
   /** Naming tier used to produce the name: 0 = hash fallback, 1 = PoS-pairing, 2 = LLM. */
   nameTier?: 0 | 1 | 2;
+  /** The grown artifact for this seed; set when seed is grown. */
+  artifact?: unknown;
 }
 
 interface ActiveSeedState {
   seed: ActiveSeed | null;
+  artifact: unknown;
   setSeed: (seed: ActiveSeed | null) => void;
+  setArtifact: (artifact: unknown) => void;
   patchSeed: (patch: Partial<ActiveSeed>) => void;
 }
 
@@ -53,7 +57,9 @@ export const DEFAULT_SEED: ActiveSeed = {
 export const useActiveSeed = create<ActiveSeedState>((set) => ({
   /** null until first grow — drives empty-state magic moment. */
   seed: null,
+  artifact: null,
   setSeed: (seed) => set({ seed }),
+  setArtifact: (artifact) => set({ artifact }),
   patchSeed: (patch) =>
     set((s) => (s.seed ? { seed: { ...s.seed, ...patch } } : s)),
 }));

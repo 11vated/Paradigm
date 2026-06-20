@@ -8,6 +8,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateFurniture } from './furniture';
+import { ensureNodeCanvas } from './canvas-utils';
 import { registerContract, type QualityContract, type Stratum } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -51,6 +52,7 @@ export const FurnitureQualityContract: QualityContract<S, A, any> = {
     { id: 'furniture-quiet', name: 'Quiet furniture', intent: 'low-energy', seed: { $domain: 'furniture', $name: 'furniture-quiet', genes: { energy: 0.1 } } },
   ],
   synthesize: async (seed) => {
+    await ensureNodeCanvas();
     const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'furniture-'));
     const out = path.join(dir, 'a.json');
     const r = await withKernelClock(0, () => generateFurniture(seed, out)) as any;

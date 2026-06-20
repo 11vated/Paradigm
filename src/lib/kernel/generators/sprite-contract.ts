@@ -27,6 +27,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateSpriteV3 } from './sprite';  // PHASE 2: Explicitly the CANONICAL primary only. No sibling imports allowed.
+import { ensureNodeCanvas } from './canvas-utils';
 import { registerContract } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -64,6 +65,7 @@ interface SpriteArtifact {
 }
 
 async function synthesize(seed: SpriteSeed): Promise<SpriteArtifact> {
+  await ensureNodeCanvas();
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'sprite-contract-'));
   const out = dir; // sprite-v3 treats outputPath as a directory
   try {

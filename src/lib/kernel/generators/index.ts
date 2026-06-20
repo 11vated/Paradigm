@@ -111,13 +111,12 @@ export { generateAR } from './ar';
 export { generateVR } from './vr';
 export { generateMetaverse } from './metaverse';
 
-// Session 10: Cybersecurity, Cloud, DevOps, Data Science, ML, Robotics Industrial, Aerospace Defense
+// Session 10: Cybersecurity, Cloud, DevOps, Data Science, ML, Aerospace Defense
 export { generateCybersecurity } from './cybersecurity';
 export { generateCloud } from './cloud';
 export { generateDevOps } from './devops';
 export { generateDataScience } from './data-science';
 export { generateML } from './ml';
-export { generateRoboticsIndustrial } from './robotics-industrial';
 
 // Session 11: Biotechnology, Nanotechnology, Renewable Energy, Battery, Smart Grid, 5G, 6G
 export { generateBiotechnology } from './biotechnology';
@@ -133,9 +132,8 @@ export { generateQuantumComputing } from './quantum-computing';
 export { generateSyntheticBiology } from './synthetic-biology';
 export { generateGenomics } from './genomics';
 
-// Session 13: AgTech, Food Delivery, Smart Home, Wearables, 3D Printing
+// Session 13: AgTech, Smart Home, Wearables, 3D Printing
 export { generateAgTech } from './agtech';
-export { generateFoodDelivery } from './food-delivery';
 export { generateSmartHome } from './smart-home';
 export { generateWearables } from './wearables';
 export { generate3DPrinting } from './3d-printing';

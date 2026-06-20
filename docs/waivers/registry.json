@@ -31,14 +31,26 @@
       "pattern": "336 instances of as any / @ts-ignore / broad catch"
     },
     {
-      "reason": "Legacy food-delivery domain from pre-canonical era. Will be merged or deprecated during Phase 2 canonical collapse.",
-      "status": "waived",
+      "reason": "Legacy food-delivery domain from pre-canonical era. REMOVED - merged into food.ts during Phase 2 canonical collapse.",
+      "status": "removed",
       "date": "2026-06-01",
       "id": "phase0-food-sibling",
       "pattern": "food-delivery as separate domain from food",
       "sunset": "2026-08-15",
       "approved_by": "doctrine-v2-session",
-      "file": "src/lib/kernel/generators/food-delivery.ts"
+      "file": "src/lib/kernel/generators/food-delivery.ts",
+      "removed_date": "2026-06-20"
+    },
+    {
+      "reason": "Legacy robotics-industrial domain from pre-canonical era. REMOVED - merged into robotics.ts during Phase 2 canonical collapse.",
+      "status": "removed",
+      "date": "2026-06-01",
+      "id": "phase0-robotics-industrial-sibling",
+      "pattern": "robotics-industrial as separate domain from robotics",
+      "sunset": "2026-08-15",
+      "approved_by": "doctrine-v2-session",
+      "file": "src/lib/kernel/generators/robotics-industrial.ts",
+      "removed_date": "2026-06-20"
     },
     {
       "id": "phase1-evasion-sweep-2026-06",

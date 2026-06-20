@@ -6,7 +6,6 @@
 import React from 'react';
 import { useLayout } from '@/stores/layoutStore';
 import { useAgentThreads } from '@/stores/agentThreads';
-import { useMode, MODES, MODE_LABEL, type Mode } from '@/stores/modeStore';
 import { useActiveSeed } from '@/stores/activeSeed';
 import { SeedGlyph } from '@/ui/primitives/SeedGlyph';
 import { domainColor } from '@/hooks/useDomainColor';
@@ -18,7 +17,6 @@ interface CollapsedLeftRailProps {
 export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }) => {
   const { setFocus } = useLayout();
   const { newThread } = useAgentThreads();
-  const { mode, setMode } = useMode();
   const { seed } = useActiveSeed();
 
   const expand = () => setFocus('normal');
@@ -84,33 +82,6 @@ export const CollapsedLeftRail: React.FC<CollapsedLeftRailProps> = ({ onCosmos }
           title="Composition Atlas (⌘Space)"
           aria-label="Open Composition Atlas"
         >✦</button>
-
-        {/* Mode quick-switch */}
-        <div style={{
-          width: '100%',
-          height: 1,
-          background: 'var(--p-ink-4)',
-          margin: '4px 0',
-        }} />
-
-        {MODES.map((m: Mode, i) => (
-          <button
-            key={m}
-            className="p-icon-button"
-            data-active={mode === m}
-            onClick={() => { setMode(m); expand(); }}
-            title={`${i + 1} · ${MODE_LABEL[m]}`}
-            aria-label={`Switch to ${MODE_LABEL[m]} mode`}
-            style={{
-              width: 32,
-              height: 24,
-              fontFamily: 'var(--p-font-mono)',
-              fontSize: 'var(--p-text-1)',
-            }}
-          >
-            {i + 1}
-          </button>
-        ))}
       </div>
     </aside>
   );

@@ -1,21 +1,54 @@
-import { StratumPredicates, StratumScore, Stratum } from './types';
-import { CharacterArtifact } from '../domains/character';
+/**
+ * Motion Stratum — Base Predicate Implementation (Engineering Grade)
+ * 
+ * Motion covers joints, loop closure, ground contact, trajectory stability, collision fidelity, energy conservation, velocity smoothness, acceleration consistency, momentum preservation, and timing precision.
+ */
 
-export class MotionStratum implements StratumPredicates<CharacterArtifact> {
+import { StratumPredicates, StratumScore, Stratum } from './types';
+import { motionPredicate } from '../../kernel/quality/predicates';
+
+export interface MotionArtifact {
+  joints: number;
+  loopClosure: number;
+  groundContact: boolean;
+  trajectoryStability: number;
+  noCollisions: boolean;
+  energyConservation: number;
+  velocitySmoothness: number;
+  accelerationConsistency: number;
+  momentumPreservation: number;
+  timingPrecision: number;
+}
+
+export class MotionStratum implements StratumPredicates<MotionArtifact> {
   readonly stratum: Stratum = 'Motion';
 
-  evaluate(artifact: CharacterArtifact): StratumScore {
-    const motion = artifact.strataScores.Motion ?? 0.5;
-    const score = motion * 0.9 + (artifact.animationLibrarySize > 1000 ? 0.1 : 0);
+  evaluate(artifact: MotionArtifact): StratumScore {
+    const result = motionPredicate(artifact);
+    const score = result.passed ? result.score : Math.max(0.1, result.score);
+    
     return {
-      score: Math.min(1, score),
+      score,
       confidence: 0.87,
-      issues: motion < 0.85 ? ['Motion/animation quality below flagship'] : [],
+      subscores: this.parseDetails(result.details),
+      issues: result.passed ? [] : ['Motion/animation quality below flagship threshold'],
     };
   }
 
-  explain(artifact: CharacterArtifact): string {
-    return `Motion stratum: ${((artifact.strataScores.Motion ?? 0) * 100).toFixed(1)}% with ${artifact.animationLibrarySize} animation clips.`;
+  private parseDetails(details: string): Record<string, number> {
+    const result: Record<string, number> = {};
+    details.split(', ').forEach(part => {
+      const [key, value] = part.split('=');
+      if (key && value) {
+        const num = parseFloat(value);
+        if (!isNaN(num)) result[key.trim()] = num;
+      }
+    });
+    return result;
+  }
+
+  explain(artifact: MotionArtifact): string {
+    return `Motion stratum: ${(this.evaluate(artifact).score * 100).toFixed(1)}% — ${motionPredicate(artifact).details}`;
   }
 }
 

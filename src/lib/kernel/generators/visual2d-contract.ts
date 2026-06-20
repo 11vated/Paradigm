@@ -9,6 +9,7 @@ import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
 import { generateVisual2DV3 } from './visual2d';
+import { ensureNodeCanvas } from './canvas-utils';
 import { registerContract } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -49,6 +50,7 @@ interface V2Artifact {
 }
 
 async function synthesize(seed: V2Seed): Promise<V2Artifact> {
+  await ensureNodeCanvas();
   const dir = await fs.mkdtemp(path.join(os.tmpdir(), 'pdgm-v2-'));
   try {
     const r = await generateVisual2DV3(seed as any, dir);

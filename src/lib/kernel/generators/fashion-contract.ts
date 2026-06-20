@@ -8,7 +8,7 @@ import { promises as fsp } from 'fs';
 import path from 'path';
 import os from 'os';
 import crypto from 'crypto';
-import { generateFashion } from './fashion';
+import { generateFashion, ensureNodeCanvas } from './fashion';
 import { registerContract, type QualityContract, type QualityReport, type Stratum } from '../quality-contract';
 
 // 15_ spec integration: new contracts system available alongside legacy
@@ -45,6 +45,7 @@ function hashArtifact(a: A): string {
 }
 
 async function synthesize(seed: S): Promise<A> {
+  await ensureNodeCanvas();
   const dir = await fsp.mkdtemp(path.join(os.tmpdir(), 'fashion-'));
   try {
     // Generator boundary cast (legacy untyped generator interop) — narrow, isolated

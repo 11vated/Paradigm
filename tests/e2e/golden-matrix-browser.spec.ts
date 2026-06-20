@@ -51,8 +51,8 @@ test.describe('Phase 7: Golden Matrix - Browser Runtime', () => {
   
   test.beforeEach(async ({ page }) => {
     // Navigate to a page that loads the Paradigm kernel
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 });
   });
 
   test('should have access to Paradigm kernel in browser', async ({ page }) => {
@@ -178,8 +178,8 @@ test.describe('Phase 7: Golden Matrix - Browser Runtime', () => {
 
 test.describe('Phase 7: Golden Matrix - RNG Determinism', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    await page.waitForLoadState('domcontentloaded', { timeout: 10000 });
   });
 
   test('should produce deterministic RNG sequences in browser', async ({ page }) => {
